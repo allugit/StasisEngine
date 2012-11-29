@@ -34,9 +34,10 @@
             // 
             // surface
             // 
-            this.surface.Location = new System.Drawing.Point(263, 12);
+            this.surface.Location = new System.Drawing.Point(263, 0);
+            this.surface.Margin = new System.Windows.Forms.Padding(0);
             this.surface.Name = "surface";
-            this.surface.Size = new System.Drawing.Size(1001, 706);
+            this.surface.Size = new System.Drawing.Size(1001, 730);
             this.surface.TabIndex = 0;
             this.surface.TabStop = false;
             // 
@@ -49,6 +50,7 @@
             this.Name = "EditorForm";
             this.Text = "EditorForm";
             this.FormClosed += new System.Windows.Forms.FormClosedEventHandler(this.EditorForm_Closed);
+            this.Resize += new System.EventHandler(this.EditorForm_Resize);
             ((System.ComponentModel.ISupportInitialize)(this.surface)).EndInit();
             this.ResumeLayout(false);
 

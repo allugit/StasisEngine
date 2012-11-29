@@ -25,9 +25,28 @@ namespace StasisEditor
             return surface;
         }
 
+        // EditorForm closed event
         private void EditorForm_Closed(object sender, FormClosedEventArgs e)
         {
             Application.Exit();
+        }
+
+        private void EditorForm_Resize(object sender, EventArgs e)
+        {
+            // Resize surface
+            surface.Width = Width - surface.Location.X;
+            surface.Height = Height;
+
+            // Resize main options control
+            //mainOptionsControl.Height = Height - 103;
+
+            // Resize graphics device
+            if (surface.Width > 0 && surface.Height > 0)
+            {
+                Main.graphics.PreferredBackBufferWidth = surface.Width;
+                Main.graphics.PreferredBackBufferHeight = surface.Height;
+                Main.graphics.ApplyChanges();
+            }
         }
     }
 }

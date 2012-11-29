@@ -13,7 +13,7 @@ namespace StasisEditor
 {
     public class Main : Game
     {
-        GraphicsDeviceManager graphics;
+        public static GraphicsDeviceManager graphics;
         public static SpriteBatch spriteBatch;
         public static GraphicsDevice graphicsDevice;
         private EditorForm form;
