@@ -34,8 +34,8 @@ namespace StasisEditor
         private void EditorForm_Resize(object sender, EventArgs e)
         {
             // Resize surface
-            surface.Width = Width - surface.Location.X;
-            surface.Height = Height;
+            //surface.Width = Width - surface.Location.X;
+            //surface.Height = Height;
 
             // Resize main options control
             //mainOptionsControl.Height = Height - 103;
