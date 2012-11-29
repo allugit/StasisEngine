@@ -52,8 +52,6 @@ namespace StasisEditor
             Vector2 gridOffset = new Vector2((editor.worldOffset.X * editor.scale) % editor.scale, (editor.worldOffset.Y * editor.scale) % editor.scale);
             Color color = new Color(new Vector3(0.2f, 0.2f, 0.2f));
 
-            editor.main.spriteBatch.Begin();
-
             // Vertical grid lines
             for (float x = 0; x < destRect.Width; x += editor.scale)
                 editor.main.spriteBatch.Draw(pixel, new Rectangle((int)(x + gridOffset.X), 0, 1, screenHeight), color);
@@ -62,7 +60,9 @@ namespace StasisEditor
             for (float y = 0; y < destRect.Height; y += editor.scale)
                 editor.main.spriteBatch.Draw(pixel, new Rectangle(0, (int)(y + gridOffset.Y), screenWidth, 1), color);
 
-            editor.main.spriteBatch.End();
+            // Draw mouse position
+            if (editor.isMouseOverSurface)
+                editor.main.spriteBatch.Draw(pixel, editor.worldMouse * editor.scale, new Rectangle(0, 0, 8, 8), Color.Yellow, 0, new Vector2(4, 4), 1f, SpriteEffects.None, 0);
         }
     }
 }

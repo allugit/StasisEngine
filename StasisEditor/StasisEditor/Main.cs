@@ -62,7 +62,9 @@ namespace StasisEditor
         {
             GraphicsDevice.Clear(Color.Black);
 
+            spriteBatch.Begin();
             editor.draw();
+            spriteBatch.End();
 
             base.Draw(gameTime);
         }
