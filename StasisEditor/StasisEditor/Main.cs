@@ -14,8 +14,7 @@ namespace StasisEditor
     public class Main : Game
     {
         public GraphicsDeviceManager graphics;
-        public static SpriteBatch spriteBatch;
-        public static GraphicsDevice graphicsDevice;
+        public SpriteBatch spriteBatch;
         public static Editor editor;
 
         public Main()
@@ -31,8 +30,6 @@ namespace StasisEditor
             // XNA
             IsMouseVisible = true;
             graphics.PreferMultiSampling = true;
-            graphics.PreferredBackBufferWidth = 1280;
-            graphics.PreferredBackBufferHeight = 768;
             graphics.ApplyChanges();
 
             // Base initialize -- calls LoadContent
@@ -43,7 +40,8 @@ namespace StasisEditor
         protected override void LoadContent()
         {
             spriteBatch = new SpriteBatch(GraphicsDevice);
-            graphicsDevice = GraphicsDevice;
+
+            editor.loadContent();
         }
 
         // UnloadContent
@@ -54,6 +52,8 @@ namespace StasisEditor
         // Update
         protected override void Update(GameTime gameTime)
         {
+            editor.update();
+
             base.Update(gameTime);
         }
 
@@ -61,6 +61,8 @@ namespace StasisEditor
         protected override void Draw(GameTime gameTime)
         {
             GraphicsDevice.Clear(Color.Black);
+
+            editor.draw();
 
             base.Draw(gameTime);
         }

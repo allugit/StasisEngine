@@ -60,8 +60,8 @@
             // splitContainer1.Panel2
             // 
             this.splitContainer1.Panel2.Controls.Add(this.surface);
-            this.splitContainer1.Size = new System.Drawing.Size(1264, 730);
-            this.splitContainer1.SplitterDistance = 284;
+            this.splitContainer1.Size = new System.Drawing.Size(1029, 556);
+            this.splitContainer1.SplitterDistance = 305;
             this.splitContainer1.TabIndex = 1;
             this.splitContainer1.TabStop = false;
             // 
@@ -74,7 +74,7 @@
             this.surface.Location = new System.Drawing.Point(0, 0);
             this.surface.Margin = new System.Windows.Forms.Padding(0);
             this.surface.Name = "surface";
-            this.surface.Size = new System.Drawing.Size(976, 730);
+            this.surface.Size = new System.Drawing.Size(720, 556);
             this.surface.TabIndex = 1;
             this.surface.TabStop = false;
             // 
@@ -155,13 +155,12 @@
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(1264, 730);
+            this.ClientSize = new System.Drawing.Size(1029, 556);
             this.Controls.Add(this.splitContainer1);
             this.Menu = this.mainMenu1;
             this.Name = "EditorForm";
             this.Text = "Stasis Editor";
             this.FormClosed += new System.Windows.Forms.FormClosedEventHandler(this.EditorForm_Closed);
-            this.Resize += new System.EventHandler(this.EditorForm_Resize);
             this.splitContainer1.Panel2.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)(this.splitContainer1)).EndInit();
             this.splitContainer1.ResumeLayout(false);
