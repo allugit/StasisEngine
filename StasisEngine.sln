@@ -1,8 +1,6 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 11.00
 # Visual C# Express 2010
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "StasisCore", "StasisCore\StasisCore.csproj", "{4DA349E2-4C5A-4A6A-B72A-214C218068FC}"
-EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "StasisGame", "StasisGame\StasisGame\StasisGame.csproj", "{E69DAE86-0C16-4192-A144-43D5E3F37790}"
 EndProject
 Project("{96E2B04D-8817-42C6-938A-82C39BA4D311}") = "StasisGameContent", "StasisGame\StasisGameContent\StasisGameContent.contentproj", "{21DD3CA2-2BD4-4E2F-91D5-F83873CB3769}"
@@ -17,10 +15,6 @@ Global
 		Release|x86 = Release|x86
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
-		{4DA349E2-4C5A-4A6A-B72A-214C218068FC}.Debug|x86.ActiveCfg = Debug|x86
-		{4DA349E2-4C5A-4A6A-B72A-214C218068FC}.Debug|x86.Build.0 = Debug|x86
-		{4DA349E2-4C5A-4A6A-B72A-214C218068FC}.Release|x86.ActiveCfg = Release|x86
-		{4DA349E2-4C5A-4A6A-B72A-214C218068FC}.Release|x86.Build.0 = Release|x86
 		{E69DAE86-0C16-4192-A144-43D5E3F37790}.Debug|x86.ActiveCfg = Debug|x86
 		{E69DAE86-0C16-4192-A144-43D5E3F37790}.Debug|x86.Build.0 = Debug|x86
 		{E69DAE86-0C16-4192-A144-43D5E3F37790}.Release|x86.ActiveCfg = Release|x86

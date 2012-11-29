@@ -11,11 +11,7 @@ namespace StasisEditor
         [STAThread]
         static void Main(string[] args)
         {
-            EditorForm form = new EditorForm();
-            Main main = new Main(form);
-            form.main = main;
-            form.Show();
-            using (main)
+            using (Main main = new Main())
                 main.Run();
         }
     }

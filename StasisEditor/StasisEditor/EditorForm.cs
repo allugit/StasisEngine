@@ -11,18 +11,13 @@ namespace StasisEditor
 {
     public partial class EditorForm : Form
     {
-        public Main main;
+        private Editor editor;
 
         // Constructor
-        public EditorForm()
+        public EditorForm(Editor editor)
         {
+            this.editor = editor;
             InitializeComponent();
-        }
-
-        // getSurface
-        public PictureBox getSurface()
-        {
-            return surface;
         }
 
         // EditorForm closed event
@@ -33,19 +28,12 @@ namespace StasisEditor
 
         private void EditorForm_Resize(object sender, EventArgs e)
         {
-            // Resize surface
-            //surface.Width = Width - surface.Location.X;
-            //surface.Height = Height;
-
-            // Resize main options control
-            //mainOptionsControl.Height = Height - 103;
-
             // Resize graphics device
             if (surface.Width > 0 && surface.Height > 0)
             {
-                Main.graphics.PreferredBackBufferWidth = surface.Width;
-                Main.graphics.PreferredBackBufferHeight = surface.Height;
-                Main.graphics.ApplyChanges();
+                editor.main.graphics.PreferredBackBufferWidth = surface.Width;
+                editor.main.graphics.PreferredBackBufferHeight = surface.Height;
+                editor.main.graphics.ApplyChanges();
             }
         }
     }

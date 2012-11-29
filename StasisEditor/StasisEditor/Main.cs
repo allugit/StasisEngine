@@ -13,37 +13,16 @@ namespace StasisEditor
 {
     public class Main : Game
     {
-        public static GraphicsDeviceManager graphics;
+        public GraphicsDeviceManager graphics;
         public static SpriteBatch spriteBatch;
         public static GraphicsDevice graphicsDevice;
-        private EditorForm form;
-        private System.Windows.Forms.PictureBox surface;
+        public static Editor editor;
 
-        public Main(EditorForm form)
+        public Main()
         {
-            this.form = form;
             graphics = new GraphicsDeviceManager(this);
             Content.RootDirectory = "Content";
-            surface = form.getSurface();
-
-            // Events
-            graphics.PreparingDeviceSettings +=
-                new EventHandler<PreparingDeviceSettingsEventArgs>(preparingDeviceSettings);
-            System.Windows.Forms.Control.FromHandle(this.Window.Handle).VisibleChanged +=
-                new EventHandler(visibleChanged);
-        }
-
-        // preparingGraphicsDeviceSettings event handler
-        private void preparingDeviceSettings(object sender, PreparingDeviceSettingsEventArgs e)
-        {
-            e.GraphicsDeviceInformation.PresentationParameters.DeviceWindowHandle = surface.Handle;
-        }
-
-        // visibleChanged event handler
-        private void visibleChanged(object sender, EventArgs e)
-        {
-            if (System.Windows.Forms.Control.FromHandle(this.Window.Handle).Visible)
-                System.Windows.Forms.Control.FromHandle(this.Window.Handle).Visible = false;
+            editor = new Editor(this);
         }
 
         // Initialize
