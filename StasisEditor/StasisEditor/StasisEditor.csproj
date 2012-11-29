@@ -82,6 +82,7 @@
     <Compile Include="EditorForm.Designer.cs">
       <DependentUpon>EditorForm.cs</DependentUpon>
     </Compile>
+    <Compile Include="Input.cs" />
     <Compile Include="Levels\Brush.cs" />
     <Compile Include="Levels\Level.cs" />
     <Compile Include="Levels\LevelSurface.cs">

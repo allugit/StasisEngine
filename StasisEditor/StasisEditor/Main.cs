@@ -17,6 +17,7 @@ namespace StasisEditor
         public SpriteBatch spriteBatch;
         public static Editor editor;
         public static Texture2D pixel;
+        public static SpriteFont arial;
 
         public Main()
         {
@@ -44,6 +45,8 @@ namespace StasisEditor
             pixel = new Texture2D(editor.main.GraphicsDevice, 1, 1);
             pixel.SetData<Color>(new Color[] { Color.White });
             editor.loadContent();
+
+            arial = Content.Load<SpriteFont>("arial");
         }
 
         // UnloadContent
@@ -54,6 +57,10 @@ namespace StasisEditor
         // Update
         protected override void Update(GameTime gameTime)
         {
+            // Update input
+            Input.update();
+
+            // Update editor
             editor.update();
 
             base.Update(gameTime);

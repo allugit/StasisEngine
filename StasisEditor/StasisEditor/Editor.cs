@@ -12,18 +12,6 @@ namespace StasisEditor
         public Main main;
         private EditorForm form;
 
-        private KeyboardState newKey;
-        private KeyboardState oldKey;
-        private MouseState newMouse;
-        private MouseState oldMouse;
-        private int newScrollValue;
-        private int oldScrollValue;
-
-        private float _scale = 35f;
-        public float scale { get { return _scale; } }
-        public Vector2 screenCenter;
-        public Vector2 worldOffset { get { return screenCenter + (new Vector2(main.GraphicsDevice.Viewport.Width, main.GraphicsDevice.Viewport.Height) / 2) / scale; } }
-
         public Level level;
         public System.Windows.Forms.SplitterPanel levelContainer { get { return form.levelSurfaceContainer; } }
 
@@ -64,18 +52,9 @@ namespace StasisEditor
         // update
         public void update()
         {
-            // Update input
-            newKey = Keyboard.GetState();
-            newMouse = Mouse.GetState();
-            newScrollValue = newMouse.ScrollWheelValue;
-
+            // Update level
             if (level != null)
                 level.update();
-
-            // Store input
-            oldKey = newKey;
-            oldMouse = newMouse;
-            oldScrollValue = newScrollValue;
         }
 
         // draw
