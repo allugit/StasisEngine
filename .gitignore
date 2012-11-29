@@ -1,0 +1,11 @@
+StasisEngine.suo
+StasisCore/bin
+StasisCore/obj
+StasisEditor/StasisEditor/bin
+StasisEditor/StasisEditor/obj
+StasisEditor/StasisEditorContent/bin
+StasisEditor/StasisEditorContent/obj
+StasisGame/StasisGame/bin
+StasisGame/StasisGame/obj
+StasisGame/StasisGameContent/bin
+StasisGame/StasisGameContent/obj
