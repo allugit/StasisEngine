@@ -14,7 +14,7 @@ namespace StasisEditor
     public partial class EditorForm : Form
     {
         private Editor editor;
-        private Texture2D pixel;
+        public SplitterPanel levelSurfaceContainer { get { return mainSplit.Panel2; } }
 
         // Constructor
         public EditorForm(Editor editor)
@@ -29,40 +29,17 @@ namespace StasisEditor
             Application.Exit();
         }
 
-        // loadContent
-        public void loadContent()
+        // enableNewLevel
+        public void enableNewLevel(bool status)
         {
-            pixel = new Texture2D(editor.main.GraphicsDevice, 1, 1);
-            pixel.SetData<Color>(new Color[] { Color.White });
+            menuLevelNew.Enabled = status;
         }
 
-        // unloadContent
-        public void unloadContent()
+        // New level clicked
+        private void menuLevelNew_Click(object sender, EventArgs e)
         {
-            pixel.Dispose();
-        }
-
-        // draw
-        public void draw()
-        {
-            // Draw grid
-            int screenWidth = editor.main.GraphicsDevice.Viewport.Width;
-            int screenHeight = editor.main.GraphicsDevice.Viewport.Height;
-            Rectangle destRect = new Rectangle(0, 0, (int)(screenWidth + editor.scale), (int)(screenHeight + editor.scale));
-            Vector2 gridOffset = new Vector2((editor.worldOffset.X * editor.scale) % editor.scale, (editor.worldOffset.Y * editor.scale) % editor.scale);
-            Color color = new Color(new Vector3(0.2f, 0.2f, 0.2f));
-
-            // Vertical grid lines
-            for (float x = 0; x < destRect.Width; x += editor.scale)
-                editor.main.spriteBatch.Draw(pixel, new Rectangle((int)(x + gridOffset.X), 0, 1, screenHeight), color);
-
-            // Horizontal grid lines
-            for (float y = 0; y < destRect.Height; y += editor.scale)
-                editor.main.spriteBatch.Draw(pixel, new Rectangle(0, (int)(y + gridOffset.Y), screenWidth, 1), color);
-
-            // Draw mouse position
-            if (editor.isMouseOverSurface)
-                editor.main.spriteBatch.Draw(pixel, editor.worldMouse * editor.scale, new Rectangle(0, 0, 8, 8), Color.Yellow, 0, new Vector2(4, 4), 1f, SpriteEffects.None, 0);
+            // Create a level
+            editor.createLevel();
         }
     }
 }

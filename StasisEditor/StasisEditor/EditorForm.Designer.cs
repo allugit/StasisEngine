@@ -29,162 +29,140 @@
         private void InitializeComponent()
         {
             this.components = new System.ComponentModel.Container();
-            this.splitContainer1 = new System.Windows.Forms.SplitContainer();
-            this.surface = new System.Windows.Forms.PictureBox();
+            this.mainSplit = new System.Windows.Forms.SplitContainer();
             this.mainMenu1 = new System.Windows.Forms.MainMenu(this.components);
-            this.menuItem1 = new System.Windows.Forms.MenuItem();
-            this.menuItem5 = new System.Windows.Forms.MenuItem();
-            this.menuItem2 = new System.Windows.Forms.MenuItem();
-            this.menuItem3 = new System.Windows.Forms.MenuItem();
-            this.menuItem4 = new System.Windows.Forms.MenuItem();
-            this.menuItem11 = new System.Windows.Forms.MenuItem();
-            this.menuItem6 = new System.Windows.Forms.MenuItem();
-            this.menuItem9 = new System.Windows.Forms.MenuItem();
-            this.menuItem10 = new System.Windows.Forms.MenuItem();
-            this.menuItem7 = new System.Windows.Forms.MenuItem();
-            this.menuItem8 = new System.Windows.Forms.MenuItem();
-            ((System.ComponentModel.ISupportInitialize)(this.splitContainer1)).BeginInit();
-            this.splitContainer1.Panel2.SuspendLayout();
-            this.splitContainer1.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.surface)).BeginInit();
+            this.menuFile = new System.Windows.Forms.MenuItem();
+            this.menuFileExit = new System.Windows.Forms.MenuItem();
+            this.menuLevel = new System.Windows.Forms.MenuItem();
+            this.menuLevelNew = new System.Windows.Forms.MenuItem();
+            this.menuLevelLoad = new System.Windows.Forms.MenuItem();
+            this.menuLevelSave = new System.Windows.Forms.MenuItem();
+            this.menuAssets = new System.Windows.Forms.MenuItem();
+            this.menuAssetsTextures = new System.Windows.Forms.MenuItem();
+            this.menuAssetsMaterials = new System.Windows.Forms.MenuItem();
+            this.menuItems = new System.Windows.Forms.MenuItem();
+            this.menuScripts = new System.Windows.Forms.MenuItem();
+            ((System.ComponentModel.ISupportInitialize)(this.mainSplit)).BeginInit();
+            this.mainSplit.SuspendLayout();
             this.SuspendLayout();
             // 
-            // splitContainer1
+            // mainSplit
             // 
-            this.splitContainer1.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom)
+            this.mainSplit.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom)
                         | System.Windows.Forms.AnchorStyles.Left)
                         | System.Windows.Forms.AnchorStyles.Right)));
-            this.splitContainer1.Location = new System.Drawing.Point(0, 0);
-            this.splitContainer1.Name = "splitContainer1";
-            // 
-            // splitContainer1.Panel2
-            // 
-            this.splitContainer1.Panel2.Controls.Add(this.surface);
-            this.splitContainer1.Size = new System.Drawing.Size(1029, 556);
-            this.splitContainer1.SplitterDistance = 305;
-            this.splitContainer1.TabIndex = 1;
-            this.splitContainer1.TabStop = false;
-            // 
-            // surface
-            // 
-            this.surface.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom)
-                        | System.Windows.Forms.AnchorStyles.Left)
-                        | System.Windows.Forms.AnchorStyles.Right)));
-            this.surface.BackColor = System.Drawing.Color.Black;
-            this.surface.Location = new System.Drawing.Point(0, 0);
-            this.surface.Margin = new System.Windows.Forms.Padding(0);
-            this.surface.Name = "surface";
-            this.surface.Size = new System.Drawing.Size(720, 556);
-            this.surface.TabIndex = 1;
-            this.surface.TabStop = false;
+            this.mainSplit.Location = new System.Drawing.Point(0, 0);
+            this.mainSplit.Name = "mainSplit";
+            this.mainSplit.Size = new System.Drawing.Size(1029, 556);
+            this.mainSplit.SplitterDistance = 261;
+            this.mainSplit.TabIndex = 1;
+            this.mainSplit.TabStop = false;
             // 
             // mainMenu1
             // 
             this.mainMenu1.MenuItems.AddRange(new System.Windows.Forms.MenuItem[] {
-            this.menuItem1,
-            this.menuItem2,
-            this.menuItem6,
-            this.menuItem7,
-            this.menuItem8});
+            this.menuFile,
+            this.menuLevel,
+            this.menuAssets,
+            this.menuItems,
+            this.menuScripts});
             // 
-            // menuItem1
+            // menuFile
             // 
-            this.menuItem1.Index = 0;
-            this.menuItem1.MenuItems.AddRange(new System.Windows.Forms.MenuItem[] {
-            this.menuItem5});
-            this.menuItem1.Text = "File";
+            this.menuFile.Index = 0;
+            this.menuFile.MenuItems.AddRange(new System.Windows.Forms.MenuItem[] {
+            this.menuFileExit});
+            this.menuFile.Text = "File";
             // 
-            // menuItem5
+            // menuFileExit
             // 
-            this.menuItem5.Index = 0;
-            this.menuItem5.Text = "Exit";
+            this.menuFileExit.Index = 0;
+            this.menuFileExit.Text = "Exit";
             // 
-            // menuItem2
+            // menuLevel
             // 
-            this.menuItem2.Index = 1;
-            this.menuItem2.MenuItems.AddRange(new System.Windows.Forms.MenuItem[] {
-            this.menuItem3,
-            this.menuItem4,
-            this.menuItem11});
-            this.menuItem2.Text = "Level";
+            this.menuLevel.Index = 1;
+            this.menuLevel.MenuItems.AddRange(new System.Windows.Forms.MenuItem[] {
+            this.menuLevelNew,
+            this.menuLevelLoad,
+            this.menuLevelSave});
+            this.menuLevel.Text = "Level";
             // 
-            // menuItem3
+            // menuLevelNew
             // 
-            this.menuItem3.Index = 0;
-            this.menuItem3.Text = "New";
+            this.menuLevelNew.Index = 0;
+            this.menuLevelNew.Text = "New";
+            this.menuLevelNew.Click += new System.EventHandler(this.menuLevelNew_Click);
             // 
-            // menuItem4
+            // menuLevelLoad
             // 
-            this.menuItem4.Index = 1;
-            this.menuItem4.Text = "Load";
+            this.menuLevelLoad.Index = 1;
+            this.menuLevelLoad.Text = "Load";
             // 
-            // menuItem11
+            // menuLevelSave
             // 
-            this.menuItem11.Index = 2;
-            this.menuItem11.Text = "Save";
+            this.menuLevelSave.Index = 2;
+            this.menuLevelSave.Text = "Save";
             // 
-            // menuItem6
+            // menuAssets
             // 
-            this.menuItem6.Index = 2;
-            this.menuItem6.MenuItems.AddRange(new System.Windows.Forms.MenuItem[] {
-            this.menuItem9,
-            this.menuItem10});
-            this.menuItem6.Text = "Assets";
+            this.menuAssets.Index = 2;
+            this.menuAssets.MenuItems.AddRange(new System.Windows.Forms.MenuItem[] {
+            this.menuAssetsTextures,
+            this.menuAssetsMaterials});
+            this.menuAssets.Text = "Assets";
             // 
-            // menuItem9
+            // menuAssetsTextures
             // 
-            this.menuItem9.Index = 0;
-            this.menuItem9.Text = "Textures";
+            this.menuAssetsTextures.Index = 0;
+            this.menuAssetsTextures.Text = "Textures";
             // 
-            // menuItem10
+            // menuAssetsMaterials
             // 
-            this.menuItem10.Index = 1;
-            this.menuItem10.Text = "Materials";
+            this.menuAssetsMaterials.Index = 1;
+            this.menuAssetsMaterials.Text = "Materials";
             // 
-            // menuItem7
+            // menuItems
             // 
-            this.menuItem7.Index = 3;
-            this.menuItem7.Text = "Items";
+            this.menuItems.Index = 3;
+            this.menuItems.Text = "Items";
             // 
-            // menuItem8
+            // menuScripts
             // 
-            this.menuItem8.Index = 4;
-            this.menuItem8.Text = "Scripts";
+            this.menuScripts.Index = 4;
+            this.menuScripts.Text = "Scripts";
             // 
             // EditorForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(1029, 556);
-            this.Controls.Add(this.splitContainer1);
+            this.Controls.Add(this.mainSplit);
             this.Menu = this.mainMenu1;
             this.Name = "EditorForm";
             this.Text = "Stasis Editor";
             this.FormClosed += new System.Windows.Forms.FormClosedEventHandler(this.EditorForm_Closed);
-            this.splitContainer1.Panel2.ResumeLayout(false);
-            ((System.ComponentModel.ISupportInitialize)(this.splitContainer1)).EndInit();
-            this.splitContainer1.ResumeLayout(false);
-            ((System.ComponentModel.ISupportInitialize)(this.surface)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.mainSplit)).EndInit();
+            this.mainSplit.ResumeLayout(false);
             this.ResumeLayout(false);
 
         }
 
         #endregion
 
-        private System.Windows.Forms.SplitContainer splitContainer1;
-        public System.Windows.Forms.PictureBox surface;
+        private System.Windows.Forms.SplitContainer mainSplit;
         private System.Windows.Forms.MainMenu mainMenu1;
-        private System.Windows.Forms.MenuItem menuItem1;
-        private System.Windows.Forms.MenuItem menuItem5;
-        private System.Windows.Forms.MenuItem menuItem6;
-        private System.Windows.Forms.MenuItem menuItem9;
-        private System.Windows.Forms.MenuItem menuItem10;
-        private System.Windows.Forms.MenuItem menuItem7;
-        private System.Windows.Forms.MenuItem menuItem8;
-        private System.Windows.Forms.MenuItem menuItem2;
-        private System.Windows.Forms.MenuItem menuItem3;
-        private System.Windows.Forms.MenuItem menuItem4;
-        private System.Windows.Forms.MenuItem menuItem11;
+        private System.Windows.Forms.MenuItem menuFile;
+        private System.Windows.Forms.MenuItem menuFileExit;
+        private System.Windows.Forms.MenuItem menuAssets;
+        private System.Windows.Forms.MenuItem menuAssetsTextures;
+        private System.Windows.Forms.MenuItem menuAssetsMaterials;
+        private System.Windows.Forms.MenuItem menuItems;
+        private System.Windows.Forms.MenuItem menuScripts;
+        private System.Windows.Forms.MenuItem menuLevel;
+        private System.Windows.Forms.MenuItem menuLevelNew;
+        private System.Windows.Forms.MenuItem menuLevelLoad;
+        private System.Windows.Forms.MenuItem menuLevelSave;
 
     }
 }

@@ -16,6 +16,7 @@ namespace StasisEditor
         public GraphicsDeviceManager graphics;
         public SpriteBatch spriteBatch;
         public static Editor editor;
+        public static Texture2D pixel;
 
         public Main()
         {
@@ -40,7 +41,8 @@ namespace StasisEditor
         protected override void LoadContent()
         {
             spriteBatch = new SpriteBatch(GraphicsDevice);
-
+            pixel = new Texture2D(editor.main.GraphicsDevice, 1, 1);
+            pixel.SetData<Color>(new Color[] { Color.White });
             editor.loadContent();
         }
 
