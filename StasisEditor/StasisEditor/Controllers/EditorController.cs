@@ -51,8 +51,32 @@ namespace StasisEditor.Controllers
             _levelView = new LevelView();
             _levelView.setController(this);
             
+            // Add level view to editor view
             _editorView.addLevelView(_levelView);
             _editorView.addLevelSettings(level);
+
+            // Modify menu items
+            _editorView.enableNewLevel(false);
+            _editorView.enableCloseLevel(true);
+            _editorView.enableLoadLevel(false);
+            _editorView.enableSaveLevel(true);
+        }
+
+        // closeLevel
+        public void closeLevel()
+        {
+            // Remove level views
+            _editorView.removeLevelSettings();
+            _editorView.removeLevelView();
+
+            // Modify menu
+            _editorView.enableNewLevel(true);
+            _editorView.enableCloseLevel(false);
+            _editorView.enableLoadLevel(true);
+            _editorView.enableSaveLevel(false);
+
+            // Remove model
+            _level = null;
         }
 
         // mouseMove

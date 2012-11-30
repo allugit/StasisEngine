@@ -50,6 +50,8 @@ namespace StasisEditor.Views
         public void removeLevelView()
         {
             mainSplit.Panel2.Controls.Remove(_levelView as Control);
+            _levelView.Dispose();
+            _levelView = null;
         }
 
         // addLevelSettings
@@ -63,6 +65,8 @@ namespace StasisEditor.Views
         public void removeLevelSettings()
         {
             mainSplit.Panel1.Controls.Remove(_levelSettings);
+            _levelSettings.Dispose();
+            _levelSettings = null;
         }
 
         // EditorForm closed event
@@ -77,6 +81,24 @@ namespace StasisEditor.Views
             menuLevelNew.Enabled = enabled;
         }
 
+        // enableCloseLevel
+        public void enableCloseLevel(bool enabled)
+        {
+            menuLevelClose.Enabled = enabled;
+        }
+
+        // enableSaveLevel
+        public void enableSaveLevel(bool enabled)
+        {
+            menuLevelSave.Enabled = enabled;
+        }
+
+        // enableLoadLevel
+        public void enableLoadLevel(bool enabled)
+        {
+            menuLevelLoad.Enabled = enabled;
+        }
+
         // New level clicked
         private void menuLevelNew_Click(object sender, EventArgs e)
         {
@@ -88,6 +110,15 @@ namespace StasisEditor.Views
         private void menuFileExit_Click(object sender, EventArgs e)
         {
             _controller.exit();
+        }
+
+        // Close level clicked
+        private void menuLevelClose_Click(object sender, EventArgs e)
+        {
+            if (MessageBox.Show("Are you sure you want to close the level?", "Close Level", MessageBoxButtons.OKCancel) == DialogResult.OK)
+            {
+                _controller.closeLevel();
+            }
         }
     }
 }

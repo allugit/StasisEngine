@@ -27,7 +27,6 @@ namespace StasisEditor.Controls
             this.Dock = System.Windows.Forms.DockStyle.Top;
             this.Margin = new System.Windows.Forms.Padding(0);
             this.ResumeLayout(false);
-
         }
     }
 }

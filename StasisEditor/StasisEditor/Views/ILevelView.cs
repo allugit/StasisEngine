@@ -6,7 +6,7 @@ using System.Windows.Forms;
 
 namespace StasisEditor.Views
 {
-    public interface ILevelView
+    public interface ILevelView : IBaseView
     {
         void setController(EditorController controller);
         int getWidth();

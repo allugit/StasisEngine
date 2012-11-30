@@ -11,6 +11,9 @@ namespace StasisEditor.Views
     {
         void setController(EditorController controller);
         void enableNewLevel(bool enabled);
+        void enableCloseLevel(bool enabled);
+        void enableLoadLevel(bool enabled);
+        void enableSaveLevel(bool enabled);
         void addLevelView(ILevelView levelView);
         void removeLevelView();
         void addLevelSettings(Level level);
