@@ -52,7 +52,7 @@ namespace StasisEditor.Controls
             this.boxButton.ImageTransparentColor = System.Drawing.Color.Magenta;
             this.boxButton.Margin = new System.Windows.Forms.Padding(0);
             this.boxButton.Name = "boxButton";
-            this.boxButton.Size = new System.Drawing.Size(26, 25);
+            this.boxButton.Size = new System.Drawing.Size(26, 26);
             this.boxButton.Text = "Box";
             // 
             // circleButton
@@ -194,6 +194,7 @@ namespace StasisEditor.Controls
             this.fluidButton,
             this.playerSpawnButton,
             this.goalButton});
+            this.LayoutStyle = System.Windows.Forms.ToolStripLayoutStyle.Flow;
             this.Padding = new System.Windows.Forms.Padding(0, 0, 2, 0);
             this.ResumeLayout(false);
 
