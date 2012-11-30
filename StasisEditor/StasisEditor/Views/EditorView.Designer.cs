@@ -1,4 +1,4 @@
-﻿namespace StasisEditor.View
+﻿namespace StasisEditor.Views
 {
     partial class EditorView
     {

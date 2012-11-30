@@ -2,19 +2,20 @@
 using System.Collections.Generic;
 using System.Windows.Forms;
 using Microsoft.Xna.Framework;
-using StasisEditor.Controller;
+using StasisEditor.Controllers;
 
-namespace StasisEditor.View
+namespace StasisEditor.Views
 {
     public class LevelView : PictureBox, ILevelView
     {
-        private LevelController _controller;
+        private EditorController _controller;
+        private IContainerControl _propertyContainer;
 
         public LevelView()
             : base()
         {
             // Control properties
-            Anchor = AnchorStyles.Top | AnchorStyles.Right | AnchorStyles.Bottom | AnchorStyles.Left;
+            Dock = DockStyle.Fill;
             BackColor = System.Drawing.Color.Black;
 
             // Add a listener to get the location of the mouse over the surface
@@ -42,18 +43,9 @@ namespace StasisEditor.View
         }
 
         // setController
-        public void setController(LevelController controller)
+        public void setController(EditorController controller)
         {
             _controller = controller;
-        }
-
-        // setSize
-        public void setSize(System.Drawing.Point size) { setSize(size.X, size.Y); }
-        public void setSize(int width, int height)
-        {
-            Width = width;
-            Height = height;
-            _controller.resizeGraphicsDevice(Width, Height);
         }
 
         // getWidth

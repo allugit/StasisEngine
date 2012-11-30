@@ -1,9 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
 using Microsoft.Xna.Framework;
-using StasisEditor.Controller;
+using StasisEditor.Controllers;
 
-namespace StasisEditor.Model
+namespace StasisEditor.Models
 {
     public class Brush
     {

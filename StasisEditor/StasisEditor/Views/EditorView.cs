@@ -8,13 +8,17 @@ using System.Text;
 using System.Windows.Forms;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
-using StasisEditor.Controller;
+using StasisEditor.Controllers;
+using StasisEditor.Controls;
+using StasisEditor.Models;
 
-namespace StasisEditor.View
+namespace StasisEditor.Views
 {
     public partial class EditorView : Form, IEditorView
     {
         private EditorController _controller;
+        private ILevelView _levelView;
+        private LevelSettings _levelSettings;
 
         // Constructor
         public EditorView()
@@ -38,13 +42,27 @@ namespace StasisEditor.View
         // addLevelView
         public void addLevelView(ILevelView levelView)
         {
+            _levelView = levelView;
             mainSplit.Panel2.Controls.Add(levelView as Control);
         }
 
         // removeLevelView
-        public void removeLevelView(ILevelView levelView)
+        public void removeLevelView()
         {
-            mainSplit.Panel2.Controls.Remove(levelView as Control);
+            mainSplit.Panel2.Controls.Remove(_levelView as Control);
+        }
+
+        // addLevelSettings
+        public void addLevelSettings(Level level)
+        {
+            _levelSettings = new LevelSettings(level, mainSplit.Panel1.Width, 200);
+            mainSplit.Panel1.Controls.Add(_levelSettings);
+        }
+
+        // removeLevelSettings
+        public void removeLevelSettings()
+        {
+            mainSplit.Panel1.Controls.Remove(_levelSettings);
         }
 
         // EditorForm closed event

@@ -5,7 +5,7 @@ using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Input;
 using Microsoft.Xna.Framework.Graphics;
 
-namespace StasisEditor.Model
+namespace StasisEditor.Models
 {
     public class Level
     {

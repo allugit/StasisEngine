@@ -1,10 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
-using StasisEditor.Controller;
+using StasisEditor.Controllers;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 
-namespace StasisEditor.View
+namespace StasisEditor.Views
 {
     public class XNAResources
     {

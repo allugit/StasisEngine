@@ -1,16 +1,19 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Drawing;
-using StasisEditor.Controller;
+using StasisEditor.Controllers;
+using StasisEditor.Controls;
+using StasisEditor.Models;
 
-namespace StasisEditor.View
+namespace StasisEditor.Views
 {
     public interface IEditorView
     {
         void setController(EditorController controller);
         void enableNewLevel(bool enabled);
-        Point getLevelContainerSize();
         void addLevelView(ILevelView levelView);
-        void removeLevelView(ILevelView levelView);
+        void removeLevelView();
+        void addLevelSettings(Level level);
+        void removeLevelSettings();
     }
 }
