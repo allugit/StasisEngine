@@ -8,22 +8,42 @@ using Microsoft.Xna.Framework.GamerServices;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 using Microsoft.Xna.Framework.Media;
+using StasisEditor.View;
 
-namespace StasisEditor
+namespace StasisEditor.Controller
 {
-    public class Main : Game
+    public class XNAController : Game
     {
         public GraphicsDeviceManager graphics;
         public SpriteBatch spriteBatch;
-        public static Editor editor;
-        public static Texture2D pixel;
-        public static SpriteFont arial;
+        private EditorController _editorController;
 
-        public Main()
+        public XNAController()
         {
             graphics = new GraphicsDeviceManager(this);
             Content.RootDirectory = "Content";
-            editor = new Editor(this);
+
+            // Hide the main XNA game window
+            System.Windows.Forms.Control.FromHandle(Window.Handle).VisibleChanged += new EventHandler(visibleChanged);
+        }
+
+        // Keep the main XNA game window hidden
+        private void visibleChanged(object sender, EventArgs e)
+        {
+            if (System.Windows.Forms.Control.FromHandle(Window.Handle).Visible)
+                System.Windows.Forms.Control.FromHandle(Window.Handle).Visible = false;
+        }
+
+        // resizeGraphicsDevice
+        public void resizeGraphicsDevice(int width, int height)
+        {
+            // Resize graphics device
+            if (width > 0 && height > 0)
+            {
+                graphics.PreferredBackBufferWidth = width;
+                graphics.PreferredBackBufferHeight = height;
+                graphics.ApplyChanges();
+            }
         }
 
         // Initialize
@@ -36,17 +56,17 @@ namespace StasisEditor
 
             // Base initialize -- calls LoadContent
             base.Initialize();
+
+            // Create the editor view and controller
+            EditorView editorView = new EditorView();
+            _editorController = new EditorController(this, editorView);
         }
 
         // LoadContent
         protected override void LoadContent()
         {
             spriteBatch = new SpriteBatch(GraphicsDevice);
-            pixel = new Texture2D(editor.main.GraphicsDevice, 1, 1);
-            pixel.SetData<Color>(new Color[] { Color.White });
-            editor.loadContent();
-
-            arial = Content.Load<SpriteFont>("arial");
+            XNAResources.initialize(this);
         }
 
         // UnloadContent
@@ -60,9 +80,6 @@ namespace StasisEditor
             // Update input
             Input.update();
 
-            // Update editor
-            editor.update();
-
             base.Update(gameTime);
         }
 
@@ -72,7 +89,7 @@ namespace StasisEditor
             GraphicsDevice.Clear(Color.Black);
 
             spriteBatch.Begin();
-            editor.draw();
+            _editorController.handleXNADraw();
             spriteBatch.End();
 
             base.Draw(gameTime);

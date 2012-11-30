@@ -1,6 +1,6 @@
-﻿namespace StasisEditor
+﻿namespace StasisEditor.View
 {
-    partial class EditorForm
+    partial class EditorView
     {
         /// <summary>
         /// Required designer variable.
@@ -78,6 +78,7 @@
             // 
             this.menuFileExit.Index = 0;
             this.menuFileExit.Text = "Exit";
+            this.menuFileExit.Click += new System.EventHandler(this.menuFileExit_Click);
             // 
             // menuLevel
             // 

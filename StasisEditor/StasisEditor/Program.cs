@@ -1,4 +1,5 @@
 using System;
+using StasisEditor.Controller;
 
 namespace StasisEditor
 {
@@ -11,8 +12,10 @@ namespace StasisEditor
         [STAThread]
         static void Main(string[] args)
         {
-            using (Main main = new Main())
-                main.Run();
+            using (XNAController xnaController = new XNAController())
+            {
+                xnaController.Run();
+            }
         }
     }
 #endif
