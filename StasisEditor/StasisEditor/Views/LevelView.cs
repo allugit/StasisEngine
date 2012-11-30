@@ -30,6 +30,14 @@ namespace StasisEditor.Views
             XNAResources.graphics.PreparingDeviceSettings += new EventHandler<PreparingDeviceSettingsEventArgs>(preparingDeviceSettings);
         }
 
+        // Dispose
+        protected override void Dispose(bool disposing)
+        {
+            // Unhook from XNA
+            XNAResources.graphics.PreparingDeviceSettings -= new EventHandler<PreparingDeviceSettingsEventArgs>(preparingDeviceSettings);
+            base.Dispose(disposing);
+        }
+
         // Surface resize event handler
         void surface_Resize(object sender, EventArgs e)
         {
