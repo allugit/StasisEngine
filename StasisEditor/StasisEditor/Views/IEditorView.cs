@@ -10,13 +10,19 @@ namespace StasisEditor.Views
     public interface IEditorView
     {
         void setController(EditorController controller);
+        
         void enableNewLevel(bool enabled);
         void enableCloseLevel(bool enabled);
         void enableLoadLevel(bool enabled);
         void enableSaveLevel(bool enabled);
+        
         void addLevelView(ILevelView levelView);
         void removeLevelView();
+        
         void addLevelSettings(Level level);
         void removeLevelSettings();
+
+        void addBrushToolbar();
+        void removeBrushToolbar();
     }
 }

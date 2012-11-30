@@ -19,6 +19,7 @@ namespace StasisEditor.Views
         private EditorController _controller;
         private ILevelView _levelView;
         private LevelSettings _levelSettings;
+        private BrushToolbar _brushToolbar;
 
         // Constructor
         public EditorView()
@@ -67,6 +68,21 @@ namespace StasisEditor.Views
             mainSplit.Panel1.Controls.Remove(_levelSettings);
             _levelSettings.Dispose();
             _levelSettings = null;
+        }
+
+        // addBrushToolbar
+        public void addBrushToolbar()
+        {
+            _brushToolbar = new BrushToolbar();
+            mainSplit.Panel1.Controls.Add(_brushToolbar);
+        }
+
+        // removeBrushToolbar
+        public void removeBrushToolbar()
+        {
+            mainSplit.Panel1.Controls.Remove(_brushToolbar);
+            _brushToolbar.Dispose();
+            _brushToolbar = null;
         }
 
         // EditorForm closed event

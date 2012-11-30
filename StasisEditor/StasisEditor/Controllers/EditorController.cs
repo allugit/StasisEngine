@@ -55,6 +55,9 @@ namespace StasisEditor.Controllers
             _editorView.addLevelView(_levelView);
             _editorView.addLevelSettings(level);
 
+            // Create brush toolbar
+            _editorView.addBrushToolbar();
+
             // Modify menu items
             _editorView.enableNewLevel(false);
             _editorView.enableCloseLevel(true);
@@ -68,6 +71,9 @@ namespace StasisEditor.Controllers
             // Remove level views
             _editorView.removeLevelSettings();
             _editorView.removeLevelView();
+
+            // Remove toolbar
+            _editorView.removeBrushToolbar();
 
             // Modify menu
             _editorView.enableNewLevel(true);
