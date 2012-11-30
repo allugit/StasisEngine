@@ -51,6 +51,7 @@
             this.mainSplit.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom)
                         | System.Windows.Forms.AnchorStyles.Left)
                         | System.Windows.Forms.AnchorStyles.Right)));
+            this.mainSplit.FixedPanel = System.Windows.Forms.FixedPanel.Panel1;
             this.mainSplit.Location = new System.Drawing.Point(0, 0);
             this.mainSplit.Name = "mainSplit";
             this.mainSplit.Size = new System.Drawing.Size(1029, 556);
@@ -133,14 +134,14 @@
             this.menuScripts.Index = 4;
             this.menuScripts.Text = "Scripts";
             // 
-            // EditorForm
+            // EditorView
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(1029, 556);
             this.Controls.Add(this.mainSplit);
             this.Menu = this.mainMenu1;
-            this.Name = "EditorForm";
+            this.Name = "EditorView";
             this.Text = "Stasis Editor";
             this.FormClosed += new System.Windows.Forms.FormClosedEventHandler(this.EditorForm_Closed);
             ((System.ComponentModel.ISupportInitialize)(this.mainSplit)).EndInit();
