@@ -144,6 +144,7 @@
             // 
             this.menuAssetsMaterials.Index = 1;
             this.menuAssetsMaterials.Text = "Materials";
+            this.menuAssetsMaterials.Click += new System.EventHandler(this.menuAssetsMaterials_Click);
             // 
             // menuItems
             // 

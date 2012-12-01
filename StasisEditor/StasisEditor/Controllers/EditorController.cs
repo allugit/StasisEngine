@@ -15,6 +15,13 @@ namespace StasisEditor.Controllers
 
         private Level _level;
         private ILevelView _levelView;
+
+        private IMaterialView _materialView;
+        private List<TreeMaterial> _treeMaterials;
+        private List<TerrainMaterial> _terrainMaterials;
+        private List<FluidMaterial> _fluidMaterials;
+        private List<ItemMaterial> _itemMaterials;
+
         private bool _isMouseOverView;
         private System.Drawing.Point _mouse;
         private float _scale = 35f;
@@ -31,6 +38,12 @@ namespace StasisEditor.Controllers
             _xnaController = xnaController;
             _editorView = editorView;
             _editorView.setController(this);
+
+            // Materials
+            _terrainMaterials = new List<TerrainMaterial>();
+            _treeMaterials = new List<TreeMaterial>();
+            _fluidMaterials = new List<FluidMaterial>();
+            _itemMaterials = new List<ItemMaterial>();
         }
 
         // resizeGraphicsDevice
@@ -83,6 +96,14 @@ namespace StasisEditor.Controllers
 
             // Remove model
             _level = null;
+        }
+
+        // openMaterialView
+        public void openMaterialView()
+        {
+            _materialView = new MaterialView();
+            _materialView.setController(this);
+            _materialView.ShowDialog();
         }
 
         // mouseMove

@@ -1,11 +1,13 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
+using System.Windows.Forms;
+using StasisEditor.Controllers;
 
 namespace StasisEditor.Views
 {
-    public interface IMaterialView
+    public interface IMaterialView : IBaseView
     {
+        DialogResult ShowDialog();
+        void setController(EditorController controller);
     }
 }

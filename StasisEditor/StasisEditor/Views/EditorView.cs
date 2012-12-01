@@ -136,5 +136,11 @@ namespace StasisEditor.Views
                 _controller.closeLevel();
             }
         }
+
+        // Materials clicked
+        private void menuAssetsMaterials_Click(object sender, EventArgs e)
+        {
+            _controller.openMaterialView();
+        }
     }
 }
