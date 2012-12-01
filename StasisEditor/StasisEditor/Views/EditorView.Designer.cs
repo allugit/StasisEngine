@@ -42,8 +42,8 @@
             this.menuAssets = new System.Windows.Forms.MenuItem();
             this.menuAssetsTextures = new System.Windows.Forms.MenuItem();
             this.menuAssetsMaterials = new System.Windows.Forms.MenuItem();
-            this.menuItems = new System.Windows.Forms.MenuItem();
-            this.menuScripts = new System.Windows.Forms.MenuItem();
+            this.menuAssetsItems = new System.Windows.Forms.MenuItem();
+            this.menuAssetsScripts = new System.Windows.Forms.MenuItem();
             ((System.ComponentModel.ISupportInitialize)(this.mainSplit)).BeginInit();
             this.mainSplit.SuspendLayout();
             this.SuspendLayout();
@@ -70,9 +70,7 @@
             this.mainMenu1.MenuItems.AddRange(new System.Windows.Forms.MenuItem[] {
             this.menuFile,
             this.menuLevel,
-            this.menuAssets,
-            this.menuItems,
-            this.menuScripts});
+            this.menuAssets});
             // 
             // menuFile
             // 
@@ -132,7 +130,9 @@
             this.menuAssets.Index = 2;
             this.menuAssets.MenuItems.AddRange(new System.Windows.Forms.MenuItem[] {
             this.menuAssetsTextures,
-            this.menuAssetsMaterials});
+            this.menuAssetsMaterials,
+            this.menuAssetsItems,
+            this.menuAssetsScripts});
             this.menuAssets.Text = "Assets";
             // 
             // menuAssetsTextures
@@ -146,15 +146,15 @@
             this.menuAssetsMaterials.Text = "Materials";
             this.menuAssetsMaterials.Click += new System.EventHandler(this.menuAssetsMaterials_Click);
             // 
-            // menuItems
+            // menuAssetsItems
             // 
-            this.menuItems.Index = 3;
-            this.menuItems.Text = "Items";
+            this.menuAssetsItems.Index = 2;
+            this.menuAssetsItems.Text = "Items";
             // 
-            // menuScripts
+            // menuAssetsScripts
             // 
-            this.menuScripts.Index = 4;
-            this.menuScripts.Text = "Scripts";
+            this.menuAssetsScripts.Index = 3;
+            this.menuAssetsScripts.Text = "Scripts";
             // 
             // EditorView
             // 
@@ -181,14 +181,14 @@
         private System.Windows.Forms.MenuItem menuAssets;
         private System.Windows.Forms.MenuItem menuAssetsTextures;
         private System.Windows.Forms.MenuItem menuAssetsMaterials;
-        private System.Windows.Forms.MenuItem menuItems;
-        private System.Windows.Forms.MenuItem menuScripts;
         private System.Windows.Forms.MenuItem menuLevel;
         private System.Windows.Forms.MenuItem menuLevelNew;
         private System.Windows.Forms.MenuItem menuLevelLoad;
         private System.Windows.Forms.MenuItem menuLevelSave;
         private System.Windows.Forms.MenuItem menuItem2;
         private System.Windows.Forms.MenuItem menuLevelClose;
+        private System.Windows.Forms.MenuItem menuAssetsItems;
+        private System.Windows.Forms.MenuItem menuAssetsScripts;
 
     }
 }
