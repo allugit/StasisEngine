@@ -22,5 +22,11 @@ namespace StasisEditor.Models
         {
             return _name;
         }
+
+        // clone
+        public override Material clone()
+        {
+            return new TerrainMaterial(_name);
+        }
     }
 }

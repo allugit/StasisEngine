@@ -5,6 +5,7 @@ using System.Data;
 using System.Drawing;
 using System.Windows.Forms;
 using StasisEditor.Controllers;
+using StasisEditor.Controls;
 using StasisEditor.Models;
 
 namespace StasisEditor.Views
@@ -34,6 +35,12 @@ namespace StasisEditor.Views
         public void setController(EditorController controller)
         {
             _controller = controller;
+
+            // Set material copies
+            _terrainMaterialsCopy = Material.copyFrom(_controller.terrainMaterials);
+            _treeMaterialsCopy = Material.copyFrom(_controller.treeMaterials);
+            _fluidMaterialsCopy = Material.copyFrom(_controller.fluidMaterials);
+            _itemMaterialsCopy = Material.copyFrom(_controller.itemMaterials);
         }
 
         private void closeButton_Click(object sender, EventArgs e)
@@ -55,22 +62,18 @@ namespace StasisEditor.Views
             switch (type)
             {
                 case MaterialType.Terrain:
-                    _terrainMaterialsCopy = new List<Material>(_controller.terrainMaterials);
                     materialsListBox.DataSource = _terrainMaterialsCopy;
                     break;
 
                 case MaterialType.Trees:
-                    _treeMaterialsCopy = new List<Material>(_controller.treeMaterials);
                     materialsListBox.DataSource = _treeMaterialsCopy;
                     break;
 
                 case MaterialType.Fluid:
-                    _fluidMaterialsCopy = new List<Material>(_controller.fluidMaterials);
                     materialsListBox.DataSource = _fluidMaterialsCopy;
                     break;
 
                 case MaterialType.Items:
-                    _itemMaterialsCopy = new List<Material>(_controller.itemMaterials);
                     materialsListBox.DataSource = _itemMaterialsCopy;
                     break;
             }
@@ -84,6 +87,14 @@ namespace StasisEditor.Views
                 _selectedMaterials.Add(selectedMaterial);
 
             materialProperties.SelectedObjects = _selectedMaterials.ToArray();
+        }
+
+        // Material property changed
+        private void materialProperties_PropertyValueChanged(object s, PropertyValueChangedEventArgs e)
+        {
+            _changesMade = true;
+            saveButton.Enabled = true;
+            (materialsListBox as RefreshingListBox).RefreshItems();
         }
     }
 }

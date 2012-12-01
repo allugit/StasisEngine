@@ -1,4 +1,5 @@
-﻿namespace StasisEditor.Views
+﻿using StasisEditor.Controls;
+namespace StasisEditor.Views
 {
     partial class MaterialView
     {
@@ -32,7 +33,7 @@
             this.closeButton = new System.Windows.Forms.Button();
             this.materialTypesLabel = new System.Windows.Forms.Label();
             this.materialTypesListBox = new System.Windows.Forms.ListBox();
-            this.materialsListBox = new System.Windows.Forms.ListBox();
+            this.materialsListBox = new RefreshingListBox();
             this.materialsLabel = new System.Windows.Forms.Label();
             this.materialProperties = new System.Windows.Forms.PropertyGrid();
             this.materialPropertiesLabel = new System.Windows.Forms.Label();
@@ -110,6 +111,7 @@
             this.materialProperties.Name = "materialProperties";
             this.materialProperties.Size = new System.Drawing.Size(293, 362);
             this.materialProperties.TabIndex = 6;
+            this.materialProperties.PropertyValueChanged += new System.Windows.Forms.PropertyValueChangedEventHandler(this.materialProperties_PropertyValueChanged);
             // 
             // materialPropertiesLabel
             // 

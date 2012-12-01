@@ -82,6 +82,9 @@
     <Compile Include="Controls\LevelSettings.cs">
       <SubType>Component</SubType>
     </Compile>
+    <Compile Include="Controls\RefreshingListBox.cs">
+      <SubType>Component</SubType>
+    </Compile>
     <Compile Include="Models\FluidMaterial.cs" />
     <Compile Include="Models\ItemMaterial.cs" />
     <Compile Include="Models\Material.cs" />
