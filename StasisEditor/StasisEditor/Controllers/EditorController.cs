@@ -9,24 +9,17 @@ using Microsoft.Xna.Framework;
 
 namespace StasisEditor.Controllers
 {
-    public enum MaterialType
-    {
-        Terrain = 0,
-        Trees,
-        Fluid,
-        Items
-    };
-
     public class EditorController
     {
         private XNAController _xnaController;
+        private MaterialController _materialController;
         private IEditorView _editorView;
 
         private Level _level;
         private ILevelView _levelView;
         public Level level { get { return _level; } }
-        private IMaterialView _materialView;
-        private List<Material>[] _materials;
+        //private IMaterialView _materialView;
+        //private List<Material>[] _materials;
 
         private bool _isMouseOverView;
         private System.Drawing.Point _mouse;
@@ -38,32 +31,16 @@ namespace StasisEditor.Controllers
         public Vector2 worldOffset { get { return _screenCenter + (new Vector2(_levelView.getWidth(), _levelView.getHeight()) / 2) / scale; } }
         public Vector2 worldMouse { get { return new Vector2(_mouse.X, _mouse.Y) / scale - worldOffset; } }
 
-        public EditorController(XNAController xnaController, IEditorView editorView)
+        public EditorController(XNAController xnaController)
         {
             _xnaController = xnaController;
-            _editorView = editorView;
+
+            // Create editor view
+            _editorView = new EditorView();
             _editorView.setController(this);
 
-            // Materials
-            int numMaterialTypes = Enum.GetValues(typeof(MaterialType)).Length;
-            _materials = new List<Material>[numMaterialTypes];
-            for (int i = 0; i < numMaterialTypes; i++)
-                _materials[i] = new List<Material>();
-
-            // Test materials
-            _materials[(int)MaterialType.Terrain].Add(new TerrainMaterial("Rock"));
-            _materials[(int)MaterialType.Terrain].Add(new TerrainMaterial("Dirt"));
-            _materials[(int)MaterialType.Terrain].Add(new TerrainMaterial("Snow"));
-            _materials[(int)MaterialType.Trees].Add(new TreeMaterial("Acuminate"));
-            _materials[(int)MaterialType.Fluid].Add(new FluidMaterial("Water"));
-            _materials[(int)MaterialType.Items].Add(new ItemMaterial("Rope Gun"));
-            _materials[(int)MaterialType.Items].Add(new ItemMaterial("Gravity Gun"));
-        }
-
-        // getMaterials
-        public ReadOnlyCollection<Material> getMaterials(MaterialType type)
-        {
-            return _materials[(int)type].AsReadOnly();
+            // Create material controller
+            _materialController = new MaterialController(this);
         }
 
         // resizeGraphicsDevice
@@ -121,9 +98,7 @@ namespace StasisEditor.Controllers
         // openMaterialView
         public void openMaterialView()
         {
-            _materialView = new MaterialView();
-            _materialView.setController(this);
-            _materialView.ShowDialog();
+            _materialController.openView();
         }
 
         // mouseMove

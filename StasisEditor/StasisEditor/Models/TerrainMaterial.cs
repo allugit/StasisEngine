@@ -1,26 +1,16 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel;
+using StasisCore;
 
 namespace StasisEditor.Models
 {
     public class TerrainMaterial : Material
     {
-        private string _name;
-
-        [CategoryAttribute("General")]
-        public string Name { get { return _name; } set { _name = value; } }
-
         // Constructor
-        public TerrainMaterial(string name)
+        public TerrainMaterial(string name) : base(name)
         {
-            _name = name;
-        }
-
-        // Override default string
-        public override string ToString()
-        {
-            return _name;
+            _type = MaterialType.Terrain;
         }
 
         // clone

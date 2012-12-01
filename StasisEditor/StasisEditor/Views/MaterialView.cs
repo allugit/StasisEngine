@@ -4,6 +4,7 @@ using System.ComponentModel;
 using System.Data;
 using System.Drawing;
 using System.Windows.Forms;
+using StasisCore;
 using StasisEditor.Controllers;
 using StasisEditor.Controls;
 using StasisEditor.Models;
@@ -12,7 +13,7 @@ namespace StasisEditor.Views
 {
     public partial class MaterialView : Form, IMaterialView
     {
-        private EditorController _controller;
+        private MaterialController _controller;
         private List<Material>[] _materialCopies;
         private List<Material> _selectedMaterials;
         private bool _changesMade;
@@ -32,7 +33,7 @@ namespace StasisEditor.Views
         }
 
         // setController
-        public void setController(EditorController controller)
+        public void setController(MaterialController controller)
         {
             _controller = controller;
 
@@ -72,7 +73,7 @@ namespace StasisEditor.Views
                 _selectedMaterials.Add(selectedMaterial);
 
             // Update preview button
-            previewButton.Enabled = _selectedMaterials.Count > 0;
+            previewButton.Enabled = _selectedMaterials.Count == 1;
             
             // Set material property grid's selected objects
             materialProperties.SelectedObjects = _selectedMaterials.ToArray();
@@ -87,6 +88,12 @@ namespace StasisEditor.Views
 
             // Refresh the materials list
             (materialsListBox as RefreshingListBox).RefreshItems();
+        }
+
+        // Preview material
+        private void previewButton_Click(object sender, EventArgs e)
+        {
+
         }
     }
 }

@@ -57,9 +57,8 @@ namespace StasisEditor.Controllers
             // Base initialize -- calls LoadContent
             base.Initialize();
 
-            // Create the editor view and controller
-            EditorView editorView = new EditorView();
-            _editorController = new EditorController(this, editorView);
+            // Create editor controller
+            _editorController = new EditorController(this);
         }
 
         // LoadContent

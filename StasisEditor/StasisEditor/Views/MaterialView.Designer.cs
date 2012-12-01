@@ -134,6 +134,7 @@ namespace StasisEditor.Views
             this.previewButton.TabIndex = 8;
             this.previewButton.Text = "Preview";
             this.previewButton.UseVisualStyleBackColor = true;
+            this.previewButton.Click += new System.EventHandler(this.previewButton_Click);
             // 
             // MaterialView
             // 

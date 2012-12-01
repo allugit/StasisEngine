@@ -8,6 +8,6 @@ namespace StasisEditor.Views
     public interface IMaterialView : IBaseView
     {
         DialogResult ShowDialog();
-        void setController(EditorController controller);
+        void setController(MaterialController controller);
     }
 }

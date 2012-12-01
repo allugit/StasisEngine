@@ -76,6 +76,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Controllers\EditorController.cs" />
+    <Compile Include="Controllers\MaterialController.cs" />
     <Compile Include="Controls\BrushToolbar.cs">
       <SubType>Component</SubType>
     </Compile>
@@ -128,6 +129,10 @@
       <Project>{84F6D086-1D47-489A-B334-E2058D1A752B}</Project>
       <Name>StasisCoreContent</Name>
       <XnaReferenceType>Content</XnaReferenceType>
+    </ProjectReference>
+    <ProjectReference Include="..\..\StasisCore\StasisCore.csproj">
+      <Project>{FF9881A5-29E0-4B52-8E75-42715D66842B}</Project>
+      <Name>StasisCore</Name>
     </ProjectReference>
     <ProjectReference Include="..\StasisEditorContent\StasisEditorContent.contentproj">
       <Name>StasisEditorContent</Name>
