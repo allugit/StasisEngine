@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Diagnostics;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using StasisEditor.Views;
 using StasisEditor.Controls;
 using StasisEditor.Models;
@@ -8,6 +9,14 @@ using Microsoft.Xna.Framework;
 
 namespace StasisEditor.Controllers
 {
+    public enum MaterialType
+    {
+        Terrain = 0,
+        Trees,
+        Fluid,
+        Items
+    };
+
     public class EditorController
     {
         private XNAController _xnaController;
@@ -15,19 +24,22 @@ namespace StasisEditor.Controllers
 
         private Level _level;
         private ILevelView _levelView;
-
+        public Level level { get { return _level; } }
         private IMaterialView _materialView;
-        private List<TreeMaterial> _treeMaterials;
         private List<TerrainMaterial> _terrainMaterials;
+        private List<TreeMaterial> _treeMaterials;
         private List<FluidMaterial> _fluidMaterials;
         private List<ItemMaterial> _itemMaterials;
+        public ReadOnlyCollection<TerrainMaterial> terrainMaterials { get { return _terrainMaterials.AsReadOnly(); } }
+        public ReadOnlyCollection<TreeMaterial> treeMaterials { get { return _treeMaterials.AsReadOnly(); } }
+        public ReadOnlyCollection<FluidMaterial> fluidMaterials { get { return _fluidMaterials.AsReadOnly(); } }
+        public ReadOnlyCollection<ItemMaterial> itemMaterials { get { return _itemMaterials.AsReadOnly(); } }
 
         private bool _isMouseOverView;
         private System.Drawing.Point _mouse;
         private float _scale = 35f;
         private Vector2 _screenCenter;
 
-        public Level level { get { return _level; } }
         public bool isMouseOverView { get { return _isMouseOverView; } }
         public float scale { get { return _scale; } }
         public Vector2 worldOffset { get { return _screenCenter + (new Vector2(_levelView.getWidth(), _levelView.getHeight()) / 2) / scale; } }

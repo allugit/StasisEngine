@@ -34,6 +34,8 @@
             this.materialTypesListBox = new System.Windows.Forms.ListBox();
             this.materialsListBox = new System.Windows.Forms.ListBox();
             this.materialsLabel = new System.Windows.Forms.Label();
+            this.propertyGrid1 = new System.Windows.Forms.PropertyGrid();
+            this.materialPropertiesLabel = new System.Windows.Forms.Label();
             this.SuspendLayout();
             // 
             // saveButton
@@ -70,15 +72,11 @@
             // 
             this.materialTypesListBox.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
             this.materialTypesListBox.FormattingEnabled = true;
-            this.materialTypesListBox.Items.AddRange(new object[] {
-            "Terrain",
-            "Trees",
-            "Fluid",
-            "Items"});
             this.materialTypesListBox.Location = new System.Drawing.Point(16, 29);
             this.materialTypesListBox.Name = "materialTypesListBox";
             this.materialTypesListBox.Size = new System.Drawing.Size(208, 54);
             this.materialTypesListBox.TabIndex = 3;
+            this.materialTypesListBox.SelectedValueChanged += new System.EventHandler(this.materialTypesListBox_SelectedValueChanged);
             // 
             // materialsListBox
             // 
@@ -100,12 +98,35 @@
             this.materialsLabel.TabIndex = 5;
             this.materialsLabel.Text = "Materials";
             // 
+            // propertyGrid1
+            // 
+            this.propertyGrid1.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom)
+                        | System.Windows.Forms.AnchorStyles.Left)
+                        | System.Windows.Forms.AnchorStyles.Right)));
+            this.propertyGrid1.Location = new System.Drawing.Point(250, 29);
+            this.propertyGrid1.Name = "propertyGrid1";
+            this.propertyGrid1.Size = new System.Drawing.Size(293, 362);
+            this.propertyGrid1.TabIndex = 6;
+            // 
+            // materialPropertiesLabel
+            // 
+            this.materialPropertiesLabel.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
+                        | System.Windows.Forms.AnchorStyles.Right)));
+            this.materialPropertiesLabel.AutoSize = true;
+            this.materialPropertiesLabel.Location = new System.Drawing.Point(247, 13);
+            this.materialPropertiesLabel.Name = "materialPropertiesLabel";
+            this.materialPropertiesLabel.Size = new System.Drawing.Size(54, 13);
+            this.materialPropertiesLabel.TabIndex = 7;
+            this.materialPropertiesLabel.Text = "Properties";
+            // 
             // MaterialView
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(555, 449);
             this.ControlBox = false;
+            this.Controls.Add(this.materialPropertiesLabel);
+            this.Controls.Add(this.propertyGrid1);
             this.Controls.Add(this.materialsLabel);
             this.Controls.Add(this.materialsListBox);
             this.Controls.Add(this.materialTypesListBox);
@@ -127,5 +148,7 @@
         private System.Windows.Forms.ListBox materialTypesListBox;
         private System.Windows.Forms.ListBox materialsListBox;
         private System.Windows.Forms.Label materialsLabel;
+        private System.Windows.Forms.PropertyGrid propertyGrid1;
+        private System.Windows.Forms.Label materialPropertiesLabel;
     }
 }
