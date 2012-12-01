@@ -26,14 +26,7 @@ namespace StasisEditor.Controllers
         private ILevelView _levelView;
         public Level level { get { return _level; } }
         private IMaterialView _materialView;
-        private List<Material> _terrainMaterials;
-        private List<Material> _treeMaterials;
-        private List<Material> _fluidMaterials;
-        private List<Material> _itemMaterials;
-        public ReadOnlyCollection<Material> terrainMaterials { get { return _terrainMaterials.AsReadOnly(); } }
-        public ReadOnlyCollection<Material> treeMaterials { get { return _treeMaterials.AsReadOnly(); } }
-        public ReadOnlyCollection<Material> fluidMaterials { get { return _fluidMaterials.AsReadOnly(); } }
-        public ReadOnlyCollection<Material> itemMaterials { get { return _itemMaterials.AsReadOnly(); } }
+        private List<Material>[] _materials;
 
         private bool _isMouseOverView;
         private System.Drawing.Point _mouse;
@@ -52,19 +45,25 @@ namespace StasisEditor.Controllers
             _editorView.setController(this);
 
             // Materials
-            _terrainMaterials = new List<Material>();
-            _treeMaterials = new List<Material>();
-            _fluidMaterials = new List<Material>();
-            _itemMaterials = new List<Material>();
+            int numMaterialTypes = Enum.GetValues(typeof(MaterialType)).Length;
+            _materials = new List<Material>[numMaterialTypes];
+            for (int i = 0; i < numMaterialTypes; i++)
+                _materials[i] = new List<Material>();
 
             // Test materials
-            _terrainMaterials.Add(new TerrainMaterial("Rock"));
-            _terrainMaterials.Add(new TerrainMaterial("Dirt"));
-            _terrainMaterials.Add(new TerrainMaterial("Snow"));
-            _treeMaterials.Add(new TreeMaterial("Acuminate"));
-            _fluidMaterials.Add(new FluidMaterial("Water"));
-            _itemMaterials.Add(new ItemMaterial("Rope Gun"));
-            _itemMaterials.Add(new ItemMaterial("Gravity Gun"));
+            _materials[(int)MaterialType.Terrain].Add(new TerrainMaterial("Rock"));
+            _materials[(int)MaterialType.Terrain].Add(new TerrainMaterial("Dirt"));
+            _materials[(int)MaterialType.Terrain].Add(new TerrainMaterial("Snow"));
+            _materials[(int)MaterialType.Trees].Add(new TreeMaterial("Acuminate"));
+            _materials[(int)MaterialType.Fluid].Add(new FluidMaterial("Water"));
+            _materials[(int)MaterialType.Items].Add(new ItemMaterial("Rope Gun"));
+            _materials[(int)MaterialType.Items].Add(new ItemMaterial("Gravity Gun"));
+        }
+
+        // getMaterials
+        public ReadOnlyCollection<Material> getMaterials(MaterialType type)
+        {
+            return _materials[(int)type].AsReadOnly();
         }
 
         // resizeGraphicsDevice

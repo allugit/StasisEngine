@@ -13,15 +13,15 @@ namespace StasisEditor.Views
     public partial class MaterialView : Form, IMaterialView
     {
         private EditorController _controller;
-        private List<Material> _terrainMaterialsCopy;
-        private List<Material> _treeMaterialsCopy;
-        private List<Material> _fluidMaterialsCopy;
-        private List<Material> _itemMaterialsCopy;
+        private List<Material>[] _materialCopies;
         private List<Material> _selectedMaterials;
         private bool _changesMade;
 
         public MaterialView()
         {
+            int numMaterialTypes = Enum.GetValues(typeof(MaterialType)).Length;
+            _materialCopies = new List<Material>[numMaterialTypes];
+
             _selectedMaterials = new List<Material>();
 
             InitializeComponent();
@@ -37,10 +37,9 @@ namespace StasisEditor.Views
             _controller = controller;
 
             // Set material copies
-            _terrainMaterialsCopy = Material.copyFrom(_controller.terrainMaterials);
-            _treeMaterialsCopy = Material.copyFrom(_controller.treeMaterials);
-            _fluidMaterialsCopy = Material.copyFrom(_controller.fluidMaterials);
-            _itemMaterialsCopy = Material.copyFrom(_controller.itemMaterials);
+            int numMaterialTypes = Enum.GetValues(typeof(MaterialType)).Length;
+            for (int i = 0; i < numMaterialTypes; i++)
+                _materialCopies[i] = Material.copyFrom(_controller.getMaterials((MaterialType)i));
         }
 
         private void closeButton_Click(object sender, EventArgs e)
@@ -59,24 +58,7 @@ namespace StasisEditor.Views
         {
             ListBox listBox = (sender as ListBox);
             MaterialType type = (MaterialType)Enum.Parse(typeof(MaterialType), listBox.SelectedItem as string);
-            switch (type)
-            {
-                case MaterialType.Terrain:
-                    materialsListBox.DataSource = _terrainMaterialsCopy;
-                    break;
-
-                case MaterialType.Trees:
-                    materialsListBox.DataSource = _treeMaterialsCopy;
-                    break;
-
-                case MaterialType.Fluid:
-                    materialsListBox.DataSource = _fluidMaterialsCopy;
-                    break;
-
-                case MaterialType.Items:
-                    materialsListBox.DataSource = _itemMaterialsCopy;
-                    break;
-            }
+            materialsListBox.DataSource = _materialCopies[(int)type];
         }
 
         // Selected materials changed
