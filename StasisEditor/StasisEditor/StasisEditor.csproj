@@ -80,11 +80,13 @@
     <Compile Include="Controls\BrushToolbar.cs">
       <SubType>Component</SubType>
     </Compile>
-    <Compile Include="Models\Material.cs" />
-    <Compile Include="Models\TextureResource.cs" />
     <Compile Include="Controls\LevelSettings.cs">
       <SubType>Component</SubType>
     </Compile>
+    <Compile Include="Models\FluidMaterial.cs" />
+    <Compile Include="Models\ItemMaterial.cs" />
+    <Compile Include="Models\TerrainMaterial.cs" />
+    <Compile Include="Models\TreeMaterial.cs" />
     <Compile Include="Views\EditorView.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -97,6 +99,7 @@
     <Compile Include="Views\IBaseView.cs" />
     <Compile Include="Views\IEditorView.cs" />
     <Compile Include="Views\ILevelView.cs" />
+    <Compile Include="Views\IMaterialView.cs" />
     <Compile Include="Views\LevelView.cs">
       <SubType>Component</SubType>
     </Compile>
@@ -110,19 +113,6 @@
     <Content Include="GameThumbnail.png">
       <XnaPlatformSpecific>true</XnaPlatformSpecific>
     </Content>
-    <None Include="icons\timer_brush.png" />
-    <None Include="icons\sliding_box.png" />
-    <None Include="icons\rope_brush.png" />
-    <None Include="icons\pressure_plate_brush.png" />
-    <None Include="icons\player_spawn_brush.png" />
-    <None Include="icons\plant_brush.png" />
-    <None Include="icons\object_spawner_brush.png" />
-    <None Include="icons\item_brush.png" />
-    <None Include="icons\goal_brush.png" />
-    <None Include="icons\fluid_brush.png" />
-    <None Include="icons\edge_brush.png" />
-    <None Include="icons\circle_brush.png" />
-    <None Include="icons\box_brush.png" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\StasisEditorContent\StasisEditorContent.contentproj">
