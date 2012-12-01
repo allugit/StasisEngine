@@ -6,20 +6,58 @@ using Microsoft.Xna.Framework.Graphics;
 
 namespace StasisCore
 {
+    public enum NoiseType
+    {
+        Perlin = 0,
+        Worley,
+        InverseWorley
+    };
+
     public class TerrainRenderer
     {
         public const int MAX_TEXTURE_SIZE = 2048;
         private Game _game;
+        private SpriteBatch _spriteBatch;
+        private Random _random;
+        private Color[] _randomTextureData;
+        private Texture2D _randomTexture;
+        private Texture2D _worleyTexture;
         private Effect _primitivesEffect;
+        private Effect _noiseEffect;
 
-        public TerrainRenderer(Game game)
+        public TerrainRenderer(Game game, SpriteBatch spriteBatch, int randomTextureWidth = 32, int randomTextureHeight = 32, int seed = 1234)
         {
             _game = game;
+            _spriteBatch = spriteBatch;
 
             // Load content
             ContentManager content = new ContentManager(game as IServiceProvider);
             content.RootDirectory = "Content";
             _primitivesEffect = game.Content.Load<Effect>("effects/primitives");
+            _noiseEffect = game.Content.Load<Effect>("effects/noise");
+
+            // Create random generator
+            _random = new Random(seed);
+
+            // Initialize random texture
+            _randomTextureData = new Color[randomTextureWidth * randomTextureHeight];
+            for (int i = 0; i < randomTextureWidth; i++)
+            {
+                for (int j = 0; j < randomTextureHeight; j++)
+                    _randomTextureData[i + j * randomTextureWidth] = new Color((float)_random.Next(3) / 2, (float)_random.Next(3) / 2, (float)_random.Next(3) / 2);
+            }
+            _randomTexture = new Texture2D(game.GraphicsDevice, randomTextureWidth, randomTextureHeight);
+            _randomTexture.SetData<Color>(_randomTextureData);
+
+            // Initialize worley texture
+            Color[] data = new Color[randomTextureWidth * randomTextureHeight];
+            for (int i = 0; i < randomTextureWidth; i++)
+            {
+                for (int j = 0; j < randomTextureHeight; j++)
+                    data[i + j * randomTextureWidth] = new Color((float)_random.NextDouble(), (float)_random.NextDouble(), (float)_random.NextDouble(), (float)_random.NextDouble());
+            }
+            _worleyTexture = new Texture2D(game.GraphicsDevice, randomTextureWidth, randomTextureHeight);
+            _worleyTexture.SetData<Color>(data);
         }
 
         // Primitives pass
@@ -79,9 +117,90 @@ namespace StasisCore
         }
 
         // Noise pass
-        public Texture2D noisePass(Texture2D texture)
+        public Texture2D noisePass(
+            Texture2D texture,
+            NoiseType noiseType,
+            Vector2 offset,
+            float scale,
+            float noiseFrequency,
+            float noiseGain,
+            float noiseLacunarity,
+            float multiplier,
+            float fbmScale,
+            Color colorRangeLow,
+            Color colorRangeHigh,
+            int iterations
+            )
         {
-            return null;
+            // Initialize vertex shader properties
+            Matrix projection = Matrix.CreateOrthographicOffCenter(0, texture.Width, texture.Height, 0, 0, 1);
+            Matrix halfPixelOffset = Matrix.CreateTranslation(-0.5f, -0.5f, 0);
+            Matrix matrixTransform = halfPixelOffset * projection;
+            _noiseEffect.Parameters["matrixTransform"].SetValue(matrixTransform);
+
+            // Initialize render target
+            RenderTarget2D renderTarget = new RenderTarget2D(_game.GraphicsDevice, texture.Width, texture.Height);
+
+            // Aspect ratio
+            float shortest = Math.Min(texture.Width, texture.Height);
+            Vector2 aspectRatio = new Vector2(texture.Width / shortest, texture.Height / shortest);
+
+            // Set options based on noise type
+            Vector2 noiseSize = Vector2.Zero;
+            bool perlinBasis = false;
+            bool worleyBasis = false;
+            bool invWorleyBasis = false;
+            switch (noiseType)
+            {
+                case NoiseType.Perlin:
+                    noiseSize = new Vector2(_randomTexture.Width, _randomTexture.Height);
+                    perlinBasis = true;
+                    break;
+
+                case NoiseType.Worley:
+                    noiseSize = new Vector2(_worleyTexture.Width, _worleyTexture.Height);
+                    worleyBasis = true;
+                    break;
+
+                case NoiseType.InverseWorley:
+                    noiseSize = new Vector2(_worleyTexture.Width, _worleyTexture.Height);
+                    break;
+            }
+
+            // Draw noise effect to render target
+            _game.GraphicsDevice.SetRenderTarget(renderTarget);
+            _game.GraphicsDevice.Textures[1] = _randomTexture;
+            _game.GraphicsDevice.Textures[2] = _worleyTexture;
+            _game.GraphicsDevice.Clear(Color.Black);
+            _noiseEffect.Parameters["aspectRatio"].SetValue(aspectRatio);
+            _noiseEffect.Parameters["offset"].SetValue(offset);
+            _noiseEffect.Parameters["noiseScale"].SetValue(scale);
+            _noiseEffect.Parameters["renderSize"].SetValue(new Vector2(texture.Width, texture.Height));
+            _noiseEffect.Parameters["noiseSize"].SetValue(noiseSize);
+            _noiseEffect.Parameters["noiseFrequency"].SetValue(noiseFrequency);
+            _noiseEffect.Parameters["noiseGain"].SetValue(noiseGain);
+            _noiseEffect.Parameters["noiseLacunarity"].SetValue(noiseLacunarity);
+            _noiseEffect.Parameters["multiplier"].SetValue(multiplier);
+            _noiseEffect.Parameters["fbmOffset"].SetValue(Vector2.Zero);
+            _noiseEffect.Parameters["fbmPerlinBasis"].SetValue(perlinBasis);
+            _noiseEffect.Parameters["fbmCellBasis"].SetValue(worleyBasis);
+            _noiseEffect.Parameters["fbmInvCellBasis"].SetValue(invWorleyBasis);
+            _noiseEffect.Parameters["fbmScale"].SetValue(fbmScale);
+            _noiseEffect.Parameters["noiseLowColor"].SetValue(new Vector4((float)colorRangeLow.R / 255f, (float)colorRangeLow.G / 255f, (float)colorRangeLow.B / 255f, (float)colorRangeLow.A / 255f));
+            _noiseEffect.Parameters["noiseHighColor"].SetValue(new Vector4((float)colorRangeHigh.R / 255f, (float)colorRangeHigh.G / 255f, (float)colorRangeHigh.B / 255f, (float)colorRangeHigh.A / 255f));
+            _noiseEffect.Parameters["fbmIterations"].SetValue(iterations);
+            _spriteBatch.Begin(SpriteSortMode.Immediate, null, null, null, null, _noiseEffect);
+            _spriteBatch.Draw(texture, renderTarget.Bounds, Color.White);
+            _spriteBatch.End();
+            _game.GraphicsDevice.SetRenderTarget(null);
+
+            // Store
+            Color[] data = new Color[texture.Width * texture.Height];
+            Texture2D output = new Texture2D(_game.GraphicsDevice, texture.Width, texture.Height);
+            renderTarget.GetData<Color>(data);
+            output.SetData<Color>(data);
+
+            return output;
         }
     }
 }
