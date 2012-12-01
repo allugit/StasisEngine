@@ -9,7 +9,7 @@ namespace StasisCore
         public Vector2 texCoord;
         public Vector3 color;
 
-        public CustomVertexFormat(Vector3 position, Vector2 texCoord, Vector3 color)
+        public TexturedVertexFormat(Vector3 position, Vector2 texCoord, Vector3 color)
         {
             this.position = position;
             this.texCoord = texCoord;

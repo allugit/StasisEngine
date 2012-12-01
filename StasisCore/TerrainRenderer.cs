@@ -8,7 +8,7 @@ namespace StasisCore
 {
     public class TerrainRenderer
     {
-        public static const int MAX_TEXTURE_SIZE = 2048;
+        public const int MAX_TEXTURE_SIZE = 2048;
         private Game _game;
         private Effect _primitivesEffect;
 
@@ -79,6 +79,9 @@ namespace StasisCore
         }
 
         // Noise pass
-        
+        public Texture2D noisePass(Texture2D texture)
+        {
+            return null;
+        }
     }
 }

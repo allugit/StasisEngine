@@ -33,10 +33,10 @@ namespace StasisEditor.Views
             this.closeButton = new System.Windows.Forms.Button();
             this.materialTypesLabel = new System.Windows.Forms.Label();
             this.materialTypesListBox = new System.Windows.Forms.ListBox();
-            this.materialsListBox = new RefreshingListBox();
             this.materialsLabel = new System.Windows.Forms.Label();
             this.materialProperties = new System.Windows.Forms.PropertyGrid();
             this.materialPropertiesLabel = new System.Windows.Forms.Label();
+            this.materialsListBox = new StasisEditor.Controls.RefreshingListBox();
             this.SuspendLayout();
             // 
             // saveButton
@@ -80,19 +80,6 @@ namespace StasisEditor.Views
             this.materialTypesListBox.TabIndex = 3;
             this.materialTypesListBox.SelectedValueChanged += new System.EventHandler(this.materialTypesListBox_SelectedValueChanged);
             // 
-            // materialsListBox
-            // 
-            this.materialsListBox.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom)
-                        | System.Windows.Forms.AnchorStyles.Left)));
-            this.materialsListBox.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-            this.materialsListBox.FormattingEnabled = true;
-            this.materialsListBox.Location = new System.Drawing.Point(16, 125);
-            this.materialsListBox.Name = "materialsListBox";
-            this.materialsListBox.SelectionMode = System.Windows.Forms.SelectionMode.MultiExtended;
-            this.materialsListBox.Size = new System.Drawing.Size(208, 301);
-            this.materialsListBox.TabIndex = 4;
-            this.materialsListBox.SelectedIndexChanged += new System.EventHandler(this.materialsListBox_SelectedIndexChanged);
-            // 
             // materialsLabel
             // 
             this.materialsLabel.AutoSize = true;
@@ -124,16 +111,29 @@ namespace StasisEditor.Views
             this.materialPropertiesLabel.TabIndex = 7;
             this.materialPropertiesLabel.Text = "Properties";
             // 
+            // materialsListBox
+            // 
+            this.materialsListBox.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom)
+                        | System.Windows.Forms.AnchorStyles.Left)));
+            this.materialsListBox.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.materialsListBox.FormattingEnabled = true;
+            this.materialsListBox.Location = new System.Drawing.Point(16, 125);
+            this.materialsListBox.Name = "materialsListBox";
+            this.materialsListBox.SelectionMode = System.Windows.Forms.SelectionMode.MultiExtended;
+            this.materialsListBox.Size = new System.Drawing.Size(208, 301);
+            this.materialsListBox.TabIndex = 4;
+            this.materialsListBox.SelectedIndexChanged += new System.EventHandler(this.materialsListBox_SelectedIndexChanged);
+            // 
             // MaterialView
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(555, 449);
             this.ControlBox = false;
+            this.Controls.Add(this.materialsListBox);
             this.Controls.Add(this.materialPropertiesLabel);
             this.Controls.Add(this.materialProperties);
             this.Controls.Add(this.materialsLabel);
-            this.Controls.Add(this.materialsListBox);
             this.Controls.Add(this.materialTypesListBox);
             this.Controls.Add(this.materialTypesLabel);
             this.Controls.Add(this.closeButton);
@@ -151,9 +151,9 @@ namespace StasisEditor.Views
         private System.Windows.Forms.Button closeButton;
         private System.Windows.Forms.Label materialTypesLabel;
         private System.Windows.Forms.ListBox materialTypesListBox;
-        private System.Windows.Forms.ListBox materialsListBox;
         private System.Windows.Forms.Label materialsLabel;
         private System.Windows.Forms.PropertyGrid materialProperties;
         private System.Windows.Forms.Label materialPropertiesLabel;
+        private RefreshingListBox materialsListBox;
     }
 }
