@@ -15,7 +15,7 @@ namespace StasisEditor.Controls
     {
         private Image _image;
 
-        public MaterialPreview(string title, Texture2D texture)
+        public MaterialPreview(Texture2D texture, string title = "Material Preview")
         {
             // Initialize components
             InitializeComponent();

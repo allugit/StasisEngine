@@ -87,7 +87,7 @@ namespace StasisEditor.Controllers
                     XNAResources.graphicsDevice.Clear(Color.Black);
 
                     // Open material preview
-                    MaterialPreview materialPreview = new MaterialPreview(String.Format("{0} Preview", material.type.ToString()), baseTexture);
+                    MaterialPreview materialPreview = new MaterialPreview(baseTexture, String.Format("{0} Preview", material.Name));
                     materialPreview.Show();
                     break;
 
