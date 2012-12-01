@@ -1,6 +1,8 @@
 StasisEngine.suo
 StasisCore/bin
 StasisCore/obj
+StasisCoreContent/bin
+StasisCoreContent/obj
 StasisEditor/StasisEditor/bin
 StasisEditor/StasisEditor/obj
 StasisEditor/StasisEditorContent/bin
