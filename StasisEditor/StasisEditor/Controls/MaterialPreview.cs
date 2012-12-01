@@ -23,7 +23,7 @@ namespace StasisEditor.Controls
             pictureBox.Height = texture.Height;
             Text = title;
 
-            // Write texture to memory stream
+            // Create image from texture
             using (MemoryStream ms = new MemoryStream())
             {
                 // Save to memory
