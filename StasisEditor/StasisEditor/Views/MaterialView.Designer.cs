@@ -37,6 +37,7 @@ namespace StasisEditor.Views
             this.materialProperties = new System.Windows.Forms.PropertyGrid();
             this.materialPropertiesLabel = new System.Windows.Forms.Label();
             this.materialsListBox = new StasisEditor.Controls.RefreshingListBox();
+            this.previewButton = new System.Windows.Forms.Button();
             this.SuspendLayout();
             // 
             // saveButton
@@ -124,12 +125,23 @@ namespace StasisEditor.Views
             this.materialsListBox.TabIndex = 4;
             this.materialsListBox.SelectedIndexChanged += new System.EventHandler(this.materialsListBox_SelectedIndexChanged);
             // 
+            // previewButton
+            // 
+            this.previewButton.Enabled = false;
+            this.previewButton.Location = new System.Drawing.Point(306, 414);
+            this.previewButton.Name = "previewButton";
+            this.previewButton.Size = new System.Drawing.Size(75, 23);
+            this.previewButton.TabIndex = 8;
+            this.previewButton.Text = "Preview";
+            this.previewButton.UseVisualStyleBackColor = true;
+            // 
             // MaterialView
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(555, 449);
             this.ControlBox = false;
+            this.Controls.Add(this.previewButton);
             this.Controls.Add(this.materialsListBox);
             this.Controls.Add(this.materialPropertiesLabel);
             this.Controls.Add(this.materialProperties);
@@ -155,5 +167,6 @@ namespace StasisEditor.Views
         private System.Windows.Forms.PropertyGrid materialProperties;
         private System.Windows.Forms.Label materialPropertiesLabel;
         private RefreshingListBox materialsListBox;
+        private System.Windows.Forms.Button previewButton;
     }
 }

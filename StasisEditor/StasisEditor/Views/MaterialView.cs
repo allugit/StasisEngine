@@ -64,18 +64,28 @@ namespace StasisEditor.Views
         // Selected materials changed
         private void materialsListBox_SelectedIndexChanged(object sender, EventArgs e)
         {
+            // Clear selected materials
             _selectedMaterials.Clear();
+
+            // Construct new selected materials list from materialListBox's selected items
             foreach (Material selectedMaterial in materialsListBox.SelectedItems)
                 _selectedMaterials.Add(selectedMaterial);
 
+            // Update preview button
+            previewButton.Enabled = _selectedMaterials.Count > 0;
+            
+            // Set material property grid's selected objects
             materialProperties.SelectedObjects = _selectedMaterials.ToArray();
         }
 
         // Material property changed
         private void materialProperties_PropertyValueChanged(object s, PropertyValueChangedEventArgs e)
         {
+            // Changes were made
             _changesMade = true;
             saveButton.Enabled = true;
+
+            // Refresh the materials list
             (materialsListBox as RefreshingListBox).RefreshItems();
         }
     }
