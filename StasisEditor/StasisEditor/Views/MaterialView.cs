@@ -22,5 +22,11 @@ namespace StasisEditor.Views
         {
             _controller = controller;
         }
+
+        private void closeButton_Click(object sender, EventArgs e)
+        {
+            if (MessageBox.Show("Are you sure you want to close the Materials View? Any unsaved changes will be lost.", "Close Materials", MessageBoxButtons.OKCancel) == DialogResult.OK)
+                Close();
+        }
     }
 }
