@@ -37,13 +37,13 @@
             this.menuLevelNew = new System.Windows.Forms.MenuItem();
             this.menuLevelLoad = new System.Windows.Forms.MenuItem();
             this.menuLevelSave = new System.Windows.Forms.MenuItem();
+            this.menuItem2 = new System.Windows.Forms.MenuItem();
+            this.menuLevelClose = new System.Windows.Forms.MenuItem();
             this.menuAssets = new System.Windows.Forms.MenuItem();
             this.menuAssetsTextures = new System.Windows.Forms.MenuItem();
             this.menuAssetsMaterials = new System.Windows.Forms.MenuItem();
             this.menuItems = new System.Windows.Forms.MenuItem();
             this.menuScripts = new System.Windows.Forms.MenuItem();
-            this.menuLevelClose = new System.Windows.Forms.MenuItem();
-            this.menuItem2 = new System.Windows.Forms.MenuItem();
             ((System.ComponentModel.ISupportInitialize)(this.mainSplit)).BeginInit();
             this.mainSplit.SuspendLayout();
             this.SuspendLayout();
@@ -56,6 +56,10 @@
             this.mainSplit.FixedPanel = System.Windows.Forms.FixedPanel.Panel1;
             this.mainSplit.Location = new System.Drawing.Point(0, 0);
             this.mainSplit.Name = "mainSplit";
+            // 
+            // mainSplit.Panel2
+            // 
+            this.mainSplit.Panel2.BackColor = System.Drawing.SystemColors.ControlDarkDark;
             this.mainSplit.Size = new System.Drawing.Size(1029, 556);
             this.mainSplit.SplitterDistance = 261;
             this.mainSplit.TabIndex = 1;
@@ -111,6 +115,18 @@
             this.menuLevelSave.Index = 2;
             this.menuLevelSave.Text = "Save";
             // 
+            // menuItem2
+            // 
+            this.menuItem2.Index = 3;
+            this.menuItem2.Text = "-";
+            // 
+            // menuLevelClose
+            // 
+            this.menuLevelClose.Enabled = false;
+            this.menuLevelClose.Index = 4;
+            this.menuLevelClose.Text = "Close";
+            this.menuLevelClose.Click += new System.EventHandler(this.menuLevelClose_Click);
+            // 
             // menuAssets
             // 
             this.menuAssets.Index = 2;
@@ -138,18 +154,6 @@
             // 
             this.menuScripts.Index = 4;
             this.menuScripts.Text = "Scripts";
-            // 
-            // menuLevelClose
-            // 
-            this.menuLevelClose.Enabled = false;
-            this.menuLevelClose.Index = 4;
-            this.menuLevelClose.Text = "Close";
-            this.menuLevelClose.Click += new System.EventHandler(this.menuLevelClose_Click);
-            // 
-            // menuItem2
-            // 
-            this.menuItem2.Index = 3;
-            this.menuItem2.Text = "-";
             // 
             // EditorView
             // 
