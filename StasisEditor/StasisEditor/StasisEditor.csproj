@@ -83,6 +83,12 @@
     <Compile Include="Controls\LevelSettings.cs">
       <SubType>Component</SubType>
     </Compile>
+    <Compile Include="Controls\MaterialPreview.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Controls\MaterialPreview.Designer.cs">
+      <DependentUpon>MaterialPreview.cs</DependentUpon>
+    </Compile>
     <Compile Include="Controls\RefreshingListBox.cs">
       <SubType>Component</SubType>
     </Compile>
@@ -172,6 +178,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Controls\LevelSettings.resx">
       <DependentUpon>LevelSettings.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Controls\MaterialPreview.resx">
+      <DependentUpon>MaterialPreview.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Views\EditorView.resx">
       <DependentUpon>EditorView.cs</DependentUpon>

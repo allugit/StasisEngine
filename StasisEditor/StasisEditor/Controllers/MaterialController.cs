@@ -6,6 +6,7 @@ using Microsoft.Xna.Framework.Graphics;
 using StasisCore;
 using StasisEditor.Views;
 using StasisEditor.Models;
+using StasisEditor.Controls;
 
 namespace StasisEditor.Controllers
 {
@@ -57,30 +58,42 @@ namespace StasisEditor.Controllers
         // preview
         public void preview(Material material)
         {
-            // Test data
-            TexturedVertexFormat[] vertices = new TexturedVertexFormat[3];
-            vertices[0].color = new Vector3(1, 1, 1);
-            vertices[0].position = new Vector3(0.5f, 0, 0);
-            vertices[0].texCoord = new Vector2(0.5f, 0);
-            vertices[1].color = new Vector3(1, 1, 1);
-            vertices[1].position = new Vector3(1f, 1f, 0);
-            vertices[1].texCoord = new Vector2(1f, 1f);
-            vertices[2].color = new Vector3(1, 1, 1);
-            vertices[2].position = new Vector3(0, 1f, 0);
-            vertices[2].texCoord = new Vector2(0, 1f);
+            switch(material.type)
+            {
+                case MaterialType.Terrain:
+                    // Test data
+                    TexturedVertexFormat[] vertices = new TexturedVertexFormat[3];
+                    vertices[0].color = new Vector3(1, 1, 1);
+                    vertices[0].position = new Vector3(0.5f, 0, 0);
+                    vertices[0].texCoord = new Vector2(0.5f, 0);
+                    vertices[1].color = new Vector3(1, 1, 1);
+                    vertices[1].position = new Vector3(1f, 1f, 0);
+                    vertices[1].texCoord = new Vector2(1f, 1f);
+                    vertices[2].color = new Vector3(1, 1, 1);
+                    vertices[2].position = new Vector3(0, 1f, 0);
+                    vertices[2].texCoord = new Vector2(0, 1f);
 
-            // Resize graphics device
-            int graphicsDeviceWidth = XNAResources.graphicsDevice.Viewport.Width;
-            int graphicsDeviceHeight = XNAResources.graphicsDevice.Viewport.Height;
-            _editorController.resizeGraphicsDevice((int)(1f * _editorController.scale), (int)(1f * _editorController.scale));
+                    // Resize graphics device
+                    int graphicsDeviceWidth = XNAResources.graphicsDevice.Viewport.Width;
+                    int graphicsDeviceHeight = XNAResources.graphicsDevice.Viewport.Height;
+                    _editorController.resizeGraphicsDevice((int)(1f * _editorController.scale), (int)(1f * _editorController.scale));
 
-            // Render base texture
-            Texture2D baseTexture = _terrainRenderer.primitivesPass(null, _editorController.scale, vertices, 1);
-            Console.WriteLine("base texture size: [{0}, {1}]", baseTexture.Width, baseTexture.Height);
+                    // Render base texture
+                    Texture2D baseTexture = _terrainRenderer.primitivesPass(null, _editorController.scale, vertices, 1);
+                    Console.WriteLine("base texture size: [{0}, {1}]", baseTexture.Width, baseTexture.Height);
 
-            // Restore graphics device
-            _editorController.resizeGraphicsDevice(graphicsDeviceWidth, graphicsDeviceHeight);
-            XNAResources.graphicsDevice.Clear(Color.Black);
+                    // Restore graphics device
+                    _editorController.resizeGraphicsDevice(graphicsDeviceWidth, graphicsDeviceHeight);
+                    XNAResources.graphicsDevice.Clear(Color.Black);
+
+                    // Open material preview
+                    MaterialPreview materialPreview = new MaterialPreview(String.Format("{0} Preview", material.type.ToString()), baseTexture);
+                    materialPreview.Show();
+                    break;
+
+                default:
+                    return;
+            }
         }
     }
 }
