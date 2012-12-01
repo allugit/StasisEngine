@@ -56,7 +56,7 @@ technique generic
 {
     pass layered
     {
-		VertexShader = compile vs_2_0 VSBase();
-        PixelShader = compile ps_2_0 PSBaseNoise();
+		VertexShader = compile vs_3_0 VSBase();
+        PixelShader = compile ps_3_0 PSBaseNoise();
     }
 }
