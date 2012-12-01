@@ -8,6 +8,7 @@ namespace StasisEditor.Views
 {
     public class XNAResources
     {
+        public static Game game;
         public static GraphicsDeviceManager graphics;
         public static GraphicsDevice graphicsDevice;
         public static SpriteBatch spriteBatch;
@@ -16,6 +17,7 @@ namespace StasisEditor.Views
 
         public static void initialize(XNAController controller)
         {
+            game = controller;
             graphics = controller.graphics;
             graphicsDevice = controller.GraphicsDevice;
             spriteBatch = controller.spriteBatch;

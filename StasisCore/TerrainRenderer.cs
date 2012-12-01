@@ -29,12 +29,10 @@ namespace StasisCore
         {
             _game = game;
             _spriteBatch = spriteBatch;
-
+            
             // Load content
-            ContentManager content = new ContentManager(game as IServiceProvider);
-            content.RootDirectory = "Content";
-            _primitivesEffect = game.Content.Load<Effect>("effects/primitives");
-            _noiseEffect = game.Content.Load<Effect>("effects/noise");
+            _primitivesEffect = game.Content.Load<Effect>("../StasisCoreContent/effects/primitives");
+            _noiseEffect = game.Content.Load<Effect>("../StasisCoreContent/effects/noise");
 
             // Create random generator
             _random = new Random(seed);

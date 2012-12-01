@@ -93,7 +93,7 @@ namespace StasisEditor.Views
         // Preview material
         private void previewButton_Click(object sender, EventArgs e)
         {
-
+            _controller.preview(_selectedMaterials[0]);
         }
     }
 }

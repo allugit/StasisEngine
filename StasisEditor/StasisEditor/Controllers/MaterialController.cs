@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using Microsoft.Xna.Framework;
+using Microsoft.Xna.Framework.Graphics;
 using StasisCore;
 using StasisEditor.Views;
 using StasisEditor.Models;
@@ -11,6 +13,7 @@ namespace StasisEditor.Controllers
     public class MaterialController
     {
         private EditorController _editorController;
+        private TerrainRenderer _terrainRenderer;
         private IMaterialView _materialView;
         private List<Material>[] _materials;
 
@@ -32,6 +35,9 @@ namespace StasisEditor.Controllers
             _materials[(int)MaterialType.Fluid].Add(new FluidMaterial("Water"));
             _materials[(int)MaterialType.Items].Add(new ItemMaterial("Rope Gun"));
             _materials[(int)MaterialType.Items].Add(new ItemMaterial("Gravity Gun"));
+
+            // Create terrain renderer
+            _terrainRenderer = new TerrainRenderer(XNAResources.game as Game, XNAResources.spriteBatch);
         }
 
         // getMaterials
@@ -46,6 +52,35 @@ namespace StasisEditor.Controllers
             _materialView = new MaterialView();
             _materialView.setController(this);
             _materialView.ShowDialog();
+        }
+
+        // preview
+        public void preview(Material material)
+        {
+            // Test data
+            TexturedVertexFormat[] vertices = new TexturedVertexFormat[3];
+            vertices[0].color = new Vector3(1, 1, 1);
+            vertices[0].position = new Vector3(0.5f, 0, 0);
+            vertices[0].texCoord = new Vector2(0.5f, 0);
+            vertices[1].color = new Vector3(1, 1, 1);
+            vertices[1].position = new Vector3(1f, 1f, 0);
+            vertices[1].texCoord = new Vector2(1f, 1f);
+            vertices[2].color = new Vector3(1, 1, 1);
+            vertices[2].position = new Vector3(0, 1f, 0);
+            vertices[2].texCoord = new Vector2(0, 1f);
+
+            // Resize graphics device
+            int graphicsDeviceWidth = XNAResources.graphicsDevice.Viewport.Width;
+            int graphicsDeviceHeight = XNAResources.graphicsDevice.Viewport.Height;
+            _editorController.resizeGraphicsDevice((int)(1f * _editorController.scale), (int)(1f * _editorController.scale));
+
+            // Render base texture
+            Texture2D baseTexture = _terrainRenderer.primitivesPass(null, _editorController.scale, vertices, 1);
+            Console.WriteLine("base texture size: [{0}, {1}]", baseTexture.Width, baseTexture.Height);
+
+            // Restore graphics device
+            _editorController.resizeGraphicsDevice(graphicsDeviceWidth, graphicsDeviceHeight);
+            XNAResources.graphicsDevice.Clear(Color.Black);
         }
     }
 }

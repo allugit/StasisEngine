@@ -11,6 +11,8 @@ namespace StasisEditor.Models
     {
         protected string _name;
         protected MaterialType _type;
+
+        [Browsable(false)]
         public MaterialType type { get { return _type; } }
 
         [CategoryAttribute("General")]
