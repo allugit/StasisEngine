@@ -63,14 +63,15 @@ namespace StasisEditor.Controllers
                 case MaterialType.Terrain:
                     // Test data
                     TexturedVertexFormat[] vertices = new TexturedVertexFormat[3];
-                    vertices[0].color = new Vector3(1, 1, 1);
-                    vertices[0].position = new Vector3(0.5f, 0, 0);
+                    float vertexScale = 20f;
+                    vertices[0].color = new Vector3(1, 0, 0);
+                    vertices[0].position = new Vector3(0.5f, 0, 0) * vertexScale;
                     vertices[0].texCoord = new Vector2(0.5f, 0);
-                    vertices[1].color = new Vector3(1, 1, 1);
-                    vertices[1].position = new Vector3(1f, 1f, 0);
+                    vertices[1].color = new Vector3(0, 1, 0);
+                    vertices[1].position = new Vector3(1f, 1f, 0) * vertexScale;
                     vertices[1].texCoord = new Vector2(1f, 1f);
-                    vertices[2].color = new Vector3(1, 1, 1);
-                    vertices[2].position = new Vector3(0, 1f, 0);
+                    vertices[2].color = new Vector3(0, 0, 1);
+                    vertices[2].position = new Vector3(0, 1f, 0) * vertexScale;
                     vertices[2].texCoord = new Vector2(0, 1f);
 
                     // Resize graphics device
@@ -78,16 +79,18 @@ namespace StasisEditor.Controllers
                     int graphicsDeviceHeight = XNAResources.graphicsDevice.Viewport.Height;
                     _editorController.resizeGraphicsDevice((int)(1f * _editorController.scale), (int)(1f * _editorController.scale));
 
-                    // Render base texture
-                    Texture2D baseTexture = _terrainRenderer.primitivesPass(null, _editorController.scale, vertices, 1);
-                    Console.WriteLine("base texture size: [{0}, {1}]", baseTexture.Width, baseTexture.Height);
+                    // Render base pass
+                    Texture2D result = _terrainRenderer.primitivesPass(null, _editorController.scale, vertices, 1);
+
+                    // Render noise pass
+                    result = _terrainRenderer.noisePass(result, NoiseType.Perlin, Vector2.Zero, 1f, 0.5f, 0.2f, 0.6f, 1f, 1f, Color.Black, Color.White, 8);
 
                     // Restore graphics device
                     _editorController.resizeGraphicsDevice(graphicsDeviceWidth, graphicsDeviceHeight);
                     XNAResources.graphicsDevice.Clear(Color.Black);
 
                     // Open material preview
-                    MaterialPreview materialPreview = new MaterialPreview(baseTexture, String.Format("{0} Preview", material.Name));
+                    MaterialPreview materialPreview = new MaterialPreview(result, String.Format("{0} Preview", material.Name));
                     materialPreview.Show();
                     break;
 

@@ -40,7 +40,9 @@ VSOutput VSDrawPrimitives(VSInput input)
 ///////////////////////////////////////////////
 float4 PSDrawPrimitives(VSOutput input) : COLOR0
 {
-	return float4(1, 1, 1, 1);
+	float4 color = float4(1, 1, 1, 1);
+	color.rgb *= input.color;
+	return color;
 }
 
 ///////////////////////////////////////////////
