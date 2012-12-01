@@ -5,12 +5,19 @@ using System.Data;
 using System.Drawing;
 using System.Windows.Forms;
 using StasisEditor.Controllers;
+using StasisEditor.Models;
 
 namespace StasisEditor.Views
 {
     public partial class MaterialView : Form, IMaterialView
     {
         private EditorController _controller;
+        private Material _selectedMaterial;
+        private List<TerrainMaterial> _terrainMaterialsCopy;
+        private List<TreeMaterial> _treeMaterialsCopy;
+        private List<FluidMaterial> _fluidMaterialsCopy;
+        private List<ItemMaterial> _itemMaterialsCopy;
+        private bool _changesMade;
 
         public MaterialView()
         {
@@ -29,7 +36,12 @@ namespace StasisEditor.Views
 
         private void closeButton_Click(object sender, EventArgs e)
         {
-            if (MessageBox.Show("Are you sure you want to close the Materials View? Any unsaved changes will be lost.", "Close Materials", MessageBoxButtons.OKCancel) == DialogResult.OK)
+            if (_changesMade)
+            {
+                if (MessageBox.Show("Are you sure you want to close the Materials View? Any unsaved changes will be lost.", "Close Materials", MessageBoxButtons.OKCancel) == DialogResult.OK)
+                    Close();
+            }
+            else
                 Close();
         }
 
@@ -41,21 +53,33 @@ namespace StasisEditor.Views
             switch (type)
             {
                 case MaterialType.Terrain:
-                    materialsListBox.DataSource = _controller.terrainMaterials;
+                    _terrainMaterialsCopy = new List<TerrainMaterial>(_controller.terrainMaterials);
+                    materialsListBox.DataSource = _terrainMaterialsCopy;
                     break;
 
                 case MaterialType.Trees:
-                    materialsListBox.DataSource = _controller.treeMaterials;
+                    _treeMaterialsCopy = new List<TreeMaterial>(_controller.treeMaterials);
+                    materialsListBox.DataSource = _treeMaterialsCopy;
                     break;
 
                 case MaterialType.Fluid:
-                    materialsListBox.DataSource = _controller.fluidMaterials;
+                    _fluidMaterialsCopy = new List<FluidMaterial>(_controller.fluidMaterials);
+                    materialsListBox.DataSource = _fluidMaterialsCopy;
                     break;
 
                 case MaterialType.Items:
-                    materialsListBox.DataSource = _controller.itemMaterials;
+                    _itemMaterialsCopy = new List<ItemMaterial>(_controller.itemMaterials);
+                    materialsListBox.DataSource = _itemMaterialsCopy;
                     break;
             }
+        }
+
+        // Selected material changed
+        private void materialsListBox_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            _changesMade = true;
+            saveButton.Enabled = true;
+            throw new NotImplementedException();
         }
     }
 }

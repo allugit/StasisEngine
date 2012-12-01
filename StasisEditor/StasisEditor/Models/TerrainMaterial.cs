@@ -5,7 +5,7 @@ using System.Text;
 
 namespace StasisEditor.Models
 {
-    public class TerrainMaterial
+    public class TerrainMaterial : Material
     {
     }
 }

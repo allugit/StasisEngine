@@ -84,6 +84,7 @@
     </Compile>
     <Compile Include="Models\FluidMaterial.cs" />
     <Compile Include="Models\ItemMaterial.cs" />
+    <Compile Include="Models\Material.cs" />
     <Compile Include="Models\TerrainMaterial.cs" />
     <Compile Include="Models\TreeMaterial.cs" />
     <Compile Include="Views\EditorView.cs">

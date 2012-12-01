@@ -41,6 +41,7 @@
             // saveButton
             // 
             this.saveButton.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
+            this.saveButton.Enabled = false;
             this.saveButton.Location = new System.Drawing.Point(387, 414);
             this.saveButton.Name = "saveButton";
             this.saveButton.Size = new System.Drawing.Size(75, 23);
@@ -88,6 +89,7 @@
             this.materialsListBox.Name = "materialsListBox";
             this.materialsListBox.Size = new System.Drawing.Size(208, 301);
             this.materialsListBox.TabIndex = 4;
+            this.materialsListBox.SelectedIndexChanged += new System.EventHandler(this.materialsListBox_SelectedIndexChanged);
             // 
             // materialsLabel
             // 

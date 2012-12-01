@@ -9,7 +9,6 @@ namespace StasisEditor.Views
     public class LevelView : PictureBox, ILevelView
     {
         private EditorController _controller;
-        private IContainerControl _propertyContainer;
 
         public LevelView()
             : base()
