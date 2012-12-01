@@ -7,8 +7,8 @@ using System.Runtime.InteropServices;
 // associated with an assembly.
 [assembly: AssemblyTitle("StasisCore")]
 [assembly: AssemblyProduct("StasisCore")]
-[assembly: AssemblyDescription("Core component of the Stasis Engine")]
-[assembly: AssemblyCompany("Quantum Yeti")]
+[assembly: AssemblyDescription("")]
+[assembly: AssemblyCompany("")]
 [assembly: AssemblyCopyright("Copyright ©  2012")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]
@@ -22,7 +22,7 @@ using System.Runtime.InteropServices;
 // On Windows, the following GUID is for the ID of the typelib if this
 // project is exposed to COM. On other platforms, it unique identifies the
 // title storage container when deploying this assembly to the device.
-[assembly: Guid("c30f8993-01de-4e2b-b3ea-236e8f27e27b")]
+[assembly: Guid("b420d63b-062f-4476-92e3-35655f158d52")]
 
 // Version information for an assembly consists of the following four values:
 //

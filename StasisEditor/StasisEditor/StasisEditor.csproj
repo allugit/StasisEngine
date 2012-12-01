@@ -124,6 +124,11 @@
     </Content>
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\..\StasisCoreContent\StasisCoreContent.contentproj">
+      <Project>{84F6D086-1D47-489A-B334-E2058D1A752B}</Project>
+      <Name>StasisCoreContent</Name>
+      <XnaReferenceType>Content</XnaReferenceType>
+    </ProjectReference>
     <ProjectReference Include="..\StasisEditorContent\StasisEditorContent.contentproj">
       <Name>StasisEditorContent</Name>
       <XnaReferenceType>Content</XnaReferenceType>
