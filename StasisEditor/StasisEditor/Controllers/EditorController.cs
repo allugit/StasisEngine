@@ -56,6 +56,15 @@ namespace StasisEditor.Controllers
             _treeMaterials = new List<TreeMaterial>();
             _fluidMaterials = new List<FluidMaterial>();
             _itemMaterials = new List<ItemMaterial>();
+
+            // Test materials
+            _terrainMaterials.Add(new TerrainMaterial("Rock"));
+            _terrainMaterials.Add(new TerrainMaterial("Dirt"));
+            _terrainMaterials.Add(new TerrainMaterial("Snow"));
+            _treeMaterials.Add(new TreeMaterial());
+            _fluidMaterials.Add(new FluidMaterial());
+            _itemMaterials.Add(new ItemMaterial());
+            _itemMaterials.Add(new ItemMaterial());
         }
 
         // resizeGraphicsDevice

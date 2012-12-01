@@ -12,15 +12,17 @@ namespace StasisEditor.Views
     public partial class MaterialView : Form, IMaterialView
     {
         private EditorController _controller;
-        private Material _selectedMaterial;
-        private List<TerrainMaterial> _terrainMaterialsCopy;
-        private List<TreeMaterial> _treeMaterialsCopy;
-        private List<FluidMaterial> _fluidMaterialsCopy;
-        private List<ItemMaterial> _itemMaterialsCopy;
+        private List<Material> _terrainMaterialsCopy;
+        private List<Material> _treeMaterialsCopy;
+        private List<Material> _fluidMaterialsCopy;
+        private List<Material> _itemMaterialsCopy;
+        private List<Material> _selectedMaterials;
         private bool _changesMade;
 
         public MaterialView()
         {
+            _selectedMaterials = new List<Material>();
+
             InitializeComponent();
 
             // Set material types
@@ -53,33 +55,35 @@ namespace StasisEditor.Views
             switch (type)
             {
                 case MaterialType.Terrain:
-                    _terrainMaterialsCopy = new List<TerrainMaterial>(_controller.terrainMaterials);
+                    _terrainMaterialsCopy = new List<Material>(_controller.terrainMaterials);
                     materialsListBox.DataSource = _terrainMaterialsCopy;
                     break;
 
                 case MaterialType.Trees:
-                    _treeMaterialsCopy = new List<TreeMaterial>(_controller.treeMaterials);
+                    _treeMaterialsCopy = new List<Material>(_controller.treeMaterials);
                     materialsListBox.DataSource = _treeMaterialsCopy;
                     break;
 
                 case MaterialType.Fluid:
-                    _fluidMaterialsCopy = new List<FluidMaterial>(_controller.fluidMaterials);
+                    _fluidMaterialsCopy = new List<Material>(_controller.fluidMaterials);
                     materialsListBox.DataSource = _fluidMaterialsCopy;
                     break;
 
                 case MaterialType.Items:
-                    _itemMaterialsCopy = new List<ItemMaterial>(_controller.itemMaterials);
+                    _itemMaterialsCopy = new List<Material>(_controller.itemMaterials);
                     materialsListBox.DataSource = _itemMaterialsCopy;
                     break;
             }
         }
 
-        // Selected material changed
+        // Selected materials changed
         private void materialsListBox_SelectedIndexChanged(object sender, EventArgs e)
         {
-            _changesMade = true;
-            saveButton.Enabled = true;
-            throw new NotImplementedException();
+            _selectedMaterials.Clear();
+            foreach (Material selectedMaterial in materialsListBox.SelectedItems)
+                _selectedMaterials.Add(selectedMaterial);
+
+            materialProperties.SelectedObjects = _selectedMaterials.ToArray();
         }
     }
 }

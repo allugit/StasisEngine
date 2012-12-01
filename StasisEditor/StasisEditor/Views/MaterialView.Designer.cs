@@ -34,7 +34,7 @@
             this.materialTypesListBox = new System.Windows.Forms.ListBox();
             this.materialsListBox = new System.Windows.Forms.ListBox();
             this.materialsLabel = new System.Windows.Forms.Label();
-            this.propertyGrid1 = new System.Windows.Forms.PropertyGrid();
+            this.materialProperties = new System.Windows.Forms.PropertyGrid();
             this.materialPropertiesLabel = new System.Windows.Forms.Label();
             this.SuspendLayout();
             // 
@@ -87,6 +87,7 @@
             this.materialsListBox.FormattingEnabled = true;
             this.materialsListBox.Location = new System.Drawing.Point(16, 125);
             this.materialsListBox.Name = "materialsListBox";
+            this.materialsListBox.SelectionMode = System.Windows.Forms.SelectionMode.MultiExtended;
             this.materialsListBox.Size = new System.Drawing.Size(208, 301);
             this.materialsListBox.TabIndex = 4;
             this.materialsListBox.SelectedIndexChanged += new System.EventHandler(this.materialsListBox_SelectedIndexChanged);
@@ -100,15 +101,15 @@
             this.materialsLabel.TabIndex = 5;
             this.materialsLabel.Text = "Materials";
             // 
-            // propertyGrid1
+            // materialProperties
             // 
-            this.propertyGrid1.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom)
+            this.materialProperties.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom)
                         | System.Windows.Forms.AnchorStyles.Left)
                         | System.Windows.Forms.AnchorStyles.Right)));
-            this.propertyGrid1.Location = new System.Drawing.Point(250, 29);
-            this.propertyGrid1.Name = "propertyGrid1";
-            this.propertyGrid1.Size = new System.Drawing.Size(293, 362);
-            this.propertyGrid1.TabIndex = 6;
+            this.materialProperties.Location = new System.Drawing.Point(250, 29);
+            this.materialProperties.Name = "materialProperties";
+            this.materialProperties.Size = new System.Drawing.Size(293, 362);
+            this.materialProperties.TabIndex = 6;
             // 
             // materialPropertiesLabel
             // 
@@ -128,7 +129,7 @@
             this.ClientSize = new System.Drawing.Size(555, 449);
             this.ControlBox = false;
             this.Controls.Add(this.materialPropertiesLabel);
-            this.Controls.Add(this.propertyGrid1);
+            this.Controls.Add(this.materialProperties);
             this.Controls.Add(this.materialsLabel);
             this.Controls.Add(this.materialsListBox);
             this.Controls.Add(this.materialTypesListBox);
@@ -150,7 +151,7 @@
         private System.Windows.Forms.ListBox materialTypesListBox;
         private System.Windows.Forms.ListBox materialsListBox;
         private System.Windows.Forms.Label materialsLabel;
-        private System.Windows.Forms.PropertyGrid propertyGrid1;
+        private System.Windows.Forms.PropertyGrid materialProperties;
         private System.Windows.Forms.Label materialPropertiesLabel;
     }
 }
