@@ -17,6 +17,7 @@ namespace StasisEditor.Views
         private List<Material>[] _materialCopies;
         private List<Material> _selectedMaterials;
         private bool _changesMade;
+        private MaterialProperties _properties;
 
         public MaterialView()
         {
@@ -43,6 +44,36 @@ namespace StasisEditor.Views
                 _materialCopies[i] = Material.copyFrom(_controller.getMaterials((MaterialType)i));
         }
 
+        // openProperties
+        private void openProperties(MaterialType type)
+        {
+            // Common
+            _properties = new MaterialProperties();
+            propertiesContainer.Controls.Add(_properties);
+
+            // Material specific
+            switch (type)
+            {
+                case MaterialType.Terrain:
+                    break;
+            }
+
+            // Set material property grid's selected objects
+            _properties.PropertyGrid.SelectedObjects = _selectedMaterials.ToArray();
+        }
+
+        // closeProperties
+        private void closeProperties()
+        {
+            if (_properties == null)
+                return;
+
+            propertiesContainer.Controls.Remove(_properties);
+            _properties.Dispose();
+            _properties = null;
+        }
+
+        // Close button clicked
         private void closeButton_Click(object sender, EventArgs e)
         {
             if (_changesMade)
@@ -75,8 +106,9 @@ namespace StasisEditor.Views
             // Update preview button
             previewButton.Enabled = _selectedMaterials.Count == 1;
             
-            // Set material property grid's selected objects
-            materialProperties.SelectedObjects = _selectedMaterials.ToArray();
+            // Open material properties
+            closeProperties();
+            openProperties(((sender as ListBox).SelectedItems[0] as Material).type);
         }
 
         // Material property changed

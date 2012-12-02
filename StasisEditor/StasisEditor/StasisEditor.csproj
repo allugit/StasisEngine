@@ -89,6 +89,12 @@
     <Compile Include="Controls\MaterialPreview.Designer.cs">
       <DependentUpon>MaterialPreview.cs</DependentUpon>
     </Compile>
+    <Compile Include="Controls\MaterialProperties.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="Controls\MaterialProperties.Designer.cs">
+      <DependentUpon>MaterialProperties.cs</DependentUpon>
+    </Compile>
     <Compile Include="Controls\RefreshingListBox.cs">
       <SubType>Component</SubType>
     </Compile>
@@ -175,6 +181,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Controls\MaterialPreview.resx">
       <DependentUpon>MaterialPreview.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Controls\MaterialProperties.resx">
+      <DependentUpon>MaterialProperties.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Views\EditorView.resx">
       <DependentUpon>EditorView.cs</DependentUpon>
