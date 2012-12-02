@@ -7,6 +7,7 @@ using System.Linq;
 using System.Text;
 using System.Windows.Forms;
 using StasisEditor.Controllers;
+using StasisEditor.Controls;
 
 namespace StasisEditor.Views
 {
@@ -17,6 +18,7 @@ namespace StasisEditor.Views
         public TextureView()
         {
             InitializeComponent();
+            textureDataGrid.DataSource = TextureResources.getAllResources();
         }
 
         // setController
@@ -29,6 +31,16 @@ namespace StasisEditor.Views
         private void TextureView_FormClosed(object sender, FormClosedEventArgs e)
         {
             _controller.viewClosed();
+        }
+
+        // Add texture resource
+        private void addTextureButton_Click(object sender, EventArgs e)
+        {
+            NewTextureResource newResource = new NewTextureResource();
+            if (newResource.ShowDialog() == DialogResult.OK)
+            {
+                MessageBox.Show("should add a new texture resource.");
+            }
         }
     }
 }

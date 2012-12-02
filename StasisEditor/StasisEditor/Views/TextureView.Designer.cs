@@ -29,10 +29,10 @@
         private void InitializeComponent()
         {
             this.label1 = new System.Windows.Forms.Label();
-            this.dataGridView1 = new System.Windows.Forms.DataGridView();
+            this.textureDataGrid = new System.Windows.Forms.DataGridView();
             this.removeTextureButton = new System.Windows.Forms.Button();
             this.addTextureButton = new System.Windows.Forms.Button();
-            ((System.ComponentModel.ISupportInitialize)(this.dataGridView1)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.textureDataGrid)).BeginInit();
             this.SuspendLayout();
             // 
             // label1
@@ -44,13 +44,13 @@
             this.label1.TabIndex = 1;
             this.label1.Text = "Textures";
             // 
-            // dataGridView1
+            // textureDataGrid
             // 
-            this.dataGridView1.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
-            this.dataGridView1.Location = new System.Drawing.Point(15, 26);
-            this.dataGridView1.Name = "dataGridView1";
-            this.dataGridView1.Size = new System.Drawing.Size(194, 377);
-            this.dataGridView1.TabIndex = 2;
+            this.textureDataGrid.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
+            this.textureDataGrid.Location = new System.Drawing.Point(15, 26);
+            this.textureDataGrid.Name = "textureDataGrid";
+            this.textureDataGrid.Size = new System.Drawing.Size(260, 377);
+            this.textureDataGrid.TabIndex = 2;
             // 
             // removeTextureButton
             // 
@@ -69,6 +69,7 @@
             this.addTextureButton.TabIndex = 4;
             this.addTextureButton.Text = "Add";
             this.addTextureButton.UseVisualStyleBackColor = true;
+            this.addTextureButton.Click += new System.EventHandler(this.addTextureButton_Click);
             // 
             // TextureView
             // 
@@ -77,12 +78,12 @@
             this.ClientSize = new System.Drawing.Size(740, 444);
             this.Controls.Add(this.addTextureButton);
             this.Controls.Add(this.removeTextureButton);
-            this.Controls.Add(this.dataGridView1);
+            this.Controls.Add(this.textureDataGrid);
             this.Controls.Add(this.label1);
             this.Name = "TextureView";
             this.Text = "Textures";
             this.FormClosed += new System.Windows.Forms.FormClosedEventHandler(this.TextureView_FormClosed);
-            ((System.ComponentModel.ISupportInitialize)(this.dataGridView1)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.textureDataGrid)).EndInit();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -91,7 +92,7 @@
         #endregion
 
         private System.Windows.Forms.Label label1;
-        private System.Windows.Forms.DataGridView dataGridView1;
+        private System.Windows.Forms.DataGridView textureDataGrid;
         private System.Windows.Forms.Button removeTextureButton;
         private System.Windows.Forms.Button addTextureButton;
     }
