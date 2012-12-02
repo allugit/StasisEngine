@@ -30,6 +30,8 @@
         {
             this.materialPropertiesLabel = new System.Windows.Forms.Label();
             this.materialPropertyGrid = new System.Windows.Forms.PropertyGrid();
+            this.panel1 = new System.Windows.Forms.Panel();
+            this.panel1.SuspendLayout();
             this.SuspendLayout();
             // 
             // materialPropertiesLabel
@@ -52,17 +54,32 @@
             this.materialPropertyGrid.Location = new System.Drawing.Point(0, 13);
             this.materialPropertyGrid.Margin = new System.Windows.Forms.Padding(0);
             this.materialPropertyGrid.Name = "materialPropertyGrid";
-            this.materialPropertyGrid.Size = new System.Drawing.Size(245, 166);
+            this.materialPropertyGrid.Size = new System.Drawing.Size(204, 179);
             this.materialPropertyGrid.TabIndex = 8;
+            // 
+            // panel1
+            // 
+            this.panel1.AutoSize = true;
+            this.panel1.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
+            this.panel1.Controls.Add(this.materialPropertiesLabel);
+            this.panel1.Controls.Add(this.materialPropertyGrid);
+            this.panel1.Dock = System.Windows.Forms.DockStyle.Top;
+            this.panel1.Location = new System.Drawing.Point(0, 0);
+            this.panel1.Margin = new System.Windows.Forms.Padding(0);
+            this.panel1.Name = "panel1";
+            this.panel1.Size = new System.Drawing.Size(204, 216);
+            this.panel1.TabIndex = 10;
             // 
             // MaterialProperties
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.Controls.Add(this.materialPropertiesLabel);
-            this.Controls.Add(this.materialPropertyGrid);
+            this.AutoSize = true;
+            this.Controls.Add(this.panel1);
             this.Name = "MaterialProperties";
-            this.Size = new System.Drawing.Size(245, 179);
+            this.Size = new System.Drawing.Size(204, 216);
+            this.panel1.ResumeLayout(false);
+            this.panel1.PerformLayout();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -72,6 +89,7 @@
 
         private System.Windows.Forms.Label materialPropertiesLabel;
         private System.Windows.Forms.PropertyGrid materialPropertyGrid;
+        private System.Windows.Forms.Panel panel1;
 
     }
 }

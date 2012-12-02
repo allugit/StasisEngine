@@ -45,18 +45,10 @@ namespace StasisEditor.Views
         }
 
         // openProperties
-        private void openProperties(MaterialType type)
+        private void openProperties(Material material)
         {
-            // Common
-            _properties = new MaterialProperties();
+            _properties = new MaterialProperties(material);
             propertiesContainer.Controls.Add(_properties);
-
-            // Material specific
-            switch (type)
-            {
-                case MaterialType.Terrain:
-                    break;
-            }
 
             // Set material property grid's selected objects
             _properties.PropertyGrid.SelectedObjects = _selectedMaterials.ToArray();
@@ -108,7 +100,7 @@ namespace StasisEditor.Views
             
             // Open material properties
             closeProperties();
-            openProperties(((sender as ListBox).SelectedItems[0] as Material).type);
+            openProperties((sender as ListBox).SelectedItems[0] as Material);
         }
 
         // Material property changed

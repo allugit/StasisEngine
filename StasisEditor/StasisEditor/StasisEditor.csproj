@@ -98,6 +98,12 @@
     <Compile Include="Controls\RefreshingListBox.cs">
       <SubType>Component</SubType>
     </Compile>
+    <Compile Include="Controls\TerrainLayers.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="Controls\TerrainLayers.Designer.cs">
+      <DependentUpon>TerrainLayers.cs</DependentUpon>
+    </Compile>
     <Compile Include="Views\EditorView.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -184,6 +190,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Controls\MaterialProperties.resx">
       <DependentUpon>MaterialProperties.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Controls\TerrainLayers.resx">
+      <DependentUpon>TerrainLayers.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Views\EditorView.resx">
       <DependentUpon>EditorView.cs</DependentUpon>
