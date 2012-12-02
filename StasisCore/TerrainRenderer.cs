@@ -169,7 +169,7 @@ namespace StasisCore
             _game.GraphicsDevice.SetRenderTarget(renderTarget);
             _game.GraphicsDevice.Textures[1] = _randomTexture;
             _game.GraphicsDevice.Textures[2] = _worleyTexture;
-            _game.GraphicsDevice.Clear(Color.Black);
+            _game.GraphicsDevice.Clear(Color.Transparent);
             _noiseEffect.Parameters["aspectRatio"].SetValue(aspectRatio);
             _noiseEffect.Parameters["offset"].SetValue(offset);
             _noiseEffect.Parameters["noiseScale"].SetValue(scale);
@@ -179,7 +179,7 @@ namespace StasisCore
             _noiseEffect.Parameters["noiseGain"].SetValue(noiseGain);
             _noiseEffect.Parameters["noiseLacunarity"].SetValue(noiseLacunarity);
             _noiseEffect.Parameters["multiplier"].SetValue(multiplier);
-            _noiseEffect.Parameters["fbmOffset"].SetValue(Vector2.Zero);
+            _noiseEffect.Parameters["fbmOffset"].SetValue(offset);
             _noiseEffect.Parameters["fbmPerlinBasis"].SetValue(perlinBasis);
             _noiseEffect.Parameters["fbmCellBasis"].SetValue(worleyBasis);
             _noiseEffect.Parameters["fbmInvCellBasis"].SetValue(invWorleyBasis);

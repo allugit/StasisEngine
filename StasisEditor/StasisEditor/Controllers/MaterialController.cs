@@ -83,7 +83,9 @@ namespace StasisEditor.Controllers
                     Texture2D result = _terrainRenderer.primitivesPass(null, _editorController.scale, vertices, 1);
 
                     // Render noise pass
-                    result = _terrainRenderer.noisePass(result, NoiseType.Perlin, Vector2.Zero, 1f, 0.5f, 0.2f, 0.6f, 1f, 1f, Color.Black, Color.White, 8);
+                    result = _terrainRenderer.noisePass(result, NoiseType.Perlin, Vector2.Zero, 2f, 1.5f, 0.5f, 0.8f, 1f, 1f, Color.Black, Color.White, 10);
+                    result = _terrainRenderer.noisePass(result, NoiseType.Perlin, new Vector2(0.3f, 0.1f), 2f, 0.24f, 0.4f, 0.6f, 1f, 1f, Color.Black, Color.White, 5);
+                    result = _terrainRenderer.noisePass(result, NoiseType.Perlin, new Vector2(-0.3f, -0.25f), 2f, 0.54f, 0.6f, 0.8f, 1f, 1f, Color.Black, Color.White, 3);
 
                     // Restore graphics device
                     _editorController.resizeGraphicsDevice(graphicsDeviceWidth, graphicsDeviceHeight);
