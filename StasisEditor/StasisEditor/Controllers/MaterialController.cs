@@ -92,10 +92,21 @@ namespace StasisEditor.Controllers
         // openView
         public void openView()
         {
-            _materialView = new MaterialView();
-            _materialView.setController(this);
-            _materialView.setAutoUpdatePreview(true);
-            _materialView.ShowDialog();
+            if (_materialView == null)
+            {
+                _materialView = new MaterialView();
+                _materialView.setController(this);
+                _materialView.setAutoUpdatePreview(true);
+                _materialView.Show();
+            }
+            else
+                _materialView.Focus();
+        }
+
+        // viewClosed
+        public void viewClosed()
+        {
+            _materialView = null;
         }
 
         // preview
@@ -145,7 +156,12 @@ namespace StasisEditor.Controllers
                         _materialPreview.Show();
                     }
                     else
+                    {
+                        // Make sure window is on top
+                        _materialPreview.Focus();
                         _materialPreview.updatePreview(result);
+                        _materialView.Focus();
+                    }
 
                     break;
 

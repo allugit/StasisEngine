@@ -155,6 +155,7 @@ namespace StasisEditor.Views
             this.Controls.Add(this.saveButton);
             this.Name = "MaterialView";
             this.Text = "Materials";
+            this.FormClosed += new System.Windows.Forms.FormClosedEventHandler(this.MaterialView_FormClosed);
             this.ResumeLayout(false);
             this.PerformLayout();
 

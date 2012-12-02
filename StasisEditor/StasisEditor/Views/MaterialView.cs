@@ -141,5 +141,11 @@ namespace StasisEditor.Views
         {
             _controller.setAutoUpdatePreview(autoUpdatePreview.Checked);
         }
+
+        // Form closed
+        private void MaterialView_FormClosed(object sender, FormClosedEventArgs e)
+        {
+            _controller.viewClosed();
+        }
     }
 }

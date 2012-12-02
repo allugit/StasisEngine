@@ -60,9 +60,6 @@ namespace StasisEditor.Controls
             if (selectedIndex == _layers.Count - 1)
                 return;
 
-            // Inform controller that changes are being made
-            _controller.setChangesMade(true);
-
             SuspendLayout();
 
             TerrainLayer selectedLayer = _layers[selectedIndex];
@@ -73,6 +70,9 @@ namespace StasisEditor.Controls
             layersListBox.SelectedItem = selectedLayer;
 
             ResumeLayout();
+
+            // Inform controller that changes are being made
+            _controller.setChangesMade(true);
         }
 
         // Add new layer
