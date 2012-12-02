@@ -4,6 +4,7 @@ using System.Collections.ObjectModel;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using StasisCore;
+using StasisCore.Models;
 using StasisEditor.Views;
 using StasisEditor.Models;
 using StasisEditor.Controls;

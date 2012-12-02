@@ -2,11 +2,17 @@
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
-using StasisCore;
-using StasisEditor.Models;
 
-namespace StasisEditor.Models
+namespace StasisCore.Models
 {
+    public enum MaterialType
+    {
+        Terrain = 0,
+        Trees,
+        Fluid,
+        Items
+    };
+
     public abstract class Material
     {
         protected string _name;

@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.ComponentModel;
 using StasisCore;
 
-namespace StasisEditor.Models
+namespace StasisCore.Models
 {
     public class TreeMaterial : Material
     {
