@@ -113,6 +113,7 @@ namespace StasisEditor.Controls
             _layers.RemoveAt(layersListBox.SelectedIndex);
             layersListBox.DataSource = null;
             layersListBox.DataSource = _layers;
+            layerProperties.SelectedObject = null;
             ResumeLayout();
         }
 
