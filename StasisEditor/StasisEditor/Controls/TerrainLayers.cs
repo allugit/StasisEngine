@@ -119,7 +119,8 @@ namespace StasisEditor.Controls
         // Selected layer changed
         private void layersListBox_SelectedValueChanged(object sender, EventArgs e)
         {
-            layerProperties.SelectedObject = (layersListBox.SelectedItem as TerrainLayer).properties;
+            if (layersListBox.DataSource != null)
+                layerProperties.SelectedObject = (layersListBox.SelectedItem as TerrainLayer).properties;
         }
     }
 }

@@ -59,8 +59,26 @@ namespace StasisCore
             _worleyTexture.SetData<Color>(data);
         }
 
+        // Render layer
+        public Texture2D renderLayer(Texture2D result, TerrainLayer layer, float worldScale, TexturedVertexFormat[] vertices, int primitiveCount)
+        {
+            switch (layer.type)
+            {
+                case TerrainLayerType.Base:
+                    Texture2D baseTexture = null;   // TEMPORARY -- should attempt to look up texture based on tag
+                    result = primitivesPass(baseTexture, worldScale, vertices, primitiveCount);
+                    break;
+                
+                case TerrainLayerType.Noise:
+                    result = noisePass(result, (layer.properties as NoiseOptions));
+                    break;
+            }
+
+            return result;
+        }
+
         // Primitives pass
-        public Texture2D primitivesPass(Texture2D texture, float worldScale, TexturedVertexFormat[] vertices, int primitiveCount)
+        private Texture2D primitivesPass(Texture2D texture, float worldScale, TexturedVertexFormat[] vertices, int primitiveCount)
         {
             // Find boundaries
             Vector2 topLeftBoundary = new Vector2(vertices[0].position.X, vertices[0].position.Y);
@@ -116,7 +134,7 @@ namespace StasisCore
         }
 
         // Noise pass
-        public Texture2D noisePass(Texture2D texture, NoiseOptions options)
+        private Texture2D noisePass(Texture2D texture, NoiseOptions options)
         {
             // Initialize vertex shader properties
             Matrix projection = Matrix.CreateOrthographicOffCenter(0, texture.Width, texture.Height, 0, 0, 1);

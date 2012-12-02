@@ -72,6 +72,8 @@ namespace StasisEditor.Controllers
             switch(material.type)
             {
                 case MaterialType.Terrain:
+                    TerrainMaterial terrainMaterial = material as TerrainMaterial;
+
                     // Test data
                     TexturedVertexFormat[] vertices = new TexturedVertexFormat[3];
                     float vertexScale = 20f;
@@ -88,16 +90,17 @@ namespace StasisEditor.Controllers
                     // Resize graphics device
                     int graphicsDeviceWidth = XNAResources.graphicsDevice.Viewport.Width;
                     int graphicsDeviceHeight = XNAResources.graphicsDevice.Viewport.Height;
-                    _editorController.resizeGraphicsDevice((int)(1f * _editorController.scale), (int)(1f * _editorController.scale));
+                    float baseScale = 35f;
+                    int textureWidth = (int)(1f * baseScale);
+                    int textureHeight = (int)(1f * baseScale);
+                    _editorController.resizeGraphicsDevice(textureWidth, textureHeight);
 
-                    // Render base pass
-                    Texture2D result = _terrainRenderer.primitivesPass(null, _editorController.scale, vertices, 1);
+                    // Create result texture
+                    Texture2D result = new Texture2D(XNAResources.graphicsDevice, textureWidth, textureHeight);
 
-                    // Render noise pass
-                    //result = _terrainRenderer.noisePass(result, NoiseType.Perlin, Vector2.Zero, 2f, 1.5f, 0.5f, 0.8f, 1f, 1f, Color.Black, Color.White, 10);
-                    //result = _terrainRenderer.noisePass(result, NoiseType.Perlin, Vector2.Zero, 1f, new Vector2(0.3f, 0.1f), 0.24f, 0.4f, 0.6f, 1f, 1f, Color.Black, Color.White, 10);
-                    //result = _terrainRenderer.noisePass(result, NoiseType.Perlin, Vector2.Zero, 1f, new Vector2(-0.3f, -0.25f), 0.54f, 0.6f, 0.8f, 1f, 1f, Color.Black, Color.White, 3);
-                    //result = _terrainRenderer.noisePass(result, NoiseType.Worley, Vector2.Zero, 2f, Vector2.Zero, 1.1f, 0.4f, 0.8f, 1f, 1f, Color.Black, Color.White, 1);
+                    // Render layers
+                    foreach (TerrainLayer layer in terrainMaterial.layers)
+                        result = _terrainRenderer.renderLayer(result, layer, baseScale, vertices, 1);
 
                     // Restore graphics device
                     _editorController.resizeGraphicsDevice(graphicsDeviceWidth, graphicsDeviceHeight);
