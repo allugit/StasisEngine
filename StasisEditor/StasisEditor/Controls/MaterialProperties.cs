@@ -13,11 +13,11 @@ namespace StasisEditor.Controls
 {
     public partial class MaterialProperties : UserControl
     {
-        private IController _controller;
+        private IMaterialController _controller;
         private Material _material;
         public PropertyGrid PropertyGrid { get { return this.materialPropertyGrid; } }
 
-        public MaterialProperties(IController controller, Material material)
+        public MaterialProperties(IMaterialController controller, Material material)
         {
             _material = material;
             _controller = controller;

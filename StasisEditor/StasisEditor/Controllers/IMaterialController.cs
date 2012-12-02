@@ -9,6 +9,8 @@ namespace StasisEditor.Controllers
     {
         void setAutoUpdatePreview(bool status);
         bool getAutoUpdatePreview();
+        void setChangesMade(bool status);
+        bool getChangesMade();
         void preview(Material material);
         void previewClosed();
         void viewClosed();

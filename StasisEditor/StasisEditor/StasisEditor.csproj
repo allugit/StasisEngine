@@ -78,7 +78,9 @@
     <Compile Include="Controllers\IController.cs" />
     <Compile Include="Controllers\EditorController.cs" />
     <Compile Include="Controllers\IMaterialController.cs" />
+    <Compile Include="Controllers\ITextureController.cs" />
     <Compile Include="Controllers\MaterialController.cs" />
+    <Compile Include="Controllers\TextureController.cs" />
     <Compile Include="Controls\BrushToolbar.cs">
       <SubType>Component</SubType>
     </Compile>
@@ -121,6 +123,7 @@
     <Compile Include="Views\IEditorView.cs" />
     <Compile Include="Views\ILevelView.cs" />
     <Compile Include="Views\IMaterialView.cs" />
+    <Compile Include="Views\ITextureView.cs" />
     <Compile Include="Views\LevelView.cs">
       <SubType>Component</SubType>
     </Compile>
@@ -132,6 +135,12 @@
     </Compile>
     <Compile Include="Views\MaterialView.Designer.cs">
       <DependentUpon>MaterialView.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Views\TextureView.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Views\TextureView.Designer.cs">
+      <DependentUpon>TextureView.cs</DependentUpon>
     </Compile>
     <Compile Include="Views\XNAResources.cs" />
   </ItemGroup>
@@ -207,6 +216,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Views\MaterialView.resx">
       <DependentUpon>MaterialView.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Views\TextureView.resx">
+      <DependentUpon>TextureView.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />

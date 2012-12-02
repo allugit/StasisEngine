@@ -74,6 +74,7 @@
     <Compile Include="Models\TerrainMaterial.cs" />
     <Compile Include="Models\TerrainNoiseLayer.cs" />
     <Compile Include="Models\TerrainOutlineLayer.cs" />
+    <Compile Include="Models\TextureResource.cs" />
     <Compile Include="Models\TreeMaterial.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="TerrainRenderer.cs" />

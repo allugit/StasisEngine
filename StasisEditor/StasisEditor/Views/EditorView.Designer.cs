@@ -139,6 +139,7 @@
             // 
             this.menuAssetsTextures.Index = 0;
             this.menuAssetsTextures.Text = "Textures";
+            this.menuAssetsTextures.Click += new System.EventHandler(this.menuAssetsTextures_Click);
             // 
             // menuAssetsMaterials
             // 

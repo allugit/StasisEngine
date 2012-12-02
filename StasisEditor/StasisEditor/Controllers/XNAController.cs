@@ -27,17 +27,6 @@ namespace StasisEditor.Controllers
             System.Windows.Forms.Control.FromHandle(Window.Handle).VisibleChanged += new EventHandler(visibleChanged);
         }
 
-        // getChangesMade
-        public bool getChangesMade()
-        {
-            return false;
-        }
-
-        // setChangesMade
-        public void setChangesMade(bool status)
-        {
-        }
-
         // Keep the main XNA game window hidden
         private void visibleChanged(object sender, EventArgs e)
         {

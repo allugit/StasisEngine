@@ -143,5 +143,11 @@ namespace StasisEditor.Views
         {
             _controller.openMaterialView();
         }
+
+        // Textures clicked
+        private void menuAssetsTextures_Click(object sender, EventArgs e)
+        {
+            _controller.openTextureView();
+        }
     }
 }

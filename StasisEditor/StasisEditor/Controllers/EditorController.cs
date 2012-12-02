@@ -14,13 +14,13 @@ namespace StasisEditor.Controllers
     {
         private XNAController _xnaController;
         private MaterialController _materialController;
+        private TextureController _textureController;
+
         private IEditorView _editorView;
+        private ILevelView _levelView;
 
         private Level _level;
-        private ILevelView _levelView;
         public Level level { get { return _level; } }
-        //private IMaterialView _materialView;
-        //private List<Material>[] _materials;
 
         private bool _isMouseOverView;
         private System.Drawing.Point _mouse;
@@ -42,6 +42,9 @@ namespace StasisEditor.Controllers
 
             // Create material controller
             _materialController = new MaterialController(this);
+
+            // Create texture controller
+            _textureController = new TextureController(this);
         }
 
         // resizeGraphicsDevice
@@ -96,21 +99,16 @@ namespace StasisEditor.Controllers
             _level = null;
         }
 
-        // getChangesMade
-        public bool getChangesMade()
-        {
-            return false;
-        }
-
-        // setChangesMade
-        public void setChangesMade(bool status)
-        {
-        }
-
         // openMaterialView
         public void openMaterialView()
         {
             _materialController.openView();
+        }
+
+        // openTextureView
+        public void openTextureView()
+        {
+            _textureController.openView();
         }
 
         // mouseMove
