@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Drawing;
+using StasisCore.Models;
 using StasisEditor.Controllers;
 using StasisEditor.Controls;
 using StasisEditor.Models;

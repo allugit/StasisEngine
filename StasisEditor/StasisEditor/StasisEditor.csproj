@@ -100,7 +100,6 @@
     </Compile>
     <Compile Include="Input.cs" />
     <Compile Include="Models\Brush.cs" />
-    <Compile Include="Models\Level.cs" />
     <Compile Include="Views\IBaseView.cs" />
     <Compile Include="Views\IEditorView.cs" />
     <Compile Include="Views\ILevelView.cs" />

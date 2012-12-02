@@ -2,10 +2,11 @@
 using System.Diagnostics;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using Microsoft.Xna.Framework;
+using StasisCore.Models;
 using StasisEditor.Views;
 using StasisEditor.Controls;
 using StasisEditor.Models;
-using Microsoft.Xna.Framework;
 
 namespace StasisEditor.Controllers
 {
