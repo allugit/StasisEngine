@@ -29,9 +29,24 @@ namespace StasisEditor.Controllers
             for (int i = 0; i < numMaterialTypes; i++)
                 _materials[i] = new List<Material>();
 
-            // Test materials
-            _materials[(int)MaterialType.Terrain].Add(new TerrainMaterial("Rock", new List<TerrainLayer>()));
-            _materials[(int)MaterialType.Terrain].Add(new TerrainMaterial("Dirt", new List<TerrainLayer>()));
+            // Test material data
+            List<TerrainLayer> testLayers = new List<TerrainLayer>();
+            testLayers.Add(new TerrainBaseLayer("some_texture"));
+            testLayers.Add(new TerrainNoiseLayer(new NoiseOptions(
+                NoiseType.Perlin,
+                Vector2.Zero,
+                2f,
+                new Vector2(0.1f, 0.2f),
+                1.1f,
+                0.5f,
+                0.8f,
+                1f,
+                1f,
+                Color.Black,
+                Color.White,
+                1)));
+            _materials[(int)MaterialType.Terrain].Add(new TerrainMaterial("Rock", testLayers));
+            _materials[(int)MaterialType.Terrain].Add(new TerrainMaterial("Dirt", TerrainLayer.copyFrom(testLayers)));
             _materials[(int)MaterialType.Terrain].Add(new TerrainMaterial("Snow", new List<TerrainLayer>()));
             _materials[(int)MaterialType.Trees].Add(new TreeMaterial("Acuminate"));
             _materials[(int)MaterialType.Fluid].Add(new FluidMaterial("Water"));

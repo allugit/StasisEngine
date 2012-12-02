@@ -32,6 +32,8 @@
             this.layersListBox = new System.Windows.Forms.ListBox();
             this.upButton = new System.Windows.Forms.Button();
             this.downButton = new System.Windows.Forms.Button();
+            this.addLayerButton = new System.Windows.Forms.Button();
+            this.removeLayerButton = new System.Windows.Forms.Button();
             this.SuspendLayout();
             // 
             // label1
@@ -45,19 +47,18 @@
             // 
             // layersListBox
             // 
-            this.layersListBox.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom)
-                        | System.Windows.Forms.AnchorStyles.Left)
+            this.layersListBox.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
                         | System.Windows.Forms.AnchorStyles.Right)));
             this.layersListBox.FormattingEnabled = true;
             this.layersListBox.Location = new System.Drawing.Point(0, 16);
             this.layersListBox.Name = "layersListBox";
-            this.layersListBox.Size = new System.Drawing.Size(135, 108);
+            this.layersListBox.Size = new System.Drawing.Size(187, 82);
             this.layersListBox.TabIndex = 1;
             // 
             // upButton
             // 
             this.upButton.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.upButton.Location = new System.Drawing.Point(141, 16);
+            this.upButton.Location = new System.Drawing.Point(193, 16);
             this.upButton.Name = "upButton";
             this.upButton.Size = new System.Drawing.Size(32, 23);
             this.upButton.TabIndex = 2;
@@ -66,22 +67,42 @@
             // downButton
             // 
             this.downButton.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.downButton.Location = new System.Drawing.Point(141, 45);
+            this.downButton.Location = new System.Drawing.Point(193, 45);
             this.downButton.Name = "downButton";
             this.downButton.Size = new System.Drawing.Size(32, 23);
             this.downButton.TabIndex = 3;
             this.downButton.UseVisualStyleBackColor = true;
             // 
+            // addLayerButton
+            // 
+            this.addLayerButton.Location = new System.Drawing.Point(0, 104);
+            this.addLayerButton.Name = "addLayerButton";
+            this.addLayerButton.Size = new System.Drawing.Size(75, 23);
+            this.addLayerButton.TabIndex = 4;
+            this.addLayerButton.Text = "Add";
+            this.addLayerButton.UseVisualStyleBackColor = true;
+            // 
+            // removeLayerButton
+            // 
+            this.removeLayerButton.Location = new System.Drawing.Point(82, 104);
+            this.removeLayerButton.Name = "removeLayerButton";
+            this.removeLayerButton.Size = new System.Drawing.Size(75, 23);
+            this.removeLayerButton.TabIndex = 5;
+            this.removeLayerButton.Text = "Remove";
+            this.removeLayerButton.UseVisualStyleBackColor = true;
+            // 
             // TerrainLayers
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
+            this.Controls.Add(this.removeLayerButton);
+            this.Controls.Add(this.addLayerButton);
             this.Controls.Add(this.downButton);
             this.Controls.Add(this.upButton);
             this.Controls.Add(this.layersListBox);
             this.Controls.Add(this.label1);
             this.Name = "TerrainLayers";
-            this.Size = new System.Drawing.Size(176, 126);
+            this.Size = new System.Drawing.Size(228, 135);
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -93,5 +114,7 @@
         private System.Windows.Forms.ListBox layersListBox;
         private System.Windows.Forms.Button upButton;
         private System.Windows.Forms.Button downButton;
+        private System.Windows.Forms.Button addLayerButton;
+        private System.Windows.Forms.Button removeLayerButton;
     }
 }
