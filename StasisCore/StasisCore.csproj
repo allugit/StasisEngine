@@ -63,6 +63,7 @@
     <Compile Include="Models\ItemMaterial.cs" />
     <Compile Include="Models\Level.cs" />
     <Compile Include="Models\Material.cs" />
+    <Compile Include="Models\NoiseOptions.cs" />
     <Compile Include="Models\TerrainMaterial.cs" />
     <Compile Include="Models\TreeMaterial.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

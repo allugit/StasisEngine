@@ -87,7 +87,7 @@ namespace StasisEditor.Controllers
                     //result = _terrainRenderer.noisePass(result, NoiseType.Perlin, Vector2.Zero, 2f, 1.5f, 0.5f, 0.8f, 1f, 1f, Color.Black, Color.White, 10);
                     //result = _terrainRenderer.noisePass(result, NoiseType.Perlin, Vector2.Zero, 1f, new Vector2(0.3f, 0.1f), 0.24f, 0.4f, 0.6f, 1f, 1f, Color.Black, Color.White, 10);
                     //result = _terrainRenderer.noisePass(result, NoiseType.Perlin, Vector2.Zero, 1f, new Vector2(-0.3f, -0.25f), 0.54f, 0.6f, 0.8f, 1f, 1f, Color.Black, Color.White, 3);
-                    result = _terrainRenderer.noisePass(result, NoiseType.Worley, Vector2.Zero, 2f, Vector2.Zero, 1.1f, 0.4f, 0.8f, 1f, 1f, Color.Black, Color.White, 1);
+                    //result = _terrainRenderer.noisePass(result, NoiseType.Worley, Vector2.Zero, 2f, Vector2.Zero, 1.1f, 0.4f, 0.8f, 1f, 1f, Color.Black, Color.White, 1);
 
                     // Restore graphics device
                     _editorController.resizeGraphicsDevice(graphicsDeviceWidth, graphicsDeviceHeight);
