@@ -7,20 +7,16 @@ namespace StasisCore.Models
 {
     public class TerrainOutlineLayer : TerrainLayer
     {
-        private OutlineOptions _outlineOptions;
-
-        public OutlineOptions outlineOptions { get { return _outlineOptions; } set { _outlineOptions = value; } }
-
-        public TerrainOutlineLayer(OutlineOptions outlineOptions = null)
+        public TerrainOutlineLayer(LayerProperties properties = null)
             : base()
         {
             // Default options
-            if (outlineOptions == null)
+            if (properties == null)
             {
-                outlineOptions = new OutlineOptions(Vector2.Zero);
+                properties = new OutlineOptions(Vector2.Zero);
             }
 
-            _outlineOptions = outlineOptions;
+            _properties = properties;
             _type = TerrainLayerType.Outline;
         }
 
@@ -33,7 +29,7 @@ namespace StasisCore.Models
         // clone
         public override TerrainLayer clone()
         {
-            return new TerrainOutlineLayer(_outlineOptions.clone());
+            return new TerrainOutlineLayer(_properties.clone());
         }
     }
 }

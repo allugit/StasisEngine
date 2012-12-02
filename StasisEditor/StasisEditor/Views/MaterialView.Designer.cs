@@ -43,7 +43,7 @@ namespace StasisEditor.Views
             // 
             this.saveButton.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
             this.saveButton.Enabled = false;
-            this.saveButton.Location = new System.Drawing.Point(387, 414);
+            this.saveButton.Location = new System.Drawing.Point(505, 585);
             this.saveButton.Name = "saveButton";
             this.saveButton.Size = new System.Drawing.Size(75, 23);
             this.saveButton.TabIndex = 0;
@@ -53,7 +53,7 @@ namespace StasisEditor.Views
             // closeButton
             // 
             this.closeButton.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
-            this.closeButton.Location = new System.Drawing.Point(468, 414);
+            this.closeButton.Location = new System.Drawing.Point(586, 585);
             this.closeButton.Name = "closeButton";
             this.closeButton.Size = new System.Drawing.Size(75, 23);
             this.closeButton.TabIndex = 1;
@@ -76,7 +76,7 @@ namespace StasisEditor.Views
             this.materialTypesListBox.FormattingEnabled = true;
             this.materialTypesListBox.Location = new System.Drawing.Point(12, 29);
             this.materialTypesListBox.Name = "materialTypesListBox";
-            this.materialTypesListBox.Size = new System.Drawing.Size(212, 54);
+            this.materialTypesListBox.Size = new System.Drawing.Size(221, 54);
             this.materialTypesListBox.TabIndex = 3;
             this.materialTypesListBox.SelectedValueChanged += new System.EventHandler(this.materialTypesListBox_SelectedValueChanged);
             // 
@@ -93,7 +93,7 @@ namespace StasisEditor.Views
             // 
             this.previewButton.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
             this.previewButton.Enabled = false;
-            this.previewButton.Location = new System.Drawing.Point(306, 414);
+            this.previewButton.Location = new System.Drawing.Point(424, 585);
             this.previewButton.Name = "previewButton";
             this.previewButton.Size = new System.Drawing.Size(75, 23);
             this.previewButton.TabIndex = 8;
@@ -109,7 +109,7 @@ namespace StasisEditor.Views
             this.propertiesContainer.AutoScroll = true;
             this.propertiesContainer.Location = new System.Drawing.Point(250, 12);
             this.propertiesContainer.Name = "propertiesContainer";
-            this.propertiesContainer.Size = new System.Drawing.Size(293, 388);
+            this.propertiesContainer.Size = new System.Drawing.Size(411, 567);
             this.propertiesContainer.TabIndex = 9;
             // 
             // materialsListBox
@@ -121,7 +121,7 @@ namespace StasisEditor.Views
             this.materialsListBox.Location = new System.Drawing.Point(12, 125);
             this.materialsListBox.Name = "materialsListBox";
             this.materialsListBox.SelectionMode = System.Windows.Forms.SelectionMode.MultiExtended;
-            this.materialsListBox.Size = new System.Drawing.Size(212, 314);
+            this.materialsListBox.Size = new System.Drawing.Size(221, 470);
             this.materialsListBox.TabIndex = 4;
             this.materialsListBox.SelectedIndexChanged += new System.EventHandler(this.materialsListBox_SelectedIndexChanged);
             // 
@@ -129,7 +129,7 @@ namespace StasisEditor.Views
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(555, 449);
+            this.ClientSize = new System.Drawing.Size(673, 620);
             this.ControlBox = false;
             this.Controls.Add(this.propertiesContainer);
             this.Controls.Add(this.previewButton);

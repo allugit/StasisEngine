@@ -23,7 +23,7 @@ namespace StasisEditor.Controls
 
             // Controls
             InitializeComponent();
-            Dock = DockStyle.Top;
+            Dock = DockStyle.Fill;
             upButton.Text = char.ConvertFromUtf32(0x000002c4);
             downButton.Text = char.ConvertFromUtf32(0x000002c5);
             layersListBox.DataSource = _layers;
@@ -114,6 +114,12 @@ namespace StasisEditor.Controls
             layersListBox.DataSource = null;
             layersListBox.DataSource = _layers;
             ResumeLayout();
+        }
+
+        // Selected layer changed
+        private void layersListBox_SelectedValueChanged(object sender, EventArgs e)
+        {
+            layerProperties.SelectedObject = (layersListBox.SelectedItem as TerrainLayer).properties;
         }
     }
 }

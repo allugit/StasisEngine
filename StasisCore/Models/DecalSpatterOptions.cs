@@ -5,13 +5,13 @@ using System.Text;
 
 namespace StasisCore.Models
 {
-    public class DecalSpatterOptions
+    public class DecalSpatterOptions : LayerProperties
     {
-        public DecalSpatterOptions()
+        public DecalSpatterOptions() : base()
         {
         }
 
-        public DecalSpatterOptions clone()
+        public override LayerProperties clone()
         {
             return new DecalSpatterOptions();
         }

@@ -6,15 +6,15 @@ namespace StasisCore.Models
 {
     public class TerrainBaseLayer : TerrainLayer
     {
-        private string _textureTag;
-
-        [CategoryAttribute("General")]
-        [DisplayName("Texture Tag")]
-        public string textureTag { get { return _textureTag; } set { _textureTag = value; } }
-
-        public TerrainBaseLayer(string textureTag = "") : base()
+        public TerrainBaseLayer(LayerProperties properties = null) : base()
         {
-            _textureTag = textureTag;
+            // Default options
+            if (properties == null)
+            {
+                properties = new BaseOptions("");
+            }
+
+            _properties = properties;
             _type = TerrainLayerType.Base;
         }
 
@@ -27,7 +27,7 @@ namespace StasisCore.Models
         // clone
         public override TerrainLayer clone()
         {
-            return new TerrainBaseLayer(_textureTag);
+            return new TerrainBaseLayer(_properties.clone());
         }
     }
 }

@@ -31,7 +31,7 @@ namespace StasisEditor.Controls
 
             // Controls
             InitializeComponent();
-            Dock = DockStyle.Top;
+            Dock = DockStyle.Fill;
         }
     }
 }

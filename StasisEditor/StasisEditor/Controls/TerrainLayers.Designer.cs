@@ -34,6 +34,8 @@
             this.downButton = new System.Windows.Forms.Button();
             this.addLayerButton = new System.Windows.Forms.Button();
             this.removeLayerButton = new System.Windows.Forms.Button();
+            this.layerProperties = new System.Windows.Forms.PropertyGrid();
+            this.label2 = new System.Windows.Forms.Label();
             this.SuspendLayout();
             // 
             // label1
@@ -54,6 +56,7 @@
             this.layersListBox.Name = "layersListBox";
             this.layersListBox.Size = new System.Drawing.Size(187, 82);
             this.layersListBox.TabIndex = 1;
+            this.layersListBox.SelectedValueChanged += new System.EventHandler(this.layersListBox_SelectedValueChanged);
             // 
             // upButton
             // 
@@ -95,18 +98,41 @@
             this.removeLayerButton.UseVisualStyleBackColor = true;
             this.removeLayerButton.Click += new System.EventHandler(this.removeLayerButton_Click);
             // 
+            // layerProperties
+            // 
+            this.layerProperties.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom)
+                        | System.Windows.Forms.AnchorStyles.Left)
+                        | System.Windows.Forms.AnchorStyles.Right)));
+            this.layerProperties.Location = new System.Drawing.Point(0, 162);
+            this.layerProperties.Margin = new System.Windows.Forms.Padding(0);
+            this.layerProperties.Name = "layerProperties";
+            this.layerProperties.Size = new System.Drawing.Size(228, 160);
+            this.layerProperties.TabIndex = 6;
+            // 
+            // label2
+            // 
+            this.label2.AutoSize = true;
+            this.label2.Location = new System.Drawing.Point(0, 145);
+            this.label2.Name = "label2";
+            this.label2.Size = new System.Drawing.Size(83, 13);
+            this.label2.TabIndex = 7;
+            this.label2.Text = "Layer Properties";
+            // 
             // TerrainLayers
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
+            this.Controls.Add(this.label2);
+            this.Controls.Add(this.layerProperties);
             this.Controls.Add(this.removeLayerButton);
             this.Controls.Add(this.addLayerButton);
             this.Controls.Add(this.downButton);
             this.Controls.Add(this.upButton);
             this.Controls.Add(this.layersListBox);
             this.Controls.Add(this.label1);
+            this.Margin = new System.Windows.Forms.Padding(0);
             this.Name = "TerrainLayers";
-            this.Size = new System.Drawing.Size(228, 135);
+            this.Size = new System.Drawing.Size(228, 325);
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -120,5 +146,7 @@
         private System.Windows.Forms.Button downButton;
         private System.Windows.Forms.Button addLayerButton;
         private System.Windows.Forms.Button removeLayerButton;
+        private System.Windows.Forms.PropertyGrid layerProperties;
+        private System.Windows.Forms.Label label2;
     }
 }

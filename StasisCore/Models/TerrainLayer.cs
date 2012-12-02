@@ -14,7 +14,9 @@ namespace StasisCore.Models
     abstract public class TerrainLayer
     {
         protected TerrainLayerType _type;
+        protected LayerProperties _properties;
         public TerrainLayerType type { get { return _type; } }
+        public LayerProperties properties { get { return _properties; } set { _properties = value; } }
 
         // create
         public static TerrainLayer create(TerrainLayerType layerType)

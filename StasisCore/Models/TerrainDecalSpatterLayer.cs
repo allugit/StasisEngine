@@ -5,19 +5,16 @@ namespace StasisCore.Models
 {
     public class TerrainDecalSpatterLayer : TerrainLayer
     {
-        private DecalSpatterOptions _decalSpatterOptions;
-        public DecalSpatterOptions decalSpatterOptions { get { return _decalSpatterOptions; } set { _decalSpatterOptions = value; } }
-
-        public TerrainDecalSpatterLayer(DecalSpatterOptions decalSpatterOptions = null)
+        public TerrainDecalSpatterLayer(LayerProperties properties = null)
             : base()
         {
             // Default options
-            if (decalSpatterOptions == null)
+            if (properties == null)
             {
-                decalSpatterOptions = new DecalSpatterOptions();
+                properties = new DecalSpatterOptions();
             }
 
-            _decalSpatterOptions = decalSpatterOptions;
+            _properties = properties;
             _type = TerrainLayerType.DecalSpatter;
         }
 
@@ -30,7 +27,7 @@ namespace StasisCore.Models
         // clone
         public override TerrainLayer clone()
         {
-            return new TerrainDecalSpatterLayer(_decalSpatterOptions.clone());
+            return new TerrainDecalSpatterLayer(_properties.clone());
         }
     }
 }

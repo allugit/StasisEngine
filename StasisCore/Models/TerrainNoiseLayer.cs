@@ -6,16 +6,13 @@ namespace StasisCore.Models
 {
     public class TerrainNoiseLayer : TerrainLayer
     {
-        private NoiseOptions _noiseOptions;
-        public NoiseOptions noiseOptions { get { return _noiseOptions; } set { _noiseOptions = value; } }
-
-        public TerrainNoiseLayer(NoiseOptions noiseOptions = null)
+        public TerrainNoiseLayer(LayerProperties properties = null)
             : base()
         {
             // Default options
-            if (noiseOptions == null)
+            if (properties == null)
             {
-                noiseOptions = new NoiseOptions(
+                properties = new NoiseOptions(
                     NoiseType.Perlin,
                     Vector2.Zero,
                     1f,
@@ -30,7 +27,7 @@ namespace StasisCore.Models
                     1);
             }
 
-            _noiseOptions = noiseOptions;
+            _properties = properties;
             _type = TerrainLayerType.Noise;
         }
 
@@ -43,7 +40,7 @@ namespace StasisCore.Models
         // clone
         public override TerrainLayer clone()
         {
-            return new TerrainNoiseLayer(_noiseOptions.clone());
+            return new TerrainNoiseLayer(_properties.clone());
         }
     }
 }

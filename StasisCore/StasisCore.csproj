@@ -59,9 +59,11 @@
     <Reference Include="System.Net" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Models\BaseOptions.cs" />
     <Compile Include="Models\DecalSpatterOptions.cs" />
     <Compile Include="Models\FluidMaterial.cs" />
     <Compile Include="Models\ItemMaterial.cs" />
+    <Compile Include="Models\LayerProperties.cs" />
     <Compile Include="Models\Level.cs" />
     <Compile Include="Models\Material.cs" />
     <Compile Include="Models\NoiseOptions.cs" />
