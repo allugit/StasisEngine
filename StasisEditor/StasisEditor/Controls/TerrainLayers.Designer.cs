@@ -108,6 +108,7 @@
             this.layerProperties.Name = "layerProperties";
             this.layerProperties.Size = new System.Drawing.Size(228, 160);
             this.layerProperties.TabIndex = 6;
+            this.layerProperties.PropertyValueChanged += new System.Windows.Forms.PropertyValueChangedEventHandler(this.layerProperties_PropertyValueChanged);
             // 
             // label2
             // 

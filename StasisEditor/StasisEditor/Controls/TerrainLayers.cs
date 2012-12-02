@@ -32,9 +32,6 @@ namespace StasisEditor.Controls
         // Add new layer
         public void addNewLayer(TerrainLayerType layerType)
         {
-            // Inform controller that changes are being made
-            _controller.setChangesMade(true);
-
             SuspendLayout();
 
             _layers.Add(TerrainLayer.create(layerType));
@@ -42,6 +39,9 @@ namespace StasisEditor.Controls
             layersListBox.DataSource = _layers;
 
             ResumeLayout();
+
+            // Inform controller that changes were made
+            _controller.setChangesMade(true);
         }
 
         // Move layer up
@@ -51,9 +51,6 @@ namespace StasisEditor.Controls
             int selectedIndex = layersListBox.SelectedIndex;
             if (selectedIndex == 0)
                 return;
-
-            // Inform controller that changes are being made
-            _controller.setChangesMade(true);
 
             SuspendLayout();
 
@@ -65,6 +62,9 @@ namespace StasisEditor.Controls
             layersListBox.SelectedItem = selectedLayer;
 
             ResumeLayout();
+
+            // Inform controller that changes were made
+            _controller.setChangesMade(true);
         }
 
         // Move layer down
@@ -122,6 +122,12 @@ namespace StasisEditor.Controls
         {
             if (layersListBox.DataSource != null)
                 layerProperties.SelectedObject = (layersListBox.SelectedItem as TerrainLayer).properties;
+        }
+
+        // Property value changed
+        private void layerProperties_PropertyValueChanged(object s, PropertyValueChangedEventArgs e)
+        {
+            _controller.setChangesMade(true);
         }
     }
 }

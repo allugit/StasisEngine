@@ -8,20 +8,43 @@ using System.Linq;
 using System.Text;
 using System.Windows.Forms;
 using Microsoft.Xna.Framework.Graphics;
+using StasisEditor.Controllers;
 
 namespace StasisEditor.Controls
 {
     public partial class MaterialPreview : Form
     {
+        private IMaterialController _controller;
         private Image _image;
 
-        public MaterialPreview(Texture2D texture, string title = "Material Preview")
+        public MaterialPreview(IMaterialController controller, Texture2D texture, string title = "Material Preview")
         {
+            _controller = controller;
+
             // Initialize components
             InitializeComponent();
             pictureBox.Width = texture.Width;
             pictureBox.Height = texture.Height;
             Text = title;
+
+            setPictureBox(texture);
+        }
+
+        // Update preview
+        public void updatePreview(Texture2D result)
+        {
+            setPictureBox(result);
+        }
+
+        // Set picture box to texture
+        private void setPictureBox(Texture2D texture)
+        {
+            // Dispose previous image
+            if (pictureBox.Image != null)
+            {
+                pictureBox.Image.Dispose();
+                pictureBox.Image = null;
+            }
 
             // Create image from texture
             using (MemoryStream ms = new MemoryStream())
@@ -39,6 +62,12 @@ namespace StasisEditor.Controls
 
             // Set picture box to image
             pictureBox.Image = _image;
+        }
+
+        // Preview window closing
+        private void MaterialPreview_FormClosing(object sender, FormClosingEventArgs e)
+        {
+            _controller.previewClosed();
         }
     }
 }

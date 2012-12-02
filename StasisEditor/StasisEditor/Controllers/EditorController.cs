@@ -96,7 +96,13 @@ namespace StasisEditor.Controllers
             _level = null;
         }
 
-        // setChangesMage
+        // getChangesMade
+        public bool getChangesMade()
+        {
+            return false;
+        }
+
+        // setChangesMade
         public void setChangesMade(bool status)
         {
         }

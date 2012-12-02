@@ -12,12 +12,15 @@ using StasisEditor.Controls;
 namespace StasisEditor.Controllers
 {
 
-    public class MaterialController : IController
+    public class MaterialController : IMaterialController
     {
         private EditorController _editorController;
         private TerrainRenderer _terrainRenderer;
         private IMaterialView _materialView;
+        private MaterialPreview _materialPreview;
         private List<Material>[] _materials;
+        private bool _changesMade;
+        private bool _autoUpdatePreview;
 
         public MaterialController(EditorController editorController)
         {
@@ -45,11 +48,39 @@ namespace StasisEditor.Controllers
             _terrainRenderer = new TerrainRenderer(XNAResources.game as Game, XNAResources.spriteBatch);
         }
 
+        // setAutoUpdatePreview
+        public void setAutoUpdatePreview(bool status)
+        {
+            _autoUpdatePreview = status;
+        }
+
+        // getAutoUpdatePreview
+        public bool getAutoUpdatePreview()
+        {
+            return _autoUpdatePreview;
+        }
+
+        // getChangesMade
+        public bool getChangesMade()
+        {
+            return _changesMade;
+        }
+
         // setChangesMade
         public void setChangesMade(bool status)
         {
+            // Changes were made
+            _changesMade = status;
             if (_materialView != null)
                 _materialView.setChangesMade(status);
+
+            // Update if set to auto update
+            if (_autoUpdatePreview)
+            {
+                Material material = _materialView.getSelectedMaterial();
+                if (material != null)
+                    preview(material);
+            }
         }
 
         // getMaterials
@@ -63,6 +94,7 @@ namespace StasisEditor.Controllers
         {
             _materialView = new MaterialView();
             _materialView.setController(this);
+            _materialView.setAutoUpdatePreview(true);
             _materialView.ShowDialog();
         }
 
@@ -106,14 +138,26 @@ namespace StasisEditor.Controllers
                     _editorController.resizeGraphicsDevice(graphicsDeviceWidth, graphicsDeviceHeight);
                     XNAResources.graphicsDevice.Clear(Color.Black);
 
-                    // Open material preview
-                    MaterialPreview materialPreview = new MaterialPreview(result, String.Format("{0} Preview", material.name));
-                    materialPreview.Show();
+                    if (_materialPreview == null)
+                    {
+                        // Open material preview
+                        _materialPreview = new MaterialPreview(this, result, String.Format("{0} Preview", material.name));
+                        _materialPreview.Show();
+                    }
+                    else
+                        _materialPreview.updatePreview(result);
+
                     break;
 
                 default:
                     return;
             }
+        }
+
+        // previewClosed
+        public void previewClosed()
+        {
+            _materialPreview = null;
         }
     }
 }

@@ -27,6 +27,12 @@ namespace StasisEditor.Controllers
             System.Windows.Forms.Control.FromHandle(Window.Handle).VisibleChanged += new EventHandler(visibleChanged);
         }
 
+        // getChangesMade
+        public bool getChangesMade()
+        {
+            return false;
+        }
+
         // setChangesMade
         public void setChangesMade(bool status)
         {

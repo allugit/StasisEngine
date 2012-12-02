@@ -13,10 +13,9 @@ namespace StasisEditor.Views
 {
     public partial class MaterialView : Form, IMaterialView
     {
-        private MaterialController _controller;
+        private IMaterialController _controller;
         private List<Material>[] _materialCopies;
         private List<Material> _selectedMaterials;
-        private bool _changesMade;
         private MaterialProperties _materialProperties;
 
         public MaterialView()
@@ -34,7 +33,7 @@ namespace StasisEditor.Views
         }
 
         // setController
-        public void setController(MaterialController controller)
+        public void setController(IMaterialController controller)
         {
             _controller = controller;
 
@@ -47,8 +46,19 @@ namespace StasisEditor.Views
         // setChangesMade
         public void setChangesMade(bool status)
         {
-            _changesMade = true;
             saveButton.Enabled = true;
+        }
+
+        // setAutoUpdatePreview -- this will trigger an event
+        public void setAutoUpdatePreview(bool status)
+        {
+            autoUpdatePreview.Checked = status;
+        }
+
+        // getSelectedMaterial
+        public Material getSelectedMaterial()
+        {
+            return materialsListBox.SelectedItem as Material;
         }
 
         // openProperties
@@ -75,7 +85,7 @@ namespace StasisEditor.Views
         // Close button clicked
         private void closeButton_Click(object sender, EventArgs e)
         {
-            if (_changesMade)
+            if (_controller.getChangesMade())
             {
                 if (MessageBox.Show("Are you sure you want to close the Materials View? Any unsaved changes will be lost.", "Close Materials", MessageBoxButtons.OKCancel) == DialogResult.OK)
                     Close();
@@ -124,6 +134,12 @@ namespace StasisEditor.Views
         private void previewButton_Click(object sender, EventArgs e)
         {
             _controller.preview(_selectedMaterials[0]);
+        }
+
+        // Auto update changed
+        private void autoUpdatePreview_CheckedChanged(object sender, EventArgs e)
+        {
+            _controller.setAutoUpdatePreview(autoUpdatePreview.Checked);
         }
     }
 }

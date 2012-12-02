@@ -37,6 +37,7 @@ namespace StasisEditor.Views
             this.previewButton = new System.Windows.Forms.Button();
             this.propertiesContainer = new System.Windows.Forms.Panel();
             this.materialsListBox = new StasisEditor.Controls.RefreshingListBox();
+            this.autoUpdatePreview = new System.Windows.Forms.CheckBox();
             this.SuspendLayout();
             // 
             // saveButton
@@ -125,12 +126,25 @@ namespace StasisEditor.Views
             this.materialsListBox.TabIndex = 4;
             this.materialsListBox.SelectedIndexChanged += new System.EventHandler(this.materialsListBox_SelectedIndexChanged);
             // 
+            // autoUpdatePreview
+            // 
+            this.autoUpdatePreview.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
+            this.autoUpdatePreview.AutoSize = true;
+            this.autoUpdatePreview.Location = new System.Drawing.Point(291, 589);
+            this.autoUpdatePreview.Name = "autoUpdatePreview";
+            this.autoUpdatePreview.Size = new System.Drawing.Size(127, 17);
+            this.autoUpdatePreview.TabIndex = 10;
+            this.autoUpdatePreview.Text = "Auto Update Preview";
+            this.autoUpdatePreview.UseVisualStyleBackColor = true;
+            this.autoUpdatePreview.CheckedChanged += new System.EventHandler(this.autoUpdatePreview_CheckedChanged);
+            // 
             // MaterialView
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(673, 620);
             this.ControlBox = false;
+            this.Controls.Add(this.autoUpdatePreview);
             this.Controls.Add(this.propertiesContainer);
             this.Controls.Add(this.previewButton);
             this.Controls.Add(this.materialsListBox);
@@ -156,5 +170,6 @@ namespace StasisEditor.Views
         private RefreshingListBox materialsListBox;
         private System.Windows.Forms.Button previewButton;
         private System.Windows.Forms.Panel propertiesContainer;
+        private System.Windows.Forms.CheckBox autoUpdatePreview;
     }
 }
