@@ -19,7 +19,7 @@ namespace StasisCore.Models
                     Vector2.Zero,
                     1.1f,
                     0.5f,
-                    0.8f,
+                    2f,
                     1f,
                     1f,
                     Color.Black,

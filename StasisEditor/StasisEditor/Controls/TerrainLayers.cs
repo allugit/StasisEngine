@@ -29,21 +29,6 @@ namespace StasisEditor.Controls
             layersListBox.DataSource = _layers;
         }
 
-        // Add new layer
-        public void addNewLayer(TerrainLayerType layerType)
-        {
-            SuspendLayout();
-
-            _layers.Add(TerrainLayer.create(layerType));
-            layersListBox.DataSource = null;
-            layersListBox.DataSource = _layers;
-
-            ResumeLayout();
-
-            // Inform controller that changes were made
-            _controller.setChangesMade(true);
-        }
-
         // Move layer up
         private void upButton_Click(object sender, EventArgs e)
         {
@@ -96,7 +81,19 @@ namespace StasisEditor.Controls
             TerrainLayerSelectBox selectBox = new TerrainLayerSelectBox();
             selectBox.StartPosition = FormStartPosition.CenterParent;
             if (selectBox.ShowDialog() == DialogResult.OK)
-                addNewLayer(selectBox.getSelectedType());
+            {
+                SuspendLayout();
+
+                _layers.Add(TerrainLayer.create(selectBox.getSelectedType()));
+                layersListBox.DataSource = null;
+                layersListBox.DataSource = _layers;
+                layersListBox.SelectedItem = _layers[_layers.Count - 1];
+
+                ResumeLayout();
+
+                // Inform controller that changes were made
+                _controller.setChangesMade(true);
+            }
         }
 
         // Remove layer
@@ -106,15 +103,25 @@ namespace StasisEditor.Controls
             if (layersListBox.Items.Count == 0)
                 return;
 
-            // Inform controller of changes
-            _controller.setChangesMade(true);
+            int selectedIndex = layersListBox.SelectedIndex;
 
             SuspendLayout();
-            _layers.RemoveAt(layersListBox.SelectedIndex);
+            _layers.RemoveAt(selectedIndex);
             layersListBox.DataSource = null;
             layersListBox.DataSource = _layers;
-            layerProperties.SelectedObject = null;
+
+            // Change layer selection
+            if (_layers.Count == 0)
+                layersListBox.SelectedItem = null;
+            else if (selectedIndex < _layers.Count)
+                layersListBox.SelectedItem = _layers[selectedIndex];
+            else if (selectedIndex - 1 >= 0)
+                layersListBox.SelectedItem = _layers[selectedIndex - 1];
+
             ResumeLayout();
+
+            // Inform controller of changes
+            _controller.setChangesMade(true);
         }
 
         // Selected layer changed
@@ -122,6 +129,8 @@ namespace StasisEditor.Controls
         {
             if (layersListBox.DataSource != null)
                 layerProperties.SelectedObject = (layersListBox.SelectedItem as TerrainLayer).properties;
+            else
+                layerProperties.SelectedObject = null;
         }
 
         // Property value changed

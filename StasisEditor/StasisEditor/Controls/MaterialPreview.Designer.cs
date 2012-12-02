@@ -50,6 +50,7 @@
             this.ClientSize = new System.Drawing.Size(168, 146);
             this.Controls.Add(this.pictureBox);
             this.Name = "MaterialPreview";
+            this.StartPosition = System.Windows.Forms.FormStartPosition.Manual;
             this.TopMost = true;
             this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.MaterialPreview_FormClosing);
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox)).EndInit();

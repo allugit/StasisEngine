@@ -154,7 +154,7 @@ namespace StasisEditor.Views
             this.Controls.Add(this.closeButton);
             this.Controls.Add(this.saveButton);
             this.Name = "MaterialView";
-            this.Text = "MaterialView";
+            this.Text = "Materials";
             this.ResumeLayout(false);
             this.PerformLayout();
 
