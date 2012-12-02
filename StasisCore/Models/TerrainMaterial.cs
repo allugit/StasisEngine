@@ -6,24 +6,22 @@ namespace StasisCore.Models
 {
     public class TerrainMaterial : Material
     {
-        private string _textureTag;
-        private List<NoiseOptions> _noiseLayerOptions;
+        private List<TerrainLayer> _layers;
 
-        [CategoryAttribute("General")]
-        [DisplayName("Texture Tag")]
-        public string textureTag { get { return _textureTag; } set { _textureTag = value; } }
+        [Browsable(false)]
+        public List<TerrainLayer> layers { get { return _layers; } set { _layers = layers; } }
 
         // Constructor
-        public TerrainMaterial(string name, List<NoiseOptions> noiseLayerOptions) : base(name)
+        public TerrainMaterial(string name, List<TerrainLayer> layers) : base(name)
         {
+            _layers = layers;
             _type = MaterialType.Terrain;
-            _noiseLayerOptions = noiseLayerOptions;
         }
 
         // clone
         public override Material clone()
         {
-            return new TerrainMaterial(_name, NoiseOptions.copyFrom(_noiseLayerOptions));
+            return new TerrainMaterial(_name, TerrainLayer.copyFrom(_layers));
         }
     }
 }

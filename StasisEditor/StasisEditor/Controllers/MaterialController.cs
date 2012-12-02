@@ -30,9 +30,9 @@ namespace StasisEditor.Controllers
                 _materials[i] = new List<Material>();
 
             // Test materials
-            _materials[(int)MaterialType.Terrain].Add(new TerrainMaterial("Rock", new List<NoiseOptions>()));
-            _materials[(int)MaterialType.Terrain].Add(new TerrainMaterial("Dirt", new List<NoiseOptions>()));
-            _materials[(int)MaterialType.Terrain].Add(new TerrainMaterial("Snow", new List<NoiseOptions>()));
+            _materials[(int)MaterialType.Terrain].Add(new TerrainMaterial("Rock", new List<TerrainLayer>()));
+            _materials[(int)MaterialType.Terrain].Add(new TerrainMaterial("Dirt", new List<TerrainLayer>()));
+            _materials[(int)MaterialType.Terrain].Add(new TerrainMaterial("Snow", new List<TerrainLayer>()));
             _materials[(int)MaterialType.Trees].Add(new TreeMaterial("Acuminate"));
             _materials[(int)MaterialType.Fluid].Add(new FluidMaterial("Water"));
             _materials[(int)MaterialType.Items].Add(new ItemMaterial("Rope Gun"));
