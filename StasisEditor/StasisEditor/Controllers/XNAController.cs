@@ -12,7 +12,7 @@ using StasisEditor.Views;
 
 namespace StasisEditor.Controllers
 {
-    public class XNAController : Game
+    public class XNAController : Game, IController
     {
         public GraphicsDeviceManager graphics;
         public SpriteBatch spriteBatch;
@@ -25,6 +25,11 @@ namespace StasisEditor.Controllers
 
             // Hide the main XNA game window
             System.Windows.Forms.Control.FromHandle(Window.Handle).VisibleChanged += new EventHandler(visibleChanged);
+        }
+
+        // setChangesMade
+        public void setChangesMade(bool status)
+        {
         }
 
         // Keep the main XNA game window hidden

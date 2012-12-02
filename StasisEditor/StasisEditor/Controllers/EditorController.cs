@@ -10,7 +10,7 @@ using StasisEditor.Models;
 
 namespace StasisEditor.Controllers
 {
-    public class EditorController
+    public class EditorController : IController
     {
         private XNAController _xnaController;
         private MaterialController _materialController;
@@ -94,6 +94,11 @@ namespace StasisEditor.Controllers
 
             // Remove model
             _level = null;
+        }
+
+        // setChangesMage
+        public void setChangesMade(bool status)
+        {
         }
 
         // openMaterialView

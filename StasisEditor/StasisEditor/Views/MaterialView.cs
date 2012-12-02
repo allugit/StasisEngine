@@ -17,7 +17,7 @@ namespace StasisEditor.Views
         private List<Material>[] _materialCopies;
         private List<Material> _selectedMaterials;
         private bool _changesMade;
-        private MaterialProperties _properties;
+        private MaterialProperties _materialProperties;
 
         public MaterialView()
         {
@@ -44,25 +44,32 @@ namespace StasisEditor.Views
                 _materialCopies[i] = Material.copyFrom(_controller.getMaterials((MaterialType)i));
         }
 
+        // setChangesMade
+        public void setChangesMade(bool status)
+        {
+            _changesMade = true;
+            saveButton.Enabled = true;
+        }
+
         // openProperties
         private void openProperties(Material material)
         {
-            _properties = new MaterialProperties(material);
-            propertiesContainer.Controls.Add(_properties);
+            _materialProperties = new MaterialProperties(_controller, material);
+            propertiesContainer.Controls.Add(_materialProperties);
 
             // Set material property grid's selected objects
-            _properties.PropertyGrid.SelectedObjects = _selectedMaterials.ToArray();
+            _materialProperties.PropertyGrid.SelectedObjects = _selectedMaterials.ToArray();
         }
 
         // closeProperties
         private void closeProperties()
         {
-            if (_properties == null)
+            if (_materialProperties == null)
                 return;
 
-            propertiesContainer.Controls.Remove(_properties);
-            _properties.Dispose();
-            _properties = null;
+            propertiesContainer.Controls.Remove(_materialProperties);
+            _materialProperties.Dispose();
+            _materialProperties = null;
         }
 
         // Close button clicked
@@ -106,9 +113,8 @@ namespace StasisEditor.Views
         // Material property changed
         private void materialProperties_PropertyValueChanged(object s, PropertyValueChangedEventArgs e)
         {
-            // Changes were made
-            _changesMade = true;
-            saveButton.Enabled = true;
+            // Changes are being made
+            setChangesMade(true);
 
             // Refresh the materials list
             (materialsListBox as RefreshingListBox).RefreshItems();

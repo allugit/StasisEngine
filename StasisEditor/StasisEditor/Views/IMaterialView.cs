@@ -9,5 +9,6 @@ namespace StasisEditor.Views
     {
         DialogResult ShowDialog();
         void setController(MaterialController controller);
+        void setChangesMade(bool status);
     }
 }

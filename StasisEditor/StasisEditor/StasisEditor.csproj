@@ -75,6 +75,7 @@
     <Reference Include="System.Net" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Controllers\IController.cs" />
     <Compile Include="Controllers\EditorController.cs" />
     <Compile Include="Controllers\MaterialController.cs" />
     <Compile Include="Controls\BrushToolbar.cs">

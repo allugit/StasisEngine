@@ -7,15 +7,18 @@ using System.Linq;
 using System.Text;
 using System.Windows.Forms;
 using StasisCore.Models;
+using StasisEditor.Controllers;
 
 namespace StasisEditor.Controls
 {
     public partial class TerrainLayers : UserControl
     {
+        private IController _controller;
         private List<TerrainLayer> _layers;
 
-        public TerrainLayers(List<TerrainLayer> layers)
+        public TerrainLayers(IController controller, List<TerrainLayer> layers)
         {
+            _controller = controller;
             _layers = layers;
 
             // Controls
@@ -29,6 +32,9 @@ namespace StasisEditor.Controls
         // Add new layer
         public void addNewLayer(TerrainLayerType layerType)
         {
+            // Inform controller that changes are being made
+            _controller.setChangesMade(true);
+
             SuspendLayout();
 
             _layers.Add(TerrainLayer.create(layerType));
@@ -41,9 +47,13 @@ namespace StasisEditor.Controls
         // Move layer up
         private void upButton_Click(object sender, EventArgs e)
         {
+            // Return if selected index is already at top
             int selectedIndex = layersListBox.SelectedIndex;
             if (selectedIndex == 0)
                 return;
+
+            // Inform controller that changes are being made
+            _controller.setChangesMade(true);
 
             SuspendLayout();
 
@@ -60,9 +70,13 @@ namespace StasisEditor.Controls
         // Move layer down
         private void downButton_Click(object sender, EventArgs e)
         {
+            // Return if selected index is already at bottom
             int selectedIndex = layersListBox.SelectedIndex;
             if (selectedIndex == _layers.Count - 1)
                 return;
+
+            // Inform controller that changes are being made
+            _controller.setChangesMade(true);
 
             SuspendLayout();
 

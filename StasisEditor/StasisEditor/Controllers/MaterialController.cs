@@ -12,7 +12,7 @@ using StasisEditor.Controls;
 namespace StasisEditor.Controllers
 {
 
-    public class MaterialController
+    public class MaterialController : IController
     {
         private EditorController _editorController;
         private TerrainRenderer _terrainRenderer;
@@ -43,6 +43,13 @@ namespace StasisEditor.Controllers
 
             // Create terrain renderer
             _terrainRenderer = new TerrainRenderer(XNAResources.game as Game, XNAResources.spriteBatch);
+        }
+
+        // setChangesMade
+        public void setChangesMade(bool status)
+        {
+            if (_materialView != null)
+                _materialView.setChangesMade(status);
         }
 
         // getMaterials
