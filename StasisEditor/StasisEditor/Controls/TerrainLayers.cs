@@ -98,5 +98,22 @@ namespace StasisEditor.Controls
             if (selectBox.ShowDialog() == DialogResult.OK)
                 addNewLayer(selectBox.getSelectedType());
         }
+
+        // Remove layer
+        private void removeLayerButton_Click(object sender, EventArgs e)
+        {
+            // Return if there are no layers to remove
+            if (layersListBox.Items.Count == 0)
+                return;
+
+            // Inform controller of changes
+            _controller.setChangesMade(true);
+
+            SuspendLayout();
+            _layers.RemoveAt(layersListBox.SelectedIndex);
+            layersListBox.DataSource = null;
+            layersListBox.DataSource = _layers;
+            ResumeLayout();
+        }
     }
 }

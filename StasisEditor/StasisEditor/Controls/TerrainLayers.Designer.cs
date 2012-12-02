@@ -93,6 +93,7 @@
             this.removeLayerButton.TabIndex = 5;
             this.removeLayerButton.Text = "Remove";
             this.removeLayerButton.UseVisualStyleBackColor = true;
+            this.removeLayerButton.Click += new System.EventHandler(this.removeLayerButton_Click);
             // 
             // TerrainLayers
             // 
