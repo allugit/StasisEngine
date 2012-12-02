@@ -12,7 +12,7 @@ namespace StasisCore.Models
         [DisplayName("Texture Tag")]
         public string textureTag { get { return _textureTag; } set { _textureTag = value; } }
 
-        public TerrainBaseLayer(string textureTag) : base()
+        public TerrainBaseLayer(string textureTag = "") : base()
         {
             _textureTag = textureTag;
             _type = TerrainLayerType.Base;

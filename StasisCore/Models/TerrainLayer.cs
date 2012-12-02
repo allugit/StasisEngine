@@ -16,6 +16,23 @@ namespace StasisCore.Models
         protected TerrainLayerType _type;
         public TerrainLayerType type { get { return _type; } }
 
+        // create
+        public static TerrainLayer create(TerrainLayerType layerType)
+        {
+            switch (layerType)
+            {
+                case TerrainLayerType.Base:
+                    return new TerrainBaseLayer();
+                case TerrainLayerType.DecalSpatter:
+                    return new TerrainDecalSpatterLayer();
+                case TerrainLayerType.Noise:
+                    return new TerrainNoiseLayer();
+                case TerrainLayerType.Outline:
+                    return new TerrainOutlineLayer();
+            }
+            return null;
+        }
+
         // copyFrom -- clones a list
         public static List<TerrainLayer> copyFrom(List<TerrainLayer> list)
         {

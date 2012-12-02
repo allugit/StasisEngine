@@ -32,19 +32,7 @@ namespace StasisEditor.Controllers
             // Test material data
             List<TerrainLayer> testLayers = new List<TerrainLayer>();
             testLayers.Add(new TerrainBaseLayer("some_texture"));
-            testLayers.Add(new TerrainNoiseLayer(new NoiseOptions(
-                NoiseType.Perlin,
-                Vector2.Zero,
-                2f,
-                new Vector2(0.1f, 0.2f),
-                1.1f,
-                0.5f,
-                0.8f,
-                1f,
-                1f,
-                Color.Black,
-                Color.White,
-                1)));
+            testLayers.Add(new TerrainNoiseLayer());
             _materials[(int)MaterialType.Terrain].Add(new TerrainMaterial("Rock", testLayers));
             _materials[(int)MaterialType.Terrain].Add(new TerrainMaterial("Dirt", TerrainLayer.copyFrom(testLayers)));
             _materials[(int)MaterialType.Terrain].Add(new TerrainMaterial("Snow", new List<TerrainLayer>()));

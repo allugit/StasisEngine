@@ -7,25 +7,20 @@ namespace StasisCore.Models
 {
     public class TerrainOutlineLayer : TerrainLayer
     {
-        private Vector2 _normal;
+        private OutlineOptions _outlineOptions;
 
-        [CategoryAttribute("General")]
-        [DisplayName("Outline Normal")]
-        public Vector2 normal
-        {
-            get { return _normal; } 
-            set
-            {
-                Vector2 val = value;
-                val.Normalize();
-                _normal = val;
-            } 
-        }
+        public OutlineOptions outlineOptions { get { return _outlineOptions; } set { _outlineOptions = value; } }
 
-        public TerrainOutlineLayer(Vector2 normal)
+        public TerrainOutlineLayer(OutlineOptions outlineOptions = null)
             : base()
         {
-            _normal = normal;
+            // Default options
+            if (outlineOptions == null)
+            {
+                outlineOptions = new OutlineOptions(Vector2.Zero);
+            }
+
+            _outlineOptions = outlineOptions;
             _type = TerrainLayerType.Outline;
         }
 
@@ -38,7 +33,7 @@ namespace StasisCore.Models
         // clone
         public override TerrainLayer clone()
         {
-            return new TerrainOutlineLayer(_normal);
+            return new TerrainOutlineLayer(_outlineOptions.clone());
         }
     }
 }

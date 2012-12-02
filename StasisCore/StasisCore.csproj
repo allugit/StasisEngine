@@ -65,6 +65,7 @@
     <Compile Include="Models\Level.cs" />
     <Compile Include="Models\Material.cs" />
     <Compile Include="Models\NoiseOptions.cs" />
+    <Compile Include="Models\OutlineOptions.cs" />
     <Compile Include="Models\TerrainBaseLayer.cs" />
     <Compile Include="Models\TerrainDecalSpatterLayer.cs" />
     <Compile Include="Models\TerrainLayer.cs" />

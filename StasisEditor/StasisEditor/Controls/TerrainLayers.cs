@@ -26,6 +26,18 @@ namespace StasisEditor.Controls
             layersListBox.DataSource = _layers;
         }
 
+        // Add new layer
+        public void addNewLayer(TerrainLayerType layerType)
+        {
+            SuspendLayout();
+
+            _layers.Add(TerrainLayer.create(layerType));
+            layersListBox.DataSource = null;
+            layersListBox.DataSource = _layers;
+
+            ResumeLayout();
+        }
+
         // Move layer up
         private void upButton_Click(object sender, EventArgs e)
         {
@@ -62,6 +74,15 @@ namespace StasisEditor.Controls
             layersListBox.SelectedItem = selectedLayer;
 
             ResumeLayout();
+        }
+
+        // Add new layer
+        private void addLayerButton_Click(object sender, EventArgs e)
+        {
+            TerrainLayerSelectBox selectBox = new TerrainLayerSelectBox();
+            selectBox.StartPosition = FormStartPosition.CenterParent;
+            if (selectBox.ShowDialog() == DialogResult.OK)
+                addNewLayer(selectBox.getSelectedType());
         }
     }
 }

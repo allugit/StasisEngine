@@ -8,9 +8,15 @@ namespace StasisCore.Models
         private DecalSpatterOptions _decalSpatterOptions;
         public DecalSpatterOptions decalSpatterOptions { get { return _decalSpatterOptions; } set { _decalSpatterOptions = value; } }
 
-        public TerrainDecalSpatterLayer(DecalSpatterOptions decalSpatterOptions)
+        public TerrainDecalSpatterLayer(DecalSpatterOptions decalSpatterOptions = null)
             : base()
         {
+            // Default options
+            if (decalSpatterOptions == null)
+            {
+                decalSpatterOptions = new DecalSpatterOptions();
+            }
+
             _decalSpatterOptions = decalSpatterOptions;
             _type = TerrainLayerType.DecalSpatter;
         }

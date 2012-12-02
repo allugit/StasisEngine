@@ -104,6 +104,9 @@
     <Compile Include="Controls\TerrainLayers.Designer.cs">
       <DependentUpon>TerrainLayers.cs</DependentUpon>
     </Compile>
+    <Compile Include="Controls\TerrainLayerSelectBox.cs">
+      <SubType>Form</SubType>
+    </Compile>
     <Compile Include="Views\EditorView.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -194,6 +197,9 @@
     <EmbeddedResource Include="Controls\TerrainLayers.resx">
       <DependentUpon>TerrainLayers.cs</DependentUpon>
     </EmbeddedResource>
+    <EmbeddedResource Include="Controls\TerrainLayerSelectBox.resx">
+      <DependentUpon>TerrainLayerSelectBox.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="Views\EditorView.resx">
       <DependentUpon>EditorView.cs</DependentUpon>
     </EmbeddedResource>
@@ -201,7 +207,6 @@
       <DependentUpon>MaterialView.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
-  <ItemGroup />
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <Import Project="$(MSBuildExtensionsPath)\Microsoft\XNA Game Studio\Microsoft.Xna.GameStudio.targets" />
   <!--

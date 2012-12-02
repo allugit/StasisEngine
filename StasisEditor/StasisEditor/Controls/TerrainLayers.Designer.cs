@@ -83,6 +83,7 @@
             this.addLayerButton.TabIndex = 4;
             this.addLayerButton.Text = "Add";
             this.addLayerButton.UseVisualStyleBackColor = true;
+            this.addLayerButton.Click += new System.EventHandler(this.addLayerButton_Click);
             // 
             // removeLayerButton
             // 

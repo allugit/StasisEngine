@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
+using Microsoft.Xna.Framework;
 
 namespace StasisCore.Models
 {
@@ -10,9 +9,27 @@ namespace StasisCore.Models
         private NoiseOptions _noiseOptions;
         public NoiseOptions noiseOptions { get { return _noiseOptions; } set { _noiseOptions = value; } }
 
-        public TerrainNoiseLayer(NoiseOptions noiseOptions)
+        public TerrainNoiseLayer(NoiseOptions noiseOptions = null)
             : base()
         {
+            // Default options
+            if (noiseOptions == null)
+            {
+                noiseOptions = new NoiseOptions(
+                    NoiseType.Perlin,
+                    Vector2.Zero,
+                    1f,
+                    Vector2.Zero,
+                    1.1f,
+                    0.5f,
+                    0.8f,
+                    1f,
+                    1f,
+                    Color.Black,
+                    Color.White,
+                    1);
+            }
+
             _noiseOptions = noiseOptions;
             _type = TerrainLayerType.Noise;
         }
