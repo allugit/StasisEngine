@@ -21,29 +21,52 @@ namespace StasisCore.Models
         private int _iterations;
 
         [CategoryAttribute("General")]
-        public NoiseType NoiseType { get { return _noiseType; } set { _noiseType = value; } }
+        [DisplayName("Noise Type")]
+        public NoiseType noiseType { get { return _noiseType; } set { _noiseType = value; } }
+
         [CategoryAttribute("General")]
-        public Vector2 Position { get { return _position; } set { _position = value; } }
+        [DisplayName("Position")]
+        public Vector2 position { get { return _position; } set { _position = value; } }
+
         [CategoryAttribute("General")]
-        public float Scale { get { return _scale; } set { _scale = value; } }
+        [DisplayName("Scale")]
+        public float scale { get { return _scale; } set { _scale = value; } }
+
         [CategoryAttribute("General")]
-        public float Multiplier { get { return _multiplier; } set { _multiplier = value; } }
+        [DisplayName("Multiplier")]
+        public float multiplier { get { return _multiplier; } set { _multiplier = value; } }
+
         [CategoryAttribute("General")]
-        public Color ColorRangeLow { get { return _colorRangeLow; } set { _colorRangeLow = value; } }
+        [DisplayName("Low Color")]
+        public Color colorRangeLow { get { return _colorRangeLow; } set { _colorRangeLow = value; } }
+
         [CategoryAttribute("General")]
-        public Color ColorRangeHigh { get { return _colorRangeHigh; } set { _colorRangeHigh = value; } }
+        [DisplayName("High Color")]
+        public Color colorRangeHigh { get { return _colorRangeHigh; } set { _colorRangeHigh = value; } }
+
         [CategoryAttribute("Fractional Brownian Motion")]
-        public float NoiseFrequency { get { return _noiseFrequency; } set { _noiseFrequency = value; } }
+        [DisplayName("Noise Frequency")]
+        public float noiseFrequency { get { return _noiseFrequency; } set { _noiseFrequency = value; } }
+
         [CategoryAttribute("Fractional Brownian Motion")]
-        public float NoiseGain { get { return _noiseGain; } set { _noiseGain = value; } }
+        [DisplayName("Noise Gain")]
+        public float noiseGain { get { return _noiseGain; } set { _noiseGain = value; } }
+
         [CategoryAttribute("Fractional Brownian Motion")]
-        public float NoiseLacunarity { get { return _noiseLacunarity; } set { _noiseLacunarity = value; } }
+        [DisplayName("Noise Lacunarity")]
+        public float noiseLacunarity { get { return _noiseLacunarity; } set { _noiseLacunarity = value; } }
+
         [CategoryAttribute("Fractional Brownian Motion")]
-        public Vector2 FBMOffset { get { return _fbmOffset; } set { _fbmOffset = value; } }
+        [DisplayName("Offset")]
+        public Vector2 fbmOffset { get { return _fbmOffset; } set { _fbmOffset = value; } }
+
         [CategoryAttribute("Fractional Brownian Motion")]
-        public float FBMScale { get { return _fbmScale; } set { _fbmScale = value; } }
+        [DisplayName("Coordinate Scale")]
+        public float fbmScale { get { return _fbmScale; } set { _fbmScale = value; } }
+
         [CategoryAttribute("Fractional Brownian Motion")]
-        public int Iterations { get { return _iterations; } set { _iterations = value; } }
+        [DisplayName("Iterations")]
+        public int iterations { get { return _iterations; } set { _iterations = value; } }
 
         public NoiseOptions(
             NoiseType noiseType,
@@ -71,6 +94,33 @@ namespace StasisCore.Models
             _colorRangeLow = colorRangeLow;
             _colorRangeHigh = colorRangeHigh;
             _iterations = iterations;
+        }
+
+        // copyFrom -- clones a list
+        public static List<NoiseOptions> copyFrom(List<NoiseOptions> list)
+        {
+            List<NoiseOptions> copy = new List<NoiseOptions>();
+            foreach (NoiseOptions options in list)
+                copy.Add(options.clone());
+            return copy;
+        }
+
+        // clone
+        public NoiseOptions clone()
+        {
+            return new NoiseOptions(
+                _noiseType,
+                _position,
+                _scale,
+                _fbmOffset,
+                _noiseFrequency,
+                _noiseGain,
+                _noiseLacunarity,
+                _multiplier,
+                _fbmScale,
+                _colorRangeLow,
+                _colorRangeHigh,
+                _iterations);
         }
     }
 }

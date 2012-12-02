@@ -136,7 +136,7 @@ namespace StasisCore
             bool perlinBasis = false;
             bool worleyBasis = false;
             bool invWorleyBasis = false;
-            switch (options.NoiseType)
+            switch (options.noiseType)
             {
                 case NoiseType.Perlin:
                     noiseSize = new Vector2(_randomTexture.Width, _randomTexture.Height);
@@ -160,22 +160,22 @@ namespace StasisCore
             _game.GraphicsDevice.Textures[2] = _worleyTexture;
             _game.GraphicsDevice.Clear(Color.Transparent);
             _noiseEffect.Parameters["aspectRatio"].SetValue(aspectRatio);
-            _noiseEffect.Parameters["offset"].SetValue(options.Position);
-            _noiseEffect.Parameters["noiseScale"].SetValue(options.Scale);
+            _noiseEffect.Parameters["offset"].SetValue(options.position);
+            _noiseEffect.Parameters["noiseScale"].SetValue(options.scale);
             _noiseEffect.Parameters["renderSize"].SetValue(new Vector2(texture.Width, texture.Height));
             _noiseEffect.Parameters["noiseSize"].SetValue(noiseSize);
-            _noiseEffect.Parameters["noiseFrequency"].SetValue(options.NoiseFrequency);
-            _noiseEffect.Parameters["noiseGain"].SetValue(options.NoiseGain);
-            _noiseEffect.Parameters["noiseLacunarity"].SetValue(options.NoiseLacunarity);
-            _noiseEffect.Parameters["multiplier"].SetValue(options.Multiplier);
-            _noiseEffect.Parameters["fbmOffset"].SetValue(options.Multiplier);
+            _noiseEffect.Parameters["noiseFrequency"].SetValue(options.noiseFrequency);
+            _noiseEffect.Parameters["noiseGain"].SetValue(options.noiseGain);
+            _noiseEffect.Parameters["noiseLacunarity"].SetValue(options.noiseLacunarity);
+            _noiseEffect.Parameters["multiplier"].SetValue(options.multiplier);
+            _noiseEffect.Parameters["fbmOffset"].SetValue(options.fbmOffset);
             _noiseEffect.Parameters["fbmPerlinBasis"].SetValue(perlinBasis);
             _noiseEffect.Parameters["fbmCellBasis"].SetValue(worleyBasis);
             _noiseEffect.Parameters["fbmInvCellBasis"].SetValue(invWorleyBasis);
-            _noiseEffect.Parameters["fbmScale"].SetValue(options.FBMScale);
-            _noiseEffect.Parameters["noiseLowColor"].SetValue(options.ColorRangeLow.ToVector4());
-            _noiseEffect.Parameters["noiseHighColor"].SetValue(options.ColorRangeHigh.ToVector4());
-            _noiseEffect.Parameters["fbmIterations"].SetValue(options.Iterations);
+            _noiseEffect.Parameters["fbmScale"].SetValue(options.fbmScale);
+            _noiseEffect.Parameters["noiseLowColor"].SetValue(options.colorRangeLow.ToVector4());
+            _noiseEffect.Parameters["noiseHighColor"].SetValue(options.colorRangeHigh.ToVector4());
+            _noiseEffect.Parameters["fbmIterations"].SetValue(options.iterations);
             _spriteBatch.Begin(SpriteSortMode.Immediate, null, null, null, null, _noiseEffect);
             _spriteBatch.Draw(texture, renderTarget.Bounds, Color.White);
             _spriteBatch.End();

@@ -22,7 +22,8 @@ namespace StasisCore.Models
         public MaterialType type { get { return _type; } }
 
         [CategoryAttribute("General")]
-        public string Name { get { return _name; } set { _name = value; } }
+        [DisplayName("Name")]
+        public string name { get { return _name; } set { _name = value; } }
 
         // Constructor
         public Material(string name)

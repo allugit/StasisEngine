@@ -30,9 +30,9 @@ namespace StasisEditor.Controllers
                 _materials[i] = new List<Material>();
 
             // Test materials
-            _materials[(int)MaterialType.Terrain].Add(new TerrainMaterial("Rock"));
-            _materials[(int)MaterialType.Terrain].Add(new TerrainMaterial("Dirt"));
-            _materials[(int)MaterialType.Terrain].Add(new TerrainMaterial("Snow"));
+            _materials[(int)MaterialType.Terrain].Add(new TerrainMaterial("Rock", new List<NoiseOptions>()));
+            _materials[(int)MaterialType.Terrain].Add(new TerrainMaterial("Dirt", new List<NoiseOptions>()));
+            _materials[(int)MaterialType.Terrain].Add(new TerrainMaterial("Snow", new List<NoiseOptions>()));
             _materials[(int)MaterialType.Trees].Add(new TreeMaterial("Acuminate"));
             _materials[(int)MaterialType.Fluid].Add(new FluidMaterial("Water"));
             _materials[(int)MaterialType.Items].Add(new ItemMaterial("Rope Gun"));
@@ -94,7 +94,7 @@ namespace StasisEditor.Controllers
                     XNAResources.graphicsDevice.Clear(Color.Black);
 
                     // Open material preview
-                    MaterialPreview materialPreview = new MaterialPreview(result, String.Format("{0} Preview", material.Name));
+                    MaterialPreview materialPreview = new MaterialPreview(result, String.Format("{0} Preview", material.name));
                     materialPreview.Show();
                     break;
 
