@@ -63,6 +63,7 @@
             this.upButton.Size = new System.Drawing.Size(32, 23);
             this.upButton.TabIndex = 2;
             this.upButton.UseVisualStyleBackColor = true;
+            this.upButton.Click += new System.EventHandler(this.upButton_Click);
             // 
             // downButton
             // 
@@ -72,6 +73,7 @@
             this.downButton.Size = new System.Drawing.Size(32, 23);
             this.downButton.TabIndex = 3;
             this.downButton.UseVisualStyleBackColor = true;
+            this.downButton.Click += new System.EventHandler(this.downButton_Click);
             // 
             // addLayerButton
             // 

@@ -18,6 +18,12 @@ namespace StasisCore.Models
             _type = TerrainLayerType.Base;
         }
 
+        // Default string
+        public override string ToString()
+        {
+            return "Base Layer";
+        }
+
         // clone
         public override TerrainLayer clone()
         {

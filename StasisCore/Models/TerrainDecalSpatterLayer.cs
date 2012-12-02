@@ -15,6 +15,12 @@ namespace StasisCore.Models
             _type = TerrainLayerType.DecalSpatter;
         }
 
+        // Default string
+        public override string ToString()
+        {
+            return "Decale Spatter Layer";
+        }
+
         // clone
         public override TerrainLayer clone()
         {

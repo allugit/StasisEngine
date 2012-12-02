@@ -17,6 +17,12 @@ namespace StasisCore.Models
             _type = TerrainLayerType.Noise;
         }
 
+        // Default string
+        public override string ToString()
+        {
+            return "Noise Layer";
+        }
+
         // clone
         public override TerrainLayer clone()
         {

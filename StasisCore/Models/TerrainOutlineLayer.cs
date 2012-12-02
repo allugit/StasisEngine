@@ -29,6 +29,12 @@ namespace StasisCore.Models
             _type = TerrainLayerType.Outline;
         }
 
+        // Default string
+        public override string ToString()
+        {
+            return "Outline Layer";
+        }
+
         // clone
         public override TerrainLayer clone()
         {
