@@ -28,7 +28,10 @@ namespace StasisCore.Models
         public string relativePath { get { return string.Format("{0}\\{1}", _category, fileName); } }
 
         [Browsable(false)]
-        public string loadedFrom { get { return _loadedFrom; } }
+        public string loadedFrom { get { return _loadedFrom; } set { _loadedFrom = value; } }
+
+        [Browsable(false)]
+        public bool isValid { get { return _tag != "" && _category != ""; } }
 
         public TextureResource(string tag, string category, string extension)
         {
@@ -75,6 +78,12 @@ namespace StasisCore.Models
             foreach (TextureResource resource in list)
                 copy.Add(resource.clone());
             return copy;
+        }
+
+        // getFullPath
+        public string getFullPath(string textureDirectory)
+        {
+            return string.Format("{0}\\{1}", textureDirectory, relativePath);
         }
 
         // clone

@@ -2,6 +2,7 @@
 using System.IO;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.ComponentModel;
 using System.Windows.Forms;
 using StasisEditor.Views;
 using StasisEditor.Models;
@@ -13,16 +14,16 @@ namespace StasisEditor.Controllers
     {
         private IController _controller;
         private ITextureView _textureView;
-        private List<TextureResource> _textureResources;
+        private BindingList<TextureResource> _textureResources;
 
         public TextureController(IController controller)
         {
             _controller = controller;
-            _textureResources = new List<TextureResource>();
+            _textureResources = new BindingList<TextureResource>();
         }
 
         // getTextureResources
-        public ReadOnlyCollection<TextureResource> getTextureResources() { return _textureResources.AsReadOnly(); }
+        public BindingList<TextureResource> getTextureResources() { return _textureResources; }
 
         // openView
         public void openView()
@@ -35,7 +36,6 @@ namespace StasisEditor.Controllers
                 // Create view
                 _textureView = new NewTextureResource();
                 _textureView.setController(this);
-                _textureView.refreshGrid();
                 _textureView.Show();
             }
             else
@@ -55,7 +55,29 @@ namespace StasisEditor.Controllers
         {
             // Clear already loaded texture resources
             _textureResources.Clear();
-            _textureResources = TextureResource.loadAll(EditorController.TEXTURE_RESOURCE_DIRECTORY);
+            _textureResources = new BindingList<TextureResource>(TextureResource.loadAll(EditorController.TEXTURE_RESOURCE_DIRECTORY));
+        }
+
+        // addTextureResources
+        public void addTextureResources(string[] fileNames)
+        {
+            foreach (string filePath in fileNames)
+                addTextureResource(filePath);
+        }
+        public void addTextureResource(string filePath)
+        {
+            // Make sure only unique files get added
+            foreach (TextureResource tr in _textureResources)
+            {
+                if (tr.fileName == Path.GetFileName(filePath))
+                    return;
+            }
+
+            // Create texture resource, and clear its tag and category properties
+            TextureResource resource = TextureResource.loadFromFile(filePath);
+            resource.tag = "";
+            resource.category = "";
+            _textureResources.Add(resource);
         }
 
         /*
@@ -113,7 +135,29 @@ namespace StasisEditor.Controllers
 
             // Reload resources
             loadTextureResources();
-            _textureView.refreshGrid();
+        }
+
+        // relocateTextureResource
+        public void relocateTextureResource(TextureResource resource)
+        {
+            // Check to make sure category directory exists
+            string textureDirectory = EditorController.TEXTURE_RESOURCE_DIRECTORY;
+            string categoryDirectory = String.Format("{0}\\{1}", textureDirectory, resource.category);
+            if (!Directory.Exists(categoryDirectory))
+                Directory.CreateDirectory(categoryDirectory);
+
+            // Copy file to texture_directory\category\tag.extension
+            string fileDestination = String.Format("{0}\\{1}", categoryDirectory, resource.fileName);
+            if (File.Exists(fileDestination))
+            {
+                if (MessageBox.Show(String.Format("The file {{...{0}\\{1}}} already exists. Overwrite it?", resource.category, resource.fileName), "File exists", MessageBoxButtons.YesNo) == DialogResult.Yes)
+                    File.Copy(resource.loadedFrom, fileDestination, true);
+            }
+            else
+                File.Copy(resource.loadedFrom, fileDestination);
+
+            // Update loadedFrom
+            resource.loadedFrom = fileDestination;
         }
     }
 }

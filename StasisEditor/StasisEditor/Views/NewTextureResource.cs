@@ -17,15 +17,14 @@ namespace StasisEditor.Views
     public partial class NewTextureResource : Form, ITextureView
     {
         private ITextureController _controller;
-        private BindingList<TextureResource> _textureResources;
+        //private BindingList<TextureResource> _textureResources;
         private BindingSource _textureBindingSource;
         private DataGridViewButtonColumn _buttonColumn;
 
         public NewTextureResource()
         {
-            _textureResources = new BindingList<TextureResource>();
             _textureBindingSource = new BindingSource();
-            _textureBindingSource.DataSource = _textureResources;
+            _textureBindingSource.DataSource = new BindingList<TextureResource>();
 
             InitializeComponent();
             textureDataGrid.DataSource = _textureBindingSource;
@@ -42,47 +41,13 @@ namespace StasisEditor.Views
             textureDataGrid.CellContentClick += new DataGridViewCellEventHandler(newTextureResourcesGrid_CellClick);
         }
 
-        /*
-        // Validate entire form
-        public void validateForm()
-        {
-            // Initial value
-            bool valid = true;
-            
-            // Check to make sure there's at least one row
-            if (newTextureResourcesGrid.Rows.Count == 0)
-                valid = false;
-            else
-            {
-                // Make sure cells aren't empty
-                foreach (DataGridViewRow row in newTextureResourcesGrid.Rows)
-                {
-                    foreach (DataGridViewCell cell in row.Cells)
-                    {
-                        if (cell.Value == null || String.IsNullOrEmpty(cell.Value.ToString()))
-                        {
-                            valid = false;
-                            break;
-                        }
-                    }
-
-                    if (!valid)
-                        break;
-                }
-            }
-            createButton.Enabled = valid;
-        }
-        */
-
         // Remove button handler
         void newTextureResourcesGrid_CellClick(object sender, DataGridViewCellEventArgs e)
         {
             // Remove from data source
-            if (e.ColumnIndex == 0 && e.RowIndex > -1 && e.RowIndex < _textureResources.Count)
-                _textureResources.RemoveAt(e.RowIndex);
-
-            // Validate form
-            //validateForm();
+            BindingList<TextureResource> resources = _controller.getTextureResources();
+            if (e.ColumnIndex == 0 && e.RowIndex > -1 && e.RowIndex < resources.Count)
+                resources.RemoveAt(e.RowIndex);
         }
 
         // Browse button clicked
@@ -92,45 +57,24 @@ namespace StasisEditor.Views
             fd.Filter = "Image Files (*.bmp;*.png;*.jpg;*.jpeg;*.tga;*.dds;*.dib)|*.bmp;*.png;*.jpg;*.jpeg;*.tga;*.dds;*.dib";
             fd.Multiselect = true;
             if (fd.ShowDialog() == DialogResult.OK)
-            {
-                foreach (string filePath in fd.FileNames)
-                {
-                    // Make sure only unique files get added
-                    bool skip = false;
-                    foreach (TextureResource tempResource in _textureResources)
-                    {
-                        if (tempResource.fileName == Path.GetFileName(filePath))
-                        {
-                            skip = true;
-                            break;
-                        }
-                    }
-
-                    if (skip)
-                        continue;
-
-                    // Create texture resource, and clear its tag and category properties
-                    TextureResource resource = TextureResource.loadFromFile(filePath);
-                    resource.tag = "";
-                    resource.category = "";
-                    _textureResources.Add(resource);
-                }
-            }
+                _controller.addTextureResources(fd.FileNames);
         }
 
         // setController
         public void setController(ITextureController controller)
         {
             _controller = controller;
+            _textureBindingSource.DataSource = _controller.getTextureResources();
         }
 
+        /*
         // refreshGrid
         public void refreshGrid()
         {
             _textureResources.Clear();
             _textureResources = new BindingList<TextureResource>(TextureResource.copyFrom(_controller.getTextureResources()));
             _textureBindingSource.DataSource = _textureResources;
-        }
+        }*/
 
         // preview
         public void preview(List<TextureResource> resources)
@@ -142,11 +86,7 @@ namespace StasisEditor.Views
             foreach (TextureResource resource in resources)
             {
                 // Load file, falling back to the file path it was loaded from if invalid
-                string filePath = null;
-                if (resource.tag == "" || resource.category == "")
-                    filePath = resource.loadedFrom;
-                else
-                    filePath = string.Format("{0}\\{1}", textureDirectory, resource.relativePath);
+                string filePath = resource.isValid ? resource.getFullPath(textureDirectory) : resource.loadedFrom;
 
                 Image image = null;
                 using (FileStream stream = new FileStream(filePath, FileMode.Open))
@@ -277,7 +217,10 @@ namespace StasisEditor.Views
         {
             textureDataGrid.Rows[e.RowIndex].ErrorText = String.Empty;
 
-            //validateForm();
+            // Check if a move is necessary
+            TextureResource resource = textureDataGrid.Rows[e.RowIndex].DataBoundItem as TextureResource;
+            if (resource.isValid && !File.Exists(resource.getFullPath(EditorController.TEXTURE_RESOURCE_DIRECTORY)))
+                _controller.relocateTextureResource(resource);
         }
 
         // Remove button clicked
