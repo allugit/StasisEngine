@@ -4,6 +4,7 @@ using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Content;
 using Microsoft.Xna.Framework.Graphics;
 using StasisCore.Models;
+using StasisCore.Controllers;
 
 namespace StasisCore
 {
@@ -60,17 +61,18 @@ namespace StasisCore
         }
 
         // Render layer
-        public Texture2D renderLayer(Texture2D result, TerrainLayer layer, float worldScale, TexturedVertexFormat[] vertices, int primitiveCount)
+        public Texture2D renderLayer(Texture2D result, TerrainLayerResource resource, float worldScale, TexturedVertexFormat[] vertices, int primitiveCount)
         {
-            switch (layer.type)
+            switch (resource.type)
             {
                 case TerrainLayerType.Base:
-                    Texture2D baseTexture = null;   // TEMPORARY -- should attempt to look up texture based on tag
+                    PrimitivesProperties primitivesProperties = (resource as TerrainPrimitivesLayerResource).properties as PrimitivesProperties;
+                    Texture2D baseTexture = TextureController.getTexture(primitivesProperties.textureTag);
                     result = primitivesPass(baseTexture, worldScale, vertices, primitiveCount);
                     break;
                 
                 case TerrainLayerType.Noise:
-                    result = noisePass(result, (layer.properties as NoiseOptions));
+                    result = noisePass(result, (resource.properties as NoiseProperties));
                     break;
             }
 
@@ -134,7 +136,7 @@ namespace StasisCore
         }
 
         // Noise pass
-        private Texture2D noisePass(Texture2D texture, NoiseOptions options)
+        private Texture2D noisePass(Texture2D texture, NoiseProperties options)
         {
             // Initialize vertex shader properties
             Matrix projection = Matrix.CreateOrthographicOffCenter(0, texture.Width, texture.Height, 0, 0, 1);

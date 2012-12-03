@@ -3,15 +3,15 @@ using System.Collections.Generic;
 
 namespace StasisCore.Models
 {
-    public class TerrainDecalSpatterLayer : TerrainLayer
+    public class TerrainDecalSpatterLayerResource : TerrainLayerResource
     {
-        public TerrainDecalSpatterLayer(LayerProperties properties = null)
+        public TerrainDecalSpatterLayerResource(LayerProperties properties = null)
             : base()
         {
             // Default options
             if (properties == null)
             {
-                properties = new DecalSpatterOptions();
+                properties = new DecalProperties();
             }
 
             _properties = properties;
@@ -25,9 +25,9 @@ namespace StasisCore.Models
         }
 
         // clone
-        public override TerrainLayer clone()
+        public override TerrainLayerResource clone()
         {
-            return new TerrainDecalSpatterLayer(_properties.clone());
+            return new TerrainDecalSpatterLayerResource(_properties.clone());
         }
     }
 }

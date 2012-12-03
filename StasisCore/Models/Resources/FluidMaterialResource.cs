@@ -4,18 +4,18 @@ using System.ComponentModel;
 
 namespace StasisCore.Models
 {
-    public class FluidMaterial : Material
+    public class FluidMaterialResource : MaterialResource
     {
         // Constructor
-        public FluidMaterial(string name) : base(name)
+        public FluidMaterialResource(string name) : base(name)
         {
             _type = MaterialType.Fluid;
         }
 
         // clone
-        public override Material clone()
+        public override MaterialResource clone()
         {
-            return new FluidMaterial(_name);
+            return new FluidMaterialResource(_name);
         }
     }
 }

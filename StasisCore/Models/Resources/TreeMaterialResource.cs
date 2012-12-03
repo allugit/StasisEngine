@@ -5,18 +5,18 @@ using StasisCore;
 
 namespace StasisCore.Models
 {
-    public class TreeMaterial : Material
+    public class TreeMaterialResource : MaterialResource
     {
         // Constructor
-        public TreeMaterial(string name) : base(name)
+        public TreeMaterialResource(string name) : base(name)
         {
             _type = MaterialType.Trees;
         }
 
         // clone
-        public override Material clone()
+        public override MaterialResource clone()
         {
-            return new TreeMaterial(_name);
+            return new TreeMaterialResource(_name);
         }
     }
 }

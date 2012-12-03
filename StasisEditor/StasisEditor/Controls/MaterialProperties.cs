@@ -14,10 +14,10 @@ namespace StasisEditor.Controls
     public partial class MaterialProperties : UserControl
     {
         private IMaterialController _controller;
-        private Material _material;
+        private MaterialResource _material;
         public PropertyGrid PropertyGrid { get { return this.materialPropertyGrid; } }
 
-        public MaterialProperties(IMaterialController controller, Material material)
+        public MaterialProperties(IMaterialController controller, MaterialResource material)
         {
             _material = material;
             _controller = controller;
@@ -25,7 +25,7 @@ namespace StasisEditor.Controls
             switch (material.type)
             {
                 case MaterialType.Terrain:
-                    Controls.Add(new TerrainLayers(_controller, (material as TerrainMaterial).layers));
+                    Controls.Add(new TerrainLayers(_controller, (material as TerrainMaterialResource).layers));
                     break;
             }
 

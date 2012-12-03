@@ -11,9 +11,9 @@ namespace StasisEditor.Controllers
         bool getAutoUpdatePreview();
         void setChangesMade(bool status);
         bool getChangesMade();
-        void preview(Material material);
+        void preview(MaterialResource material);
         void previewClosed();
         void viewClosed();
-        ReadOnlyCollection<Material> getMaterials(MaterialType type);
+        ReadOnlyCollection<MaterialResource> getMaterials(MaterialType type);
     }
 }

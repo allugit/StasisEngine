@@ -5,7 +5,7 @@ using Microsoft.Xna.Framework;
 
 namespace StasisCore.Models
 {
-    public class OutlineOptions : LayerProperties
+    public class OutlineProperties : LayerProperties
     {
         private Vector2 _normal;
 
@@ -22,7 +22,7 @@ namespace StasisCore.Models
             }
         }
 
-        public OutlineOptions(Vector2 normal)
+        public OutlineProperties(Vector2 normal)
             : base()
         {
             _normal = normal;
@@ -31,7 +31,7 @@ namespace StasisCore.Models
         // clone
         override public LayerProperties clone()
         {
-            return new OutlineOptions(_normal);
+            return new OutlineProperties(_normal);
         }
     }
 }

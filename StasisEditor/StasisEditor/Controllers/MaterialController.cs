@@ -18,7 +18,7 @@ namespace StasisEditor.Controllers
         private TerrainRenderer _terrainRenderer;
         private IMaterialView _materialView;
         private MaterialPreview _materialPreview;
-        private List<Material>[] _materials;
+        private List<MaterialResource>[] _materials;
         private bool _changesMade;
         private bool _autoUpdatePreview;
 
@@ -28,21 +28,21 @@ namespace StasisEditor.Controllers
 
             // Materials
             int numMaterialTypes = Enum.GetValues(typeof(MaterialType)).Length;
-            _materials = new List<Material>[numMaterialTypes];
+            _materials = new List<MaterialResource>[numMaterialTypes];
             for (int i = 0; i < numMaterialTypes; i++)
-                _materials[i] = new List<Material>();
+                _materials[i] = new List<MaterialResource>();
 
             // Test material data
-            List<TerrainLayer> testLayers = new List<TerrainLayer>();
-            testLayers.Add(new TerrainBaseLayer());
-            testLayers.Add(new TerrainNoiseLayer());
-            _materials[(int)MaterialType.Terrain].Add(new TerrainMaterial("Rock", testLayers));
-            _materials[(int)MaterialType.Terrain].Add(new TerrainMaterial("Dirt", TerrainLayer.copyFrom(testLayers)));
-            _materials[(int)MaterialType.Terrain].Add(new TerrainMaterial("Snow", new List<TerrainLayer>()));
-            _materials[(int)MaterialType.Trees].Add(new TreeMaterial("Acuminate"));
-            _materials[(int)MaterialType.Fluid].Add(new FluidMaterial("Water"));
-            _materials[(int)MaterialType.Items].Add(new ItemMaterial("Rope Gun"));
-            _materials[(int)MaterialType.Items].Add(new ItemMaterial("Gravity Gun"));
+            List<TerrainLayerResource> testLayers = new List<TerrainLayerResource>();
+            testLayers.Add(new TerrainPrimitivesLayerResource());
+            testLayers.Add(new TerrainNoiseLayerResource());
+            _materials[(int)MaterialType.Terrain].Add(new TerrainMaterialResource("Rock", testLayers));
+            _materials[(int)MaterialType.Terrain].Add(new TerrainMaterialResource("Dirt", TerrainLayerResource.copyFrom(testLayers)));
+            _materials[(int)MaterialType.Terrain].Add(new TerrainMaterialResource("Snow", new List<TerrainLayerResource>()));
+            _materials[(int)MaterialType.Trees].Add(new TreeMaterialResource("Acuminate"));
+            _materials[(int)MaterialType.Fluid].Add(new FluidMaterialResource("Water"));
+            _materials[(int)MaterialType.Items].Add(new ItemMaterialResource("Rope Gun"));
+            _materials[(int)MaterialType.Items].Add(new ItemMaterialResource("Gravity Gun"));
 
             // Create terrain renderer
             _terrainRenderer = new TerrainRenderer(XNAResources.game as Game, XNAResources.spriteBatch);
@@ -77,14 +77,14 @@ namespace StasisEditor.Controllers
             // Update if set to auto update
             if (_autoUpdatePreview)
             {
-                Material material = _materialView.getSelectedMaterial();
+                MaterialResource material = _materialView.getSelectedMaterial();
                 if (material != null)
                     preview(material);
             }
         }
 
         // getMaterials
-        public ReadOnlyCollection<Material> getMaterials(MaterialType type)
+        public ReadOnlyCollection<MaterialResource> getMaterials(MaterialType type)
         {
             return _materials[(int)type].AsReadOnly();
         }
@@ -110,23 +110,23 @@ namespace StasisEditor.Controllers
         }
 
         // preview
-        public void preview(Material material)
+        public void preview(MaterialResource material)
         {
             switch(material.type)
             {
                 case MaterialType.Terrain:
-                    TerrainMaterial terrainMaterial = material as TerrainMaterial;
+                    TerrainMaterialResource terrainMaterial = material as TerrainMaterialResource;
 
                     // Test data
                     TexturedVertexFormat[] vertices = new TexturedVertexFormat[3];
                     float vertexScale = 20f;
-                    vertices[0].color = new Vector3(1, 0, 0);
+                    vertices[0].color = new Vector3(1, 1, 1);
                     vertices[0].position = new Vector3(0.5f, 0, 0) * vertexScale;
                     vertices[0].texCoord = new Vector2(0.5f, 0);
-                    vertices[1].color = new Vector3(0, 1, 0);
+                    vertices[1].color = new Vector3(1, 1, 1);
                     vertices[1].position = new Vector3(1f, 1f, 0) * vertexScale;
                     vertices[1].texCoord = new Vector2(1f, 1f);
-                    vertices[2].color = new Vector3(0, 0, 1);
+                    vertices[2].color = new Vector3(1, 1, 1);
                     vertices[2].position = new Vector3(0, 1f, 0) * vertexScale;
                     vertices[2].texCoord = new Vector2(0, 1f);
 
@@ -141,8 +141,12 @@ namespace StasisEditor.Controllers
                     // Create result texture
                     Texture2D result = new Texture2D(XNAResources.graphicsDevice, textureWidth, textureHeight);
 
+                    // Initialize core texture controller
+                    StasisCore.Controllers.TextureController.initialize(XNAResources.graphicsDevice, _editorController.getTextureResources());
+                    StasisCore.Controllers.TextureController.textureDirectory = EditorController.TEXTURE_RESOURCE_DIRECTORY; // Use the absolute path, since the core uses a relative path by default.
+
                     // Render layers
-                    foreach (TerrainLayer layer in terrainMaterial.layers)
+                    foreach (TerrainLayerResource layer in terrainMaterial.layers)
                         result = _terrainRenderer.renderLayer(result, layer, baseScale, vertices, 1);
 
                     // Restore graphics device

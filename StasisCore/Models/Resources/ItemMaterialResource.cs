@@ -4,18 +4,18 @@ using System.ComponentModel;
 
 namespace StasisCore.Models
 {
-    public class ItemMaterial : Material
+    public class ItemMaterialResource : MaterialResource
     {
         // Constructor
-        public ItemMaterial(string name) : base(name)
+        public ItemMaterialResource(string name) : base(name)
         {
             _type = MaterialType.Items;
         }
 
         // clone
-        public override Material clone()
+        public override MaterialResource clone()
         {
-            return new ItemMaterial(_name);
+            return new ItemMaterialResource(_name);
         }
     }
 }

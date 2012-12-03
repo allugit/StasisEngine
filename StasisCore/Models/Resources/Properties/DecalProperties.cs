@@ -5,15 +5,15 @@ using System.Text;
 
 namespace StasisCore.Models
 {
-    public class DecalSpatterOptions : LayerProperties
+    public class DecalProperties : LayerProperties
     {
-        public DecalSpatterOptions() : base()
+        public DecalProperties() : base()
         {
         }
 
         public override LayerProperties clone()
         {
-            return new DecalSpatterOptions();
+            return new DecalProperties();
         }
     }
 }

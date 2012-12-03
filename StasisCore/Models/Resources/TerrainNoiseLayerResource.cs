@@ -4,15 +4,15 @@ using Microsoft.Xna.Framework;
 
 namespace StasisCore.Models
 {
-    public class TerrainNoiseLayer : TerrainLayer
+    public class TerrainNoiseLayerResource : TerrainLayerResource
     {
-        public TerrainNoiseLayer(LayerProperties properties = null)
+        public TerrainNoiseLayerResource(LayerProperties properties = null)
             : base()
         {
             // Default options
             if (properties == null)
             {
-                properties = new NoiseOptions(
+                properties = new NoiseProperties(
                     NoiseType.Perlin,
                     Vector2.Zero,
                     1f,
@@ -38,9 +38,9 @@ namespace StasisCore.Models
         }
 
         // clone
-        public override TerrainLayer clone()
+        public override TerrainLayerResource clone()
         {
-            return new TerrainNoiseLayer(_properties.clone());
+            return new TerrainNoiseLayerResource(_properties.clone());
         }
     }
 }

@@ -5,15 +5,15 @@ using Microsoft.Xna.Framework;
 
 namespace StasisCore.Models
 {
-    public class TerrainOutlineLayer : TerrainLayer
+    public class TerrainOutlineLayerResource : TerrainLayerResource
     {
-        public TerrainOutlineLayer(LayerProperties properties = null)
+        public TerrainOutlineLayerResource(LayerProperties properties = null)
             : base()
         {
             // Default options
             if (properties == null)
             {
-                properties = new OutlineOptions(Vector2.Zero);
+                properties = new OutlineProperties(Vector2.Zero);
             }
 
             _properties = properties;
@@ -27,9 +27,9 @@ namespace StasisCore.Models
         }
 
         // clone
-        public override TerrainLayer clone()
+        public override TerrainLayerResource clone()
         {
-            return new TerrainOutlineLayer(_properties.clone());
+            return new TerrainOutlineLayerResource(_properties.clone());
         }
     }
 }

@@ -4,14 +4,14 @@ using System.ComponentModel;
 
 namespace StasisCore.Models
 {
-    public class TerrainBaseLayer : TerrainLayer
+    public class TerrainPrimitivesLayerResource : TerrainLayerResource
     {
-        public TerrainBaseLayer(LayerProperties properties = null) : base()
+        public TerrainPrimitivesLayerResource(LayerProperties properties = null) : base()
         {
             // Default options
             if (properties == null)
             {
-                properties = new BaseOptions("");
+                properties = new PrimitivesProperties("");
             }
 
             _properties = properties;
@@ -25,9 +25,9 @@ namespace StasisCore.Models
         }
 
         // clone
-        public override TerrainLayer clone()
+        public override TerrainLayerResource clone()
         {
-            return new TerrainBaseLayer(_properties.clone());
+            return new TerrainPrimitivesLayerResource(_properties.clone());
         }
     }
 }

@@ -14,9 +14,9 @@ namespace StasisEditor.Controls
     public partial class TerrainLayers : UserControl
     {
         private IMaterialController _controller;
-        private List<TerrainLayer> _layers;
+        private List<TerrainLayerResource> _layers;
 
-        public TerrainLayers(IMaterialController controller, List<TerrainLayer> layers)
+        public TerrainLayers(IMaterialController controller, List<TerrainLayerResource> layers)
         {
             _controller = controller;
             _layers = layers;
@@ -39,7 +39,7 @@ namespace StasisEditor.Controls
 
             SuspendLayout();
 
-            TerrainLayer selectedLayer = _layers[selectedIndex];
+            TerrainLayerResource selectedLayer = _layers[selectedIndex];
             _layers.Remove(selectedLayer);
             _layers.Insert(selectedIndex - 1, selectedLayer);
             layersListBox.DataSource = null;
@@ -62,7 +62,7 @@ namespace StasisEditor.Controls
 
             SuspendLayout();
 
-            TerrainLayer selectedLayer = _layers[selectedIndex];
+            TerrainLayerResource selectedLayer = _layers[selectedIndex];
             _layers.Remove(selectedLayer);
             _layers.Insert(selectedIndex + 1, selectedLayer);
             layersListBox.DataSource = null;
@@ -84,7 +84,7 @@ namespace StasisEditor.Controls
             {
                 SuspendLayout();
 
-                _layers.Add(TerrainLayer.create(selectBox.getSelectedType()));
+                _layers.Add(TerrainLayerResource.create(selectBox.getSelectedType()));
                 layersListBox.DataSource = null;
                 layersListBox.DataSource = _layers;
                 layersListBox.SelectedItem = _layers[_layers.Count - 1];
@@ -128,7 +128,7 @@ namespace StasisEditor.Controls
         private void layersListBox_SelectedValueChanged(object sender, EventArgs e)
         {
             if (layersListBox.DataSource != null)
-                layerProperties.SelectedObject = (layersListBox.SelectedItem as TerrainLayer).properties;
+                layerProperties.SelectedObject = (layersListBox.SelectedItem as TerrainLayerResource).properties;
             else
                 layerProperties.SelectedObject = null;
         }

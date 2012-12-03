@@ -14,16 +14,16 @@ namespace StasisEditor.Views
     public partial class MaterialView : Form, IMaterialView
     {
         private IMaterialController _controller;
-        private List<Material>[] _materialCopies;
-        private List<Material> _selectedMaterials;
+        private List<MaterialResource>[] _materialCopies;
+        private List<MaterialResource> _selectedMaterials;
         private MaterialProperties _materialProperties;
 
         public MaterialView()
         {
             int numMaterialTypes = Enum.GetValues(typeof(MaterialType)).Length;
-            _materialCopies = new List<Material>[numMaterialTypes];
+            _materialCopies = new List<MaterialResource>[numMaterialTypes];
 
-            _selectedMaterials = new List<Material>();
+            _selectedMaterials = new List<MaterialResource>();
 
             InitializeComponent();
 
@@ -40,7 +40,7 @@ namespace StasisEditor.Views
             // Set material copies
             int numMaterialTypes = Enum.GetValues(typeof(MaterialType)).Length;
             for (int i = 0; i < numMaterialTypes; i++)
-                _materialCopies[i] = Material.copyFrom(_controller.getMaterials((MaterialType)i));
+                _materialCopies[i] = MaterialResource.copyFrom(_controller.getMaterials((MaterialType)i));
         }
 
         // setChangesMade
@@ -56,13 +56,13 @@ namespace StasisEditor.Views
         }
 
         // getSelectedMaterial
-        public Material getSelectedMaterial()
+        public MaterialResource getSelectedMaterial()
         {
-            return materialsListBox.SelectedItem as Material;
+            return materialsListBox.SelectedItem as MaterialResource;
         }
 
         // openProperties
-        private void openProperties(Material material)
+        private void openProperties(MaterialResource material)
         {
             _materialProperties = new MaterialProperties(_controller, material);
             propertiesContainer.Controls.Add(_materialProperties);
@@ -109,7 +109,7 @@ namespace StasisEditor.Views
             _selectedMaterials.Clear();
 
             // Construct new selected materials list from materialListBox's selected items
-            foreach (Material selectedMaterial in materialsListBox.SelectedItems)
+            foreach (MaterialResource selectedMaterial in materialsListBox.SelectedItems)
                 _selectedMaterials.Add(selectedMaterial);
 
             // Update preview button
@@ -117,7 +117,7 @@ namespace StasisEditor.Views
             
             // Open material properties
             closeProperties();
-            openProperties((sender as ListBox).SelectedItems[0] as Material);
+            openProperties((sender as ListBox).SelectedItems[0] as MaterialResource);
         }
 
         // Material property changed

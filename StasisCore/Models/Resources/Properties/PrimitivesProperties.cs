@@ -4,7 +4,7 @@ using System.ComponentModel;
 
 namespace StasisCore.Models
 {
-    public class BaseOptions : LayerProperties
+    public class PrimitivesProperties : LayerProperties
     {
         private string _textureTag;
 
@@ -12,7 +12,7 @@ namespace StasisCore.Models
         [DisplayName("Texture Tag")]
         public string textureTag { get { return _textureTag; } set { _textureTag = value; } }
 
-        public BaseOptions(string textureTag)
+        public PrimitivesProperties(string textureTag)
             : base()
         {
             _textureTag = textureTag;
@@ -21,7 +21,7 @@ namespace StasisCore.Models
         // clone
         public override LayerProperties clone()
         {
-            return new BaseOptions(_textureTag);
+            return new PrimitivesProperties(_textureTag);
         }
     }
 }

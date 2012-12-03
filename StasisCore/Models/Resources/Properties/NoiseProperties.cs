@@ -5,7 +5,7 @@ using Microsoft.Xna.Framework;
 
 namespace StasisCore.Models
 {
-    public class NoiseOptions : LayerProperties
+    public class NoiseProperties : LayerProperties
     {
         private NoiseType _noiseType;
         private Vector2 _position;
@@ -68,7 +68,7 @@ namespace StasisCore.Models
         [DisplayName("Iterations")]
         public int iterations { get { return _iterations; } set { _iterations = value; } }
 
-        public NoiseOptions(
+        public NoiseProperties(
             NoiseType noiseType,
             Vector2 position,
             float scale,
@@ -98,10 +98,10 @@ namespace StasisCore.Models
         }
 
         // copyFrom -- clones a list
-        public static List<LayerProperties> copyFrom(List<NoiseOptions> list)
+        public static List<LayerProperties> copyFrom(List<NoiseProperties> list)
         {
             List<LayerProperties> copy = new List<LayerProperties>();
-            foreach (NoiseOptions options in list)
+            foreach (NoiseProperties options in list)
                 copy.Add(options.clone());
             return copy;
         }
@@ -109,7 +109,7 @@ namespace StasisCore.Models
         // clone
         public override LayerProperties clone()
         {
-            return new NoiseOptions(
+            return new NoiseProperties(
                 _noiseType,
                 _position,
                 _scale,

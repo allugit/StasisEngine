@@ -114,6 +114,12 @@ namespace StasisEditor.Controllers
             _textureController.openView();
         }
 
+        // getTextureResources
+        public List<TextureResource> getTextureResources()
+        {
+            return new List<TextureResource>(_textureController.getTextureResources());
+        }
+
         // mouseMove
         public void mouseMove(System.Windows.Forms.MouseEventArgs e)
         {

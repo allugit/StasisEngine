@@ -13,7 +13,7 @@ namespace StasisCore.Models
         Items
     };
 
-    public abstract class Material
+    public abstract class MaterialResource
     {
         protected string _name;
         protected MaterialType _type;
@@ -26,7 +26,7 @@ namespace StasisCore.Models
         public string name { get { return _name; } set { _name = value; } }
 
         // Constructor
-        public Material(string name)
+        public MaterialResource(string name)
         {
             _name = name;
         }
@@ -38,15 +38,15 @@ namespace StasisCore.Models
         }
 
         // copyFrom -- clones a list
-        public static List<Material> copyFrom(IList<Material> list)
+        public static List<MaterialResource> copyFrom(IList<MaterialResource> list)
         {
-            List<Material> copy = new List<Material>(list.Count);
-            foreach (Material material in list)
+            List<MaterialResource> copy = new List<MaterialResource>(list.Count);
+            foreach (MaterialResource material in list)
                 copy.Add(material.clone());
             return copy;
         }
 
         // clone
-        public abstract Material clone();
+        public abstract MaterialResource clone();
     }
 }
