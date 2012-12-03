@@ -147,6 +147,11 @@ namespace StasisEditor.Controllers
             else
                 File.Move(resource.currentPath, fileDestination);
 
+            // Delete empty directories
+            string sourceDirectory = Path.GetDirectoryName(resource.currentPath);
+            if (Directory.GetFiles(sourceDirectory).Length == 0)
+                Directory.Delete(sourceDirectory);
+
             // Update loadedFrom
             resource.currentPath = fileDestination;
         }
