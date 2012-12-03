@@ -110,7 +110,7 @@ namespace StasisEditor.Views
                         continue;
 
                     // Create texture resource, and clear its tag and category properties
-                    TextureResource resource = new TextureResource(filePath);
+                    TextureResource resource = TextureResource.loadFromFile(filePath);
                     resource.tag = "";
                     resource.category = "";
                     _textureResources.Add(resource);
@@ -141,8 +141,12 @@ namespace StasisEditor.Views
             string textureDirectory = EditorController.TEXTURE_RESOURCE_DIRECTORY;
             foreach (TextureResource resource in resources)
             {
-                // Load file
-                string filePath = string.Format("{0}\\{1}", textureDirectory, resource.relativePath);
+                // Load file, falling back to the file path it was loaded from if invalid
+                string filePath = null;
+                if (resource.tag == "" || resource.category == "")
+                    filePath = resource.loadedFrom;
+                else
+                    filePath = string.Format("{0}\\{1}", textureDirectory, resource.relativePath);
 
                 Image image = null;
                 using (FileStream stream = new FileStream(filePath, FileMode.Open))

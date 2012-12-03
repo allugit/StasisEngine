@@ -55,7 +55,7 @@ namespace StasisEditor.Controllers
         {
             // Clear already loaded texture resources
             _textureResources.Clear();
-            _textureResources = TextureResource.loadFromDirectory(EditorController.TEXTURE_RESOURCE_DIRECTORY);
+            _textureResources = TextureResource.loadAll(EditorController.TEXTURE_RESOURCE_DIRECTORY);
         }
 
         /*
