@@ -32,6 +32,8 @@
             this.textureDataGrid = new System.Windows.Forms.DataGridView();
             this.removeTextureButton = new System.Windows.Forms.Button();
             this.addTextureButton = new System.Windows.Forms.Button();
+            this.label2 = new System.Windows.Forms.Label();
+            this.previewContainer = new System.Windows.Forms.FlowLayoutPanel();
             ((System.ComponentModel.ISupportInitialize)(this.textureDataGrid)).BeginInit();
             this.SuspendLayout();
             // 
@@ -52,6 +54,7 @@
             this.textureDataGrid.Name = "textureDataGrid";
             this.textureDataGrid.Size = new System.Drawing.Size(302, 377);
             this.textureDataGrid.TabIndex = 2;
+            this.textureDataGrid.SelectionChanged += new System.EventHandler(this.textureDataGrid_SelectionChanged);
             // 
             // removeTextureButton
             // 
@@ -72,11 +75,34 @@
             this.addTextureButton.UseVisualStyleBackColor = true;
             this.addTextureButton.Click += new System.EventHandler(this.addTextureButton_Click);
             // 
+            // label2
+            // 
+            this.label2.AutoSize = true;
+            this.label2.Location = new System.Drawing.Point(320, 9);
+            this.label2.Name = "label2";
+            this.label2.Size = new System.Drawing.Size(45, 13);
+            this.label2.TabIndex = 6;
+            this.label2.Text = "Preview";
+            // 
+            // previewContainer
+            // 
+            this.previewContainer.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom)
+                        | System.Windows.Forms.AnchorStyles.Left)
+                        | System.Windows.Forms.AnchorStyles.Right)));
+            this.previewContainer.AutoScroll = true;
+            this.previewContainer.BackColor = System.Drawing.Color.Black;
+            this.previewContainer.Location = new System.Drawing.Point(323, 26);
+            this.previewContainer.Name = "previewContainer";
+            this.previewContainer.Size = new System.Drawing.Size(405, 377);
+            this.previewContainer.TabIndex = 7;
+            // 
             // TextureView
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(740, 444);
+            this.Controls.Add(this.previewContainer);
+            this.Controls.Add(this.label2);
             this.Controls.Add(this.addTextureButton);
             this.Controls.Add(this.removeTextureButton);
             this.Controls.Add(this.textureDataGrid);
@@ -96,5 +122,7 @@
         private System.Windows.Forms.DataGridView textureDataGrid;
         private System.Windows.Forms.Button removeTextureButton;
         private System.Windows.Forms.Button addTextureButton;
+        private System.Windows.Forms.Label label2;
+        private System.Windows.Forms.FlowLayoutPanel previewContainer;
     }
 }

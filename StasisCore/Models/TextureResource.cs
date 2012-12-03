@@ -23,6 +23,9 @@ namespace StasisCore.Models
         [Browsable(false)]
         public string fileName { get { return string.Format("{0}{1}", _tag, _extension); } }
 
+        [Browsable(false)]
+        public string relativePath { get { return string.Format("{0}\\{1}", _category, fileName); } }
+
         public TextureResource(string tag, string category, string extension)
         {
             _tag = tag;
