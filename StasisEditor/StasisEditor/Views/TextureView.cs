@@ -59,15 +59,6 @@ namespace StasisEditor.Views
             _textureBindingSource.DataSource = _controller.getTextureResources();
         }
 
-        /*
-        // refreshGrid
-        public void refreshGrid()
-        {
-            _textureResources.Clear();
-            _textureResources = new BindingList<TextureResource>(TextureResource.copyFrom(_controller.getTextureResources()));
-            _textureBindingSource.DataSource = _textureResources;
-        }*/
-
         // preview
         public void preview(List<TextureResource> resources)
         {
