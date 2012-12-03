@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
+using System.ComponentModel;
 
 namespace StasisCore.Models
 {
@@ -10,8 +9,11 @@ namespace StasisCore.Models
         private string _tag;
         private string _category;
 
-        public string tag { get { return _tag; } set { _tag = value; } }
-        public string category { get { return _category; } set { _category = value; } }
+        [DisplayName("Tag")]
+        public string tag { get; set; }
+
+        [DisplayName("Category")]
+        public string category { get; set; }
 
         public TextureResource(string tag, string category)
         {

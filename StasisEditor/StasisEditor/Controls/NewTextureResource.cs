@@ -4,65 +4,54 @@ using System.ComponentModel;
 using System.Data;
 using System.Drawing;
 using System.Linq;
-using System.Text;
+using System.Text.RegularExpressions;
 using System.Windows.Forms;
+using StasisEditor.Models;
 
 namespace StasisEditor.Controls
 {
     public partial class NewTextureResource : Form
     {
-        private bool _validTag;
-        private bool _validCategory;
-        private bool _validFile;
-        private string _tag;
-        private string _category;
-        private string _fileName;
+        private List<TemporaryTextureResource> _newTextureResources;
 
         public NewTextureResource()
         {
+            _newTextureResources = new List<TemporaryTextureResource>();
+            
             InitializeComponent();
         }
-
-        // Check validation
-        private void checkValidation()
-        {
-            if (_validTag && _validCategory && _validFile)
-                addButton.Enabled = true;
-        }
-
         // Browse button clicked
         private void browseButton_Click(object sender, EventArgs e)
         {
             OpenFileDialog fd = new OpenFileDialog();
-            fd.Filter = "PNG Files | *.png";
+            fd.Filter = "Image Files (*.bmp;*.png;*.jpg;*.jpeg;*.tga;*.dds;*.dib)|*.bmp;*.png;*.jpg;*.jpeg;*.tga;*.dds;*.dib";
+            fd.Multiselect = true;
             if (fd.ShowDialog() == DialogResult.OK)
             {
-                _validFile = true;
-                _fileName = fd.FileName;
+                foreach (string fileName in fd.FileNames)
+                {
+                    // Make sure only unique files get added
+                    bool skip = false;
+                    foreach (TemporaryTextureResource tempResource in _newTextureResources)
+                    {
+                        if (tempResource.fileName == fileName)
+                        {
+                            skip = true;
+                            break;
+                        }
+                    }
+
+                    if (skip)
+                        continue;
+
+                    _newTextureResources.Add(new TemporaryTextureResource(fileName));
+                }
+
+                SuspendLayout();
+                newTextureResourcesGrid.DataSource = null;
+                newTextureResourcesGrid.DataSource = _newTextureResources;
+                ResumeLayout();
             }
-
-            // Check validation
-            checkValidation();
-        }
-
-        // Tag text changed
-        private void tagTextBox_TextChanged(object sender, EventArgs e)
-        {
-            // TODO: Check tag
-            _validTag = true;
-
-            // Check validation
-            checkValidation();
-        }
-
-        // Category text changed
-        private void categoryTextBox_TextChanged(object sender, EventArgs e)
-        {
-            // TODO: check category
-            _validCategory = true;
-
-            // Check validation
-            checkValidation();
         }
 
         // Cancel clicked
