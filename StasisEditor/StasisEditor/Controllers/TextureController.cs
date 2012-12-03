@@ -60,8 +60,8 @@ namespace StasisEditor.Controllers
                 string fileDestination = String.Format("{0}\\{1}", categoryDirectory, tempResource.fileName);
                 if (File.Exists(fileDestination))
                 {
-                    if (MessageBox.Show(String.Format("The file {..{0}\\{1}} already exists. Overwrite it?", tempResource.category, tempResource.fileName), "File exists", MessageBoxButtons.YesNo) == DialogResult.Yes)
-                        File.Copy(tempResource.sourcePath, fileDestination);
+                    if (MessageBox.Show(String.Format("The file {{...{0}\\{1}}} already exists. Overwrite it?", tempResource.category, tempResource.fileName), "File exists", MessageBoxButtons.YesNo) == DialogResult.Yes)
+                        File.Copy(tempResource.sourcePath, fileDestination, true);
                 }
                 else
                     File.Copy(tempResource.sourcePath, fileDestination);

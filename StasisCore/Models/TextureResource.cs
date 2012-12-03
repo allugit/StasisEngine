@@ -20,7 +20,7 @@ namespace StasisCore.Models
         public string extension { get { return _extension; } }
 
         [Browsable(false)]
-        public string fileName { get { return string.Format("{0}.{1}", _tag, _extension); } }
+        public string fileName { get { return string.Format("{0}{1}", _tag, _extension); } }
 
         public TextureResource(string tag, string category, string extension)
         {

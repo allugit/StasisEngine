@@ -46,10 +46,11 @@
             // 
             // textureDataGrid
             // 
+            this.textureDataGrid.AutoSizeColumnsMode = System.Windows.Forms.DataGridViewAutoSizeColumnsMode.Fill;
             this.textureDataGrid.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
             this.textureDataGrid.Location = new System.Drawing.Point(15, 26);
             this.textureDataGrid.Name = "textureDataGrid";
-            this.textureDataGrid.Size = new System.Drawing.Size(260, 377);
+            this.textureDataGrid.Size = new System.Drawing.Size(302, 377);
             this.textureDataGrid.TabIndex = 2;
             // 
             // removeTextureButton

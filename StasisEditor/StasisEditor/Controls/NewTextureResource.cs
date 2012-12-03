@@ -42,20 +42,29 @@ namespace StasisEditor.Controls
         // Validate entire form
         public void validateForm()
         {
+            // Initial value
             bool valid = true;
-            foreach (DataGridViewRow row in newTextureResourcesGrid.Rows)
+            
+            // Check to make sure there's at least one row
+            if (newTextureResourcesGrid.Rows.Count == 0)
+                valid = false;
+            else
             {
-                foreach (DataGridViewCell cell in row.Cells)
+                // Make sure cells aren't empty
+                foreach (DataGridViewRow row in newTextureResourcesGrid.Rows)
                 {
-                    if (cell.Value == null || String.IsNullOrEmpty(cell.Value.ToString()))
+                    foreach (DataGridViewCell cell in row.Cells)
                     {
-                        valid = false;
-                        break;
+                        if (cell.Value == null || String.IsNullOrEmpty(cell.Value.ToString()))
+                        {
+                            valid = false;
+                            break;
+                        }
                     }
-                }
 
-                if (!valid)
-                    break;
+                    if (!valid)
+                        break;
+                }
             }
             createButton.Enabled = valid;
         }
