@@ -49,9 +49,8 @@ float perlin(float2 p)
 	float nx0 = n00 * (1 - weight(u)) + n10 * weight(u);
 	float nx1 = n01 * (1 - weight(u)) + n11 * weight(u);
 	float nxy = nx0 * (1 - weight(v)) + nx1 * weight(v);
-
-	//return (nxy + 1) / 2;
-	return nxy;
+	
+	return nxy + 1;
 }
 
 ///////////////////////////////////////////
@@ -106,10 +105,9 @@ float2 worley(float2 p, bool inverse = false, float jitter = 2.0)
 		}
 	}
 
-	if (inverse)
-		return float2(sqrt(distance1), sqrt(distance2)) - 1;
-	else
-		return (1 - float2(sqrt(distance1), sqrt(distance2))) * 2 - 1;
+	// Note: value is inversed by default
+	float2 value = float2(sqrt(distance1), sqrt(distance2));
+	return inverse ? value : 1 - value;
 }
 
 ///////////////////////////////////////////

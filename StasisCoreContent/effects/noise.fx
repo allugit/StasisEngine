@@ -31,23 +31,22 @@ float4 PSBaseNoise(float2 texCoords:TEXCOORD0) : COLOR0
 {
 	// Base values
 	float4 base = tex2D(baseSampler, texCoords);
-	float n = (base.r + base.g + base.b) / 3;
-	n = n * 2 - 1;
+	float baseValue = (base.r + base.g + base.b) / 3;
 
 	// Set position
-	float2 p = 
-		(offset / renderSize) - (texCoords * aspectRatio) / noiseScale;
+	float2 p = (offset / renderSize) - (texCoords * aspectRatio) / noiseScale;
 
 	// Calculate noise
-	float2 coords = (p + n * fbmOffset) / fbmScale;
+	float2 coords = p + baseValue * fbmOffset;
+	float value = 0;
 	if (fbmPerlinBasis)
-		n = fbmPerlin(coords, fbmIterations, noiseFrequency, noiseGain, noiseLacunarity);
+		value = fbmPerlin(coords, fbmIterations, noiseFrequency, noiseGain, noiseLacunarity);
 	else if (fbmCellBasis)
-		n = fbmWorley(coords, false, fbmIterations, noiseFrequency, noiseGain, noiseLacunarity);
+		value = fbmWorley(coords, false, fbmIterations, noiseFrequency, noiseGain, noiseLacunarity);
 	else
-		n = fbmWorley(coords, true, fbmIterations, noiseFrequency, noiseGain, noiseLacunarity);
-
-	base.rgb += n * multiplier;
+		value = fbmWorley(coords, true, fbmIterations, noiseFrequency, noiseGain, noiseLacunarity);
+	
+	base.rgb *= value * multiplier;
 
 	return base;
 }
