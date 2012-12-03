@@ -10,7 +10,7 @@ namespace StasisCore.Models
         private string _tag;
         private string _category;
         private string _extension;
-        private string _loadedFrom;
+        private string _currentPath;
 
         [DisplayName("Tag")]
         public string tag { get { return _tag; } set { _tag = value; } }
@@ -28,7 +28,7 @@ namespace StasisCore.Models
         public string relativePath { get { return string.Format("{0}\\{1}", _category, fileName); } }
 
         [Browsable(false)]
-        public string loadedFrom { get { return _loadedFrom; } set { _loadedFrom = value; } }
+        public string currentPath { get { return _currentPath; } set { _currentPath = value; } }
 
         [Browsable(false)]
         public bool isValid { get { return _tag != "" && _category != ""; } }
@@ -67,7 +67,7 @@ namespace StasisCore.Models
             string[] dirNames = filePath.Split(new[] { '\\', '/' });
             string category = dirNames[dirNames.Length - 2];
             TextureResource resource = new TextureResource(Path.GetFileNameWithoutExtension(filePath), category, Path.GetExtension(filePath));
-            resource._loadedFrom = filePath;
+            resource._currentPath = filePath;
             return resource;
         }
 

@@ -73,11 +73,37 @@ namespace StasisEditor.Controllers
                     return;
             }
 
-            // Create texture resource, and clear its tag and category properties
+            // Create texture resource
             TextureResource resource = TextureResource.loadFromFile(filePath);
+
+            // Copy to a temporary directory
+            copyToTemporaryDirectory(resource);
+
+            // Clear initial values
             resource.tag = "";
             resource.category = "";
             _textureResources.Add(resource);
+        }
+
+        // copyToTemporaryDirectory
+        private void copyToTemporaryDirectory(TextureResource resource)
+        {
+            // Make sure temporary directory exists
+            string temporaryDirectory = EditorController.TEMPORARY_TEXTURE_DIRECTORY;
+            if (!Directory.Exists(temporaryDirectory))
+                Directory.CreateDirectory(temporaryDirectory);
+
+            // Make sure subdirectory exists
+            string subDirectory = Path.GetDirectoryName(resource.getFullPath(temporaryDirectory));
+            if (!Directory.Exists(subDirectory))
+                Directory.CreateDirectory(subDirectory);
+
+            // Copy file
+            string destination = resource.getFullPath(temporaryDirectory);
+            File.Copy(resource.currentPath, destination);
+
+            // Update current path
+            resource.currentPath = destination;
         }
 
         /*
@@ -151,13 +177,13 @@ namespace StasisEditor.Controllers
             if (File.Exists(fileDestination))
             {
                 if (MessageBox.Show(String.Format("The file {{...{0}\\{1}}} already exists. Overwrite it?", resource.category, resource.fileName), "File exists", MessageBoxButtons.YesNo) == DialogResult.Yes)
-                    File.Copy(resource.loadedFrom, fileDestination, true);
+                    File.Move(resource.currentPath, fileDestination);
             }
             else
-                File.Copy(resource.loadedFrom, fileDestination);
+                File.Move(resource.currentPath, fileDestination);
 
             // Update loadedFrom
-            resource.loadedFrom = fileDestination;
+            resource.currentPath = fileDestination;
         }
     }
 }

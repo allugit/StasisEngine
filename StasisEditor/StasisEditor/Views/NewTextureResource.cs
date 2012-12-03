@@ -78,7 +78,7 @@ namespace StasisEditor.Views
             foreach (TextureResource resource in resources)
             {
                 // Load file, falling back to the file path it was loaded from if invalid
-                string filePath = resource.isValid ? resource.getFullPath(textureDirectory) : resource.loadedFrom;
+                string filePath = resource.isValid ? resource.getFullPath(textureDirectory) : resource.currentPath;
 
                 Image image = null;
                 using (FileStream stream = new FileStream(filePath, FileMode.Open))
