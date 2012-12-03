@@ -215,15 +215,18 @@ namespace StasisEditor.Views
         }
 
         // Remove button clicked
-        private void removeTextureButton_Click(object sender, EventArgs e)
+        private void removeTextureButton_Click(object sender, DataGridViewCellEventArgs e)
         {
-            if (MessageBox.Show("Are you sure you want to delete the selected textures from the hard drive?", "Delete textures", MessageBoxButtons.YesNo) == System.Windows.Forms.DialogResult.Yes)
+            if (e.ColumnIndex == _buttonColumn.Index)
             {
-                // Clear preview
-                clearPreview();
+                if (MessageBox.Show("Are you sure you want to delete the selected textures from the hard drive?", "Delete textures", MessageBoxButtons.YesNo) == System.Windows.Forms.DialogResult.Yes)
+                {
+                    // Clear preview
+                    clearPreview();
 
-                // Destroy selected resources
-                _controller.removeTextureResource(getSelectedResources());
+                    // Destroy selected resources
+                    _controller.removeTextureResource(getSelectedResources());
+                }
             }
         }
 
