@@ -28,62 +28,68 @@
         /// </summary>
         private void InitializeComponent()
         {
-            this.label1 = new System.Windows.Forms.Label();
+            this.closeButton = new System.Windows.Forms.Button();
+            this.browseButton = new System.Windows.Forms.Button();
             this.textureDataGrid = new System.Windows.Forms.DataGridView();
-            this.removeTextureButton = new System.Windows.Forms.Button();
-            this.addTextureButton = new System.Windows.Forms.Button();
-            this.label2 = new System.Windows.Forms.Label();
+            this.label1 = new System.Windows.Forms.Label();
             this.previewContainer = new System.Windows.Forms.FlowLayoutPanel();
+            this.label2 = new System.Windows.Forms.Label();
+            this.splitContainer1 = new System.Windows.Forms.SplitContainer();
             ((System.ComponentModel.ISupportInitialize)(this.textureDataGrid)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.splitContainer1)).BeginInit();
+            this.splitContainer1.Panel1.SuspendLayout();
+            this.splitContainer1.Panel2.SuspendLayout();
+            this.splitContainer1.SuspendLayout();
             this.SuspendLayout();
+            // 
+            // closeButton
+            // 
+            this.closeButton.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
+            this.closeButton.Location = new System.Drawing.Point(558, 400);
+            this.closeButton.Name = "closeButton";
+            this.closeButton.Size = new System.Drawing.Size(75, 23);
+            this.closeButton.TabIndex = 6;
+            this.closeButton.Text = "Close";
+            this.closeButton.UseVisualStyleBackColor = true;
+            this.closeButton.Click += new System.EventHandler(this.cancelButton_Click);
+            // 
+            // browseButton
+            // 
+            this.browseButton.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
+            this.browseButton.Location = new System.Drawing.Point(12, 400);
+            this.browseButton.Name = "browseButton";
+            this.browseButton.Size = new System.Drawing.Size(118, 23);
+            this.browseButton.TabIndex = 7;
+            this.browseButton.Text = "Add Textures...";
+            this.browseButton.UseVisualStyleBackColor = true;
+            this.browseButton.Click += new System.EventHandler(this.browseButton_Click);
+            // 
+            // textureDataGrid
+            // 
+            this.textureDataGrid.AllowUserToAddRows = false;
+            this.textureDataGrid.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom)
+                        | System.Windows.Forms.AnchorStyles.Left)
+                        | System.Windows.Forms.AnchorStyles.Right)));
+            this.textureDataGrid.AutoSizeColumnsMode = System.Windows.Forms.DataGridViewAutoSizeColumnsMode.Fill;
+            this.textureDataGrid.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
+            this.textureDataGrid.Location = new System.Drawing.Point(0, 21);
+            this.textureDataGrid.Margin = new System.Windows.Forms.Padding(0);
+            this.textureDataGrid.Name = "textureDataGrid";
+            this.textureDataGrid.Size = new System.Drawing.Size(267, 352);
+            this.textureDataGrid.TabIndex = 9;
+            this.textureDataGrid.CellEndEdit += new System.Windows.Forms.DataGridViewCellEventHandler(this.newTextureResourcesGrid_CellEndEdit);
+            this.textureDataGrid.CellValidating += new System.Windows.Forms.DataGridViewCellValidatingEventHandler(this.newTextureResourcesGrid_CellValidating);
+            this.textureDataGrid.SelectionChanged += new System.EventHandler(this.textureDataGrid_SelectionChanged);
             // 
             // label1
             // 
             this.label1.AutoSize = true;
-            this.label1.Location = new System.Drawing.Point(12, 9);
+            this.label1.Location = new System.Drawing.Point(3, 3);
+            this.label1.Margin = new System.Windows.Forms.Padding(0);
             this.label1.Name = "label1";
-            this.label1.Size = new System.Drawing.Size(48, 13);
-            this.label1.TabIndex = 1;
-            this.label1.Text = "Textures";
-            // 
-            // textureDataGrid
-            // 
-            this.textureDataGrid.AutoSizeColumnsMode = System.Windows.Forms.DataGridViewAutoSizeColumnsMode.Fill;
-            this.textureDataGrid.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
-            this.textureDataGrid.Location = new System.Drawing.Point(15, 26);
-            this.textureDataGrid.Name = "textureDataGrid";
-            this.textureDataGrid.Size = new System.Drawing.Size(302, 377);
-            this.textureDataGrid.TabIndex = 2;
-            this.textureDataGrid.SelectionChanged += new System.EventHandler(this.textureDataGrid_SelectionChanged);
-            // 
-            // removeTextureButton
-            // 
-            this.removeTextureButton.Location = new System.Drawing.Point(96, 409);
-            this.removeTextureButton.Name = "removeTextureButton";
-            this.removeTextureButton.Size = new System.Drawing.Size(75, 23);
-            this.removeTextureButton.TabIndex = 3;
-            this.removeTextureButton.Text = "Remove";
-            this.removeTextureButton.UseVisualStyleBackColor = true;
-            this.removeTextureButton.Click += new System.EventHandler(this.removeTextureButton_Click);
-            // 
-            // addTextureButton
-            // 
-            this.addTextureButton.Location = new System.Drawing.Point(15, 409);
-            this.addTextureButton.Name = "addTextureButton";
-            this.addTextureButton.Size = new System.Drawing.Size(75, 23);
-            this.addTextureButton.TabIndex = 4;
-            this.addTextureButton.Text = "Add";
-            this.addTextureButton.UseVisualStyleBackColor = true;
-            this.addTextureButton.Click += new System.EventHandler(this.addTextureButton_Click);
-            // 
-            // label2
-            // 
-            this.label2.AutoSize = true;
-            this.label2.Location = new System.Drawing.Point(320, 9);
-            this.label2.Name = "label2";
-            this.label2.Size = new System.Drawing.Size(45, 13);
-            this.label2.TabIndex = 6;
-            this.label2.Text = "Preview";
+            this.label1.Size = new System.Drawing.Size(97, 13);
+            this.label1.TabIndex = 10;
+            this.label1.Text = "Texture Resources";
             // 
             // previewContainer
             // 
@@ -92,38 +98,73 @@
                         | System.Windows.Forms.AnchorStyles.Right)));
             this.previewContainer.AutoScroll = true;
             this.previewContainer.BackColor = System.Drawing.Color.Black;
-            this.previewContainer.Location = new System.Drawing.Point(323, 26);
+            this.previewContainer.Location = new System.Drawing.Point(0, 21);
+            this.previewContainer.Margin = new System.Windows.Forms.Padding(0);
             this.previewContainer.Name = "previewContainer";
-            this.previewContainer.Size = new System.Drawing.Size(405, 377);
-            this.previewContainer.TabIndex = 7;
+            this.previewContainer.Size = new System.Drawing.Size(349, 352);
+            this.previewContainer.TabIndex = 11;
             // 
-            // TextureView
+            // label2
+            // 
+            this.label2.AutoSize = true;
+            this.label2.Location = new System.Drawing.Point(3, 3);
+            this.label2.Margin = new System.Windows.Forms.Padding(0);
+            this.label2.Name = "label2";
+            this.label2.Size = new System.Drawing.Size(45, 13);
+            this.label2.TabIndex = 12;
+            this.label2.Text = "Preview";
+            // 
+            // splitContainer1
+            // 
+            this.splitContainer1.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom)
+                        | System.Windows.Forms.AnchorStyles.Left)
+                        | System.Windows.Forms.AnchorStyles.Right)));
+            this.splitContainer1.Location = new System.Drawing.Point(12, 12);
+            this.splitContainer1.Name = "splitContainer1";
+            // 
+            // splitContainer1.Panel1
+            // 
+            this.splitContainer1.Panel1.Controls.Add(this.label1);
+            this.splitContainer1.Panel1.Controls.Add(this.textureDataGrid);
+            // 
+            // splitContainer1.Panel2
+            // 
+            this.splitContainer1.Panel2.Controls.Add(this.label2);
+            this.splitContainer1.Panel2.Controls.Add(this.previewContainer);
+            this.splitContainer1.Size = new System.Drawing.Size(620, 373);
+            this.splitContainer1.SplitterDistance = 267;
+            this.splitContainer1.TabIndex = 13;
+            // 
+            // NewTextureResource
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(740, 444);
-            this.Controls.Add(this.previewContainer);
-            this.Controls.Add(this.label2);
-            this.Controls.Add(this.addTextureButton);
-            this.Controls.Add(this.removeTextureButton);
-            this.Controls.Add(this.textureDataGrid);
-            this.Controls.Add(this.label1);
-            this.Name = "TextureView";
-            this.Text = "Textures";
-            this.FormClosed += new System.Windows.Forms.FormClosedEventHandler(this.TextureView_FormClosed);
+            this.ClientSize = new System.Drawing.Size(645, 434);
+            this.Controls.Add(this.splitContainer1);
+            this.Controls.Add(this.browseButton);
+            this.Controls.Add(this.closeButton);
+            this.Name = "NewTextureResource";
+            this.Text = "Texture Resources";
+            this.FormClosed += new System.Windows.Forms.FormClosedEventHandler(this.NewTextureResource_FormClosed);
             ((System.ComponentModel.ISupportInitialize)(this.textureDataGrid)).EndInit();
+            this.splitContainer1.Panel1.ResumeLayout(false);
+            this.splitContainer1.Panel1.PerformLayout();
+            this.splitContainer1.Panel2.ResumeLayout(false);
+            this.splitContainer1.Panel2.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.splitContainer1)).EndInit();
+            this.splitContainer1.ResumeLayout(false);
             this.ResumeLayout(false);
-            this.PerformLayout();
 
         }
 
         #endregion
 
-        private System.Windows.Forms.Label label1;
+        private System.Windows.Forms.Button closeButton;
+        private System.Windows.Forms.Button browseButton;
         private System.Windows.Forms.DataGridView textureDataGrid;
-        private System.Windows.Forms.Button removeTextureButton;
-        private System.Windows.Forms.Button addTextureButton;
-        private System.Windows.Forms.Label label2;
+        private System.Windows.Forms.Label label1;
         private System.Windows.Forms.FlowLayoutPanel previewContainer;
+        private System.Windows.Forms.Label label2;
+        private System.Windows.Forms.SplitContainer splitContainer1;
     }
 }

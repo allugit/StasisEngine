@@ -1,46 +1,72 @@
 ﻿using System;
-using System.IO;
 using System.Collections.Generic;
-using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.Data;
 using System.Drawing;
+using System.Linq;
+using System.Text.RegularExpressions;
 using System.Windows.Forms;
-using StasisCore.Models;
+using System.IO;
 using StasisEditor.Controllers;
-using StasisEditor.Controls;
+using StasisEditor.Models;
+using StasisEditor.Views;
+using StasisCore.Models;
 
 namespace StasisEditor.Views
 {
     public partial class TextureView : Form, ITextureView
     {
         private ITextureController _controller;
-        private BindingList<TextureResource> _textureResources;
+        //private BindingList<TextureResource> _textureResources;
         private BindingSource _textureBindingSource;
+        private DataGridViewButtonColumn _buttonColumn;
 
         public TextureView()
         {
-            _textureResources = new BindingList<TextureResource>();
             _textureBindingSource = new BindingSource();
+            _textureBindingSource.DataSource = new BindingList<TextureResource>();
 
             InitializeComponent();
 
             textureDataGrid.DataSource = _textureBindingSource;
+
+            // Add button column
+            _buttonColumn = new DataGridViewButtonColumn();
+            _buttonColumn.AutoSizeMode = DataGridViewAutoSizeColumnMode.None;
+            _buttonColumn.HeaderText = "";
+            _buttonColumn.Text = "Remove";
+            _buttonColumn.Width = 80;
+            _buttonColumn.FlatStyle = FlatStyle.Standard;
+            _buttonColumn.UseColumnTextForButtonValue = true;
+            textureDataGrid.Columns.Add(_buttonColumn);
+            textureDataGrid.CellContentClick += new DataGridViewCellEventHandler(removeTextureButton_Click);
+        }
+
+        // Browse button clicked
+        private void browseButton_Click(object sender, EventArgs e)
+        {
+            OpenFileDialog fd = new OpenFileDialog();
+            fd.Filter = "Image Files (*.bmp;*.png;*.jpg;*.jpeg;*.tga;*.dds;*.dib)|*.bmp;*.png;*.jpg;*.jpeg;*.tga;*.dds;*.dib";
+            fd.Multiselect = true;
+            if (fd.ShowDialog() == DialogResult.OK)
+                _controller.addTextureResources(fd.FileNames);
         }
 
         // setController
         public void setController(ITextureController controller)
         {
             _controller = controller;
+            _textureBindingSource.DataSource = _controller.getTextureResources();
         }
 
+        /*
         // refreshGrid
         public void refreshGrid()
         {
             _textureResources.Clear();
             _textureResources = new BindingList<TextureResource>(TextureResource.copyFrom(_controller.getTextureResources()));
             _textureBindingSource.DataSource = _textureResources;
-        }
+        }*/
 
         // preview
         public void preview(List<TextureResource> resources)
@@ -51,8 +77,9 @@ namespace StasisEditor.Views
             string textureDirectory = EditorController.TEXTURE_RESOURCE_DIRECTORY;
             foreach (TextureResource resource in resources)
             {
-                // Load file
-                string filePath = string.Format("{0}\\{1}", textureDirectory, resource.relativePath);
+                // Load file, falling back to the file path it was loaded from if invalid
+                string filePath = resource.isValid ? resource.getFullPath(textureDirectory) : resource.currentPath;
+
                 Image image = null;
                 using (FileStream stream = new FileStream(filePath, FileMode.Open))
                 {
@@ -110,20 +137,6 @@ namespace StasisEditor.Views
             return selectedResources;
         }
 
-        // Form closed
-        private void TextureView_FormClosed(object sender, FormClosedEventArgs e)
-        {
-            _controller.viewClosed();
-        }
-
-        // Add texture resources
-        private void addTextureButton_Click(object sender, EventArgs e)
-        {
-            NewTextureResource newResources = new NewTextureResource();
-            //if (newResources.ShowDialog() == DialogResult.OK)
-                //_controller.createNewTextureResources(newResources.newTextureResources);
-        }
-
         // Selection changed
         private void textureDataGrid_SelectionChanged(object sender, EventArgs e)
         {
@@ -131,17 +144,97 @@ namespace StasisEditor.Views
             preview(getSelectedResources());
         }
 
-        // Remove button clicked
-        private void removeTextureButton_Click(object sender, EventArgs e)
+        // Cancel clicked
+        private void cancelButton_Click(object sender, EventArgs e)
         {
-            if (MessageBox.Show("Are you sure you want to delete the selected textures from the hard drive?", "Delete textures", MessageBoxButtons.YesNo) == System.Windows.Forms.DialogResult.Yes)
-            {
-                // Clear preview
-                clearPreview();
+            this.DialogResult = DialogResult.Cancel;
+            Close();
+        }
 
-                // Destroy selected resources
-                _controller.removeTextureResource(getSelectedResources());
+        // Add clicked
+        private void button1_Click(object sender, EventArgs e)
+        {
+            this.DialogResult = DialogResult.OK;
+            Close();
+        }
+
+        // Validate the cell
+        private void newTextureResourcesGrid_CellValidating(object sender, DataGridViewCellValidatingEventArgs e)
+        {
+            // Validate characters
+            string value = e.FormattedValue.ToString();
+            List<char> invalidChars = new List<char>(Path.GetInvalidPathChars());
+            invalidChars.AddRange(Path.GetInvalidFileNameChars());
+            string invalidCharsString = String.Format("{0}", new string(invalidChars.ToArray()));
+            List<char> foundInvalidChars = new List<char>();
+            foreach (char c in value)
+            {
+                if (invalidChars.Contains(c))
+                    foundInvalidChars.Add(c);
             }
+            if (foundInvalidChars.Count > 0)
+            {
+                textureDataGrid.Rows[e.RowIndex].ErrorText = String.Format("Invalid characters: {0}", new string(foundInvalidChars.ToArray()));
+                e.Cancel = true;
+            }
+
+            // Validate uniqueness
+            if (value.Length > 0)   // skip empty cells
+            {
+                // Only validate the uniqueness of tags
+                if (textureDataGrid.Columns[e.ColumnIndex].Name == "tag")
+                {
+                    foreach (DataGridViewRow row in textureDataGrid.Rows)
+                    {
+                        foreach (DataGridViewCell cell in row.Cells)
+                        {
+                            // Skip self and button cells
+                            if ((cell.ColumnIndex == e.ColumnIndex && cell.RowIndex == e.RowIndex) ||
+                                cell.FormattedValue.ToString() == "Remove")
+                                continue;
+
+                            if (cell.FormattedValue.ToString() == value)
+                            {
+                                textureDataGrid.Rows[e.RowIndex].ErrorText = String.Format("Must have unique values: {0}", value);
+                                e.Cancel = true;
+                            }
+                        }
+                    }
+                }
+            }
+        }
+
+        // Done validating the cell
+        private void newTextureResourcesGrid_CellEndEdit(object sender, DataGridViewCellEventArgs e)
+        {
+            textureDataGrid.Rows[e.RowIndex].ErrorText = String.Empty;
+
+            // Check if a move is necessary
+            TextureResource resource = textureDataGrid.Rows[e.RowIndex].DataBoundItem as TextureResource;
+            if (resource.isValid && !File.Exists(resource.getFullPath(EditorController.TEXTURE_RESOURCE_DIRECTORY)))
+                _controller.relocateTextureResource(resource);
+        }
+
+        // Remove button clicked
+        private void removeTextureButton_Click(object sender, DataGridViewCellEventArgs e)
+        {
+            if (e.ColumnIndex == _buttonColumn.Index)
+            {
+                if (MessageBox.Show("Are you sure you want to delete the selected textures from the hard drive?", "Delete textures", MessageBoxButtons.YesNo) == System.Windows.Forms.DialogResult.Yes)
+                {
+                    // Clear preview
+                    clearPreview();
+
+                    // Destroy selected resources
+                    _controller.removeTextureResource(getSelectedResources());
+                }
+            }
+        }
+
+        // Form closed
+        private void NewTextureResource_FormClosed(object sender, FormClosedEventArgs e)
+        {
+            _controller.viewClosed();
         }
     }
 }

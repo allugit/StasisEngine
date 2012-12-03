@@ -102,11 +102,11 @@
     <Compile Include="Controls\MaterialProperties.Designer.cs">
       <DependentUpon>MaterialProperties.cs</DependentUpon>
     </Compile>
-    <Compile Include="Views\NewTextureResource.cs">
+    <Compile Include="Views\TextureView.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="Views\NewTextureResource.Designer.cs">
-      <DependentUpon>NewTextureResource.cs</DependentUpon>
+    <Compile Include="Views\TextureView.Designer.cs">
+      <DependentUpon>TextureView.cs</DependentUpon>
     </Compile>
     <Compile Include="Controls\RefreshingListBox.cs">
       <SubType>Component</SubType>
@@ -144,12 +144,6 @@
     </Compile>
     <Compile Include="Views\MaterialView.Designer.cs">
       <DependentUpon>MaterialView.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Views\TextureView.cs">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="Views\TextureView.Designer.cs">
-      <DependentUpon>TextureView.cs</DependentUpon>
     </Compile>
     <Compile Include="Views\XNAResources.cs" />
   </ItemGroup>
@@ -214,8 +208,8 @@
     <EmbeddedResource Include="Controls\MaterialProperties.resx">
       <DependentUpon>MaterialProperties.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="Views\NewTextureResource.resx">
-      <DependentUpon>NewTextureResource.cs</DependentUpon>
+    <EmbeddedResource Include="Views\TextureView.resx">
+      <DependentUpon>TextureView.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Controls\TerrainLayers.resx">
       <DependentUpon>TerrainLayers.cs</DependentUpon>
@@ -228,9 +222,6 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Views\MaterialView.resx">
       <DependentUpon>MaterialView.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Views\TextureView.resx">
-      <DependentUpon>TextureView.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />

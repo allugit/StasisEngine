@@ -34,7 +34,7 @@ namespace StasisEditor.Controllers
                 loadTextureResources();
 
                 // Create view
-                _textureView = new NewTextureResource();
+                _textureView = new TextureView();
                 _textureView.setController(this);
                 _textureView.Show();
             }
