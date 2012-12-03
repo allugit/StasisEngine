@@ -6,20 +6,45 @@ using System.Drawing;
 using System.Linq;
 using System.Text.RegularExpressions;
 using System.Windows.Forms;
+using System.IO;
 using StasisEditor.Models;
 
 namespace StasisEditor.Controls
 {
     public partial class NewTextureResource : Form
     {
-        private List<TemporaryTextureResource> _newTextureResources;
+        private BindingList<TemporaryTextureResource> _newTextureResources;
+        private BindingSource _bindingSource;
+        private DataGridViewButtonColumn _buttonColumn;
 
         public NewTextureResource()
         {
-            _newTextureResources = new List<TemporaryTextureResource>();
-            
+            _newTextureResources = new BindingList<TemporaryTextureResource>();
+            _bindingSource = new BindingSource();
+            _bindingSource.DataSource = _newTextureResources;
+
             InitializeComponent();
+            newTextureResourcesGrid.DataSource = _bindingSource;
+
+            // Add button column
+            _buttonColumn = new DataGridViewButtonColumn();
+            _buttonColumn.AutoSizeMode = DataGridViewAutoSizeColumnMode.None;
+            _buttonColumn.HeaderText = "Remove";
+            _buttonColumn.Text = "Remove";
+            _buttonColumn.Width = 80;
+            _buttonColumn.FlatStyle = FlatStyle.Standard;
+            _buttonColumn.UseColumnTextForButtonValue = true;
+            newTextureResourcesGrid.Columns.Add(_buttonColumn);
+            newTextureResourcesGrid.CellContentClick += new DataGridViewCellEventHandler(newTextureResourcesGrid_CellClick);
         }
+
+        // Remove button handler
+        void newTextureResourcesGrid_CellClick(object sender, DataGridViewCellEventArgs e)
+        {
+            if (e.ColumnIndex == 0 && e.RowIndex > -1 && e.RowIndex < _newTextureResources.Count)
+                _newTextureResources.RemoveAt(e.RowIndex);
+        }
+
         // Browse button clicked
         private void browseButton_Click(object sender, EventArgs e)
         {
@@ -34,7 +59,7 @@ namespace StasisEditor.Controls
                     bool skip = false;
                     foreach (TemporaryTextureResource tempResource in _newTextureResources)
                     {
-                        if (tempResource.fileName == fileName)
+                        if (tempResource.filePath == fileName)
                         {
                             skip = true;
                             break;
@@ -46,11 +71,6 @@ namespace StasisEditor.Controls
 
                     _newTextureResources.Add(new TemporaryTextureResource(fileName));
                 }
-
-                SuspendLayout();
-                newTextureResourcesGrid.DataSource = null;
-                newTextureResourcesGrid.DataSource = _newTextureResources;
-                ResumeLayout();
             }
         }
 
@@ -66,6 +86,49 @@ namespace StasisEditor.Controls
         {
             this.DialogResult = DialogResult.OK;
             Close();
+        }
+
+        // Validate the cell
+        private void newTextureResourcesGrid_CellValidating(object sender, DataGridViewCellValidatingEventArgs e)
+        {
+            string value = e.FormattedValue.ToString();
+            List<char> invalidChars = new List<char>(Path.GetInvalidPathChars());
+            invalidChars.AddRange(Path.GetInvalidFileNameChars());
+            string invalidCharsString = String.Format("{0}", new string(invalidChars.ToArray()));
+
+            foreach (char c in value)
+            {
+                if (invalidChars.Contains(c))
+                {
+                    newTextureResourcesGrid.Rows[e.RowIndex].ErrorText = "Invalid characters. Use alphanumeric characters and underscores.";
+                    e.Cancel = true;
+                    break;
+                }
+            }
+        }
+
+        // Done validating the cell
+        private void newTextureResourcesGrid_CellEndEdit(object sender, DataGridViewCellEventArgs e)
+        {
+            newTextureResourcesGrid.Rows[e.RowIndex].ErrorText = String.Empty;
+
+            // Validate the entire form
+            bool valid = true;
+            foreach (DataGridViewRow row in newTextureResourcesGrid.Rows)
+            {
+                foreach (DataGridViewCell cell in row.Cells)
+                {
+                    if (cell.Value == null || String.IsNullOrEmpty(cell.Value.ToString()))
+                    {
+                        valid = false;
+                        break;
+                    }
+                }
+
+                if (!valid)
+                    break;
+            }
+            createButton.Enabled = valid;
         }
     }
 }

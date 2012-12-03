@@ -29,7 +29,7 @@
         private void InitializeComponent()
         {
             this.cancelButton = new System.Windows.Forms.Button();
-            this.addButton = new System.Windows.Forms.Button();
+            this.createButton = new System.Windows.Forms.Button();
             this.browseButton = new System.Windows.Forms.Button();
             this.label1 = new System.Windows.Forms.Label();
             this.newTextureResourcesGrid = new System.Windows.Forms.DataGridView();
@@ -39,7 +39,7 @@
             // cancelButton
             // 
             this.cancelButton.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
-            this.cancelButton.Location = new System.Drawing.Point(295, 230);
+            this.cancelButton.Location = new System.Drawing.Point(573, 217);
             this.cancelButton.Name = "cancelButton";
             this.cancelButton.Size = new System.Drawing.Size(75, 23);
             this.cancelButton.TabIndex = 6;
@@ -47,21 +47,21 @@
             this.cancelButton.UseVisualStyleBackColor = true;
             this.cancelButton.Click += new System.EventHandler(this.cancelButton_Click);
             // 
-            // addButton
+            // createButton
             // 
-            this.addButton.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
-            this.addButton.Enabled = false;
-            this.addButton.Location = new System.Drawing.Point(214, 230);
-            this.addButton.Name = "addButton";
-            this.addButton.Size = new System.Drawing.Size(75, 23);
-            this.addButton.TabIndex = 3;
-            this.addButton.Text = "Create";
-            this.addButton.UseVisualStyleBackColor = true;
-            this.addButton.Click += new System.EventHandler(this.button1_Click);
+            this.createButton.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
+            this.createButton.Enabled = false;
+            this.createButton.Location = new System.Drawing.Point(492, 217);
+            this.createButton.Name = "createButton";
+            this.createButton.Size = new System.Drawing.Size(75, 23);
+            this.createButton.TabIndex = 3;
+            this.createButton.Text = "Create";
+            this.createButton.UseVisualStyleBackColor = true;
+            this.createButton.Click += new System.EventHandler(this.button1_Click);
             // 
             // browseButton
             // 
-            this.browseButton.Location = new System.Drawing.Point(16, 29);
+            this.browseButton.Location = new System.Drawing.Point(16, 30);
             this.browseButton.Name = "browseButton";
             this.browseButton.Size = new System.Drawing.Size(118, 23);
             this.browseButton.TabIndex = 7;
@@ -86,21 +86,23 @@
                         | System.Windows.Forms.AnchorStyles.Right)));
             this.newTextureResourcesGrid.AutoSizeColumnsMode = System.Windows.Forms.DataGridViewAutoSizeColumnsMode.Fill;
             this.newTextureResourcesGrid.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
-            this.newTextureResourcesGrid.Location = new System.Drawing.Point(16, 58);
+            this.newTextureResourcesGrid.Location = new System.Drawing.Point(16, 59);
             this.newTextureResourcesGrid.Name = "newTextureResourcesGrid";
-            this.newTextureResourcesGrid.Size = new System.Drawing.Size(354, 166);
+            this.newTextureResourcesGrid.Size = new System.Drawing.Size(632, 152);
             this.newTextureResourcesGrid.TabIndex = 9;
+            this.newTextureResourcesGrid.CellEndEdit += new System.Windows.Forms.DataGridViewCellEventHandler(this.newTextureResourcesGrid_CellEndEdit);
+            this.newTextureResourcesGrid.CellValidating += new System.Windows.Forms.DataGridViewCellValidatingEventHandler(this.newTextureResourcesGrid_CellValidating);
             // 
             // NewTextureResource
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(382, 265);
+            this.ClientSize = new System.Drawing.Size(660, 251);
             this.ControlBox = false;
             this.Controls.Add(this.newTextureResourcesGrid);
             this.Controls.Add(this.label1);
             this.Controls.Add(this.browseButton);
-            this.Controls.Add(this.addButton);
+            this.Controls.Add(this.createButton);
             this.Controls.Add(this.cancelButton);
             this.Name = "NewTextureResource";
             this.Text = "New Texture Resource";
@@ -113,7 +115,7 @@
         #endregion
 
         private System.Windows.Forms.Button cancelButton;
-        private System.Windows.Forms.Button addButton;
+        private System.Windows.Forms.Button createButton;
         private System.Windows.Forms.Button browseButton;
         private System.Windows.Forms.Label label1;
         private System.Windows.Forms.DataGridView newTextureResourcesGrid;
