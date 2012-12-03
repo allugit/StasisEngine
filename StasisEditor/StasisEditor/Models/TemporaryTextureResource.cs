@@ -8,18 +8,24 @@ namespace StasisEditor.Models
 {
     public class TemporaryTextureResource : TextureResource
     {
-        private string _filePath;
+        private string _sourcePath;
 
         [Browsable(false)]
-        public string filePath { get { return _filePath; } set { _filePath = value; } }
+        public string sourcePath { get { return _sourcePath; } set { _sourcePath = value; } }
 
-        [DisplayName("File Name")]
-        public string fileName { get { return Path.GetFileName(_filePath); } }
+        [DisplayName("Source File")]
+        public string sourceFile { get { return Path.GetFileName(_sourcePath); } }
 
         public TemporaryTextureResource(string filePath)
-            : base("", "")
+            : base("", "", "")
         {
-            _filePath = filePath;
+            _sourcePath = filePath;
+        }
+
+        // prepareForCopy
+        public void prepareForCopy()
+        {
+            _extension = Path.GetExtension(_sourcePath);
         }
     }
 }

@@ -12,6 +12,8 @@ namespace StasisEditor.Controllers
 {
     public class EditorController : IController
     {
+        public const string TEXTURE_RESOURCE_DIRECTORY = "E:\\_C#\\StasisEngine\\StasisGame\\StasisGame\\bin\\x86\\Debug\\TextureResources";
+
         private XNAController _xnaController;
         private MaterialController _materialController;
         private TextureController _textureController;

@@ -33,14 +33,12 @@ namespace StasisEditor.Views
             _controller.viewClosed();
         }
 
-        // Add texture resource
+        // Add texture resources
         private void addTextureButton_Click(object sender, EventArgs e)
         {
-            NewTextureResource newResource = new NewTextureResource();
-            if (newResource.ShowDialog() == DialogResult.OK)
-            {
-                MessageBox.Show("should add a new texture resource.");
-            }
+            NewTextureResource newResources = new NewTextureResource();
+            if (newResources.ShowDialog() == DialogResult.OK)
+                _controller.createNewTextureResources(newResources.newTextureResources);
         }
     }
 }

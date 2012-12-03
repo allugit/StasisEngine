@@ -16,6 +16,7 @@ namespace StasisEditor.Controls
         private BindingList<TemporaryTextureResource> _newTextureResources;
         private BindingSource _bindingSource;
         private DataGridViewButtonColumn _buttonColumn;
+        public List<TemporaryTextureResource> newTextureResources { get { return _newTextureResources.ToList<TemporaryTextureResource>(); } }
 
         public NewTextureResource()
         {
@@ -38,11 +39,36 @@ namespace StasisEditor.Controls
             newTextureResourcesGrid.CellContentClick += new DataGridViewCellEventHandler(newTextureResourcesGrid_CellClick);
         }
 
+        // Validate entire form
+        public void validateForm()
+        {
+            bool valid = true;
+            foreach (DataGridViewRow row in newTextureResourcesGrid.Rows)
+            {
+                foreach (DataGridViewCell cell in row.Cells)
+                {
+                    if (cell.Value == null || String.IsNullOrEmpty(cell.Value.ToString()))
+                    {
+                        valid = false;
+                        break;
+                    }
+                }
+
+                if (!valid)
+                    break;
+            }
+            createButton.Enabled = valid;
+        }
+
         // Remove button handler
         void newTextureResourcesGrid_CellClick(object sender, DataGridViewCellEventArgs e)
         {
+            // Remove from data source
             if (e.ColumnIndex == 0 && e.RowIndex > -1 && e.RowIndex < _newTextureResources.Count)
                 _newTextureResources.RemoveAt(e.RowIndex);
+
+            // Validate form
+            validateForm();
         }
 
         // Browse button clicked
@@ -59,7 +85,7 @@ namespace StasisEditor.Controls
                     bool skip = false;
                     foreach (TemporaryTextureResource tempResource in _newTextureResources)
                     {
-                        if (tempResource.filePath == fileName)
+                        if (tempResource.sourcePath == fileName)
                         {
                             skip = true;
                             break;
@@ -139,23 +165,7 @@ namespace StasisEditor.Controls
         {
             newTextureResourcesGrid.Rows[e.RowIndex].ErrorText = String.Empty;
 
-            // Validate the entire form
-            bool valid = true;
-            foreach (DataGridViewRow row in newTextureResourcesGrid.Rows)
-            {
-                foreach (DataGridViewCell cell in row.Cells)
-                {
-                    if (cell.Value == null || String.IsNullOrEmpty(cell.Value.ToString()))
-                    {
-                        valid = false;
-                        break;
-                    }
-                }
-
-                if (!valid)
-                    break;
-            }
-            createButton.Enabled = valid;
+            validateForm();
         }
     }
 }
