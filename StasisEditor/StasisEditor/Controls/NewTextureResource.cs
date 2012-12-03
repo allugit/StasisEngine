@@ -96,36 +96,38 @@ namespace StasisEditor.Controls
             List<char> invalidChars = new List<char>(Path.GetInvalidPathChars());
             invalidChars.AddRange(Path.GetInvalidFileNameChars());
             string invalidCharsString = String.Format("{0}", new string(invalidChars.ToArray()));
+            List<char> foundInvalidChars = new List<char>();
             foreach (char c in value)
             {
                 if (invalidChars.Contains(c))
-                {
-                    newTextureResourcesGrid.Rows[e.RowIndex].ErrorText = String.Format("Invalid characters. Use alphanumeric characters and underscores: ({0})", c);
-                    e.Cancel = true;
-                    break;
-                }
+                    foundInvalidChars.Add(c);
+            }
+            if (foundInvalidChars.Count > 0)
+            {
+                newTextureResourcesGrid.Rows[e.RowIndex].ErrorText = String.Format("Invalid characters: {0}", new string(foundInvalidChars.ToArray()));
+                e.Cancel = true;
             }
 
             // Validate uniqueness
-            if (value.Length > 0)
+            if (value.Length > 0)   // skip empty cells
             {
-                foreach (DataGridViewRow row in newTextureResourcesGrid.Rows)
+                // Only validate the uniqueness of tags
+                if (newTextureResourcesGrid.Columns[e.ColumnIndex].Name == "tag")
                 {
-                    foreach (DataGridViewCell cell in row.Cells)
+                    foreach (DataGridViewRow row in newTextureResourcesGrid.Rows)
                     {
-                        // Skip self and button cells
-                        if ((cell.ColumnIndex == e.ColumnIndex && cell.RowIndex == e.RowIndex) || 
-                            cell.FormattedValue.ToString() == "Remove")
-                            continue;
-
-                        // Skip cells in other columns
-                        if (e.ColumnIndex != cell.ColumnIndex)
-                            continue;
-
-                        if (cell.FormattedValue.ToString() == value)
+                        foreach (DataGridViewCell cell in row.Cells)
                         {
-                            newTextureResourcesGrid.Rows[e.RowIndex].ErrorText = String.Format("Must have unique values: ({0})", value);
-                            e.Cancel = true;
+                            // Skip self and button cells
+                            if ((cell.ColumnIndex == e.ColumnIndex && cell.RowIndex == e.RowIndex) ||
+                                cell.FormattedValue.ToString() == "Remove")
+                                continue;
+
+                            if (cell.FormattedValue.ToString() == value)
+                            {
+                                newTextureResourcesGrid.Rows[e.RowIndex].ErrorText = String.Format("Must have unique values: {0}", value);
+                                e.Cancel = true;
+                            }
                         }
                     }
                 }
