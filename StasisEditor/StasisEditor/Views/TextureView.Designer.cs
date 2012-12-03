@@ -64,6 +64,7 @@
             this.removeTextureButton.TabIndex = 3;
             this.removeTextureButton.Text = "Remove";
             this.removeTextureButton.UseVisualStyleBackColor = true;
+            this.removeTextureButton.Click += new System.EventHandler(this.removeTextureButton_Click);
             // 
             // addTextureButton
             // 

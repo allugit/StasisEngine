@@ -11,5 +11,7 @@ namespace StasisEditor.Controllers
         void viewClosed();
         void createNewTextureResources(List<TemporaryTextureResource> list);
         ReadOnlyCollection<TextureResource> getTextureResources();
+        void removeTextureResource(TextureResource resource);
+        void removeTextureResource(List<TextureResource> resources);
     }
 }

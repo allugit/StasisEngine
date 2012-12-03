@@ -91,5 +91,28 @@ namespace StasisEditor.Controllers
             loadTextureResources();
             _textureView.refreshGrid();
         }
+
+        // removeTextureResource
+        public void removeTextureResource(List<TextureResource> resources)
+        {
+            foreach (TextureResource resource in resources)
+                removeTextureResource(resource);
+        }
+        public void removeTextureResource(TextureResource resource)
+        {
+            // Remove file
+            string textureDirectory = EditorController.TEXTURE_RESOURCE_DIRECTORY;
+            string filePath = String.Format("{0}\\{1}", textureDirectory, resource.relativePath);
+            File.Delete(filePath);
+
+            // Remove directory if empty
+            string categoryDirectory = String.Format("{0}\\{1}", textureDirectory, resource.category);
+            if (Directory.GetFiles(categoryDirectory).Length == 0)
+                Directory.Delete(categoryDirectory);
+
+            // Reload resources
+            loadTextureResources();
+            _textureView.refreshGrid();
+        }
     }
 }

@@ -46,43 +46,45 @@ namespace StasisEditor.Views
         public void preview(List<TextureResource> resources)
         {
             // Clear previous preview images
-            previewContainer.Controls.Clear();
+            clearPreview();
 
             string textureDirectory = EditorController.TEXTURE_RESOURCE_DIRECTORY;
             foreach (TextureResource resource in resources)
             {
                 // Load file
                 string filePath = string.Format("{0}\\{1}", textureDirectory, resource.relativePath);
-                addPreviewImage(Image.FromFile(filePath));
+                Image image = null;
+                using (FileStream stream = new FileStream(filePath, FileMode.Open))
+                {
+                    image = Image.FromStream(stream);
+                }
+
+                // Create picture box
+                PictureBox pictureBox = new PictureBox();
+                pictureBox.BackColor = Color.Transparent;
+                pictureBox.Image = image;
+                pictureBox.Size = image.Size;
+                previewContainer.Controls.Add(pictureBox);
             }
         }
 
-        // addPreviewImage
-        private void addPreviewImage(Image image)
+        // clearPreview
+        public void clearPreview()
         {
-            PictureBox pictureBox = new PictureBox();
-            pictureBox.BackColor = Color.Transparent;
-            pictureBox.Image = image;
-            pictureBox.Size = image.Size;
-            previewContainer.Controls.Add(pictureBox);
+            foreach (Control control in previewContainer.Controls)
+            {
+                if (control is PictureBox)
+                {
+                    //(control as PictureBox).Image.Dispose();
+                    control.Dispose();
+                }
+            }
+
+            previewContainer.Controls.Clear();
         }
 
-        // Form closed
-        private void TextureView_FormClosed(object sender, FormClosedEventArgs e)
-        {
-            _controller.viewClosed();
-        }
-
-        // Add texture resources
-        private void addTextureButton_Click(object sender, EventArgs e)
-        {
-            NewTextureResource newResources = new NewTextureResource();
-            if (newResources.ShowDialog() == DialogResult.OK)
-                _controller.createNewTextureResources(newResources.newTextureResources);
-        }
-
-        // Selection changed
-        private void textureDataGrid_SelectionChanged(object sender, EventArgs e)
+        // getSelectedResources
+        private List<TextureResource> getSelectedResources()
         {
             List<int> selectedRows = new List<int>();
 
@@ -105,8 +107,41 @@ namespace StasisEditor.Views
             foreach (int index in selectedRows)
                 selectedResources.Add(textureDataGrid.Rows[index].DataBoundItem as TextureResource);
 
+            return selectedResources;
+        }
+
+        // Form closed
+        private void TextureView_FormClosed(object sender, FormClosedEventArgs e)
+        {
+            _controller.viewClosed();
+        }
+
+        // Add texture resources
+        private void addTextureButton_Click(object sender, EventArgs e)
+        {
+            NewTextureResource newResources = new NewTextureResource();
+            if (newResources.ShowDialog() == DialogResult.OK)
+                _controller.createNewTextureResources(newResources.newTextureResources);
+        }
+
+        // Selection changed
+        private void textureDataGrid_SelectionChanged(object sender, EventArgs e)
+        {
             // Preview selected texture resources
-            preview(selectedResources);
+            preview(getSelectedResources());
+        }
+
+        // Remove button clicked
+        private void removeTextureButton_Click(object sender, EventArgs e)
+        {
+            if (MessageBox.Show("Are you sure you want to delete the selected textures from the hard drive?", "Delete textures", MessageBoxButtons.YesNo) == System.Windows.Forms.DialogResult.Yes)
+            {
+                // Clear preview
+                clearPreview();
+
+                // Destroy selected resources
+                _controller.removeTextureResource(getSelectedResources());
+            }
         }
     }
 }
