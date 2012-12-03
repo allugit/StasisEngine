@@ -27,6 +27,7 @@ namespace StasisEditor.Views
             _textureBindingSource.DataSource = new BindingList<TextureResource>();
 
             InitializeComponent();
+
             textureDataGrid.DataSource = _textureBindingSource;
 
             // Add button column
