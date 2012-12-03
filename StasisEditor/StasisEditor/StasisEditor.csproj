@@ -102,10 +102,10 @@
     <Compile Include="Controls\MaterialProperties.Designer.cs">
       <DependentUpon>MaterialProperties.cs</DependentUpon>
     </Compile>
-    <Compile Include="Controls\NewTextureResource.cs">
+    <Compile Include="Views\NewTextureResource.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="Controls\NewTextureResource.Designer.cs">
+    <Compile Include="Views\NewTextureResource.Designer.cs">
       <DependentUpon>NewTextureResource.cs</DependentUpon>
     </Compile>
     <Compile Include="Controls\RefreshingListBox.cs">
@@ -120,7 +120,6 @@
     <Compile Include="Controls\TerrainLayerSelectBox.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="Models\TemporaryTextureResource.cs" />
     <Compile Include="Views\EditorView.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -215,7 +214,7 @@
     <EmbeddedResource Include="Controls\MaterialProperties.resx">
       <DependentUpon>MaterialProperties.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="Controls\NewTextureResource.resx">
+    <EmbeddedResource Include="Views\NewTextureResource.resx">
       <DependentUpon>NewTextureResource.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Controls\TerrainLayers.resx">

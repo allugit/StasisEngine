@@ -33,7 +33,7 @@ namespace StasisEditor.Controllers
                 loadTextureResources();
 
                 // Create view
-                _textureView = new TextureView();
+                _textureView = new NewTextureResource();
                 _textureView.setController(this);
                 _textureView.refreshGrid();
                 _textureView.Show();
@@ -58,6 +58,7 @@ namespace StasisEditor.Controllers
             _textureResources = TextureResource.loadFromDirectory(EditorController.TEXTURE_RESOURCE_DIRECTORY);
         }
 
+        /*
         // createNewTextureResources
         public void createNewTextureResources(List<TemporaryTextureResource> temporaryResources)
         {
@@ -90,7 +91,7 @@ namespace StasisEditor.Controllers
             // Reload texture resources
             loadTextureResources();
             _textureView.refreshGrid();
-        }
+        }*/
 
         // removeTextureResource
         public void removeTextureResource(List<TextureResource> resources)

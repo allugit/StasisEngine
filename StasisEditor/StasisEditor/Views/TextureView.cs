@@ -120,8 +120,8 @@ namespace StasisEditor.Views
         private void addTextureButton_Click(object sender, EventArgs e)
         {
             NewTextureResource newResources = new NewTextureResource();
-            if (newResources.ShowDialog() == DialogResult.OK)
-                _controller.createNewTextureResources(newResources.newTextureResources);
+            //if (newResources.ShowDialog() == DialogResult.OK)
+                //_controller.createNewTextureResources(newResources.newTextureResources);
         }
 
         // Selection changed
