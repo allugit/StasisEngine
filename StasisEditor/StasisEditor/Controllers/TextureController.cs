@@ -1,9 +1,11 @@
 ﻿using System;
 using System.IO;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Windows.Forms;
 using StasisEditor.Views;
 using StasisEditor.Models;
+using StasisCore.Models;
 
 namespace StasisEditor.Controllers
 {
@@ -11,19 +13,29 @@ namespace StasisEditor.Controllers
     {
         private IController _controller;
         private ITextureView _textureView;
+        private List<TextureResource> _textureResources;
 
         public TextureController(IController controller)
         {
             _controller = controller;
+            _textureResources = new List<TextureResource>();
         }
+
+        // getTextureResources
+        public ReadOnlyCollection<TextureResource> getTextureResources() { return _textureResources.AsReadOnly(); }
 
         // openView
         public void openView()
         {
             if (_textureView == null)
             {
+                // Load texture resources
+                loadTextureResources();
+
+                // Create view
                 _textureView = new TextureView();
                 _textureView.setController(this);
+                _textureView.refreshGrid();
                 _textureView.Show();
             }
             else
@@ -36,6 +48,14 @@ namespace StasisEditor.Controllers
         public void viewClosed()
         {
             _textureView = null;
+        }
+
+        // loadTextureResources
+        public void loadTextureResources()
+        {
+            // Clear already loaded texture resources
+            _textureResources.Clear();
+            _textureResources = TextureResource.loadFromDirectory(EditorController.TEXTURE_RESOURCE_DIRECTORY);
         }
 
         // createNewTextureResources
@@ -66,6 +86,10 @@ namespace StasisEditor.Controllers
                 else
                     File.Copy(tempResource.sourcePath, fileDestination);
             }
+
+            // Reload texture resources
+            loadTextureResources();
+            _textureView.refreshGrid();
         }
     }
 }

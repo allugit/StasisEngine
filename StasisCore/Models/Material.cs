@@ -38,13 +38,11 @@ namespace StasisCore.Models
         }
 
         // copyFrom -- clones a list
-        public static List<Material> copyFrom(ReadOnlyCollection<Material> list)
+        public static List<Material> copyFrom(IList<Material> list)
         {
             List<Material> copy = new List<Material>(list.Count);
-
             foreach (Material material in list)
                 copy.Add(material.clone());
-
             return copy;
         }
 

@@ -1,5 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
+using StasisCore.Models;
 using StasisEditor.Models;
 
 namespace StasisEditor.Controllers
@@ -8,5 +10,6 @@ namespace StasisEditor.Controllers
     {
         void viewClosed();
         void createNewTextureResources(List<TemporaryTextureResource> list);
+        ReadOnlyCollection<TextureResource> getTextureResources();
     }
 }
