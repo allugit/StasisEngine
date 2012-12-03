@@ -38,16 +38,7 @@ namespace StasisEditor.Views
             _buttonColumn.FlatStyle = FlatStyle.Standard;
             _buttonColumn.UseColumnTextForButtonValue = true;
             textureDataGrid.Columns.Add(_buttonColumn);
-            textureDataGrid.CellContentClick += new DataGridViewCellEventHandler(newTextureResourcesGrid_CellClick);
-        }
-
-        // Remove button handler
-        void newTextureResourcesGrid_CellClick(object sender, DataGridViewCellEventArgs e)
-        {
-            // Remove from data source
-            BindingList<TextureResource> resources = _controller.getTextureResources();
-            if (e.ColumnIndex == 0 && e.RowIndex > -1 && e.RowIndex < resources.Count)
-                resources.RemoveAt(e.RowIndex);
+            textureDataGrid.CellContentClick += new DataGridViewCellEventHandler(removeTextureButton_Click);
         }
 
         // Browse button clicked

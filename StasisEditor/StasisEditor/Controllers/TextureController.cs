@@ -133,8 +133,8 @@ namespace StasisEditor.Controllers
             if (Directory.GetFiles(categoryDirectory).Length == 0)
                 Directory.Delete(categoryDirectory);
 
-            // Reload resources
-            loadTextureResources();
+            // Remove from list
+            _textureResources.Remove(resource);
         }
 
         // relocateTextureResource
