@@ -138,12 +138,12 @@ namespace StasisEditor.Controllers
                     int textureHeight = (int)(1f * baseScale);
                     _editorController.resizeGraphicsDevice(textureWidth, textureHeight);
 
-                    // Create result texture
-                    Texture2D result = new Texture2D(XNAResources.graphicsDevice, textureWidth, textureHeight);
+                    // Create canvas
+                    Texture2D canvas = _terrainRenderer.createCanvas(35, vertices);
 
                     // Render layers
                     foreach (TerrainLayerResource layer in terrainMaterial.layers)
-                        result = _terrainRenderer.renderLayer(result, layer, baseScale, vertices, 1);
+                        canvas = _terrainRenderer.renderLayer(canvas, layer);
 
                     // Restore graphics device
                     _editorController.resizeGraphicsDevice(graphicsDeviceWidth, graphicsDeviceHeight);
@@ -152,14 +152,14 @@ namespace StasisEditor.Controllers
                     if (_materialPreview == null)
                     {
                         // Open material preview
-                        _materialPreview = new MaterialPreview(this, result, String.Format("{0} Preview", material.name));
+                        _materialPreview = new MaterialPreview(this, canvas, String.Format("{0} Preview", material.name));
                         _materialPreview.Show();
                     }
                     else
                     {
-                        // Make sure window is on top
+                        // Put preview window on top
                         _materialPreview.Focus();
-                        _materialPreview.updatePreview(result);
+                        _materialPreview.updatePreview(canvas);
                         _materialView.Focus();
                     }
 

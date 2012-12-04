@@ -9,6 +9,7 @@ namespace StasisCore.Models
         private TerrainBlendType _blendType;
         private float _scale;
         private float _multiplier;
+        private string _textureTag;
 
         [CategoryAttribute("General")]
         [DisplayName("Blend Type")]
@@ -21,6 +22,10 @@ namespace StasisCore.Models
         [CategoryAttribute("General")]
         [DisplayName("Multiplier")]
         public float multiplier { get { return _multiplier; } set { _multiplier = value; } }
+
+        [CategoryAttribute("General")]
+        [DisplayName("Texture Tag")]
+        public string textureTag { get { return _textureTag; } set { _textureTag = value; } }
 
         public TextureProperties(TerrainBlendType blendType, float scale, float multiplier)
             : base()

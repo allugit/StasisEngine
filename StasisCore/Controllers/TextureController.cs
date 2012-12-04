@@ -38,6 +38,10 @@ namespace StasisCore.Controllers
         {
             Texture2D texture = null;
 
+            // Validate string
+            if (String.IsNullOrEmpty(tag))
+                return texture;
+
             // Discover category name
             foreach (KeyValuePair<string, Dictionary<string, TextureResource>> rowPair in _resources)
             {

@@ -24,8 +24,10 @@ namespace StasisCore
         private Color[] _randomTextureData;
         private Texture2D _randomTexture;
         private Texture2D _worleyTexture;
+        private Texture2D pixel;
         private Effect _primitivesEffect;
         private Effect _noiseEffect;
+        private Effect _textureEffect;
 
         public TerrainRenderer(Game game, SpriteBatch spriteBatch, int randomTextureWidth = 32, int randomTextureHeight = 32, int seed = 1234)
         {
@@ -35,6 +37,7 @@ namespace StasisCore
             // Load content
             _primitivesEffect = game.Content.Load<Effect>("../StasisCoreContent/effects/primitives");
             _noiseEffect = game.Content.Load<Effect>("../StasisCoreContent/effects/noise");
+            _textureEffect = game.Content.Load<Effect>("../StasisCoreContent/effects/texture");
 
             // Create random generator
             _random = new Random(seed);
@@ -58,10 +61,40 @@ namespace StasisCore
             }
             _worleyTexture = new Texture2D(game.GraphicsDevice, randomTextureWidth, randomTextureHeight);
             _worleyTexture.SetData<Color>(data);
+
+            // Initialize pixel texture
+            pixel = new Texture2D(_game.GraphicsDevice, 1, 1);
+            pixel.SetData<Color>(new[] { Color.White });
+        }
+
+        // Create canvas
+        public Texture2D createCanvas(float worldScale, TexturedVertexFormat[] vertices)
+        {
+            // Find boundaries
+            Vector2 topLeftBoundary = new Vector2(vertices[0].position.X, vertices[0].position.Y);
+            Vector2 bottomRightBoundary = new Vector2(vertices[0].position.X, vertices[0].position.Y);
+            for (int i = 0; i < vertices.Length; i++)
+            {
+                topLeftBoundary.X = Math.Min(vertices[i].position.X, topLeftBoundary.X);
+                topLeftBoundary.Y = Math.Min(vertices[i].position.Y, topLeftBoundary.Y);
+                bottomRightBoundary.X = Math.Max(vertices[i].position.X, bottomRightBoundary.X);
+                bottomRightBoundary.Y = Math.Max(vertices[i].position.Y, bottomRightBoundary.Y);
+            }
+
+            // Calculate width and height
+            int width = (int)((bottomRightBoundary.X - topLeftBoundary.X) * worldScale);
+            int height = (int)((bottomRightBoundary.Y - topLeftBoundary.Y) * worldScale);
+
+            Texture2D canvas = new Texture2D(_game.GraphicsDevice, width, height);
+            Color[] data = new Color[width * height];
+            for (int i = 0; i < (width * height); i++)
+                data[i] = Color.Transparent;
+            canvas.SetData<Color>(data);
+            return canvas;
         }
 
         // Render layer
-        public Texture2D renderLayer(Texture2D result, TerrainLayerResource resource, float worldScale, TexturedVertexFormat[] vertices, int primitiveCount)
+        public Texture2D renderLayer(Texture2D current, TerrainLayerResource resource)
         {
             switch (resource.type)
             {
@@ -72,13 +105,17 @@ namespace StasisCore
                     result = primitivesPass(baseTexture, worldScale, vertices, primitiveCount);
                     break;
                     */
+
+                case TerrainLayerType.Texture:
+                    current = texturePass(current, (resource.properties as TextureProperties));
+                    break;
                 
                 case TerrainLayerType.Noise:
-                    result = noisePass(result, (resource.properties as NoiseProperties));
+                    current = noisePass(current, (resource.properties as NoiseProperties));
                     break;
             }
 
-            return result;
+            return current;
         }
 
         /*
@@ -139,21 +176,70 @@ namespace StasisCore
         }
         */
 
+        // Texture pass
+        private Texture2D texturePass(Texture2D current, TextureProperties options)
+        {
+            // Initialize render targets and textures
+            RenderTarget2D renderTarget = new RenderTarget2D(_game.GraphicsDevice, current.Width, current.Height);
+            Texture2D baseTexture = new Texture2D(_game.GraphicsDevice, renderTarget.Width, renderTarget.Height);
+            Color[] data = new Color[renderTarget.Width * renderTarget.Height];
+
+            // Initialize shader
+            switch (options.blendType)
+            {
+                case TerrainBlendType.Opaque:
+                    _textureEffect.CurrentTechnique = _textureEffect.Techniques["opaque"];
+                    break;
+
+                case TerrainBlendType.Additive:
+                    _textureEffect.CurrentTechnique = _textureEffect.Techniques["additive"];
+                    break;
+
+                case TerrainBlendType.Overlay:
+                    _textureEffect.CurrentTechnique = _textureEffect.Techniques["overlay"];
+                    break;
+            }
+            _textureEffect.Parameters["canvasSize"].SetValue(new Vector2(current.Width, current.Height));
+            _textureEffect.Parameters["scale"].SetValue(options.scale);
+            _textureEffect.Parameters["multiplier"].SetValue(options.multiplier);
+            
+            // Switch render target
+            _game.GraphicsDevice.SetRenderTarget(renderTarget);
+            _game.GraphicsDevice.Textures[1] = TextureController.getTexture(options.textureTag);
+
+            // Draw
+            _spriteBatch.Begin(SpriteSortMode.Immediate, null, null, null, null, _textureEffect);
+            _spriteBatch.Draw(current, current.Bounds, Color.White);
+            _spriteBatch.End();
+
+            // Switch render target
+            _game.GraphicsDevice.SetRenderTarget(null);
+
+            // Save base texture
+            renderTarget.GetData<Color>(data);
+            baseTexture.SetData<Color>(data);
+
+            // Cleanup
+            renderTarget.Dispose();
+
+            return baseTexture;
+        }
+
         // Noise pass
-        private Texture2D noisePass(Texture2D texture, NoiseProperties options)
+        private Texture2D noisePass(Texture2D current, NoiseProperties options)
         {
             // Initialize vertex shader properties
-            Matrix projection = Matrix.CreateOrthographicOffCenter(0, texture.Width, texture.Height, 0, 0, 1);
+            Matrix projection = Matrix.CreateOrthographicOffCenter(0, current.Width, current.Height, 0, 0, 1);
             Matrix halfPixelOffset = Matrix.CreateTranslation(-0.5f, -0.5f, 0);
             Matrix matrixTransform = halfPixelOffset * projection;
             _noiseEffect.Parameters["matrixTransform"].SetValue(matrixTransform);
 
             // Initialize render target
-            RenderTarget2D renderTarget = new RenderTarget2D(_game.GraphicsDevice, texture.Width, texture.Height);
+            RenderTarget2D renderTarget = new RenderTarget2D(_game.GraphicsDevice, current.Width, current.Height);
 
             // Aspect ratio
-            float shortest = Math.Min(texture.Width, texture.Height);
-            Vector2 aspectRatio = new Vector2(texture.Width / shortest, texture.Height / shortest);
+            float shortest = Math.Min(current.Width, current.Height);
+            Vector2 aspectRatio = new Vector2(current.Width / shortest, current.Height / shortest);
 
             // Set options based on noise type
             Vector2 noiseSize = Vector2.Zero;
@@ -186,7 +272,7 @@ namespace StasisCore
             _noiseEffect.Parameters["aspectRatio"].SetValue(aspectRatio);
             _noiseEffect.Parameters["offset"].SetValue(options.position);
             _noiseEffect.Parameters["noiseScale"].SetValue(options.scale);
-            _noiseEffect.Parameters["renderSize"].SetValue(new Vector2(texture.Width, texture.Height));
+            _noiseEffect.Parameters["renderSize"].SetValue(new Vector2(current.Width, current.Height));
             _noiseEffect.Parameters["noiseSize"].SetValue(noiseSize);
             _noiseEffect.Parameters["noiseFrequency"].SetValue(options.noiseFrequency);
             _noiseEffect.Parameters["noiseGain"].SetValue(options.noiseGain);
@@ -201,13 +287,13 @@ namespace StasisCore
             _noiseEffect.Parameters["noiseHighColor"].SetValue(options.colorRangeHigh.ToVector4());
             _noiseEffect.Parameters["fbmIterations"].SetValue(options.iterations);
             _spriteBatch.Begin(SpriteSortMode.Immediate, null, null, null, null, _noiseEffect);
-            _spriteBatch.Draw(texture, renderTarget.Bounds, Color.White);
+            _spriteBatch.Draw(current, renderTarget.Bounds, Color.White);
             _spriteBatch.End();
             _game.GraphicsDevice.SetRenderTarget(null);
 
             // Store
-            Color[] data = new Color[texture.Width * texture.Height];
-            Texture2D output = new Texture2D(_game.GraphicsDevice, texture.Width, texture.Height);
+            Color[] data = new Color[current.Width * current.Height];
+            Texture2D output = new Texture2D(_game.GraphicsDevice, current.Width, current.Height);
             renderTarget.GetData<Color>(data);
             output.SetData<Color>(data);
 
