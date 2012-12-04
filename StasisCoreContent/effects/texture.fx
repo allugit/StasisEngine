@@ -21,7 +21,8 @@ float4 PSOverlay(float2 texCoords : TEXCOORD0) : COLOR0
 	float4 base = tex2D(baseSampler, texCoords);
 	float4 tex = tex2D(textureSampler, texCoords);
 	
-	base.rgb *= tex.rgb;
+	
+	base.rgb =  lerp(base.rgb, base.rgb * tex.rgb, tex.a);
 	
 	return base;
 }

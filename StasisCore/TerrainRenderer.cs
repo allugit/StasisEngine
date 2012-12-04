@@ -208,7 +208,7 @@ namespace StasisCore
             _game.GraphicsDevice.Textures[1] = TextureController.getTexture(options.textureTag);
 
             // Draw
-            _spriteBatch.Begin(SpriteSortMode.Immediate, null, null, null, null, _textureEffect);
+            _spriteBatch.Begin(SpriteSortMode.Immediate, BlendState.AlphaBlend, null, null, null, _textureEffect);
             _spriteBatch.Draw(current, current.Bounds, Color.White);
             _spriteBatch.End();
 
