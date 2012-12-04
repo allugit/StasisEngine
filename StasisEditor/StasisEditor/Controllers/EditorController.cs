@@ -51,7 +51,8 @@ namespace StasisEditor.Controllers
 
             // Initialize core texture controller
             StasisCore.Controllers.TextureController.textureDirectory = EditorController.TEXTURE_RESOURCE_DIRECTORY; // Use the absolute path, since the core uses a relative path by default.
-            StasisCore.Controllers.TextureController.initialize(XNAResources.graphicsDevice, new List<TextureResource>(_textureResources));
+            StasisCore.Controllers.TextureController.graphicsDevice = XNAResources.graphicsDevice;
+            StasisCore.Controllers.TextureController.addResources(new List<TextureResource>(_textureResources));
 
             // Create material controller
             _materialController = new MaterialController(this);
@@ -70,6 +71,7 @@ namespace StasisEditor.Controllers
         public void addTextureResource(TextureResource resource)
         {
             _textureResources.Add(resource);
+            StasisCore.Controllers.TextureController.addResource(resource);
         }
 
         // removeTextureResource

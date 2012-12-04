@@ -9,6 +9,7 @@ namespace StasisCore.Controllers
     public class TextureController
     {
         private static GraphicsDevice _graphicsDevice;
+        public static GraphicsDevice graphicsDevice { get { return _graphicsDevice; } set { _graphicsDevice = value; } }
 
         // textures[category][tag]
         private static Dictionary<string, Dictionary<string, TextureResource>> _resources = new Dictionary<string, Dictionary<string, TextureResource>>();
@@ -17,20 +18,19 @@ namespace StasisCore.Controllers
         private static string _textureDirectory = "TextureResources";
         public static string textureDirectory { get { return _textureDirectory; } set { _textureDirectory = value; } }
 
-        // initialize
-        public static void initialize(GraphicsDevice graphicsDevice, List<TextureResource> resources)
+        // addResources
+        public static void addResources(List<TextureResource> resources)
         {
-            // GraphicsDevice
-            _graphicsDevice = graphicsDevice;
-
             // Resources
             foreach (TextureResource resource in resources)
-            {
-                if (!_resources.ContainsKey(resource.category))
-                    _resources[resource.category] = new Dictionary<string, TextureResource>();
-                if (!_resources[resource.category].ContainsKey(resource.tag))
-                    _resources[resource.category][resource.tag] = resource;
-            }
+                addResource(resource);
+        }
+        public static void addResource(TextureResource resource)
+        {
+            if (!_resources.ContainsKey(resource.category))
+                _resources[resource.category] = new Dictionary<string, TextureResource>();
+            if (!_resources[resource.category].ContainsKey(resource.tag))
+                _resources[resource.category][resource.tag] = resource;
         }
 
         // getTexture
