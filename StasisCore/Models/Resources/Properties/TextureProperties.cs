@@ -27,12 +27,13 @@ namespace StasisCore.Models
         [DisplayName("Texture Tag")]
         public string textureTag { get { return _textureTag; } set { _textureTag = value; } }
 
-        public TextureProperties(TerrainBlendType blendType, float scale, float multiplier)
+        public TextureProperties(TerrainBlendType blendType, float scale, float multiplier, string textureTag)
             : base()
         {
             _blendType = blendType;
             _scale = scale;
             _multiplier = multiplier;
+            _textureTag = textureTag;
         }
 
         // copyFrom -- clones a list
@@ -47,7 +48,7 @@ namespace StasisCore.Models
         // clone
         public override LayerProperties clone()
         {
-            return new TextureProperties(_blendType, _scale, _multiplier);
+            return new TextureProperties(_blendType, _scale, _multiplier, _textureTag);
         }
     }
 }

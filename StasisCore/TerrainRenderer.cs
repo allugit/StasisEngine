@@ -211,10 +211,11 @@ namespace StasisCore
             
             // Switch render target
             _game.GraphicsDevice.SetRenderTarget(renderTarget);
+            _game.GraphicsDevice.Clear(Color.Transparent);
             _game.GraphicsDevice.Textures[1] = texture;
 
             // Draw
-            _spriteBatch.Begin(SpriteSortMode.Immediate, null, null, null, null, _textureEffect);
+            _spriteBatch.Begin(SpriteSortMode.Immediate, BlendState.AlphaBlend, null, null, null, _textureEffect);
             _spriteBatch.Draw(current, current.Bounds, Color.White);
             _spriteBatch.End();
 

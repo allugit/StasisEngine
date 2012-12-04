@@ -10,7 +10,7 @@ namespace StasisCore.Models
         {
             // Default options
             if (properties == null)
-                properties = new TextureProperties(TerrainBlendType.Opaque, 1, 1);
+                properties = new TextureProperties(TerrainBlendType.Opaque, 1, 1, "");
 
             _properties = properties;
             _type = TerrainLayerType.Texture;
