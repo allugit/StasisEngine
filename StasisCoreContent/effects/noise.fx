@@ -12,14 +12,20 @@ float noiseFrequency;
 float noiseGain;
 float noiseLacunarity;
 float multiplier;
-
+float4 noiseLowColor;
+float4 noiseHighColor;
 float2 fbmOffset;
 bool fbmPerlinBasis;
 bool fbmCellBasis;
 bool fbmInvCellBasis;
-float4 noiseLowColor;
-float4 noiseHighColor;
 int fbmIterations;
+
+int opaqueBlend = 0;
+int overlayBlend = 1;
+int additiveBlend = 2;
+int blendType;
+int worleyFeature;	// 0 = F1, 1 = F2, 2 = F2-F1 -- defined in noise_functions.fx
+bool inverseWorley;
 float4x4 matrixTransform;
 
 // scaleTexCoords
@@ -41,7 +47,7 @@ float getPerlin(float2 texCoords)
 }
 
 // getWorley
-float getWorley(float2 texCoords, bool inverse)
+float getWorley(float2 texCoords, int feature, bool inverse)
 {
 	// Base values
 	float4 base = tex2D(baseSampler, texCoords);
@@ -49,7 +55,7 @@ float getWorley(float2 texCoords, bool inverse)
 	
 	// Calculate noise
 	float2 coords = scaleTexCoords(texCoords) + baseValue * fbmOffset;
-	return fbmWorley(coords, inverse, fbmIterations, noiseFrequency, noiseGain, noiseLacunarity);
+	return fbmWorley(coords, feature, inverse, fbmIterations, noiseFrequency, noiseGain, noiseLacunarity);
 }
 
 // Vertex shader
@@ -59,163 +65,53 @@ void VSBase(inout float4 color:COLOR0, inout float2 texCoord:TEXCOORD0, inout fl
 }
 
 // Perlin pixel shaders
-float4 PSOpaquePerlin(float2 texCoords:TEXCOORD0) : COLOR0
+float4 PSPerlin(float2 texCoords:TEXCOORD0) : COLOR0
 {
-	float value = getPerlin(texCoords);
-	value *= multiplier;
-	return float4(value, value, value, 1);
-}
-float4 PSOverlayPerlin(float2 texCoords:TEXCOORD0) : COLOR0
-{
-	float value = getPerlin(texCoords);
+	float value = getPerlin(texCoords) * multiplier;
 	float4 base = tex2D(baseSampler, texCoords);
-	float4 tex = float4(value, value, value, 1);
-	
-	base.rgb =  lerp(base.rgb, base.rgb * tex.rgb, tex.a) * multiplier;
-	
-	return base;
-}
-float4 PSAdditivePerlin(float2 texCoords:TEXCOORD0) : COLOR0
-{
-	float value = getPerlin(texCoords);
-	float4 base = tex2D(baseSampler, texCoords);
-	float4 tex = float4(value, value, value, 1);
-	
-	base.rgb += tex.rgb * multiplier;
-	
+
+	if (blendType == opaqueBlend)
+		base = float4(value, value, value, 1);
+	else if (blendType == overlayBlend)
+		base.rgb *= value;
+	else if (blendType == additiveBlend)
+		base.rgb += value;
+
 	return base;
 }
 
 // Worley pixel shaders
-float4 PSOpaqueWorley(float2 texCoords:TEXCOORD0) : COLOR0
+float4 PSWorley(float2 texCoords:TEXCOORD0) : COLOR0
 {
-	float value = getWorley(texCoords, false);
-	value *= multiplier;
-	return float4(value, value, value, 1);
-}
-float4 PSOverlayWorley(float2 texCoords:TEXCOORD0) : COLOR0
-{
-	float value = getWorley(texCoords, false);
+	float value = getWorley(texCoords, worleyFeature, inverseWorley) * multiplier;
 	float4 base = tex2D(baseSampler, texCoords);
-	float4 tex = float4(value, value, value, 1);
-	
-	base.rgb =  lerp(base.rgb, base.rgb * tex.rgb, tex.a) * multiplier;
-	
-	return base;
-}
-float4 PSAdditiveWorley(float2 texCoords:TEXCOORD0) : COLOR0
-{
-	float value = getWorley(texCoords, false);
-	float4 base = tex2D(baseSampler, texCoords);
-	float4 tex = float4(value, value, value, 1);
-	
-	base.rgb += tex.rgb * multiplier;
-	
+
+	if (blendType == opaqueBlend)
+		base = float4(value, value, value, 1);
+	else if (blendType == overlayBlend)
+		base.rgb *= value;
+	else if (blendType == additiveBlend)
+		base.rgb += value;
+
 	return base;
 }
 
-// Inverse Worley pixel shaders
-float4 PSOpaqueInvWorley(float2 texCoords:TEXCOORD0) : COLOR0
-{
-	float value = getWorley(texCoords, true);
-	value *= multiplier;
-	return float4(value, value, value, 1);
-}
-float4 PSOverlayInvWorley(float2 texCoords:TEXCOORD0) : COLOR0
-{
-	float value = getWorley(texCoords, true);
-	float4 base = tex2D(baseSampler, texCoords);
-	float4 tex = float4(value, value, value, 1);
-	
-	base.rgb =  lerp(base.rgb, base.rgb * tex.rgb, tex.a) * multiplier;
-	
-	return base;
-}
-float4 PSAdditiveInvWorley(float2 texCoords:TEXCOORD0) : COLOR0
-{
-	float value = getWorley(texCoords, true);
-	float4 base = tex2D(baseSampler, texCoords);
-	float4 tex = float4(value, value, value, 1);
-	
-	base.rgb += tex.rgb * multiplier;
-	
-	return base;
-}
-
-// Perlin techniques
-technique opaque_perlin
+// Techniques
+technique perlin_noise
 { 
 	pass main 
 	{ 
 		VertexShader = compile vs_3_0 VSBase();
-		PixelShader = compile ps_3_0 PSOpaquePerlin(); 
-	}
-}
-technique overlay_perlin
-{ 
-	pass main
-	{ 
-		VertexShader = compile vs_3_0 VSBase();
-		PixelShader = compile ps_3_0 PSOverlayPerlin();
-	}
-}
-technique additive_perlin
-{ 
-	pass main 
-	{
-		VertexShader = compile vs_3_0 VSBase();
-		PixelShader = compile ps_3_0 PSAdditivePerlin();
+		PixelShader = compile ps_3_0 PSPerlin(); 
 	}
 }
 
 // Worley techniques
-technique opaque_worley
+technique worley_noise
 { 
 	pass main
 	{
 		VertexShader = compile vs_3_0 VSBase();
-		PixelShader = compile ps_3_0 PSOpaqueWorley();
-	}
-}
-technique overlay_worley
-{ 
-	pass main
-	{
-		VertexShader = compile vs_3_0 VSBase();
-		PixelShader = compile ps_3_0 PSOverlayWorley();
-	}
-}
-technique additive_worley
-{ 
-	pass main
-	{
-		VertexShader = compile vs_3_0 VSBase();
-		PixelShader = compile ps_3_0 PSAdditiveWorley();
-	}
-}
-
-// Inverse Worley techniques
-technique opaque_inv_worley
-{ 
-	pass main
-	{
-		VertexShader = compile vs_3_0 VSBase();
-		PixelShader = compile ps_3_0 PSOpaqueInvWorley();
-	}
-}
-technique overlay_inv_worley
-{ 
-	pass main
-	{
-		VertexShader = compile vs_3_0 VSBase();
-		PixelShader = compile ps_3_0 PSOverlayInvWorley();
-	}
-}
-technique additive_inv_worley
-{ 
-	pass main
-	{
-		VertexShader = compile vs_3_0 VSBase();
-		PixelShader = compile ps_3_0 PSAdditiveInvWorley();
+		PixelShader = compile ps_3_0 PSWorley();
 	}
 }

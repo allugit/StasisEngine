@@ -46,7 +46,7 @@
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.AutoSize = true;
-            this.BackColor = System.Drawing.Color.Black;
+            this.BackColor = System.Drawing.Color.Gray;
             this.ClientSize = new System.Drawing.Size(168, 146);
             this.Controls.Add(this.pictureBox);
             this.Name = "MaterialPreview";

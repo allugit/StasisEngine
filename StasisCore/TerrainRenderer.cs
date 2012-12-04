@@ -249,45 +249,15 @@ namespace StasisCore
 
             // Set options based on noise type and blend type
             Vector2 noiseSize = Vector2.Zero;
-            switch (options.noiseType)
+            if (options.noiseType == NoiseType.Perlin)
             {
-                case NoiseType.Perlin:
-                    noiseSize = new Vector2(_perlinSource.Width, _perlinSource.Height);
-                    break;
-                case NoiseType.Worley:
-                    noiseSize = new Vector2(_worleySource.Width, _worleySource.Height);
-                    break;
-                case NoiseType.InverseWorley:
-                    noiseSize = new Vector2(_worleySource.Width, _worleySource.Height);
-                    break;
+                _noiseEffect.CurrentTechnique = _noiseEffect.Techniques["perlin_noise"];
+                noiseSize = new Vector2(_perlinSource.Width, _perlinSource.Height);
             }
-
-            switch (options.blendType)
+            else
             {
-                case TerrainBlendType.Opaque:
-                    if (options.noiseType == NoiseType.Perlin)
-                        _noiseEffect.CurrentTechnique = _noiseEffect.Techniques["opaque_perlin"];
-                    else if (options.noiseType == NoiseType.Worley)
-                        _noiseEffect.CurrentTechnique = _noiseEffect.Techniques["opaque_worley"];
-                    else if (options.noiseType == NoiseType.InverseWorley)
-                        _noiseEffect.CurrentTechnique = _noiseEffect.Techniques["opaque_inv_worley"];
-                    break;
-                case TerrainBlendType.Overlay:
-                    if (options.noiseType == NoiseType.Perlin)
-                        _noiseEffect.CurrentTechnique = _noiseEffect.Techniques["overlay_perlin"];
-                    else if (options.noiseType == NoiseType.Worley)
-                        _noiseEffect.CurrentTechnique = _noiseEffect.Techniques["overlay_worley"];
-                    else if (options.noiseType == NoiseType.InverseWorley)
-                        _noiseEffect.CurrentTechnique = _noiseEffect.Techniques["overlay_inv_worley"];
-                    break;
-                case TerrainBlendType.Additive:
-                    if (options.noiseType == NoiseType.Perlin)
-                        _noiseEffect.CurrentTechnique = _noiseEffect.Techniques["additive_perlin"];
-                    else if (options.noiseType == NoiseType.Worley)
-                        _noiseEffect.CurrentTechnique = _noiseEffect.Techniques["additive_worley"];
-                    else if (options.noiseType == NoiseType.InverseWorley)
-                        _noiseEffect.CurrentTechnique = _noiseEffect.Techniques["additive_inv_worley"];
-                    break;
+                _noiseEffect.CurrentTechnique = _noiseEffect.Techniques["worley_noise"];
+                noiseSize = new Vector2(_worleySource.Width, _worleySource.Height);
             }
 
             // Draw noise effect to render target
@@ -308,6 +278,9 @@ namespace StasisCore
             _noiseEffect.Parameters["noiseLowColor"].SetValue(options.colorRangeLow.ToVector4());
             _noiseEffect.Parameters["noiseHighColor"].SetValue(options.colorRangeHigh.ToVector4());
             _noiseEffect.Parameters["fbmIterations"].SetValue(options.iterations);
+            _noiseEffect.Parameters["blendType"].SetValue((int)options.blendType);
+            _noiseEffect.Parameters["inverseWorley"].SetValue(options.noiseType == NoiseType.InverseWorley);
+            _noiseEffect.Parameters["worleyFeature"].SetValue(0);
             _spriteBatch.Begin(SpriteSortMode.Immediate, null, null, null, null, _noiseEffect);
             _spriteBatch.Draw(current, renderTarget.Bounds, Color.White);
             _spriteBatch.End();

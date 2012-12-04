@@ -19,9 +19,12 @@ float2 resizeTexCoords(float2 texCoords)
 // Opaque
 float4 PSOpaque(float2 texCoords : TEXCOORD0) : COLOR0
 {
-	float4 final = tex2D(textureSampler, resizeTexCoords(texCoords) / scale);
-	final.rgb *= multiplier;
-	return final;
+	float4 base = tex2D(baseSampler, texCoords);
+	float4 tex = tex2D(textureSampler, resizeTexCoords(texCoords) / scale);
+	tex.rgb *= multiplier;
+	tex.rgb = lerp(base.rgb, tex.rgb, tex.a);
+	tex.a = max(base.a, tex.a);
+	return tex;
 }
 
 // Overlay
