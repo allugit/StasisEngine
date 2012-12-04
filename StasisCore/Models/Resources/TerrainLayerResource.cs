@@ -5,10 +5,16 @@ namespace StasisCore.Models
 {
     public enum TerrainLayerType
     {
-        Base = 0,
+        Texture = 0,
         Noise,
-        Outline,
         DecalSpatter
+    };
+
+    public enum TerrainBlendType
+    {
+        Opaque = 0,
+        Overlay,
+        Additive
     };
 
     abstract public class TerrainLayerResource
@@ -23,14 +29,16 @@ namespace StasisCore.Models
         {
             switch (layerType)
             {
-                case TerrainLayerType.Base:
-                    return new TerrainPrimitivesLayerResource();
-                case TerrainLayerType.DecalSpatter:
-                    return new TerrainDecalSpatterLayerResource();
+                //case TerrainLayerType.Base:
+                //    return new TerrainPrimitivesLayerResource();
+                case TerrainLayerType.Texture:
+                    return new TerrainTextureLayerResource();
                 case TerrainLayerType.Noise:
                     return new TerrainNoiseLayerResource();
-                case TerrainLayerType.Outline:
-                    return new TerrainOutlineLayerResource();
+                case TerrainLayerType.DecalSpatter:
+                    return new TerrainDecalSpatterLayerResource();
+                //case TerrainLayerType.Outline:
+                //    return new TerrainOutlineLayerResource();
             }
             return null;
         }

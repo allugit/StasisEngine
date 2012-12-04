@@ -2,6 +2,7 @@
 using System.Diagnostics;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.ComponentModel;
 using Microsoft.Xna.Framework;
 using StasisCore.Models;
 using StasisEditor.Views;
@@ -10,7 +11,7 @@ using StasisEditor.Models;
 
 namespace StasisEditor.Controllers
 {
-    public class EditorController : IController
+    public class EditorController : IEditorController
     {
         public const string TEXTURE_RESOURCE_DIRECTORY = "E:\\_C#\\StasisEngine\\StasisGame\\StasisGame\\bin\\x86\\Debug\\TextureResources";
         public const string TEMPORARY_TEXTURE_DIRECTORY = "E:\\_C#\\StasisEngine\\StasisEditor\\StasisEditor\\bin\\x86\\Debug\\Temporary";
@@ -24,6 +25,8 @@ namespace StasisEditor.Controllers
 
         private Level _level;
         public Level level { get { return _level; } }
+
+        private BindingList<TextureResource> _textureResources;
 
         private bool _isMouseOverView;
         private System.Drawing.Point _mouse;
@@ -43,11 +46,36 @@ namespace StasisEditor.Controllers
             _editorView = new EditorView();
             _editorView.setController(this);
 
+            // Load texture resources
+            _textureResources = new BindingList<TextureResource>(TextureResource.loadAll(EditorController.TEXTURE_RESOURCE_DIRECTORY));
+
+            // Initialize core texture controller
+            StasisCore.Controllers.TextureController.textureDirectory = EditorController.TEXTURE_RESOURCE_DIRECTORY; // Use the absolute path, since the core uses a relative path by default.
+            StasisCore.Controllers.TextureController.initialize(XNAResources.graphicsDevice, new List<TextureResource>(_textureResources));
+
             // Create material controller
             _materialController = new MaterialController(this);
 
             // Create texture controller
             _textureController = new TextureController(this);
+        }
+
+        // getTextureResources
+        public BindingList<TextureResource> getTextureResources()
+        {
+            return _textureResources;
+        }
+
+        // addTextureResource
+        public void addTextureResource(TextureResource resource)
+        {
+            _textureResources.Add(resource);
+        }
+
+        // removeTextureResource
+        public void removeTextureResource(TextureResource resource)
+        {
+            _textureResources.Remove(resource);
         }
 
         // resizeGraphicsDevice
@@ -112,12 +140,6 @@ namespace StasisEditor.Controllers
         public void openTextureView()
         {
             _textureController.openView();
-        }
-
-        // getTextureResources
-        public List<TextureResource> getTextureResources()
-        {
-            return new List<TextureResource>(_textureController.getTextureResources());
         }
 
         // mouseMove

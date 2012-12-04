@@ -1,6 +1,10 @@
 #include <noise_functions.fx>
 
-sampler baseSampler : register(s0);
+sampler baseSampler : register(s0) = sampler_state
+{
+	AddressU = Wrap;
+	AddressV = Wrap;
+};
 
 float2 aspectRatio;
 float2 offset;
@@ -46,7 +50,14 @@ float4 PSBaseNoise(float2 texCoords:TEXCOORD0) : COLOR0
 	else
 		value = fbmWorley(coords, true, fbmIterations, noiseFrequency, noiseGain, noiseLacunarity);
 	
+	// Overlay
 	base.rgb *= value * multiplier;
+	
+	// Warp
+	//float2 pixelSize = (1 / renderSize);
+	//float strength = 10;
+	//value = (value * 2) - 1;	// convert to [-1, 1]
+	//base.rgb = tex2D(baseSampler, texCoords + pixelSize * value * strength).rgb;
 
 	return base;
 }

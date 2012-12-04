@@ -60,7 +60,6 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Controllers\TextureController.cs" />
-    <Compile Include="Models\Resources\Properties\PrimitivesProperties.cs" />
     <Compile Include="Models\Resources\Properties\DecalProperties.cs" />
     <Compile Include="Models\Resources\FluidMaterialResource.cs" />
     <Compile Include="Models\Resources\ItemMaterialResource.cs" />
@@ -68,17 +67,15 @@
     <Compile Include="Models\Level.cs" />
     <Compile Include="Models\Resources\MaterialResource.cs" />
     <Compile Include="Models\Resources\Properties\NoiseProperties.cs" />
-    <Compile Include="Models\Resources\Properties\OutlineProperties.cs" />
-    <Compile Include="Models\Resources\TerrainPrimitivesLayerResource.cs" />
+    <Compile Include="Models\Resources\Properties\TextureProperties.cs" />
     <Compile Include="Models\Resources\TerrainDecalLayerResource.cs" />
     <Compile Include="Models\Resources\TerrainLayerResource.cs" />
     <Compile Include="Models\Resources\TerrainMaterialResource.cs" />
     <Compile Include="Models\Resources\TerrainNoiseLayerResource.cs" />
-    <Compile Include="Models\Resources\TerrainOutlineLayerResource.cs" />
+    <Compile Include="Models\Resources\TerrainTextureLayerResource.cs" />
     <Compile Include="Models\Resources\TextureResource.cs" />
     <Compile Include="Models\Resources\TreeMaterialResource.cs" />
     <Compile Include="Models\TerrainLayer.cs" />
-    <Compile Include="Models\TerrainPrimitivesLayer.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="TerrainRenderer.cs" />
     <Compile Include="TexturedVertexFormat.cs" />

@@ -12,18 +12,19 @@ namespace StasisEditor.Controllers
 {
     public class TextureController : ITextureController
     {
-        private IController _controller;
+        private IEditorController _editorController;
         private ITextureView _textureView;
-        private BindingList<TextureResource> _textureResources;
 
-        public TextureController(IController controller)
+        public TextureController(IEditorController editorController)
         {
-            _controller = controller;
-            _textureResources = new BindingList<TextureResource>();
+            _editorController = editorController;
         }
 
         // getTextureResources
-        public BindingList<TextureResource> getTextureResources() { return _textureResources; }
+        public BindingList<TextureResource> getTextureResources()
+        {
+            return _editorController.getTextureResources();
+        }
 
         // openView
         public void openView()
@@ -31,7 +32,7 @@ namespace StasisEditor.Controllers
             if (_textureView == null)
             {
                 // Load texture resources
-                loadTextureResources();
+                //loadTextureResources();
 
                 // Create view
                 _textureView = new TextureView();
@@ -50,14 +51,6 @@ namespace StasisEditor.Controllers
             _textureView = null;
         }
 
-        // loadTextureResources
-        public void loadTextureResources()
-        {
-            // Clear already loaded texture resources
-            _textureResources.Clear();
-            _textureResources = new BindingList<TextureResource>(TextureResource.loadAll(EditorController.TEXTURE_RESOURCE_DIRECTORY));
-        }
-
         // addTextureResources
         public void addTextureResources(string[] fileNames)
         {
@@ -67,7 +60,7 @@ namespace StasisEditor.Controllers
         public void addTextureResource(string filePath)
         {
             // Make sure only unique files get added
-            foreach (TextureResource tr in _textureResources)
+            foreach (TextureResource tr in _editorController.getTextureResources())
             {
                 if (tr.fileName == Path.GetFileName(filePath))
                     return;
@@ -82,7 +75,7 @@ namespace StasisEditor.Controllers
             // Clear initial values
             resource.tag = "";
             resource.category = "";
-            _textureResources.Add(resource);
+            _editorController.addTextureResource(resource);
         }
 
         // copyToTemporaryDirectory
@@ -125,7 +118,7 @@ namespace StasisEditor.Controllers
                 Directory.Delete(categoryDirectory);
 
             // Remove from list
-            _textureResources.Remove(resource);
+            _editorController.removeTextureResource(resource);
         }
 
         // relocateTextureResource

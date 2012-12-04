@@ -65,11 +65,13 @@ namespace StasisCore
         {
             switch (resource.type)
             {
+                    /*
                 case TerrainLayerType.Base:
                     PrimitivesProperties primitivesProperties = (resource as TerrainPrimitivesLayerResource).properties as PrimitivesProperties;
                     Texture2D baseTexture = TextureController.getTexture(primitivesProperties.textureTag);
                     result = primitivesPass(baseTexture, worldScale, vertices, primitiveCount);
                     break;
+                    */
                 
                 case TerrainLayerType.Noise:
                     result = noisePass(result, (resource.properties as NoiseProperties));
@@ -79,6 +81,7 @@ namespace StasisCore
             return result;
         }
 
+        /*
         // Primitives pass
         private Texture2D primitivesPass(Texture2D texture, float worldScale, TexturedVertexFormat[] vertices, int primitiveCount)
         {
@@ -134,6 +137,7 @@ namespace StasisCore
 
             return baseTexture;
         }
+        */
 
         // Noise pass
         private Texture2D noisePass(Texture2D texture, NoiseProperties options)

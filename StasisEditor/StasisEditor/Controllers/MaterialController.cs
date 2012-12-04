@@ -34,7 +34,7 @@ namespace StasisEditor.Controllers
 
             // Test material data
             List<TerrainLayerResource> testLayers = new List<TerrainLayerResource>();
-            testLayers.Add(new TerrainPrimitivesLayerResource());
+            testLayers.Add(new TerrainTextureLayerResource());
             testLayers.Add(new TerrainNoiseLayerResource());
             _materials[(int)MaterialType.Terrain].Add(new TerrainMaterialResource("Rock", testLayers));
             _materials[(int)MaterialType.Terrain].Add(new TerrainMaterialResource("Dirt", TerrainLayerResource.copyFrom(testLayers)));
@@ -140,10 +140,6 @@ namespace StasisEditor.Controllers
 
                     // Create result texture
                     Texture2D result = new Texture2D(XNAResources.graphicsDevice, textureWidth, textureHeight);
-
-                    // Initialize core texture controller
-                    StasisCore.Controllers.TextureController.initialize(XNAResources.graphicsDevice, _editorController.getTextureResources());
-                    StasisCore.Controllers.TextureController.textureDirectory = EditorController.TEXTURE_RESOURCE_DIRECTORY; // Use the absolute path, since the core uses a relative path by default.
 
                     // Render layers
                     foreach (TerrainLayerResource layer in terrainMaterial.layers)
