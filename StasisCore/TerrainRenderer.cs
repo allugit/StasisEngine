@@ -21,9 +21,8 @@ namespace StasisCore
         private Game _game;
         private SpriteBatch _spriteBatch;
         private Random _random;
-        private Color[] _randomTextureData;
-        private Texture2D _randomTexture;
-        private Texture2D _worleyTexture;
+        private Texture2D _perlinSource;
+        private Texture2D _worleySource;
         private Texture2D pixel;
         private Effect _primitivesEffect;
         private Effect _noiseEffect;
@@ -43,14 +42,14 @@ namespace StasisCore
             _random = new Random(seed);
 
             // Initialize random texture
-            _randomTextureData = new Color[randomTextureWidth * randomTextureHeight];
+            Color[] _perlinSourceData = new Color[randomTextureWidth * randomTextureHeight];
             for (int i = 0; i < randomTextureWidth; i++)
             {
                 for (int j = 0; j < randomTextureHeight; j++)
-                    _randomTextureData[i + j * randomTextureWidth] = new Color((float)_random.Next(3) / 2, (float)_random.Next(3) / 2, (float)_random.Next(3) / 2);
+                    _perlinSourceData[i + j * randomTextureWidth] = new Color((float)_random.Next(3) / 2, (float)_random.Next(3) / 2, (float)_random.Next(3) / 2);
             }
-            _randomTexture = new Texture2D(game.GraphicsDevice, randomTextureWidth, randomTextureHeight);
-            _randomTexture.SetData<Color>(_randomTextureData);
+            _perlinSource = new Texture2D(game.GraphicsDevice, randomTextureWidth, randomTextureHeight);
+            _perlinSource.SetData<Color>(_perlinSourceData);
 
             // Initialize worley texture
             Color[] data = new Color[randomTextureWidth * randomTextureHeight];
@@ -59,8 +58,8 @@ namespace StasisCore
                 for (int j = 0; j < randomTextureHeight; j++)
                     data[i + j * randomTextureWidth] = new Color((float)_random.NextDouble(), (float)_random.NextDouble(), (float)_random.NextDouble(), (float)_random.NextDouble());
             }
-            _worleyTexture = new Texture2D(game.GraphicsDevice, randomTextureWidth, randomTextureHeight);
-            _worleyTexture.SetData<Color>(data);
+            _worleySource = new Texture2D(game.GraphicsDevice, randomTextureWidth, randomTextureHeight);
+            _worleySource.SetData<Color>(data);
 
             // Initialize pixel texture
             pixel = new Texture2D(_game.GraphicsDevice, 1, 1);
@@ -248,33 +247,53 @@ namespace StasisCore
             float shortest = Math.Min(current.Width, current.Height);
             Vector2 aspectRatio = new Vector2(current.Width / shortest, current.Height / shortest);
 
-            // Set options based on noise type
+            // Set options based on noise type and blend type
             Vector2 noiseSize = Vector2.Zero;
-            bool perlinBasis = false;
-            bool worleyBasis = false;
-            bool invWorleyBasis = false;
             switch (options.noiseType)
             {
                 case NoiseType.Perlin:
-                    noiseSize = new Vector2(_randomTexture.Width, _randomTexture.Height);
-                    perlinBasis = true;
+                    noiseSize = new Vector2(_perlinSource.Width, _perlinSource.Height);
                     break;
-
                 case NoiseType.Worley:
-                    noiseSize = new Vector2(_worleyTexture.Width, _worleyTexture.Height);
-                    worleyBasis = true;
+                    noiseSize = new Vector2(_worleySource.Width, _worleySource.Height);
                     break;
-
                 case NoiseType.InverseWorley:
-                    noiseSize = new Vector2(_worleyTexture.Width, _worleyTexture.Height);
-                    invWorleyBasis = true;
+                    noiseSize = new Vector2(_worleySource.Width, _worleySource.Height);
+                    break;
+            }
+
+            switch (options.blendType)
+            {
+                case TerrainBlendType.Opaque:
+                    if (options.noiseType == NoiseType.Perlin)
+                        _noiseEffect.CurrentTechnique = _noiseEffect.Techniques["opaque_perlin"];
+                    else if (options.noiseType == NoiseType.Worley)
+                        _noiseEffect.CurrentTechnique = _noiseEffect.Techniques["opaque_worley"];
+                    else if (options.noiseType == NoiseType.InverseWorley)
+                        _noiseEffect.CurrentTechnique = _noiseEffect.Techniques["opaque_inv_worley"];
+                    break;
+                case TerrainBlendType.Overlay:
+                    if (options.noiseType == NoiseType.Perlin)
+                        _noiseEffect.CurrentTechnique = _noiseEffect.Techniques["overlay_perlin"];
+                    else if (options.noiseType == NoiseType.Worley)
+                        _noiseEffect.CurrentTechnique = _noiseEffect.Techniques["overlay_worley"];
+                    else if (options.noiseType == NoiseType.InverseWorley)
+                        _noiseEffect.CurrentTechnique = _noiseEffect.Techniques["overlay_inv_worley"];
+                    break;
+                case TerrainBlendType.Additive:
+                    if (options.noiseType == NoiseType.Perlin)
+                        _noiseEffect.CurrentTechnique = _noiseEffect.Techniques["additive_perlin"];
+                    else if (options.noiseType == NoiseType.Worley)
+                        _noiseEffect.CurrentTechnique = _noiseEffect.Techniques["additive_worley"];
+                    else if (options.noiseType == NoiseType.InverseWorley)
+                        _noiseEffect.CurrentTechnique = _noiseEffect.Techniques["additive_inv_worley"];
                     break;
             }
 
             // Draw noise effect to render target
             _game.GraphicsDevice.SetRenderTarget(renderTarget);
-            _game.GraphicsDevice.Textures[1] = _randomTexture;
-            _game.GraphicsDevice.Textures[2] = _worleyTexture;
+            _game.GraphicsDevice.Textures[1] = _perlinSource;
+            _game.GraphicsDevice.Textures[2] = _worleySource;
             _game.GraphicsDevice.Clear(Color.Transparent);
             _noiseEffect.Parameters["aspectRatio"].SetValue(aspectRatio);
             _noiseEffect.Parameters["offset"].SetValue(options.position);
@@ -286,10 +305,6 @@ namespace StasisCore
             _noiseEffect.Parameters["noiseLacunarity"].SetValue(options.noiseLacunarity);
             _noiseEffect.Parameters["multiplier"].SetValue(options.multiplier);
             _noiseEffect.Parameters["fbmOffset"].SetValue(options.fbmOffset);
-            _noiseEffect.Parameters["fbmPerlinBasis"].SetValue(perlinBasis);
-            _noiseEffect.Parameters["fbmCellBasis"].SetValue(worleyBasis);
-            _noiseEffect.Parameters["fbmInvCellBasis"].SetValue(invWorleyBasis);
-            _noiseEffect.Parameters["fbmScale"].SetValue(options.fbmScale);
             _noiseEffect.Parameters["noiseLowColor"].SetValue(options.colorRangeLow.ToVector4());
             _noiseEffect.Parameters["noiseHighColor"].SetValue(options.colorRangeHigh.ToVector4());
             _noiseEffect.Parameters["fbmIterations"].SetValue(options.iterations);

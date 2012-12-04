@@ -29,16 +29,12 @@ namespace StasisCore.Models
         {
             switch (layerType)
             {
-                //case TerrainLayerType.Base:
-                //    return new TerrainPrimitivesLayerResource();
                 case TerrainLayerType.Texture:
                     return new TerrainTextureLayerResource();
                 case TerrainLayerType.Noise:
                     return new TerrainNoiseLayerResource();
                 case TerrainLayerType.DecalSpatter:
                     return new TerrainDecalSpatterLayerResource();
-                //case TerrainLayerType.Outline:
-                //    return new TerrainOutlineLayerResource();
             }
             return null;
         }

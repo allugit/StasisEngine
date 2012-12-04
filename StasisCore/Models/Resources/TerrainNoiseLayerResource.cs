@@ -14,13 +14,13 @@ namespace StasisCore.Models
             {
                 properties = new NoiseProperties(
                     NoiseType.Perlin,
+                    TerrainBlendType.Opaque,
                     Vector2.Zero,
                     1f,
                     Vector2.Zero,
                     1.1f,
                     0.5f,
                     2f,
-                    1f,
                     1f,
                     Color.Black,
                     Color.White,

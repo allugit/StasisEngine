@@ -8,6 +8,7 @@ namespace StasisCore.Models
     public class NoiseProperties : LayerProperties
     {
         private NoiseType _noiseType;
+        private TerrainBlendType _blendType;
         private Vector2 _position;
         private float _scale;
         private Vector2 _fbmOffset;
@@ -15,10 +16,13 @@ namespace StasisCore.Models
         private float _noiseGain;
         private float _noiseLacunarity;
         private float _multiplier;
-        private float _fbmScale;
         private Color _colorRangeLow;
         private Color _colorRangeHigh;
         private int _iterations;
+
+        [CategoryAttribute("General")]
+        [DisplayName("Blend Type")]
+        public TerrainBlendType blendType { get { return _blendType; } set { _blendType = value; } }
 
         [CategoryAttribute("General")]
         [DisplayName("Noise Type")]
@@ -61,15 +65,12 @@ namespace StasisCore.Models
         public Vector2 fbmOffset { get { return _fbmOffset; } set { _fbmOffset = value; } }
 
         [CategoryAttribute("Fractional Brownian Motion")]
-        [DisplayName("Coordinate Scale")]
-        public float fbmScale { get { return _fbmScale; } set { _fbmScale = value; } }
-
-        [CategoryAttribute("Fractional Brownian Motion")]
         [DisplayName("Iterations")]
         public int iterations { get { return _iterations; } set { _iterations = value; } }
 
         public NoiseProperties(
             NoiseType noiseType,
+            TerrainBlendType blendType,
             Vector2 position,
             float scale,
             Vector2 fbmOffset,
@@ -77,13 +78,13 @@ namespace StasisCore.Models
             float noiseGain,
             float noiseLacunarity,
             float multiplier,
-            float fbmScale,
             Color colorRangeLow,
             Color colorRangeHigh,
             int iterations)
             : base()
         {
             _noiseType = noiseType;
+            _blendType = blendType;
             _position = position;
             _scale = scale;
             _fbmOffset = fbmOffset;
@@ -91,7 +92,6 @@ namespace StasisCore.Models
             _noiseGain = noiseGain;
             _noiseLacunarity = noiseLacunarity;
             _multiplier = multiplier;
-            _fbmScale = fbmScale;
             _colorRangeLow = colorRangeLow;
             _colorRangeHigh = colorRangeHigh;
             _iterations = iterations;
@@ -111,6 +111,7 @@ namespace StasisCore.Models
         {
             return new NoiseProperties(
                 _noiseType,
+                _blendType,
                 _position,
                 _scale,
                 _fbmOffset,
@@ -118,7 +119,6 @@ namespace StasisCore.Models
                 _noiseGain,
                 _noiseLacunarity,
                 _multiplier,
-                _fbmScale,
                 _colorRangeLow,
                 _colorRangeHigh,
                 _iterations);
