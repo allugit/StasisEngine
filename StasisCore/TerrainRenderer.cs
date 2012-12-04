@@ -183,6 +183,11 @@ namespace StasisCore
             RenderTarget2D renderTarget = new RenderTarget2D(_game.GraphicsDevice, current.Width, current.Height);
             Texture2D baseTexture = new Texture2D(_game.GraphicsDevice, renderTarget.Width, renderTarget.Height);
             Color[] data = new Color[renderTarget.Width * renderTarget.Height];
+            Texture2D texture = TextureController.getTexture(options.textureTag);
+
+            // Handle missing texture
+            if (texture == null)
+                return baseTexture;
 
             // Initialize shader
             switch (options.blendType)
@@ -200,15 +205,16 @@ namespace StasisCore
                     break;
             }
             _textureEffect.Parameters["canvasSize"].SetValue(new Vector2(current.Width, current.Height));
+            _textureEffect.Parameters["textureSize"].SetValue(new Vector2(texture.Width, texture.Height));
             _textureEffect.Parameters["scale"].SetValue(options.scale);
             _textureEffect.Parameters["multiplier"].SetValue(options.multiplier);
             
             // Switch render target
             _game.GraphicsDevice.SetRenderTarget(renderTarget);
-            _game.GraphicsDevice.Textures[1] = TextureController.getTexture(options.textureTag);
+            _game.GraphicsDevice.Textures[1] = texture;
 
             // Draw
-            _spriteBatch.Begin(SpriteSortMode.Immediate, BlendState.AlphaBlend, null, null, null, _textureEffect);
+            _spriteBatch.Begin(SpriteSortMode.Immediate, null, null, null, null, _textureEffect);
             _spriteBatch.Draw(current, current.Bounds, Color.White);
             _spriteBatch.End();
 
