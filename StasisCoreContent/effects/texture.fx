@@ -11,7 +11,7 @@ sampler textureSampler : register(s1) = sampler_state
 };
 
 // Scale texture coordinates based on canvas size and texture size
-float2 scaleTexCoords(float2 texCoords)
+float2 resizeTexCoords(float2 texCoords)
 {
 	return texCoords * (canvasSize / textureSize);
 }
@@ -19,18 +19,18 @@ float2 scaleTexCoords(float2 texCoords)
 // Opaque
 float4 PSOpaque(float2 texCoords : TEXCOORD0) : COLOR0
 {
-	texCoords = scaleTexCoords(texCoords);
-	return tex2D(textureSampler, texCoords);
+	float4 final = tex2D(textureSampler, resizeTexCoords(texCoords) / scale);
+	final.rgb *= multiplier;
+	return final;
 }
 
 // Overlay
 float4 PSOverlay(float2 texCoords : TEXCOORD0) : COLOR0
 {
 	float4 base = tex2D(baseSampler, texCoords);
-	float4 tex = tex2D(textureSampler, scaleTexCoords(texCoords));
+	float4 tex = tex2D(textureSampler, resizeTexCoords(texCoords) / scale);
 	
-	
-	base.rgb =  lerp(base.rgb, base.rgb * tex.rgb, tex.a);
+	base.rgb =  lerp(base.rgb, base.rgb * tex.rgb, tex.a) * multiplier;
 	
 	return base;
 }
@@ -39,9 +39,9 @@ float4 PSOverlay(float2 texCoords : TEXCOORD0) : COLOR0
 float4 PSAdditive(float2 texCoords : TEXCOORD0) : COLOR0
 {
 	float4 base = tex2D(baseSampler, texCoords);
-	float4 tex = tex2D(textureSampler, scaleTexCoords(texCoords));
+	float4 tex = tex2D(textureSampler, resizeTexCoords(texCoords) / scale);
 	
-	base.rgb += tex.rgb;
+	base.rgb += tex.rgb * multiplier;
 	
 	return base;
 }
