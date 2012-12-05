@@ -102,12 +102,49 @@ namespace StasisEditor.Controls
         // Move layer up
         private void upButton_Click(object sender, EventArgs e)
         {
-            LayerNode node = layersTreeView.SelectedNode as LayerNode;
+            TreeNode selectedNode = layersTreeView.SelectedNode;
+            Debug.Assert(selectedNode != null);
+            Debug.Assert(selectedNode != rootNode);
+            TerrainLayerResource layer = (selectedNode as LayerNode).layer;
+
+            // Determine parent
+            TerrainLayerResource parent = selectedNode.Parent == rootNode ? null : (selectedNode.Parent as LayerNode).layer;
+
+            // Move terrain layer up
+            _controller.moveTerrainLayerUp(_material, parent, layer);
+
+            // Refresh tree view
+            populateTreeView(_material.layers);
+
+            // Select repositioned layer
+            selectLayer(layer);
+
+            // Set changes made
+            _controller.setChangesMade(true);
         }
 
         // Move layer down
         private void downButton_Click(object sender, EventArgs e)
         {
+            TreeNode selectedNode = layersTreeView.SelectedNode;
+            Debug.Assert(selectedNode != null);
+            Debug.Assert(selectedNode != rootNode);
+            TerrainLayerResource layer = (selectedNode as LayerNode).layer;
+
+            // Determine parent
+            TerrainLayerResource parent = selectedNode.Parent == rootNode ? null : (selectedNode.Parent as LayerNode).layer;
+
+            // Move terrain layer up
+            _controller.moveTerrainLayerDown(_material, parent, layer);
+
+            // Refresh tree view
+            populateTreeView(_material.layers);
+
+            // Select repositioned layer
+            selectLayer(layer);
+
+            // Set changes made
+            _controller.setChangesMade(true);
         }
 
         // Add child node clicked
