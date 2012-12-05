@@ -15,6 +15,7 @@ namespace StasisCore.Models
                 properties = new NoiseProperties(
                     NoiseType.Perlin,
                     TerrainBlendType.Opaque,
+                    WorleyFeature.F1,
                     Vector2.Zero,
                     1f,
                     Vector2.Zero,

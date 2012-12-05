@@ -34,6 +34,29 @@ float2 scaleTexCoords(float2 texCoords)
 	return (offset / renderSize) - (texCoords * aspectRatio) / noiseScale;
 }
 
+// blend
+float4 blend(float noiseValue, float2 texCoords)
+{
+	float4 base;
+	
+	if (blendType == opaqueBlend)
+	{
+		base = float4(noiseValue, noiseValue, noiseValue, 1);
+	}
+	else if (blendType == overlayBlend)
+	{
+		base = tex2D(baseSampler, texCoords);
+		base.rgb *= noiseValue;
+	}
+	else if (blendType == additiveBlend)
+	{
+		base = tex2D(baseSampler, texCoords);
+		base.rgb += noiseValue;
+	}
+
+	return base;
+}
+
 // getPerlin
 float getPerlin(float2 texCoords)
 {
@@ -68,32 +91,18 @@ void VSBase(inout float4 color:COLOR0, inout float2 texCoord:TEXCOORD0, inout fl
 float4 PSPerlin(float2 texCoords:TEXCOORD0) : COLOR0
 {
 	float value = getPerlin(texCoords) * multiplier;
-	float4 base = tex2D(baseSampler, texCoords);
+	float4 final = blend(value, texCoords);
 
-	if (blendType == opaqueBlend)
-		base = float4(value, value, value, 1);
-	else if (blendType == overlayBlend)
-		base.rgb *= value;
-	else if (blendType == additiveBlend)
-		base.rgb += value;
-
-	return base;
+	return final;
 }
 
 // Worley pixel shaders
 float4 PSWorley(float2 texCoords:TEXCOORD0) : COLOR0
 {
 	float value = getWorley(texCoords, worleyFeature, inverseWorley) * multiplier;
-	float4 base = tex2D(baseSampler, texCoords);
+	float4 final = blend(value, texCoords);
 
-	if (blendType == opaqueBlend)
-		base = float4(value, value, value, 1);
-	else if (blendType == overlayBlend)
-		base.rgb *= value;
-	else if (blendType == additiveBlend)
-		base.rgb += value;
-
-	return base;
+	return final;
 }
 
 // Techniques

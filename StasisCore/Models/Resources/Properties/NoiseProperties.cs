@@ -5,6 +5,13 @@ using Microsoft.Xna.Framework;
 
 namespace StasisCore.Models
 {
+    public enum WorleyFeature
+    {
+        F1 = 0,
+        F2,
+        F2mF1
+    };
+
     public class NoiseProperties : LayerProperties
     {
         private NoiseType _noiseType;
@@ -19,9 +26,10 @@ namespace StasisCore.Models
         private Color _colorRangeLow;
         private Color _colorRangeHigh;
         private int _iterations;
+        private WorleyFeature _worleyFeature;
 
-        [CategoryAttribute("General")]
-        [DisplayName("Blend Type")]
+        [CategoryAttribute("Blending")]
+        [DisplayName("Type")]
         public TerrainBlendType blendType { get { return _blendType; } set { _blendType = value; } }
 
         [CategoryAttribute("General")]
@@ -68,9 +76,14 @@ namespace StasisCore.Models
         [DisplayName("Iterations")]
         public int iterations { get { return _iterations; } set { _iterations = value; } }
 
+        [CategoryAttribute("Worley")]
+        [DisplayName("Features")]
+        public WorleyFeature worleyFeature { get { return _worleyFeature; } set { _worleyFeature = value; } }
+
         public NoiseProperties(
             NoiseType noiseType,
             TerrainBlendType blendType,
+            WorleyFeature worleyFeature,
             Vector2 position,
             float scale,
             Vector2 fbmOffset,
@@ -112,6 +125,7 @@ namespace StasisCore.Models
             return new NoiseProperties(
                 _noiseType,
                 _blendType,
+                _worleyFeature,
                 _position,
                 _scale,
                 _fbmOffset,

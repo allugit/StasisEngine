@@ -39,6 +39,11 @@
       <Importer>EffectImporter</Importer>
       <Processor>EffectProcessor</Processor>
     </Compile>
+    <None Include="effects\normal_functions.fx">
+      <Name>normal_functions</Name>
+      <Importer>EffectImporter</Importer>
+      <Processor>EffectProcessor</Processor>
+    </None>
   </ItemGroup>
   <ItemGroup>
     <Compile Include="effects\noise.fx">

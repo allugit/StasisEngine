@@ -280,7 +280,7 @@ namespace StasisCore
             _noiseEffect.Parameters["fbmIterations"].SetValue(options.iterations);
             _noiseEffect.Parameters["blendType"].SetValue((int)options.blendType);
             _noiseEffect.Parameters["inverseWorley"].SetValue(options.noiseType == NoiseType.InverseWorley);
-            _noiseEffect.Parameters["worleyFeature"].SetValue(0);
+            _noiseEffect.Parameters["worleyFeature"].SetValue((int)options.worleyFeature);
             _spriteBatch.Begin(SpriteSortMode.Immediate, null, null, null, null, _noiseEffect);
             _spriteBatch.Draw(current, renderTarget.Bounds, Color.White);
             _spriteBatch.End();

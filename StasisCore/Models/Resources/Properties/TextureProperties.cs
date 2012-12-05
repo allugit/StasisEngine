@@ -11,8 +11,8 @@ namespace StasisCore.Models
         private float _multiplier;
         private string _textureTag;
 
-        [CategoryAttribute("General")]
-        [DisplayName("Blend Type")]
+        [CategoryAttribute("Blending")]
+        [DisplayName("Type")]
         public TerrainBlendType blendType { get { return _blendType; } set { _blendType = value; } }
 
         [CategoryAttribute("General")]
