@@ -35,6 +35,12 @@ namespace StasisEditor.Views
             _controller = controller;
         }
 
+        // getMaterialView
+        public IMaterialView getMaterialView()
+        {
+            return materialView;
+        }
+
         // getLevelContainerSize
         public System.Drawing.Point getLevelContainerSize()
         {
@@ -45,7 +51,8 @@ namespace StasisEditor.Views
         public void addLevelView(ILevelView levelView)
         {
             _levelView = levelView;
-            mainSplit.Panel2.Controls.Add(levelView as Control);
+            //mainSplit.Panel2.Controls.Add(levelView as Control);
+            levelTab.Controls.Add(levelView as Control);
         }
 
         // removeLevelView
@@ -141,7 +148,7 @@ namespace StasisEditor.Views
         // Materials clicked
         private void menuAssetsMaterials_Click(object sender, EventArgs e)
         {
-            _controller.openMaterialView();
+            //_controller.openMaterialView();
         }
 
         // Textures clicked

@@ -141,7 +141,7 @@
     <Compile Include="Program.cs" />
     <Compile Include="Controllers\XNAController.cs" />
     <Compile Include="Views\MaterialView.cs">
-      <SubType>Form</SubType>
+      <SubType>UserControl</SubType>
     </Compile>
     <Compile Include="Views\MaterialView.Designer.cs">
       <DependentUpon>MaterialView.cs</DependentUpon>

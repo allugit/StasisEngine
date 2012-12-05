@@ -11,6 +11,7 @@ namespace StasisEditor.Views
     public interface IEditorView
     {
         void setController(EditorController controller);
+        IMaterialView getMaterialView();
         
         void enableNewLevel(bool enabled);
         void enableCloseLevel(bool enabled);

@@ -55,7 +55,7 @@ namespace StasisEditor.Controllers
             StasisCore.Controllers.TextureController.addResources(new List<TextureResource>(_textureResources));
 
             // Create material controller
-            _materialController = new MaterialController(this);
+            _materialController = new MaterialController(this, _editorView.getMaterialView());
 
             // Create texture controller
             _textureController = new TextureController(this);
@@ -132,11 +132,12 @@ namespace StasisEditor.Controllers
             _level = null;
         }
 
+        /*
         // openMaterialView
         public void openMaterialView()
         {
             _materialController.openView();
-        }
+        }*/
 
         // openTextureView
         public void openTextureView()

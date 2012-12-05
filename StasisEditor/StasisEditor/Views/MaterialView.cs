@@ -11,7 +11,7 @@ using StasisEditor.Models;
 
 namespace StasisEditor.Views
 {
-    public partial class MaterialView : Form, IMaterialView
+    public partial class MaterialView : UserControl, IMaterialView
     {
         private IMaterialController _controller;
         private List<MaterialResource>[] _materialCopies;
@@ -36,7 +36,11 @@ namespace StasisEditor.Views
         public void setController(IMaterialController controller)
         {
             _controller = controller;
+        }
 
+        // copyMaterials
+        public void copyMaterials()
+        {
             // Set material copies
             int numMaterialTypes = Enum.GetValues(typeof(MaterialType)).Length;
             for (int i = 0; i < numMaterialTypes; i++)
@@ -82,6 +86,7 @@ namespace StasisEditor.Views
             _materialProperties = null;
         }
 
+        /*
         // Close button clicked
         private void closeButton_Click(object sender, EventArgs e)
         {
@@ -92,7 +97,7 @@ namespace StasisEditor.Views
             }
             else
                 Close();
-        }
+        }*/
 
         // Material type selection changed
         private void materialTypesListBox_SelectedValueChanged(object sender, EventArgs e)
@@ -142,10 +147,11 @@ namespace StasisEditor.Views
             _controller.setAutoUpdatePreview(autoUpdatePreview.Checked);
         }
 
+        /*
         // Form closed
         private void MaterialView_FormClosed(object sender, FormClosedEventArgs e)
         {
             _controller.viewClosed();
-        }
+        }*/
     }
 }

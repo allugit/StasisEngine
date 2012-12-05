@@ -22,9 +22,10 @@ namespace StasisEditor.Controllers
         private bool _changesMade;
         private bool _autoUpdatePreview;
 
-        public MaterialController(EditorController editorController)
+        public MaterialController(EditorController editorController, IMaterialView materialView)
         {
             _editorController = editorController;
+            _materialView = materialView;
 
             // Materials
             int numMaterialTypes = Enum.GetValues(typeof(MaterialType)).Length;
@@ -43,6 +44,11 @@ namespace StasisEditor.Controllers
             _materials[(int)MaterialType.Fluid].Add(new FluidMaterialResource("Water"));
             _materials[(int)MaterialType.Items].Add(new ItemMaterialResource("Rope Gun"));
             _materials[(int)MaterialType.Items].Add(new ItemMaterialResource("Gravity Gun"));
+
+            // Initialize material view
+            materialView.setController(this);
+            materialView.copyMaterials();
+            materialView.setAutoUpdatePreview(true);
 
             // Create terrain renderer
             _terrainRenderer = new TerrainRenderer(XNAResources.game as Game, XNAResources.spriteBatch);
@@ -89,6 +95,7 @@ namespace StasisEditor.Controllers
             return _materials[(int)type].AsReadOnly();
         }
 
+        /*
         // openView
         public void openView()
         {
@@ -101,7 +108,7 @@ namespace StasisEditor.Controllers
             }
             else
                 _materialView.Focus();
-        }
+        }*/
 
         // viewClosed
         public void viewClosed()
@@ -158,9 +165,9 @@ namespace StasisEditor.Controllers
                     else
                     {
                         // Put preview window on top
-                        _materialPreview.Focus();
+                        //_materialPreview.Focus();
                         _materialPreview.updatePreview(canvas);
-                        _materialView.Focus();
+                        //_materialView.Focus();
                     }
 
                     break;
