@@ -133,6 +133,9 @@ namespace StasisEditor.Controls
                 // Select new layer
                 selectLayer(newLayer);
 
+                // Refocus on tree view
+                layersTreeView.Focus();
+
                 // Set changes made
                 _controller.setChangesMade(true);
             }

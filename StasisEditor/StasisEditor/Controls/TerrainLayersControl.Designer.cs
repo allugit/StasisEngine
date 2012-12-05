@@ -117,6 +117,7 @@
             this.layersTreeView.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
                         | System.Windows.Forms.AnchorStyles.Right)));
             this.layersTreeView.CheckBoxes = true;
+            this.layersTreeView.HideSelection = false;
             this.layersTreeView.Location = new System.Drawing.Point(0, 16);
             this.layersTreeView.Name = "layersTreeView";
             this.layersTreeView.ShowPlusMinus = false;
