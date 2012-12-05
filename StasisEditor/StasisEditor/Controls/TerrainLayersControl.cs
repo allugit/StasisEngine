@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Diagnostics;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Drawing;
@@ -79,12 +80,6 @@ namespace StasisEditor.Controls
         {
         }
 
-        // Add new sibling layer
-        private void addSiblingButton_Click(object sender, EventArgs e)
-        {
-
-        }
-
         // Add child node clicked
         private void addChildButton_Click(object sender, EventArgs e)
         {
@@ -100,16 +95,38 @@ namespace StasisEditor.Controls
                 TerrainLayerResource parent = selectedNode == rootNode ? null : (selectedNode as LayerNode).layer;
 
                 // Add new layer to material
-                _controller.addTerrainLayerToMaterial(_material, newLayerForm.getSelectedType(), parent, null);
+                _controller.addTerrainLayer(_material, newLayerForm.getSelectedType(), parent);
 
                 // Refresh the tree view
                 populateTreeView(_material.layers);
+
+                // Set changes made
+                _controller.setChangesMade(true);
             }
         }
 
         // Remove layer
         private void removeLayerButton_Click(object sender, EventArgs e)
         {
+            TreeNode selectedNode = layersTreeView.SelectedNode;
+            Debug.Assert(selectedNode != null);
+            Debug.Assert(selectedNode != rootNode);
+
+            // Display a warning that child nodes will be destroyed
+            if (MessageBox.Show("Are you sure you want to remove this node and all its child nodes?", "Remove Nodes", MessageBoxButtons.YesNo) == DialogResult.Yes)
+            {
+                // Determine parent layer
+                TerrainLayerResource parent = selectedNode.Parent == rootNode ? null : (selectedNode.Parent as LayerNode).layer;
+
+                // Remove layer
+                _controller.removeTerrainLayer(_material, parent, (selectedNode as LayerNode).layer);
+
+                // Refresh tree view
+                populateTreeView(_material.layers);
+
+                // Set changes made
+                _controller.setChangesMade(true);
+            }
         }
 
         // Property value changed
@@ -124,12 +141,12 @@ namespace StasisEditor.Controls
             // Enable/disable remove button
             removeLayerButton.Enabled = e.Node != rootNode;
 
+            // Enable/disable add child button
+            addChildButton.Enabled = e.Node != null;
+
             // Check for root node selection
             if (e.Node == rootNode)
                 return;
-
-            // Enable/disable add child button
-            addChildButton.Enabled = e.Node != null;
 
             // Set layer's property grid
             layerProperties.SelectedObject = (e.Node as LayerNode).layer.properties;
@@ -138,11 +155,14 @@ namespace StasisEditor.Controls
         // Node check changed
         private void layersTreeView_AfterCheck(object sender, TreeViewEventArgs e)
         {
-            if (e.Node == rootNode)
-                return;
+            Debug.Assert(e.Node != rootNode);
 
+            // Enable/disable layer
             LayerNode node = (e.Node as LayerNode);
             node.layer.enabled = node.Checked;
+
+            // Set changes made
+            _controller.setChangesMade(true);
         }
 
         private void layersTreeView_BeforeCheck(object sender, TreeViewCancelEventArgs e)

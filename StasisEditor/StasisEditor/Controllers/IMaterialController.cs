@@ -14,6 +14,7 @@ namespace StasisEditor.Controllers
         void preview(MaterialResource material);
         void previewClosed();
         ReadOnlyCollection<MaterialResource> getMaterials(MaterialType type);
-        void addTerrainLayerToMaterial(TerrainMaterialResource material, TerrainLayerType layerType, TerrainLayerResource parent = null, TerrainLayerResource previousSibling = null);
+        void addTerrainLayer(TerrainMaterialResource material, TerrainLayerType layerType, TerrainLayerResource parent = null);
+        void removeTerrainLayer(TerrainMaterialResource material, TerrainLayerResource parent, TerrainLayerResource layer);
     }
 }

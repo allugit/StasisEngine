@@ -70,6 +70,7 @@
             // removeLayerButton
             // 
             this.removeLayerButton.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+            this.removeLayerButton.Enabled = false;
             this.removeLayerButton.Location = new System.Drawing.Point(198, 148);
             this.removeLayerButton.Name = "removeLayerButton";
             this.removeLayerButton.Size = new System.Drawing.Size(75, 23);
@@ -118,6 +119,7 @@
             this.layersTreeView.CheckBoxes = true;
             this.layersTreeView.Location = new System.Drawing.Point(0, 16);
             this.layersTreeView.Name = "layersTreeView";
+            this.layersTreeView.ShowPlusMinus = false;
             this.layersTreeView.Size = new System.Drawing.Size(273, 126);
             this.layersTreeView.TabIndex = 8;
             this.layersTreeView.BeforeCheck += new System.Windows.Forms.TreeViewCancelEventHandler(this.layersTreeView_BeforeCheck);

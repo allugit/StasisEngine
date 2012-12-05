@@ -101,16 +101,19 @@ namespace StasisEditor.Controllers
             return _materials[(int)type].AsReadOnly();
         }
 
-        // addTerrainLayerToMaterial
-        public void addTerrainLayerToMaterial(TerrainMaterialResource material, TerrainLayerType layerType, TerrainLayerResource parent = null, TerrainLayerResource previousSibling = null)
+        // addTerrainLayer
+        public void addTerrainLayer(TerrainMaterialResource material, TerrainLayerType layerType, TerrainLayerResource parent = null)
         {
             TerrainLayerResource layer = TerrainLayerResource.create(layerType);
             List<TerrainLayerResource> parentList = parent == null ? material.layers : parent.layers;
+            parentList.Add(layer);
+        }
 
-            if (previousSibling == null)
-                parentList.Add(layer);
-            else
-                parentList.Insert(parentList.IndexOf(previousSibling) + 1, layer);
+        // removeTerrainLayer
+        public void removeTerrainLayer(TerrainMaterialResource material, TerrainLayerResource parent, TerrainLayerResource layer)
+        {
+            List<TerrainLayerResource> parentList = parent == null ? material.layers : parent.layers;
+            parentList.Remove(layer);
         }
 
         // preview
