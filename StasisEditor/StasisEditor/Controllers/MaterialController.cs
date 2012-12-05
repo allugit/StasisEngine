@@ -102,9 +102,8 @@ namespace StasisEditor.Controllers
         }
 
         // addTerrainLayer
-        public void addTerrainLayer(TerrainMaterialResource material, TerrainLayerType layerType, TerrainLayerResource parent = null)
+        public void addTerrainLayer(TerrainMaterialResource material, TerrainLayerResource layer, TerrainLayerResource parent = null)
         {
-            TerrainLayerResource layer = TerrainLayerResource.create(layerType);
             List<TerrainLayerResource> parentList = parent == null ? material.layers : parent.layers;
             parentList.Add(layer);
         }

@@ -70,6 +70,35 @@ namespace StasisEditor.Controls
             }
         }
 
+        // Select layer
+        public void selectLayer(TerrainLayerResource layer)
+        {
+            LayerNode targetNode = recursiveGetNode(rootNode, layer);
+            layersTreeView.SelectedNode = targetNode;
+        }
+
+        // recursiveGetLayer
+        private LayerNode recursiveGetNode(TreeNode startNode, TerrainLayerResource layer)
+        {
+            // Check this node's layer
+            if (startNode != rootNode)
+            {
+                LayerNode layerNode = startNode as LayerNode;
+                if (layerNode.layer == layer)
+                    return layerNode;
+            }
+
+            // Spawn more searches, checking the resulting layers
+            foreach (TreeNode node in startNode.Nodes)
+            {
+                LayerNode result = recursiveGetNode(node, layer);
+                if (result != null && result.layer == layer)
+                    return result;
+            }
+
+            return null;
+        }
+
         // Move layer up
         private void upButton_Click(object sender, EventArgs e)
         {
@@ -95,10 +124,14 @@ namespace StasisEditor.Controls
                 TerrainLayerResource parent = selectedNode == rootNode ? null : (selectedNode as LayerNode).layer;
 
                 // Add new layer to material
-                _controller.addTerrainLayer(_material, newLayerForm.getSelectedType(), parent);
+                TerrainLayerResource newLayer = TerrainLayerResource.create(newLayerForm.getSelectedType());
+                _controller.addTerrainLayer(_material, newLayer, parent);
 
                 // Refresh the tree view
                 populateTreeView(_material.layers);
+
+                // Select new layer
+                selectLayer(newLayer);
 
                 // Set changes made
                 _controller.setChangesMade(true);
