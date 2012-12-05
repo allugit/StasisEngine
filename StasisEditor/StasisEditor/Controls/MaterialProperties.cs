@@ -25,7 +25,9 @@ namespace StasisEditor.Controls
             switch (material.type)
             {
                 case MaterialType.Terrain:
-                    Controls.Add(new TerrainLayers(_controller, (material as TerrainMaterialResource).layers));
+                    TerrainLayers terrainLayers = new TerrainLayers(_controller);
+                    terrainLayers.populateTreeView((material as TerrainMaterialResource).layers);
+                    Controls.Add(terrainLayers);
                     break;
             }
 

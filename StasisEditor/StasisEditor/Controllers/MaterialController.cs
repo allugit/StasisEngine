@@ -35,8 +35,14 @@ namespace StasisEditor.Controllers
 
             // Test material data
             List<TerrainLayerResource> testLayers = new List<TerrainLayerResource>();
-            testLayers.Add(new TerrainTextureLayerResource(new TextureProperties(TerrainBlendType.Opaque, 1, 1, "dirt")));
-            testLayers.Add(new TerrainTextureLayerResource(new TextureProperties(TerrainBlendType.Overlay, 1, 1, "rock")));
+            testLayers.Add(
+                new TerrainTextureLayerResource(
+                    null,
+                    new TextureProperties(TerrainBlendType.Overlay, 1, 1, "rock")));
+            testLayers.Add(
+                new TerrainNoiseLayerResource(
+                    new List<TerrainLayerResource>(new[] { new TerrainNoiseLayerResource(null, null) }),
+                    null));
             _materials[(int)MaterialType.Terrain].Add(new TerrainMaterialResource("Rock", testLayers));
             _materials[(int)MaterialType.Terrain].Add(new TerrainMaterialResource("Dirt", TerrainLayerResource.copyFrom(testLayers)));
             _materials[(int)MaterialType.Terrain].Add(new TerrainMaterialResource("Snow", new List<TerrainLayerResource>()));

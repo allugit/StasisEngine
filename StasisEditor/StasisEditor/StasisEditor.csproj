@@ -88,6 +88,7 @@
     <Compile Include="Controls\FileSafeTextBox.cs">
       <SubType>Component</SubType>
     </Compile>
+    <Compile Include="Controls\LayerNode.cs" />
     <Compile Include="Controls\LevelSettings.cs">
       <SubType>Component</SubType>
     </Compile>

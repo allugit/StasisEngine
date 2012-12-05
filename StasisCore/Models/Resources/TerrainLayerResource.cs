@@ -21,8 +21,11 @@ namespace StasisCore.Models
     {
         protected TerrainLayerType _type;
         protected LayerProperties _properties;
+        protected List<TerrainLayerResource> _layers;
+
         public TerrainLayerType type { get { return _type; } }
         public LayerProperties properties { get { return _properties; } set { _properties = value; } }
+        public List<TerrainLayerResource> layers { get { return _layers; } set { _layers = value; } }
 
         // create
         public static TerrainLayerResource create(TerrainLayerType layerType)
@@ -46,6 +49,13 @@ namespace StasisCore.Models
             foreach (TerrainLayerResource layer in list)
                 copy.Add(layer.clone());
             return copy;
+        }
+
+        // Constructor
+        public TerrainLayerResource(List<TerrainLayerResource> layers)
+        {
+            // Default layers
+            _layers = layers == null ? new List<TerrainLayerResource>() : layers;
         }
 
         // clone
