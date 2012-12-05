@@ -28,7 +28,6 @@
         /// </summary>
         private void InitializeComponent()
         {
-            this.closeButton = new System.Windows.Forms.Button();
             this.browseButton = new System.Windows.Forms.Button();
             this.textureDataGrid = new System.Windows.Forms.DataGridView();
             this.label1 = new System.Windows.Forms.Label();
@@ -41,17 +40,6 @@
             this.splitContainer1.Panel2.SuspendLayout();
             this.splitContainer1.SuspendLayout();
             this.SuspendLayout();
-            // 
-            // closeButton
-            // 
-            this.closeButton.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
-            this.closeButton.Location = new System.Drawing.Point(558, 400);
-            this.closeButton.Name = "closeButton";
-            this.closeButton.Size = new System.Drawing.Size(75, 23);
-            this.closeButton.TabIndex = 6;
-            this.closeButton.Text = "Close";
-            this.closeButton.UseVisualStyleBackColor = true;
-            this.closeButton.Click += new System.EventHandler(this.cancelButton_Click);
             // 
             // browseButton
             // 
@@ -135,17 +123,14 @@
             this.splitContainer1.SplitterDistance = 267;
             this.splitContainer1.TabIndex = 13;
             // 
-            // NewTextureResource
+            // TextureView
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(645, 434);
             this.Controls.Add(this.splitContainer1);
             this.Controls.Add(this.browseButton);
-            this.Controls.Add(this.closeButton);
-            this.Name = "NewTextureResource";
-            this.Text = "Texture Resources";
-            this.FormClosed += new System.Windows.Forms.FormClosedEventHandler(this.NewTextureResource_FormClosed);
+            this.Name = "TextureView";
+            this.Size = new System.Drawing.Size(645, 434);
             ((System.ComponentModel.ISupportInitialize)(this.textureDataGrid)).EndInit();
             this.splitContainer1.Panel1.ResumeLayout(false);
             this.splitContainer1.Panel1.PerformLayout();
@@ -159,7 +144,6 @@
 
         #endregion
 
-        private System.Windows.Forms.Button closeButton;
         private System.Windows.Forms.Button browseButton;
         private System.Windows.Forms.DataGridView textureDataGrid;
         private System.Windows.Forms.Label label1;

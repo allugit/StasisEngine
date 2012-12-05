@@ -7,7 +7,6 @@ namespace StasisEditor.Views
     public interface ITextureView : IBaseView
     {
         void setController(ITextureController controller);
-        void Show();
-        bool Focus();
+        void bindTextureResources();
     }
 }

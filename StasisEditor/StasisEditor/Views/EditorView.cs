@@ -41,6 +41,12 @@ namespace StasisEditor.Views
             return materialView;
         }
 
+        // getTextureView
+        public ITextureView getTextureView()
+        {
+            return textureView;
+        }
+
         // getLevelContainerSize
         public System.Drawing.Point getLevelContainerSize()
         {
@@ -143,18 +149,6 @@ namespace StasisEditor.Views
             {
                 _controller.closeLevel();
             }
-        }
-
-        // Materials clicked
-        private void menuAssetsMaterials_Click(object sender, EventArgs e)
-        {
-            //_controller.openMaterialView();
-        }
-
-        // Textures clicked
-        private void menuAssetsTextures_Click(object sender, EventArgs e)
-        {
-            _controller.openTextureView();
         }
     }
 }

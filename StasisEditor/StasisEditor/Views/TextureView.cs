@@ -14,7 +14,7 @@ using StasisCore.Models;
 
 namespace StasisEditor.Views
 {
-    public partial class TextureView : Form, ITextureView
+    public partial class TextureView : UserControl, ITextureView
     {
         private ITextureController _controller;
         //private BindingList<TextureResource> _textureResources;
@@ -56,6 +56,11 @@ namespace StasisEditor.Views
         public void setController(ITextureController controller)
         {
             _controller = controller;
+        }
+
+        // bindTextureResources
+        public void bindTextureResources()
+        {
             _textureBindingSource.DataSource = _controller.getTextureResources();
         }
 
@@ -133,20 +138,6 @@ namespace StasisEditor.Views
         {
             // Preview selected texture resources
             preview(getSelectedResources());
-        }
-
-        // Cancel clicked
-        private void cancelButton_Click(object sender, EventArgs e)
-        {
-            this.DialogResult = DialogResult.Cancel;
-            Close();
-        }
-
-        // Add clicked
-        private void button1_Click(object sender, EventArgs e)
-        {
-            this.DialogResult = DialogResult.OK;
-            Close();
         }
 
         // Validate the cell

@@ -104,7 +104,7 @@
       <DependentUpon>MaterialProperties.cs</DependentUpon>
     </Compile>
     <Compile Include="Views\TextureView.cs">
-      <SubType>Form</SubType>
+      <SubType>UserControl</SubType>
     </Compile>
     <Compile Include="Views\TextureView.Designer.cs">
       <DependentUpon>TextureView.cs</DependentUpon>

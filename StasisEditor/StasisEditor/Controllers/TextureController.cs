@@ -15,34 +15,20 @@ namespace StasisEditor.Controllers
         private IEditorController _editorController;
         private ITextureView _textureView;
 
-        public TextureController(IEditorController editorController)
+        public TextureController(IEditorController editorController, ITextureView textureView)
         {
             _editorController = editorController;
+            _textureView = textureView;
+
+            // Initialize texture view
+            _textureView.setController(this);
+            _textureView.bindTextureResources();
         }
 
         // getTextureResources
         public BindingList<TextureResource> getTextureResources()
         {
             return _editorController.getTextureResources();
-        }
-
-        // openView
-        public void openView()
-        {
-            if (_textureView == null)
-            {
-                // Load texture resources
-                //loadTextureResources();
-
-                // Create view
-                _textureView = new TextureView();
-                _textureView.setController(this);
-                _textureView.Show();
-            }
-            else
-            {
-                _textureView.Focus();
-            }
         }
 
         // viewClosed

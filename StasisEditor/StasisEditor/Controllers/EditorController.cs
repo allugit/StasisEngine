@@ -58,7 +58,7 @@ namespace StasisEditor.Controllers
             _materialController = new MaterialController(this, _editorView.getMaterialView());
 
             // Create texture controller
-            _textureController = new TextureController(this);
+            _textureController = new TextureController(this, _editorView.getTextureView());
         }
 
         // getTextureResources
@@ -130,19 +130,6 @@ namespace StasisEditor.Controllers
 
             // Remove model
             _level = null;
-        }
-
-        /*
-        // openMaterialView
-        public void openMaterialView()
-        {
-            _materialController.openView();
-        }*/
-
-        // openTextureView
-        public void openTextureView()
-        {
-            _textureController.openView();
         }
 
         // mouseMove

@@ -12,6 +12,7 @@ namespace StasisEditor.Views
     {
         void setController(EditorController controller);
         IMaterialView getMaterialView();
+        ITextureView getTextureView();
         
         void enableNewLevel(bool enabled);
         void enableCloseLevel(bool enabled);
