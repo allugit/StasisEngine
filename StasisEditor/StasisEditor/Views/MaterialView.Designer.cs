@@ -109,7 +109,6 @@ namespace StasisEditor.Views
             this.materialsListBox.FormattingEnabled = true;
             this.materialsListBox.Location = new System.Drawing.Point(12, 125);
             this.materialsListBox.Name = "materialsListBox";
-            this.materialsListBox.SelectionMode = System.Windows.Forms.SelectionMode.MultiExtended;
             this.materialsListBox.Size = new System.Drawing.Size(221, 470);
             this.materialsListBox.TabIndex = 4;
             this.materialsListBox.SelectedIndexChanged += new System.EventHandler(this.materialsListBox_SelectedIndexChanged);

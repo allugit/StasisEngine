@@ -42,8 +42,8 @@
             this.editorTabControl = new System.Windows.Forms.TabControl();
             this.levelTab = new System.Windows.Forms.TabPage();
             this.materialsTab = new System.Windows.Forms.TabPage();
-            this.texturesTab = new System.Windows.Forms.TabPage();
             this.materialView = new StasisEditor.Views.MaterialView();
+            this.texturesTab = new System.Windows.Forms.TabPage();
             this.textureView = new StasisEditor.Views.TextureView();
             this.itemsTab = new System.Windows.Forms.TabPage();
             this.scriptsTab = new System.Windows.Forms.TabPage();
@@ -132,7 +132,7 @@
             // 
             this.mainSplit.Panel2.BackColor = System.Drawing.SystemColors.Control;
             this.mainSplit.Panel2.Controls.Add(this.editorTabControl);
-            this.mainSplit.Size = new System.Drawing.Size(1029, 409);
+            this.mainSplit.Size = new System.Drawing.Size(1004, 590);
             this.mainSplit.SplitterDistance = 261;
             this.mainSplit.TabIndex = 1;
             this.mainSplit.TabStop = false;
@@ -149,7 +149,7 @@
             this.editorTabControl.Margin = new System.Windows.Forms.Padding(0);
             this.editorTabControl.Name = "editorTabControl";
             this.editorTabControl.SelectedIndex = 0;
-            this.editorTabControl.Size = new System.Drawing.Size(762, 407);
+            this.editorTabControl.Size = new System.Drawing.Size(737, 588);
             this.editorTabControl.TabIndex = 0;
             // 
             // levelTab
@@ -157,7 +157,7 @@
             this.levelTab.BackColor = System.Drawing.SystemColors.ControlDark;
             this.levelTab.Location = new System.Drawing.Point(4, 22);
             this.levelTab.Name = "levelTab";
-            this.levelTab.Size = new System.Drawing.Size(754, 381);
+            this.levelTab.Size = new System.Drawing.Size(729, 562);
             this.levelTab.TabIndex = 0;
             this.levelTab.Text = "Level";
             // 
@@ -172,6 +172,15 @@
             this.materialsTab.Text = "Materials";
             this.materialsTab.UseVisualStyleBackColor = true;
             // 
+            // materialView
+            // 
+            this.materialView.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.materialView.Location = new System.Drawing.Point(0, 0);
+            this.materialView.Margin = new System.Windows.Forms.Padding(0);
+            this.materialView.Name = "materialView";
+            this.materialView.Size = new System.Drawing.Size(754, 381);
+            this.materialView.TabIndex = 0;
+            // 
             // texturesTab
             // 
             this.texturesTab.Controls.Add(this.textureView);
@@ -182,15 +191,6 @@
             this.texturesTab.TabIndex = 2;
             this.texturesTab.Text = "Textures";
             this.texturesTab.UseVisualStyleBackColor = true;
-            // 
-            // materialView
-            // 
-            this.materialView.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.materialView.Location = new System.Drawing.Point(0, 0);
-            this.materialView.Margin = new System.Windows.Forms.Padding(0);
-            this.materialView.Name = "materialView";
-            this.materialView.Size = new System.Drawing.Size(754, 381);
-            this.materialView.TabIndex = 0;
             // 
             // textureView
             // 
@@ -223,7 +223,7 @@
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(1029, 409);
+            this.ClientSize = new System.Drawing.Size(1004, 590);
             this.Controls.Add(this.mainSplit);
             this.Menu = this.mainMenu1;
             this.Name = "EditorView";

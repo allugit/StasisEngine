@@ -15,15 +15,12 @@ namespace StasisEditor.Views
     {
         private IMaterialController _controller;
         private List<MaterialResource>[] _materialCopies;
-        private List<MaterialResource> _selectedMaterials;
         private MaterialProperties _materialProperties;
 
         public MaterialView()
         {
             int numMaterialTypes = Enum.GetValues(typeof(MaterialType)).Length;
             _materialCopies = new List<MaterialResource>[numMaterialTypes];
-
-            _selectedMaterials = new List<MaterialResource>();
 
             InitializeComponent();
 
@@ -72,7 +69,7 @@ namespace StasisEditor.Views
             propertiesContainer.Controls.Add(_materialProperties);
 
             // Set material property grid's selected objects
-            _materialProperties.PropertyGrid.SelectedObjects = _selectedMaterials.ToArray();
+            _materialProperties.PropertyGrid.SelectedObject = material;
         }
 
         // closeProperties
@@ -110,19 +107,12 @@ namespace StasisEditor.Views
         // Selected materials changed
         private void materialsListBox_SelectedIndexChanged(object sender, EventArgs e)
         {
-            // Clear selected materials
-            _selectedMaterials.Clear();
-
-            // Construct new selected materials list from materialListBox's selected items
-            foreach (MaterialResource selectedMaterial in materialsListBox.SelectedItems)
-                _selectedMaterials.Add(selectedMaterial);
-
             // Update preview button
-            previewButton.Enabled = _selectedMaterials.Count == 1;
+            previewButton.Enabled = materialsListBox.SelectedItem != null;
             
             // Open material properties
             closeProperties();
-            openProperties((sender as ListBox).SelectedItems[0] as MaterialResource);
+            openProperties(materialsListBox.SelectedItem as MaterialResource);
         }
 
         // Material property changed
@@ -138,7 +128,7 @@ namespace StasisEditor.Views
         // Preview material
         private void previewButton_Click(object sender, EventArgs e)
         {
-            _controller.preview(_selectedMaterials[0]);
+            _controller.preview(materialsListBox.SelectedItem as MaterialResource);
         }
 
         // Auto update changed
