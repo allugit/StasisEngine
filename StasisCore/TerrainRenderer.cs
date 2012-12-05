@@ -98,6 +98,10 @@ namespace StasisCore
         {
             Debug.Assert(resource.layers != null);
 
+            // Don't render disabled layers
+            if (!resource.enabled)
+                return current;
+
             switch (resource.type)
             {
                     /*

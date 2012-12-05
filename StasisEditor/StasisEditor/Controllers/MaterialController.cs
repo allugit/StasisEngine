@@ -38,7 +38,7 @@ namespace StasisEditor.Controllers
             testLayers.Add(
                 new TerrainTextureLayerResource(
                     null,
-                    new TextureProperties(TerrainBlendType.Overlay, 1, 1, "rock")));
+                    new TextureProperties(TerrainBlendType.Opaque, 1, 1, "rock")));
             testLayers.Add(
                 new TerrainNoiseLayerResource(
                     new List<TerrainLayerResource>(new[] { new TerrainNoiseLayerResource(null, null) }),

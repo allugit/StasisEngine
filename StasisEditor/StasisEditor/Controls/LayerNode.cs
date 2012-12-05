@@ -10,12 +10,12 @@ namespace StasisEditor.Controls
         private TerrainLayerResource _layer;
         public TerrainLayerResource layer { get { return _layer; } }
 
-        public LayerNode(TerrainLayerResource layer)
+        public LayerNode(TerrainLayerResource layer, bool enabled)
             : base()
         {
             _layer = layer;
             Text = _layer.ToString();
-            Checked = true;
+            Checked = enabled;
         }
     }
 }

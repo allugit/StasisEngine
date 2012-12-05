@@ -35,7 +35,7 @@
             this.removeLayerButton = new System.Windows.Forms.Button();
             this.layerProperties = new System.Windows.Forms.PropertyGrid();
             this.label2 = new System.Windows.Forms.Label();
-            this.layersTreeView = new System.Windows.Forms.TreeView();
+            this.layersTreeView = new StasisEditor.Controls.LayersTreeView();
             this.SuspendLayout();
             // 
             // label1
@@ -114,10 +114,10 @@
                         | System.Windows.Forms.AnchorStyles.Right)));
             this.layersTreeView.CheckBoxes = true;
             this.layersTreeView.Location = new System.Drawing.Point(0, 16);
-            this.layersTreeView.Margin = new System.Windows.Forms.Padding(0);
             this.layersTreeView.Name = "layersTreeView";
-            this.layersTreeView.Size = new System.Drawing.Size(190, 85);
+            this.layersTreeView.Size = new System.Drawing.Size(187, 82);
             this.layersTreeView.TabIndex = 8;
+            this.layersTreeView.AfterCheck += new System.Windows.Forms.TreeViewEventHandler(this.layersTreeView_AfterCheck);
             this.layersTreeView.AfterSelect += new System.Windows.Forms.TreeViewEventHandler(this.layersTreeView_AfterSelect);
             // 
             // TerrainLayers
@@ -149,6 +149,6 @@
         private System.Windows.Forms.Button removeLayerButton;
         private System.Windows.Forms.PropertyGrid layerProperties;
         private System.Windows.Forms.Label label2;
-        private System.Windows.Forms.TreeView layersTreeView;
+        private LayersTreeView layersTreeView;
     }
 }

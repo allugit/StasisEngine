@@ -5,8 +5,8 @@ namespace StasisCore.Models
 {
     public class TerrainTextureLayerResource : TerrainLayerResource
     {
-        public TerrainTextureLayerResource(List<TerrainLayerResource> layers = null, LayerProperties properties = null)
-            : base(layers)
+        public TerrainTextureLayerResource(List<TerrainLayerResource> layers = null, LayerProperties properties = null, bool enabled = true)
+            : base(layers, enabled)
         {
             // Default options
             if (properties == null)

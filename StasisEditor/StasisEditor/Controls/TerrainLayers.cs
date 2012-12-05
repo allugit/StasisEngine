@@ -36,7 +36,7 @@ namespace StasisEditor.Controls
             // Build root nodes
             List<LayerNode> rootNodes = new List<LayerNode>();
             foreach (TerrainLayerResource layer in layers)
-                rootNodes.Add(new LayerNode(layer));
+                rootNodes.Add(new LayerNode(layer, layer.enabled));
 
             // Recursively populate root nodes
             foreach (LayerNode node in rootNodes)
@@ -54,7 +54,7 @@ namespace StasisEditor.Controls
         {
             foreach (TerrainLayerResource layer in node.layer.layers)
             {
-                LayerNode childNode = new LayerNode(layer);
+                LayerNode childNode = new LayerNode(layer, layer.enabled);
                 node.Nodes.Add(childNode);
                 recursiveNodePopulate(childNode);
             }
@@ -89,7 +89,14 @@ namespace StasisEditor.Controls
         // Selected node changed
         private void layersTreeView_AfterSelect(object sender, TreeViewEventArgs e)
         {
-            layerProperties.SelectedObject = (layersTreeView.SelectedNode as LayerNode).layer.properties;
+            layerProperties.SelectedObject = (e.Node as LayerNode).layer.properties;
+        }
+
+        // Node check changed
+        private void layersTreeView_AfterCheck(object sender, TreeViewEventArgs e)
+        {
+            LayerNode node = (e.Node as LayerNode);
+            node.layer.enabled = node.Checked;
         }
     }
 }

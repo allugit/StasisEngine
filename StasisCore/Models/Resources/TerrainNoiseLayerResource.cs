@@ -6,8 +6,8 @@ namespace StasisCore.Models
 {
     public class TerrainNoiseLayerResource : TerrainLayerResource
     {
-        public TerrainNoiseLayerResource(List<TerrainLayerResource> layers = null, LayerProperties properties = null)
-            : base(layers)
+        public TerrainNoiseLayerResource(List<TerrainLayerResource> layers = null, LayerProperties properties = null, bool enabled = true)
+            : base(layers, enabled)
         {
             // Default options
             if (properties == null)
