@@ -15,6 +15,7 @@ namespace StasisEditor.Controls
         {
             _layer = layer;
             Text = _layer.ToString();
+            Checked = true;
         }
     }
 }

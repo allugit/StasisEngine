@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Diagnostics;
 using System.Collections.Generic;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Content;
@@ -95,6 +96,8 @@ namespace StasisCore
         // Render layer
         public Texture2D renderLayer(Texture2D current, TerrainLayerResource resource)
         {
+            Debug.Assert(resource.layers != null);
+
             switch (resource.type)
             {
                     /*
@@ -113,6 +116,10 @@ namespace StasisCore
                     current = noisePass(current, (resource.properties as NoiseProperties));
                     break;
             }
+
+            // Recursively render layers
+            foreach (TerrainLayerResource layer in resource.layers)
+                current = renderLayer(current, layer);
 
             return current;
         }

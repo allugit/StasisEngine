@@ -80,15 +80,16 @@ namespace StasisEditor.Controls
         {
         }
 
-        // Selected layer changed
-        private void layersListBox_SelectedValueChanged(object sender, EventArgs e)
-        {
-        }
-
         // Property value changed
         private void layerProperties_PropertyValueChanged(object s, PropertyValueChangedEventArgs e)
         {
             _controller.setChangesMade(true);
+        }
+
+        // Selected node changed
+        private void layersTreeView_AfterSelect(object sender, TreeViewEventArgs e)
+        {
+            layerProperties.SelectedObject = (layersTreeView.SelectedNode as LayerNode).layer.properties;
         }
     }
 }

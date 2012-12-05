@@ -110,12 +110,15 @@
             // 
             // layersTreeView
             // 
+            this.layersTreeView.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
+                        | System.Windows.Forms.AnchorStyles.Right)));
             this.layersTreeView.CheckBoxes = true;
             this.layersTreeView.Location = new System.Drawing.Point(0, 16);
             this.layersTreeView.Margin = new System.Windows.Forms.Padding(0);
             this.layersTreeView.Name = "layersTreeView";
             this.layersTreeView.Size = new System.Drawing.Size(190, 85);
             this.layersTreeView.TabIndex = 8;
+            this.layersTreeView.AfterSelect += new System.Windows.Forms.TreeViewEventHandler(this.layersTreeView_AfterSelect);
             // 
             // TerrainLayers
             // 
