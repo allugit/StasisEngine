@@ -4,14 +4,16 @@ using System.Windows.Forms;
 using StasisCore.Models;
 namespace StasisEditor.Controls
 {
-    public class TerrainLayerSelectBox : Form
+    public class NewTerrainLayerForm : Form
     {
         private ListBox layerTypeListBox;
         private Label label1;
+        private Button addChildButton;
         private Button cancelButton;
-        private Button okayButton;
+        private bool _addChild;
+        public bool addChild { get { return _addChild; } }
     
-        public TerrainLayerSelectBox()
+        public NewTerrainLayerForm()
         {
             InitializeComponent();
 
@@ -27,7 +29,7 @@ namespace StasisEditor.Controls
             this.layerTypeListBox = new System.Windows.Forms.ListBox();
             this.label1 = new System.Windows.Forms.Label();
             this.cancelButton = new System.Windows.Forms.Button();
-            this.okayButton = new System.Windows.Forms.Button();
+            this.addChildButton = new System.Windows.Forms.Button();
             this.SuspendLayout();
             // 
             // layerTypeListBox
@@ -38,7 +40,7 @@ namespace StasisEditor.Controls
             this.layerTypeListBox.FormattingEnabled = true;
             this.layerTypeListBox.Location = new System.Drawing.Point(14, 26);
             this.layerTypeListBox.Name = "layerTypeListBox";
-            this.layerTypeListBox.Size = new System.Drawing.Size(183, 69);
+            this.layerTypeListBox.Size = new System.Drawing.Size(217, 69);
             this.layerTypeListBox.TabIndex = 0;
             // 
             // label1
@@ -53,7 +55,7 @@ namespace StasisEditor.Controls
             // cancelButton
             // 
             this.cancelButton.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
-            this.cancelButton.Location = new System.Drawing.Point(123, 107);
+            this.cancelButton.Location = new System.Drawing.Point(157, 114);
             this.cancelButton.Name = "cancelButton";
             this.cancelButton.Size = new System.Drawing.Size(75, 23);
             this.cancelButton.TabIndex = 2;
@@ -61,26 +63,26 @@ namespace StasisEditor.Controls
             this.cancelButton.UseVisualStyleBackColor = true;
             this.cancelButton.Click += new System.EventHandler(this.cancelButton_Click);
             // 
-            // okayButton
+            // addChildButton
             // 
-            this.okayButton.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
-            this.okayButton.Location = new System.Drawing.Point(42, 107);
-            this.okayButton.Name = "okayButton";
-            this.okayButton.Size = new System.Drawing.Size(75, 23);
-            this.okayButton.TabIndex = 3;
-            this.okayButton.Text = "OK";
-            this.okayButton.UseVisualStyleBackColor = true;
-            this.okayButton.Click += new System.EventHandler(this.okayButton_Click);
+            this.addChildButton.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
+            this.addChildButton.Location = new System.Drawing.Point(76, 114);
+            this.addChildButton.Name = "addChildButton";
+            this.addChildButton.Size = new System.Drawing.Size(75, 23);
+            this.addChildButton.TabIndex = 5;
+            this.addChildButton.Text = "OK";
+            this.addChildButton.UseVisualStyleBackColor = true;
+            this.addChildButton.Click += new System.EventHandler(this.addChildButton_Click);
             // 
-            // TerrainLayerSelectBox
+            // NewTerrainLayer
             // 
-            this.ClientSize = new System.Drawing.Size(210, 142);
+            this.ClientSize = new System.Drawing.Size(244, 149);
             this.ControlBox = false;
-            this.Controls.Add(this.okayButton);
+            this.Controls.Add(this.addChildButton);
             this.Controls.Add(this.cancelButton);
             this.Controls.Add(this.label1);
             this.Controls.Add(this.layerTypeListBox);
-            this.Name = "TerrainLayerSelectBox";
+            this.Name = "NewTerrainLayer";
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -99,8 +101,8 @@ namespace StasisEditor.Controls
             Close();
         }
 
-        // OK button clicked
-        private void okayButton_Click(object sender, EventArgs e)
+        // Add child clicked
+        private void addChildButton_Click(object sender, EventArgs e)
         {
             this.DialogResult = DialogResult.OK;
             Close();

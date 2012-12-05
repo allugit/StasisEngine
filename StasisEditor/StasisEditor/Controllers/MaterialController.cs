@@ -101,25 +101,16 @@ namespace StasisEditor.Controllers
             return _materials[(int)type].AsReadOnly();
         }
 
-        /*
-        // openView
-        public void openView()
+        // addTerrainLayerToMaterial
+        public void addTerrainLayerToMaterial(TerrainMaterialResource material, TerrainLayerType layerType, TerrainLayerResource parent = null, TerrainLayerResource previousSibling = null)
         {
-            if (_materialView == null)
-            {
-                _materialView = new MaterialView();
-                _materialView.setController(this);
-                _materialView.setAutoUpdatePreview(true);
-                _materialView.Show();
-            }
-            else
-                _materialView.Focus();
-        }*/
+            TerrainLayerResource layer = TerrainLayerResource.create(layerType);
+            List<TerrainLayerResource> parentList = parent == null ? material.layers : parent.layers;
 
-        // viewClosed
-        public void viewClosed()
-        {
-            _materialView = null;
+            if (previousSibling == null)
+                parentList.Add(layer);
+            else
+                parentList.Insert(parentList.IndexOf(previousSibling) + 1, layer);
         }
 
         // preview

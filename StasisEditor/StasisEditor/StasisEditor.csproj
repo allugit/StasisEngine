@@ -116,13 +116,13 @@
     <Compile Include="Controls\RefreshingListBox.cs">
       <SubType>Component</SubType>
     </Compile>
-    <Compile Include="Controls\TerrainLayers.cs">
+    <Compile Include="Controls\TerrainLayersControl.cs">
       <SubType>UserControl</SubType>
     </Compile>
-    <Compile Include="Controls\TerrainLayers.Designer.cs">
-      <DependentUpon>TerrainLayers.cs</DependentUpon>
+    <Compile Include="Controls\TerrainLayersControl.Designer.cs">
+      <DependentUpon>TerrainLayersControl.cs</DependentUpon>
     </Compile>
-    <Compile Include="Controls\TerrainLayerSelectBox.cs">
+    <Compile Include="Controls\NewTerrainLayerForm.cs">
       <SubType>Form</SubType>
     </Compile>
     <Compile Include="Views\EditorView.cs">
@@ -216,11 +216,11 @@
     <EmbeddedResource Include="Views\TextureView.resx">
       <DependentUpon>TextureView.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="Controls\TerrainLayers.resx">
-      <DependentUpon>TerrainLayers.cs</DependentUpon>
+    <EmbeddedResource Include="Controls\TerrainLayersControl.resx">
+      <DependentUpon>TerrainLayersControl.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="Controls\TerrainLayerSelectBox.resx">
-      <DependentUpon>TerrainLayerSelectBox.cs</DependentUpon>
+    <EmbeddedResource Include="Controls\NewTerrainLayerForm.resx">
+      <DependentUpon>NewTerrainLayerForm.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Views\EditorView.resx">
       <DependentUpon>EditorView.cs</DependentUpon>
