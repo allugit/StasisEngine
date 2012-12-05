@@ -15,6 +15,7 @@ namespace StasisEditor.Controls
     {
         private IMaterialController _controller;
         private TerrainMaterialResource _material;
+        private TreeNode rootNode;
         //private List<TerrainLayerResource> _layers;
 
         public TerrainLayersControl(IMaterialController controller, TerrainMaterialResource material)
@@ -27,13 +28,18 @@ namespace StasisEditor.Controls
             Dock = DockStyle.Fill;
             upButton.Text = char.ConvertFromUtf32(0x000002c4);
             downButton.Text = char.ConvertFromUtf32(0x000002c5);
+
+            // Add root node to tree view
+            rootNode = new TreeNode("Root");
+            rootNode.Checked = true;
+            layersTreeView.Nodes.Add(rootNode);
         }
 
         // populate tree view
         public void populateTreeView(List<TerrainLayerResource> layers)
         {
             // Clear existing nodes
-            layersTreeView.Nodes.Clear();
+            rootNode.Nodes.Clear();
 
             // Build root nodes
             List<LayerNode> rootNodes = new List<LayerNode>();
@@ -46,9 +52,10 @@ namespace StasisEditor.Controls
 
             // Set root nodes
             foreach (LayerNode node in rootNodes)
-                layersTreeView.Nodes.Add(node);
+                rootNode.Nodes.Add(node);
 
-            //Console.WriteLine("nodes: {0}", rootNodes);
+            // Expand all
+            rootNode.ExpandAll();
         }
 
         // recursiveNodePopulate
@@ -81,16 +88,19 @@ namespace StasisEditor.Controls
         // Add child node clicked
         private void addChildButton_Click(object sender, EventArgs e)
         {
-            LayerNode node = (layersTreeView.SelectedNode as LayerNode);
-            if (node == null)
+            TreeNode selectedNode = layersTreeView.SelectedNode;
+            if (selectedNode == null)
                 return;
 
             // Show new terrain layer select box
             NewTerrainLayerForm newLayerForm = new NewTerrainLayerForm();
             if (newLayerForm.ShowDialog() == DialogResult.OK)
             {
-                // Add new layer
-                _controller.addTerrainLayerToMaterial(_material, newLayerForm.getSelectedType(), node.layer, null);
+                // Determine parent layer
+                TerrainLayerResource parent = selectedNode == rootNode ? null : (selectedNode as LayerNode).layer;
+
+                // Add new layer to material
+                _controller.addTerrainLayerToMaterial(_material, newLayerForm.getSelectedType(), parent, null);
 
                 // Refresh the tree view
                 populateTreeView(_material.layers);
@@ -111,14 +121,35 @@ namespace StasisEditor.Controls
         // Selected node changed
         private void layersTreeView_AfterSelect(object sender, TreeViewEventArgs e)
         {
+            // Enable/disable remove button
+            removeLayerButton.Enabled = e.Node != rootNode;
+
+            // Check for root node selection
+            if (e.Node == rootNode)
+                return;
+
+            // Enable/disable add child button
+            addChildButton.Enabled = e.Node != null;
+
+            // Set layer's property grid
             layerProperties.SelectedObject = (e.Node as LayerNode).layer.properties;
         }
 
         // Node check changed
         private void layersTreeView_AfterCheck(object sender, TreeViewEventArgs e)
         {
+            if (e.Node == rootNode)
+                return;
+
             LayerNode node = (e.Node as LayerNode);
             node.layer.enabled = node.Checked;
+        }
+
+        private void layersTreeView_BeforeCheck(object sender, TreeViewCancelEventArgs e)
+        {
+            // Prevent root from being unchecked
+            if (e.Node == rootNode)
+                e.Cancel = true;
         }
     }
 }

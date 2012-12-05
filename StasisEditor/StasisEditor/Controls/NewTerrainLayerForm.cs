@@ -74,15 +74,16 @@ namespace StasisEditor.Controls
             this.addChildButton.UseVisualStyleBackColor = true;
             this.addChildButton.Click += new System.EventHandler(this.addChildButton_Click);
             // 
-            // NewTerrainLayer
+            // NewTerrainLayerForm
             // 
             this.ClientSize = new System.Drawing.Size(244, 149);
-            this.ControlBox = false;
             this.Controls.Add(this.addChildButton);
             this.Controls.Add(this.cancelButton);
             this.Controls.Add(this.label1);
             this.Controls.Add(this.layerTypeListBox);
-            this.Name = "NewTerrainLayer";
+            this.Name = "NewTerrainLayerForm";
+            this.ShowIcon = false;
+            this.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;
             this.ResumeLayout(false);
             this.PerformLayout();
 
