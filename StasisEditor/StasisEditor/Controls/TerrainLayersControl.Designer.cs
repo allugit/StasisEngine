@@ -50,6 +50,7 @@
             // upButton
             // 
             this.upButton.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+            this.upButton.Enabled = false;
             this.upButton.Location = new System.Drawing.Point(279, 16);
             this.upButton.Name = "upButton";
             this.upButton.Size = new System.Drawing.Size(32, 23);
@@ -60,6 +61,7 @@
             // downButton
             // 
             this.downButton.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+            this.downButton.Enabled = false;
             this.downButton.Location = new System.Drawing.Point(279, 45);
             this.downButton.Name = "downButton";
             this.downButton.Size = new System.Drawing.Size(32, 23);

@@ -10,8 +10,6 @@ namespace StasisEditor.Controls
         private Label label1;
         private Button addChildButton;
         private Button cancelButton;
-        private bool _addChild;
-        public bool addChild { get { return _addChild; } }
     
         public NewTerrainLayerForm()
         {

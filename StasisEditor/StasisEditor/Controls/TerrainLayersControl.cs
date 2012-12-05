@@ -102,6 +102,7 @@ namespace StasisEditor.Controls
         // Move layer up
         private void upButton_Click(object sender, EventArgs e)
         {
+            LayerNode node = layersTreeView.SelectedNode as LayerNode;
         }
 
         // Move layer down
@@ -165,6 +166,17 @@ namespace StasisEditor.Controls
             }
         }
 
+        // recursiveEnableNode
+        private void recursiveEnableNode(TreeNode startNode, bool enabled)
+        {
+            // This only fakes a disabled node by changing its forecolor
+            startNode.ForeColor = enabled ? Color.Black : Color.Gray;
+
+            // Call the chillens'
+            foreach (TreeNode childNode in startNode.Nodes)
+                recursiveEnableNode(childNode, enabled);
+        }
+
         // Property value changed
         private void layerProperties_PropertyValueChanged(object s, PropertyValueChangedEventArgs e)
         {
@@ -180,9 +192,21 @@ namespace StasisEditor.Controls
             // Enable/disable add child button
             addChildButton.Enabled = e.Node != null;
 
-            // Check for root node selection
             if (e.Node == rootNode)
+            {
+                // Disable both up and down buttons
+                upButton.Enabled = false;
+                downButton.Enabled = false;
                 return;
+            }
+            else
+            {
+                // Enable/disable move up button
+                upButton.Enabled = e.Node.Index > 0;
+
+                // Enable/disable move down button
+                downButton.Enabled = e.Node.Index < e.Node.Parent.Nodes.Count - 1;
+            }
 
             // Set layer's property grid
             layerProperties.SelectedObject = (e.Node as LayerNode).layer.properties;
@@ -196,6 +220,11 @@ namespace StasisEditor.Controls
             // Enable/disable layer
             LayerNode node = (e.Node as LayerNode);
             node.layer.enabled = node.Checked;
+
+            // Enable/disable child nodes
+            // (nodes only, not layers -- the renderer stops at the first disabled layer anyway, so it's effectively the same behavior as disabling the layers)
+            foreach (TreeNode childNode in e.Node.Nodes)
+                recursiveEnableNode(childNode, node.Checked);
 
             // Set changes made
             _controller.setChangesMade(true);
