@@ -193,6 +193,10 @@ namespace StasisCore
             RenderTarget2D renderTarget = new RenderTarget2D(_game.GraphicsDevice, current.Width, current.Height);
             Texture2D baseTexture = new Texture2D(_game.GraphicsDevice, renderTarget.Width, renderTarget.Height);
             Color[] data = new Color[renderTarget.Width * renderTarget.Height];
+            for (int i = 0; i < (renderTarget.Width * renderTarget.Height); i++)
+                data[i] = Color.Transparent;
+            baseTexture.SetData<Color>(data);
+
             Texture2D texture = TextureController.getTexture(options.textureTag);
 
             // Handle missing texture
