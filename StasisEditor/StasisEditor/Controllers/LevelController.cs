@@ -29,6 +29,12 @@ namespace StasisEditor.Controllers
         public Vector2 getWorldOffset() { return _screenCenter + (new Vector2(_levelView.getWidth(), _levelView.getHeight()) / 2) / _editorController.getScale(); }
         public Vector2 getWorldMouse() { return new Vector2(_mouse.X, _mouse.Y) / _editorController.getScale() - getWorldOffset(); }
 
+        // getLevel
+        public Level getLevel()
+        {
+            return _level;
+        }
+
         // resizeGraphicsDevice
         public void resizeGraphicsDevice(int width, int height)
         {

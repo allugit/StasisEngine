@@ -26,7 +26,7 @@ namespace StasisEditor.Views
         void addLevelSettings(Level level);
         void removeLevelSettings();
 
-        void addBrushToolbar();
-        void removeBrushToolbar();
+        void addActorToolbar();
+        void removeActorToolbar();
     }
 }

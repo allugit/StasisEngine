@@ -84,7 +84,7 @@
     <Compile Include="Controllers\LevelController.cs" />
     <Compile Include="Controllers\MaterialController.cs" />
     <Compile Include="Controllers\TextureController.cs" />
-    <Compile Include="Controls\BrushToolbar.cs">
+    <Compile Include="Controls\ActorToolbar.cs">
       <SubType>Component</SubType>
     </Compile>
     <Compile Include="Controls\FileSafeTextBox.cs">
@@ -206,8 +206,8 @@
     </BootstrapperPackage>
   </ItemGroup>
   <ItemGroup>
-    <EmbeddedResource Include="Controls\BrushToolbar.resx">
-      <DependentUpon>BrushToolbar.cs</DependentUpon>
+    <EmbeddedResource Include="Controls\ActorToolbar.resx">
+      <DependentUpon>ActorToolbar.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Controls\LevelSettings.resx">
       <DependentUpon>LevelSettings.cs</DependentUpon>

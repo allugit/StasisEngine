@@ -92,29 +92,11 @@ namespace StasisEditor.Controllers
             _editorView.enableLoadLevel(false);
             _editorView.enableSaveLevel(true);
 
-            /*
-            Debug.Assert(_level == null);
+            // Add level settings
+            _editorView.addLevelSettings(_levelController.getLevel());
 
-            // Create model
-            _level = new Level();
-
-            // Create level view
-            _levelView = new LevelView();
-            _levelView.setController(this);
-            
-            // Add level view to editor view
-            _editorView.addLevelView(_levelView);
-            _editorView.addLevelSettings(level);
-
-            // Create brush toolbar
-            _editorView.addBrushToolbar();
-
-            // Modify menu items
-            _editorView.enableNewLevel(false);
-            _editorView.enableCloseLevel(true);
-            _editorView.enableLoadLevel(false);
-            _editorView.enableSaveLevel(true);
-            */
+            // Create actor toolbar
+            _editorView.addActorToolbar();
         }
 
         // closeLevel
@@ -128,23 +110,11 @@ namespace StasisEditor.Controllers
             _editorView.enableLoadLevel(true);
             _editorView.enableSaveLevel(false);
 
-            /*
-            // Remove level views
+            // Remove level settings
             _editorView.removeLevelSettings();
-            _editorView.removeLevelView();
 
-            // Remove toolbar
-            _editorView.removeBrushToolbar();
-
-            // Modify menu
-            _editorView.enableNewLevel(true);
-            _editorView.enableCloseLevel(false);
-            _editorView.enableLoadLevel(true);
-            _editorView.enableSaveLevel(false);
-
-            // Remove model
-            _level = null;
-            */
+            // Remove actor toolbar
+            _editorView.removeActorToolbar();
         }
 
         // handleXNADraw

@@ -5,7 +5,7 @@ using System.Windows.Forms;
 
 namespace StasisEditor.Controls
 {
-    public class BrushToolbar : ToolStrip
+    public class ActorToolbar : ToolStrip
     {
         private ToolStripButton boxButton;
         private ToolStripButton circleButton;
@@ -21,7 +21,7 @@ namespace StasisEditor.Controls
         private ToolStripButton ropeButton;
         private ToolStripButton edgeButton;
     
-        public BrushToolbar()
+        public ActorToolbar()
             : base()
         {
             InitializeComponent();
@@ -29,7 +29,7 @@ namespace StasisEditor.Controls
 
         private void InitializeComponent()
         {
-            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(BrushToolbar));
+            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(ActorToolbar));
             this.boxButton = new System.Windows.Forms.ToolStripButton();
             this.circleButton = new System.Windows.Forms.ToolStripButton();
             this.edgeButton = new System.Windows.Forms.ToolStripButton();
