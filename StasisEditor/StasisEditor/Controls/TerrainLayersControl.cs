@@ -43,6 +43,9 @@ namespace StasisEditor.Controls
 
             // Set tree view to root node
             layersTreeView.Nodes.Add(rootNode);
+
+            // Expand all
+            layersTreeView.ExpandAll();
         }
 
         // recursiveBuildNode

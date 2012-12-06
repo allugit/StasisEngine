@@ -38,7 +38,7 @@ namespace StasisCore.Models
             List<TerrainLayerResource> layersCopy = new List<TerrainLayerResource>();
             foreach (TerrainLayerResource layer in _layers)
                 layersCopy.Add(layer.clone());
-            return new TerrainGroupLayerResource(layersCopy, _properties.clone());
+            return new TerrainGroupLayerResource(layersCopy, _properties.clone(), enabled);
         }
     }
 }

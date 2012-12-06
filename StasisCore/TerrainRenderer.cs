@@ -82,6 +82,10 @@ namespace StasisCore
         // recursiveRenderLayers
         private Texture2D recursiveRenderLayers(Texture2D current, TerrainLayerResource layer)
         {
+            // Stop rendering at disabled layers
+            if (!layer.enabled)
+                return current;
+
             switch (layer.type)
             {
                 case TerrainLayerType.Root:

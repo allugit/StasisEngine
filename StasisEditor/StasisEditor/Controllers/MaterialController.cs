@@ -25,6 +25,7 @@ namespace StasisEditor.Controllers
 
         public MaterialController(EditorController editorController, IMaterialView materialView)
         {
+            Console.WriteLine("Initializing material controller.");
             _editorController = editorController;
             _materialView = materialView;
 
@@ -36,7 +37,15 @@ namespace StasisEditor.Controllers
 
             // Test material data
             TerrainRootLayerResource rootLayer = new TerrainRootLayerResource();
-            rootLayer.layers.Add(new TerrainTextureLayerResource());
+            rootLayer.layers.Add(new TerrainTextureLayerResource(new TextureProperties(TerrainBlendType.Opaque, 1f, 1f, "rock")));
+            rootLayer.layers.Add(new TerrainNoiseLayerResource(new NoiseProperties(NoiseType.Perlin, TerrainBlendType.Overlay, WorleyFeature.F1, Vector2.Zero, 1, Vector2.Zero, 1.1f, 0.5f, 2f, 1f, Color.Black, Color.White, 1)));
+            rootLayer.layers.Add(new TerrainGroupLayerResource(
+                new List<TerrainLayerResource>(new TerrainLayerResource[] {
+                    new TerrainTextureLayerResource(new TextureProperties(TerrainBlendType.Opaque, 1f, 1f, "rock_3")),
+                    new TerrainNoiseLayerResource(new NoiseProperties(NoiseType.Worley, TerrainBlendType.Overlay, WorleyFeature.F1, Vector2.Zero, 1, Vector2.Zero, 1.1f, 0.5f, 2f, 2f, Color.Black, Color.White, 1))
+                }),
+                new GroupProperties(TerrainBlendType.Overlay), false));
+
             _materials[(int)MaterialType.Terrain].Add(new TerrainMaterialResource("Rock", rootLayer));
             _materials[(int)MaterialType.Terrain].Add(new TerrainMaterialResource("Dirt", rootLayer));
             _materials[(int)MaterialType.Terrain].Add(new TerrainMaterialResource("Snow", rootLayer));
@@ -154,6 +163,7 @@ namespace StasisEditor.Controllers
                     TerrainMaterialResource terrainMaterial = material as TerrainMaterialResource;
 
                     // Test data
+                    /*
                     TexturedVertexFormat[] vertices = new TexturedVertexFormat[3];
                     float vertexScale = 20f;
                     vertices[0].color = new Vector3(1, 1, 1);
@@ -165,13 +175,16 @@ namespace StasisEditor.Controllers
                     vertices[2].color = new Vector3(1, 1, 1);
                     vertices[2].position = new Vector3(0, 1f, 0) * vertexScale;
                     vertices[2].texCoord = new Vector2(0, 1f);
+                    */
 
                     // Resize graphics device
                     int graphicsDeviceWidth = XNAResources.graphicsDevice.Viewport.Width;
                     int graphicsDeviceHeight = XNAResources.graphicsDevice.Viewport.Height;
-                    float baseScale = 35f;
-                    int textureWidth = (int)(1f * baseScale);
-                    int textureHeight = (int)(1f * baseScale);
+                    //float baseScale = 35f;
+                    //int textureWidth = (int)(1f * baseScale);
+                    //int textureHeight = (int)(1f * baseScale);
+                    int textureWidth = 512;
+                    int textureHeight = 512;
                     _editorController.resizeGraphicsDevice(textureWidth, textureHeight);
 
                     Texture2D materialTexture = _terrainRenderer.renderMaterial(terrainMaterial, textureWidth, textureHeight);
