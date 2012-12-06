@@ -263,30 +263,30 @@ namespace StasisEditor.Controls
         // Node check changed
         private void layersTreeView_AfterCheck(object sender, TreeViewEventArgs e)
         {
-            /*
-            Debug.Assert(e.Node != rootNode);
+            Debug.Assert(e.Node is LayerNode);
+            LayerNode node = e.Node as LayerNode;
+            Debug.Assert(node.layer.type != TerrainLayerType.Root);
 
-            // Enable/disable layer
-            LayerNode node = (e.Node as LayerNode);
+            // Set layer's enabled status
             node.layer.enabled = node.Checked;
 
-            // Enable/disable child nodes
+            // Recursively update child nodes' enabled status
             // (nodes only, not layers -- the renderer stops at the first disabled layer anyway, so it's effectively the same behavior as disabling the layers)
             foreach (TreeNode childNode in e.Node.Nodes)
                 recursiveEnableNode(childNode, node.Checked);
 
             // Set changes made
             _controller.setChangesMade(true);
-            */
         }
 
+        // Checkbox validation
         private void layersTreeView_BeforeCheck(object sender, TreeViewCancelEventArgs e)
         {
-            /*
-            // Prevent root from being unchecked
-            if (e.Node == rootNode)
+            // Prevent root node from being unchecked
+            Debug.Assert(e.Node is LayerNode);
+            LayerNode node = e.Node as LayerNode;
+            if (node.layer.type == TerrainLayerType.Root)
                 e.Cancel = true;
-            */
         }
     }
 }
