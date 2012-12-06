@@ -180,10 +180,6 @@ namespace StasisEditor.Controllers
                     foreach (TerrainLayerResource layer in terrainMaterial.layers)
                         canvas = _terrainRenderer.renderLayer(canvas, layer);
 
-                    // Restore graphics device
-                    _editorController.resizeGraphicsDevice(graphicsDeviceWidth, graphicsDeviceHeight);
-                    XNAResources.graphicsDevice.Clear(Color.Black);
-
                     if (_materialPreview == null)
                     {
                         // Open material preview
@@ -197,6 +193,10 @@ namespace StasisEditor.Controllers
                         _materialPreview.updatePreview(canvas);
                         //_materialView.Focus();
                     }
+
+                    // Restore graphics device
+                    _editorController.resizeGraphicsDevice(graphicsDeviceWidth, graphicsDeviceHeight);
+                    XNAResources.graphicsDevice.Clear(Color.Black);
 
                     break;
 

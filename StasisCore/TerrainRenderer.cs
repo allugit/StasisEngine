@@ -201,7 +201,10 @@ namespace StasisCore
 
             // Handle missing texture
             if (texture == null)
-                return baseTexture;
+            {
+                texture = new Texture2D(_game.GraphicsDevice, renderTarget.Width, renderTarget.Height);
+                texture.SetData<Color>(data);
+            }
 
             // Initialize shader
             switch (options.blendType)
