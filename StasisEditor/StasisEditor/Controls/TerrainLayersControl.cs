@@ -192,27 +192,29 @@ namespace StasisEditor.Controls
         // Remove layer
         private void removeLayerButton_Click(object sender, EventArgs e)
         {
-            /*
-            TreeNode selectedNode = layersTreeView.SelectedNode;
-            Debug.Assert(selectedNode != null);
-            Debug.Assert(selectedNode != rootNode);
+            Debug.Assert(layersTreeView.SelectedNode is LayerNode);
+            LayerNode node = layersTreeView.SelectedNode as LayerNode;
+            Debug.Assert(node.layer.type != TerrainLayerType.Root);
 
             // Display a warning that child nodes will be destroyed
-            if (MessageBox.Show("Are you sure you want to remove this node and all its child nodes?", "Remove Nodes", MessageBoxButtons.YesNo) == DialogResult.Yes)
-            {
-                // Determine parent layer
-                TerrainLayerResource parent = selectedNode.Parent == rootNode ? null : (selectedNode.Parent as LayerNode).layer;
+            bool doRemove = false;
+            if (node.layer.type == TerrainLayerType.Root || node.layer.type == TerrainLayerType.Group)
+                doRemove = MessageBox.Show("Are you sure you want to remove this node and all its child nodes?", "Remove Nodes", MessageBoxButtons.YesNo) == DialogResult.Yes;
+            else
+                doRemove = true;
 
+            if (doRemove)
+            {
                 // Remove layer
-                _controller.removeTerrainLayer(_material, parent, (selectedNode as LayerNode).layer);
+                TerrainGroupLayerResource parent = (node.Parent as LayerNode).layer as TerrainGroupLayerResource;
+                _controller.removeTerrainLayer(parent, node.layer);
 
                 // Refresh tree view
-                populateTreeView(_material.layers);
+                populateTreeView(_material.rootLayer);
 
                 // Set changes made
                 _controller.setChangesMade(true);
             }
-            */
         }
 
         // recursiveEnableNode
