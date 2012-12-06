@@ -6,8 +6,8 @@ namespace StasisCore.Models
 {
     public class TerrainNoiseLayerResource : TerrainLayerResource
     {
-        public TerrainNoiseLayerResource(List<TerrainLayerResource> layers = null, LayerProperties properties = null, bool enabled = true)
-            : base(layers, enabled)
+        public TerrainNoiseLayerResource(LayerProperties properties = null, bool enabled = true)
+            : base(enabled)
         {
             // Default options
             if (properties == null)
@@ -41,10 +41,7 @@ namespace StasisCore.Models
         // clone
         public override TerrainLayerResource clone()
         {
-            List<TerrainLayerResource> layersCopy = new List<TerrainLayerResource>();
-            foreach (TerrainLayerResource layer in _layers)
-                layersCopy.Add(layer.clone());
-            return new TerrainNoiseLayerResource(layersCopy, _properties.clone());
+            return new TerrainNoiseLayerResource(_properties.clone());
         }
     }
 }

@@ -5,8 +5,8 @@ namespace StasisCore.Models
 {
     public class TerrainTextureLayerResource : TerrainLayerResource
     {
-        public TerrainTextureLayerResource(List<TerrainLayerResource> layers = null, LayerProperties properties = null, bool enabled = true)
-            : base(layers, enabled)
+        public TerrainTextureLayerResource(LayerProperties properties = null, bool enabled = true)
+            : base(enabled)
         {
             // Default options
             if (properties == null)
@@ -25,10 +25,7 @@ namespace StasisCore.Models
         // clone
         public override TerrainLayerResource clone()
         {
-            List<TerrainLayerResource> layersCopy = new List<TerrainLayerResource>();
-            foreach (TerrainLayerResource layer in _layers)
-                layersCopy.Add(layer.clone());
-            return new TerrainTextureLayerResource(layersCopy, _properties.clone());
+            return new TerrainTextureLayerResource(properties.clone());
         }
     }
 }

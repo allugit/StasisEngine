@@ -67,9 +67,55 @@ namespace StasisCore
             pixel.SetData<Color>(new[] { Color.White });
         }
 
-        // Create canvas
-        public Texture2D createCanvas(float worldScale, TexturedVertexFormat[] vertices)
+        // Render material
+        public Texture2D renderMaterial(TerrainMaterialResource material, int textureWidth, int textureHeight)
         {
+            // Create canvas
+            Texture2D canvas = createCanvas(textureWidth, textureHeight);
+
+            // Recursively render layers
+            canvas = recursiveRenderLayers(canvas, material.rootLayer);
+
+            return canvas;
+        }
+
+        // recursiveRenderLayers
+        private Texture2D recursiveRenderLayers(Texture2D current, TerrainLayerResource layer)
+        {
+            switch (layer.type)
+            {
+                case TerrainLayerType.Root:
+                    // Render child layers without doing anything else
+                    TerrainRootLayerResource rootLayer = layer as TerrainRootLayerResource;
+                    foreach (TerrainLayerResource childLayer in rootLayer.layers)
+                        current = recursiveRenderLayers(current, childLayer);
+                    break;
+
+                case TerrainLayerType.Group:
+                    // Render child layers, and do a texture pass at the end
+                    TerrainGroupLayerResource groupLayer = layer as TerrainGroupLayerResource;
+                    Texture2D groupCanvas = createCanvas(current.Width, current.Height);
+                    foreach (TerrainLayerResource childLayer in groupLayer.layers)
+                        groupCanvas = recursiveRenderLayers(groupCanvas, childLayer);
+                    current = texturePass(current, groupCanvas, groupLayer.properties as GroupProperties);
+                    break;
+
+                case TerrainLayerType.Texture:
+                    current = texturePass(current, (layer.properties as TextureProperties));
+                    break;
+
+                case TerrainLayerType.Noise:
+                    current = noisePass(current, (layer.properties as NoiseProperties));
+                    break;
+            }
+
+            return current;
+        }
+
+        // Create canvas
+        private Texture2D createCanvas(int width, int height)
+        {
+            /*
             // Find boundaries
             Vector2 topLeftBoundary = new Vector2(vertices[0].position.X, vertices[0].position.Y);
             Vector2 bottomRightBoundary = new Vector2(vertices[0].position.X, vertices[0].position.Y);
@@ -84,6 +130,7 @@ namespace StasisCore
             // Calculate width and height
             int width = (int)((bottomRightBoundary.X - topLeftBoundary.X) * worldScale);
             int height = (int)((bottomRightBoundary.Y - topLeftBoundary.Y) * worldScale);
+            */
 
             Texture2D canvas = new Texture2D(_game.GraphicsDevice, width, height);
             Color[] data = new Color[width * height];
@@ -93,10 +140,11 @@ namespace StasisCore
             return canvas;
         }
 
+        /*
         // Render layer
-        public Texture2D renderLayer(Texture2D current, TerrainLayerResource resource)
+        private Texture2D renderLayer(Texture2D current, TerrainLayerResource resource)
         {
-            Debug.Assert(resource.layers != null);
+            //Debug.Assert(resource.layers != null);
 
             // Don't render disabled layers
             if (!resource.enabled)
@@ -104,13 +152,11 @@ namespace StasisCore
 
             switch (resource.type)
             {
-                    /*
                 case TerrainLayerType.Base:
                     PrimitivesProperties primitivesProperties = (resource as TerrainPrimitivesLayerResource).properties as PrimitivesProperties;
                     Texture2D baseTexture = TextureController.getTexture(primitivesProperties.textureTag);
                     result = primitivesPass(baseTexture, worldScale, vertices, primitiveCount);
                     break;
-                    */
 
                 case TerrainLayerType.Texture:
                     current = texturePass(current, (resource.properties as TextureProperties));
@@ -127,6 +173,7 @@ namespace StasisCore
 
             return current;
         }
+        */
 
         /*
         // Primitives pass
@@ -186,8 +233,18 @@ namespace StasisCore
         }
         */
 
-        // Texture pass
+        // Overloaded texture pass (normal)
         private Texture2D texturePass(Texture2D current, TextureProperties options)
+        {
+            return texturePass(current, TextureController.getTexture(options.textureTag), options.blendType, options.scale, options.multiplier);
+        }
+        // Overloaded texture pass (group)
+        private Texture2D texturePass(Texture2D canvas, Texture2D groupCanvas, GroupProperties options)
+        {
+            return texturePass(canvas, groupCanvas, options.blendType, 1f, 1f);
+        }
+        // Texture pass
+        private Texture2D texturePass(Texture2D current, Texture2D texture, TerrainBlendType blendType, float scale, float multiplier)
         {
             // Initialize render targets and textures
             RenderTarget2D renderTarget = new RenderTarget2D(_game.GraphicsDevice, current.Width, current.Height);
@@ -197,8 +254,6 @@ namespace StasisCore
                 data[i] = Color.Transparent;
             baseTexture.SetData<Color>(data);
 
-            Texture2D texture = TextureController.getTexture(options.textureTag);
-
             // Handle missing texture
             if (texture == null)
             {
@@ -207,7 +262,7 @@ namespace StasisCore
             }
 
             // Initialize shader
-            switch (options.blendType)
+            switch (blendType)
             {
                 case TerrainBlendType.Opaque:
                     _textureEffect.CurrentTechnique = _textureEffect.Techniques["opaque"];
@@ -223,8 +278,8 @@ namespace StasisCore
             }
             _textureEffect.Parameters["canvasSize"].SetValue(new Vector2(current.Width, current.Height));
             _textureEffect.Parameters["textureSize"].SetValue(new Vector2(texture.Width, texture.Height));
-            _textureEffect.Parameters["scale"].SetValue(options.scale);
-            _textureEffect.Parameters["multiplier"].SetValue(options.multiplier);
+            _textureEffect.Parameters["scale"].SetValue(scale);
+            _textureEffect.Parameters["multiplier"].SetValue(multiplier);
             
             // Switch render target
             _game.GraphicsDevice.SetRenderTarget(renderTarget);

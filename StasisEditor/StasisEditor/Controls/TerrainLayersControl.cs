@@ -16,7 +16,6 @@ namespace StasisEditor.Controls
     {
         private IMaterialController _controller;
         private TerrainMaterialResource _material;
-        private TreeNode rootNode;
         //private List<TerrainLayerResource> _layers;
 
         public TerrainLayersControl(IMaterialController controller, TerrainMaterialResource material)
@@ -29,57 +28,58 @@ namespace StasisEditor.Controls
             Dock = DockStyle.Fill;
             upButton.Text = char.ConvertFromUtf32(0x000002c4);
             downButton.Text = char.ConvertFromUtf32(0x000002c5);
-
-            // Add root node to tree view
-            rootNode = new TreeNode("Root");
-            rootNode.Checked = true;
-            layersTreeView.Nodes.Add(rootNode);
         }
 
         // populate tree view
-        public void populateTreeView(List<TerrainLayerResource> layers)
+        public void populateTreeView(TerrainRootLayerResource rootLayer)
         {
+            List<TerrainLayerResource> layers = rootLayer.layers;
+
             // Clear existing nodes
-            rootNode.Nodes.Clear();
+            layersTreeView.Nodes.Clear();
 
-            // Build root nodes
-            List<LayerNode> rootNodes = new List<LayerNode>();
-            foreach (TerrainLayerResource layer in layers)
-                rootNodes.Add(new LayerNode(layer, layer.enabled));
+            // Build nodes
+            LayerNode rootNode = recursiveBuildNode(rootLayer);
 
-            // Recursively populate root nodes
-            foreach (LayerNode node in rootNodes)
-                recursiveNodePopulate(node);
-
-            // Set root nodes
-            foreach (LayerNode node in rootNodes)
-                rootNode.Nodes.Add(node);
-
-            // Expand all
-            rootNode.ExpandAll();
+            // Set tree view to root node
+            layersTreeView.Nodes.Add(rootNode);
         }
 
-        // recursiveNodePopulate
-        private void recursiveNodePopulate(LayerNode node)
+        // recursiveBuildNode
+        private LayerNode recursiveBuildNode(TerrainLayerResource layer)
         {
-            foreach (TerrainLayerResource layer in node.layer.layers)
+            LayerNode node = new LayerNode(layer, layer.enabled);
+            switch (layer.type)
             {
-                LayerNode childNode = new LayerNode(layer, layer.enabled);
-                node.Nodes.Add(childNode);
-                recursiveNodePopulate(childNode);
+                case TerrainLayerType.Root:
+                    TerrainRootLayerResource rootLayer = layer as TerrainRootLayerResource;
+                    foreach (TerrainLayerResource childLayer in rootLayer.layers)
+                        node.Nodes.Add(recursiveBuildNode(childLayer));
+                    break;
+
+                case TerrainLayerType.Group:
+                    TerrainGroupLayerResource groupLayer = layer as TerrainGroupLayerResource;
+                    foreach (TerrainLayerResource childLayer in groupLayer.layers)
+                        node.Nodes.Add(recursiveBuildNode(childLayer));
+                    break;
             }
+            return node;
         }
 
         // Select layer
         public void selectLayer(TerrainLayerResource layer)
         {
+            /*
             LayerNode targetNode = recursiveGetNode(rootNode, layer);
             layersTreeView.SelectedNode = targetNode;
+            */
         }
 
         // recursiveGetLayer
         private LayerNode recursiveGetNode(TreeNode startNode, TerrainLayerResource layer)
         {
+            return null;
+            /*
             // Check this node's layer
             if (startNode != rootNode)
             {
@@ -97,11 +97,13 @@ namespace StasisEditor.Controls
             }
 
             return null;
+            */
         }
 
         // Move layer up
         private void upButton_Click(object sender, EventArgs e)
         {
+            /*
             TreeNode selectedNode = layersTreeView.SelectedNode;
             Debug.Assert(selectedNode != null);
             Debug.Assert(selectedNode != rootNode);
@@ -121,11 +123,13 @@ namespace StasisEditor.Controls
 
             // Set changes made
             _controller.setChangesMade(true);
+            */
         }
 
         // Move layer down
         private void downButton_Click(object sender, EventArgs e)
         {
+            /*
             TreeNode selectedNode = layersTreeView.SelectedNode;
             Debug.Assert(selectedNode != null);
             Debug.Assert(selectedNode != rootNode);
@@ -145,11 +149,13 @@ namespace StasisEditor.Controls
 
             // Set changes made
             _controller.setChangesMade(true);
+            */
         }
 
         // Add child node clicked
         private void addChildButton_Click(object sender, EventArgs e)
         {
+            /*
             TreeNode selectedNode = layersTreeView.SelectedNode;
             if (selectedNode == null)
                 return;
@@ -177,11 +183,13 @@ namespace StasisEditor.Controls
                 // Set changes made
                 _controller.setChangesMade(true);
             }
+            */
         }
 
         // Remove layer
         private void removeLayerButton_Click(object sender, EventArgs e)
         {
+            /*
             TreeNode selectedNode = layersTreeView.SelectedNode;
             Debug.Assert(selectedNode != null);
             Debug.Assert(selectedNode != rootNode);
@@ -201,6 +209,7 @@ namespace StasisEditor.Controls
                 // Set changes made
                 _controller.setChangesMade(true);
             }
+            */
         }
 
         // recursiveEnableNode
@@ -223,6 +232,7 @@ namespace StasisEditor.Controls
         // Selected node changed
         private void layersTreeView_AfterSelect(object sender, TreeViewEventArgs e)
         {
+            /*
             // Enable/disable remove button
             removeLayerButton.Enabled = e.Node != rootNode;
 
@@ -247,11 +257,13 @@ namespace StasisEditor.Controls
 
             // Set layer's property grid
             layerProperties.SelectedObject = (e.Node as LayerNode).layer.properties;
+            */
         }
 
         // Node check changed
         private void layersTreeView_AfterCheck(object sender, TreeViewEventArgs e)
         {
+            /*
             Debug.Assert(e.Node != rootNode);
 
             // Enable/disable layer
@@ -265,13 +277,16 @@ namespace StasisEditor.Controls
 
             // Set changes made
             _controller.setChangesMade(true);
+            */
         }
 
         private void layersTreeView_BeforeCheck(object sender, TreeViewCancelEventArgs e)
         {
+            /*
             // Prevent root from being unchecked
             if (e.Node == rootNode)
                 e.Cancel = true;
+            */
         }
     }
 }

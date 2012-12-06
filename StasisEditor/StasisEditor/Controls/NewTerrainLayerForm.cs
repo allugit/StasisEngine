@@ -17,7 +17,10 @@ namespace StasisEditor.Controls
 
             List<TerrainLayerType> types = new List<TerrainLayerType>();
             foreach (TerrainLayerType type in Enum.GetValues(typeof(TerrainLayerType)))
-                types.Add(type);
+            {
+                if (type != TerrainLayerType.Group && type != TerrainLayerType.Root)
+                    types.Add(type);
+            }
 
             layerTypeListBox.DataSource = types;
         }

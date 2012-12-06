@@ -35,18 +35,11 @@ namespace StasisEditor.Controllers
                 _materials[i] = new List<MaterialResource>();
 
             // Test material data
-            List<TerrainLayerResource> testLayers = new List<TerrainLayerResource>();
-            testLayers.Add(
-                new TerrainTextureLayerResource(
-                    null,
-                    new TextureProperties(TerrainBlendType.Opaque, 1, 1, "rock")));
-            testLayers.Add(
-                new TerrainNoiseLayerResource(
-                    new List<TerrainLayerResource>(new[] { new TerrainNoiseLayerResource(null, null) }),
-                    null));
-            _materials[(int)MaterialType.Terrain].Add(new TerrainMaterialResource("Rock", testLayers));
-            _materials[(int)MaterialType.Terrain].Add(new TerrainMaterialResource("Dirt", TerrainLayerResource.copyFrom(testLayers)));
-            _materials[(int)MaterialType.Terrain].Add(new TerrainMaterialResource("Snow", new List<TerrainLayerResource>()));
+            TerrainRootLayerResource rootLayer = new TerrainRootLayerResource();
+            rootLayer.layers.Add(new TerrainTextureLayerResource());
+            _materials[(int)MaterialType.Terrain].Add(new TerrainMaterialResource("Rock", rootLayer));
+            _materials[(int)MaterialType.Terrain].Add(new TerrainMaterialResource("Dirt", rootLayer));
+            _materials[(int)MaterialType.Terrain].Add(new TerrainMaterialResource("Snow", rootLayer));
             _materials[(int)MaterialType.Trees].Add(new TreeMaterialResource("Acuminate"));
             _materials[(int)MaterialType.Fluid].Add(new FluidMaterialResource("Water"));
             _materials[(int)MaterialType.Items].Add(new ItemMaterialResource("Rope Gun"));
@@ -105,20 +98,25 @@ namespace StasisEditor.Controllers
         // addTerrainLayer
         public void addTerrainLayer(TerrainMaterialResource material, TerrainLayerResource layer, TerrainLayerResource parent = null)
         {
+            /*
             List<TerrainLayerResource> parentList = parent == null ? material.layers : parent.layers;
             parentList.Add(layer);
+            */
         }
 
         // removeTerrainLayer
         public void removeTerrainLayer(TerrainMaterialResource material, TerrainLayerResource parent, TerrainLayerResource layer)
         {
+            /*
             List<TerrainLayerResource> parentList = parent == null ? material.layers : parent.layers;
             parentList.Remove(layer);
+            */
         }
 
         // moveTerrainLayerUp
         public void moveTerrainLayerUp(TerrainMaterialResource material, TerrainLayerResource parent, TerrainLayerResource layer)
         {
+            /*
             List<TerrainLayerResource> parentList = parent == null ? material.layers : parent.layers;
             int currentIndex = parentList.IndexOf(layer);
             Debug.Assert(currentIndex != 0);
@@ -128,11 +126,13 @@ namespace StasisEditor.Controllers
 
             // Insert at the position before its last position
             parentList.Insert(currentIndex - 1, layer);
+            */
         }
 
         // moveTerrainLayerDown
         public void moveTerrainLayerDown(TerrainMaterialResource material, TerrainLayerResource parent, TerrainLayerResource layer)
         {
+            /*
             List<TerrainLayerResource> parentList = parent == null ? material.layers : parent.layers;
             int currentIndex = parentList.IndexOf(layer);
             Debug.Assert(currentIndex != parentList.Count - 1);
@@ -142,6 +142,7 @@ namespace StasisEditor.Controllers
 
             // Insert at the position after its last position
             parentList.Insert(currentIndex + 1, layer);
+            */
         }
 
         // preview
@@ -173,24 +174,28 @@ namespace StasisEditor.Controllers
                     int textureHeight = (int)(1f * baseScale);
                     _editorController.resizeGraphicsDevice(textureWidth, textureHeight);
 
+                    Texture2D materialTexture = _terrainRenderer.renderMaterial(terrainMaterial, textureWidth, textureHeight);
+
+                    /*
                     // Create canvas
                     Texture2D canvas = _terrainRenderer.createCanvas(35, vertices);
 
                     // Render layers
                     foreach (TerrainLayerResource layer in terrainMaterial.layers)
                         canvas = _terrainRenderer.renderLayer(canvas, layer);
+                    */
 
                     if (_materialPreview == null)
                     {
                         // Open material preview
-                        _materialPreview = new MaterialPreview(this, canvas, String.Format("{0} Preview", material.name));
+                        _materialPreview = new MaterialPreview(this, materialTexture, String.Format("{0} Preview", material.name));
                         _materialPreview.Show();
                     }
                     else
                     {
                         // Put preview window on top
                         //_materialPreview.Focus();
-                        _materialPreview.updatePreview(canvas);
+                        _materialPreview.updatePreview(materialTexture);
                         //_materialView.Focus();
                     }
 

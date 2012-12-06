@@ -7,7 +7,9 @@ namespace StasisCore.Models
     {
         Texture = 0,
         Noise,
-        DecalSpatter
+        DecalSpatter,
+        Group,
+        Root
     };
 
     public enum TerrainBlendType
@@ -21,12 +23,10 @@ namespace StasisCore.Models
     {
         protected TerrainLayerType _type;
         protected LayerProperties _properties;
-        protected List<TerrainLayerResource> _layers;
         protected bool _enabled;
 
         public TerrainLayerType type { get { return _type; } }
         public LayerProperties properties { get { return _properties; } set { _properties = value; } }
-        public List<TerrainLayerResource> layers { get { return _layers; } set { _layers = value; } }
         public bool enabled { get { return _enabled; } set { _enabled = value; } }
 
         // create
@@ -54,11 +54,8 @@ namespace StasisCore.Models
         }
 
         // Constructor
-        public TerrainLayerResource(List<TerrainLayerResource> layers, bool enabled)
+        public TerrainLayerResource(bool enabled)
         {
-            // Default layers
-            _layers = layers == null ? new List<TerrainLayerResource>() : layers;
-
             _enabled = enabled;
         }
 

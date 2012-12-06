@@ -6,22 +6,24 @@ namespace StasisCore.Models
 {
     public class TerrainMaterialResource : MaterialResource
     {
-        private List<TerrainLayerResource> _layers;
-
-        [Browsable(false)]
-        public List<TerrainLayerResource> layers { get { return _layers; } set { _layers = layers; } }
+        private TerrainRootLayerResource _rootLayer;
+        public TerrainRootLayerResource rootLayer { get { return _rootLayer; } }
 
         // Constructor
-        public TerrainMaterialResource(string name, List<TerrainLayerResource> layers) : base(name)
+        public TerrainMaterialResource(string name, TerrainRootLayerResource rootLayer = null) : base(name)
         {
-            _layers = layers;
+            // Default root layer
+            if (rootLayer == null)
+                rootLayer = new TerrainRootLayerResource();
+
+            _rootLayer = rootLayer;
             _type = MaterialType.Terrain;
         }
 
         // clone
         public override MaterialResource clone()
         {
-            return new TerrainMaterialResource(_name, TerrainLayerResource.copyFrom(_layers));
+            return new TerrainMaterialResource(_name, _rootLayer.clone() as TerrainRootLayerResource);
         }
     }
 }
