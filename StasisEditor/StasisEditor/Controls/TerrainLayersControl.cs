@@ -155,8 +155,8 @@ namespace StasisEditor.Controls
             */
         }
 
-        // Add child node clicked
-        private void addChildButton_Click(object sender, EventArgs e)
+        // Add layer button clicked
+        private void addButton_Click(object sender, EventArgs e)
         {
             /*
             TreeNode selectedNode = layersTreeView.SelectedNode;
@@ -235,32 +235,29 @@ namespace StasisEditor.Controls
         // Selected node changed
         private void layersTreeView_AfterSelect(object sender, TreeViewEventArgs e)
         {
-            /*
-            // Enable/disable remove button
-            removeLayerButton.Enabled = e.Node != rootNode;
+            Debug.Assert(e.Node is LayerNode);
+            LayerNode node = e.Node as LayerNode;
 
-            // Enable/disable add child button
-            addChildButton.Enabled = e.Node != null;
+            // Remove button's status
+            removeLayerButton.Enabled = node.layer.type != TerrainLayerType.Root;
 
-            if (e.Node == rootNode)
+            // Add button's status
+            addLayerButton.Enabled = true;
+
+            // Up/down buttons' status
+            if (node.layer.type == TerrainLayerType.Root)
             {
-                // Disable both up and down buttons
                 upButton.Enabled = false;
                 downButton.Enabled = false;
-                return;
             }
             else
             {
-                // Enable/disable move up button
                 upButton.Enabled = e.Node.Index > 0;
-
-                // Enable/disable move down button
                 downButton.Enabled = e.Node.Index < e.Node.Parent.Nodes.Count - 1;
             }
 
             // Set layer's property grid
-            layerProperties.SelectedObject = (e.Node as LayerNode).layer.properties;
-            */
+            layerProperties.SelectedObject = node.layer.properties;
         }
 
         // Node check changed

@@ -34,8 +34,9 @@
             this.removeLayerButton = new System.Windows.Forms.Button();
             this.layerProperties = new System.Windows.Forms.PropertyGrid();
             this.label2 = new System.Windows.Forms.Label();
-            this.addChildButton = new System.Windows.Forms.Button();
+            this.addLayerButton = new System.Windows.Forms.Button();
             this.layersTreeView = new StasisEditor.Controls.LayersTreeView();
+            this.addGroupButton = new System.Windows.Forms.Button();
             this.SuspendLayout();
             // 
             // label1
@@ -102,17 +103,17 @@
             this.label2.TabIndex = 7;
             this.label2.Text = "Layer Properties";
             // 
-            // addChildButton
+            // addLayerButton
             // 
-            this.addChildButton.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.addChildButton.Enabled = false;
-            this.addChildButton.Location = new System.Drawing.Point(122, 148);
-            this.addChildButton.Name = "addChildButton";
-            this.addChildButton.Size = new System.Drawing.Size(70, 23);
-            this.addChildButton.TabIndex = 9;
-            this.addChildButton.Text = "Add Child";
-            this.addChildButton.UseVisualStyleBackColor = true;
-            this.addChildButton.Click += new System.EventHandler(this.addChildButton_Click);
+            this.addLayerButton.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+            this.addLayerButton.Enabled = false;
+            this.addLayerButton.Location = new System.Drawing.Point(122, 148);
+            this.addLayerButton.Name = "addLayerButton";
+            this.addLayerButton.Size = new System.Drawing.Size(70, 23);
+            this.addLayerButton.TabIndex = 9;
+            this.addLayerButton.Text = "Add";
+            this.addLayerButton.UseVisualStyleBackColor = true;
+            this.addLayerButton.Click += new System.EventHandler(this.addButton_Click);
             // 
             // layersTreeView
             // 
@@ -129,11 +130,21 @@
             this.layersTreeView.AfterCheck += new System.Windows.Forms.TreeViewEventHandler(this.layersTreeView_AfterCheck);
             this.layersTreeView.AfterSelect += new System.Windows.Forms.TreeViewEventHandler(this.layersTreeView_AfterSelect);
             // 
+            // addGroupButton
+            // 
+            this.addGroupButton.Location = new System.Drawing.Point(0, 147);
+            this.addGroupButton.Name = "addGroupButton";
+            this.addGroupButton.Size = new System.Drawing.Size(75, 23);
+            this.addGroupButton.TabIndex = 10;
+            this.addGroupButton.Text = "Add Group";
+            this.addGroupButton.UseVisualStyleBackColor = true;
+            // 
             // TerrainLayersControl
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.Controls.Add(this.addChildButton);
+            this.Controls.Add(this.addGroupButton);
+            this.Controls.Add(this.addLayerButton);
             this.Controls.Add(this.layersTreeView);
             this.Controls.Add(this.label2);
             this.Controls.Add(this.layerProperties);
@@ -159,6 +170,7 @@
         private System.Windows.Forms.PropertyGrid layerProperties;
         private System.Windows.Forms.Label label2;
         private LayersTreeView layersTreeView;
-        private System.Windows.Forms.Button addChildButton;
+        private System.Windows.Forms.Button addLayerButton;
+        private System.Windows.Forms.Button addGroupButton;
     }
 }
