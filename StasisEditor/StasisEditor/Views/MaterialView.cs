@@ -14,13 +14,11 @@ namespace StasisEditor.Views
     public partial class MaterialView : UserControl, IMaterialView
     {
         private IMaterialController _controller;
-        private List<MaterialResource>[] _materialCopies;
         private MaterialProperties _materialProperties;
 
         public MaterialView()
         {
             int numMaterialTypes = Enum.GetValues(typeof(MaterialType)).Length;
-            _materialCopies = new List<MaterialResource>[numMaterialTypes];
 
             InitializeComponent();
 
@@ -33,15 +31,6 @@ namespace StasisEditor.Views
         public void setController(IMaterialController controller)
         {
             _controller = controller;
-        }
-
-        // copyMaterials
-        public void copyMaterials()
-        {
-            // Set material copies
-            int numMaterialTypes = Enum.GetValues(typeof(MaterialType)).Length;
-            for (int i = 0; i < numMaterialTypes; i++)
-                _materialCopies[i] = MaterialResource.copyFrom(_controller.getMaterials((MaterialType)i));
         }
 
         // setChangesMade
@@ -83,25 +72,12 @@ namespace StasisEditor.Views
             _materialProperties = null;
         }
 
-        /*
-        // Close button clicked
-        private void closeButton_Click(object sender, EventArgs e)
-        {
-            if (_controller.getChangesMade())
-            {
-                if (MessageBox.Show("Are you sure you want to close the Materials View? Any unsaved changes will be lost.", "Close Materials", MessageBoxButtons.OKCancel) == DialogResult.OK)
-                    Close();
-            }
-            else
-                Close();
-        }*/
-
         // Material type selection changed
         private void materialTypesListBox_SelectedValueChanged(object sender, EventArgs e)
         {
             ListBox listBox = (sender as ListBox);
             MaterialType type = (MaterialType)Enum.Parse(typeof(MaterialType), listBox.SelectedItem as string);
-            materialsListBox.DataSource = _materialCopies[(int)type];
+            materialsListBox.DataSource = _controller.getMaterials(type);
         }
 
         // Selected materials changed
@@ -136,12 +112,5 @@ namespace StasisEditor.Views
         {
             _controller.setAutoUpdatePreview(autoUpdatePreview.Checked);
         }
-
-        /*
-        // Form closed
-        private void MaterialView_FormClosed(object sender, FormClosedEventArgs e)
-        {
-            _controller.viewClosed();
-        }*/
     }
 }

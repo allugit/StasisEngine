@@ -13,7 +13,7 @@ namespace StasisEditor.Controllers
         bool getChangesMade();
         void preview(MaterialResource material);
         void previewClosed();
-        ReadOnlyCollection<MaterialResource> getMaterials(MaterialType type);
+        List<MaterialResource> getMaterials(MaterialType type);
         void addTerrainLayer(TerrainGroupLayerResource parent, TerrainLayerResource layer, int index);
         void removeTerrainLayer(TerrainGroupLayerResource parent, TerrainLayerResource layer);
         void moveTerrainLayerUp(TerrainGroupLayerResource parent, TerrainLayerResource layer);

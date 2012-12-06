@@ -12,6 +12,5 @@ namespace StasisEditor.Views
         void setChangesMade(bool status);
         void setAutoUpdatePreview(bool status);
         MaterialResource getSelectedMaterial();
-        void copyMaterials();
     }
 }

@@ -56,7 +56,6 @@ namespace StasisEditor.Controllers
 
             // Initialize material view
             materialView.setController(this);
-            materialView.copyMaterials();
             materialView.setAutoUpdatePreview(true);
 
             // Create terrain renderer
@@ -99,9 +98,9 @@ namespace StasisEditor.Controllers
         }
 
         // getMaterials
-        public ReadOnlyCollection<MaterialResource> getMaterials(MaterialType type)
+        public List<MaterialResource> getMaterials(MaterialType type)
         {
-            return _materials[(int)type].AsReadOnly();
+            return _materials[(int)type];
         }
 
         // addTerrainLayer
