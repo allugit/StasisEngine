@@ -41,6 +41,7 @@
             this.mainSplit = new System.Windows.Forms.SplitContainer();
             this.editorTabControl = new System.Windows.Forms.TabControl();
             this.levelTab = new System.Windows.Forms.TabPage();
+            this.levelView = new StasisEditor.Views.LevelView();
             this.materialsTab = new System.Windows.Forms.TabPage();
             this.materialView = new StasisEditor.Views.MaterialView();
             this.texturesTab = new System.Windows.Forms.TabPage();
@@ -51,6 +52,7 @@
             this.mainSplit.Panel2.SuspendLayout();
             this.mainSplit.SuspendLayout();
             this.editorTabControl.SuspendLayout();
+            this.levelTab.SuspendLayout();
             this.materialsTab.SuspendLayout();
             this.texturesTab.SuspendLayout();
             this.SuspendLayout();
@@ -155,11 +157,21 @@
             // levelTab
             // 
             this.levelTab.BackColor = System.Drawing.SystemColors.ControlDark;
+            this.levelTab.Controls.Add(this.levelView);
             this.levelTab.Location = new System.Drawing.Point(4, 22);
             this.levelTab.Name = "levelTab";
             this.levelTab.Size = new System.Drawing.Size(729, 562);
             this.levelTab.TabIndex = 0;
             this.levelTab.Text = "Level";
+            // 
+            // levelView
+            // 
+            this.levelView.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.levelView.Location = new System.Drawing.Point(0, 0);
+            this.levelView.Margin = new System.Windows.Forms.Padding(0);
+            this.levelView.Name = "levelView";
+            this.levelView.Size = new System.Drawing.Size(729, 562);
+            this.levelView.TabIndex = 0;
             // 
             // materialsTab
             // 
@@ -167,7 +179,7 @@
             this.materialsTab.Location = new System.Drawing.Point(4, 22);
             this.materialsTab.Margin = new System.Windows.Forms.Padding(0);
             this.materialsTab.Name = "materialsTab";
-            this.materialsTab.Size = new System.Drawing.Size(754, 381);
+            this.materialsTab.Size = new System.Drawing.Size(729, 562);
             this.materialsTab.TabIndex = 1;
             this.materialsTab.Text = "Materials";
             this.materialsTab.UseVisualStyleBackColor = true;
@@ -178,7 +190,7 @@
             this.materialView.Location = new System.Drawing.Point(0, 0);
             this.materialView.Margin = new System.Windows.Forms.Padding(0);
             this.materialView.Name = "materialView";
-            this.materialView.Size = new System.Drawing.Size(754, 381);
+            this.materialView.Size = new System.Drawing.Size(729, 562);
             this.materialView.TabIndex = 0;
             // 
             // texturesTab
@@ -187,7 +199,7 @@
             this.texturesTab.Location = new System.Drawing.Point(4, 22);
             this.texturesTab.Margin = new System.Windows.Forms.Padding(0);
             this.texturesTab.Name = "texturesTab";
-            this.texturesTab.Size = new System.Drawing.Size(754, 381);
+            this.texturesTab.Size = new System.Drawing.Size(729, 562);
             this.texturesTab.TabIndex = 2;
             this.texturesTab.Text = "Textures";
             this.texturesTab.UseVisualStyleBackColor = true;
@@ -205,7 +217,7 @@
             // 
             this.itemsTab.Location = new System.Drawing.Point(4, 22);
             this.itemsTab.Name = "itemsTab";
-            this.itemsTab.Size = new System.Drawing.Size(754, 381);
+            this.itemsTab.Size = new System.Drawing.Size(729, 562);
             this.itemsTab.TabIndex = 3;
             this.itemsTab.Text = "Items";
             this.itemsTab.UseVisualStyleBackColor = true;
@@ -214,7 +226,7 @@
             // 
             this.scriptsTab.Location = new System.Drawing.Point(4, 22);
             this.scriptsTab.Name = "scriptsTab";
-            this.scriptsTab.Size = new System.Drawing.Size(754, 381);
+            this.scriptsTab.Size = new System.Drawing.Size(729, 562);
             this.scriptsTab.TabIndex = 4;
             this.scriptsTab.Text = "Scripts";
             this.scriptsTab.UseVisualStyleBackColor = true;
@@ -233,6 +245,7 @@
             ((System.ComponentModel.ISupportInitialize)(this.mainSplit)).EndInit();
             this.mainSplit.ResumeLayout(false);
             this.editorTabControl.ResumeLayout(false);
+            this.levelTab.ResumeLayout(false);
             this.materialsTab.ResumeLayout(false);
             this.texturesTab.ResumeLayout(false);
             this.ResumeLayout(false);
@@ -259,6 +272,7 @@
         private TextureView textureView;
         private System.Windows.Forms.TabPage itemsTab;
         private System.Windows.Forms.TabPage scriptsTab;
+        private LevelView levelView;
 
     }
 }

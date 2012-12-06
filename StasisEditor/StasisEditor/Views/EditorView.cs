@@ -47,6 +47,12 @@ namespace StasisEditor.Views
             return textureView;
         }
 
+        // getLevelView
+        public ILevelView getLevelView()
+        {
+            return levelView;
+        }
+
         // getLevelContainerSize
         public System.Drawing.Point getLevelContainerSize()
         {

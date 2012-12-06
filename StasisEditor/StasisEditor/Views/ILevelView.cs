@@ -8,7 +8,7 @@ namespace StasisEditor.Views
 {
     public interface ILevelView : IBaseView
     {
-        void setController(EditorController controller);
+        void setController(ILevelController controller);
         int getWidth();
         int getHeight();
         void handleXNADraw();

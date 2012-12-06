@@ -19,24 +19,13 @@ namespace StasisEditor.Controllers
         private XNAController _xnaController;
         private MaterialController _materialController;
         private TextureController _textureController;
+        private LevelController _levelController;
 
         private IEditorView _editorView;
-        private ILevelView _levelView;
-
-        private Level _level;
-        public Level level { get { return _level; } }
 
         private BindingList<TextureResource> _textureResources;
 
-        private bool _isMouseOverView;
-        private System.Drawing.Point _mouse;
         private float _scale = 35f;
-        private Vector2 _screenCenter;
-
-        public bool isMouseOverView { get { return _isMouseOverView; } }
-        public float scale { get { return _scale; } }
-        public Vector2 worldOffset { get { return _screenCenter + (new Vector2(_levelView.getWidth(), _levelView.getHeight()) / 2) / scale; } }
-        public Vector2 worldMouse { get { return new Vector2(_mouse.X, _mouse.Y) / scale - worldOffset; } }
 
         public EditorController(XNAController xnaController)
         {
@@ -59,7 +48,13 @@ namespace StasisEditor.Controllers
 
             // Create texture controller
             _textureController = new TextureController(this, _editorView.getTextureView());
+
+            // Create level controller
+            _levelController = new LevelController(this, _editorView.getLevelView());
         }
+
+        // getScale
+        public float getScale() { return _scale; }
 
         // getTextureResources
         public BindingList<TextureResource> getTextureResources()
@@ -89,6 +84,15 @@ namespace StasisEditor.Controllers
         // createNewLevel
         public void createNewLevel()
         {
+            _levelController.createNewLevel();
+
+            // Modify menu items
+            _editorView.enableNewLevel(false);
+            _editorView.enableCloseLevel(true);
+            _editorView.enableLoadLevel(false);
+            _editorView.enableSaveLevel(true);
+
+            /*
             Debug.Assert(_level == null);
 
             // Create model
@@ -110,11 +114,21 @@ namespace StasisEditor.Controllers
             _editorView.enableCloseLevel(true);
             _editorView.enableLoadLevel(false);
             _editorView.enableSaveLevel(true);
+            */
         }
 
         // closeLevel
         public void closeLevel()
         {
+            _levelController.closeLevel();
+
+            // Modify menu
+            _editorView.enableNewLevel(true);
+            _editorView.enableCloseLevel(false);
+            _editorView.enableLoadLevel(true);
+            _editorView.enableSaveLevel(false);
+
+            /*
             // Remove level views
             _editorView.removeLevelSettings();
             _editorView.removeLevelView();
@@ -130,45 +144,13 @@ namespace StasisEditor.Controllers
 
             // Remove model
             _level = null;
-        }
-
-        // mouseMove
-        public void mouseMove(System.Windows.Forms.MouseEventArgs e)
-        {
-            int x = Math.Min(Math.Max(0, e.X), _levelView.getWidth());
-            int y = Math.Min(Math.Max(0, e.Y), _levelView.getHeight());
-
-            bool ctrl = Input.newKey.IsKeyDown(Microsoft.Xna.Framework.Input.Keys.LeftControl);
-
-            if (ctrl)
-            {
-                int deltaX = _mouse.X - x;
-                int deltaY = _mouse.Y - y;
-
-                _screenCenter -= new Vector2(deltaX, deltaY) / scale;
-            }
-
-            _mouse.X = x;
-            _mouse.Y = y;
-        }
-
-        // mouseEnter
-        public void mouseEnter()
-        {
-            _isMouseOverView = true;
-        }
-
-        // mouseLeave
-        public void mouseLeave()
-        {
-            _isMouseOverView = false;
+            */
         }
 
         // handleXNADraw
         public void handleXNADraw()
         {
-            if (_levelView != null)
-                _levelView.handleXNADraw();
+            _levelController.handleXNADraw();
         }
 
         // exit
