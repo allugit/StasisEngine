@@ -33,6 +33,8 @@ namespace StasisEditor.Controls
         // populate tree view
         public void populateTreeView(TerrainRootLayerResource rootLayer)
         {
+            SuspendLayout();
+
             List<TerrainLayerResource> layers = rootLayer.layers;
 
             // Clear existing nodes
@@ -46,6 +48,8 @@ namespace StasisEditor.Controls
 
             // Expand all
             layersTreeView.ExpandAll();
+
+            ResumeLayout();
         }
 
         // recursiveBuildNode
@@ -101,53 +105,41 @@ namespace StasisEditor.Controls
         // Move layer up
         private void upButton_Click(object sender, EventArgs e)
         {
-            /*
-            TreeNode selectedNode = layersTreeView.SelectedNode;
-            Debug.Assert(selectedNode != null);
-            Debug.Assert(selectedNode != rootNode);
-            TerrainLayerResource layer = (selectedNode as LayerNode).layer;
+            Debug.Assert(layersTreeView.SelectedNode is LayerNode);
+            LayerNode node = layersTreeView.SelectedNode as LayerNode;
 
-            // Determine parent
-            TerrainLayerResource parent = selectedNode.Parent == rootNode ? null : (selectedNode.Parent as LayerNode).layer;
-
-            // Move terrain layer up
-            _controller.moveTerrainLayerUp(_material, parent, layer);
+            // Move layer up
+            TerrainGroupLayerResource parent = (node.Parent as LayerNode).layer as TerrainGroupLayerResource;
+            _controller.moveTerrainLayerUp(parent, node.layer);
 
             // Refresh tree view
-            populateTreeView(_material.layers);
+            populateTreeView(_material.rootLayer);
 
             // Select repositioned layer
-            selectLayer(layer);
+            selectLayer(node.layer);
 
             // Set changes made
             _controller.setChangesMade(true);
-            */
         }
 
         // Move layer down
         private void downButton_Click(object sender, EventArgs e)
         {
-            /*
-            TreeNode selectedNode = layersTreeView.SelectedNode;
-            Debug.Assert(selectedNode != null);
-            Debug.Assert(selectedNode != rootNode);
-            TerrainLayerResource layer = (selectedNode as LayerNode).layer;
+            Debug.Assert(layersTreeView.SelectedNode is LayerNode);
+            LayerNode node = layersTreeView.SelectedNode as LayerNode;
 
-            // Determine parent
-            TerrainLayerResource parent = selectedNode.Parent == rootNode ? null : (selectedNode.Parent as LayerNode).layer;
-
-            // Move terrain layer up
-            _controller.moveTerrainLayerDown(_material, parent, layer);
+            // Move layer down
+            TerrainGroupLayerResource parent = (node.Parent as LayerNode).layer as TerrainGroupLayerResource;
+            _controller.moveTerrainLayerDown(parent, node.layer);
 
             // Refresh tree view
-            populateTreeView(_material.layers);
+            populateTreeView(_material.rootLayer);
 
             // Select repositioned layer
-            selectLayer(layer);
+            selectLayer(node.layer);
 
             // Set changes made
             _controller.setChangesMade(true);
-            */
         }
 
         // Add layer button clicked

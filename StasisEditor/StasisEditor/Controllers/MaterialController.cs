@@ -117,35 +117,33 @@ namespace StasisEditor.Controllers
         }
 
         // moveTerrainLayerUp
-        public void moveTerrainLayerUp(TerrainMaterialResource material, TerrainLayerResource parent, TerrainLayerResource layer)
+        public void moveTerrainLayerUp(TerrainGroupLayerResource parent, TerrainLayerResource layer)
         {
-            /*
-            List<TerrainLayerResource> parentList = parent == null ? material.layers : parent.layers;
-            int currentIndex = parentList.IndexOf(layer);
-            Debug.Assert(currentIndex != 0);
+            Debug.Assert(parent.layers.Contains(layer));
+
+            // Store current layer index
+            int index = parent.layers.IndexOf(layer);
 
             // Remove layer from parent list
-            parentList.Remove(layer);
+            parent.layers.Remove(layer);
 
             // Insert at the position before its last position
-            parentList.Insert(currentIndex - 1, layer);
-            */
+            parent.layers.Insert(index - 1, layer);
         }
 
         // moveTerrainLayerDown
-        public void moveTerrainLayerDown(TerrainMaterialResource material, TerrainLayerResource parent, TerrainLayerResource layer)
+        public void moveTerrainLayerDown(TerrainGroupLayerResource parent, TerrainLayerResource layer)
         {
-            /*
-            List<TerrainLayerResource> parentList = parent == null ? material.layers : parent.layers;
-            int currentIndex = parentList.IndexOf(layer);
-            Debug.Assert(currentIndex != parentList.Count - 1);
+            Debug.Assert(parent.layers.Contains(layer));
+
+            // Store current layer index
+            int index = parent.layers.IndexOf(layer);
 
             // Remove layer from parent list
-            parentList.Remove(layer);
+            parent.layers.Remove(layer);
 
             // Insert at the position after its last position
-            parentList.Insert(currentIndex + 1, layer);
-            */
+            parent.layers.Insert(index + 1, layer);
         }
 
         // preview
