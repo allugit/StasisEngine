@@ -36,7 +36,6 @@
             this.label2 = new System.Windows.Forms.Label();
             this.addLayerButton = new System.Windows.Forms.Button();
             this.layersTreeView = new StasisEditor.Controls.LayersTreeView();
-            this.addGroupButton = new System.Windows.Forms.Button();
             this.SuspendLayout();
             // 
             // label1
@@ -130,20 +129,10 @@
             this.layersTreeView.AfterCheck += new System.Windows.Forms.TreeViewEventHandler(this.layersTreeView_AfterCheck);
             this.layersTreeView.AfterSelect += new System.Windows.Forms.TreeViewEventHandler(this.layersTreeView_AfterSelect);
             // 
-            // addGroupButton
-            // 
-            this.addGroupButton.Location = new System.Drawing.Point(0, 147);
-            this.addGroupButton.Name = "addGroupButton";
-            this.addGroupButton.Size = new System.Drawing.Size(75, 23);
-            this.addGroupButton.TabIndex = 10;
-            this.addGroupButton.Text = "Add Group";
-            this.addGroupButton.UseVisualStyleBackColor = true;
-            // 
             // TerrainLayersControl
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.Controls.Add(this.addGroupButton);
             this.Controls.Add(this.addLayerButton);
             this.Controls.Add(this.layersTreeView);
             this.Controls.Add(this.label2);
@@ -171,6 +160,5 @@
         private System.Windows.Forms.Label label2;
         private LayersTreeView layersTreeView;
         private System.Windows.Forms.Button addLayerButton;
-        private System.Windows.Forms.Button addGroupButton;
     }
 }

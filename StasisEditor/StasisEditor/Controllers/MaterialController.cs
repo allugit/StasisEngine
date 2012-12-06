@@ -105,21 +105,15 @@ namespace StasisEditor.Controllers
         }
 
         // addTerrainLayer
-        public void addTerrainLayer(TerrainMaterialResource material, TerrainLayerResource layer, TerrainLayerResource parent = null)
+        public void addTerrainLayer(TerrainGroupLayerResource parent, TerrainLayerResource layer, int index)
         {
-            /*
-            List<TerrainLayerResource> parentList = parent == null ? material.layers : parent.layers;
-            parentList.Add(layer);
-            */
+            parent.layers.Insert(index, layer);
         }
 
         // removeTerrainLayer
-        public void removeTerrainLayer(TerrainMaterialResource material, TerrainLayerResource parent, TerrainLayerResource layer)
+        public void removeTerrainLayer(TerrainGroupLayerResource parent, TerrainLayerResource layer)
         {
-            /*
-            List<TerrainLayerResource> parentList = parent == null ? material.layers : parent.layers;
-            parentList.Remove(layer);
-            */
+            parent.layers.Remove(layer);
         }
 
         // moveTerrainLayerUp

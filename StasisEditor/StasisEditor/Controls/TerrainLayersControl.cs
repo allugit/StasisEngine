@@ -72,35 +72,30 @@ namespace StasisEditor.Controls
         // Select layer
         public void selectLayer(TerrainLayerResource layer)
         {
-            /*
-            LayerNode targetNode = recursiveGetNode(rootNode, layer);
+            Debug.Assert(layersTreeView.Nodes[0] is LayerNode);
+            LayerNode targetNode = recursiveGetNode(layersTreeView.Nodes[0] as LayerNode, layer);
             layersTreeView.SelectedNode = targetNode;
-            */
         }
 
-        // recursiveGetLayer
-        private LayerNode recursiveGetNode(TreeNode startNode, TerrainLayerResource layer)
+        // recursiveGetNode
+        private LayerNode recursiveGetNode(LayerNode startNode, TerrainLayerResource layer)
         {
-            return null;
-            /*
             // Check this node's layer
-            if (startNode != rootNode)
-            {
-                LayerNode layerNode = startNode as LayerNode;
-                if (layerNode.layer == layer)
-                    return layerNode;
-            }
+            if (startNode.layer == layer)
+                return startNode;
 
-            // Spawn more searches, checking the resulting layers
-            foreach (TreeNode node in startNode.Nodes)
+            if (startNode.layer.type == TerrainLayerType.Root || startNode.layer.type == TerrainLayerType.Group)
             {
-                LayerNode result = recursiveGetNode(node, layer);
-                if (result != null && result.layer == layer)
-                    return result;
+                // Spawn more searches, checking results
+                foreach (TreeNode node in startNode.Nodes)
+                {
+                    LayerNode result = recursiveGetNode(node as LayerNode, layer);
+                    if (result != null && result.layer == layer)
+                        return result;
+                }
             }
 
             return null;
-            */
         }
 
         // Move layer up
@@ -158,35 +153,40 @@ namespace StasisEditor.Controls
         // Add layer button clicked
         private void addButton_Click(object sender, EventArgs e)
         {
-            /*
-            TreeNode selectedNode = layersTreeView.SelectedNode;
-            if (selectedNode == null)
-                return;
+            Debug.Assert(layersTreeView.SelectedNode is LayerNode);
 
-            // Show new terrain layer select box
             NewTerrainLayerForm newLayerForm = new NewTerrainLayerForm();
             if (newLayerForm.ShowDialog() == DialogResult.OK)
             {
-                // Determine parent layer
-                TerrainLayerResource parent = selectedNode == rootNode ? null : (selectedNode as LayerNode).layer;
-
-                // Add new layer to material
+                LayerNode node = layersTreeView.SelectedNode as LayerNode;
                 TerrainLayerResource newLayer = TerrainLayerResource.create(newLayerForm.getSelectedType());
-                _controller.addTerrainLayer(_material, newLayer, parent);
 
-                // Refresh the tree view
-                populateTreeView(_material.layers);
+                if (node.layer.type == TerrainLayerType.Root || node.layer.type == TerrainLayerType.Group)
+                {
+                    // Insert into group
+                    _controller.addTerrainLayer(node.layer as TerrainGroupLayerResource, newLayer, node.Nodes.Count);
+                }
+                else
+                {
+                    // Create new layer
+                    LayerNode parent = node.Parent as LayerNode;
 
-                // Select new layer
+                    // Add new layer to parent
+                    _controller.addTerrainLayer(parent.layer as TerrainGroupLayerResource, newLayer, node.Index + 1);
+                }
+
+                // Refresh tree
+                populateTreeView(_material.rootLayer);
+
+                // Select layer
                 selectLayer(newLayer);
 
-                // Refocus on tree view
+                // Refocus on tree
                 layersTreeView.Focus();
 
                 // Set changes made
                 _controller.setChangesMade(true);
             }
-            */
         }
 
         // Remove layer
