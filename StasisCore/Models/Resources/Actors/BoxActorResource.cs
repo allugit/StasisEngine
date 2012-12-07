@@ -27,6 +27,7 @@ namespace StasisCore.Models
             _bodyProperties = bodyProperties as BodyProperties;
         }
 
+        // clone
         public override ActorResource clone()
         {
             return new BoxActorResource(_generalProperties.clone(), _boxProperties.clone(), _bodyProperties.clone());

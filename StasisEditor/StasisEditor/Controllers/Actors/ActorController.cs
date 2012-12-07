@@ -19,6 +19,27 @@ namespace StasisEditor.Controllers.Actors
             _renderer = levelController.getShapeRenderer();
         }
 
+        // getLevelController
+        public ILevelController getLevelController()
+        {
+            return _levelController;
+        }
+
+        // mouseMove
+        abstract public void mouseMove();
+
+        // mouseEnterView
+        abstract public void mouseEnterView();
+
+        // mouseLeaveView
+        abstract public void mouseLeaveView();
+
+        // keyDown
+        abstract public void keyDown();
+
+        // keyUp
+        abstract public void keyUp();
+
         // draw
         abstract public void draw();
 

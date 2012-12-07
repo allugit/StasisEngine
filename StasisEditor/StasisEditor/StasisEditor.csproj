@@ -76,7 +76,13 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Controllers\Actors\ActorController.cs" />
-    <Compile Include="Controllers\Actors\BoxController.cs" />
+    <Compile Include="Controllers\Actors\Input\ActorInputController.cs" />
+    <Compile Include="Controllers\Actors\BoxActorController.cs" />
+    <Compile Include="Controllers\Actors\Input\BoxActorInputController.cs" />
+    <Compile Include="Controllers\Actors\Input\GeneralActorInputController.cs" />
+    <Compile Include="Controllers\Actors\IBoxActorController.cs" />
+    <Compile Include="Controllers\Actors\IGeneralActorController.cs" />
+    <Compile Include="Controllers\Actors\IActorController.cs" />
     <Compile Include="Controllers\IController.cs" />
     <Compile Include="Controllers\EditorController.cs" />
     <Compile Include="Controllers\IEditorController.cs" />

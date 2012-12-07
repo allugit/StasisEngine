@@ -116,7 +116,7 @@ namespace StasisEditor.Controllers
             switch (buttonName)
             {
                 case "boxButton":
-                    actorController = new BoxController(this);
+                    actorController = new BoxActorController(this);
                     break;
             }
 
@@ -179,18 +179,30 @@ namespace StasisEditor.Controllers
             // Store screen space mouse coordinates
             _mouse.X = x;
             _mouse.Y = y;
+
+            // Pass input to actor controller
+            if (_selectedActorController != null)
+                _selectedActorController.mouseMove();
         }
 
         // mouseEnter
         public void mouseEnter()
         {
             _isMouseOverView = true;
+
+            // Pass input to actor controller
+            if (_selectedActorController != null)
+                _selectedActorController.mouseEnterView();
         }
 
         // mouseLeave
         public void mouseLeave()
         {
             _isMouseOverView = false;
+
+            // Pass input to actor controller
+            if (_selectedActorController != null)
+                _selectedActorController.mouseLeaveView();
         }
 
         #endregion
