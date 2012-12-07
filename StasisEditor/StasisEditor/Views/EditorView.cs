@@ -11,7 +11,6 @@ using Microsoft.Xna.Framework.Graphics;
 using StasisCore.Models;
 using StasisEditor.Controllers;
 using StasisEditor.Controls;
-using StasisEditor.Models;
 
 namespace StasisEditor.Views
 {
@@ -20,7 +19,7 @@ namespace StasisEditor.Views
         private EditorController _controller;
         private ILevelView _levelView;
         private LevelSettings _levelSettings;
-        private ActorToolbar _actorToolbar;
+        private ActorToolbar actorToolbar;
 
         // Constructor
         public EditorView()
@@ -92,19 +91,15 @@ namespace StasisEditor.Views
         }
 
         // addActorToolbar
-        public void addActorToolbar(ILevelController levelController)
+        public void addActorToolbar(ActorToolbar actorToolbar)
         {
-            _actorToolbar = new ActorToolbar();
-            _actorToolbar.setController(levelController);
-            mainSplit.Panel1.Controls.Add(_actorToolbar);
+            mainSplit.Panel1.Controls.Add(actorToolbar);
         }
 
         // removeActorToolbar
-        public void removeActorToolbar()
+        public void removeActorToolbar(ActorToolbar actorToolbar)
         {
-            mainSplit.Panel1.Controls.Remove(_actorToolbar);
-            _actorToolbar.Dispose();
-            _actorToolbar = null;
+            mainSplit.Panel1.Controls.Remove(actorToolbar);
         }
 
         // EditorForm closed event

@@ -7,7 +7,6 @@ using Microsoft.Xna.Framework.Graphics;
 using StasisCore;
 using StasisCore.Models;
 using StasisEditor.Views;
-using StasisEditor.Models;
 using StasisEditor.Controls;
 
 namespace StasisEditor.Controllers

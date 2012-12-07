@@ -75,6 +75,7 @@
             this.anchorToolStrip.Size = new System.Drawing.Size(206, 69);
             this.anchorToolStrip.TabIndex = 0;
             this.anchorToolStrip.Text = "Actor Toolbar";
+            this.anchorToolStrip.ItemClicked += new System.Windows.Forms.ToolStripItemClickedEventHandler(this.anchorToolStrip_ItemClicked);
             // 
             // boxButton
             // 
@@ -93,7 +94,7 @@
             this.circleButton.ImageTransparentColor = System.Drawing.Color.Magenta;
             this.circleButton.Margin = new System.Windows.Forms.Padding(0);
             this.circleButton.Name = "circleButton";
-            this.circleButton.Size = new System.Drawing.Size(23, 20);
+            this.circleButton.Size = new System.Drawing.Size(26, 26);
             this.circleButton.Text = "Circle";
             // 
             // terrainButton
@@ -103,7 +104,7 @@
             this.terrainButton.ImageTransparentColor = System.Drawing.Color.Magenta;
             this.terrainButton.Margin = new System.Windows.Forms.Padding(0);
             this.terrainButton.Name = "terrainButton";
-            this.terrainButton.Size = new System.Drawing.Size(23, 20);
+            this.terrainButton.Size = new System.Drawing.Size(26, 26);
             this.terrainButton.Text = "Terrain";
             // 
             // movingPlatformButton
@@ -113,7 +114,7 @@
             this.movingPlatformButton.ImageTransparentColor = System.Drawing.Color.Magenta;
             this.movingPlatformButton.Margin = new System.Windows.Forms.Padding(0);
             this.movingPlatformButton.Name = "movingPlatformButton";
-            this.movingPlatformButton.Size = new System.Drawing.Size(23, 20);
+            this.movingPlatformButton.Size = new System.Drawing.Size(26, 26);
             this.movingPlatformButton.Text = "Moving Platform (Signal Receiver)";
             // 
             // pressurePlateButton
@@ -123,7 +124,7 @@
             this.pressurePlateButton.ImageTransparentColor = System.Drawing.Color.Magenta;
             this.pressurePlateButton.Margin = new System.Windows.Forms.Padding(0);
             this.pressurePlateButton.Name = "pressurePlateButton";
-            this.pressurePlateButton.Size = new System.Drawing.Size(23, 20);
+            this.pressurePlateButton.Size = new System.Drawing.Size(26, 26);
             this.pressurePlateButton.Text = "Pressure Plate (Signal Transmitter)";
             // 
             // objectSpawnerButton
@@ -132,7 +133,7 @@
             this.objectSpawnerButton.Image = ((System.Drawing.Image)(resources.GetObject("objectSpawnerButton.Image")));
             this.objectSpawnerButton.ImageTransparentColor = System.Drawing.Color.Magenta;
             this.objectSpawnerButton.Name = "objectSpawnerButton";
-            this.objectSpawnerButton.Size = new System.Drawing.Size(23, 20);
+            this.objectSpawnerButton.Size = new System.Drawing.Size(26, 26);
             this.objectSpawnerButton.Text = "Object Spawner (Signal Receiver)";
             // 
             // ropeButton
@@ -142,7 +143,7 @@
             this.ropeButton.ImageTransparentColor = System.Drawing.Color.Magenta;
             this.ropeButton.Margin = new System.Windows.Forms.Padding(0);
             this.ropeButton.Name = "ropeButton";
-            this.ropeButton.Size = new System.Drawing.Size(23, 20);
+            this.ropeButton.Size = new System.Drawing.Size(26, 26);
             this.ropeButton.Text = "Rope";
             // 
             // timerButton
@@ -152,7 +153,7 @@
             this.timerButton.ImageTransparentColor = System.Drawing.Color.Magenta;
             this.timerButton.Margin = new System.Windows.Forms.Padding(0);
             this.timerButton.Name = "timerButton";
-            this.timerButton.Size = new System.Drawing.Size(23, 20);
+            this.timerButton.Size = new System.Drawing.Size(26, 26);
             this.timerButton.Text = "Timer (Signal Transmitter)";
             // 
             // fluidButton
@@ -162,7 +163,7 @@
             this.fluidButton.ImageTransparentColor = System.Drawing.Color.Magenta;
             this.fluidButton.Margin = new System.Windows.Forms.Padding(0);
             this.fluidButton.Name = "fluidButton";
-            this.fluidButton.Size = new System.Drawing.Size(23, 20);
+            this.fluidButton.Size = new System.Drawing.Size(26, 26);
             this.fluidButton.Text = "Fluid";
             // 
             // itemsButton
@@ -171,7 +172,7 @@
             this.itemsButton.Image = ((System.Drawing.Image)(resources.GetObject("itemsButton.Image")));
             this.itemsButton.ImageTransparentColor = System.Drawing.Color.Magenta;
             this.itemsButton.Name = "itemsButton";
-            this.itemsButton.Size = new System.Drawing.Size(23, 20);
+            this.itemsButton.Size = new System.Drawing.Size(26, 26);
             this.itemsButton.Text = "Items";
             // 
             // plantsButton
@@ -181,7 +182,7 @@
             this.plantsButton.ImageTransparentColor = System.Drawing.Color.Magenta;
             this.plantsButton.Margin = new System.Windows.Forms.Padding(0);
             this.plantsButton.Name = "plantsButton";
-            this.plantsButton.Size = new System.Drawing.Size(23, 20);
+            this.plantsButton.Size = new System.Drawing.Size(26, 26);
             this.plantsButton.Text = "Plants";
             // 
             // playerSpawnButton
@@ -191,7 +192,7 @@
             this.playerSpawnButton.ImageTransparentColor = System.Drawing.Color.Magenta;
             this.playerSpawnButton.Margin = new System.Windows.Forms.Padding(0);
             this.playerSpawnButton.Name = "playerSpawnButton";
-            this.playerSpawnButton.Size = new System.Drawing.Size(23, 20);
+            this.playerSpawnButton.Size = new System.Drawing.Size(26, 26);
             this.playerSpawnButton.Text = "Player Spawn";
             // 
             // goalButton
@@ -201,7 +202,7 @@
             this.goalButton.ImageTransparentColor = System.Drawing.Color.Magenta;
             this.goalButton.Margin = new System.Windows.Forms.Padding(0);
             this.goalButton.Name = "goalButton";
-            this.goalButton.Size = new System.Drawing.Size(23, 20);
+            this.goalButton.Size = new System.Drawing.Size(26, 26);
             this.goalButton.Text = "Goal";
             // 
             // ActorToolbar

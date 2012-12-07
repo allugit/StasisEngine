@@ -5,7 +5,6 @@ using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.Windows.Forms;
 using StasisEditor.Views;
-using StasisEditor.Models;
 using StasisCore.Models;
 
 namespace StasisEditor.Controllers

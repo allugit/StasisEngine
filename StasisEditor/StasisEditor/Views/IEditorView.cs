@@ -4,7 +4,6 @@ using System.Drawing;
 using StasisCore.Models;
 using StasisEditor.Controllers;
 using StasisEditor.Controls;
-using StasisEditor.Models;
 
 namespace StasisEditor.Views
 {
@@ -26,7 +25,7 @@ namespace StasisEditor.Views
         void addLevelSettings(LevelResource level);
         void removeLevelSettings();
 
-        void addActorToolbar(ILevelController controller);
-        void removeActorToolbar();
+        void addActorToolbar(ActorToolbar actorToolbar);
+        void removeActorToolbar(ActorToolbar actorToolbar);
     }
 }

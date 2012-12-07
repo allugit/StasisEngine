@@ -8,7 +8,6 @@ using System.Text.RegularExpressions;
 using System.Windows.Forms;
 using System.IO;
 using StasisEditor.Controllers;
-using StasisEditor.Models;
 using StasisEditor.Views;
 using StasisCore.Models;
 

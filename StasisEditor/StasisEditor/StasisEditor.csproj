@@ -75,6 +75,8 @@
     <Reference Include="System.Net" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Controllers\Actors\ActorController.cs" />
+    <Compile Include="Controllers\Actors\BoxController.cs" />
     <Compile Include="Controllers\IController.cs" />
     <Compile Include="Controllers\EditorController.cs" />
     <Compile Include="Controllers\IEditorController.cs" />
@@ -121,6 +123,7 @@
     <Compile Include="Views\LevelView.Designer.cs">
       <DependentUpon>LevelView.cs</DependentUpon>
     </Compile>
+    <Compile Include="Views\ShapeRenderer.cs" />
     <Compile Include="Views\TextureView.cs">
       <SubType>UserControl</SubType>
     </Compile>
@@ -146,7 +149,6 @@
       <DependentUpon>EditorView.cs</DependentUpon>
     </Compile>
     <Compile Include="Input.cs" />
-    <Compile Include="Models\Brush.cs" />
     <Compile Include="Views\IBaseView.cs" />
     <Compile Include="Views\IEditorView.cs" />
     <Compile Include="Views\ILevelView.cs" />
@@ -255,6 +257,9 @@
     <EmbeddedResource Include="Views\MaterialView.resx">
       <DependentUpon>MaterialView.cs</DependentUpon>
     </EmbeddedResource>
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="Models\" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <Import Project="$(MSBuildExtensionsPath)\Microsoft\XNA Game Studio\Microsoft.Xna.GameStudio.targets" />

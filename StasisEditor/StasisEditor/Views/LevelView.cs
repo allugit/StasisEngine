@@ -6,6 +6,7 @@ using System.Data;
 using System.Windows.Forms;
 using Microsoft.Xna.Framework;
 using StasisEditor.Controllers;
+using StasisEditor.Controllers.Actors;
 
 namespace StasisEditor.Views
 {
@@ -85,6 +86,12 @@ namespace StasisEditor.Views
         {
             // Draw grid
             drawGrid();
+
+            // Draw mouse position
+            drawMousePosition();
+
+            // Draw actor controllers
+            drawActorControllers();
         }
 
         // drawGrid
@@ -93,9 +100,8 @@ namespace StasisEditor.Views
             // Draw grid
             int screenWidth = surface.Width;
             int screenHeight = surface.Height;
-            float scale = _controller.getScale();
             Vector2 worldOffset = _controller.getWorldOffset();
-            Vector2 worldMouse = _controller.getWorldMouse();
+            float scale = _controller.getScale();
             Microsoft.Xna.Framework.Rectangle destRect = new Microsoft.Xna.Framework.Rectangle(0, 0, (int)(screenWidth + scale), (int)(screenHeight + scale));
             Vector2 gridOffset = new Vector2((worldOffset.X * scale) % scale, (worldOffset.Y * scale) % scale);
             Microsoft.Xna.Framework.Color color = new Microsoft.Xna.Framework.Color(new Vector3(0.2f, 0.2f, 0.2f));
@@ -107,8 +113,15 @@ namespace StasisEditor.Views
             // Horizontal grid lines
             for (float y = 0; y < destRect.Height; y += scale)
                 XNAResources.spriteBatch.Draw(XNAResources.pixel, new Microsoft.Xna.Framework.Rectangle(0, (int)(y + gridOffset.Y), screenWidth, 1), color);
+        }
 
-            // Draw mouse position
+        // drawMousePosition
+        private void drawMousePosition()
+        {
+            float scale = _controller.getScale();
+            Vector2 worldOffset = _controller.getWorldOffset();
+            Vector2 worldMouse = _controller.getWorldMouse();
+
             if (_controller.getIsMouseOverView())
             {
                 XNAResources.spriteBatch.Draw(
@@ -121,6 +134,14 @@ namespace StasisEditor.Views
                     0);
                 //level.editor.main.spriteBatch.DrawString(Main.arial, String.Format("{0}, {1}", worldMouse.X, worldMouse.Y), (worldMouse + worldOffset) * scale, Color.Gray);
             }
+        }
+
+        // drawActorControllers
+        private void drawActorControllers()
+        {
+            List<ActorController> actorControllers = _controller.getActorControllers();
+            foreach (ActorController actorController in actorControllers)
+                actorController.draw();
         }
     }
 }

@@ -7,7 +7,6 @@ using Microsoft.Xna.Framework;
 using StasisCore.Models;
 using StasisEditor.Views;
 using StasisEditor.Controls;
-using StasisEditor.Models;
 
 namespace StasisEditor.Controllers
 {
@@ -19,9 +18,11 @@ namespace StasisEditor.Controllers
         private XNAController _xnaController;
         private MaterialController _materialController;
         private TextureController _textureController;
-        private LevelController _levelController;
+        private ILevelController _levelController;
 
         private IEditorView _editorView;
+        private ShapeRenderer _shapeRenderer;
+        private ActorToolbar _actorToolbar;
 
         private BindingList<TextureResource> _textureResources;
 
@@ -51,6 +52,10 @@ namespace StasisEditor.Controllers
 
             // Create level controller
             _levelController = new LevelController(this, _editorView.getLevelView());
+
+            // Create shape renderer
+            _shapeRenderer = new ShapeRenderer(_levelController, XNAResources.spriteBatch);
+            _levelController.setShapeRenderer(_shapeRenderer);
         }
 
         // getScale
@@ -81,6 +86,12 @@ namespace StasisEditor.Controllers
             _xnaController.resizeGraphicsDevice(width, height);
         }
 
+        // setActorToolbarEnabled
+        public void setActorToolbarEnabled(bool status)
+        {
+            _actorToolbar.Enabled = status;
+        }
+
         // createNewLevel
         public void createNewLevel()
         {
@@ -96,7 +107,9 @@ namespace StasisEditor.Controllers
             _editorView.addLevelSettings(_levelController.getLevel());
 
             // Create actor toolbar
-            _editorView.addActorToolbar(_levelController);
+            _actorToolbar = new ActorToolbar();
+            _actorToolbar.setController(_levelController);
+            _editorView.addActorToolbar(_actorToolbar);
         }
 
         // closeLevel
@@ -114,7 +127,7 @@ namespace StasisEditor.Controllers
             _editorView.removeLevelSettings();
 
             // Remove actor toolbar
-            _editorView.removeActorToolbar();
+            _editorView.removeActorToolbar(_actorToolbar);
         }
 
         // handleXNADraw

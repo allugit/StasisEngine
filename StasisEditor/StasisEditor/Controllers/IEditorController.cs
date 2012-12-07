@@ -7,10 +7,14 @@ namespace StasisEditor.Controllers
 {
     public interface IEditorController : IController
     {
-        BindingList<TextureResource> getTextureResources();
         void resizeGraphicsDevice(int width, int height);
+
+        float getScale();
+
+        BindingList<TextureResource> getTextureResources();
         void addTextureResource(TextureResource resource);
         void removeTextureResource(TextureResource resource);
-        float getScale();
+
+        void setActorToolbarEnabled(bool status);
     }
 }
