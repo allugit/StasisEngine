@@ -85,7 +85,10 @@
     <Compile Include="Controllers\MaterialController.cs" />
     <Compile Include="Controllers\TextureController.cs" />
     <Compile Include="Controls\ActorToolbar.cs">
-      <SubType>Component</SubType>
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="Controls\ActorToolbar.Designer.cs">
+      <DependentUpon>ActorToolbar.cs</DependentUpon>
     </Compile>
     <Compile Include="Controls\FileSafeTextBox.cs">
       <SubType>Component</SubType>
@@ -162,6 +165,19 @@
     <Content Include="GameThumbnail.png">
       <XnaPlatformSpecific>true</XnaPlatformSpecific>
     </Content>
+    <None Include="Resources\object_spawner.png" />
+    <None Include="Resources\timer.png" />
+    <None Include="Resources\terrain.png" />
+    <None Include="Resources\rope.png" />
+    <None Include="Resources\pressure_plate.png" />
+    <None Include="Resources\player_spawn.png" />
+    <None Include="Resources\plants.png" />
+    <None Include="Resources\moving_platform.png" />
+    <None Include="Resources\items.png" />
+    <None Include="Resources\goal.png" />
+    <None Include="Resources\fluid.png" />
+    <None Include="Resources\circle.png" />
+    <None Include="Resources\box.png" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\..\StasisCoreContent\StasisCoreContent.contentproj">

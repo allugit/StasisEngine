@@ -96,7 +96,7 @@ namespace StasisEditor.Controllers
             _editorView.addLevelSettings(_levelController.getLevel());
 
             // Create actor toolbar
-            _editorView.addActorToolbar();
+            _editorView.addActorToolbar(_levelController);
         }
 
         // closeLevel

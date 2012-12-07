@@ -26,7 +26,7 @@ namespace StasisEditor.Views
         void addLevelSettings(LevelResource level);
         void removeLevelSettings();
 
-        void addActorToolbar();
+        void addActorToolbar(ILevelController controller);
         void removeActorToolbar();
     }
 }

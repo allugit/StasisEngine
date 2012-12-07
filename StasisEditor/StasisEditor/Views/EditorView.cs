@@ -91,9 +91,10 @@ namespace StasisEditor.Views
         }
 
         // addActorToolbar
-        public void addActorToolbar()
+        public void addActorToolbar(ILevelController levelController)
         {
             _actorToolbar = new ActorToolbar();
+            _actorToolbar.setController(levelController);
             mainSplit.Panel1.Controls.Add(_actorToolbar);
         }
 
