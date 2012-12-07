@@ -11,7 +11,7 @@ namespace StasisEditor.Controllers
         void resizeGraphicsDevice(int width, int height);
         void createNewLevel();
         void closeLevel();
-        Level getLevel();
+        LevelResource getLevel();
         void mouseMove(MouseEventArgs e);
         void mouseLeave();
         void mouseEnter();

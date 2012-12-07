@@ -8,9 +8,9 @@ namespace StasisEditor.Controls
 {
     public class LevelSettings : PropertyGrid
     {
-        private Level _level;
+        private LevelResource _level;
 
-        public LevelSettings(Level level, int width, int height) : base()
+        public LevelSettings(LevelResource level, int width, int height) : base()
         {
             _level = level;
             Width = width;

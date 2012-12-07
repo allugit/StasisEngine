@@ -8,7 +8,7 @@ using Microsoft.Xna.Framework.Graphics;
 
 namespace StasisCore.Models
 {
-    public class Level
+    public class LevelResource
     {
         private Vector2 _wind;
         private Vector2 _gravity;
@@ -19,12 +19,12 @@ namespace StasisCore.Models
         [CategoryAttribute("Environment")]
         public Vector2 Gravity { get { return _gravity; } set { _gravity = value; } }
 
-        public Level()
+        public LevelResource()
         {
         }
 
         // load
-        public static Level load(XmlDocument document)
+        public static LevelResource load(XmlDocument document)
         {
             return null;
         }

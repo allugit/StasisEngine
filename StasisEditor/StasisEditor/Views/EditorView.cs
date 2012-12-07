@@ -76,7 +76,7 @@ namespace StasisEditor.Views
         }
 
         // addLevelSettings
-        public void addLevelSettings(Level level)
+        public void addLevelSettings(LevelResource level)
         {
             _levelSettings = new LevelSettings(level, mainSplit.Panel1.Width, 200);
             mainSplit.Panel1.Controls.Add(_levelSettings);

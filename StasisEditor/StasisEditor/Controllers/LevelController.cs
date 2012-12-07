@@ -11,7 +11,7 @@ namespace StasisEditor.Controllers
         private IEditorController _editorController;
         private ILevelView _levelView;
 
-        private Level _level;
+        private LevelResource _level;
 
         private bool _isMouseOverView;
         private System.Drawing.Point _mouse;
@@ -30,7 +30,7 @@ namespace StasisEditor.Controllers
         public Vector2 getWorldMouse() { return new Vector2(_mouse.X, _mouse.Y) / _editorController.getScale() - getWorldOffset(); }
 
         // getLevel
-        public Level getLevel()
+        public LevelResource getLevel()
         {
             return _level;
         }
@@ -51,7 +51,7 @@ namespace StasisEditor.Controllers
         // createNewLevel
         public void createNewLevel()
         {
-            _level = new Level();
+            _level = new LevelResource();
         }
 
         // closeLevel

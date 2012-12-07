@@ -175,7 +175,7 @@ namespace StasisEditor.Controls
             this.ropeButton.Size = new System.Drawing.Size(26, 26);
             this.ropeButton.Text = "Rope";
             // 
-            // BrushToolbar
+            // ActorToolbar
             // 
             this.GripMargin = new System.Windows.Forms.Padding(0);
             this.GripStyle = System.Windows.Forms.ToolStripGripStyle.Hidden;
