@@ -54,7 +54,7 @@ namespace StasisEditor.Controllers
             _levelController = new LevelController(this, _editorView.getLevelView());
 
             // Create shape renderer
-            _shapeRenderer = new ShapeRenderer(_levelController, XNAResources.spriteBatch);
+            _shapeRenderer = new ShapeRenderer(_levelController);
             _levelController.setShapeRenderer(_shapeRenderer);
         }
 

@@ -14,7 +14,10 @@ namespace StasisEditor.Controllers.Actors
         {
             // Default actor
             if (actor == null)
-                actor = new BoxActorResource();
+            {
+                GeneralProperties generalProperties = new GeneralProperties(_levelController.getWorldMouse());
+                actor = new BoxActorResource(generalProperties);
+            }
 
             _actor = actor;
 
@@ -25,7 +28,7 @@ namespace StasisEditor.Controllers.Actors
         // draw
         public override void draw()
         {
-            _renderer.drawBox(_boxActor.boxProperties.halfWidth, _boxActor.boxProperties.halfHeight, _boxActor.boxProperties.angle);
+            _renderer.drawBox(_actor.properties.position, _boxActor.boxProperties.halfWidth, _boxActor.boxProperties.halfHeight, _boxActor.boxProperties.angle);
         }
 
         // clone

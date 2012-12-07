@@ -13,12 +13,15 @@ namespace StasisCore.Models
 
     abstract public class ActorResource
     {
+        protected GeneralProperties _generalProperties;
         protected ActorType _type;
 
         public ActorType type { get { return _type; } }
+        public GeneralProperties properties { get { return _generalProperties; } set { _generalProperties = value; } }
 
-        public ActorResource()
+        public ActorResource(ActorProperties generalProperties)
         {
+            _generalProperties = generalProperties as GeneralProperties;
         }
 
         // clone
