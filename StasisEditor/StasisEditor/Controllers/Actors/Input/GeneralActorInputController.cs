@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
+using Microsoft.Xna.Framework;
 
 namespace StasisEditor.Controllers.Actors
 {
@@ -20,6 +19,8 @@ namespace StasisEditor.Controllers.Actors
         // handleMouseMove
         public override void handleMouseMove()
         {
+            Vector2 worldMouse = _levelController.getWorldMouse();
+            _generalActorController.setPosition(worldMouse);
         }
 
         // handleMouseEnterView

@@ -93,6 +93,7 @@ namespace StasisEditor.Controllers.Actors
         // mouseMove
         public override void mouseMove()
         {
+            _generalInputController.handleMouseMove();
         }
 
         // mouseEnterView
