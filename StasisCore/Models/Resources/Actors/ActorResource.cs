@@ -8,7 +8,8 @@ namespace StasisCore.Models
     {
         BoxActor = 0,
         CircleActor,
-        MovingPlatform
+        MovingPlatform,
+        Terrain
     }
 
     abstract public class ActorResource

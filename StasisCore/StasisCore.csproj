@@ -67,6 +67,7 @@
     <Compile Include="Models\Resources\Actors\Properties\BodyProperties.cs" />
     <Compile Include="Models\Resources\Actors\Properties\BoxProperties.cs" />
     <Compile Include="Models\Resources\Actors\Properties\IActorProperties.cs" />
+    <Compile Include="Models\Resources\Actors\TerrainActorResource.cs" />
     <Compile Include="Models\Resources\Materials\Properties\DecalProperties.cs" />
     <Compile Include="Models\Resources\Materials\FluidMaterialResource.cs" />
     <Compile Include="Models\Resources\Materials\ItemMaterialResource.cs" />

@@ -11,7 +11,8 @@ namespace StasisEditor.Controllers.Actors
         private BoxSubController _boxSubController;
         private PointSubController _axisSubController;
 
-        public MovingPlatformActorResourceController(ILevelController levelController, ActorResource actorResource = null) : base(levelController)
+        public MovingPlatformActorResourceController(ILevelController levelController, ActorResource actorResource = null)
+            : base(levelController)
         {
             // Default actor resource
             if (actorResource == null)
