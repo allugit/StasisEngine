@@ -129,6 +129,10 @@ namespace StasisEditor.Controllers
                 case "movingPlatformButton":
                     actorController = new MovingPlatformActorResourceController(this);
                     break;
+
+                case "terrainButton":
+                    actorController = new TerrainActorResourceController(this);
+                    break;
             }
 
             if (actorController != null)

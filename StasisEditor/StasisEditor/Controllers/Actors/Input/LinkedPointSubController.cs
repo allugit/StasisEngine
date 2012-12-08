@@ -8,8 +8,12 @@ namespace StasisEditor.Controllers.Actors
     {
         private Vector2 _position;
         private ILinkedPointSubControllable _actorResourceController;
+        private LinkedPointSubController _previous;
+        private LinkedPointSubController _next;
 
         public Vector2 position { get { return _position; } }
+        public LinkedPointSubController previous { get { return _previous; } set { _previous = value; } }
+        public LinkedPointSubController next { get { return _next; } set { _next = value; } }
 
         public LinkedPointSubController(Vector2 position, ILinkedPointSubControllable actorResourceController)
             : base()
