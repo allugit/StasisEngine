@@ -32,6 +32,12 @@ namespace StasisEditor.Controllers.Actors
         // deselectAllSubControllers
         abstract public void deselectAllSubControllers();
 
+        // selectSubController
+        public void selectSubController(ActorSubController subController)
+        {
+            _levelController.selectSubController(subController);
+        }
+
         // deselectSubController
         public void deselectSubController(ActorSubController subController)
         {

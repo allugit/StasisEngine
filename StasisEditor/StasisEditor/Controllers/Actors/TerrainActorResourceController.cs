@@ -42,6 +42,16 @@ namespace StasisEditor.Controllers.Actors
             }
         }
 
+        #region Linked Point Sub Controller Interface
+
+        // setNewLinkedPointSubControllerHead
+        public void setNewLinkedPointSubControllerHead(LinkedPointSubController newHead)
+        {
+            _headLinkedPointController = newHead;
+        }
+
+        #endregion
+
         #region Actor Resource Controller Methods
 
         // selectAllSubControllers

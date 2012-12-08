@@ -16,7 +16,8 @@ namespace StasisEditor.Controllers
 
         private List<ActorSubController> _selectedSubControllers;
         private List<ActorResourceController> _actorControllers;
-        private List<ActorSubController> _subControllersDeselectQueue;
+        private List<ActorSubController> _subControllerSelectQueue;
+        private List<ActorSubController> _subControllerDeselectQueue;
 
         private LevelResource _level;
 
@@ -31,7 +32,8 @@ namespace StasisEditor.Controllers
             _levelView.setController(this);
 
             _selectedSubControllers = new List<ActorSubController>();
-            _subControllersDeselectQueue = new List<ActorSubController>();
+            _subControllerSelectQueue = new List<ActorSubController>();
+            _subControllerDeselectQueue = new List<ActorSubController>();
 
             _actorControllers = new List<ActorResourceController>();
         }
@@ -87,11 +89,20 @@ namespace StasisEditor.Controllers
         // update
         public void update()
         {
-            while (_subControllersDeselectQueue.Count > 0)
+            // Selection queue
+            while (_subControllerSelectQueue.Count > 0)
             {
-                int index = _subControllersDeselectQueue.Count - 1;
-                _selectedSubControllers.Remove(_subControllersDeselectQueue[index]);
-                _subControllersDeselectQueue.Remove(_subControllersDeselectQueue[index]);
+                int index = _subControllerSelectQueue.Count - 1;
+                _selectedSubControllers.Add(_subControllerSelectQueue[index]);
+                _subControllerSelectQueue.Remove(_subControllerSelectQueue[index]);
+            }
+
+            // Deselection queue
+            while (_subControllerDeselectQueue.Count > 0)
+            {
+                int index = _subControllerDeselectQueue.Count - 1;
+                _selectedSubControllers.Remove(_subControllerDeselectQueue[index]);
+                _subControllerDeselectQueue.Remove(_subControllerDeselectQueue[index]);
             }
         }
 
@@ -154,14 +165,15 @@ namespace StasisEditor.Controllers
         // selectSubController
         public void selectSubController(ActorSubController subController)
         {
-            _selectedSubControllers.Add(subController);
+            // actual selection is handled in update() in the 'XNA Methods' region
+            _subControllerSelectQueue.Add(subController);
         }
 
         // deselectSubController
         public void deselectSubController(ActorSubController subController)
         {
             // actual deselection is handled in update() in the 'XNA Methods' region
-            _subControllersDeselectQueue.Add(subController);
+            _subControllerDeselectQueue.Add(subController);
         }
 
         // addActorController

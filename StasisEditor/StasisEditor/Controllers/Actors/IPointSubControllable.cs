@@ -6,6 +6,5 @@ namespace StasisEditor.Controllers.Actors
 {
     public interface IPointSubControllable : ISubControllable
     {
-
     }
 }
