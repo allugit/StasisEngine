@@ -111,6 +111,7 @@ namespace StasisEditor.Controllers.Actors
             if (_boxSubController.hitTest(worldMouse))
             {
                 _levelController.selectSubController(_boxSubController);
+                _levelController.selectSubController(_axisSubController);
                 return true;
             }
 
