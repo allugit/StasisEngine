@@ -152,6 +152,10 @@ namespace StasisEditor.Controllers
                 case "terrainButton":
                     actorController = new TerrainActorResourceController(this);
                     break;
+
+                case "objectSpawnerButton":
+                    actorController = new ObjectSpawnerResourceController(this);
+                    break;
             }
 
             if (actorController != null)
