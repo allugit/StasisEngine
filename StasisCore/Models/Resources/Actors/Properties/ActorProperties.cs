@@ -4,12 +4,8 @@ using Microsoft.Xna.Framework;
 
 namespace StasisCore.Models
 {
-    abstract public class ActorProperties : IActorProperties
+    abstract public class ActorProperties
     {
-        public ActorProperties()
-        {
-        }
-
         // clone
         abstract public ActorProperties clone();
     }

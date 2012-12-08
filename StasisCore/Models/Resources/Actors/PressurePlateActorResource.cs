@@ -4,7 +4,7 @@ using Microsoft.Xna.Framework;
 
 namespace StasisCore.Models
 {
-    public class MovingPlatformActorResource : ActorResource
+    public class PressurePlateActorResource : ActorResource
     {
         private BoxProperties _boxProperties;
         private BodyProperties _bodyProperties;
@@ -12,7 +12,7 @@ namespace StasisCore.Models
         public BoxProperties boxProperties { get { return _boxProperties; } }
         public BodyProperties bodyProperties { get { return _bodyProperties; } }
 
-        public MovingPlatformActorResource(Vector2 position, ActorProperties boxProperties = null, ActorProperties bodyProperties = null)
+        public PressurePlateActorResource(Vector2 position, ActorProperties boxProperties = null, ActorProperties bodyProperties = null)
             : base(position)
         {
             // Default box properties
@@ -25,13 +25,13 @@ namespace StasisCore.Models
 
             _boxProperties = boxProperties as BoxProperties;
             _bodyProperties = bodyProperties as BodyProperties;
-            _type = ActorType.MovingPlatform;
+            _type = ActorType.PressurePlate;
         }
 
         // clone
         public override ActorResource clone()
         {
-            return new MovingPlatformActorResource(_position, _boxProperties.clone(), _bodyProperties.clone());
+            return new PressurePlateActorResource(_position, _boxProperties.clone(), _bodyProperties.clone());
         }
     }
 }

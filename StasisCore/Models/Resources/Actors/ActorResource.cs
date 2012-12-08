@@ -9,6 +9,7 @@ namespace StasisCore.Models
         BoxActor = 0,
         CircleActor,
         MovingPlatform,
+        PressurePlate,
         Terrain
     }
 
