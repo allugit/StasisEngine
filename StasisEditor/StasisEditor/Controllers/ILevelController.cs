@@ -11,6 +11,7 @@ namespace StasisEditor.Controllers
     public interface ILevelController : IController
     {
         void handleXNADraw();
+        void update();
         void resizeGraphicsDevice(int width, int height);
 
         void createNewLevel();
@@ -31,6 +32,9 @@ namespace StasisEditor.Controllers
         void mouseMove(MouseEventArgs e);
         void mouseLeave();
         void mouseEnter();
+        void mouseDown(MouseEventArgs e);
+        void mouseUp(MouseEventArgs e);
+
         Vector2 getWorldOffset();
         Vector2 getWorldMouse();
         bool getIsMouseOverView();

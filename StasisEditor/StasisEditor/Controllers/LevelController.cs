@@ -16,6 +16,7 @@ namespace StasisEditor.Controllers
 
         private List<ActorSubController> _selectedSubControllers;
         private List<ActorResourceController> _actorControllers;
+        private List<ActorSubController> _subControllersDeselectQueue;
 
         private LevelResource _level;
 
@@ -30,6 +31,7 @@ namespace StasisEditor.Controllers
             _levelView.setController(this);
 
             _selectedSubControllers = new List<ActorSubController>();
+            _subControllersDeselectQueue = new List<ActorSubController>();
 
             _actorControllers = new List<ActorResourceController>();
         }
@@ -80,6 +82,17 @@ namespace StasisEditor.Controllers
         {
             if (_level != null)
                 _levelView.handleXNADraw();
+        }
+
+        // update
+        public void update()
+        {
+            while (_subControllersDeselectQueue.Count > 0)
+            {
+                int index = _subControllersDeselectQueue.Count - 1;
+                _selectedSubControllers.Remove(_subControllersDeselectQueue[index]);
+                _subControllersDeselectQueue.Remove(_subControllersDeselectQueue[index]);
+            }
         }
 
         #endregion
@@ -139,7 +152,8 @@ namespace StasisEditor.Controllers
         // deselectSubController
         public void deselectSubController(ActorSubController subController)
         {
-            _selectedSubControllers.Add(subController);
+            // actual deselection is handled in update() in the 'XNA Methods' region
+            _subControllersDeselectQueue.Add(subController);
         }
 
         // addActorController
@@ -180,7 +194,7 @@ namespace StasisEditor.Controllers
 
             // Pass input to selected sub controllers
             foreach (ActorSubController subController in _selectedSubControllers)
-                subController.handleMouseMove();
+                subController.handleMouseMove(getWorldMouse());
         }
 
         // mouseEnter
@@ -201,6 +215,22 @@ namespace StasisEditor.Controllers
             // Pass input to selected sub controllers
             foreach (ActorSubController subController in _selectedSubControllers)
                 subController.handleMouseLeaveView();
+        }
+
+        // mouseDown
+        public void mouseDown(System.Windows.Forms.MouseEventArgs e)
+        {
+            // Pass input to selected sub controllers
+            foreach (ActorSubController subController in _selectedSubControllers)
+                subController.handleMouseDown(e);
+        }
+
+        // mouseUp
+        public void mouseUp(System.Windows.Forms.MouseEventArgs e)
+        {
+            // Pass input to selected sub controllers
+            foreach (ActorSubController subController in _selectedSubControllers)
+                subController.handleMouseUp(e);
         }
 
         #endregion

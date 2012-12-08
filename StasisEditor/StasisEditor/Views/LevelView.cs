@@ -28,9 +28,9 @@ namespace StasisEditor.Views
             XNAResources.graphics.PreparingDeviceSettings += new EventHandler<PreparingDeviceSettingsEventArgs>(preparingDeviceSettings);
 
             // Add a listener to get the location of the mouse over the surface
-            surface.MouseMove += new System.Windows.Forms.MouseEventHandler(surface_MouseMove);
-            surface.MouseEnter += new EventHandler(surface_MouseEnter);
-            surface.MouseLeave += new EventHandler(surface_MouseLeave);
+            //surface.MouseMove += new System.Windows.Forms.MouseEventHandler(surface_MouseMove);
+            //surface.MouseEnter += new EventHandler(surface_MouseEnter);
+            //surface.MouseLeave += new EventHandler(surface_MouseLeave);
 
             // Resize graphics device when the surface is resized
             Resize += new EventHandler(surface_Resize);
@@ -142,6 +142,18 @@ namespace StasisEditor.Views
             List<ActorResourceController> actorControllers = _controller.getActorControllers();
             foreach (ActorResourceController actorController in actorControllers)
                 actorController.draw();
+        }
+
+        // Mouse down
+        private void surface_MouseDown(object sender, MouseEventArgs e)
+        {
+            _controller.mouseDown(e);
+        }
+
+        // Mouse up
+        private void surface_MouseUp(object sender, MouseEventArgs e)
+        {
+            _controller.mouseUp(e);
         }
     }
 }

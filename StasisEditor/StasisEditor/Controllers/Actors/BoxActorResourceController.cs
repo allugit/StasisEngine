@@ -91,9 +91,9 @@ namespace StasisEditor.Controllers.Actors
         #region Input
 
         // mouseMove
-        public override void mouseMove()
+        public override void mouseMove(Vector2 worldMouse)
         {
-            _generalSubController.handleMouseMove();
+            _generalSubController.handleMouseMove(worldMouse);
         }
 
         // mouseEnterView
@@ -104,6 +104,18 @@ namespace StasisEditor.Controllers.Actors
         // mouseLeaveView
         public override void mouseLeaveView()
         {
+        }
+
+        // mouseDown
+        public override void mouseDown(System.Windows.Forms.MouseEventArgs e)
+        {
+            _generalSubController.handleMouseDown(e);
+        }
+
+        // mouseUp
+        public override void mouseUp(System.Windows.Forms.MouseEventArgs e)
+        {
+            _generalSubController.handleMouseUp(e);
         }
 
         // keyDown
@@ -123,6 +135,13 @@ namespace StasisEditor.Controllers.Actors
         {
             _levelController.selectSubController(_generalSubController);
             _levelController.selectSubController(_boxSubController);
+        }
+
+        // deselectAllSubControllers
+        public override void deselectAllSubControllers()
+        {
+            _levelController.deselectSubController(_generalSubController);
+            _levelController.deselectSubController(_boxSubController);
         }
 
         // draw

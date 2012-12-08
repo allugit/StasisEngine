@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using Microsoft.Xna.Framework;
 using StasisCore.Models;
 using StasisEditor.Views;
 
@@ -26,13 +27,19 @@ namespace StasisEditor.Controllers.Actors
         }
 
         // mouseMove
-        abstract public void mouseMove();
+        abstract public void mouseMove(Vector2 worldMouse);
 
         // mouseEnterView
         abstract public void mouseEnterView();
 
         // mouseLeaveView
         abstract public void mouseLeaveView();
+
+        // mouseDown
+        abstract public void mouseDown(System.Windows.Forms.MouseEventArgs e);
+
+        // mouseUp
+        abstract public void mouseUp(System.Windows.Forms.MouseEventArgs e);
 
         // keyDown
         abstract public void keyDown();
@@ -42,6 +49,9 @@ namespace StasisEditor.Controllers.Actors
 
         // selectAllSubControllers
         abstract public void selectAllSubControllers();
+
+        // deselectAllSubControllers
+        abstract public void deselectAllSubControllers();
 
         // draw
         abstract public void draw();

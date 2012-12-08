@@ -79,6 +79,9 @@ namespace StasisEditor.Controllers
             // Update input
             Input.update();
 
+            // Update controllers
+            _editorController.update();
+
             base.Update(gameTime);
         }
 

@@ -136,6 +136,12 @@ namespace StasisEditor.Controllers
             _levelController.handleXNADraw();
         }
 
+        // update
+        public void update()
+        {
+            _levelController.update();
+        }
+
         // exit
         public void exit()
         {

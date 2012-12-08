@@ -8,5 +8,6 @@ namespace StasisEditor.Controllers.Actors
     {
         Vector2 getPosition();
         void setPosition(Vector2 position);
+        void deselectAllSubControllers();
     }
 }

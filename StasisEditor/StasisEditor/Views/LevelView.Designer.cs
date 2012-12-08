@@ -42,6 +42,11 @@
             this.surface.Size = new System.Drawing.Size(150, 150);
             this.surface.TabIndex = 0;
             this.surface.TabStop = false;
+            this.surface.MouseDown += new System.Windows.Forms.MouseEventHandler(this.surface_MouseDown);
+            this.surface.MouseEnter += new System.EventHandler(this.surface_MouseEnter);
+            this.surface.MouseLeave += new System.EventHandler(this.surface_MouseLeave);
+            this.surface.MouseMove += new System.Windows.Forms.MouseEventHandler(this.surface_MouseMove);
+            this.surface.MouseUp += new System.Windows.Forms.MouseEventHandler(this.surface_MouseUp);
             // 
             // LevelView
             // 

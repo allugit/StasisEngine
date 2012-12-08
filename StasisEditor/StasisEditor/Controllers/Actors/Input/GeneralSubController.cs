@@ -9,7 +9,7 @@ namespace StasisEditor.Controllers.Actors
         private IGeneralSubControllable _actorResourceController;
 
         public GeneralSubController(IGeneralSubControllable actorResourceController)
-            : base(actorResourceController)
+            : base()
         {
             _actorResourceController = actorResourceController;
         }
@@ -17,9 +17,8 @@ namespace StasisEditor.Controllers.Actors
         #region Input
 
         // handleMouseMove
-        public override void handleMouseMove()
+        public override void handleMouseMove(Vector2 worldMouse)
         {
-            Vector2 worldMouse = _levelController.getWorldMouse();
             _actorResourceController.setPosition(worldMouse);
         }
 
@@ -30,6 +29,19 @@ namespace StasisEditor.Controllers.Actors
 
         // handleMouseLeaveView
         public override void handleMouseLeaveView()
+        {
+        }
+
+        // handleMouseDown
+        public override void handleMouseDown(System.Windows.Forms.MouseEventArgs e)
+        {
+            Console.WriteLine("shit yall");
+            if (e.Button == System.Windows.Forms.MouseButtons.Left)
+                _actorResourceController.deselectAllSubControllers();
+        }
+
+        // handleMouseUp
+        public override void handleMouseUp(System.Windows.Forms.MouseEventArgs e)
         {
         }
 
