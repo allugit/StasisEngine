@@ -12,6 +12,7 @@ namespace StasisEditor.Views
         private SpriteBatch _spriteBatch;
         private Texture2D _pixel;
         private SpriteFont _arial;
+        private Texture2D _circle;
 
         public ShapeRenderer(ILevelController levelController)
         {
@@ -19,6 +20,7 @@ namespace StasisEditor.Views
             _spriteBatch = XNAResources.spriteBatch;
             _pixel = XNAResources.pixel;
             _arial = XNAResources.arial;
+            _circle = XNAResources.circle;
         }
 
         // drawBox
@@ -27,6 +29,25 @@ namespace StasisEditor.Views
             float scale = _levelController.getScale();
             Rectangle rectangle = new Rectangle(0, 0, (int)(halfWidth * 2 * scale), (int)(halfHeight * 2 * scale));
             _spriteBatch.Draw(_pixel, (position + _levelController.getWorldOffset()) * scale, rectangle, color, angle, new Vector2(halfWidth, halfHeight) * scale, 1, SpriteEffects.None, 0);
+        }
+
+        // drawLine
+        public void drawLine(Vector2 pointA, Vector2 pointB, Color color)
+        {
+            float scale = _levelController.getScale();
+            Vector2 relative = pointB - pointA;
+            float length = relative.Length();
+            float angle = (float)Math.Atan2(relative.Y, relative.X);
+            Rectangle rect = new Rectangle(0, 0, (int)(length * scale), 2);
+            _spriteBatch.Draw(_pixel, (pointA + _levelController.getWorldOffset()) * scale, rect, color, angle, new Vector2(0, 1), 1f, SpriteEffects.None, 0);
+        }
+
+        // drawPoint
+        public void drawPoint(Vector2 position, Color color)
+        {
+            float circleRadius = 4f;
+            float circleScale = circleRadius / ((float)_circle.Width / 2);
+            _spriteBatch.Draw(_circle, (position + _levelController.getWorldOffset()) * _levelController.getScale(), _circle.Bounds, color, 0, new Vector2(_circle.Width, _circle.Height) / 2, circleScale, SpriteEffects.None, 0);
         }
     }
 }

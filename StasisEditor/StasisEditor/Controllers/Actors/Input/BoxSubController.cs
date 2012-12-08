@@ -50,26 +50,11 @@ namespace StasisEditor.Controllers.Actors
             _actorResourceController.setPosition(worldMouse);
         }
 
-        // handleMouseEnterView
-        public override void handleMouseEnterView()
-        {
-        }
-
-        // handleMouseLeaveView
-        public override void handleMouseLeaveView()
-        {
-        }
-
         // handleMouseDown
         public override void handleMouseDown(System.Windows.Forms.MouseEventArgs e)
         {
             if (e.Button == System.Windows.Forms.MouseButtons.Left)
                 _actorResourceController.deselectSubController(this);
-        }
-
-        // handleMouseUp
-        public override void handleMouseUp(System.Windows.Forms.MouseEventArgs e)
-        {
         }
 
         // handleKeyDown

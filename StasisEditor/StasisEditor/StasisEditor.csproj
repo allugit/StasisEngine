@@ -80,6 +80,8 @@
     <Compile Include="Controllers\Actors\BoxActorResourceController.cs" />
     <Compile Include="Controllers\Actors\Input\BoxSubController.cs" />
     <Compile Include="Controllers\Actors\IBoxSubControllable.cs" />
+    <Compile Include="Controllers\Actors\Input\PointSubController.cs" />
+    <Compile Include="Controllers\Actors\IPointSubControllable.cs" />
     <Compile Include="Controllers\Actors\ISubControllable.cs" />
     <Compile Include="Controllers\Actors\MovingPlatformActorResourceController.cs" />
     <Compile Include="Controllers\IController.cs" />

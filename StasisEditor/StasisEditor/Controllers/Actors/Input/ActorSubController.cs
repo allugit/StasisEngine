@@ -14,24 +14,38 @@ namespace StasisEditor.Controllers.Actors
         abstract public bool hitTest(Microsoft.Xna.Framework.Vector2 worldMouse);
 
         // handleMouseMove
-        abstract public void handleMouseMove(Microsoft.Xna.Framework.Vector2 worldMouse);
+        virtual public void handleMouseMove(Microsoft.Xna.Framework.Vector2 worldMouse)
+        {
+        }
 
         // handleMouseEnterView
-        abstract public void handleMouseEnterView();
+        virtual public void handleMouseEnterView()
+        {
+        }
 
         // handleMouseLeaveView
-        abstract public void handleMouseLeaveView();
+        virtual public void handleMouseLeaveView()
+        {
+        }
 
         // handleMouseDown
-        abstract public void handleMouseDown(MouseEventArgs e);
+        virtual public void handleMouseDown(MouseEventArgs e)
+        {
+        }
 
         // handleMouseUp
-        abstract public void handleMouseUp(MouseEventArgs e);
+        virtual public void handleMouseUp(MouseEventArgs e)
+        {
+        }
 
         // handleKeyDown
-        abstract public void handleKeyDown();
+        virtual public void handleKeyDown()
+        {
+        }
 
         // handleKeyUp
-        abstract public void handleKeyUp();
+        virtual public void handleKeyUp()
+        {
+        }
     }
 }

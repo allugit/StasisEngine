@@ -5,10 +5,11 @@ using StasisCore.Models;
 
 namespace StasisEditor.Controllers.Actors
 {
-    public class MovingPlatformActorResourceController : ActorResourceController, IBoxSubControllable
+    public class MovingPlatformActorResourceController : ActorResourceController, IBoxSubControllable, IPointSubControllable
     {
         private MovingPlatformActorResource _movingPlatformActor;
         private BoxSubController _boxSubController;
+        private PointSubController _axisSubController;
 
         public MovingPlatformActorResourceController(ILevelController levelController, ActorResource actorResource = null) : base(levelController)
         {
@@ -21,9 +22,10 @@ namespace StasisEditor.Controllers.Actors
 
             // Create sub controllers
             _boxSubController = new BoxSubController(this);
+            _axisSubController = new PointSubController(actorResource.position + new Vector2(1f, 0), this);
         }
 
-        #region Box Actor Interface
+        #region Box SubController Interface
 
         // getPosition
         public Vector2 getPosition()
@@ -75,6 +77,12 @@ namespace StasisEditor.Controllers.Actors
 
         #endregion
 
+        #region Axis SubController Interface
+
+
+
+        #endregion
+
         #region Actor Resource Controller Methods
 
         // selectAllSubControllers
@@ -92,20 +100,32 @@ namespace StasisEditor.Controllers.Actors
         // hitTest
         public override bool hitTest(Vector2 worldMouse)
         {
+            // Axis control point hit test
+            if (_axisSubController.hitTest(worldMouse))
+            {
+                _levelController.selectSubController(_axisSubController);
+                return true;
+            }
+
             // Box hit test
-            bool hit = _boxSubController.hitTest(worldMouse);
-
-            // Select appropriate sub control
-            if (hit)
+            if (_boxSubController.hitTest(worldMouse))
+            {
                 _levelController.selectSubController(_boxSubController);
+                return true;
+            }
 
-            return hit;
+            return false;
         }
 
         // draw
         public override void draw()
         {
+            // Draw box
             _renderer.drawBox(_actor.position, _movingPlatformActor.boxProperties.halfWidth, _movingPlatformActor.boxProperties.halfHeight, _movingPlatformActor.boxProperties.angle, Color.Blue);
+
+            // Draw axis sub controller
+            _renderer.drawLine(_actor.position, _axisSubController.position, Color.Gray);
+            _renderer.drawPoint(_axisSubController.position, Color.White);
         }
 
         // clone

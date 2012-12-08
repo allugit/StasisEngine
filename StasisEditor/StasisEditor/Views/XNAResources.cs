@@ -14,6 +14,7 @@ namespace StasisEditor.Views
         public static SpriteBatch spriteBatch;
         public static Texture2D pixel;
         public static SpriteFont arial;
+        public static Texture2D circle;
 
         public static void initialize(XNAController controller)
         {
@@ -28,6 +29,9 @@ namespace StasisEditor.Views
 
             // Arial
             arial = controller.Content.Load<SpriteFont>("arial");
+
+            // Circle
+            circle = controller.Content.Load<Texture2D>("circle");
         }
     }
 }
