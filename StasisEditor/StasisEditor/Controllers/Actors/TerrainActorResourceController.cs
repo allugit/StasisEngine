@@ -122,5 +122,9 @@ namespace StasisEditor.Controllers.Actors
         }
 
         #endregion
+
+        // Unused sub controller methods
+        public void setPosition(Vector2 position) { }
+        public Vector2 getPosition() { return _terrainActorResource.position; }
     }
 }

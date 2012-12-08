@@ -45,8 +45,16 @@ namespace StasisEditor.Views
         // drawPoint
         public void drawPoint(Vector2 position, Color color)
         {
-            float circleRadius = 4f;
-            float circleScale = circleRadius / ((float)_circle.Width / 2);
+            drawCircle(position, 4f / _levelController.getScale(), color);
+            //float circleRadius = 4f;
+            //float circleScale = circleRadius / ((float)_circle.Width / 2);
+            //_spriteBatch.Draw(_circle, (position + _levelController.getWorldOffset()) * _levelController.getScale(), _circle.Bounds, color, 0, new Vector2(_circle.Width, _circle.Height) / 2, circleScale, SpriteEffects.None, 0);
+        }
+
+        // drawCircle
+        public void drawCircle(Vector2 position, float radius, Color color)
+        {
+            float circleScale = radius / (((float)_circle.Width / 2) / _levelController.getScale());
             _spriteBatch.Draw(_circle, (position + _levelController.getWorldOffset()) * _levelController.getScale(), _circle.Bounds, color, 0, new Vector2(_circle.Width, _circle.Height) / 2, circleScale, SpriteEffects.None, 0);
         }
     }

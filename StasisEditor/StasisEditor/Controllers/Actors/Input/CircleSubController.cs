@@ -4,36 +4,29 @@ using Microsoft.Xna.Framework;
 
 namespace StasisEditor.Controllers.Actors
 {
-    public class PointSubController : ActorSubController
+    public class CircleSubController : ActorSubController
     {
-        private Vector2 _position;
-        private IPointSubControllable _actorResourceController;
+        private ICircleSubControllable _actorResourceController;
 
-        public Vector2 position { get { return _position; } }
-
-        public PointSubController(Vector2 position, IPointSubControllable actorResourceController)
+        public CircleSubController(ICircleSubControllable actorResourceController)
             : base()
         {
-            _position = position;
             _actorResourceController = actorResourceController;
         }
-
-        #region Input
 
         // hitTest
         public override bool hitTest(Vector2 worldMouse)
         {
-            float margin = 8f / _actorResourceController.getLevelController().getScale();
-            Vector2 relative = _position - worldMouse;
+            Vector2 relative = _actorResourceController.getPosition() - worldMouse;
             float length = relative.Length();
 
-            return length <= margin;
+            return length <= _actorResourceController.getRadius();
         }
 
         // handleMouseMove
         public override void handleMouseMove(Vector2 worldDelta)
         {
-            _position = _position + worldDelta;
+            _actorResourceController.setPosition(_actorResourceController.getPosition() + worldDelta);
         }
 
         // handleMouseDown
@@ -42,7 +35,5 @@ namespace StasisEditor.Controllers.Actors
             if (e.Button == System.Windows.Forms.MouseButtons.Left)
                 _actorResourceController.deselectSubController(this);
         }
-
-        #endregion
     }
 }
