@@ -69,6 +69,19 @@ namespace StasisEditor.Controllers.Actors
         // hitTest
         public override bool hitTest(Vector2 worldMouse)
         {
+            // Hit test linked point sub controllers
+            LinkedPointSubController current = _headLinkedPointController;
+            while (current != null)
+            {
+                if (current.hitTest(worldMouse))
+                {
+                    _levelController.selectSubController(current);
+                    return true;
+                }
+
+                current = current.next;
+            }
+
             return false;
         }
 
