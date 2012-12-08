@@ -31,9 +31,9 @@ namespace StasisEditor.Controllers.Actors
         }
 
         // handleMouseMove
-        public override void handleMouseMove(Vector2 worldMouse)
+        public override void handleMouseMove(Vector2 worldDelta)
         {
-            _position = worldMouse;
+            _position = _position + worldDelta;
         }
 
         // handleMouseDown

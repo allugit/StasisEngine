@@ -184,13 +184,13 @@ namespace StasisEditor.Controllers
             int y = Math.Min(Math.Max(0, e.Y), _levelView.getHeight());
 
             // Calculate change in mouse position (for screen and world coordinates)
-            int deltaX = _mouse.X - x;
-            int deltaY = _mouse.Y - y;
+            int deltaX = x - _mouse.X;
+            int deltaY = y - _mouse.Y;
             Vector2 worldDelta = new Vector2(deltaX, deltaY) / _editorController.getScale();
 
             // Move screen
             if (Input.newKey.IsKeyDown(Microsoft.Xna.Framework.Input.Keys.LeftControl))
-                _screenCenter -= worldDelta;
+                _screenCenter += worldDelta;
 
             // Store screen space mouse coordinates
             _mouse.X = x;
@@ -198,7 +198,7 @@ namespace StasisEditor.Controllers
 
             // Pass input to selected sub controllers
             foreach (ActorSubController subController in _selectedSubControllers)
-                subController.handleMouseMove(getWorldMouse());
+                subController.handleMouseMove(worldDelta);
         }
 
         // mouseEnter

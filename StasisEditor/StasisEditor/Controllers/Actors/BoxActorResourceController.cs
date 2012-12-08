@@ -26,8 +26,8 @@ namespace StasisEditor.Controllers.Actors
             // Create input controls
             _boxSubController = new BoxSubController(this);
         }
-
-        #region General Actor Interface
+        
+        #region Box Actor Interface
 
         // getPosition
         public Vector2 getPosition()
@@ -40,10 +40,6 @@ namespace StasisEditor.Controllers.Actors
         {
             _boxActor.position = position;
         }
-
-        #endregion
-
-        #region Box Actor Interface
 
         // getHalfWidth
         public float getHalfWidth()

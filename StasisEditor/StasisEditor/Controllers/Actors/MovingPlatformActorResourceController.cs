@@ -89,12 +89,14 @@ namespace StasisEditor.Controllers.Actors
         public override void selectAllSubControllers()
         {
             _levelController.selectSubController(_boxSubController);
+            _levelController.selectSubController(_axisSubController);
         }
 
         // deselectAllSubControllers
         public override void deselectAllSubControllers()
         {
             _levelController.deselectSubController(_boxSubController);
+            _levelController.deselectSubController(_axisSubController);
         }
 
         // hitTest
