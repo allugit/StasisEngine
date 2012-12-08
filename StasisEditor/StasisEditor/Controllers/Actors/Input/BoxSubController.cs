@@ -4,14 +4,14 @@ using Microsoft.Xna.Framework;
 
 namespace StasisEditor.Controllers.Actors
 {
-    public class GeneralActorInputController : ActorInputController
+    public class BoxSubController : ActorSubController
     {
-        private IGeneralActorController _generalActorController;
+        private IBoxSubControllable _actorResourceController;
 
-        public GeneralActorInputController(IGeneralActorController generalActorController)
-            : base(generalActorController)
+        public BoxSubController(IBoxSubControllable actorResourceController)
+            : base(actorResourceController)
         {
-            _generalActorController = generalActorController;
+            _actorResourceController = actorResourceController;
         }
 
         #region Input
@@ -19,8 +19,6 @@ namespace StasisEditor.Controllers.Actors
         // handleMouseMove
         public override void handleMouseMove()
         {
-            Vector2 worldMouse = _levelController.getWorldMouse();
-            _generalActorController.setPosition(worldMouse);
         }
 
         // handleMouseEnterView
@@ -44,5 +42,6 @@ namespace StasisEditor.Controllers.Actors
         }
 
         #endregion
+
     }
 }

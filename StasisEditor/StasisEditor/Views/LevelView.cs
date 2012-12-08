@@ -139,8 +139,8 @@ namespace StasisEditor.Views
         // drawActorControllers
         private void drawActorControllers()
         {
-            List<ActorController> actorControllers = _controller.getActorControllers();
-            foreach (ActorController actorController in actorControllers)
+            List<ActorResourceController> actorControllers = _controller.getActorControllers();
+            foreach (ActorResourceController actorController in actorControllers)
                 actorController.draw();
         }
     }

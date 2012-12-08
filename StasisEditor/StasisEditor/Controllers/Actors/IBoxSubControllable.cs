@@ -4,7 +4,7 @@ using Microsoft.Xna.Framework;
 
 namespace StasisEditor.Controllers.Actors
 {
-    public interface IBoxActorController : IActorController
+    public interface IBoxSubControllable : ISubControllable
     {
         float getAngle();
         float getHalfWidth();

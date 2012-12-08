@@ -21,12 +21,11 @@ namespace StasisEditor.Controllers
         ShapeRenderer getShapeRenderer();
 
         void createActorControllerFromToolbar(string buttonName);
-        void addActorController(ActorController actorController);
-        void removeActorController(ActorController actorController);
+        void addActorController(ActorResourceController actorController);
+        void removeActorController(ActorResourceController actorController);
         //void selectActorController(ActorController actorController);
 
-        ActorController getSelectedActorController();
-        List<ActorController> getActorControllers();
+        List<ActorResourceController> getActorControllers();
 
         void mouseMove(MouseEventArgs e);
         void mouseLeave();

@@ -5,7 +5,7 @@ using StasisEditor.Views;
 
 namespace StasisEditor.Controllers.Actors
 {
-    abstract public class ActorController
+    abstract public class ActorResourceController
     {
         protected ActorResource _actor;
         protected ShapeRenderer _renderer;
@@ -13,7 +13,7 @@ namespace StasisEditor.Controllers.Actors
 
         public ActorType type { get { return _actor.type; } }
 
-        public ActorController(ILevelController levelController)
+        public ActorResourceController(ILevelController levelController)
         {
             _levelController = levelController;
             _renderer = levelController.getShapeRenderer();
@@ -44,6 +44,6 @@ namespace StasisEditor.Controllers.Actors
         abstract public void draw();
 
         // clone
-        abstract public ActorController clone();
+        abstract public ActorResourceController clone();
     }
 }

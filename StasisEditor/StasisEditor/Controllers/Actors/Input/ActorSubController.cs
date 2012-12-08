@@ -1,15 +1,13 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 
 namespace StasisEditor.Controllers.Actors
 {
-    abstract public class ActorInputController
+    abstract public class ActorSubController
     {
         protected ILevelController _levelController;
 
-        public ActorInputController(IActorController actorController)
+        public ActorSubController(ISubControllable actorController)
         {
             _levelController = actorController.getLevelController();
         }

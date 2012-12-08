@@ -14,8 +14,8 @@ namespace StasisEditor.Controllers
         private ILevelView _levelView;
         private ShapeRenderer _shapeRenderer;
 
-        private ActorController _selectedActorController;
-        private List<ActorController> _actorControllers;
+        private ISubControllable _selectedSubControllers;
+        private List<ActorResourceController> _actorControllers;
 
         private LevelResource _level;
 
@@ -29,7 +29,7 @@ namespace StasisEditor.Controllers
             _levelView = levelView;
             _levelView.setController(this);
 
-            _actorControllers = new List<ActorController>();
+            _actorControllers = new List<ActorResourceController>();
         }
 
         #region Getters/Setters
@@ -45,14 +45,8 @@ namespace StasisEditor.Controllers
             return _level;
         }
 
-        // getSelectedActor
-        public ActorController getSelectedActorController()
-        {
-            return _selectedActorController;
-        }
-
         // getActorControllers
-        public List<ActorController> getActorControllers()
+        public List<ActorResourceController> getActorControllers()
         {
             return _actorControllers;
         }
@@ -109,14 +103,12 @@ namespace StasisEditor.Controllers
         // createActorControllerFromToolbar
         public void createActorControllerFromToolbar(string buttonName)
         {
-            Debug.Assert(_selectedActorController == null);
-
             // Create actor controller based on button name
-            ActorController actorController = null;
+            ActorResourceController actorController = null;
             switch (buttonName)
             {
                 case "boxButton":
-                    actorController = new BoxActorController(this);
+                    actorController = new BoxActorResourceController(this);
                     break;
             }
 
@@ -124,36 +116,31 @@ namespace StasisEditor.Controllers
             {
                 // Add actor controller to list
                 _actorControllers.Add(actorController);
-
-                // Select actor controller
-                selectActorController(actorController);
             }
         }
 
         // addActorController
-        public void addActorController(ActorController actorController)
+        public void addActorController(ActorResourceController actorController)
         {
             _actorControllers.Add(actorController);
         }
 
         // removeActorController
-        public void removeActorController(ActorController actorController)
+        public void removeActorController(ActorResourceController actorController)
         {
             _actorControllers.Remove(actorController);
         }
 
         // selectActorController
-        public void selectActorController(ActorController actorController)
+        public void selectActorController(ActorResourceController actorController)
         {
             _editorController.setActorToolbarEnabled(false);
-            _selectedActorController = actorController;
         }
 
         // deselectActorController
         public void deselectActorController()
         {
             _editorController.setActorToolbarEnabled(true);
-            _selectedActorController = null;
         }
 
         #endregion
@@ -179,30 +166,18 @@ namespace StasisEditor.Controllers
             // Store screen space mouse coordinates
             _mouse.X = x;
             _mouse.Y = y;
-
-            // Pass input to actor controller
-            if (_selectedActorController != null)
-                _selectedActorController.mouseMove();
         }
 
         // mouseEnter
         public void mouseEnter()
         {
             _isMouseOverView = true;
-
-            // Pass input to actor controller
-            if (_selectedActorController != null)
-                _selectedActorController.mouseEnterView();
         }
 
         // mouseLeave
         public void mouseLeave()
         {
             _isMouseOverView = false;
-
-            // Pass input to actor controller
-            if (_selectedActorController != null)
-                _selectedActorController.mouseLeaveView();
         }
 
         #endregion

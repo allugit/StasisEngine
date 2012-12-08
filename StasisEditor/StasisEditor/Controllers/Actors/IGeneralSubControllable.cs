@@ -4,7 +4,7 @@ using Microsoft.Xna.Framework;
 
 namespace StasisEditor.Controllers.Actors
 {
-    public interface IGeneralActorController : IActorController
+    public interface IGeneralSubControllable : ISubControllable
     {
         Vector2 getPosition();
         void setPosition(Vector2 position);

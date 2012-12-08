@@ -2,7 +2,7 @@
 
 namespace StasisEditor.Controllers.Actors
 {
-    public interface IActorController
+    public interface ISubControllable
     {
         ILevelController getLevelController();
     }

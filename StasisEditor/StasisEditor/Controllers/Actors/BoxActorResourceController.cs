@@ -6,13 +6,13 @@ using StasisEditor.Views;
 
 namespace StasisEditor.Controllers.Actors
 {
-    public class BoxActorController : ActorController, IGeneralActorController, IBoxActorController
+    public class BoxActorResourceController : ActorResourceController, IGeneralSubControllable, IBoxSubControllable
     {
         private BoxActorResource _boxActor;
-        private GeneralActorInputController _generalInputController;
-        private BoxActorInputController _boxInputController;
+        private GeneralSubController _generalSubController;
+        private BoxSubController _boxSubController;
 
-        public BoxActorController(ILevelController levelController, ActorResource actor = null)
+        public BoxActorResourceController(ILevelController levelController, ActorResource actor = null)
             : base(levelController)
         {
             // Default actor
@@ -28,8 +28,8 @@ namespace StasisEditor.Controllers.Actors
             _boxActor = _actor as BoxActorResource;
 
             // Create input controls
-            _generalInputController = new GeneralActorInputController(this);
-            _boxInputController = new BoxActorInputController(this);
+            _generalSubController = new GeneralSubController(this);
+            _boxSubController = new BoxSubController(this);
         }
 
         #region General Actor Interface
@@ -93,7 +93,6 @@ namespace StasisEditor.Controllers.Actors
         // mouseMove
         public override void mouseMove()
         {
-            _generalInputController.handleMouseMove();
         }
 
         // mouseEnterView
@@ -125,9 +124,9 @@ namespace StasisEditor.Controllers.Actors
         }
 
         // clone
-        public override ActorController clone()
+        public override ActorResourceController clone()
         {
-            return new BoxActorController(_levelController, _actor.clone());
+            return new BoxActorResourceController(_levelController, _actor.clone());
         }
     }
 }
