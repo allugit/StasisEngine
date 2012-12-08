@@ -20,6 +20,7 @@ namespace StasisEditor.Controllers.Actors
         public override void handleMouseMove()
         {
             Vector2 worldMouse = _levelController.getWorldMouse();
+            _actorResourceController.setPosition(worldMouse);
         }
 
         // handleMouseEnterView

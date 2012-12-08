@@ -23,7 +23,8 @@ namespace StasisEditor.Controllers
         void createActorControllerFromToolbar(string buttonName);
         void addActorController(ActorResourceController actorController);
         void removeActorController(ActorResourceController actorController);
-        //void selectActorController(ActorController actorController);
+        void selectSubController(ActorSubController subController);
+        void deselectSubController(ActorSubController subController);
 
         List<ActorResourceController> getActorControllers();
 

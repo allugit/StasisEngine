@@ -40,6 +40,9 @@ namespace StasisEditor.Controllers.Actors
         // keyUp
         abstract public void keyUp();
 
+        // selectAllSubControllers
+        abstract public void selectAllSubControllers();
+
         // draw
         abstract public void draw();
 

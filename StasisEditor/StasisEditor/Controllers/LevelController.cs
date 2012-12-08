@@ -14,7 +14,7 @@ namespace StasisEditor.Controllers
         private ILevelView _levelView;
         private ShapeRenderer _shapeRenderer;
 
-        private ISubControllable _selectedSubControllers;
+        private List<ActorSubController> _selectedSubControllers;
         private List<ActorResourceController> _actorControllers;
 
         private LevelResource _level;
@@ -28,6 +28,8 @@ namespace StasisEditor.Controllers
             _editorController = editorController;
             _levelView = levelView;
             _levelView.setController(this);
+
+            _selectedSubControllers = new List<ActorSubController>();
 
             _actorControllers = new List<ActorResourceController>();
         }
@@ -116,7 +118,28 @@ namespace StasisEditor.Controllers
             {
                 // Add actor controller to list
                 _actorControllers.Add(actorController);
+
+                // Select all sub controllers
+                actorController.selectAllSubControllers();
             }
+        }
+
+        // clearSubControllers
+        public void clearSubControllers()
+        {
+            _selectedSubControllers.Clear();
+        }
+
+        // selectSubController
+        public void selectSubController(ActorSubController subController)
+        {
+            _selectedSubControllers.Add(subController);
+        }
+
+        // deselectSubController
+        public void deselectSubController(ActorSubController subController)
+        {
+            _selectedSubControllers.Add(subController);
         }
 
         // addActorController
@@ -129,18 +152,6 @@ namespace StasisEditor.Controllers
         public void removeActorController(ActorResourceController actorController)
         {
             _actorControllers.Remove(actorController);
-        }
-
-        // selectActorController
-        public void selectActorController(ActorResourceController actorController)
-        {
-            _editorController.setActorToolbarEnabled(false);
-        }
-
-        // deselectActorController
-        public void deselectActorController()
-        {
-            _editorController.setActorToolbarEnabled(true);
         }
 
         #endregion
@@ -166,18 +177,30 @@ namespace StasisEditor.Controllers
             // Store screen space mouse coordinates
             _mouse.X = x;
             _mouse.Y = y;
+
+            // Pass input to selected sub controllers
+            foreach (ActorSubController subController in _selectedSubControllers)
+                subController.handleMouseMove();
         }
 
         // mouseEnter
         public void mouseEnter()
         {
             _isMouseOverView = true;
+
+            // Pass input to selected sub controllers
+            foreach (ActorSubController subController in _selectedSubControllers)
+                subController.handleMouseEnterView();
         }
 
         // mouseLeave
         public void mouseLeave()
         {
             _isMouseOverView = false;
+
+            // Pass input to selected sub controllers
+            foreach (ActorSubController subController in _selectedSubControllers)
+                subController.handleMouseLeaveView();
         }
 
         #endregion

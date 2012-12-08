@@ -93,6 +93,7 @@ namespace StasisEditor.Controllers.Actors
         // mouseMove
         public override void mouseMove()
         {
+            _generalSubController.handleMouseMove();
         }
 
         // mouseEnterView
@@ -116,6 +117,13 @@ namespace StasisEditor.Controllers.Actors
         }
 
         #endregion
+
+        // selectAllSubControllers
+        public override void selectAllSubControllers()
+        {
+            _levelController.selectSubController(_generalSubController);
+            _levelController.selectSubController(_boxSubController);
+        }
 
         // draw
         public override void draw()
