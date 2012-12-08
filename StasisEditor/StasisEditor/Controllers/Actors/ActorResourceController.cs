@@ -26,32 +26,14 @@ namespace StasisEditor.Controllers.Actors
             return _levelController;
         }
 
-        // mouseMove
-        abstract public void mouseMove(Vector2 worldMouse);
-
-        // mouseEnterView
-        abstract public void mouseEnterView();
-
-        // mouseLeaveView
-        abstract public void mouseLeaveView();
-
-        // mouseDown
-        abstract public void mouseDown(System.Windows.Forms.MouseEventArgs e);
-
-        // mouseUp
-        abstract public void mouseUp(System.Windows.Forms.MouseEventArgs e);
-
-        // keyDown
-        abstract public void keyDown();
-
-        // keyUp
-        abstract public void keyUp();
-
         // selectAllSubControllers
         abstract public void selectAllSubControllers();
 
         // deselectAllSubControllers
         abstract public void deselectAllSubControllers();
+
+        // hitTest
+        abstract public bool hitTest(Vector2 worldMouse);
 
         // draw
         abstract public void draw();

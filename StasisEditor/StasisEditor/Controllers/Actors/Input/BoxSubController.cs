@@ -16,6 +16,12 @@ namespace StasisEditor.Controllers.Actors
 
         #region Input
 
+        // hitTest
+        public override bool hitTest(Vector2 worldMouse)
+        {
+            return false;
+        }
+
         // handleMouseMove
         public override void handleMouseMove(Vector2 worldMouse)
         {

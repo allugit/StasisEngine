@@ -220,9 +220,23 @@ namespace StasisEditor.Controllers
         // mouseDown
         public void mouseDown(System.Windows.Forms.MouseEventArgs e)
         {
-            // Pass input to selected sub controllers
-            foreach (ActorSubController subController in _selectedSubControllers)
-                subController.handleMouseDown(e);
+            if (_selectedSubControllers.Count == 0)
+            {
+                // Try to select a sub controller
+                foreach (ActorResourceController actorResourceController in _actorControllers)
+                {
+                    if (actorResourceController.hitTest(getWorldMouse()))
+                    {
+                        Console.WriteLine("Something is being selected.. halt search");
+                    }
+                }
+            }
+            else
+            {
+                // Pass input to selected sub controllers
+                foreach (ActorSubController subController in _selectedSubControllers)
+                    subController.handleMouseDown(e);
+            }
         }
 
         // mouseUp

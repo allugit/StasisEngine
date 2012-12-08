@@ -16,6 +16,12 @@ namespace StasisEditor.Controllers.Actors
 
         #region Input
 
+        // hitTest
+        public override bool hitTest(Vector2 worldMouse)
+        {
+            return false;
+        }
+
         // handleMouseMove
         public override void handleMouseMove(Vector2 worldMouse)
         {
@@ -35,7 +41,6 @@ namespace StasisEditor.Controllers.Actors
         // handleMouseDown
         public override void handleMouseDown(System.Windows.Forms.MouseEventArgs e)
         {
-            Console.WriteLine("shit yall");
             if (e.Button == System.Windows.Forms.MouseButtons.Left)
                 _actorResourceController.deselectAllSubControllers();
         }

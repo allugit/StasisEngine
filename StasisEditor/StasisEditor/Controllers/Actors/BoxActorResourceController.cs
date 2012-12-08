@@ -88,47 +88,7 @@ namespace StasisEditor.Controllers.Actors
 
         #endregion
 
-        #region Input
-
-        // mouseMove
-        public override void mouseMove(Vector2 worldMouse)
-        {
-            _generalSubController.handleMouseMove(worldMouse);
-        }
-
-        // mouseEnterView
-        public override void mouseEnterView()
-        {
-        }
-
-        // mouseLeaveView
-        public override void mouseLeaveView()
-        {
-        }
-
-        // mouseDown
-        public override void mouseDown(System.Windows.Forms.MouseEventArgs e)
-        {
-            _generalSubController.handleMouseDown(e);
-        }
-
-        // mouseUp
-        public override void mouseUp(System.Windows.Forms.MouseEventArgs e)
-        {
-            _generalSubController.handleMouseUp(e);
-        }
-
-        // keyDown
-        public override void keyDown()
-        {
-        }
-
-        // keyUp
-        public override void keyUp()
-        {
-        }
-
-        #endregion
+        #region Actor Resource Controller Methods
 
         // selectAllSubControllers
         public override void selectAllSubControllers()
@@ -144,6 +104,14 @@ namespace StasisEditor.Controllers.Actors
             _levelController.deselectSubController(_boxSubController);
         }
 
+        // hitTest
+        public override bool hitTest(Vector2 worldMouse)
+        {
+            // Box hit test
+            bool status = _boxSubController.hitTest(worldMouse);
+            return status;
+        }
+
         // draw
         public override void draw()
         {
@@ -155,5 +123,7 @@ namespace StasisEditor.Controllers.Actors
         {
             return new BoxActorResourceController(_levelController, _actor.clone());
         }
+
+        #endregion
     }
 }
