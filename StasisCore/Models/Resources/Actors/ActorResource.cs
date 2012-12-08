@@ -1,27 +1,27 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
+using Microsoft.Xna.Framework;
 
 namespace StasisCore.Models
 {
     public enum ActorType
     {
         BoxActor = 0,
-        CircleActor
+        CircleActor,
+        MovingPlatform
     }
 
     abstract public class ActorResource
     {
-        protected GeneralProperties _generalProperties;
         protected ActorType _type;
+        protected Vector2 _position;
 
         public ActorType type { get { return _type; } }
-        public GeneralProperties properties { get { return _generalProperties; } set { _generalProperties = value; } }
+        public Vector2 position { get { return _position; } set { _position = value; } }
 
-        public ActorResource(ActorProperties generalProperties)
+        public ActorResource(Vector2 position)
         {
-            _generalProperties = generalProperties as GeneralProperties;
+            _position = position;
         }
 
         // clone

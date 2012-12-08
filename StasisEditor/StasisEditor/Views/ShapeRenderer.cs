@@ -22,11 +22,11 @@ namespace StasisEditor.Views
         }
 
         // drawBox
-        public void drawBox(Vector2 position, float halfWidth, float halfHeight, float angle)
+        public void drawBox(Vector2 position, float halfWidth, float halfHeight, float angle, Color color)
         {
             float scale = _levelController.getScale();
             Rectangle rectangle = new Rectangle(0, 0, (int)(halfWidth * 2 * scale), (int)(halfHeight * 2 * scale));
-            _spriteBatch.Draw(_pixel, (position + _levelController.getWorldOffset()) * scale, rectangle, Color.LightBlue, angle, new Vector2(halfWidth, halfHeight) * scale, 1, SpriteEffects.None, 0);
+            _spriteBatch.Draw(_pixel, (position + _levelController.getWorldOffset()) * scale, rectangle, color, angle, new Vector2(halfWidth, halfHeight) * scale, 1, SpriteEffects.None, 0);
         }
     }
 }

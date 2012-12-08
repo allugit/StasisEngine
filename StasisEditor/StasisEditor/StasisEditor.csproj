@@ -79,10 +79,9 @@
     <Compile Include="Controllers\Actors\Input\ActorSubController.cs" />
     <Compile Include="Controllers\Actors\BoxActorResourceController.cs" />
     <Compile Include="Controllers\Actors\Input\BoxSubController.cs" />
-    <Compile Include="Controllers\Actors\Input\GeneralSubController.cs" />
     <Compile Include="Controllers\Actors\IBoxSubControllable.cs" />
-    <Compile Include="Controllers\Actors\IGeneralSubControllable.cs" />
     <Compile Include="Controllers\Actors\ISubControllable.cs" />
+    <Compile Include="Controllers\Actors\MovingPlatformActorResourceController.cs" />
     <Compile Include="Controllers\IController.cs" />
     <Compile Include="Controllers\EditorController.cs" />
     <Compile Include="Controllers\IEditorController.cs" />

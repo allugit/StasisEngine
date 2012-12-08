@@ -2,83 +2,75 @@
 using System.Collections.Generic;
 using Microsoft.Xna.Framework;
 using StasisCore.Models;
-using StasisEditor.Views;
 
 namespace StasisEditor.Controllers.Actors
 {
-    public class BoxActorResourceController : ActorResourceController, IBoxSubControllable
+    public class MovingPlatformActorResourceController : ActorResourceController, IBoxSubControllable
     {
-        private BoxActorResource _boxActor;
+        private MovingPlatformActorResource _movingPlatformActor;
         private BoxSubController _boxSubController;
 
-        public BoxActorResourceController(ILevelController levelController, ActorResource actor = null)
-            : base(levelController)
+        public MovingPlatformActorResourceController(ILevelController levelController, ActorResource actorResource = null) : base(levelController)
         {
-            // Default actor
-            if (actor == null)
-                actor = new BoxActorResource(_levelController.getWorldMouse());
+            // Default actor resource
+            if (actorResource == null)
+                actorResource = new MovingPlatformActorResource(_levelController.getWorldMouse());
 
-            _actor = actor;
+            _actor = actorResource;
+            _movingPlatformActor = actorResource as MovingPlatformActorResource;
 
-            // Store reference to typed actor resource
-            _boxActor = _actor as BoxActorResource;
-
-            // Create input controls
+            // Create sub controllers
             _boxSubController = new BoxSubController(this);
         }
 
-        #region General Actor Interface
+        #region Box Actor Interface
 
         // getPosition
         public Vector2 getPosition()
         {
-            return _boxActor.position;
+            return _actor.position;
         }
 
         // setPosition
         public void setPosition(Vector2 position)
         {
-            _boxActor.position = position;
+            _actor.position = position;
         }
-
-        #endregion
-
-        #region Box Actor Interface
 
         // getHalfWidth
         public float getHalfWidth()
         {
-            return _boxActor.boxProperties.halfWidth;
+            return _movingPlatformActor.boxProperties.halfWidth;
         }
 
         // getHalfHeight
         public float getHalfHeight()
         {
-            return _boxActor.boxProperties.halfHeight;
+            return _movingPlatformActor.boxProperties.halfHeight;
         }
 
         // getAngle
         public float getAngle()
         {
-            return _boxActor.boxProperties.angle;
+            return _movingPlatformActor.boxProperties.angle;
         }
 
         // setHalfWidth
         public void setHalfWidth(float value)
         {
-            _boxActor.boxProperties.halfWidth = value;
+            _movingPlatformActor.boxProperties.halfWidth = value;
         }
 
         // setHalfHeight
         public void setHalfHeight(float value)
         {
-            _boxActor.boxProperties.halfHeight = value;
+            _movingPlatformActor.boxProperties.halfHeight = value;
         }
 
         // setAngle
         public void setAngle(float value)
         {
-            _boxActor.boxProperties.angle = value;
+            _movingPlatformActor.boxProperties.angle = value;
         }
 
         #endregion
@@ -113,13 +105,13 @@ namespace StasisEditor.Controllers.Actors
         // draw
         public override void draw()
         {
-            _renderer.drawBox(_actor.position, _boxActor.boxProperties.halfWidth, _boxActor.boxProperties.halfHeight, _boxActor.boxProperties.angle, Color.LightBlue);
+            _renderer.drawBox(_actor.position, _movingPlatformActor.boxProperties.halfWidth, _movingPlatformActor.boxProperties.halfHeight, _movingPlatformActor.boxProperties.angle, Color.Blue);
         }
 
         // clone
         public override ActorResourceController clone()
         {
-            return new BoxActorResourceController(_levelController, _actor.clone());
+            return new MovingPlatformActorResourceController(_levelController, _actor.clone());
         }
 
         #endregion

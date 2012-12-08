@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using Microsoft.Xna.Framework;
 
 namespace StasisCore.Models
 {
@@ -11,8 +12,8 @@ namespace StasisCore.Models
         public BoxProperties boxProperties { get { return _boxProperties; } }
         public BodyProperties bodyProperties { get { return _bodyProperties; } }
 
-        public BoxActorResource(ActorProperties generalProperties, ActorProperties boxProperties = null, ActorProperties bodyProperties = null)
-            : base(generalProperties)
+        public BoxActorResource(Vector2 position, ActorProperties boxProperties = null, ActorProperties bodyProperties = null)
+            : base(position)
         {
             // Default box properties
             if (boxProperties == null)
@@ -22,7 +23,6 @@ namespace StasisCore.Models
             if (bodyProperties == null)
                 bodyProperties = new BodyProperties(CoreBodyType.Static, 1f, 1f, 0f);
 
-            _generalProperties = generalProperties as GeneralProperties;
             _boxProperties = boxProperties as BoxProperties;
             _bodyProperties = bodyProperties as BodyProperties;
         }
@@ -30,7 +30,7 @@ namespace StasisCore.Models
         // clone
         public override ActorResource clone()
         {
-            return new BoxActorResource(_generalProperties.clone(), _boxProperties.clone(), _bodyProperties.clone());
+            return new BoxActorResource(_position, _boxProperties.clone(), _bodyProperties.clone());
         }
     }
 }
