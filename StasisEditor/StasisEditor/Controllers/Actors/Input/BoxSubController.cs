@@ -47,6 +47,7 @@ namespace StasisEditor.Controllers.Actors
         // handleMouseMove
         public override void handleMouseMove(Vector2 worldMouse)
         {
+            _actorResourceController.setPosition(worldMouse);
         }
 
         // handleMouseEnterView
@@ -62,6 +63,8 @@ namespace StasisEditor.Controllers.Actors
         // handleMouseDown
         public override void handleMouseDown(System.Windows.Forms.MouseEventArgs e)
         {
+            if (e.Button == System.Windows.Forms.MouseButtons.Left)
+                _actorResourceController.deselectSubController(this);
         }
 
         // handleMouseUp

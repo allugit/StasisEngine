@@ -42,7 +42,7 @@ namespace StasisEditor.Controllers.Actors
         public override void handleMouseDown(System.Windows.Forms.MouseEventArgs e)
         {
             if (e.Button == System.Windows.Forms.MouseButtons.Left)
-                _actorResourceController.deselectAllSubControllers();
+                _actorResourceController.deselectSubController(this);
         }
 
         // handleMouseUp

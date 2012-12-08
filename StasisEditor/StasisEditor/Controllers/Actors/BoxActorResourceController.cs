@@ -9,7 +9,6 @@ namespace StasisEditor.Controllers.Actors
     public class BoxActorResourceController : ActorResourceController, IGeneralSubControllable, IBoxSubControllable
     {
         private BoxActorResource _boxActor;
-        private GeneralSubController _generalSubController;
         private BoxSubController _boxSubController;
 
         public BoxActorResourceController(ILevelController levelController, ActorResource actor = null)
@@ -28,7 +27,6 @@ namespace StasisEditor.Controllers.Actors
             _boxActor = _actor as BoxActorResource;
 
             // Create input controls
-            _generalSubController = new GeneralSubController(this);
             _boxSubController = new BoxSubController(this);
         }
 
@@ -93,14 +91,12 @@ namespace StasisEditor.Controllers.Actors
         // selectAllSubControllers
         public override void selectAllSubControllers()
         {
-            _levelController.selectSubController(_generalSubController);
             _levelController.selectSubController(_boxSubController);
         }
 
         // deselectAllSubControllers
         public override void deselectAllSubControllers()
         {
-            _levelController.deselectSubController(_generalSubController);
             _levelController.deselectSubController(_boxSubController);
         }
 
@@ -108,8 +104,13 @@ namespace StasisEditor.Controllers.Actors
         public override bool hitTest(Vector2 worldMouse)
         {
             // Box hit test
-            bool status = _boxSubController.hitTest(worldMouse);
-            return status;
+            bool hit = _boxSubController.hitTest(worldMouse);
+
+            // Select appropriate sub control
+            if (hit)
+                _levelController.selectSubController(_boxSubController);
+
+            return hit;
         }
 
         // draw

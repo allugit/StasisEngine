@@ -32,6 +32,12 @@ namespace StasisEditor.Controllers.Actors
         // deselectAllSubControllers
         abstract public void deselectAllSubControllers();
 
+        // deselectSubController
+        public void deselectSubController(ActorSubController subController)
+        {
+            _levelController.deselectSubController(subController);
+        }
+
         // hitTest
         abstract public bool hitTest(Vector2 worldMouse);
 

@@ -225,10 +225,9 @@ namespace StasisEditor.Controllers
                 // Try to select a sub controller
                 foreach (ActorResourceController actorResourceController in _actorControllers)
                 {
+                    // Stop searching if a hit test returns true (actor controller will handle the selection of the appropriate sub controls)
                     if (actorResourceController.hitTest(getWorldMouse()))
-                    {
-                        Console.WriteLine("Something is being selected.. halt search");
-                    }
+                        break;
                 }
             }
             else
