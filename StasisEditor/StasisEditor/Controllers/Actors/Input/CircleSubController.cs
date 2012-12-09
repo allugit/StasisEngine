@@ -1,12 +1,14 @@
 ﻿using System;
 using System.Collections.Generic;
 using Microsoft.Xna.Framework;
+using Microsoft.Xna.Framework.Input;
 
 namespace StasisEditor.Controllers.Actors
 {
     public class CircleSubController : ActorSubController
     {
         private ICircleSubControllable _actorResourceController;
+        private float _radiusChangeAmount = 0.1f;
 
         public CircleSubController(ICircleSubControllable actorResourceController)
             : base()
@@ -34,6 +36,16 @@ namespace StasisEditor.Controllers.Actors
         {
             if (e.Button == System.Windows.Forms.MouseButtons.Left)
                 _actorResourceController.deselectSubController(this);
+        }
+
+        // checkXNAKeys
+        public override void checkXNAKeys()
+        {
+            // Update width
+            if (Input.newKey.IsKeyDown(Keys.A) || Input.newKey.IsKeyDown(Keys.W))
+                _actorResourceController.setRadius(_actorResourceController.getRadius() + _radiusChangeAmount);
+            if (Input.newKey.IsKeyDown(Keys.D) || Input.newKey.IsKeyDown(Keys.S))
+                _actorResourceController.setRadius(_actorResourceController.getRadius() - _radiusChangeAmount);
         }
     }
 }
