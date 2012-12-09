@@ -7,9 +7,6 @@ namespace StasisEditor.Controllers.Actors
     {
         ILevelController getLevelController();
 
-        Vector2 getPosition();
-        void setPosition(Vector2 position);
-
         void selectSubController(ActorSubController subController);
         void deselectSubController(ActorSubController subController);
     }

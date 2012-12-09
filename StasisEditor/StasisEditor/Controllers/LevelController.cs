@@ -156,6 +156,10 @@ namespace StasisEditor.Controllers
                 case "objectSpawnerButton":
                     actorController = new ObjectSpawnerResourceController(this);
                     break;
+
+                case "ropeButton":
+                    actorController = new RopeActorResourceController(this);
+                    break;
             }
 
             if (actorController != null)

@@ -71,6 +71,7 @@
     <Compile Include="Models\Resources\Actors\Properties\BoxProperties.cs" />
     <Compile Include="Models\Resources\Actors\Properties\CircleProperties.cs" />
     <Compile Include="Models\Resources\Actors\Properties\ObjectSpawnerProperties.cs" />
+    <Compile Include="Models\Resources\Actors\RopeActorResource.cs" />
     <Compile Include="Models\Resources\Actors\TerrainActorResource.cs" />
     <Compile Include="Models\Resources\Materials\Properties\DecalProperties.cs" />
     <Compile Include="Models\Resources\Materials\FluidMaterialResource.cs" />
