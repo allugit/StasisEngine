@@ -13,6 +13,7 @@ namespace StasisEditor
         public static MouseState oldMouse;
         public static int newScrollValue;
         public static int oldScrollValue;
+        public static int deltaScrollValue;
 
         // update
         public static void update()
@@ -26,6 +27,7 @@ namespace StasisEditor
             newKey = Keyboard.GetState();
             newMouse = Mouse.GetState();
             newScrollValue = newMouse.ScrollWheelValue;
+            deltaScrollValue = newScrollValue - oldScrollValue;
         }
     }
 }

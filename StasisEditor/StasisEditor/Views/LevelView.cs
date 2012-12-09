@@ -26,6 +26,7 @@ namespace StasisEditor.Views
 
             // Hook to XNA
             XNAResources.graphics.PreparingDeviceSettings += new EventHandler<PreparingDeviceSettingsEventArgs>(preparingDeviceSettings);
+            Microsoft.Xna.Framework.Input.Mouse.WindowHandle = surface.FindForm().Handle;
 
             // Resize graphics device when the surface is resized
             Resize += new EventHandler(surface_Resize);

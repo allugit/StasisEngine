@@ -61,6 +61,9 @@ namespace StasisEditor.Controllers
         // getScale
         public float getScale() { return _scale; }
 
+        // setScale
+        public void setScale(float value) { _scale = value; }
+
         // getTextureResources
         public BindingList<TextureResource> getTextureResources()
         {
@@ -139,6 +142,10 @@ namespace StasisEditor.Controllers
         // update
         public void update()
         {
+            // Handle mouse wheel event through XNA
+            if (Input.deltaScrollValue != 0)
+                _scale += (float)Input.deltaScrollValue * 0.01f;
+            
             _levelController.update();
         }
 

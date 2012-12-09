@@ -10,6 +10,7 @@ namespace StasisEditor.Controllers
         void resizeGraphicsDevice(int width, int height);
 
         float getScale();
+        void setScale(float value);
 
         BindingList<TextureResource> getTextureResources();
         void addTextureResource(TextureResource resource);
