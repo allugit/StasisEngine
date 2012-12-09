@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using StasisEditor.Controllers;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
+using StasisCore.Models;
 
 namespace StasisEditor.Views
 {
@@ -13,6 +14,8 @@ namespace StasisEditor.Views
         private Texture2D _pixel;
         private SpriteFont _arial;
         private Texture2D _circle;
+        private Texture2D _playerSpawnIcon;
+        private Texture2D _timerIcon;
 
         public ShapeRenderer(ILevelController levelController)
         {
@@ -21,6 +24,8 @@ namespace StasisEditor.Views
             _pixel = XNAResources.pixel;
             _arial = XNAResources.arial;
             _circle = XNAResources.circle;
+            _playerSpawnIcon = XNAResources.playerSpawnIcon;
+            _timerIcon = XNAResources.timerIcon;
         }
 
         // drawBox
@@ -46,9 +51,6 @@ namespace StasisEditor.Views
         public void drawPoint(Vector2 position, Color color)
         {
             drawCircle(position, 4f / _levelController.getScale(), color);
-            //float circleRadius = 4f;
-            //float circleScale = circleRadius / ((float)_circle.Width / 2);
-            //_spriteBatch.Draw(_circle, (position + _levelController.getWorldOffset()) * _levelController.getScale(), _circle.Bounds, color, 0, new Vector2(_circle.Width, _circle.Height) / 2, circleScale, SpriteEffects.None, 0);
         }
 
         // drawCircle
@@ -56,6 +58,23 @@ namespace StasisEditor.Views
         {
             float circleScale = radius / (((float)_circle.Width / 2) / _levelController.getScale());
             _spriteBatch.Draw(_circle, (position + _levelController.getWorldOffset()) * _levelController.getScale(), _circle.Bounds, color, 0, new Vector2(_circle.Width, _circle.Height) / 2, circleScale, SpriteEffects.None, 0);
+        }
+
+        // drawIcon
+        public void drawIcon(ActorType actorType, Vector2 position)
+        {
+            Texture2D texture = _pixel;
+
+            switch (actorType)
+            {
+                case ActorType.PlayerSpawn:
+                    texture = _playerSpawnIcon;
+                    break;
+            }
+
+            Rectangle rect = texture == _pixel ? new Rectangle(0, 0, 24, 24) : texture.Bounds;
+
+            _spriteBatch.Draw(texture, (position + _levelController.getWorldOffset()) * _levelController.getScale(), rect, Color.White, 0, new Vector2(rect.Width, rect.Height) / 2, 1f, SpriteEffects.None, 0);
         }
     }
 }

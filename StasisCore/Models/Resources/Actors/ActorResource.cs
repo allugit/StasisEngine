@@ -12,7 +12,8 @@ namespace StasisCore.Models
         PressurePlate,
         Terrain,
         Rope,
-        Fluid
+        Fluid,
+        PlayerSpawn
     }
 
     abstract public class ActorResource

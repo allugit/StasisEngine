@@ -90,6 +90,7 @@
     <Compile Include="Controllers\Actors\Input\ISubControllable.cs" />
     <Compile Include="Controllers\Actors\MovingPlatformActorResourceController.cs" />
     <Compile Include="Controllers\Actors\ObjectSpawnerResourceController.cs" />
+    <Compile Include="Controllers\Actors\PlayerSpawnActorResourceController.cs" />
     <Compile Include="Controllers\Actors\PressurePlateActorResourceController.cs" />
     <Compile Include="Controllers\Actors\RopeActorResourceController.cs" />
     <Compile Include="Controllers\Actors\TerrainActorResourceController.cs" />

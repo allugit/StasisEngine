@@ -66,6 +66,7 @@
     <Compile Include="Models\Resources\Actors\FluidActorResource.cs" />
     <Compile Include="Models\Resources\Actors\MovingPlatformActorResource.cs" />
     <Compile Include="Models\Resources\Actors\ObjectSpawnerResource.cs" />
+    <Compile Include="Models\Resources\Actors\PlayerSpawnActorResource.cs" />
     <Compile Include="Models\Resources\Actors\PressurePlateActorResource.cs" />
     <Compile Include="Models\Resources\Actors\Properties\ActorProperties.cs" />
     <Compile Include="Models\Resources\Actors\Properties\BodyProperties.cs" />

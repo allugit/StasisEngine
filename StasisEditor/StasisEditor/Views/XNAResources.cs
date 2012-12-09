@@ -15,6 +15,8 @@ namespace StasisEditor.Views
         public static Texture2D pixel;
         public static SpriteFont arial;
         public static Texture2D circle;
+        public static Texture2D playerSpawnIcon;
+        public static Texture2D timerIcon;
 
         public static void initialize(XNAController controller)
         {
@@ -32,6 +34,12 @@ namespace StasisEditor.Views
 
             // Circle
             circle = controller.Content.Load<Texture2D>("circle");
+
+            // Player spawn icon
+            playerSpawnIcon = controller.Content.Load<Texture2D>("actor_controller_icons/player_spawn");
+
+            // Timer
+            timerIcon = controller.Content.Load<Texture2D>("actor_controller_icons/timer");
         }
     }
 }

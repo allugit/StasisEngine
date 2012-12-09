@@ -8,14 +8,16 @@ namespace StasisEditor.Controllers.Actors
     {
         private Vector2 _position;
         private IPointSubControllable _actorResourceController;
+        private float _marginInPixels;
 
         public Vector2 position { get { return _position; } }
 
-        public PointSubController(Vector2 position, IPointSubControllable actorResourceController)
+        public PointSubController(Vector2 position, IPointSubControllable actorResourceController, float marginInPixels = 8f)
             : base()
         {
             _position = position;
             _actorResourceController = actorResourceController;
+            _marginInPixels = marginInPixels;
         }
 
         #region Input
@@ -23,7 +25,7 @@ namespace StasisEditor.Controllers.Actors
         // hitTest
         public override bool hitTest(Vector2 worldMouse)
         {
-            float margin = 8f / _actorResourceController.getLevelController().getScale();
+            float margin = _marginInPixels / _actorResourceController.getLevelController().getScale();
             Vector2 relative = _position - worldMouse;
             float length = relative.Length();
 

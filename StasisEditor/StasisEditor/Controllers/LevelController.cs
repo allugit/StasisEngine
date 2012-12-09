@@ -164,6 +164,10 @@ namespace StasisEditor.Controllers
                 case "fluidButton":
                     actorController = new FluidActorResourceController(this);
                     break;
+
+                case "playerSpawnButton":
+                    actorController = new PlayerSpawnActorResourceController(this);
+                    break;
             }
 
             if (actorController != null)
