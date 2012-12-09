@@ -6,6 +6,9 @@ namespace StasisEditor.Controllers.Actors
 {
     abstract public class ActorSubController
     {
+        private bool _selected;
+        public bool selected { get { return _selected; } set { _selected = value; } }
+
         public ActorSubController()
         {
         }

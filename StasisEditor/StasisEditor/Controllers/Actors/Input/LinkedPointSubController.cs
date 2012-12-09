@@ -41,14 +41,32 @@ namespace StasisEditor.Controllers.Actors
         // removePoint -- remove this point
         public void removePoint()
         {
+            // Handle deletion when there are no other linked points
+            if (next == null && previous == null)
+            {
+                if (selected)
+                    _actorResourceController.deselectSubController(this);
+                _actorResourceController.delete();
+            }
+
+            // Deselect if selected
+            if (selected)
+                _actorResourceController.deselectSubController(this);
+
             if (previous != null)
                 previous.next = next;
 
             if (next != null)
                 next.previous = previous;
 
-            previous = null;
-            next = null;
+            // Find head node
+            LinkedPointSubController head = this;
+            while (head.previous != null)
+                head = head.previous;
+
+            // Update actor resource's head control if necessary
+            if (head == this)
+                _actorResourceController.setNewLinkedPointSubControllerHead(next);
         }
 
         #endregion
@@ -136,6 +154,14 @@ namespace StasisEditor.Controllers.Actors
             
             if (e.Button == System.Windows.Forms.MouseButtons.Left)
                 _actorResourceController.deselectSubController(this);
+        }
+
+        //
+        public override void checkXNAKeys()
+        {
+            // Handle point insertion while selected
+            if (selected && (Input.newKey.IsKeyDown(Keys.OemPlus) && Input.oldKey.IsKeyUp(Keys.OemPlus)))
+                insertPoint(position);
         }
 
         #endregion

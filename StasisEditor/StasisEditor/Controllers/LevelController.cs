@@ -220,6 +220,7 @@ namespace StasisEditor.Controllers
         {
             // actual selection is handled in update() in the 'XNA Methods' region
             _subControllerSelectQueue.Add(subController);
+            subController.selected = true;
         }
 
         // deselectSubController
@@ -227,6 +228,7 @@ namespace StasisEditor.Controllers
         {
             // actual deselection is handled in update() in the 'XNA Methods' region
             _subControllerDeselectQueue.Add(subController);
+            subController.selected = false;
         }
 
         // addActorController

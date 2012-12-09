@@ -99,12 +99,8 @@ namespace StasisEditor.Controllers.Actors
         public override void globalCheckKey()
         {
             // Delete test
-            if (Input.newKey.IsKeyDown(Keys.Delete) && Input.oldKey.IsKeyUp(Keys.Delete))
-            {
-                // Hit test box
-                if (_boxSubController.hitTest(_levelController.getWorldMouse()))
-                    delete();
-            }
+            if (_boxSubController.selected && Input.newKey.IsKeyDown(Keys.Delete) && Input.oldKey.IsKeyUp(Keys.Delete))
+                delete();
         }
 
         #endregion

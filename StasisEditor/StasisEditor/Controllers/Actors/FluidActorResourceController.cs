@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using Microsoft.Xna.Framework;
+using Microsoft.Xna.Framework.Input;
 using StasisCore.Models;
 
 namespace StasisEditor.Controllers.Actors
@@ -52,29 +53,7 @@ namespace StasisEditor.Controllers.Actors
 
         #endregion
 
-        #region Actor Resource Controller Methods
-
-        // selectAllSubControllers
-        public override void selectAllSubControllers()
-        {
-            LinkedPointSubController current = _headLinkedPointController;
-            while (current != null)
-            {
-                _levelController.selectSubController(current);
-                current = current.next;
-            }
-        }
-
-        // deselectAllSubControllers
-        public override void deselectAllSubControllers()
-        {
-            LinkedPointSubController current = _headLinkedPointController;
-            while (current != null)
-            {
-                _levelController.deselectSubController(current);
-                current = current.next;
-            }
-        }
+        #region Input
 
         // hitTest
         public override bool hitTest(Vector2 worldMouse)
@@ -107,6 +86,94 @@ namespace StasisEditor.Controllers.Actors
             }
 
             return false;
+        }
+
+        // globalCheckKeys
+        public override void globalCheckKey()
+        {
+            ////////////////////////////
+            // Test for delete
+            LinkedPointSubController current = _headLinkedPointController;
+            bool anyLinkSelected = false;
+            while (current.next != null)
+            {
+                if (current.selected)
+                {
+                    anyLinkSelected = true;
+                    break;
+                }
+                current = current.next;
+            }
+            if (anyLinkSelected && Input.newKey.IsKeyDown(Keys.Delete) && Input.oldKey.IsKeyUp(Keys.Delete))
+            {
+                if (System.Windows.Forms.MessageBox.Show("Are you sure you want to delete this controller and all the points? \n (Use the minus key [-] to remove single points)", "Remove entire controller?", System.Windows.Forms.MessageBoxButtons.YesNo) == System.Windows.Forms.DialogResult.Yes)
+                    delete();
+            }
+
+            //////////////////////////////////////
+            // Test for point insertion / removal
+            bool plusPressed = Input.newKey.IsKeyDown(Keys.OemPlus) && Input.oldKey.IsKeyUp(Keys.OemPlus);
+            bool minusPressed = Input.newKey.IsKeyDown(Keys.OemMinus) && Input.oldKey.IsKeyUp(Keys.OemMinus);
+            Vector2 worldMouse = _levelController.getWorldMouse();
+
+            // Only test for insertions if there are no links selected -- insertion while selected is handled in the sub controller's
+            // checkXNAKeys method since this methods requires a hit test
+            if (!anyLinkSelected && plusPressed)
+            {
+                // Hit test link line
+                current = _headLinkedPointController;
+                while (current.next != null)
+                {
+                    if (current.linkHitTest(worldMouse))
+                    {
+                        current.insertPoint(worldMouse);
+                        return;
+                    }
+                    current = current.next;
+                }
+            }
+
+            if (minusPressed)
+            {
+                // Hit test points
+                current = _headLinkedPointController;
+                while (current != null)
+                {
+                    if (current.hitTest(worldMouse))
+                    {
+                        current.removePoint();
+                        return;
+                    }
+
+                    current = current.next;
+                }
+            }
+        }
+
+        #endregion
+
+        #region Actor Resource Controller Methods
+
+        // selectAllSubControllers
+        public override void selectAllSubControllers()
+        {
+            LinkedPointSubController current = _headLinkedPointController;
+            while (current != null)
+            {
+                _levelController.selectSubController(current);
+                current = current.next;
+            }
+        }
+
+        // deselectAllSubControllers
+        public override void deselectAllSubControllers()
+        {
+            LinkedPointSubController current = _headLinkedPointController;
+            while (current != null)
+            {
+                _levelController.deselectSubController(current);
+                current = current.next;
+            }
         }
 
         // draw

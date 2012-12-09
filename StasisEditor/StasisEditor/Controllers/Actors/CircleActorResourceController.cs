@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using Microsoft.Xna.Framework;
+using Microsoft.Xna.Framework.Input;
 using StasisCore.Models;
 
 namespace StasisEditor.Controllers.Actors
@@ -50,6 +51,30 @@ namespace StasisEditor.Controllers.Actors
 
         #endregion
 
+        #region Input
+
+        // hitTest
+        public override bool hitTest(Vector2 worldMouse)
+        {
+            if (_circleSubController.hitTest(worldMouse))
+            {
+                _levelController.selectSubController(_circleSubController);
+                return true;
+            }
+
+            return false;
+        }
+
+        // globalCheckKeys
+        public override void globalCheckKey()
+        {
+            // Delete test
+            if (_circleSubController.selected && Input.newKey.IsKeyDown(Keys.Delete) && Input.oldKey.IsKeyUp(Keys.Delete))
+                delete();
+        }
+
+        #endregion
+
         #region Actor Resource Controller methods
 
         // selectAllSubControllers
@@ -62,18 +87,6 @@ namespace StasisEditor.Controllers.Actors
         public override void deselectAllSubControllers()
         {
             _levelController.deselectSubController(_circleSubController);
-        }
-
-        // hitTest
-        public override bool hitTest(Vector2 worldMouse)
-        {
-            if (_circleSubController.hitTest(worldMouse))
-            {
-                _levelController.selectSubController(_circleSubController);
-                return true;
-            }
-
-            return false;
         }
 
         // draw
