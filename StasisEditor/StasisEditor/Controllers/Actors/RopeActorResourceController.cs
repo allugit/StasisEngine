@@ -60,6 +60,14 @@ namespace StasisEditor.Controllers.Actors
                 return true;
             }
 
+            // Hit test line
+            if (_pointASubController.lineHitTest(worldMouse, _pointBSubController.position))
+            {
+                _levelController.selectSubController(_pointASubController);
+                _levelController.selectSubController(_pointBSubController);
+                return true;
+            }
+
             return false;
         }
 
