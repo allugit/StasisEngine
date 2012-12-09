@@ -63,6 +63,7 @@
     <Compile Include="Models\Resources\Actors\ActorResource.cs" />
     <Compile Include="Models\Resources\Actors\BoxActorResource.cs" />
     <Compile Include="Models\Resources\Actors\CircleActorResource.cs" />
+    <Compile Include="Models\Resources\Actors\FluidActorResource.cs" />
     <Compile Include="Models\Resources\Actors\MovingPlatformActorResource.cs" />
     <Compile Include="Models\Resources\Actors\ObjectSpawnerResource.cs" />
     <Compile Include="Models\Resources\Actors\PressurePlateActorResource.cs" />
@@ -70,6 +71,7 @@
     <Compile Include="Models\Resources\Actors\Properties\BodyProperties.cs" />
     <Compile Include="Models\Resources\Actors\Properties\BoxProperties.cs" />
     <Compile Include="Models\Resources\Actors\Properties\CircleProperties.cs" />
+    <Compile Include="Models\Resources\Actors\Properties\FluidProperties.cs" />
     <Compile Include="Models\Resources\Actors\Properties\ObjectSpawnerProperties.cs" />
     <Compile Include="Models\Resources\Actors\RopeActorResource.cs" />
     <Compile Include="Models\Resources\Actors\TerrainActorResource.cs" />

@@ -5,31 +5,31 @@ using StasisCore.Models;
 
 namespace StasisEditor.Controllers.Actors
 {
-    public class TerrainActorResourceController : ActorResourceController, ILinkedPointSubControllable
+    public class FluidActorResourceController : ActorResourceController, ILinkedPointSubControllable
     {
-        private TerrainActorResource _terrainActorResource;
+        private FluidActorResource _fluidActorResource;
         private LinkedPointSubController _headLinkedPointController;
 
-        public TerrainActorResourceController(ILevelController levelController, ActorResource actorResource = null)
+        public FluidActorResourceController(ILevelController levelController, ActorResource actorResource = null)
             : base(levelController)
         {
             // Default actor
             if (actorResource == null)
-                actorResource = new TerrainActorResource();
+                actorResource = new FluidActorResource();
 
             // Set actor resources
             _actor = actorResource;
-            _terrainActorResource = actorResource as TerrainActorResource;
+            _fluidActorResource = actorResource as FluidActorResource;
 
             // Initialize points
             List<Vector2> actorResourcePoints = new List<Vector2>();
-            if (_terrainActorResource.points.Count == 0)
+            if (_fluidActorResource.points.Count == 0)
             {
                 actorResourcePoints.Add(_levelController.getWorldMouse() - new Vector2(1f, 0));
                 actorResourcePoints.Add(_levelController.getWorldMouse() + new Vector2(1f, 0));
             }
             else
-                actorResourcePoints = _terrainActorResource.points;
+                actorResourcePoints = _fluidActorResource.points;
 
             // Create linked point controllers
             _headLinkedPointController = new LinkedPointSubController(actorResourcePoints[0], this);
@@ -102,7 +102,7 @@ namespace StasisEditor.Controllers.Actors
             LinkedPointSubController current = _headLinkedPointController;
             while (current.next != null)
             {
-                _renderer.drawLine(current.position, current.next.position, Color.Orange);
+                _renderer.drawLine(current.position, current.next.position, Color.Blue);
                 current = current.next;
             }
 
@@ -110,7 +110,7 @@ namespace StasisEditor.Controllers.Actors
             current = _headLinkedPointController;
             while (current != null)
             {
-                _renderer.drawPoint(current.position, Color.Yellow);
+                _renderer.drawPoint(current.position, Color.LightBlue);
                 current = current.next;
             }
         }
@@ -118,7 +118,7 @@ namespace StasisEditor.Controllers.Actors
         // clone
         public override ActorResourceController clone()
         {
-            return new TerrainActorResourceController(_levelController, _actor.clone());
+            return new FluidActorResourceController(_levelController, _actor.clone());
         }
 
         #endregion

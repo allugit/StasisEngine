@@ -11,7 +11,8 @@ namespace StasisCore.Models
         MovingPlatform,
         PressurePlate,
         Terrain,
-        Rope
+        Rope,
+        Fluid
     }
 
     abstract public class ActorResource

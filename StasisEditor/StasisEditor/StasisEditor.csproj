@@ -76,6 +76,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Controllers\Actors\ActorResourceController.cs" />
+    <Compile Include="Controllers\Actors\FluidActorResourceController.cs" />
     <Compile Include="Controllers\Actors\Input\ICircleSubControllable.cs" />
     <Compile Include="Controllers\Actors\Input\ILinkedPointSubControllable.cs" />
     <Compile Include="Controllers\Actors\Input\ActorSubController.cs" />

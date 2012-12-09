@@ -160,6 +160,10 @@ namespace StasisEditor.Controllers
                 case "ropeButton":
                     actorController = new RopeActorResourceController(this);
                     break;
+
+                case "fluidButton":
+                    actorController = new FluidActorResourceController(this);
+                    break;
             }
 
             if (actorController != null)
