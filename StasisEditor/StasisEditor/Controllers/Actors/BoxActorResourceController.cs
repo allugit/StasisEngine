@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using Microsoft.Xna.Framework;
+using Microsoft.Xna.Framework.Input;
 using StasisCore.Models;
 using StasisEditor.Views;
 
@@ -79,19 +80,7 @@ namespace StasisEditor.Controllers.Actors
 
         #endregion
 
-        #region Actor Resource Controller Methods
-
-        // selectAllSubControllers
-        public override void selectAllSubControllers()
-        {
-            _levelController.selectSubController(_boxSubController);
-        }
-
-        // deselectAllSubControllers
-        public override void deselectAllSubControllers()
-        {
-            _levelController.deselectSubController(_boxSubController);
-        }
+        #region Input
 
         // hitTest
         public override bool hitTest(Vector2 worldMouse)
@@ -104,6 +93,34 @@ namespace StasisEditor.Controllers.Actors
                 _levelController.selectSubController(_boxSubController);
 
             return hit;
+        }
+
+        // globalCheckKeys
+        public override void globalCheckKey()
+        {
+            // Delete test
+            if (Input.newKey.IsKeyDown(Keys.Delete) && Input.oldKey.IsKeyUp(Keys.Delete))
+            {
+                // Hit test box
+                if (_boxSubController.hitTest(_levelController.getWorldMouse()))
+                    delete();
+            }
+        }
+
+        #endregion
+
+        #region Actor Resource Controller Methods
+
+        // selectAllSubControllers
+        public override void selectAllSubControllers()
+        {
+            _levelController.selectSubController(_boxSubController);
+        }
+
+        // deselectAllSubControllers
+        public override void deselectAllSubControllers()
+        {
+            _levelController.deselectSubController(_boxSubController);
         }
 
         // draw

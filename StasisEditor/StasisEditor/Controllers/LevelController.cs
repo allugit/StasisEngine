@@ -15,9 +15,12 @@ namespace StasisEditor.Controllers
         private ShapeRenderer _shapeRenderer;
 
         private List<ActorSubController> _selectedSubControllers;
-        private List<ActorResourceController> _actorControllers;
         private List<ActorSubController> _subControllerSelectQueue;
         private List<ActorSubController> _subControllerDeselectQueue;
+
+        private List<ActorResourceController> _actorControllers;
+        private List<ActorResourceController> _actorControllersAddQueue;
+        private List<ActorResourceController> _actorControllersRemoveQueue;
 
         private LevelResource _level;
 
@@ -36,6 +39,8 @@ namespace StasisEditor.Controllers
             _subControllerDeselectQueue = new List<ActorSubController>();
 
             _actorControllers = new List<ActorResourceController>();
+            _actorControllersAddQueue = new List<ActorResourceController>();
+            _actorControllersRemoveQueue = new List<ActorResourceController>();
         }
 
         #region Getters/Setters
@@ -111,6 +116,22 @@ namespace StasisEditor.Controllers
                 int index = _subControllerDeselectQueue.Count - 1;
                 _selectedSubControllers.Remove(_subControllerDeselectQueue[index]);
                 _subControllerDeselectQueue.Remove(_subControllerDeselectQueue[index]);
+            }
+
+            // Actor controller add queue
+            while (_actorControllersAddQueue.Count > 0)
+            {
+                int index = _actorControllersAddQueue.Count - 1;
+                _actorControllers.Add(_actorControllersAddQueue[index]);
+                _actorControllersAddQueue.Remove(_actorControllersAddQueue[index]);
+            }
+
+            // Actor controlle remove queue
+            while (_actorControllersRemoveQueue.Count > 0)
+            {
+                int index = _actorControllersRemoveQueue.Count - 1;
+                _actorControllers.Remove(_actorControllersRemoveQueue[index]);
+                _actorControllersRemoveQueue.Remove(_actorControllersRemoveQueue[index]);
             }
         }
 
@@ -211,13 +232,15 @@ namespace StasisEditor.Controllers
         // addActorController
         public void addActorController(ActorResourceController actorController)
         {
-            _actorControllers.Add(actorController);
+            // actual addition of actor controller is handled in update() in the 'XNA Methods' region
+            _actorControllersAddQueue.Add(actorController);
         }
 
         // removeActorController
         public void removeActorController(ActorResourceController actorController)
         {
-            _actorControllers.Remove(actorController);
+            // actual removal of actor controller is handled in update() in the 'XNA Methods' region
+            _actorControllersRemoveQueue.Add(actorController);
         }
 
         #endregion

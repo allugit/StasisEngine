@@ -47,6 +47,13 @@ namespace StasisEditor.Controllers.Actors
         // hitTest
         abstract public bool hitTest(Vector2 worldMouse);
 
+        // delete
+        virtual public void delete()
+        {
+            deselectAllSubControllers();
+            _levelController.removeActorController(this);
+        }
+
         // globalCheckKey
         virtual public void globalCheckKey() { }
 
