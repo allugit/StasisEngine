@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using Microsoft.Xna.Framework;
+using Microsoft.Xna.Framework.Input;
 using StasisCore.Models;
 
 namespace StasisEditor.Controllers.Actors
@@ -107,6 +108,46 @@ namespace StasisEditor.Controllers.Actors
             }
 
             return false;
+        }
+
+        // globalCheckKeys
+        public override void globalCheckKey()
+        {
+            bool plusPressed = Input.newKey.IsKeyDown(Keys.OemPlus) && Input.oldKey.IsKeyUp(Keys.OemPlus);
+            bool minusPressed = Input.newKey.IsKeyDown(Keys.OemMinus) && Input.oldKey.IsKeyUp(Keys.OemMinus);
+            Vector2 worldMouse = _levelController.getWorldMouse();
+
+            if (plusPressed)
+            {
+                // Hit test link line
+                LinkedPointSubController current = _headLinkedPointController;
+                while (current.next != null)
+                {
+                    if (current.linkHitTest(worldMouse))
+                    {
+                        current.insertPoint(worldMouse);
+                        return;
+                    }
+
+                    current = current.next;
+                }
+            }
+
+            if (minusPressed)
+            {
+                // Hit test points
+                LinkedPointSubController current = _headLinkedPointController;
+                while (current != null)
+                {
+                    if (current.hitTest(worldMouse))
+                    {
+                        current.removePoint();
+                        return;
+                    }
+
+                    current = current.next;
+                }
+            }
         }
 
         // draw

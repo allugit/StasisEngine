@@ -23,6 +23,36 @@ namespace StasisEditor.Controllers.Actors
             _actorResourceController = actorResourceController;
         }
 
+        #region Point Insertion/Removal
+
+        // insertPoint -- insert a point between this link and the next
+        public void insertPoint(Vector2 point)
+        {
+            // Create new linked point
+            LinkedPointSubController newPoint = new LinkedPointSubController(point, _actorResourceController);
+
+            // Reorganize connections
+            newPoint.previous = this;
+            newPoint.next = next;
+            next.previous = newPoint;
+            next = newPoint;
+        }
+
+        // removePoint -- remove this point
+        public void removePoint()
+        {
+            if (previous != null)
+                previous.next = next;
+
+            if (next != null)
+                next.previous = previous;
+
+            previous = null;
+            next = null;
+        }
+
+        #endregion
+
         #region Input
 
         // hitTest

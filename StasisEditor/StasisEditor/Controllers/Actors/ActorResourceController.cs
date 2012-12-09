@@ -47,6 +47,9 @@ namespace StasisEditor.Controllers.Actors
         // hitTest
         abstract public bool hitTest(Vector2 worldMouse);
 
+        // globalCheckKey
+        virtual public void globalCheckKey() { }
+
         // draw
         abstract public void draw();
 

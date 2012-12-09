@@ -89,9 +89,13 @@ namespace StasisEditor.Controllers
         // update
         public void update()
         {
-            // Check XNA keys
+            // Check XNA keys in selected sub controllers
             foreach (ActorSubController subController in _selectedSubControllers)
                 subController.checkXNAKeys();
+
+            // Let all actor resource controllers listen to key presses
+            foreach (ActorResourceController controller in _actorControllers)
+                controller.globalCheckKey();
 
             // Selection queue
             while (_subControllerSelectQueue.Count > 0)
