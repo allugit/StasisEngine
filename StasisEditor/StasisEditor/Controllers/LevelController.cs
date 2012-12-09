@@ -195,6 +195,12 @@ namespace StasisEditor.Controllers
                     break;
 
                 case "playerSpawnButton":
+                    // Remove existing player spawns before adding a new one
+                    foreach (ActorResourceController controller in _actorControllers)
+                    {
+                        if (controller.type == ActorType.PlayerSpawn)
+                            removeActorController(controller);
+                    }
                     actorController = new PlayerSpawnActorResourceController(this);
                     break;
             }
