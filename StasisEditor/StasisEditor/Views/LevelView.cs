@@ -27,11 +27,6 @@ namespace StasisEditor.Views
             // Hook to XNA
             XNAResources.graphics.PreparingDeviceSettings += new EventHandler<PreparingDeviceSettingsEventArgs>(preparingDeviceSettings);
 
-            // Add a listener to get the location of the mouse over the surface
-            //surface.MouseMove += new System.Windows.Forms.MouseEventHandler(surface_MouseMove);
-            //surface.MouseEnter += new EventHandler(surface_MouseEnter);
-            //surface.MouseLeave += new EventHandler(surface_MouseLeave);
-
             // Resize graphics device when the surface is resized
             Resize += new EventHandler(surface_Resize);
 
@@ -132,7 +127,6 @@ namespace StasisEditor.Views
                     1f,
                     Microsoft.Xna.Framework.Graphics.SpriteEffects.None,
                     0);
-                //level.editor.main.spriteBatch.DrawString(Main.arial, String.Format("{0}, {1}", worldMouse.X, worldMouse.Y), (worldMouse + worldOffset) * scale, Color.Gray);
             }
         }
 

@@ -38,13 +38,8 @@ namespace StasisEditor.Controllers.Actors
         {
         }
 
-        // handleKeyDown
-        virtual public void handleKeyDown()
-        {
-        }
-
-        // handleKeyUp
-        virtual public void handleKeyUp()
+        // checkXNAKeys
+        virtual public void checkXNAKeys()
         {
         }
     }

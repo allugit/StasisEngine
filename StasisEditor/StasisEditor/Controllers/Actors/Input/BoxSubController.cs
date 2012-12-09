@@ -1,12 +1,15 @@
 ﻿using System;
 using System.Collections.Generic;
 using Microsoft.Xna.Framework;
+using Microsoft.Xna.Framework.Input;
 
 namespace StasisEditor.Controllers.Actors
 {
     public class BoxSubController : ActorSubController
     {
         private IBoxSubControllable _actorResourceController;
+        private float _sizeChangeAmount = 0.1f;
+        private float _rotationChangeAmount = 0.05f;
 
         public BoxSubController(IBoxSubControllable actorResourceController)
             : base()
@@ -55,6 +58,28 @@ namespace StasisEditor.Controllers.Actors
         {
             if (e.Button == System.Windows.Forms.MouseButtons.Left)
                 _actorResourceController.deselectSubController(this);
+        }
+
+        // checkXNAKeys
+        public override void checkXNAKeys()
+        {
+            // Update width
+            if (Input.newKey.IsKeyDown(Keys.A))
+                _actorResourceController.setHalfWidth(_actorResourceController.getHalfWidth() + _sizeChangeAmount);
+            if (Input.newKey.IsKeyDown(Keys.D))
+                _actorResourceController.setHalfWidth(_actorResourceController.getHalfWidth() - _sizeChangeAmount);
+
+            // Update height
+            if (Input.newKey.IsKeyDown(Keys.W))
+                _actorResourceController.setHalfHeight(_actorResourceController.getHalfHeight() + _sizeChangeAmount);
+            if (Input.newKey.IsKeyDown(Keys.S))
+                _actorResourceController.setHalfHeight(_actorResourceController.getHalfHeight() - _sizeChangeAmount);
+
+            // Update angle
+            if (Input.newKey.IsKeyDown(Keys.E))
+                _actorResourceController.setAngle(_actorResourceController.getAngle() + _rotationChangeAmount);
+            if (Input.newKey.IsKeyDown(Keys.Q))
+                _actorResourceController.setAngle(_actorResourceController.getAngle() - _rotationChangeAmount);
         }
 
         #endregion

@@ -69,16 +69,6 @@ namespace StasisEditor.Controllers.Actors
                 _actorResourceController.deselectSubController(this);
         }
 
-        // handleKeyDown
-        public override void handleKeyDown()
-        {
-        }
-
-        // handleKeyUp
-        public override void handleKeyUp()
-        {
-        }
-
         #endregion
 
         #region Clone methods

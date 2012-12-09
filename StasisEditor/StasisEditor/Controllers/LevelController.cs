@@ -89,6 +89,10 @@ namespace StasisEditor.Controllers
         // update
         public void update()
         {
+            // Check XNA keys
+            foreach (ActorSubController subController in _selectedSubControllers)
+                subController.checkXNAKeys();
+
             // Selection queue
             while (_subControllerSelectQueue.Count > 0)
             {
@@ -215,6 +219,10 @@ namespace StasisEditor.Controllers
         #endregion
 
         #region Input
+
+        ///////////////////////////////////////////////////////////////////
+        /// For key input, look at update() in the 'XNA Methods' region
+        ///////////////////////////////////////////////////////////////////
 
         // mouseMove
         public void mouseMove(System.Windows.Forms.MouseEventArgs e)

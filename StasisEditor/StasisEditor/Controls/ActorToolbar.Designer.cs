@@ -130,6 +130,7 @@
             // objectSpawnerButton
             // 
             this.objectSpawnerButton.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
+            this.objectSpawnerButton.Enabled = false;
             this.objectSpawnerButton.Image = ((System.Drawing.Image)(resources.GetObject("objectSpawnerButton.Image")));
             this.objectSpawnerButton.ImageTransparentColor = System.Drawing.Color.Magenta;
             this.objectSpawnerButton.Name = "objectSpawnerButton";
@@ -149,6 +150,7 @@
             // timerButton
             // 
             this.timerButton.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
+            this.timerButton.Enabled = false;
             this.timerButton.Image = ((System.Drawing.Image)(resources.GetObject("timerButton.Image")));
             this.timerButton.ImageTransparentColor = System.Drawing.Color.Magenta;
             this.timerButton.Margin = new System.Windows.Forms.Padding(0);
@@ -169,6 +171,7 @@
             // itemsButton
             // 
             this.itemsButton.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
+            this.itemsButton.Enabled = false;
             this.itemsButton.Image = ((System.Drawing.Image)(resources.GetObject("itemsButton.Image")));
             this.itemsButton.ImageTransparentColor = System.Drawing.Color.Magenta;
             this.itemsButton.Name = "itemsButton";
@@ -178,6 +181,7 @@
             // plantsButton
             // 
             this.plantsButton.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
+            this.plantsButton.Enabled = false;
             this.plantsButton.Image = ((System.Drawing.Image)(resources.GetObject("plantsButton.Image")));
             this.plantsButton.ImageTransparentColor = System.Drawing.Color.Magenta;
             this.plantsButton.Margin = new System.Windows.Forms.Padding(0);
@@ -198,6 +202,7 @@
             // goalButton
             // 
             this.goalButton.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
+            this.goalButton.Enabled = false;
             this.goalButton.Image = ((System.Drawing.Image)(resources.GetObject("goalButton.Image")));
             this.goalButton.ImageTransparentColor = System.Drawing.Color.Magenta;
             this.goalButton.Margin = new System.Windows.Forms.Padding(0);
