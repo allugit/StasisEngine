@@ -35,6 +35,41 @@ namespace StasisEditor.Controllers.Actors
             return length <= margin;
         }
 
+        // linkHitTest -- Create a box between this link and the next, and hit test it
+        public bool linkHitTest(Vector2 worldMouse)
+        {
+            // Treat line as a thin box
+            Vector2 boxCenter = (position + next.position) / 2;
+            Vector2 linkRelative = next.position - position;
+            float boxHalfWidth = linkRelative.Length() / 2;
+            float boxHalfHeight = 0.15f;
+            float angle = (float)Math.Atan2(linkRelative.Y, linkRelative.X);
+
+            // Get the mouse position relative to the box's center
+            Vector2 relative = boxCenter - worldMouse;
+
+            // Rotate the relative mouse position by the negative angle of the box
+            Vector2 alignedRelative = Vector2.Transform(relative, Matrix.CreateRotationZ(-angle));
+
+            // Get the local, cartiasian-aligned bounding-box
+            Vector2 topLeft = -(new Vector2(boxHalfWidth, boxHalfHeight));
+            Vector2 bottomRight = -topLeft;
+
+            // Check if the relative mouse point is inside the bounding box
+            Vector2 d1, d2;
+            d1 = alignedRelative - topLeft;
+            d2 = bottomRight - alignedRelative;
+
+            // One of these components will be less than zero if the alignedRelative position is outside of the bounds
+            if (d1.X < 0 || d1.Y < 0)
+                return false;
+
+            if (d2.X < 0 || d2.Y < 0)
+                return false;
+
+            return true;
+        }
+
         // handleMouseMove
         public override void handleMouseMove(Vector2 worldDelta)
         {

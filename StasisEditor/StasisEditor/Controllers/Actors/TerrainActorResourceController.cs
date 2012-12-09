@@ -92,6 +92,20 @@ namespace StasisEditor.Controllers.Actors
                 current = current.next;
             }
 
+            // Hit test link lines
+            current = _headLinkedPointController;
+            while (current.next != null)
+            {
+                if (current.linkHitTest(worldMouse))
+                {
+                    _levelController.selectSubController(current);
+                    _levelController.selectSubController(current.next);
+                    return true;
+                }
+
+                current = current.next;
+            }
+
             return false;
         }
 
