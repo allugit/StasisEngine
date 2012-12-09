@@ -49,10 +49,6 @@ namespace StasisEditor.Controllers.Actors
                 _actorResourceController.delete();
             }
 
-            // Deselect if selected
-            if (selected)
-                _actorResourceController.deselectSubController(this);
-
             if (previous != null)
                 previous.next = next;
 
@@ -154,14 +150,6 @@ namespace StasisEditor.Controllers.Actors
             
             if (e.Button == System.Windows.Forms.MouseButtons.Left)
                 _actorResourceController.deselectSubController(this);
-        }
-
-        //
-        public override void checkXNAKeys()
-        {
-            // Handle point insertion while selected
-            if (selected && (Input.newKey.IsKeyDown(Keys.OemPlus) && Input.oldKey.IsKeyUp(Keys.OemPlus)))
-                insertPoint(position);
         }
 
         #endregion

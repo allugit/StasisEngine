@@ -95,7 +95,7 @@ namespace StasisEditor.Controllers.Actors
             // Test for delete
             LinkedPointSubController current = _headLinkedPointController;
             bool anyLinkSelected = false;
-            while (current.next != null)
+            while (current != null)
             {
                 if (current.selected)
                 {
@@ -112,40 +112,43 @@ namespace StasisEditor.Controllers.Actors
 
             //////////////////////////////////////
             // Test for point insertion / removal
-            bool plusPressed = Input.newKey.IsKeyDown(Keys.OemPlus) && Input.oldKey.IsKeyUp(Keys.OemPlus);
-            bool minusPressed = Input.newKey.IsKeyDown(Keys.OemMinus) && Input.oldKey.IsKeyUp(Keys.OemMinus);
-            Vector2 worldMouse = _levelController.getWorldMouse();
-
-            // Only test for insertions if there are no links selected -- insertion while selected is handled in the sub controller's
-            // checkXNAKeys method since this methods requires a hit test
-            if (!anyLinkSelected && plusPressed)
+            if (!anyLinkSelected)
             {
-                // Hit test link line
-                current = _headLinkedPointController;
-                while (current.next != null)
+                bool plusPressed = Input.newKey.IsKeyDown(Keys.OemPlus) && Input.oldKey.IsKeyUp(Keys.OemPlus);
+                bool minusPressed = Input.newKey.IsKeyDown(Keys.OemMinus) && Input.oldKey.IsKeyUp(Keys.OemMinus);
+                Vector2 worldMouse = _levelController.getWorldMouse();
+
+                // Only test for insertions if there are no links selected -- insertion while selected is handled in the sub controller's
+                // checkXNAKeys method since this methods requires a hit test
+                if (plusPressed)
                 {
-                    if (current.linkHitTest(worldMouse))
+                    // Hit test link line
+                    current = _headLinkedPointController;
+                    while (current.next != null)
                     {
-                        current.insertPoint(worldMouse);
-                        return;
+                        if (current.linkHitTest(worldMouse))
+                        {
+                            current.insertPoint(worldMouse);
+                            return;
+                        }
+                        current = current.next;
                     }
-                    current = current.next;
                 }
-            }
 
-            if (minusPressed)
-            {
-                // Hit test points
-                current = _headLinkedPointController;
-                while (current != null)
+                if (minusPressed)
                 {
-                    if (current.hitTest(worldMouse))
+                    // Hit test points
+                    current = _headLinkedPointController;
+                    while (current != null)
                     {
-                        current.removePoint();
-                        return;
-                    }
+                        if (current.hitTest(worldMouse))
+                        {
+                            current.removePoint();
+                            return;
+                        }
 
-                    current = current.next;
+                        current = current.next;
+                    }
                 }
             }
         }
