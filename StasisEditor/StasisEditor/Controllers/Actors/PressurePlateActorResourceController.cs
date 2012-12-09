@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using Microsoft.Xna.Framework;
+using Microsoft.Xna.Framework.Input;
 using StasisCore.Models;
 
 namespace StasisEditor.Controllers.Actors
@@ -78,27 +79,7 @@ namespace StasisEditor.Controllers.Actors
 
         #endregion
 
-        #region Axis SubController Interface
-
-
-
-        #endregion
-
-        #region Actor Resource Controller Methods
-
-        // selectAllSubControllers
-        public override void selectAllSubControllers()
-        {
-            _levelController.selectSubController(_boxSubController);
-            _levelController.selectSubController(_axisSubController);
-        }
-
-        // deselectAllSubControllers
-        public override void deselectAllSubControllers()
-        {
-            _levelController.deselectSubController(_boxSubController);
-            _levelController.deselectSubController(_axisSubController);
-        }
+        #region Input
 
         // hitTest
         public override bool hitTest(Vector2 worldMouse)
@@ -119,6 +100,32 @@ namespace StasisEditor.Controllers.Actors
             }
 
             return false;
+        }
+
+        // globalCheckKeys
+        public override void globalCheckKey()
+        {
+            // Delete test
+            if (_boxSubController.selected && Input.newKey.IsKeyDown(Keys.Delete) && Input.oldKey.IsKeyUp(Keys.Delete))
+                delete();
+        }
+
+        #endregion
+
+        #region Actor Resource Controller Methods
+
+        // selectAllSubControllers
+        public override void selectAllSubControllers()
+        {
+            _levelController.selectSubController(_boxSubController);
+            _levelController.selectSubController(_axisSubController);
+        }
+
+        // deselectAllSubControllers
+        public override void deselectAllSubControllers()
+        {
+            _levelController.deselectSubController(_boxSubController);
+            _levelController.deselectSubController(_axisSubController);
         }
 
         // draw
