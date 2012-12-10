@@ -67,9 +67,15 @@ namespace StasisEditor.Views
                     RopeGunItemResource ropeGunItemResource = itemResource as RopeGunItemResource;
                     propertiesContainer.Controls.Add(new ItemPropertiesControl(this, ropeGunItemResource.ropeGunProperties));
                     break;
+
                 case ItemType.GravityGun:
                     GravityGunItemResource gravityGunItemResource = itemResource as GravityGunItemResource;
                     propertiesContainer.Controls.Add(new ItemPropertiesControl(this, gravityGunItemResource.gravityGunProperties));
+                    break;
+
+                case ItemType.Grenade:
+                    GrenadeItemResource grenadeItemResource = itemResource as GrenadeItemResource;
+                    propertiesContainer.Controls.Add(new ItemPropertiesControl(this, grenadeItemResource.grenadeProperties));
                     break;
             }
         }
