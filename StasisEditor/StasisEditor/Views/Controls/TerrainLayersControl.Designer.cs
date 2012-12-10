@@ -1,4 +1,4 @@
-﻿namespace StasisEditor.Controls
+﻿namespace StasisEditor.Views.Controls
 {
     partial class TerrainLayersControl
     {
@@ -35,7 +35,7 @@
             this.layerProperties = new System.Windows.Forms.PropertyGrid();
             this.label2 = new System.Windows.Forms.Label();
             this.addLayerButton = new System.Windows.Forms.Button();
-            this.layersTreeView = new StasisEditor.Controls.LayersTreeView();
+            this.layersTreeView = new StasisEditor.Views.Controls.LayersTreeView();
             this.SuspendLayout();
             // 
             // label1

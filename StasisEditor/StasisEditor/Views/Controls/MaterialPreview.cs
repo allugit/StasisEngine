@@ -10,7 +10,7 @@ using System.Windows.Forms;
 using Microsoft.Xna.Framework.Graphics;
 using StasisEditor.Controllers;
 
-namespace StasisEditor.Controls
+namespace StasisEditor.Views.Controls
 {
     public partial class MaterialPreview : Form
     {

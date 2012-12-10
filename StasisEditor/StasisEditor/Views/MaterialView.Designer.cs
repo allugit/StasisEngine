@@ -1,4 +1,4 @@
-﻿using StasisEditor.Controls;
+﻿using StasisEditor.Views.Controls;
 namespace StasisEditor.Views
 {
     partial class MaterialView
@@ -35,7 +35,7 @@ namespace StasisEditor.Views
             this.materialsLabel = new System.Windows.Forms.Label();
             this.previewButton = new System.Windows.Forms.Button();
             this.propertiesContainer = new System.Windows.Forms.Panel();
-            this.materialsListBox = new StasisEditor.Controls.RefreshingListBox();
+            this.materialsListBox = new StasisEditor.Views.Controls.RefreshingListBox();
             this.autoUpdatePreview = new System.Windows.Forms.CheckBox();
             this.SuspendLayout();
             // 

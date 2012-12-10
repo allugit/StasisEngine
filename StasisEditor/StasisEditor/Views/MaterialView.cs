@@ -6,7 +6,7 @@ using System.Drawing;
 using System.Windows.Forms;
 using StasisCore.Models;
 using StasisEditor.Controllers;
-using StasisEditor.Controls;
+using StasisEditor.Views.Controls;
 
 namespace StasisEditor.Views
 {

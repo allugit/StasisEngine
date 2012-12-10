@@ -9,7 +9,7 @@ using System.Windows.Forms;
 using StasisCore.Models;
 using StasisEditor.Controllers;
 
-namespace StasisEditor.Controls
+namespace StasisEditor.Views.Controls
 {
     public partial class MaterialProperties : UserControl
     {

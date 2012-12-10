@@ -10,7 +10,7 @@ using StasisEditor.Controllers;
 using StasisEditor.Controllers.Actors;
 using StasisCore.Models;
 
-namespace StasisEditor.Controls
+namespace StasisEditor.Views.Controls
 {
     public partial class ActorToolbar : UserControl
     {

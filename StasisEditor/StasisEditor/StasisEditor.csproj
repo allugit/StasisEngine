@@ -104,35 +104,35 @@
     <Compile Include="Controllers\LevelController.cs" />
     <Compile Include="Controllers\MaterialController.cs" />
     <Compile Include="Controllers\TextureController.cs" />
-    <Compile Include="Controls\ActorToolbar.cs">
+    <Compile Include="Views\Controls\ActorToolbar.cs">
       <SubType>UserControl</SubType>
     </Compile>
-    <Compile Include="Controls\ActorToolbar.Designer.cs">
+    <Compile Include="Views\Controls\ActorToolbar.Designer.cs">
       <DependentUpon>ActorToolbar.cs</DependentUpon>
     </Compile>
-    <Compile Include="Controls\FileSafeTextBox.cs">
+    <Compile Include="Views\Controls\FileSafeTextBox.cs">
       <SubType>Component</SubType>
     </Compile>
-    <Compile Include="Controls\LayerNode.cs" />
-    <Compile Include="Controls\LayersTreeView.cs">
+    <Compile Include="Views\Controls\LayerNode.cs" />
+    <Compile Include="Views\Controls\LayersTreeView.cs">
       <SubType>Component</SubType>
     </Compile>
-    <Compile Include="Controls\LevelSettings.cs">
+    <Compile Include="Views\Controls\LevelSettings.cs">
       <SubType>UserControl</SubType>
     </Compile>
-    <Compile Include="Controls\LevelSettings.Designer.cs">
+    <Compile Include="Views\Controls\LevelSettings.Designer.cs">
       <DependentUpon>LevelSettings.cs</DependentUpon>
     </Compile>
-    <Compile Include="Controls\MaterialPreview.cs">
+    <Compile Include="Views\Controls\MaterialPreview.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="Controls\MaterialPreview.Designer.cs">
+    <Compile Include="Views\Controls\MaterialPreview.Designer.cs">
       <DependentUpon>MaterialPreview.cs</DependentUpon>
     </Compile>
-    <Compile Include="Controls\MaterialProperties.cs">
+    <Compile Include="Views\Controls\MaterialProperties.cs">
       <SubType>UserControl</SubType>
     </Compile>
-    <Compile Include="Controls\MaterialProperties.Designer.cs">
+    <Compile Include="Views\Controls\MaterialProperties.Designer.cs">
       <DependentUpon>MaterialProperties.cs</DependentUpon>
     </Compile>
     <Compile Include="Views\LevelView.cs">
@@ -148,16 +148,16 @@
     <Compile Include="Views\TextureView.Designer.cs">
       <DependentUpon>TextureView.cs</DependentUpon>
     </Compile>
-    <Compile Include="Controls\RefreshingListBox.cs">
+    <Compile Include="Views\Controls\RefreshingListBox.cs">
       <SubType>Component</SubType>
     </Compile>
-    <Compile Include="Controls\TerrainLayersControl.cs">
+    <Compile Include="Views\Controls\TerrainLayersControl.cs">
       <SubType>UserControl</SubType>
     </Compile>
-    <Compile Include="Controls\TerrainLayersControl.Designer.cs">
+    <Compile Include="Views\Controls\TerrainLayersControl.Designer.cs">
       <DependentUpon>TerrainLayersControl.cs</DependentUpon>
     </Compile>
-    <Compile Include="Controls\NewTerrainLayerForm.cs">
+    <Compile Include="Views\Controls\NewTerrainLayerForm.cs">
       <SubType>Form</SubType>
     </Compile>
     <Compile Include="Views\EditorView.cs">
@@ -245,16 +245,16 @@
     </BootstrapperPackage>
   </ItemGroup>
   <ItemGroup>
-    <EmbeddedResource Include="Controls\ActorToolbar.resx">
+    <EmbeddedResource Include="Views\Controls\ActorToolbar.resx">
       <DependentUpon>ActorToolbar.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="Controls\LevelSettings.resx">
+    <EmbeddedResource Include="Views\Controls\LevelSettings.resx">
       <DependentUpon>LevelSettings.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="Controls\MaterialPreview.resx">
+    <EmbeddedResource Include="Views\Controls\MaterialPreview.resx">
       <DependentUpon>MaterialPreview.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="Controls\MaterialProperties.resx">
+    <EmbeddedResource Include="Views\Controls\MaterialProperties.resx">
       <DependentUpon>MaterialProperties.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Views\LevelView.resx">
@@ -263,10 +263,10 @@
     <EmbeddedResource Include="Views\TextureView.resx">
       <DependentUpon>TextureView.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="Controls\TerrainLayersControl.resx">
+    <EmbeddedResource Include="Views\Controls\TerrainLayersControl.resx">
       <DependentUpon>TerrainLayersControl.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="Controls\NewTerrainLayerForm.resx">
+    <EmbeddedResource Include="Views\Controls\NewTerrainLayerForm.resx">
       <DependentUpon>NewTerrainLayerForm.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Views\EditorView.resx">

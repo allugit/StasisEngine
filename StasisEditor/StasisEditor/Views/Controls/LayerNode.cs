@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Windows.Forms;
 using StasisCore.Models;
 
-namespace StasisEditor.Controls
+namespace StasisEditor.Views.Controls
 {
     public class LayerNode : TreeNode
     {

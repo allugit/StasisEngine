@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Drawing;
 using StasisCore.Models;
 using StasisEditor.Controllers;
-using StasisEditor.Controls;
+using StasisEditor.Views.Controls;
 
 namespace StasisEditor.Views
 {
