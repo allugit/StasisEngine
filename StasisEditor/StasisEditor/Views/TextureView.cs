@@ -60,7 +60,7 @@ namespace StasisEditor.Views
         // bindTextureResources
         public void bindTextureResources()
         {
-            _textureBindingSource.DataSource = _controller.getTextureResources();
+            _textureBindingSource.DataSource = _controller.textureResources;
         }
 
         // preview

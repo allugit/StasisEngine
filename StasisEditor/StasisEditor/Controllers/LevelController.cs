@@ -8,7 +8,7 @@ using StasisCore.Models;
 
 namespace StasisEditor.Controllers
 {
-    public class LevelController
+    public class LevelController : Controller
     {
         private EditorController _editorController;
         private LevelView _levelView;
@@ -41,6 +41,11 @@ namespace StasisEditor.Controllers
             _actorControllers = new List<ActorResourceController>();
             _actorControllersAddQueue = new List<ActorResourceController>();
             _actorControllersRemoveQueue = new List<ActorResourceController>();
+        }
+
+        // loadResources
+        protected override void loadResources()
+        {
         }
 
         #region Getters/Setters
