@@ -78,10 +78,12 @@
     <Compile Include="Models\Resources\Actors\TerrainActorResource.cs" />
     <Compile Include="Models\Resources\Items\GravityGunItemResource.cs" />
     <Compile Include="Models\Resources\Items\GrenadeItemResource.cs" />
+    <Compile Include="Models\Resources\Items\HealthPotionItemResource.cs" />
     <Compile Include="Models\Resources\Items\ItemResource.cs" />
     <Compile Include="Models\Resources\Items\Properties\GeneralItemProperties.cs" />
     <Compile Include="Models\Resources\Items\Properties\GravityGunProperties.cs" />
     <Compile Include="Models\Resources\Items\Properties\GrenadeProperties.cs" />
+    <Compile Include="Models\Resources\Items\Properties\HealthPotionProperties.cs" />
     <Compile Include="Models\Resources\Items\Properties\ItemProperties.cs" />
     <Compile Include="Models\Resources\Items\Properties\RopeGunProperties.cs" />
     <Compile Include="Models\Resources\Items\RopeGunItemResource.cs" />

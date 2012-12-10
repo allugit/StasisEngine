@@ -37,6 +37,9 @@ namespace StasisEditor.Controllers
             _items[(int)ItemType.RopeGun].Add(new RopeGunItemResource(new GeneralItemProperties("single_anchor_rope_gun", 1, "single_anchor_rope_gun_crate", "single_anchor_rope_gun")));
             _items[(int)ItemType.GravityGun].Add(new GravityGunItemResource(new GeneralItemProperties("gravity_gun", 1, "gravity_gun_crate", "gravity_gun")));
             _items[(int)ItemType.Grenade].Add(new GrenadeItemResource(new GeneralItemProperties("grenade", 1, "grenade_crate", "grenade")));
+            _items[(int)ItemType.HealthPotion].Add(new HealthPotionItemResource(new GeneralItemProperties("small_health_potion", 1, "small_health_potion", "small_health_potion"), new HealthPotionProperties(20)));
+            _items[(int)ItemType.HealthPotion].Add(new HealthPotionItemResource(new GeneralItemProperties("medium_health_potion", 1, "medium_health_potion", "medium_health_potion"), new HealthPotionProperties(40)));
+            _items[(int)ItemType.HealthPotion].Add(new HealthPotionItemResource(new GeneralItemProperties("large_health_potion", 1, "large_health_potion", "large_health_potion"), new HealthPotionProperties(60)));
         }
     }
 }
