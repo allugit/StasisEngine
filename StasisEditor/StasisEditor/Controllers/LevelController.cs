@@ -11,6 +11,8 @@ namespace StasisEditor.Controllers
 {
     public class LevelController : Controller
     {
+        public const float MIN_ACTOR_SIZE = 0.1f;
+
         private EditorController _editorController;
         private LevelView _levelView;
         private ShapeRenderer _shapeRenderer;

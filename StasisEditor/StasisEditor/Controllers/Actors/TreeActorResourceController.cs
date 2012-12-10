@@ -5,12 +5,12 @@ using StasisCore.Models;
 
 namespace StasisEditor.Controllers.Actors
 {
-    public class TreeActorResourceController : ActorResourceController, ICircleSubControllable, IPointSubControllable
+    public class TreeActorResourceController : ActorResourceController, IPointSubControllable, IBoxSubControllable
     {
         private TreeActorResource _treeActorResource;
 
-        private CircleSubController _circleSubController;
-        private PointSubController _tropismSubController;
+        private BoxSubController _boxController;
+        private PointSubController _tropismController;
 
         public TreeActorResourceController(LevelController levelController, ActorResource actorResource = null)
             : base(levelController)
@@ -23,33 +23,58 @@ namespace StasisEditor.Controllers.Actors
             _treeActorResource = actorResource as TreeActorResource;
 
             // Create sub controllers
-            _circleSubController = new CircleSubController(this);
-            _tropismSubController = new PointSubController(actorResource.position + new Vector2(0f, -1f), this);
+            _tropismController = new PointSubController(actorResource.position + new Vector2(0f, -1f), this);
+            _boxController = new BoxSubController(this, BoxSubControllerAlignment.Edge);
         }
 
-
-        #region General Subcontroller interface
+        #region Box Sub Controller interface
 
         // getPosition
-        public Vector2 getPosition() { return _actor.position; }
+        public Vector2 getPosition()
+        {
+            return _treeActorResource.position;
+        }
 
         // setPosition
-        public void setPosition(Vector2 position) { _actor.position = position; }
+        public void setPosition(Vector2 position)
+        {
+            _treeActorResource.position = position;
+        }
 
-        #endregion
-
-        #region Circle Subcontroller interface
-
-        // getRadius
-        public float getRadius()
+        // getHalfWidth
+        public float getHalfWidth()
         {
             return _treeActorResource.treeProperties.maxBaseWidth;
         }
 
-        // setRadius
-        public void setRadius(float radius)
+        // getHalfHeight
+        public float getHalfHeight()
         {
-            _treeActorResource.treeProperties.maxBaseWidth = radius;
+            return _treeActorResource.treeProperties.internodeLength;
+        }
+
+        // getAngle
+        public float getAngle()
+        {
+            return _treeActorResource.treeProperties.angle;
+        }
+
+        // setHalfWidth
+        public void setHalfWidth(float value)
+        {
+            _treeActorResource.treeProperties.maxBaseWidth = Math.Max(value, LevelController.MIN_ACTOR_SIZE);
+        }
+
+        // setHalfHeight
+        public void setHalfHeight(float value)
+        {
+            _treeActorResource.treeProperties.internodeLength = Math.Max(value, LevelController.MIN_ACTOR_SIZE);
+        }
+
+        // setAngle
+        public void setAngle(float value)
+        {
+            _treeActorResource.treeProperties.angle = value;
         }
 
         #endregion
@@ -59,17 +84,17 @@ namespace StasisEditor.Controllers.Actors
         public override bool hitTest(Vector2 worldMouse)
         {
             // Hit test tropism control
-            if (_tropismSubController.hitTest(worldMouse))
+            if (_tropismController.hitTest(worldMouse))
             {
-                _levelController.selectSubController(_tropismSubController);
+                _levelController.selectSubController(_tropismController);
                 return true;
             }
 
-            // Hit test circle
-            if (_circleSubController.hitTest(worldMouse))
+            // Hit test box
+            if (_boxController.hitTest(worldMouse))
             {
-                _levelController.selectSubController(_circleSubController);
-                _levelController.selectSubController(_tropismSubController);
+                _levelController.selectSubController(_boxController);
+                _levelController.selectSubController(_tropismController);
                 return true;
             }
 
@@ -83,26 +108,29 @@ namespace StasisEditor.Controllers.Actors
         // selectAllSubControllers
         public override void selectAllSubControllers()
         {
-            _levelController.selectSubController(_circleSubController);
-            _levelController.selectSubController(_tropismSubController);
+            _levelController.selectSubController(_boxController);
+            _levelController.selectSubController(_tropismController);
         }
 
         // deselectAllSubControllers
         public override void deselectAllSubControllers()
         {
-            _levelController.deselectSubController(_circleSubController);
-            _levelController.deselectSubController(_tropismSubController);
+            _levelController.deselectSubController(_boxController);
+            _levelController.deselectSubController(_tropismController);
         }
 
         // draw
         public override void draw()
         {
-            // Draw circle
-            _renderer.drawCircle(_actor.position, _treeActorResource.treeProperties.maxBaseWidth, Color.Brown);
+            // Draw base circle
+            _renderer.drawPoint(_actor.position, Color.DarkGray);
+
+            // Draw box
+            _renderer.drawBox(_actor.position + _boxController.alignmentOffset, _treeActorResource.treeProperties.maxBaseWidth, _treeActorResource.treeProperties.internodeLength, _treeActorResource.treeProperties.angle, Color.Green);
 
             // Draw tropism control
-            _renderer.drawLine(_actor.position, _tropismSubController.position, Color.Gray);
-            _renderer.drawPoint(_tropismSubController.position, Color.Yellow);
+            _renderer.drawLine(_actor.position, _tropismController.position, Color.Gray);
+            _renderer.drawPoint(_tropismController.position, Color.Yellow);
         }
 
         // clone

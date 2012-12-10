@@ -63,13 +63,13 @@ namespace StasisEditor.Controllers.Actors
         // setHalfWidth
         public void setHalfWidth(float value)
         {
-            _boxActor.boxProperties.halfWidth = value;
+            _boxActor.boxProperties.halfWidth = Math.Max(value, LevelController.MIN_ACTOR_SIZE);
         }
 
         // setHalfHeight
         public void setHalfHeight(float value)
         {
-            _boxActor.boxProperties.halfHeight = value;
+            _boxActor.boxProperties.halfHeight = Math.Max(value, LevelController.MIN_ACTOR_SIZE);
         }
 
         // setAngle

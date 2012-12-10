@@ -5,16 +5,27 @@ using Microsoft.Xna.Framework.Input;
 
 namespace StasisEditor.Controllers.Actors
 {
+    public enum BoxSubControllerAlignment
+    {
+        Center = 0,
+        Edge
+    };
+
     public class BoxSubController : ActorSubController
     {
         private IBoxSubControllable _actorResourceController;
         private float _sizeChangeAmount = 0.1f;
         private float _rotationChangeAmount = 0.05f;
+        private BoxSubControllerAlignment _alignment;
+        private Vector2 _alignmentOffset = Vector2.Zero;
 
-        public BoxSubController(IBoxSubControllable actorResourceController)
+        public Vector2 alignmentOffset { get { return _alignmentOffset; } }
+
+        public BoxSubController(IBoxSubControllable actorResourceController, BoxSubControllerAlignment alignment = BoxSubControllerAlignment.Center)
             : base()
         {
             _actorResourceController = actorResourceController;
+            _alignment = alignment;
         }
 
         #region Input
@@ -23,7 +34,7 @@ namespace StasisEditor.Controllers.Actors
         public override bool hitTest(Vector2 worldMouse)
         {
             // Get the mouse position relative to the box's center
-            Vector2 relative = _actorResourceController.getPosition() - worldMouse;
+            Vector2 relative = (_actorResourceController.getPosition() + _alignmentOffset) - worldMouse;
 
             // Rotate the relative mouse position by the negative angle of the box
             Vector2 alignedRelative = Vector2.Transform(relative, Matrix.CreateRotationZ(-_actorResourceController.getAngle()));
@@ -83,6 +94,16 @@ namespace StasisEditor.Controllers.Actors
                 _actorResourceController.setAngle(_actorResourceController.getAngle() + _rotationChangeAmount);
             if (Input.newKey.IsKeyDown(Keys.Q))
                 _actorResourceController.setAngle(_actorResourceController.getAngle() - _rotationChangeAmount);
+
+            // Calculate alignment offset
+            _alignmentOffset = Vector2.Zero;
+            if (_alignment == BoxSubControllerAlignment.Edge)
+            {
+                float halfHeight = _actorResourceController.getHalfHeight();
+                float angle = _actorResourceController.getAngle();
+                float halfPi = (float)(Math.PI / 2);
+                _alignmentOffset = new Vector2((float)Math.Cos(angle - halfPi), (float)Math.Sin(angle - halfPi)) * halfHeight;
+            }
         }
 
         #endregion
