@@ -11,7 +11,7 @@ namespace StasisEditor.Controllers
     public class LevelController : ILevelController
     {
         private IEditorController _editorController;
-        private ILevelView _levelView;
+        private LevelView _levelView;
         private ShapeRenderer _shapeRenderer;
 
         private List<ActorSubController> _selectedSubControllers;
@@ -28,7 +28,7 @@ namespace StasisEditor.Controllers
         private System.Drawing.Point _mouse;
         private Vector2 _screenCenter;
 
-        public LevelController(IEditorController editorController, ILevelView levelView)
+        public LevelController(IEditorController editorController, LevelView levelView)
         {
             _editorController = editorController;
             _levelView = levelView;

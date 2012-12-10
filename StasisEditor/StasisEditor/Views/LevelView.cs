@@ -10,7 +10,7 @@ using StasisEditor.Controllers.Actors;
 
 namespace StasisEditor.Views
 {
-    public partial class LevelView : UserControl, ILevelView
+    public partial class LevelView : UserControl
     {
         private ILevelController _controller;
 

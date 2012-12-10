@@ -167,11 +167,6 @@
       <DependentUpon>EditorView.cs</DependentUpon>
     </Compile>
     <Compile Include="Input.cs" />
-    <Compile Include="Views\IBaseView.cs" />
-    <Compile Include="Views\IEditorView.cs" />
-    <Compile Include="Views\ILevelView.cs" />
-    <Compile Include="Views\IMaterialView.cs" />
-    <Compile Include="Views\ITextureView.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Controllers\XNAController.cs" />

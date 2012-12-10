@@ -13,7 +13,7 @@ using StasisCore.Models;
 
 namespace StasisEditor.Views
 {
-    public partial class TextureView : UserControl, ITextureView
+    public partial class TextureView : UserControl
     {
         private ITextureController _controller;
         //private BindingList<TextureResource> _textureResources;

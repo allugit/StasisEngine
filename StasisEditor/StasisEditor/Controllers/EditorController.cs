@@ -20,7 +20,7 @@ namespace StasisEditor.Controllers
         private TextureController _textureController;
         private ILevelController _levelController;
 
-        private IEditorView _editorView;
+        private EditorView _editorView;
         private ShapeRenderer _shapeRenderer;
         private ActorToolbar _actorToolbar;
 

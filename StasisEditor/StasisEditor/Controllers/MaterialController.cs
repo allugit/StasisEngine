@@ -16,13 +16,13 @@ namespace StasisEditor.Controllers
     {
         private EditorController _editorController;
         private TerrainRenderer _terrainRenderer;
-        private IMaterialView _materialView;
+        private MaterialView _materialView;
         private MaterialPreview _materialPreview;
         private List<MaterialResource>[] _materials;
         private bool _changesMade;
         private bool _autoUpdatePreview;
 
-        public MaterialController(EditorController editorController, IMaterialView materialView)
+        public MaterialController(EditorController editorController, MaterialView materialView)
         {
             Console.WriteLine("Initializing material controller.");
             _editorController = editorController;

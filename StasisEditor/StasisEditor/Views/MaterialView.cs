@@ -10,7 +10,7 @@ using StasisEditor.Views.Controls;
 
 namespace StasisEditor.Views
 {
-    public partial class MaterialView : UserControl, IMaterialView
+    public partial class MaterialView : UserControl
     {
         private IMaterialController _controller;
         private MaterialProperties _materialProperties;

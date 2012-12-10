@@ -12,9 +12,9 @@ namespace StasisEditor.Controllers
     public class TextureController : ITextureController
     {
         private IEditorController _editorController;
-        private ITextureView _textureView;
+        private TextureView _textureView;
 
-        public TextureController(IEditorController editorController, ITextureView textureView)
+        public TextureController(IEditorController editorController, TextureView textureView)
         {
             _editorController = editorController;
             _textureView = textureView;
