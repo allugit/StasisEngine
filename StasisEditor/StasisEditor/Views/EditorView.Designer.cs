@@ -47,6 +47,7 @@
             this.texturesTab = new System.Windows.Forms.TabPage();
             this.textureView = new StasisEditor.Views.TextureView();
             this.itemsTab = new System.Windows.Forms.TabPage();
+            this.itemView1 = new StasisEditor.Views.ItemView();
             this.scriptsTab = new System.Windows.Forms.TabPage();
             ((System.ComponentModel.ISupportInitialize)(this.mainSplit)).BeginInit();
             this.mainSplit.Panel2.SuspendLayout();
@@ -55,6 +56,7 @@
             this.levelTab.SuspendLayout();
             this.materialsTab.SuspendLayout();
             this.texturesTab.SuspendLayout();
+            this.itemsTab.SuspendLayout();
             this.SuspendLayout();
             // 
             // mainMenu1
@@ -134,7 +136,7 @@
             // 
             this.mainSplit.Panel2.BackColor = System.Drawing.SystemColors.Control;
             this.mainSplit.Panel2.Controls.Add(this.editorTabControl);
-            this.mainSplit.Size = new System.Drawing.Size(1004, 590);
+            this.mainSplit.Size = new System.Drawing.Size(1004, 569);
             this.mainSplit.SplitterDistance = 261;
             this.mainSplit.TabIndex = 1;
             this.mainSplit.TabStop = false;
@@ -151,7 +153,7 @@
             this.editorTabControl.Margin = new System.Windows.Forms.Padding(0);
             this.editorTabControl.Name = "editorTabControl";
             this.editorTabControl.SelectedIndex = 0;
-            this.editorTabControl.Size = new System.Drawing.Size(737, 588);
+            this.editorTabControl.Size = new System.Drawing.Size(737, 567);
             this.editorTabControl.TabIndex = 0;
             // 
             // levelTab
@@ -160,7 +162,7 @@
             this.levelTab.Controls.Add(this.levelView);
             this.levelTab.Location = new System.Drawing.Point(4, 22);
             this.levelTab.Name = "levelTab";
-            this.levelTab.Size = new System.Drawing.Size(729, 562);
+            this.levelTab.Size = new System.Drawing.Size(729, 541);
             this.levelTab.TabIndex = 0;
             this.levelTab.Text = "Level";
             // 
@@ -170,7 +172,7 @@
             this.levelView.Location = new System.Drawing.Point(0, 0);
             this.levelView.Margin = new System.Windows.Forms.Padding(0);
             this.levelView.Name = "levelView";
-            this.levelView.Size = new System.Drawing.Size(729, 562);
+            this.levelView.Size = new System.Drawing.Size(729, 541);
             this.levelView.TabIndex = 0;
             // 
             // materialsTab
@@ -179,7 +181,7 @@
             this.materialsTab.Location = new System.Drawing.Point(4, 22);
             this.materialsTab.Margin = new System.Windows.Forms.Padding(0);
             this.materialsTab.Name = "materialsTab";
-            this.materialsTab.Size = new System.Drawing.Size(729, 562);
+            this.materialsTab.Size = new System.Drawing.Size(729, 541);
             this.materialsTab.TabIndex = 1;
             this.materialsTab.Text = "Materials";
             this.materialsTab.UseVisualStyleBackColor = true;
@@ -190,7 +192,7 @@
             this.materialView.Location = new System.Drawing.Point(0, 0);
             this.materialView.Margin = new System.Windows.Forms.Padding(0);
             this.materialView.Name = "materialView";
-            this.materialView.Size = new System.Drawing.Size(729, 562);
+            this.materialView.Size = new System.Drawing.Size(729, 541);
             this.materialView.TabIndex = 0;
             // 
             // texturesTab
@@ -199,7 +201,7 @@
             this.texturesTab.Location = new System.Drawing.Point(4, 22);
             this.texturesTab.Margin = new System.Windows.Forms.Padding(0);
             this.texturesTab.Name = "texturesTab";
-            this.texturesTab.Size = new System.Drawing.Size(729, 562);
+            this.texturesTab.Size = new System.Drawing.Size(729, 541);
             this.texturesTab.TabIndex = 2;
             this.texturesTab.Text = "Textures";
             this.texturesTab.UseVisualStyleBackColor = true;
@@ -210,23 +212,32 @@
             this.textureView.Location = new System.Drawing.Point(0, 0);
             this.textureView.Margin = new System.Windows.Forms.Padding(0);
             this.textureView.Name = "textureView";
-            this.textureView.Size = new System.Drawing.Size(754, 381);
+            this.textureView.Size = new System.Drawing.Size(729, 541);
             this.textureView.TabIndex = 0;
             // 
             // itemsTab
             // 
+            this.itemsTab.Controls.Add(this.itemView1);
             this.itemsTab.Location = new System.Drawing.Point(4, 22);
             this.itemsTab.Name = "itemsTab";
-            this.itemsTab.Size = new System.Drawing.Size(729, 562);
+            this.itemsTab.Size = new System.Drawing.Size(729, 541);
             this.itemsTab.TabIndex = 3;
             this.itemsTab.Text = "Items";
             this.itemsTab.UseVisualStyleBackColor = true;
+            // 
+            // itemView1
+            // 
+            this.itemView1.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.itemView1.Location = new System.Drawing.Point(0, 0);
+            this.itemView1.Name = "itemView1";
+            this.itemView1.Size = new System.Drawing.Size(729, 541);
+            this.itemView1.TabIndex = 0;
             // 
             // scriptsTab
             // 
             this.scriptsTab.Location = new System.Drawing.Point(4, 22);
             this.scriptsTab.Name = "scriptsTab";
-            this.scriptsTab.Size = new System.Drawing.Size(729, 562);
+            this.scriptsTab.Size = new System.Drawing.Size(729, 541);
             this.scriptsTab.TabIndex = 4;
             this.scriptsTab.Text = "Scripts";
             this.scriptsTab.UseVisualStyleBackColor = true;
@@ -235,7 +246,7 @@
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(1004, 590);
+            this.ClientSize = new System.Drawing.Size(1004, 569);
             this.Controls.Add(this.mainSplit);
             this.Menu = this.mainMenu1;
             this.Name = "EditorView";
@@ -248,6 +259,7 @@
             this.levelTab.ResumeLayout(false);
             this.materialsTab.ResumeLayout(false);
             this.texturesTab.ResumeLayout(false);
+            this.itemsTab.ResumeLayout(false);
             this.ResumeLayout(false);
 
         }
@@ -273,6 +285,7 @@
         private System.Windows.Forms.TabPage itemsTab;
         private System.Windows.Forms.TabPage scriptsTab;
         private LevelView levelView;
+        private ItemView itemView1;
 
     }
 }
