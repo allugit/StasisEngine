@@ -36,6 +36,12 @@ namespace StasisEditor.Views
             _controller = controller;
         }
 
+        // setChangesMade
+        public void setChangesMade(bool status)
+        {
+            saveButton.Enabled = status;
+        }
+
         // Selected item type changed
         private void itemTypeListBox_SelectedValueChanged(object sender, EventArgs e)
         {
@@ -45,21 +51,21 @@ namespace StasisEditor.Views
         // Selected item changed
         private void itemListBox_SelectedValueChanged(object sender, EventArgs e)
         {
-            if (itemListBox.SelectedItem == null)
-                return;
-
             // Clear properties container
             propertiesContainer.Controls.Clear();
 
+            if (itemListBox.SelectedItem == null)
+                return;
+
             // Add item properties to the property container
             ItemResource itemResource = itemListBox.SelectedItem as ItemResource;
-            propertiesContainer.Controls.Add(new ItemPropertiesControl(itemResource.generalProperties));
+            propertiesContainer.Controls.Add(new ItemPropertiesControl(this, itemResource.generalProperties));
 
             switch (itemResource.type)
             {
                 case ItemType.RopeGun:
                     RopeGunItemResource ropeGunItemResource = itemResource as RopeGunItemResource;
-                    propertiesContainer.Controls.Add(new ItemPropertiesControl(ropeGunItemResource.ropeGunProperties));
+                    propertiesContainer.Controls.Add(new ItemPropertiesControl(this, ropeGunItemResource.ropeGunProperties));
                     break;
             }
         }
