@@ -35,6 +35,7 @@ namespace StasisEditor.Controllers
 
             // Test data
             _items[(int)ItemType.RopeGun].Add(new RopeGunItemResource(new GeneralItemProperties("single_anchor_rope_gun", 1, "single_anchor_rope_gun_crate", "single_anchor_rope_gun")));
+            _items[(int)ItemType.GravityGun].Add(new GravityGunItemResource(new GeneralItemProperties("point_gravity_gun", 1, "point_gravity_gun_crate", "point_gravity_gun")));
         }
     }
 }

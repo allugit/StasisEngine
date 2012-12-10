@@ -21,9 +21,8 @@ namespace StasisCore.Models
         public GeneralItemProperties generalProperties { get { return _generalProperties; } }
         public ItemType type { get { return _type; } }
 
-        public ItemResource(ItemProperties generalProperties)
+        public ItemResource()
         {
-            _generalProperties = generalProperties as GeneralItemProperties;
         }
 
         // ToString

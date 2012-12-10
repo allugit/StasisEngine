@@ -10,7 +10,7 @@ namespace StasisCore.Models
         public RopeGunProperties ropeGunProperties { get { return _ropeGunProperties; } }
 
         public RopeGunItemResource(ItemProperties generalProperties = null, ItemProperties ropeGunProperties = null)
-            : base(generalProperties)
+            : base()
         {
             // Default base properties
             if (generalProperties == null)
@@ -18,7 +18,7 @@ namespace StasisCore.Models
 
             // Default rope gun properties
             if (ropeGunProperties == null)
-                ropeGunProperties = new RopeGunProperties(false);
+                ropeGunProperties = new RopeGunProperties(false, 32f);
 
             _generalProperties = generalProperties as GeneralItemProperties;
             _ropeGunProperties = ropeGunProperties as RopeGunProperties;
