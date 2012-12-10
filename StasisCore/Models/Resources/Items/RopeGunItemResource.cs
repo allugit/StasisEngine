@@ -12,7 +12,7 @@ namespace StasisCore.Models
             if (generalProperties == null)
                 generalProperties = new GeneralItemProperties("", 1, "", "");
 
-            _generalProperties = generalProperties;
+            _generalProperties = generalProperties as GeneralItemProperties;
             _type = ItemType.RopeGun;
         }
 

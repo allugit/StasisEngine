@@ -15,15 +15,21 @@ namespace StasisCore.Models
 
     abstract public class ItemResource
     {
-        protected ItemProperties _generalProperties;
+        protected GeneralItemProperties _generalProperties;
         protected ItemType _type;
 
-        public ItemProperties generalProperties { get { return _generalProperties; } }
+        public GeneralItemProperties generalProperties { get { return _generalProperties; } }
         public ItemType type { get { return _type; } }
 
         public ItemResource(ItemProperties generalProperties)
         {
-            _generalProperties = generalProperties;
+            _generalProperties = generalProperties as GeneralItemProperties;
+        }
+
+        // ToString
+        public override string ToString()
+        {
+            return _generalProperties.tag;
         }
 
         // clone

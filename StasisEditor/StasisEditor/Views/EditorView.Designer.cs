@@ -47,7 +47,7 @@
             this.texturesTab = new System.Windows.Forms.TabPage();
             this.textureView = new StasisEditor.Views.TextureView();
             this.itemsTab = new System.Windows.Forms.TabPage();
-            this.itemView1 = new StasisEditor.Views.ItemView();
+            this.itemView = new StasisEditor.Views.ItemView();
             this.scriptsTab = new System.Windows.Forms.TabPage();
             ((System.ComponentModel.ISupportInitialize)(this.mainSplit)).BeginInit();
             this.mainSplit.Panel2.SuspendLayout();
@@ -217,7 +217,7 @@
             // 
             // itemsTab
             // 
-            this.itemsTab.Controls.Add(this.itemView1);
+            this.itemsTab.Controls.Add(this.itemView);
             this.itemsTab.Location = new System.Drawing.Point(4, 22);
             this.itemsTab.Name = "itemsTab";
             this.itemsTab.Size = new System.Drawing.Size(729, 541);
@@ -225,13 +225,13 @@
             this.itemsTab.Text = "Items";
             this.itemsTab.UseVisualStyleBackColor = true;
             // 
-            // itemView1
+            // itemView
             // 
-            this.itemView1.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.itemView1.Location = new System.Drawing.Point(0, 0);
-            this.itemView1.Name = "itemView1";
-            this.itemView1.Size = new System.Drawing.Size(729, 541);
-            this.itemView1.TabIndex = 0;
+            this.itemView.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.itemView.Location = new System.Drawing.Point(0, 0);
+            this.itemView.Name = "itemView";
+            this.itemView.Size = new System.Drawing.Size(729, 541);
+            this.itemView.TabIndex = 0;
             // 
             // scriptsTab
             // 
@@ -285,7 +285,7 @@
         private System.Windows.Forms.TabPage itemsTab;
         private System.Windows.Forms.TabPage scriptsTab;
         private LevelView levelView;
-        private ItemView itemView1;
+        private ItemView itemView;
 
     }
 }

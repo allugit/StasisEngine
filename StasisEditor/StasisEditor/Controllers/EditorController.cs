@@ -19,6 +19,7 @@ namespace StasisEditor.Controllers
         private MaterialController _materialController;
         private TextureController _textureController;
         private LevelController _levelController;
+        private ItemController _itemController;
 
         private EditorView _editorView;
         private ShapeRenderer _shapeRenderer;
@@ -39,6 +40,9 @@ namespace StasisEditor.Controllers
 
             // Create texture controller
             _textureController = new TextureController(this, _editorView.getTextureView());
+
+            // Create item controller
+            _itemController = new ItemController(this, _editorView.getItemView());
 
             // Create level controller
             _levelController = new LevelController(this, _editorView.getLevelView());

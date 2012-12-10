@@ -54,6 +54,7 @@
             this.itemTypeListBox.Name = "itemTypeListBox";
             this.itemTypeListBox.Size = new System.Drawing.Size(246, 108);
             this.itemTypeListBox.TabIndex = 1;
+            this.itemTypeListBox.SelectedValueChanged += new System.EventHandler(this.itemTypeListBox_SelectedValueChanged);
             // 
             // label2
             // 
