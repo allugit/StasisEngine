@@ -13,7 +13,8 @@ namespace StasisCore.Models
         Terrain,
         Rope,
         Fluid,
-        PlayerSpawn
+        PlayerSpawn,
+        Tree
     }
 
     abstract public class ActorResource

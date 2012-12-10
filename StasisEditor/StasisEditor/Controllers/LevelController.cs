@@ -5,6 +5,7 @@ using Microsoft.Xna.Framework;
 using StasisEditor.Controllers.Actors;
 using StasisEditor.Views;
 using StasisCore.Models;
+using StasisEditor.Views.Controls;
 
 namespace StasisEditor.Controllers
 {
@@ -254,6 +255,32 @@ namespace StasisEditor.Controllers
         {
             // actual removal of actor controller is handled in update() in the 'XNA Methods' region
             _actorControllersRemoveQueue.Add(actorController);
+        }
+
+        // openPlantSelectBox
+        public void selectPlantType()
+        {
+            PlantSelectBox plantSelectBox = new PlantSelectBox();
+            ActorResourceController actorController = null;
+            if (plantSelectBox.ShowDialog() == System.Windows.Forms.DialogResult.OK)
+            {
+                PlantType selectedPlantType = plantSelectBox.selectedPlantType;
+                switch (selectedPlantType)
+                {
+                    case PlantType.Tree:
+                        actorController = new TreeActorResourceController(this);
+                        break;
+                }
+            }
+
+            if (actorController != null)
+            {
+                // Add actor to controller list
+                addActorController(actorController);
+
+                // Select sub controllers
+                actorController.selectAllSubControllers();
+            }
         }
 
         #endregion

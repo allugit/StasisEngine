@@ -95,6 +95,7 @@
     <Compile Include="Controllers\Actors\RopeActorResourceController.cs" />
     <Compile Include="Controllers\Actors\TerrainActorResourceController.cs" />
     <Compile Include="Controllers\Actors\CircleActorResourceController.cs" />
+    <Compile Include="Controllers\Actors\TreeActorResourceController.cs" />
     <Compile Include="Controllers\Controller.cs" />
     <Compile Include="Controllers\EditorController.cs" />
     <Compile Include="Controllers\ItemController.cs" />
@@ -137,6 +138,12 @@
     </Compile>
     <Compile Include="Views\Controls\MaterialProperties.Designer.cs">
       <DependentUpon>MaterialProperties.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Views\Controls\PlantSelectBox.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Views\Controls\PlantSelectBox.Designer.cs">
+      <DependentUpon>PlantSelectBox.cs</DependentUpon>
     </Compile>
     <Compile Include="Views\ItemView.cs">
       <SubType>UserControl</SubType>
@@ -263,6 +270,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Views\Controls\MaterialProperties.resx">
       <DependentUpon>MaterialProperties.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Views\Controls\PlantSelectBox.resx">
+      <DependentUpon>PlantSelectBox.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Views\ItemView.resx">
       <DependentUpon>ItemView.cs</DependentUpon>

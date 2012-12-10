@@ -28,7 +28,7 @@ namespace StasisEditor.Controllers.Actors
             _boxSubController = new BoxSubController(this);
         }
         
-        #region Box Actor Interface
+        #region Box Sub Controller interface
 
         // getPosition
         public Vector2 getPosition()

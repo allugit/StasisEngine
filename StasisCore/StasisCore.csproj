@@ -73,9 +73,12 @@
     <Compile Include="Models\Resources\Actors\Properties\BoxProperties.cs" />
     <Compile Include="Models\Resources\Actors\Properties\CircleProperties.cs" />
     <Compile Include="Models\Resources\Actors\Properties\FluidProperties.cs" />
+    <Compile Include="Models\Resources\Actors\Properties\GeneralPlantProperties.cs" />
     <Compile Include="Models\Resources\Actors\Properties\ObjectSpawnerProperties.cs" />
+    <Compile Include="Models\Resources\Actors\Properties\TreeProperties.cs" />
     <Compile Include="Models\Resources\Actors\RopeActorResource.cs" />
     <Compile Include="Models\Resources\Actors\TerrainActorResource.cs" />
+    <Compile Include="Models\Resources\Actors\TreeActorResource.cs" />
     <Compile Include="Models\Resources\Items\GravityGunItemResource.cs" />
     <Compile Include="Models\Resources\Items\GrenadeItemResource.cs" />
     <Compile Include="Models\Resources\Items\HealthPotionItemResource.cs" />
@@ -86,7 +89,6 @@
     <Compile Include="Models\Resources\Items\Properties\HealthPotionProperties.cs" />
     <Compile Include="Models\Resources\Items\Properties\ItemProperties.cs" />
     <Compile Include="Models\Resources\Items\Properties\RopeGunProperties.cs" />
-    <Compile Include="Models\Resources\Items\Properties\TreeSeedProperties.cs" />
     <Compile Include="Models\Resources\Items\RopeGunItemResource.cs" />
     <Compile Include="Models\Resources\Materials\Properties\DecalProperties.cs" />
     <Compile Include="Models\Resources\Materials\FluidMaterialResource.cs" />

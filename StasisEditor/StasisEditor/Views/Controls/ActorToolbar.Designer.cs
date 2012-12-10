@@ -181,7 +181,6 @@
             // plantsButton
             // 
             this.plantsButton.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
-            this.plantsButton.Enabled = false;
             this.plantsButton.Image = ((System.Drawing.Image)(resources.GetObject("plantsButton.Image")));
             this.plantsButton.ImageTransparentColor = System.Drawing.Color.Magenta;
             this.plantsButton.Margin = new System.Windows.Forms.Padding(0);
