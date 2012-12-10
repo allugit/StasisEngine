@@ -10,14 +10,14 @@ using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using StasisCore.Models;
 using StasisEditor.Controllers;
-using StasisEditor.Controls;
+using StasisEditor.Views.Controls;
 
 namespace StasisEditor.Views
 {
-    public partial class EditorView : Form, IEditorView
+    public partial class EditorView : Form
     {
         private EditorController _controller;
-        private ILevelView _levelView;
+        private LevelView _levelView;
         private LevelSettings _levelSettings;
         private ActorToolbar actorToolbar;
 
@@ -35,19 +35,19 @@ namespace StasisEditor.Views
         }
 
         // getMaterialView
-        public IMaterialView getMaterialView()
+        public MaterialView getMaterialView()
         {
             return materialView;
         }
 
         // getTextureView
-        public ITextureView getTextureView()
+        public TextureView getTextureView()
         {
             return textureView;
         }
 
         // getLevelView
-        public ILevelView getLevelView()
+        public LevelView getLevelView()
         {
             return levelView;
         }
@@ -59,7 +59,7 @@ namespace StasisEditor.Views
         }
 
         // addLevelView
-        public void addLevelView(ILevelView levelView)
+        public void addLevelView(LevelView levelView)
         {
             _levelView = levelView;
             //mainSplit.Panel2.Controls.Add(levelView as Control);

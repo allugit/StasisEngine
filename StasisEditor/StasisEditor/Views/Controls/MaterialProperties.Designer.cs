@@ -1,4 +1,4 @@
-﻿namespace StasisEditor.Controls
+﻿namespace StasisEditor.Views.Controls
 {
     partial class MaterialProperties
     {

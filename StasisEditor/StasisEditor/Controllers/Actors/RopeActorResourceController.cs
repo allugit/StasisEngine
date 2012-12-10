@@ -11,7 +11,7 @@ namespace StasisEditor.Controllers.Actors
         private PointSubController _pointASubController;
         private PointSubController _pointBSubController;
 
-        public RopeActorResourceController(ILevelController levelController, ActorResource actorResource = null)
+        public RopeActorResourceController(LevelController levelController, ActorResource actorResource = null)
             : base(levelController)
         {
             // Default actor resource

@@ -3,7 +3,7 @@ using System.Text.RegularExpressions;
 using System.Collections.Generic;
 using System.Windows.Forms;
 
-namespace StasisEditor.Controls
+namespace StasisEditor.Views.Controls
 {
     public class FileSafeTextBox : TextBox
     {

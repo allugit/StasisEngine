@@ -11,7 +11,7 @@ namespace StasisEditor.Controllers.Actors
         private FluidActorResource _fluidActorResource;
         private LinkedPointSubController _headLinkedPointController;
 
-        public FluidActorResourceController(ILevelController levelController, ActorResource actorResource = null)
+        public FluidActorResourceController(LevelController levelController, ActorResource actorResource = null)
             : base(levelController)
         {
             // Default actor

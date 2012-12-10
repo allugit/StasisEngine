@@ -10,14 +10,14 @@ using System.Windows.Forms;
 using Microsoft.Xna.Framework.Graphics;
 using StasisEditor.Controllers;
 
-namespace StasisEditor.Controls
+namespace StasisEditor.Views.Controls
 {
     public partial class MaterialPreview : Form
     {
-        private IMaterialController _controller;
+        private MaterialController _controller;
         private Image _image;
 
-        public MaterialPreview(IMaterialController controller, Texture2D texture, string title = "Material Preview")
+        public MaterialPreview(MaterialController controller, Texture2D texture, string title = "Material Preview")
         {
             _controller = controller;
 

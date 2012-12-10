@@ -13,9 +13,9 @@ using StasisCore.Models;
 
 namespace StasisEditor.Views
 {
-    public partial class TextureView : UserControl, ITextureView
+    public partial class TextureView : UserControl
     {
-        private ITextureController _controller;
+        private TextureController _controller;
         //private BindingList<TextureResource> _textureResources;
         private BindingSource _textureBindingSource;
         private DataGridViewButtonColumn _buttonColumn;
@@ -52,7 +52,7 @@ namespace StasisEditor.Views
         }
 
         // setController
-        public void setController(ITextureController controller)
+        public void setController(TextureController controller)
         {
             _controller = controller;
         }
@@ -60,7 +60,7 @@ namespace StasisEditor.Views
         // bindTextureResources
         public void bindTextureResources()
         {
-            _textureBindingSource.DataSource = _controller.getTextureResources();
+            _textureBindingSource.DataSource = _controller.textureResources;
         }
 
         // preview

@@ -12,7 +12,7 @@ using StasisEditor.Views;
 
 namespace StasisEditor.Controllers
 {
-    public class XNAController : Game, IController
+    public class XNAController : Game
     {
         public GraphicsDeviceManager graphics;
         public SpriteBatch spriteBatch;

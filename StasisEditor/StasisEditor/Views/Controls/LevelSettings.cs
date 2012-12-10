@@ -8,7 +8,7 @@ using System.Text;
 using System.Windows.Forms;
 using StasisCore.Models;
 
-namespace StasisEditor.Controls
+namespace StasisEditor.Views.Controls
 {
     public partial class LevelSettings : UserControl
     {

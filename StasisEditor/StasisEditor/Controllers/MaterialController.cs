@@ -7,51 +7,25 @@ using Microsoft.Xna.Framework.Graphics;
 using StasisCore;
 using StasisCore.Models;
 using StasisEditor.Views;
-using StasisEditor.Controls;
+using StasisEditor.Views.Controls;
 
 namespace StasisEditor.Controllers
 {
 
-    public class MaterialController : IMaterialController
+    public class MaterialController : Controller
     {
         private EditorController _editorController;
         private TerrainRenderer _terrainRenderer;
-        private IMaterialView _materialView;
+        private MaterialView _materialView;
         private MaterialPreview _materialPreview;
         private List<MaterialResource>[] _materials;
         private bool _changesMade;
         private bool _autoUpdatePreview;
 
-        public MaterialController(EditorController editorController, IMaterialView materialView)
+        public MaterialController(EditorController editorController, MaterialView materialView)
         {
-            Console.WriteLine("Initializing material controller.");
             _editorController = editorController;
             _materialView = materialView;
-
-            // Materials
-            int numMaterialTypes = Enum.GetValues(typeof(MaterialType)).Length;
-            _materials = new List<MaterialResource>[numMaterialTypes];
-            for (int i = 0; i < numMaterialTypes; i++)
-                _materials[i] = new List<MaterialResource>();
-
-            // Test material data
-            TerrainRootLayerResource rootLayer = new TerrainRootLayerResource();
-            rootLayer.layers.Add(new TerrainTextureLayerResource(new TextureProperties(TerrainBlendType.Opaque, 1f, 1f, "rock")));
-            rootLayer.layers.Add(new TerrainNoiseLayerResource(new NoiseProperties(NoiseType.Perlin, TerrainBlendType.Overlay, WorleyFeature.F1, Vector2.Zero, 1, Vector2.Zero, 1.1f, 0.5f, 2f, 1f, Color.Black, Color.White, 1)));
-            rootLayer.layers.Add(new TerrainGroupLayerResource(
-                new List<TerrainLayerResource>(new TerrainLayerResource[] {
-                    new TerrainTextureLayerResource(new TextureProperties(TerrainBlendType.Opaque, 1f, 1f, "rock_3")),
-                    new TerrainNoiseLayerResource(new NoiseProperties(NoiseType.Worley, TerrainBlendType.Overlay, WorleyFeature.F1, Vector2.Zero, 1, Vector2.Zero, 1.1f, 0.5f, 2f, 2f, Color.Black, Color.White, 1))
-                }),
-                new GroupProperties(TerrainBlendType.Overlay), false));
-
-            _materials[(int)MaterialType.Terrain].Add(new TerrainMaterialResource("Rock", rootLayer));
-            _materials[(int)MaterialType.Terrain].Add(new TerrainMaterialResource("Dirt", rootLayer));
-            _materials[(int)MaterialType.Terrain].Add(new TerrainMaterialResource("Snow", rootLayer));
-            _materials[(int)MaterialType.Trees].Add(new TreeMaterialResource("Acuminate"));
-            _materials[(int)MaterialType.Fluid].Add(new FluidMaterialResource("Water"));
-            _materials[(int)MaterialType.Items].Add(new ItemMaterialResource("Rope Gun"));
-            _materials[(int)MaterialType.Items].Add(new ItemMaterialResource("Gravity Gun"));
 
             // Initialize material view
             materialView.setController(this);
@@ -100,6 +74,35 @@ namespace StasisEditor.Controllers
         public List<MaterialResource> getMaterials(MaterialType type)
         {
             return _materials[(int)type];
+        }
+
+        // loadResources
+        protected override void loadResources()
+        {
+            // Materials
+            int numMaterialTypes = Enum.GetValues(typeof(MaterialType)).Length;
+            _materials = new List<MaterialResource>[numMaterialTypes];
+            for (int i = 0; i < numMaterialTypes; i++)
+                _materials[i] = new List<MaterialResource>();
+
+            // Test material data
+            TerrainRootLayerResource rootLayer = new TerrainRootLayerResource();
+            rootLayer.layers.Add(new TerrainTextureLayerResource(new TextureProperties(TerrainBlendType.Opaque, 1f, 1f, "rock")));
+            rootLayer.layers.Add(new TerrainNoiseLayerResource(new NoiseProperties(NoiseType.Perlin, TerrainBlendType.Overlay, WorleyFeature.F1, Vector2.Zero, 1, Vector2.Zero, 1.1f, 0.5f, 2f, 1f, Color.Black, Color.White, 1)));
+            rootLayer.layers.Add(new TerrainGroupLayerResource(
+                new List<TerrainLayerResource>(new TerrainLayerResource[] {
+                    new TerrainTextureLayerResource(new TextureProperties(TerrainBlendType.Opaque, 1f, 1f, "rock_3")),
+                    new TerrainNoiseLayerResource(new NoiseProperties(NoiseType.Worley, TerrainBlendType.Overlay, WorleyFeature.F1, Vector2.Zero, 1, Vector2.Zero, 1.1f, 0.5f, 2f, 2f, Color.Black, Color.White, 1))
+                }),
+                new GroupProperties(TerrainBlendType.Overlay), false));
+
+            _materials[(int)MaterialType.Terrain].Add(new TerrainMaterialResource("Rock", rootLayer));
+            _materials[(int)MaterialType.Terrain].Add(new TerrainMaterialResource("Dirt", rootLayer));
+            _materials[(int)MaterialType.Terrain].Add(new TerrainMaterialResource("Snow", rootLayer));
+            _materials[(int)MaterialType.Trees].Add(new TreeMaterialResource("Acuminate"));
+            _materials[(int)MaterialType.Fluid].Add(new FluidMaterialResource("Water"));
+            _materials[(int)MaterialType.Items].Add(new ItemMaterialResource("Rope Gun"));
+            _materials[(int)MaterialType.Items].Add(new ItemMaterialResource("Gravity Gun"));
         }
 
         // addTerrainLayer

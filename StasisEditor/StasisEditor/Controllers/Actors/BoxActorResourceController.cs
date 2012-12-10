@@ -12,7 +12,7 @@ namespace StasisEditor.Controllers.Actors
         private BoxActorResource _boxActor;
         private BoxSubController _boxSubController;
 
-        public BoxActorResourceController(ILevelController levelController, ActorResource actor = null)
+        public BoxActorResourceController(LevelController levelController, ActorResource actor = null)
             : base(levelController)
         {
             // Default actor
