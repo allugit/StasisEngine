@@ -23,6 +23,12 @@ namespace StasisCore.Models
             _inventoryTextureTag = inventoryTextureTag;
         }
 
+        // ToString
+        public override string ToString()
+        {
+            return "General Properties";
+        }
+
         // clone
         public override ItemProperties clone()
         {

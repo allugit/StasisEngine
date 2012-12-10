@@ -110,11 +110,11 @@
     <Compile Include="Views\Controls\FileSafeTextBox.cs">
       <SubType>Component</SubType>
     </Compile>
-    <Compile Include="Views\Controls\ItemProperties.cs">
+    <Compile Include="Views\Controls\ItemPropertiesControl.cs">
       <SubType>UserControl</SubType>
     </Compile>
-    <Compile Include="Views\Controls\ItemProperties.Designer.cs">
-      <DependentUpon>ItemProperties.cs</DependentUpon>
+    <Compile Include="Views\Controls\ItemPropertiesControl.Designer.cs">
+      <DependentUpon>ItemPropertiesControl.cs</DependentUpon>
     </Compile>
     <Compile Include="Views\Controls\LayerNode.cs" />
     <Compile Include="Views\Controls\LayersTreeView.cs">
@@ -252,8 +252,8 @@
     <EmbeddedResource Include="Views\Controls\ActorToolbar.resx">
       <DependentUpon>ActorToolbar.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="Views\Controls\ItemProperties.resx">
-      <DependentUpon>ItemProperties.cs</DependentUpon>
+    <EmbeddedResource Include="Views\Controls\ItemPropertiesControl.resx">
+      <DependentUpon>ItemPropertiesControl.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Views\Controls\LevelSettings.resx">
       <DependentUpon>LevelSettings.cs</DependentUpon>

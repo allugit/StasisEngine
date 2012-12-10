@@ -15,6 +15,12 @@ namespace StasisCore.Models
             _doubleAnchor = doubleAnchor;
         }
 
+        // ToString
+        public override string ToString()
+        {
+            return "Rope Gun Properties";
+        }
+
         // clone
         public override ItemProperties clone()
         {

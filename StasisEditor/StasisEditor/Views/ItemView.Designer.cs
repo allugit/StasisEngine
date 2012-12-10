@@ -74,6 +74,7 @@
             this.itemListBox.Name = "itemListBox";
             this.itemListBox.Size = new System.Drawing.Size(246, 199);
             this.itemListBox.TabIndex = 3;
+            this.itemListBox.SelectedValueChanged += new System.EventHandler(this.itemListBox_SelectedValueChanged);
             // 
             // removeButton
             // 
@@ -97,6 +98,10 @@
             // 
             // propertiesContainer
             // 
+            this.propertiesContainer.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom)
+                        | System.Windows.Forms.AnchorStyles.Left)
+                        | System.Windows.Forms.AnchorStyles.Right)));
+            this.propertiesContainer.AutoScroll = true;
             this.propertiesContainer.Location = new System.Drawing.Point(280, 12);
             this.propertiesContainer.Name = "propertiesContainer";
             this.propertiesContainer.Size = new System.Drawing.Size(290, 365);

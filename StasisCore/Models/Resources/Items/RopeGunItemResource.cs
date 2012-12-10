@@ -5,21 +5,30 @@ namespace StasisCore.Models
 {
     public class RopeGunItemResource : ItemResource
     {
-        public RopeGunItemResource(ItemProperties generalProperties = null)
+        private RopeGunProperties _ropeGunProperties;
+
+        public RopeGunProperties ropeGunProperties { get { return _ropeGunProperties; } }
+
+        public RopeGunItemResource(ItemProperties generalProperties = null, ItemProperties ropeGunProperties = null)
             : base(generalProperties)
         {
             // Default base properties
             if (generalProperties == null)
                 generalProperties = new GeneralItemProperties("", 1, "", "");
 
+            // Default rope gun properties
+            if (ropeGunProperties == null)
+                ropeGunProperties = new RopeGunProperties(false);
+
             _generalProperties = generalProperties as GeneralItemProperties;
+            _ropeGunProperties = ropeGunProperties as RopeGunProperties;
             _type = ItemType.RopeGun;
         }
 
         // clone
         public override ItemResource clone()
         {
-            return new RopeGunItemResource(_generalProperties.clone());
+            return new RopeGunItemResource(_generalProperties.clone(), _ropeGunProperties.clone());
         }
     }
 }

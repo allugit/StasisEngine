@@ -139,6 +139,7 @@ namespace StasisEditor.Views
             // 
             // removeButton
             // 
+            this.removeButton.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
             this.removeButton.Location = new System.Drawing.Point(94, 512);
             this.removeButton.Name = "removeButton";
             this.removeButton.Size = new System.Drawing.Size(75, 23);

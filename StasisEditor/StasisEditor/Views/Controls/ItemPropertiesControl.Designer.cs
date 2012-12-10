@@ -1,6 +1,6 @@
 ﻿namespace StasisEditor.Views.Controls
 {
-    partial class ItemProperties
+    partial class ItemPropertiesControl
     {
         /// <summary> 
         /// Required designer variable.
@@ -28,38 +28,38 @@
         /// </summary>
         private void InitializeComponent()
         {
-            this.label1 = new System.Windows.Forms.Label();
             this.propertyGrid = new System.Windows.Forms.PropertyGrid();
+            this.propertiesName = new System.Windows.Forms.Label();
             this.SuspendLayout();
-            // 
-            // label1
-            // 
-            this.label1.AutoSize = true;
-            this.label1.Location = new System.Drawing.Point(4, 4);
-            this.label1.Name = "label1";
-            this.label1.Size = new System.Drawing.Size(54, 13);
-            this.label1.TabIndex = 0;
-            this.label1.Text = "Properties";
             // 
             // propertyGrid
             // 
             this.propertyGrid.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom)
                         | System.Windows.Forms.AnchorStyles.Left)
                         | System.Windows.Forms.AnchorStyles.Right)));
-            this.propertyGrid.Location = new System.Drawing.Point(0, 18);
+            this.propertyGrid.Location = new System.Drawing.Point(0, 20);
             this.propertyGrid.Margin = new System.Windows.Forms.Padding(0);
             this.propertyGrid.Name = "propertyGrid";
-            this.propertyGrid.Size = new System.Drawing.Size(234, 229);
+            this.propertyGrid.Size = new System.Drawing.Size(234, 208);
             this.propertyGrid.TabIndex = 1;
             // 
-            // ItemProperties
+            // propertiesName
+            // 
+            this.propertiesName.AutoSize = true;
+            this.propertiesName.Location = new System.Drawing.Point(0, 0);
+            this.propertiesName.Name = "propertiesName";
+            this.propertiesName.Size = new System.Drawing.Size(85, 13);
+            this.propertiesName.TabIndex = 2;
+            this.propertiesName.Text = "Properties Name";
+            // 
+            // ItemPropertiesControl
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
+            this.Controls.Add(this.propertiesName);
             this.Controls.Add(this.propertyGrid);
-            this.Controls.Add(this.label1);
-            this.Name = "ItemProperties";
-            this.Size = new System.Drawing.Size(234, 247);
+            this.Name = "ItemPropertiesControl";
+            this.Size = new System.Drawing.Size(234, 246);
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -67,7 +67,7 @@
 
         #endregion
 
-        private System.Windows.Forms.Label label1;
         private System.Windows.Forms.PropertyGrid propertyGrid;
+        private System.Windows.Forms.Label propertiesName;
     }
 }
