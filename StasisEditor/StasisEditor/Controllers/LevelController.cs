@@ -8,9 +8,9 @@ using StasisCore.Models;
 
 namespace StasisEditor.Controllers
 {
-    public class LevelController : ILevelController
+    public class LevelController
     {
-        private IEditorController _editorController;
+        private EditorController _editorController;
         private LevelView _levelView;
         private ShapeRenderer _shapeRenderer;
 
@@ -28,7 +28,7 @@ namespace StasisEditor.Controllers
         private System.Drawing.Point _mouse;
         private Vector2 _screenCenter;
 
-        public LevelController(IEditorController editorController, LevelView levelView)
+        public LevelController(EditorController editorController, LevelView levelView)
         {
             _editorController = editorController;
             _levelView = levelView;

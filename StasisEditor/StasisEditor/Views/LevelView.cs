@@ -12,7 +12,7 @@ namespace StasisEditor.Views
 {
     public partial class LevelView : UserControl
     {
-        private ILevelController _controller;
+        private LevelController _controller;
 
         public LevelView()
         {
@@ -20,7 +20,7 @@ namespace StasisEditor.Views
         }
 
         // setController
-        public void setController(ILevelController controller)
+        public void setController(LevelController controller)
         {
             _controller = controller;
 

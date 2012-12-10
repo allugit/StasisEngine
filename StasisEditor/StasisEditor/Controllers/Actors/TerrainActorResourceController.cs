@@ -11,7 +11,7 @@ namespace StasisEditor.Controllers.Actors
         private TerrainActorResource _terrainActorResource;
         private LinkedPointSubController _headLinkedPointController;
 
-        public TerrainActorResourceController(ILevelController levelController, ActorResource actorResource = null)
+        public TerrainActorResourceController(LevelController levelController, ActorResource actorResource = null)
             : base(levelController)
         {
             // Default actor

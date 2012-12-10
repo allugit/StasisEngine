@@ -95,12 +95,7 @@
     <Compile Include="Controllers\Actors\RopeActorResourceController.cs" />
     <Compile Include="Controllers\Actors\TerrainActorResourceController.cs" />
     <Compile Include="Controllers\Actors\CircleActorResourceController.cs" />
-    <Compile Include="Controllers\IController.cs" />
     <Compile Include="Controllers\EditorController.cs" />
-    <Compile Include="Controllers\IEditorController.cs" />
-    <Compile Include="Controllers\ILevelController.cs" />
-    <Compile Include="Controllers\IMaterialController.cs" />
-    <Compile Include="Controllers\ITextureController.cs" />
     <Compile Include="Controllers\LevelController.cs" />
     <Compile Include="Controllers\MaterialController.cs" />
     <Compile Include="Controllers\TextureController.cs" />

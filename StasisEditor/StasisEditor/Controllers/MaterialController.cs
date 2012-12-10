@@ -12,7 +12,7 @@ using StasisEditor.Views.Controls;
 namespace StasisEditor.Controllers
 {
 
-    public class MaterialController : IMaterialController
+    public class MaterialController
     {
         private EditorController _editorController;
         private TerrainRenderer _terrainRenderer;

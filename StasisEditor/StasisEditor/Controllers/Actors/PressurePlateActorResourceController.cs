@@ -12,7 +12,7 @@ namespace StasisEditor.Controllers.Actors
         private BoxSubController _boxSubController;
         private PointSubController _axisSubController;
 
-        public PressurePlateActorResourceController(ILevelController levelController, ActorResource actorResource = null)
+        public PressurePlateActorResourceController(LevelController levelController, ActorResource actorResource = null)
             : base(levelController)
         {
             // Default actor resource

@@ -11,7 +11,7 @@ namespace StasisEditor.Controllers.Actors
         private CircleSubController _circleSubController;
         private PointSubController _velocitySubController;
 
-        public ObjectSpawnerResourceController(ILevelController levelController, ActorResource actor = null)
+        public ObjectSpawnerResourceController(LevelController levelController, ActorResource actor = null)
             : base(levelController)
         {
             // Default actor resource

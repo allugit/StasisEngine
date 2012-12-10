@@ -11,7 +11,7 @@ namespace StasisEditor.Controllers.Actors
         private CircleActorResource _circleActorResource;
         private CircleSubController _circleSubController;
 
-        public CircleActorResourceController(ILevelController levelController, ActorResource actor = null)
+        public CircleActorResourceController(LevelController levelController, ActorResource actor = null)
             : base(levelController)
         {
             // Default actor resource

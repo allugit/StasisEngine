@@ -12,7 +12,7 @@ namespace StasisEditor.Views
 {
     public partial class MaterialView : UserControl
     {
-        private IMaterialController _controller;
+        private MaterialController _controller;
         private MaterialProperties _materialProperties;
 
         public MaterialView()
@@ -27,7 +27,7 @@ namespace StasisEditor.Views
         }
 
         // setController
-        public void setController(IMaterialController controller)
+        public void setController(MaterialController controller)
         {
             _controller = controller;
         }

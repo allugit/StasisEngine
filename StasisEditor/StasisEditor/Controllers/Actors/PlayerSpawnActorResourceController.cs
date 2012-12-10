@@ -10,7 +10,7 @@ namespace StasisEditor.Controllers.Actors
     {
         private PointSubController _positionSubController;
 
-        public PlayerSpawnActorResourceController(ILevelController levelController, ActorResource actorResource = null)
+        public PlayerSpawnActorResourceController(LevelController levelController, ActorResource actorResource = null)
             : base(levelController)
         {
             // Default player spawn actor resource

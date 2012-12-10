@@ -9,12 +9,12 @@ using StasisCore.Models;
 
 namespace StasisEditor.Controllers
 {
-    public class TextureController : ITextureController
+    public class TextureController
     {
-        private IEditorController _editorController;
+        private EditorController _editorController;
         private TextureView _textureView;
 
-        public TextureController(IEditorController editorController, TextureView textureView)
+        public TextureController(EditorController editorController, TextureView textureView)
         {
             _editorController = editorController;
             _textureView = textureView;

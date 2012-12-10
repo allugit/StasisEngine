@@ -14,11 +14,11 @@ namespace StasisEditor.Views.Controls
 {
     public partial class TerrainLayersControl : UserControl
     {
-        private IMaterialController _controller;
+        private MaterialController _controller;
         private TerrainMaterialResource _material;
         //private List<TerrainLayerResource> _layers;
 
-        public TerrainLayersControl(IMaterialController controller, TerrainMaterialResource material)
+        public TerrainLayersControl(MaterialController controller, TerrainMaterialResource material)
         {
             _controller = controller;
             _material = material;

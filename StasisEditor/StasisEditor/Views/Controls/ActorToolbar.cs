@@ -14,7 +14,7 @@ namespace StasisEditor.Views.Controls
 {
     public partial class ActorToolbar : UserControl
     {
-        private ILevelController _levelController;
+        private LevelController _levelController;
 
         public ActorToolbar()
         {
@@ -24,7 +24,7 @@ namespace StasisEditor.Views.Controls
         }
 
         // setController
-        public void setController(ILevelController controller)
+        public void setController(LevelController controller)
         {
             _levelController = controller;
         }

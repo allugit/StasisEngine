@@ -9,7 +9,7 @@ namespace StasisEditor.Views
 {
     public class ShapeRenderer
     {
-        private ILevelController _levelController;
+        private LevelController _levelController;
         private SpriteBatch _spriteBatch;
         private Texture2D _pixel;
         private SpriteFont _arial;
@@ -17,7 +17,7 @@ namespace StasisEditor.Views
         private Texture2D _playerSpawnIcon;
         private Texture2D _timerIcon;
 
-        public ShapeRenderer(ILevelController levelController)
+        public ShapeRenderer(LevelController levelController)
         {
             _levelController = levelController;
             _spriteBatch = XNAResources.spriteBatch;
