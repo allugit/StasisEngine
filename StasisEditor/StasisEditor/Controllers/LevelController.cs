@@ -27,7 +27,6 @@ namespace StasisEditor.Controllers
 
         private LevelResource _level;
 
-        private bool _isMouseOverView;
         private System.Drawing.Point _mouse;
         private Vector2 _screenCenter;
 
@@ -54,7 +53,6 @@ namespace StasisEditor.Controllers
         #region Getters/Setters
 
         public float getScale() { return _editorController.getScale(); }
-        public bool getIsMouseOverView() { return _isMouseOverView; }
         public Vector2 getWorldOffset() { return _screenCenter + (new Vector2(_levelView.getWidth(), _levelView.getHeight()) / 2) / _editorController.getScale(); }
         public Vector2 getWorldMouse() { return new Vector2(_mouse.X, _mouse.Y) / _editorController.getScale() - getWorldOffset(); }
 
@@ -102,6 +100,12 @@ namespace StasisEditor.Controllers
         // update
         public void update()
         {
+            // Update mouse position
+            updateMousePosition();
+
+            // Handle mouse down
+            handleMouseDown();
+
             // Check XNA keys in selected sub controllers
             foreach (ActorSubController subController in _selectedSubControllers)
                 subController.checkXNAKeys();
@@ -289,16 +293,15 @@ namespace StasisEditor.Controllers
 
         #region Input
 
-        ///////////////////////////////////////////////////////////////////
-        /// For key input, look at update() in the 'XNA Methods' region
-        ///////////////////////////////////////////////////////////////////
-
-        // mouseMove
-        public void mouseMove(System.Windows.Forms.MouseEventArgs e)
+        // Update mouse position
+        private void updateMousePosition()
         {
+            // View offset
+            System.Drawing.Point viewOffset = _levelView.FindForm().PointToClient(_levelView.Parent.PointToScreen(_levelView.Location));
+
             // Set mouse boundaries
-            int x = Math.Min(Math.Max(0, e.X), _levelView.getWidth());
-            int y = Math.Min(Math.Max(0, e.Y), _levelView.getHeight());
+            int x = Math.Min(Math.Max(0, Input.newMouse.X - viewOffset.X), _levelView.getWidth());
+            int y = Math.Min(Math.Max(0, Input.newMouse.Y - viewOffset.Y), _levelView.getHeight());
 
             // Calculate change in mouse position (for screen and world coordinates)
             int deltaX = x - _mouse.X;
@@ -318,55 +321,32 @@ namespace StasisEditor.Controllers
                 subController.handleMouseMove(worldDelta);
         }
 
-        // mouseEnter
-        public void mouseEnter()
+        // handleMouseDown
+        public void handleMouseDown()
         {
-            _isMouseOverView = true;
-
-            // Pass input to selected sub controllers
-            foreach (ActorSubController subController in _selectedSubControllers)
-                subController.handleMouseEnterView();
-        }
-
-        // mouseLeave
-        public void mouseLeave()
-        {
-            _isMouseOverView = false;
-
-            // Pass input to selected sub controllers
-            foreach (ActorSubController subController in _selectedSubControllers)
-                subController.handleMouseLeaveView();
-        }
-
-        // mouseDown
-        public void mouseDown(System.Windows.Forms.MouseEventArgs e)
-        {
-            if (_selectedSubControllers.Count == 0)
+            // Handle left mouse down
+            if (Input.newMouse.LeftButton == Microsoft.Xna.Framework.Input.ButtonState.Pressed &&
+                Input.oldMouse.LeftButton == Microsoft.Xna.Framework.Input.ButtonState.Released)
             {
-                // Try to select a sub controller
-                foreach (ActorResourceController actorResourceController in _actorControllers)
+                if (_selectedSubControllers.Count == 0)
                 {
-                    // Stop searching if a hit test returns true (actor controller will handle the selection of the appropriate sub controls)
-                    if (actorResourceController.hitTest(getWorldMouse()))
-                        break;
+                    // Try to select a sub controller
+                    foreach (ActorResourceController actorResourceController in _actorControllers)
+                    {
+                        // Stop searching if a hit test returns true (actor controller will handle the selection of the appropriate sub controls)
+                        if (actorResourceController.hitTest(getWorldMouse()))
+                            break;
+                    }
+                }
+                else
+                {
+                    // Pass input to selected sub controllers
+                    foreach (ActorSubController subController in _selectedSubControllers)
+                        subController.handleLeftMouseDown();
                 }
             }
-            else
-            {
-                // Pass input to selected sub controllers
-                foreach (ActorSubController subController in _selectedSubControllers)
-                    subController.handleMouseDown(e);
-            }
         }
-
-        // mouseUp
-        public void mouseUp(System.Windows.Forms.MouseEventArgs e)
-        {
-            // Pass input to selected sub controllers
-            foreach (ActorSubController subController in _selectedSubControllers)
-                subController.handleMouseUp(e);
-        }
-
+        
         #endregion
     }
 }

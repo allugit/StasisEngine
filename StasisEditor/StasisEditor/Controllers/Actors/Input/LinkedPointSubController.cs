@@ -123,14 +123,13 @@ namespace StasisEditor.Controllers.Actors
                 _position = _position + worldDelta;
         }
 
-        // handleMouseDown
-        public override void handleMouseDown(System.Windows.Forms.MouseEventArgs e)
+        // handleLeftMouseDown
+        public override void handleLeftMouseDown()
         {
             bool shift = Input.newKey.IsKeyDown(Microsoft.Xna.Framework.Input.Keys.LeftShift);
 
             // Create new linked points by pressing shift (disabled when both next and previous links exist)
-            if (shift && e.Button == System.Windows.Forms.MouseButtons.Left &&
-                (_next == null || _previous == null))
+            if (shift && (_next == null || _previous == null))
             {
                 // Deselect current controller
                 _actorResourceController.deselectSubController(this);
@@ -147,9 +146,8 @@ namespace StasisEditor.Controllers.Actors
 
                 return;
             }
-            
-            if (e.Button == System.Windows.Forms.MouseButtons.Left)
-                _actorResourceController.deselectSubController(this);
+
+            _actorResourceController.deselectSubController(this);
         }
 
         #endregion

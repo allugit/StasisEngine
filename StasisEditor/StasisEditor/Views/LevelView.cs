@@ -59,6 +59,7 @@ namespace StasisEditor.Views
             return surface.Height;
         }
 
+        /*
         // Surface mouse move event
         void surface_MouseMove(object sender, System.Windows.Forms.MouseEventArgs e)
         {
@@ -76,7 +77,7 @@ namespace StasisEditor.Views
         {
             _controller.mouseEnter();
         }
-
+        */
         // handleXNADraw
         public void handleXNADraw()
         {
@@ -118,17 +119,15 @@ namespace StasisEditor.Views
             Vector2 worldOffset = _controller.getWorldOffset();
             Vector2 worldMouse = _controller.getWorldMouse();
 
-            if (_controller.getIsMouseOverView())
-            {
-                XNAResources.spriteBatch.Draw(
-                    XNAResources.pixel,
-                    (worldMouse + worldOffset) * scale,
-                    new Microsoft.Xna.Framework.Rectangle(0, 0, 8, 8),
-                    Microsoft.Xna.Framework.Color.Yellow, 0, new Vector2(4, 4),
-                    1f,
-                    Microsoft.Xna.Framework.Graphics.SpriteEffects.None,
-                    0);
-            }
+            XNAResources.spriteBatch.Draw(
+                XNAResources.pixel,
+                (worldMouse + worldOffset) * scale,
+                new Microsoft.Xna.Framework.Rectangle(0, 0, 8, 8),
+                Microsoft.Xna.Framework.Color.Yellow, 0, new Vector2(4, 4),
+                1f,
+                Microsoft.Xna.Framework.Graphics.SpriteEffects.None,
+                0);
+
         }
 
         // drawActorControllers
@@ -138,7 +137,7 @@ namespace StasisEditor.Views
             foreach (ActorResourceController actorController in actorControllers)
                 actorController.draw();
         }
-
+        /*
         // Mouse down
         private void surface_MouseDown(object sender, MouseEventArgs e)
         {
@@ -150,5 +149,6 @@ namespace StasisEditor.Views
         {
             _controller.mouseUp(e);
         }
+        */
     }
 }

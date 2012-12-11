@@ -1,6 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Windows.Forms;
+using Microsoft.Xna.Framework;
 
 namespace StasisEditor.Controllers.Actors
 {
@@ -14,30 +14,15 @@ namespace StasisEditor.Controllers.Actors
         }
 
         // hitTest
-        abstract public bool hitTest(Microsoft.Xna.Framework.Vector2 worldMouse);
+        abstract public bool hitTest(Vector2 worldMouse);
 
         // handleMouseMove
-        virtual public void handleMouseMove(Microsoft.Xna.Framework.Vector2 worldDelta)
+        virtual public void handleMouseMove(Vector2 worldDelta)
         {
         }
 
-        // handleMouseEnterView
-        virtual public void handleMouseEnterView()
-        {
-        }
-
-        // handleMouseLeaveView
-        virtual public void handleMouseLeaveView()
-        {
-        }
-
-        // handleMouseDown
-        virtual public void handleMouseDown(MouseEventArgs e)
-        {
-        }
-
-        // handleMouseUp
-        virtual public void handleMouseUp(MouseEventArgs e)
+        // handleLeftMouseDown
+        virtual public void handleLeftMouseDown()
         {
         }
 

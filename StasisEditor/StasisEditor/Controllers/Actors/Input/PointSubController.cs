@@ -77,11 +77,10 @@ namespace StasisEditor.Controllers.Actors
                 _position = _position + worldDelta;
         }
 
-        // handleMouseDown
-        public override void handleMouseDown(System.Windows.Forms.MouseEventArgs e)
+        // handleLeftMouseDown
+        public override void handleLeftMouseDown()
         {
-            if (e.Button == System.Windows.Forms.MouseButtons.Left)
-                _actorResourceController.deselectSubController(this);
+            _actorResourceController.deselectSubController(this);
         }
 
         #endregion
