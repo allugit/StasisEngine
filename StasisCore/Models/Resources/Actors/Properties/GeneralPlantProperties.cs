@@ -26,6 +26,12 @@ namespace StasisCore.Models
             _fruitItemTag = fruitItemTag;
         }
 
+        // ToString
+        public override string ToString()
+        {
+            return "General Plant Properties";
+        }
+
         // clone
         public override ActorProperties clone()
         {

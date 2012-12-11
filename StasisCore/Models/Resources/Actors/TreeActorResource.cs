@@ -21,7 +21,7 @@ namespace StasisCore.Models
 
             // Default tree properties
             if (treeProperties == null)
-                treeProperties = new TreeProperties(0, 1, 0f, 1f, 4, 1f, 0.6f, 4f, 3f, 0.6f, 1f, 2f, 2f, 1f, 1f, Vector2.Zero);
+                treeProperties = new TreeProperties(Vector2.Zero);
 
             _generalPlantProperties = generalPlantProperties as GeneralPlantProperties;
             _treeProperties = treeProperties as TreeProperties;

@@ -14,15 +14,15 @@ namespace StasisEditor.Views.Controls
     {
         private ItemView _itemView;
 
-        public ItemPropertiesControl(ItemView itemView, ItemProperties itemProperties)
+        public ItemPropertiesControl(ItemView itemView, object properties)
         {
             _itemView = itemView;
 
             InitializeComponent();
             Dock = DockStyle.Top;
 
-            propertyGrid.SelectedObject = itemProperties;
-            propertiesName.Text = itemProperties.ToString();
+            propertyGrid.SelectedObject = properties;
+            propertiesName.Text = properties.ToString();
         }
 
         // Property value changed

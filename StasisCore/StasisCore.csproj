@@ -90,6 +90,7 @@
     <Compile Include="Models\Resources\Items\Properties\ItemProperties.cs" />
     <Compile Include="Models\Resources\Items\Properties\RopeGunProperties.cs" />
     <Compile Include="Models\Resources\Items\RopeGunItemResource.cs" />
+    <Compile Include="Models\Resources\Items\TreeSeedItemResource.cs" />
     <Compile Include="Models\Resources\Materials\Properties\DecalProperties.cs" />
     <Compile Include="Models\Resources\Materials\FluidMaterialResource.cs" />
     <Compile Include="Models\Resources\Materials\ItemMaterialResource.cs" />

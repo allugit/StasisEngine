@@ -41,22 +41,22 @@ namespace StasisCore.Models
         public Vector2 tropism { get { return _tropism; } set { _tropism = value; } }
 
         public TreeProperties(
-            float angle,
-            int seed,
-            float age,
-            float internodeLength,
-            int maxShootLength,
-            float maxBaseWidth,
-            float perceptionAngle,
-            float perceptionRadius,
-            float occupancyRadius,
-            float lateralAngle,
-            float fullExposure,
-            float penumbraA,
-            float penumbraB,
-            float optimalGrowthWeight,
-            float tropismWeight,
-            Vector2 tropism)
+            Vector2 tropism,
+            float angle = (float)(-Math.PI / 2),
+            int seed = 1,
+            float age = 0f,
+            float internodeLength = 1f,
+            int maxShootLength = 4,
+            float maxBaseWidth = 1f,
+            float perceptionAngle = 0.6f,
+            float perceptionRadius = 4f,
+            float occupancyRadius = 1f,
+            float lateralAngle = 0.6f,
+            float fullExposure = 1f,
+            float penumbraA = 2f,
+            float penumbraB = 2f,
+            float optimalGrowthWeight = 1f,
+            float tropismWeight = 1f)
             : base()
         {
             _angle = angle;
@@ -77,10 +77,16 @@ namespace StasisCore.Models
             _tropism = tropism;
         }
 
+        // ToString
+        public override string ToString()
+        {
+            return "Tree Properties";
+        }
+
         // clone
         public override ActorProperties clone()
         {
-            return new TreeProperties(_angle, _seed, _age, _internodeLength, _maxShootLength, _maxBaseWidth, _perceptionAngle, _perceptionRadius, _occupancyRadius, _lateralAngle, _fullExposure, _penumbraA, _penumbraB, _optimalGrowthWeight, _tropismWeight, _tropism);
+            return new TreeProperties(_tropism, _angle, _seed, _age, _internodeLength, _maxShootLength, _maxBaseWidth, _perceptionAngle, _perceptionRadius, _occupancyRadius, _lateralAngle, _fullExposure, _penumbraA, _penumbraB, _optimalGrowthWeight, _tropismWeight);
         }
     }
 }

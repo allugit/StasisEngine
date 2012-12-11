@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using Microsoft.Xna.Framework;
 using StasisCore.Models;
 using StasisEditor.Views;
 
@@ -40,6 +41,10 @@ namespace StasisEditor.Controllers
             _items[(int)ItemType.HealthPotion].Add(new HealthPotionItemResource(new GeneralItemProperties("small_health_potion", 1, "small_health_potion", "small_health_potion"), new HealthPotionProperties(20)));
             _items[(int)ItemType.HealthPotion].Add(new HealthPotionItemResource(new GeneralItemProperties("medium_health_potion", 1, "medium_health_potion", "medium_health_potion"), new HealthPotionProperties(40)));
             _items[(int)ItemType.HealthPotion].Add(new HealthPotionItemResource(new GeneralItemProperties("large_health_potion", 1, "large_health_potion", "large_health_potion"), new HealthPotionProperties(60)));
+            _items[(int)ItemType.TreeSeed].Add(new TreeSeedItemResource(
+                new GeneralItemProperties("accuminate_tree_seed", 1, "tree_seed", "tree_seed"),
+                new TreeProperties(Vector2.Zero),
+                new GeneralPlantProperties(true, 0f, "")));
         }
     }
 }

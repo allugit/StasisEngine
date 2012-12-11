@@ -77,6 +77,17 @@ namespace StasisEditor.Views
                     GrenadeItemResource grenadeItemResource = itemResource as GrenadeItemResource;
                     propertiesContainer.Controls.Add(new ItemPropertiesControl(this, grenadeItemResource.grenadeProperties));
                     break;
+
+                case ItemType.HealthPotion:
+                    HealthPotionItemResource healthPotionItemResource = itemResource as HealthPotionItemResource;
+                    propertiesContainer.Controls.Add(new ItemPropertiesControl(this, healthPotionItemResource.healthPotionProperties));
+                    break;
+
+                case ItemType.TreeSeed:
+                    TreeSeedItemResource treeSeedItemResource = itemResource as TreeSeedItemResource;
+                    propertiesContainer.Controls.Add(new ItemPropertiesControl(this, treeSeedItemResource.generalPlantProperties));
+                    propertiesContainer.Controls.Add(new ItemPropertiesControl(this, treeSeedItemResource.treeProperties));
+                    break;
             }
         }
     }
