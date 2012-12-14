@@ -45,6 +45,22 @@ namespace StasisEditor.Controllers
                 new GeneralItemProperties("accuminate_tree_seed", 1, "tree_seed", "tree_seed"),
                 new TreeProperties(Vector2.Zero),
                 new GeneralPlantProperties(true, 0f, "")));
+
+            _items[(int)ItemType.BlueprintScrap].Add(new BlueprintScrapItemResource(
+                new GeneralItemProperties("test_scrap_1", 1, "blueprint_scrap", "blueprint_scrap"),
+                new BlueprintScrapProperties("test_scrap_1")));
+
+            _items[(int)ItemType.BlueprintScrap].Add(new BlueprintScrapItemResource(
+                new GeneralItemProperties("test_scrap_2", 1, "blueprint_scrap", "blueprint_scrap"),
+                new BlueprintScrapProperties("test_scrap_2")));
+
+            _items[(int)ItemType.BlueprintScrap].Add(new BlueprintScrapItemResource(
+                new GeneralItemProperties("test_scrap_3", 1, "blueprint_scrap", "blueprint_scrap"),
+                new BlueprintScrapProperties("test_scrap_3")));
+
+            _items[(int)ItemType.Blueprint].Add(new BlueprintItemResource(
+                new GeneralItemProperties("test_blueprint_1", 1, "blueprint", "blueprint"),
+                new BlueprintProperties("test_item")));
         }
     }
 }

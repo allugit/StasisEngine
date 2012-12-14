@@ -88,6 +88,16 @@ namespace StasisEditor.Views
                     propertiesContainer.Controls.Add(new ItemPropertiesControl(this, treeSeedItemResource.generalPlantProperties));
                     propertiesContainer.Controls.Add(new ItemPropertiesControl(this, treeSeedItemResource.treeProperties));
                     break;
+
+                case ItemType.BlueprintScrap:
+                    BlueprintScrapItemResource blueprintScrapItemResource = itemResource as BlueprintScrapItemResource;
+                    propertiesContainer.Controls.Add(new ItemPropertiesControl(this, blueprintScrapItemResource.blueprintScrapProperties));
+                    break;
+
+                case ItemType.Blueprint:
+                    BlueprintItemResource blueprintItemResource = itemResource as BlueprintItemResource;
+                    propertiesContainer.Controls.Add(new ItemPropertiesControl(this, blueprintItemResource.blueprintProperties));
+                    break;
             }
         }
     }

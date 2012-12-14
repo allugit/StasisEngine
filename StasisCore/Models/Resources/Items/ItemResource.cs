@@ -10,7 +10,8 @@ namespace StasisCore.Models
         Grenade,
         HealthPotion,
         TreeSeed,
-        BlueprintScrap
+        BlueprintScrap,
+        Blueprint
     };
 
     abstract public class ItemResource
