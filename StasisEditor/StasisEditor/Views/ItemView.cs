@@ -92,6 +92,7 @@ namespace StasisEditor.Views
                 case ItemType.BlueprintScrap:
                     BlueprintScrapItemResource blueprintScrapItemResource = itemResource as BlueprintScrapItemResource;
                     propertiesContainer.Controls.Add(new ItemPropertiesControl(this, blueprintScrapItemResource.blueprintScrapProperties));
+                    propertiesContainer.Controls.Add(new CreateBlueprintScrapShapeButton(blueprintScrapItemResource));
                     break;
 
                 case ItemType.Blueprint:

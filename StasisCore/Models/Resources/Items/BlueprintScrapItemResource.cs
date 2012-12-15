@@ -20,7 +20,7 @@ namespace StasisCore.Models
 
             // Default blueprint scrap properties
             if (blueprintScrapProperties == null)
-                blueprintScrapProperties = new BlueprintScrapProperties("");
+                blueprintScrapProperties = new BlueprintScrapProperties("", "");
 
             _generalProperties = generalProperties as GeneralItemProperties;
             _blueprintScrapProperties = blueprintScrapProperties as BlueprintScrapProperties;

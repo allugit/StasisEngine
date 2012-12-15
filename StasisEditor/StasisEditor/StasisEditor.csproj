@@ -108,6 +108,18 @@
     <Compile Include="Views\Controls\ActorToolbar.Designer.cs">
       <DependentUpon>ActorToolbar.cs</DependentUpon>
     </Compile>
+    <Compile Include="Views\Controls\CreateBlueprintScrapShapeButton.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="Views\Controls\CreateBlueprintScrapShapeButton.Designer.cs">
+      <DependentUpon>CreateBlueprintScrapShapeButton.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Views\Controls\EditBlueprintScrapShape.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Views\Controls\EditBlueprintScrapShape.Designer.cs">
+      <DependentUpon>EditBlueprintScrapShape.cs</DependentUpon>
+    </Compile>
     <Compile Include="Views\Controls\FileSafeTextBox.cs">
       <SubType>Component</SubType>
     </Compile>
@@ -258,6 +270,12 @@
   <ItemGroup>
     <EmbeddedResource Include="Views\Controls\ActorToolbar.resx">
       <DependentUpon>ActorToolbar.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Views\Controls\CreateBlueprintScrapShapeButton.resx">
+      <DependentUpon>CreateBlueprintScrapShapeButton.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Views\Controls\EditBlueprintScrapShape.resx">
+      <DependentUpon>EditBlueprintScrapShape.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Views\Controls\ItemPropertiesControl.resx">
       <DependentUpon>ItemPropertiesControl.cs</DependentUpon>
