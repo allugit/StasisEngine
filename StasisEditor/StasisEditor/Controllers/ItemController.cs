@@ -12,7 +12,6 @@ namespace StasisEditor.Controllers
         private EditorController _editorController;
         private ItemView _itemView;
         private List<ItemResource>[] _items;
-        private bool _inputEnabled;
 
         public ItemController(EditorController editorController, ItemView itemView)
         {
@@ -124,12 +123,6 @@ namespace StasisEditor.Controllers
             _editorController.enableLevelXNADrawing(status);
         }
 
-        // enableEditBlueprintScrapInput
-        public void enableEditBlueprintScrapInput(bool status)
-        {
-            _inputEnabled = status;
-        }
-
         // handleXNADraw
         public void handleXNADraw()
         {
@@ -139,11 +132,8 @@ namespace StasisEditor.Controllers
         // update
         public void update()
         {
-            if (_inputEnabled)
-            {
-                // Update mouse position
-                _itemView.updateMousePosition();
-            }
+            // Update mouse position
+            _itemView.updateMousePosition();
         }
 
         // resizeGraphicsDevice

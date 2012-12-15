@@ -28,24 +28,24 @@
         /// </summary>
         private void InitializeComponent()
         {
-            this.doneButton = new System.Windows.Forms.Button();
+            this.saveButton = new System.Windows.Forms.Button();
             this.cancelButton = new System.Windows.Forms.Button();
             this.pictureBox = new System.Windows.Forms.PictureBox();
             this.clearButton = new System.Windows.Forms.Button();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox)).BeginInit();
             this.SuspendLayout();
             // 
-            // doneButton
+            // saveButton
             // 
-            this.doneButton.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
-            this.doneButton.Enabled = false;
-            this.doneButton.Location = new System.Drawing.Point(59, 124);
-            this.doneButton.Name = "doneButton";
-            this.doneButton.Size = new System.Drawing.Size(75, 23);
-            this.doneButton.TabIndex = 0;
-            this.doneButton.Text = "Done";
-            this.doneButton.UseVisualStyleBackColor = true;
-            this.doneButton.Click += new System.EventHandler(this.doneButton_Click);
+            this.saveButton.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
+            this.saveButton.Enabled = false;
+            this.saveButton.Location = new System.Drawing.Point(59, 124);
+            this.saveButton.Name = "saveButton";
+            this.saveButton.Size = new System.Drawing.Size(75, 23);
+            this.saveButton.TabIndex = 0;
+            this.saveButton.Text = "Save";
+            this.saveButton.UseVisualStyleBackColor = true;
+            this.saveButton.Click += new System.EventHandler(this.doneButton_Click);
             // 
             // cancelButton
             // 
@@ -88,7 +88,7 @@
             this.Controls.Add(this.clearButton);
             this.Controls.Add(this.pictureBox);
             this.Controls.Add(this.cancelButton);
-            this.Controls.Add(this.doneButton);
+            this.Controls.Add(this.saveButton);
             this.Name = "EditBlueprintScrapShape";
             this.SizeGripStyle = System.Windows.Forms.SizeGripStyle.Hide;
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;
@@ -102,7 +102,7 @@
 
         #endregion
 
-        private System.Windows.Forms.Button doneButton;
+        private System.Windows.Forms.Button saveButton;
         private System.Windows.Forms.Button cancelButton;
         private System.Windows.Forms.PictureBox pictureBox;
         private System.Windows.Forms.Button clearButton;

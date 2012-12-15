@@ -45,21 +45,17 @@ namespace StasisEditor.Views.Controls
 
                 // Create edit view
                 EditBlueprintScrapShape editForm = new EditBlueprintScrapShape(_itemView, texture, _scrapResource);
-                _itemView.setEditBlueprintScrapView(editForm);
-                _itemController.enableEditBlueprintScrapInput(true);
+                _itemView.setEditBlueprintScrapShapeView(editForm);
 
                 // Open edit view
                 if (editForm.ShowDialog() == DialogResult.OK)
                 {
-                    Console.WriteLine("setting points");
                     // Set scrap points
                     _scrapResource.points = editForm.getPoints();
-                    _itemController.setChangesMade(true);
                 }
 
                 // Close edit view
-                _itemView.setEditBlueprintScrapView(null);
-                _itemController.enableEditBlueprintScrapInput(false);
+                _itemView.setEditBlueprintScrapShapeView(null);
 
                 // Hook XNA to level view
                 _itemController.hookXNAToLevel();

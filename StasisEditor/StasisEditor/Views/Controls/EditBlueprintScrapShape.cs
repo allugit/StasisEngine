@@ -133,7 +133,7 @@ namespace StasisEditor.Views.Controls
             _points.Add(_mouse);
 
             // Enable done button
-            doneButton.Enabled = _points.Count > 2;
+            saveButton.Enabled = _points.Count > 2;
         }
 
         // Unhook from XNA
@@ -161,6 +161,7 @@ namespace StasisEditor.Views.Controls
             Close();
         }
 
+        // Clear button clicked
         private void clearButton_Click(object sender, EventArgs e)
         {
             _points.Clear();

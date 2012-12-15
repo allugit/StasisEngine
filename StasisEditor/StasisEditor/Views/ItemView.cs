@@ -16,7 +16,8 @@ namespace StasisEditor.Views
     {
         private ItemController _controller;
         private BindingSource _itemListSource;
-        private EditBlueprintScrapShape _editBlueprintScrapView;
+        private EditBlueprintScrapShape _editBlueprintScrapShapeView;
+        private EditBlueprintScrapSocketsView _editBlueprintScrapSocketsView;
 
         public ItemView()
         {
@@ -43,10 +44,16 @@ namespace StasisEditor.Views
             return _controller;
         }
 
-        // setEditBlueprintScrapView
-        public void setEditBlueprintScrapView(EditBlueprintScrapShape view)
+        // setEditBlueprintScrapShapeView
+        public void setEditBlueprintScrapShapeView(EditBlueprintScrapShape view)
         {
-            _editBlueprintScrapView = view;
+            _editBlueprintScrapShapeView = view;
+        }
+
+        // setEditBlueprintScrapSocketsView
+        public void setEditBlueprintScrapSocketsView(EditBlueprintScrapSocketsView view)
+        {
+            _editBlueprintScrapSocketsView = view;
         }
 
         // setChangesMade
@@ -58,14 +65,21 @@ namespace StasisEditor.Views
         // handleXNADraw
         public void handleXNADraw()
         {
-            if (_editBlueprintScrapView != null)
-                _editBlueprintScrapView.handleXNADraw();
+            if (_editBlueprintScrapShapeView != null)
+                _editBlueprintScrapShapeView.handleXNADraw();
+
+            if (_editBlueprintScrapSocketsView != null)
+                _editBlueprintScrapSocketsView.handleXNADraw();
         }
 
         // updateMousePosition
         public void updateMousePosition()
         {
-            _editBlueprintScrapView.updateMousePosition();
+            if (_editBlueprintScrapShapeView != null)
+                _editBlueprintScrapShapeView.updateMousePosition();
+
+            if (_editBlueprintScrapSocketsView != null)
+                _editBlueprintScrapSocketsView.updateMousePosition();
         }
 
         // Selected item type changed
@@ -126,7 +140,7 @@ namespace StasisEditor.Views
                     List<BlueprintScrapItemResource> associatedScraps = _controller.getBlueprintScrapResources(blueprintItemResource.generalProperties.tag);
                     propertiesContainer.Controls.Add(new ItemPropertiesControl(this, blueprintItemResource.blueprintProperties));
                     propertiesContainer.Controls.Add(new ViewBlueprintAssociateScraps(associatedScraps));
-                    propertiesContainer.Controls.Add(new EditBlueprintScrapSocketsButton(associatedScraps));
+                    propertiesContainer.Controls.Add(new EditBlueprintScrapSocketsButton(this, associatedScraps));
                     break;
             }
         }
