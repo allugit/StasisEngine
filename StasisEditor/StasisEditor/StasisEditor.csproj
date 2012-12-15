@@ -157,6 +157,12 @@
     <Compile Include="Views\Controls\PlantSelectBox.Designer.cs">
       <DependentUpon>PlantSelectBox.cs</DependentUpon>
     </Compile>
+    <Compile Include="Views\Controls\ViewBlueprintAssociateScraps.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="Views\Controls\ViewBlueprintAssociateScraps.Designer.cs">
+      <DependentUpon>ViewBlueprintAssociateScraps.cs</DependentUpon>
+    </Compile>
     <Compile Include="Views\ItemView.cs">
       <SubType>UserControl</SubType>
     </Compile>
@@ -291,6 +297,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Views\Controls\PlantSelectBox.resx">
       <DependentUpon>PlantSelectBox.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Views\Controls\ViewBlueprintAssociateScraps.resx">
+      <DependentUpon>ViewBlueprintAssociateScraps.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Views\ItemView.resx">
       <DependentUpon>ItemView.cs</DependentUpon>

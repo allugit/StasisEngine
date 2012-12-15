@@ -74,6 +74,32 @@ namespace StasisEditor.Controllers
                 new BlueprintProperties("test_item")));
         }
 
+        // getBlueprintScrapResources
+        public List<BlueprintScrapItemResource> getBlueprintScrapResources()
+        {
+            List<BlueprintScrapItemResource> list = new List<BlueprintScrapItemResource>();
+            List<ItemResource> scrapList = _items[(int)ItemType.BlueprintScrap];
+
+            for (int i = 0; i < scrapList.Count; i++)
+                list.Add(scrapList[i] as BlueprintScrapItemResource);
+
+            return list;
+        }
+        public List<BlueprintScrapItemResource> getBlueprintScrapResources(string blueprintTag)
+        {
+            List<BlueprintScrapItemResource> list = new List<BlueprintScrapItemResource>();
+            List<ItemResource> scrapList = _items[(int)ItemType.BlueprintScrap];
+
+            for (int i = 0; i < scrapList.Count; i++)
+            {
+                BlueprintScrapItemResource scrapItem = scrapList[i] as BlueprintScrapItemResource;
+                if (scrapItem.blueprintScrapProperties.blueprintTag == blueprintTag)
+                    list.Add(scrapItem);
+            }
+
+            return list;
+        }
+
         // unhookXNAFromLevel
         public void unhookXNAFromLevel()
         {

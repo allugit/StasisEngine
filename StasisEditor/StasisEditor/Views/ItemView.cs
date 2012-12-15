@@ -124,6 +124,7 @@ namespace StasisEditor.Views
                 case ItemType.Blueprint:
                     BlueprintItemResource blueprintItemResource = itemResource as BlueprintItemResource;
                     propertiesContainer.Controls.Add(new ItemPropertiesControl(this, blueprintItemResource.blueprintProperties));
+                    propertiesContainer.Controls.Add(new ViewBlueprintAssociateScraps(_controller.getBlueprintScrapResources(blueprintItemResource.generalProperties.tag)));
                     break;
             }
         }
