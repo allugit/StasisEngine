@@ -40,7 +40,8 @@ namespace StasisEditor.Views.Controls
             {
                 // Unhook XNA from level view
                 _itemController.unhookXNAFromLevel();
-                _itemController.enableLevelInput(false);
+                _itemController.enableLevelXNAInput(false);
+                _itemController.enableLevelXNADrawing(false);
 
                 // Create edit view
                 EditBlueprintScrapShape editForm = new EditBlueprintScrapShape(_itemView, texture, _scrapResource);
@@ -58,7 +59,8 @@ namespace StasisEditor.Views.Controls
 
                 // Hook XNA to level view
                 _itemController.hookXNAToLevel();
-                _itemController.enableLevelInput(true);
+                _itemController.enableLevelXNAInput(true);
+                _itemController.enableLevelXNADrawing(true);
             }
         }
     }

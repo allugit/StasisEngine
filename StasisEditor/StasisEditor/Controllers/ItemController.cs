@@ -77,10 +77,16 @@ namespace StasisEditor.Controllers
             _editorController.hookXNAToLevel();
         }
 
-        // enableLevelInput
-        public void enableLevelInput(bool status)
+        // enableLevelXNAInput
+        public void enableLevelXNAInput(bool status)
         {
-            _editorController.enableLevelInput(status);
+            _editorController.enableLevelXNAInput(status);
+        }
+
+        // enableLevelXNADrawing
+        public void enableLevelXNADrawing(bool status)
+        {
+            _editorController.enableLevelXNADrawing(status);
         }
 
         // enableEditBlueprintScrapInput

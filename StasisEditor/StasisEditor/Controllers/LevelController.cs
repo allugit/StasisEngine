@@ -16,7 +16,8 @@ namespace StasisEditor.Controllers
         private EditorController _editorController;
         private LevelView _levelView;
         private ShapeRenderer _shapeRenderer;
-        private bool _inputEnabled = true;
+        private bool _xnaInputEnabled = true;
+        private bool _xnaDrawingEnabled = true;
 
         private List<ActorSubController> _selectedSubControllers;
         private List<ActorSubController> _subControllerSelectQueue;
@@ -95,8 +96,11 @@ namespace StasisEditor.Controllers
         // handleXNADraw
         public void handleXNADraw()
         {
-            if (_level != null)
-                _levelView.handleXNADraw();
+            if (_xnaDrawingEnabled)
+            {
+                if (_level != null)
+                    _levelView.handleXNADraw();
+            }
         }
 
         // hookXNAToView
@@ -111,10 +115,16 @@ namespace StasisEditor.Controllers
             _levelView.unhookFromXNA();
         }
 
-        // enableInput
-        public void enableInput(bool status)
+        // enableXNAInput
+        public void enableXNAInput(bool status)
         {
-            _inputEnabled = status;
+            _xnaInputEnabled = status;
+        }
+
+        // enableXNADrawing
+        public void enableXNADrawing(bool status)
+        {
+            _xnaDrawingEnabled = status;
         }
 
         // update
@@ -152,7 +162,7 @@ namespace StasisEditor.Controllers
                 _actorControllersRemoveQueue.Remove(_actorControllersRemoveQueue[index]);
             }
 
-            if (_inputEnabled)
+            if (_xnaInputEnabled)
             {
                 // Update mouse position
                 updateMousePosition();
