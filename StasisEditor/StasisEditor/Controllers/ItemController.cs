@@ -27,6 +27,12 @@ namespace StasisEditor.Controllers
             return _items[(int)type];
         }
 
+        // setChangesMade
+        public void setChangesMade(bool status)
+        {
+            _itemView.setChangesMade(status);
+        }
+
         // Load resources
         protected override void loadResources()
         {
@@ -49,14 +55,17 @@ namespace StasisEditor.Controllers
                 new GeneralPlantProperties(true, 0f, "")));
 
             _items[(int)ItemType.BlueprintScrap].Add(new BlueprintScrapItemResource(
+                null,
                 new GeneralItemProperties("test_scrap_1", 1, "blueprint_scrap", "blueprint_scrap"),
                 new BlueprintScrapProperties("test_scrap_1", "test_blueprint_1")));
 
             _items[(int)ItemType.BlueprintScrap].Add(new BlueprintScrapItemResource(
+                null,
                 new GeneralItemProperties("test_scrap_2", 1, "blueprint_scrap", "blueprint_scrap"),
                 new BlueprintScrapProperties("test_scrap_2", "test_blueprint_1")));
 
             _items[(int)ItemType.BlueprintScrap].Add(new BlueprintScrapItemResource(
+                null,
                 new GeneralItemProperties("test_scrap_3", 1, "blueprint_scrap", "blueprint_scrap"),
                 new BlueprintScrapProperties("test_scrap_3", "test_blueprint_1")));
 

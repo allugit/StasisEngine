@@ -51,6 +51,10 @@ namespace StasisEditor.Views.Controls
                 // Open edit view
                 if (editForm.ShowDialog() == DialogResult.OK)
                 {
+                    Console.WriteLine("setting points");
+                    // Set scrap points
+                    _scrapResource.points = editForm.getPoints();
+                    _itemController.setChangesMade(true);
                 }
 
                 // Close edit view
