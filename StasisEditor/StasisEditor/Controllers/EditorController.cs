@@ -150,6 +150,9 @@ namespace StasisEditor.Controllers
             
             // Level controller update
             _levelController.update();
+
+            // Item controller update
+            _itemController.update();
         }
 
         // exit

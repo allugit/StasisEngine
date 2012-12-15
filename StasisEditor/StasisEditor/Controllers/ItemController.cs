@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using Microsoft.Xna.Framework;
 using StasisCore.Models;
 using StasisEditor.Views;
+using StasisEditor.Views.Controls;
 
 namespace StasisEditor.Controllers
 {
@@ -11,6 +12,7 @@ namespace StasisEditor.Controllers
         private EditorController _editorController;
         private ItemView _itemView;
         private List<ItemResource>[] _items;
+        private bool _inputEnabled;
 
         public ItemController(EditorController editorController, ItemView itemView)
         {
@@ -81,10 +83,26 @@ namespace StasisEditor.Controllers
             _editorController.enableLevelInput(status);
         }
 
+        // enableEditBlueprintScrapInput
+        public void enableEditBlueprintScrapInput(bool status)
+        {
+            _inputEnabled = status;
+        }
+
         // handleXNADraw
         public void handleXNADraw()
         {
             _itemView.handleXNADraw();
+        }
+
+        // update
+        public void update()
+        {
+            if (_inputEnabled)
+            {
+                // Update mouse position
+                _itemView.updateMousePosition();
+            }
         }
 
         // resizeGraphicsDevice

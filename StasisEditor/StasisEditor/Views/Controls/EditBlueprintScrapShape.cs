@@ -15,10 +15,10 @@ namespace StasisEditor.Views.Controls
     public partial class EditBlueprintScrapShape : Form
     {
         private BlueprintScrapItemResource _scrapResource;
-        private Point _mousePosition;
         private SpriteBatch _spriteBatch;
         private Texture2D _texture;
         private ItemView _itemView;
+        private Point _mouse;
 
         public EditBlueprintScrapShape(ItemView itemView, Texture2D texture, BlueprintScrapItemResource scrapResource)
         {
@@ -32,14 +32,40 @@ namespace StasisEditor.Views.Controls
             // Hook to XNA
             XNAResources.graphics.PreparingDeviceSettings += new EventHandler<Microsoft.Xna.Framework.PreparingDeviceSettingsEventArgs>(preparingDeviceSettings);
             Microsoft.Xna.Framework.Input.Mouse.WindowHandle = pictureBox.FindForm().Handle;
-
             _itemView.getController().resizeGraphicsDevice(texture.Width, texture.Height);
+
+            // Resize picturebox and form
+            int widthDelta = texture.Width - pictureBox.Width;
+            int heightDelta = texture.Height - pictureBox.Height;
+            pictureBox.Width = texture.Width;
+            pictureBox.Height = texture.Height;
+            Width = Width + widthDelta;
+            Height = Height + heightDelta;
         }
 
         // handleXNADraw
         public void handleXNADraw()
         {
             _spriteBatch.Draw(_texture, _texture.Bounds, Microsoft.Xna.Framework.Color.White);
+        }
+
+        // updateMousePosition
+        public void updateMousePosition()
+        {
+            // View offset
+            System.Drawing.Point viewOffset = FindForm().PointToClient(PointToScreen(pictureBox.Location));
+
+            // Set mouse boundaries
+            int x = Math.Min(Math.Max(0, Input.newMouse.X - viewOffset.X), pictureBox.Width);
+            int y = Math.Min(Math.Max(0, Input.newMouse.Y - viewOffset.Y), pictureBox.Height);
+
+            // Calculate change in mouse position (for screen and world coordinates)
+            int deltaX = x - _mouse.X;
+            int deltaY = y - _mouse.Y;
+
+            // Store screen space mouse coordinates
+            _mouse.X = x;
+            _mouse.Y = y;
         }
 
         // Set the graphics device window handle to the surface handle
@@ -58,13 +84,13 @@ namespace StasisEditor.Views.Controls
         // Picture box clicked
         private void pictureBox_Click(object sender, EventArgs e)
         {
-            MessageBox.Show(_mousePosition.ToString());
+            MessageBox.Show(_mouse.ToString());
         }
 
-        // Picture box mouse moved
-        private void pictureBox_MouseMove(object sender, MouseEventArgs e)
+        // Unhook from XNA
+        private void EditBlueprintScrapShape_FormClosing(object sender, FormClosingEventArgs e)
         {
-            _mousePosition = e.Location;
+            XNAResources.graphics.PreparingDeviceSettings -= new EventHandler<Microsoft.Xna.Framework.PreparingDeviceSettingsEventArgs>(preparingDeviceSettings);
         }
     }
 }

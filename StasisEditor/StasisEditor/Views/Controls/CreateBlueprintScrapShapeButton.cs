@@ -45,6 +45,7 @@ namespace StasisEditor.Views.Controls
                 // Create edit view
                 EditBlueprintScrapShape editForm = new EditBlueprintScrapShape(_itemView, texture, _scrapResource);
                 _itemView.setEditBlueprintScrapView(editForm);
+                _itemController.enableEditBlueprintScrapInput(true);
 
                 // Open edit view
                 if (editForm.ShowDialog() == DialogResult.OK)
@@ -53,6 +54,7 @@ namespace StasisEditor.Views.Controls
 
                 // Close edit view
                 _itemView.setEditBlueprintScrapView(null);
+                _itemController.enableEditBlueprintScrapInput(false);
 
                 // Hook XNA to level view
                 _itemController.hookXNAToLevel();

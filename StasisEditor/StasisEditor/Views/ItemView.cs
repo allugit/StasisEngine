@@ -62,6 +62,12 @@ namespace StasisEditor.Views
                 _editBlueprintScrapView.handleXNADraw();
         }
 
+        // updateMousePosition
+        public void updateMousePosition()
+        {
+            _editBlueprintScrapView.updateMousePosition();
+        }
+
         // Selected item type changed
         private void itemTypeListBox_SelectedValueChanged(object sender, EventArgs e)
         {
