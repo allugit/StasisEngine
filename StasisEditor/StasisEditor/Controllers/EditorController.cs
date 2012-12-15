@@ -75,6 +75,24 @@ namespace StasisEditor.Controllers
             _actorToolbar.Enabled = status;
         }
 
+        // unhookXNAFromLevel
+        public void unhookXNAFromLevel()
+        {
+            _levelController.unhookXNAFromView();
+        }
+
+        // hookXNAToLevel
+        public void hookXNAToLevel()
+        {
+            _levelController.hookXNAToView();
+        }
+
+        // enableLevelInput
+        public void enableLevelInput(bool status)
+        {
+            _levelController.enableInput(status);
+        }
+
         // createNewLevel
         public void createNewLevel()
         {
@@ -116,7 +134,11 @@ namespace StasisEditor.Controllers
         // handleXNADraw
         public void handleXNADraw()
         {
+            // Level controller draw
             _levelController.handleXNADraw();
+
+            // Item controller draw
+            _itemController.handleXNADraw();
         }
 
         // update
@@ -126,6 +148,7 @@ namespace StasisEditor.Controllers
             if (Input.deltaScrollValue != 0)
                 _scale += (float)Input.deltaScrollValue * 0.01f;
             
+            // Level controller update
             _levelController.update();
         }
 

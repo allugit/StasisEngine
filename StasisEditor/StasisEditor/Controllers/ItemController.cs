@@ -62,5 +62,35 @@ namespace StasisEditor.Controllers
                 new GeneralItemProperties("test_blueprint_1", 1, "blueprint", "blueprint"),
                 new BlueprintProperties("test_item")));
         }
+
+        // unhookXNAFromLevel
+        public void unhookXNAFromLevel()
+        {
+            _editorController.unhookXNAFromLevel();
+        }
+
+        // hookXNAToLevel
+        public void hookXNAToLevel()
+        {
+            _editorController.hookXNAToLevel();
+        }
+
+        // enableLevelInput
+        public void enableLevelInput(bool status)
+        {
+            _editorController.enableLevelInput(status);
+        }
+
+        // handleXNADraw
+        public void handleXNADraw()
+        {
+            _itemView.handleXNADraw();
+        }
+
+        // resizeGraphicsDevice
+        public void resizeGraphicsDevice(int width, int height)
+        {
+            _editorController.resizeGraphicsDevice(width, height);
+        }
     }
 }

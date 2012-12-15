@@ -23,7 +23,11 @@ namespace StasisEditor.Views
         public void setController(LevelController controller)
         {
             _controller = controller;
+        }
 
+        // hookToXNA
+        public void hookToXNA()
+        {
             // Hook to XNA
             XNAResources.graphics.PreparingDeviceSettings += new EventHandler<PreparingDeviceSettingsEventArgs>(preparingDeviceSettings);
             Microsoft.Xna.Framework.Input.Mouse.WindowHandle = surface.FindForm().Handle;
@@ -33,6 +37,16 @@ namespace StasisEditor.Views
 
             // Temporary -- Force resize
             _controller.resizeGraphicsDevice(surface.Width, surface.Height);
+        }
+
+        // unhookFromXNA
+        public void unhookFromXNA()
+        {
+            // Unhook from XNA
+            XNAResources.graphics.PreparingDeviceSettings -= new EventHandler<PreparingDeviceSettingsEventArgs>(preparingDeviceSettings);
+
+            // Remove resize event handler
+            Resize -= new EventHandler(surface_Resize);
         }
 
         // Surface resize event handler

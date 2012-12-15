@@ -15,14 +15,37 @@ namespace StasisEditor.Views.Controls
     public partial class EditBlueprintScrapShape : Form
     {
         private BlueprintScrapItemResource _scrapResource;
-        private Image _image;
         private Point _mousePosition;
+        private SpriteBatch _spriteBatch;
+        private Texture2D _texture;
+        private ItemView _itemView;
 
-        public EditBlueprintScrapShape(Texture2D texture, BlueprintScrapItemResource scrapResource)
+        public EditBlueprintScrapShape(ItemView itemView, Texture2D texture, BlueprintScrapItemResource scrapResource)
         {
+            _itemView = itemView;
+            _texture = texture;
             _scrapResource = scrapResource;
+            _spriteBatch = XNAResources.spriteBatch;
 
             InitializeComponent();
+
+            // Hook to XNA
+            XNAResources.graphics.PreparingDeviceSettings += new EventHandler<Microsoft.Xna.Framework.PreparingDeviceSettingsEventArgs>(preparingDeviceSettings);
+            Microsoft.Xna.Framework.Input.Mouse.WindowHandle = pictureBox.FindForm().Handle;
+
+            _itemView.getController().resizeGraphicsDevice(texture.Width, texture.Height);
+        }
+
+        // handleXNADraw
+        public void handleXNADraw()
+        {
+            _spriteBatch.Draw(_texture, _texture.Bounds, Microsoft.Xna.Framework.Color.White);
+        }
+
+        // Set the graphics device window handle to the surface handle
+        private void preparingDeviceSettings(object sender, Microsoft.Xna.Framework.PreparingDeviceSettingsEventArgs e)
+        {
+            e.GraphicsDeviceInformation.PresentationParameters.DeviceWindowHandle = pictureBox.Handle;
         }
 
         // Cancel button clicked

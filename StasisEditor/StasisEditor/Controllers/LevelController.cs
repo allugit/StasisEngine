@@ -16,6 +16,7 @@ namespace StasisEditor.Controllers
         private EditorController _editorController;
         private LevelView _levelView;
         private ShapeRenderer _shapeRenderer;
+        private bool _inputEnabled = true;
 
         private List<ActorSubController> _selectedSubControllers;
         private List<ActorSubController> _subControllerSelectQueue;
@@ -35,6 +36,7 @@ namespace StasisEditor.Controllers
             _editorController = editorController;
             _levelView = levelView;
             _levelView.setController(this);
+            _levelView.hookToXNA();
 
             _selectedSubControllers = new List<ActorSubController>();
             _subControllerSelectQueue = new List<ActorSubController>();
@@ -97,23 +99,27 @@ namespace StasisEditor.Controllers
                 _levelView.handleXNADraw();
         }
 
+        // hookXNAToView
+        public void hookXNAToView()
+        {
+            _levelView.hookToXNA();
+        }
+
+        // unhookXNAFromView
+        public void unhookXNAFromView()
+        {
+            _levelView.unhookFromXNA();
+        }
+
+        // enableInput
+        public void enableInput(bool status)
+        {
+            _inputEnabled = status;
+        }
+
         // update
         public void update()
         {
-            // Update mouse position
-            updateMousePosition();
-
-            // Handle mouse down
-            handleMouseDown();
-
-            // Check XNA keys in selected sub controllers
-            foreach (ActorSubController subController in _selectedSubControllers)
-                subController.checkXNAKeys();
-
-            // Let all actor resource controllers listen to key presses
-            foreach (ActorResourceController controller in _actorControllers)
-                controller.globalCheckKey();
-
             // Selection queue
             while (_subControllerSelectQueue.Count > 0)
             {
@@ -144,6 +150,23 @@ namespace StasisEditor.Controllers
                 int index = _actorControllersRemoveQueue.Count - 1;
                 _actorControllers.Remove(_actorControllersRemoveQueue[index]);
                 _actorControllersRemoveQueue.Remove(_actorControllersRemoveQueue[index]);
+            }
+
+            if (_inputEnabled)
+            {
+                // Update mouse position
+                updateMousePosition();
+
+                // Handle mouse down
+                handleMouseDown();
+
+                // Check XNA keys in selected sub controllers
+                foreach (ActorSubController subController in _selectedSubControllers)
+                    subController.checkXNAKeys();
+
+                // Let all actor resource controllers listen to key presses
+                foreach (ActorResourceController controller in _actorControllers)
+                    controller.globalCheckKey();
             }
         }
 

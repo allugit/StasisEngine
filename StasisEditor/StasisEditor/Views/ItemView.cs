@@ -16,6 +16,7 @@ namespace StasisEditor.Views
     {
         private ItemController _controller;
         private BindingSource _itemListSource;
+        private EditBlueprintScrapShape _editBlueprintScrapView;
 
         public ItemView()
         {
@@ -36,10 +37,29 @@ namespace StasisEditor.Views
             _controller = controller;
         }
 
+        // getController
+        public ItemController getController()
+        {
+            return _controller;
+        }
+
+        // setEditBlueprintScrapView
+        public void setEditBlueprintScrapView(EditBlueprintScrapShape view)
+        {
+            _editBlueprintScrapView = view;
+        }
+
         // setChangesMade
         public void setChangesMade(bool status)
         {
             saveButton.Enabled = status;
+        }
+
+        // handleXNADraw
+        public void handleXNADraw()
+        {
+            if (_editBlueprintScrapView != null)
+                _editBlueprintScrapView.handleXNADraw();
         }
 
         // Selected item type changed
@@ -92,7 +112,7 @@ namespace StasisEditor.Views
                 case ItemType.BlueprintScrap:
                     BlueprintScrapItemResource blueprintScrapItemResource = itemResource as BlueprintScrapItemResource;
                     propertiesContainer.Controls.Add(new ItemPropertiesControl(this, blueprintScrapItemResource.blueprintScrapProperties));
-                    propertiesContainer.Controls.Add(new CreateBlueprintScrapShapeButton(blueprintScrapItemResource));
+                    propertiesContainer.Controls.Add(new CreateBlueprintScrapShapeButton(this, blueprintScrapItemResource));
                     break;
 
                 case ItemType.Blueprint:
