@@ -120,6 +120,18 @@
     <Compile Include="Views\Controls\EditBlueprintScrapShape.Designer.cs">
       <DependentUpon>EditBlueprintScrapShape.cs</DependentUpon>
     </Compile>
+    <Compile Include="Views\Controls\EditBlueprintScrapSocketsButton.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="Views\Controls\EditBlueprintScrapSocketsButton.Designer.cs">
+      <DependentUpon>EditBlueprintScrapSocketsButton.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Views\Controls\EditBlueprintScrapSocketsView.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Views\Controls\EditBlueprintScrapSocketsView.Designer.cs">
+      <DependentUpon>EditBlueprintScrapSocketsView.cs</DependentUpon>
+    </Compile>
     <Compile Include="Views\Controls\FileSafeTextBox.cs">
       <SubType>Component</SubType>
     </Compile>
@@ -282,6 +294,12 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Views\Controls\EditBlueprintScrapShape.resx">
       <DependentUpon>EditBlueprintScrapShape.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Views\Controls\EditBlueprintScrapSocketsButton.resx">
+      <DependentUpon>EditBlueprintScrapSocketsButton.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Views\Controls\EditBlueprintScrapSocketsView.resx">
+      <DependentUpon>EditBlueprintScrapSocketsView.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Views\Controls\ItemPropertiesControl.resx">
       <DependentUpon>ItemPropertiesControl.cs</DependentUpon>

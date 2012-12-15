@@ -123,8 +123,10 @@ namespace StasisEditor.Views
 
                 case ItemType.Blueprint:
                     BlueprintItemResource blueprintItemResource = itemResource as BlueprintItemResource;
+                    List<BlueprintScrapItemResource> associatedScraps = _controller.getBlueprintScrapResources(blueprintItemResource.generalProperties.tag);
                     propertiesContainer.Controls.Add(new ItemPropertiesControl(this, blueprintItemResource.blueprintProperties));
-                    propertiesContainer.Controls.Add(new ViewBlueprintAssociateScraps(_controller.getBlueprintScrapResources(blueprintItemResource.generalProperties.tag)));
+                    propertiesContainer.Controls.Add(new ViewBlueprintAssociateScraps(associatedScraps));
+                    propertiesContainer.Controls.Add(new EditBlueprintScrapSocketsButton(associatedScraps));
                     break;
             }
         }
