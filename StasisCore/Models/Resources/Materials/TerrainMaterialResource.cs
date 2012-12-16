@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Linq;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Xml.Linq;
@@ -8,6 +9,8 @@ namespace StasisCore.Models
     public class TerrainMaterialResource : MaterialResource
     {
         private TerrainRootLayerResource _rootLayer;
+
+        [Browsable(false)]
         public TerrainRootLayerResource rootLayer { get { return _rootLayer; } }
 
         // Constructor
@@ -19,6 +22,15 @@ namespace StasisCore.Models
 
             _rootLayer = rootLayer;
             _type = MaterialType.Terrain;
+        }
+
+        // fromXML
+        public static TerrainMaterialResource fromXML(XElement element)
+        {
+            TerrainRootLayerResource rootLayer = TerrainRootLayerResource.fromXML(element.Element("Layer"));
+            return new TerrainMaterialResource(
+                element.Attribute("tag").Value,
+                rootLayer);
         }
 
         // toXML

@@ -116,6 +116,7 @@
     <Compile Include="Models\Resources\Materials\TerrainTextureLayerResource.cs" />
     <Compile Include="Models\Resources\Materials\TextureResource.cs" />
     <Compile Include="Models\Resources\Materials\TreeMaterialResource.cs" />
+    <Compile Include="Models\Resources\XmlLoadHelper.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="TerrainRenderer.cs" />
     <Compile Include="TexturedVertexFormat.cs" />

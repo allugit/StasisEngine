@@ -14,6 +14,12 @@ namespace StasisCore.Models
             _type = MaterialType.Trees;
         }
 
+        // fromXML
+        public static TreeMaterialResource fromXML(XElement element)
+        {
+            return new TreeMaterialResource(element.Attribute("tag").Value);
+        }
+
         // toXML
         public override XElement toXML()
         {

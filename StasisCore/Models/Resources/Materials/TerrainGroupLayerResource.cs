@@ -25,6 +25,19 @@ namespace StasisCore.Models
             _type = TerrainLayerType.Group;
         }
 
+        // fromXML
+        new public static TerrainGroupLayerResource fromXML(XElement element)
+        {
+            List<TerrainLayerResource> layers = new List<TerrainLayerResource>();
+            foreach (XElement layerElement in element.Elements("Layer"))
+                layers.Add(TerrainLayerResource.fromXML(layerElement));
+
+            return new TerrainGroupLayerResource(
+                layers,
+                new GroupProperties((TerrainBlendType)Enum.Parse(typeof(TerrainBlendType), element.Attribute("blendType").Value)),
+                bool.Parse(element.Attribute("enabled").Value));
+        }
+
         // toXML
         public override XElement toXML()
         {

@@ -13,6 +13,12 @@ namespace StasisCore.Models
             _type = MaterialType.Items;
         }
 
+        // fromXML
+        public static ItemMaterialResource fromXML(XElement element)
+        {
+            return new ItemMaterialResource(element.Attribute("tag").Value);
+        }
+
         // toXML
         public override XElement toXML()
         {

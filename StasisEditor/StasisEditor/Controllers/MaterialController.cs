@@ -1,7 +1,10 @@
 ﻿using System;
+using System.IO;
 using System.Diagnostics;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.Xml;
+using System.Xml.Linq;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using StasisCore;
@@ -85,24 +88,39 @@ namespace StasisEditor.Controllers
             for (int i = 0; i < numMaterialTypes; i++)
                 _materials[i] = new List<MaterialResource>();
 
-            // Test material data
-            TerrainRootLayerResource rootLayer = new TerrainRootLayerResource();
-            rootLayer.layers.Add(new TerrainTextureLayerResource(new TextureProperties(TerrainBlendType.Opaque, 1f, 1f, "rock")));
-            rootLayer.layers.Add(new TerrainNoiseLayerResource(new NoiseProperties(NoiseType.Perlin, TerrainBlendType.Overlay, WorleyFeature.F1, Vector2.Zero, 1, Vector2.Zero, 1.1f, 0.5f, 2f, 1f, Color.Black, Color.White, 1)));
-            rootLayer.layers.Add(new TerrainGroupLayerResource(
-                new List<TerrainLayerResource>(new TerrainLayerResource[] {
-                    new TerrainTextureLayerResource(new TextureProperties(TerrainBlendType.Opaque, 1f, 1f, "rock_3")),
-                    new TerrainNoiseLayerResource(new NoiseProperties(NoiseType.Worley, TerrainBlendType.Overlay, WorleyFeature.F1, Vector2.Zero, 1, Vector2.Zero, 1.1f, 0.5f, 2f, 2f, Color.Black, Color.White, 1))
-                }),
-                new GroupProperties(TerrainBlendType.Overlay), false));
+            // Load resources
+            string[] subDirectories = Directory.GetDirectories(EditorController.MATERIAL_RESOURCE_DIRECTORY);
+            foreach (string subDirectory in subDirectories)
+            {
+                // Read files in sub directory
+                string[] files = Directory.GetFiles(subDirectory);
+                foreach (string file in files)
+                {
+                    // Load material
+                    MaterialResource resource = MaterialResource.load(file);
 
-            _materials[(int)MaterialType.Terrain].Add(new TerrainMaterialResource("Rock", rootLayer));
-            _materials[(int)MaterialType.Terrain].Add(new TerrainMaterialResource("Dirt", rootLayer));
-            _materials[(int)MaterialType.Terrain].Add(new TerrainMaterialResource("Snow", rootLayer));
-            _materials[(int)MaterialType.Trees].Add(new TreeMaterialResource("Acuminate"));
-            _materials[(int)MaterialType.Fluid].Add(new FluidMaterialResource("Water"));
-            _materials[(int)MaterialType.Items].Add(new ItemMaterialResource("Rope Gun"));
-            _materials[(int)MaterialType.Items].Add(new ItemMaterialResource("Gravity Gun"));
+                    // Store material
+                    _materials[(int)resource.type].Add(resource);
+                }
+            }
+        }
+
+        // saveResource
+        public void saveResource(MaterialResource resource)
+        {
+            // Create material resource directory if necessary
+            if (!Directory.Exists(EditorController.MATERIAL_RESOURCE_DIRECTORY))
+                Directory.CreateDirectory(EditorController.MATERIAL_RESOURCE_DIRECTORY);
+
+            // Create material sub folder directory
+            string materialSubFolder = String.Format("{0}\\{1}", EditorController.MATERIAL_RESOURCE_DIRECTORY, resource.type.ToString());
+            if (!Directory.Exists(materialSubFolder))
+                Directory.CreateDirectory(materialSubFolder);
+
+            // Save material file
+            string fullPath = String.Format("{0}\\{1}.mat", materialSubFolder, resource.tag);
+            XElement element = resource.toXML();
+            element.Save(fullPath);
         }
 
         // addTerrainLayer

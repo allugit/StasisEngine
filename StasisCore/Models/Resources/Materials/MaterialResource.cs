@@ -1,4 +1,5 @@
 ﻿using System;
+using System.IO;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
@@ -45,6 +46,39 @@ namespace StasisCore.Models
             foreach (MaterialResource material in list)
                 copy.Add(material.clone());
             return copy;
+        }
+
+        // load
+        public static MaterialResource load(string filePath)
+        {
+            MaterialResource resource = null;
+
+            using (FileStream stream = new FileStream(filePath, FileMode.Open))
+            {
+                XElement element = XElement.Load(stream);
+                MaterialType type = (MaterialType)Enum.Parse(typeof(MaterialType), element.Attribute("type").Value);
+
+                switch (type)
+                {
+                    case MaterialType.Fluid:
+                        resource = FluidMaterialResource.fromXML(element);
+                        break;
+
+                    case MaterialType.Items:
+                        resource = ItemMaterialResource.fromXML(element);
+                        break;
+
+                    case MaterialType.Terrain:
+                        resource = TerrainMaterialResource.fromXML(element);
+                        break;
+
+                    case MaterialType.Trees:
+                        resource = TreeMaterialResource.fromXML(element);
+                        break;
+                }
+            }
+
+            return resource;
         }
 
         // toXML

@@ -35,5 +35,11 @@ namespace StasisEditor.Views.Controls
             InitializeComponent();
             Dock = DockStyle.Fill;
         }
+
+        // Property value changed
+        private void materialPropertyGrid_PropertyValueChanged(object s, PropertyValueChangedEventArgs e)
+        {
+            _controller.setChangesMade(true);
+        }
     }
 }

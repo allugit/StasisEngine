@@ -56,6 +56,7 @@
             this.materialPropertyGrid.Name = "materialPropertyGrid";
             this.materialPropertyGrid.Size = new System.Drawing.Size(204, 179);
             this.materialPropertyGrid.TabIndex = 8;
+            this.materialPropertyGrid.PropertyValueChanged += new System.Windows.Forms.PropertyValueChangedEventHandler(this.materialPropertyGrid_PropertyValueChanged);
             // 
             // panel1
             // 

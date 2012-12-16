@@ -13,6 +13,12 @@ namespace StasisCore.Models
             _type = MaterialType.Fluid;
         }
 
+        // fromXML
+        public static FluidMaterialResource fromXML(XElement element)
+        {
+            return new FluidMaterialResource(element.Attribute("tag").Value);
+        }
+
         // toXML
         public override XElement toXML()
         {

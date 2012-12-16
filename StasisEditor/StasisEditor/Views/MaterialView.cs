@@ -115,8 +115,7 @@ namespace StasisEditor.Views
         // Material save button
         private void saveButton_Click(object sender, EventArgs e)
         {
-            MaterialResource resource = materialsListBox.SelectedItem as MaterialResource;
-            Console.WriteLine(resource.toXML());
+            _controller.saveResource(materialsListBox.SelectedItem as MaterialResource);
         }
     }
 }

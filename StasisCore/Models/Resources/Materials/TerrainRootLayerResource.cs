@@ -17,6 +17,16 @@ namespace StasisCore.Models
             _type = TerrainLayerType.Root;
         }
 
+        // fromXML
+        public static TerrainRootLayerResource fromXML(XElement element)
+        {
+            List<TerrainLayerResource> layers = new List<TerrainLayerResource>();
+            foreach (XElement layerElement in element.Elements("Layer"))
+                layers.Add(TerrainLayerResource.fromXML(layerElement));
+
+            return new TerrainRootLayerResource(layers, new RootProperties());
+        }
+
         // toXML
         public override XElement toXML()
         {

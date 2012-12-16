@@ -45,6 +45,38 @@ namespace StasisCore.Models
             return null;
         }
 
+        // fromXML
+        public static TerrainLayerResource fromXML(XElement element)
+        {
+            TerrainLayerType type = (TerrainLayerType)Enum.Parse(typeof(TerrainLayerType), element.Attribute("type").Value);
+
+            TerrainLayerResource resource = null;
+            switch (type)
+            {
+                case TerrainLayerType.DecalSpatter:
+                    resource = TerrainDecalSpatterLayerResource.fromXML(element);
+                    break;
+
+                case TerrainLayerType.Group:
+                    resource = TerrainGroupLayerResource.fromXML(element);
+                    break;
+
+                case TerrainLayerType.Noise:
+                    resource = TerrainNoiseLayerResource.fromXML(element);
+                    break;
+
+                case TerrainLayerType.Root:
+                    resource = TerrainRootLayerResource.fromXML(element);
+                    break;
+
+                case TerrainLayerType.Texture:
+                    resource = TerrainTextureLayerResource.fromXML(element);
+                    break;
+            }
+
+            return resource;
+        }
+
         // toXML
         abstract public XElement toXML();
 

@@ -17,6 +17,14 @@ namespace StasisCore.Models
             _type = TerrainLayerType.DecalSpatter;
         }
 
+        // fromXML
+        new public static TerrainDecalSpatterLayerResource fromXML(XElement element)
+        {
+            return new TerrainDecalSpatterLayerResource(
+                new DecalProperties(),
+                bool.Parse(element.Attribute("enabled").Value));
+        }
+
         // toXML
         public override XElement toXML()
         {

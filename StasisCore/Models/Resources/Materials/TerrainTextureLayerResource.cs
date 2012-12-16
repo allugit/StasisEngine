@@ -17,6 +17,19 @@ namespace StasisCore.Models
             _type = TerrainLayerType.Texture;
         }
 
+        // fromXML
+        new public static TerrainTextureLayerResource fromXML(XElement element)
+        {
+            TerrainTextureLayerResource textureLayer = new TerrainTextureLayerResource(
+                new TextureProperties(
+                    (TerrainBlendType)Enum.Parse(typeof(TerrainBlendType), element.Attribute("blendType").Value),
+                    float.Parse(element.Attribute("scale").Value),
+                    float.Parse(element.Attribute("multiplier").Value),
+                    element.Attribute("textureTag").Value),
+                bool.Parse(element.Attribute("enabled").Value));
+            return textureLayer;
+        }
+
         // toXML
         public override XElement toXML()
         {

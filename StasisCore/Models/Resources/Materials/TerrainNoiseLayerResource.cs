@@ -33,6 +33,28 @@ namespace StasisCore.Models
             _type = TerrainLayerType.Noise;
         }
 
+        // fromXML
+        new public static TerrainNoiseLayerResource fromXML(XElement element)
+        {
+            TerrainNoiseLayerResource noiseLayer = new TerrainNoiseLayerResource(
+                new NoiseProperties(
+                    (NoiseType)Enum.Parse(typeof(NoiseType), element.Attribute("noiseType").Value),
+                    (TerrainBlendType)Enum.Parse(typeof(TerrainBlendType), element.Attribute("blendType").Value),
+                    (WorleyFeature)Enum.Parse(typeof(WorleyFeature), element.Attribute("worleyFeature").Value),
+                    XmlLoadHelper.getVector2(element.Attribute("position").Value),
+                    float.Parse(element.Attribute("scale").Value),
+                    XmlLoadHelper.getVector2(element.Attribute("fbmOffset").Value),
+                    float.Parse(element.Attribute("noiseFrequency").Value),
+                    float.Parse(element.Attribute("noiseGain").Value),
+                    float.Parse(element.Attribute("noiseLacunarity").Value),
+                    float.Parse(element.Attribute("multiplier").Value),
+                    XmlLoadHelper.getColor(element.Attribute("colorRangeLow").Value),
+                    XmlLoadHelper.getColor(element.Attribute("colorRangeLow").Value),
+                    int.Parse(element.Attribute("iterations").Value)),
+                bool.Parse(element.Attribute("enabled").Value));
+            return noiseLayer;
+        }
+
         // toXML
         public override XElement toXML()
         {
