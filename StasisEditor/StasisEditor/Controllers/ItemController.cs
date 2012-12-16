@@ -71,6 +71,18 @@ namespace StasisEditor.Controllers
                 new GeneralItemProperties("test_scrap_3", 1, "blueprint_scrap", "blueprint_scrap"),
                 new BlueprintScrapProperties("test_scrap_3", "test_blueprint_1")));
 
+            _items[(int)ItemType.BlueprintScrap].Add(new BlueprintScrapItemResource(
+                null,
+                null,
+                new GeneralItemProperties("test_scrap_4", 1, "blueprint_scrap", "blueprint_scrap"),
+                new BlueprintScrapProperties("test_scrap_4", "test_blueprint_1")));
+
+            _items[(int)ItemType.BlueprintScrap].Add(new BlueprintScrapItemResource(
+                null,
+                null,
+                new GeneralItemProperties("test_scrap_5", 1, "blueprint_scrap", "blueprint_scrap"),
+                new BlueprintScrapProperties("test_scrap_5", "test_blueprint_1")));
+
             _items[(int)ItemType.Blueprint].Add(new BlueprintItemResource(
                 new GeneralItemProperties("test_blueprint_1", 1, "blueprint", "blueprint"),
                 new BlueprintProperties("test_item")));

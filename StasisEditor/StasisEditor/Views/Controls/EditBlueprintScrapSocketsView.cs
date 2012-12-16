@@ -171,9 +171,6 @@ namespace StasisEditor.Views.Controls
                 }
                 else
                 {
-                    // Calculate relative point
-                    Vector2 relative = target.position - _socketTargetA.position;
-
                     // Create socket on first target
                     BlueprintSocketResource firstSocket = new BlueprintSocketResource(_socketTargetA.scrapResource, target.scrapResource);
                     _socketTargetA.scrapResource.sockets.Add(firstSocket);
