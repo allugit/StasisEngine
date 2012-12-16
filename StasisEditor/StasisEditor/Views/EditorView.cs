@@ -19,7 +19,6 @@ namespace StasisEditor.Views
         private EditorController _controller;
         private LevelView _levelView;
         private LevelSettings _levelSettings;
-        private ActorToolbar actorToolbar;
 
         // Constructor
         public EditorView()

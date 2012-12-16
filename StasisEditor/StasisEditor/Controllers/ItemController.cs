@@ -20,10 +20,32 @@ namespace StasisEditor.Controllers
             _itemView.setController(this);
         }
 
+        // getItem
+        public ItemResource getItem(string tag)
+        {
+            for (int i = 0; i < _items.Length; i++)
+            {
+                foreach (ItemResource itemResource in _items[i])
+                    if (itemResource.generalProperties.tag == tag)
+                        return itemResource;
+            }
+
+            return null;
+        }
+
         // getItems
         public List<ItemResource> getItems(ItemType type)
         {
             return _items[(int)type];
+        }
+
+        // getAllItems
+        public List<ItemResource> getAllItems()
+        {
+            List<ItemResource> allItems = new List<ItemResource>();
+            for (int i = 0; i < _items.Length; i++)
+                allItems.AddRange(_items[i]);
+            return allItems;
         }
 
         // setChangesMade

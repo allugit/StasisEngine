@@ -75,6 +75,12 @@ namespace StasisEditor.Controllers
             _actorToolbar.Enabled = status;
         }
 
+        // getItemController
+        public ItemController getItemController()
+        {
+            return _itemController;
+        }
+
         // unhookXNAFromLevel
         public void unhookXNAFromLevel()
         {

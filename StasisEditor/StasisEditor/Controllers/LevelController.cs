@@ -293,7 +293,7 @@ namespace StasisEditor.Controllers
             _actorControllersRemoveQueue.Add(actorController);
         }
 
-        // openPlantSelectBox
+        // selectPlantType
         public void selectPlantType()
         {
             PlantSelectBox plantSelectBox = new PlantSelectBox();
@@ -316,6 +316,16 @@ namespace StasisEditor.Controllers
 
                 // Select sub controllers
                 actorController.selectAllSubControllers();
+            }
+        }
+
+        // selectItem
+        public void selectItem()
+        {
+            ItemSelectBox itemSelectBox = new ItemSelectBox(_editorController.getItemController());
+            if (itemSelectBox.ShowDialog() == System.Windows.Forms.DialogResult.OK)
+            {
+
             }
         }
 

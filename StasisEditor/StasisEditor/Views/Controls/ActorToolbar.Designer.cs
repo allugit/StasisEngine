@@ -171,7 +171,6 @@
             // itemsButton
             // 
             this.itemsButton.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
-            this.itemsButton.Enabled = false;
             this.itemsButton.Image = ((System.Drawing.Image)(resources.GetObject("itemsButton.Image")));
             this.itemsButton.ImageTransparentColor = System.Drawing.Color.Magenta;
             this.itemsButton.Name = "itemsButton";

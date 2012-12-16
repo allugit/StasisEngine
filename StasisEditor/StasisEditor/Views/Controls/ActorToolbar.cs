@@ -38,6 +38,10 @@ namespace StasisEditor.Views.Controls
                     _levelController.selectPlantType();
                     break;
 
+                case "itemsButton":
+                    _levelController.selectItem();
+                    break;
+
                 default:
                     _levelController.createActorControllerFromToolbar(e.ClickedItem.Name);
                     break;
