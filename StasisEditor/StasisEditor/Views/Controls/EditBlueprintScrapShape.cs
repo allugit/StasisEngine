@@ -20,6 +20,7 @@ namespace StasisEditor.Views.Controls
         private SpriteBatch _spriteBatch;
         private Texture2D _pixel;
         private Texture2D _texture;
+        private Vector2 _textureCenter;
         private ItemView _itemView;
         private Vector2 _mouse;
         private List<Vector2> _points;
@@ -28,6 +29,7 @@ namespace StasisEditor.Views.Controls
         {
             _itemView = itemView;
             _texture = texture;
+            _textureCenter = new Vector2(_texture.Width, _texture.Height) / 2;
             _scrapResource = scrapResource;
             _spriteBatch = XNAResources.spriteBatch;
             _pixel = XNAResources.pixel;
@@ -59,7 +61,7 @@ namespace StasisEditor.Views.Controls
         public void handleXNADraw()
         {
             // Draw texture
-            _spriteBatch.Draw(_texture, _texture.Bounds, Color.White);
+            _spriteBatch.Draw(_texture, _textureCenter, _texture.Bounds, Color.White, 0, _textureCenter, 1f, SpriteEffects.None, 0);
 
             // Draw mouse position
             _spriteBatch.Draw(_pixel, new Vector2(_mouse.X, _mouse.Y), new Rectangle(0, 0, 4, 4), Color.Yellow, 0, new Vector2(2, 2), 1f, SpriteEffects.None, 0);
@@ -68,19 +70,19 @@ namespace StasisEditor.Views.Controls
             for (int i = 0; i < _points.Count; i++)
             {
                 // Point
-                _spriteBatch.Draw(_pixel, _points[i], new Rectangle(0, 0, 4, 4), Color.Orange, 0, new Vector2(2, 2), 1f, SpriteEffects.None, 0);
+                _spriteBatch.Draw(_pixel, _points[i] + _textureCenter, new Rectangle(0, 0, 4, 4), Color.Orange, 0, new Vector2(2, 2), 1f, SpriteEffects.None, 0);
 
                 // Lines
                 if (i > 0)
                 {
-                    drawLine(_points[i - 1],  _points[i], Color.Purple);
+                    drawLine(_points[i - 1] + _textureCenter,  _points[i] + _textureCenter, Color.Purple);
                 }
             }
 
             if (_points.Count > 0)
             {
                 // Draw line between last point and first point
-                drawLine(_points[0], _points[_points.Count - 1], Color.DarkBlue);
+                drawLine(_points[0] + _textureCenter, _points[_points.Count - 1] + _textureCenter, Color.DarkBlue);
             }
         }
 
@@ -130,7 +132,7 @@ namespace StasisEditor.Views.Controls
         public void click()
         {
             // Add point
-            _points.Add(_mouse);
+            _points.Add(_mouse - _textureCenter);
 
             // Enable done button
             saveButton.Enabled = _points.Count > 2;

@@ -81,6 +81,7 @@
     <Compile Include="Models\Resources\Actors\TreeActorResource.cs" />
     <Compile Include="Models\Resources\Items\BlueprintItemResource.cs" />
     <Compile Include="Models\Resources\Items\BlueprintScrapItemResource.cs" />
+    <Compile Include="Models\Resources\Items\BlueprintSocketResource.cs" />
     <Compile Include="Models\Resources\Items\GravityGunItemResource.cs" />
     <Compile Include="Models\Resources\Items\GrenadeItemResource.cs" />
     <Compile Include="Models\Resources\Items\HealthPotionItemResource.cs" />

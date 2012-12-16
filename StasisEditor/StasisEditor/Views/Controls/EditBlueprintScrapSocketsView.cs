@@ -23,6 +23,7 @@ namespace StasisEditor.Views.Controls
         private Texture2D _pixel;
         private Vector2 _mouse;
         private EditorBlueprintScrap _selectedScrap;
+        private EditorBlueprintScrap _socketTargetA;
 
         public EditBlueprintScrapSocketsView(ItemView itemView, List<BlueprintScrapItemResource> scraps)
         {
@@ -76,12 +77,26 @@ namespace StasisEditor.Views.Controls
         {
             // Draw scraps
             for (int i = 0; i < _editorScraps.Count; i++)
+                _spriteBatch.Draw(_editorScraps[i].texture, _editorScraps[i].position, _editorScraps[i].texture.Bounds, Color.White, 0f, _editorScraps[i].textureCenter, 1f, SpriteEffects.None, 0);
+
+            // Draw scrap sockets
+            foreach (EditorBlueprintScrap scrap in _editorScraps)
             {
-                _spriteBatch.Draw(_editorScraps[i].texture, _editorScraps[i].position, Color.White);
+                foreach (BlueprintSocketResource socket in scrap.scrapResource.sockets)
+                    drawLine(
+                        socket.scrapA.blueprintScrapCraftingProperties.position,
+                        socket.scrapA.blueprintScrapCraftingProperties.position + socket.relativePoint,
+                        Color.Green);
             }
 
             // Draw mouse position
             _spriteBatch.Draw(_pixel, new Vector2(_mouse.X, _mouse.Y), new Rectangle(0, 0, 4, 4), Color.Yellow, 0, new Vector2(2, 2), 1f, SpriteEffects.None, 0);
+
+            if (_socketTargetA != null)
+            {
+                // Draw socket line
+                drawLine(_socketTargetA.position, _mouse, Color.Blue);
+            }
         }
 
         // drawLine
@@ -121,24 +136,59 @@ namespace StasisEditor.Views.Controls
         }
 
         // Picture box clicked
-        private void pictureBox_Click(object sender, EventArgs e)
+        private void pictureBox_MouseDown(object sender, MouseEventArgs e)
         {
-            if (_selectedScrap == null)
+            // Hit test scraps
+            EditorBlueprintScrap target = null;
+            for (int i = 0; i < _editorScraps.Count; i++)
             {
-                // Hit test scraps
-                for (int i = 0; i < _editorScraps.Count; i++)
+                if (_editorScraps[i].hitTest(_mouse))
                 {
-                    if (_editorScraps[i].hitTest(_mouse))
-                    {
-                        _selectedScrap = _editorScraps[i];
-                        return;
-                    }
+                    target = _editorScraps[i];
+                    break;
                 }
             }
-            else
+
+            if (e.Button == System.Windows.Forms.MouseButtons.Left)
             {
-                // Place selected scrap
-                _selectedScrap = null;
+                if (_selectedScrap == null)
+                {
+                    // Select scrap
+                    _selectedScrap = target;
+                }
+                else
+                {
+                    // Place selected scrap
+                    _selectedScrap = null;
+                }
+            }
+            else if (e.Button == System.Windows.Forms.MouseButtons.Right)
+            {
+                if (_socketTargetA == null)
+                {
+                    // Set first socket target
+                    _socketTargetA = target;
+                }
+                else
+                {
+                    // Calculate relative point
+                    Vector2 relative = target.position - _socketTargetA.position;
+
+                    // Create socket on first target
+                    BlueprintSocketResource firstSocket = new BlueprintSocketResource(_socketTargetA.scrapResource, target.scrapResource);
+                    _socketTargetA.scrapResource.sockets.Add(firstSocket);
+
+                    // Create socket on second target
+                    BlueprintSocketResource secondSocket = new BlueprintSocketResource(target.scrapResource, _socketTargetA.scrapResource);
+                    target.scrapResource.sockets.Add(secondSocket);
+
+                    // Set opposising socket
+                    firstSocket.opposingSocket = secondSocket;
+                    secondSocket.opposingSocket = firstSocket;
+
+                    // Clear socket target
+                    _socketTargetA = null;
+                }
             }
         }
     }
