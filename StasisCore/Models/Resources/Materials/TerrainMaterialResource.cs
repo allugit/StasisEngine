@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel;
+using System.Xml.Linq;
 
 namespace StasisCore.Models
 {
@@ -10,7 +11,7 @@ namespace StasisCore.Models
         public TerrainRootLayerResource rootLayer { get { return _rootLayer; } }
 
         // Constructor
-        public TerrainMaterialResource(string name, TerrainRootLayerResource rootLayer = null) : base(name)
+        public TerrainMaterialResource(string tag, TerrainRootLayerResource rootLayer = null) : base(tag)
         {
             // Default root layer
             if (rootLayer == null)
@@ -20,10 +21,21 @@ namespace StasisCore.Models
             _type = MaterialType.Terrain;
         }
 
+        // toXML
+        public override XElement toXML()
+        {
+            XElement element = new XElement("Material",
+                new XAttribute("type", _type),
+                new XAttribute("tag", _tag),
+                _rootLayer.toXML());
+
+            return element;
+        }
+
         // clone
         public override MaterialResource clone()
         {
-            return new TerrainMaterialResource(_name, _rootLayer.clone() as TerrainRootLayerResource);
+            return new TerrainMaterialResource(_tag, _rootLayer.clone() as TerrainRootLayerResource);
         }
     }
 }

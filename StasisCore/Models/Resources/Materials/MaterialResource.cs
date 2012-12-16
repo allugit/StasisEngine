@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
+using System.Xml.Linq;
 
 namespace StasisCore.Models
 {
@@ -15,26 +16,26 @@ namespace StasisCore.Models
 
     public abstract class MaterialResource
     {
-        protected string _name;
+        protected string _tag;
         protected MaterialType _type;
 
         [Browsable(false)]
         public MaterialType type { get { return _type; } }
 
         [CategoryAttribute("General")]
-        [DisplayName("Name")]
-        public string name { get { return _name; } set { _name = value; } }
+        [DisplayName("Tag")]
+        public string tag { get { return _tag; } set { _tag = value; } }
 
         // Constructor
-        public MaterialResource(string name)
+        public MaterialResource(string tag)
         {
-            _name = name;
+            _tag = tag;
         }
 
         // Override default string
         public override string ToString()
         {
-            return _name;
+            return _tag;
         }
 
         // copyFrom -- clones a list
@@ -45,6 +46,9 @@ namespace StasisCore.Models
                 copy.Add(material.clone());
             return copy;
         }
+
+        // toXML
+        abstract public XElement toXML();
 
         // clone
         public abstract MaterialResource clone();

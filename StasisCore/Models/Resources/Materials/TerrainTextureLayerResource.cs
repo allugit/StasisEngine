@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Xml.Linq;
 
 namespace StasisCore.Models
 {
@@ -14,6 +15,20 @@ namespace StasisCore.Models
 
             _properties = properties;
             _type = TerrainLayerType.Texture;
+        }
+
+        // toXML
+        public override XElement toXML()
+        {
+            TextureProperties properties = _properties as TextureProperties;
+            XElement element = new XElement("Layer",
+                new XAttribute("type", _type),
+                new XAttribute("enabled", _enabled),
+                new XAttribute("blendType", properties.blendType),
+                new XAttribute("scale", properties.scale),
+                new XAttribute("multiplier", properties.multiplier),
+                new XAttribute("textureTag", properties.textureTag));
+            return element;
         }
 
         // Default string

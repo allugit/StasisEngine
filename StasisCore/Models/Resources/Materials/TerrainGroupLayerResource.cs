@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
+using System.Xml.Linq;
 
 namespace StasisCore.Models
 {
@@ -24,6 +23,24 @@ namespace StasisCore.Models
             _layers = layers;
             _properties = properties;
             _type = TerrainLayerType.Group;
+        }
+
+        // toXML
+        public override XElement toXML()
+        {
+            GroupProperties properties = _properties as GroupProperties;
+
+            List<XElement> layersXML = new List<XElement>();
+            for (int i = 0; i < _layers.Count; i++)
+                layersXML.Add(_layers[i].toXML());
+
+            XElement element = new XElement("Layer",
+                new XAttribute("type", _type),
+                new XAttribute("enabled", _enabled),
+                new XAttribute("blendType", properties.blendType),
+                layersXML);
+
+            return element;
         }
 
         // Default string

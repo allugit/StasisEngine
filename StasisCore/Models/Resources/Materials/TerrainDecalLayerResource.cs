@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Xml.Linq;
 
 namespace StasisCore.Models
 {
@@ -14,6 +15,15 @@ namespace StasisCore.Models
 
             _properties = properties;
             _type = TerrainLayerType.DecalSpatter;
+        }
+
+        // toXML
+        public override XElement toXML()
+        {
+            XElement element = new XElement("Layer",
+                new XAttribute("type", _type),
+                new XAttribute("enabled", _enabled));
+            return element;
         }
 
         // Default string

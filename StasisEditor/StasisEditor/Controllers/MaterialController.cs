@@ -194,7 +194,7 @@ namespace StasisEditor.Controllers
                     if (_materialPreview == null)
                     {
                         // Open material preview
-                        _materialPreview = new MaterialPreview(this, materialTexture, String.Format("{0} Preview", material.name));
+                        _materialPreview = new MaterialPreview(this, materialTexture, String.Format("{0} Preview", material.tag));
                         _materialPreview.Show();
                     }
                     else

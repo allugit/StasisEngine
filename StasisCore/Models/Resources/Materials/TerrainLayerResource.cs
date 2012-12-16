@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Xml.Linq;
 
 namespace StasisCore.Models
 {
@@ -43,6 +44,9 @@ namespace StasisCore.Models
             }
             return null;
         }
+
+        // toXML
+        abstract public XElement toXML();
 
         // copyFrom -- clones a list
         public static List<TerrainLayerResource> copyFrom(List<TerrainLayerResource> list)

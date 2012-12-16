@@ -111,5 +111,12 @@ namespace StasisEditor.Views
         {
             _controller.setAutoUpdatePreview(autoUpdatePreview.Checked);
         }
+
+        // Material save button
+        private void saveButton_Click(object sender, EventArgs e)
+        {
+            MaterialResource resource = materialsListBox.SelectedItem as MaterialResource;
+            Console.WriteLine(resource.toXML());
+        }
     }
 }
