@@ -73,25 +73,6 @@ namespace StasisEditor.Views
             return surface.Height;
         }
 
-        /*
-        // Surface mouse move event
-        void surface_MouseMove(object sender, System.Windows.Forms.MouseEventArgs e)
-        {
-            _controller.mouseMove(e);
-        }
-
-        // Mouse left the surface
-        void surface_MouseLeave(object sender, EventArgs e)
-        {
-            _controller.mouseLeave();
-        }
-
-        // Mouse entered the surface
-        void surface_MouseEnter(object sender, EventArgs e)
-        {
-            _controller.mouseEnter();
-        }
-        */
         // handleXNADraw
         public void handleXNADraw()
         {
@@ -151,18 +132,11 @@ namespace StasisEditor.Views
             foreach (ActorResourceController actorController in actorControllers)
                 actorController.draw();
         }
-        /*
-        // Mouse down
+
+        // Surface mouse down
         private void surface_MouseDown(object sender, MouseEventArgs e)
         {
-            _controller.mouseDown(e);
+            _controller.handleMouseDown(e);
         }
-
-        // Mouse up
-        private void surface_MouseUp(object sender, MouseEventArgs e)
-        {
-            _controller.mouseUp(e);
-        }
-        */
     }
 }

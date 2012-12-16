@@ -167,9 +167,6 @@ namespace StasisEditor.Controllers
                 // Update mouse position
                 updateMousePosition();
 
-                // Handle mouse down
-                handleMouseDown();
-
                 // Check XNA keys in selected sub controllers
                 foreach (ActorSubController subController in _selectedSubControllers)
                     subController.checkXNAKeys();
@@ -355,11 +352,10 @@ namespace StasisEditor.Controllers
         }
 
         // handleMouseDown
-        public void handleMouseDown()
+        public void handleMouseDown(System.Windows.Forms.MouseEventArgs e)
         {
             // Handle left mouse down
-            if (Input.newMouse.LeftButton == Microsoft.Xna.Framework.Input.ButtonState.Pressed &&
-                Input.oldMouse.LeftButton == Microsoft.Xna.Framework.Input.ButtonState.Released)
+            if (e.Button == System.Windows.Forms.MouseButtons.Left)
             {
                 if (_selectedSubControllers.Count == 0)
                 {
