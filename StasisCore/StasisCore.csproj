@@ -86,6 +86,7 @@
     <Compile Include="Models\Resources\Items\HealthPotionItemResource.cs" />
     <Compile Include="Models\Resources\Items\ItemResource.cs" />
     <Compile Include="Models\Resources\Items\Properties\BlueprintProperties.cs" />
+    <Compile Include="Models\Resources\Items\Properties\BlueprintScrapCraftingProperties.cs" />
     <Compile Include="Models\Resources\Items\Properties\BlueprintScrapProperties.cs" />
     <Compile Include="Models\Resources\Items\Properties\GeneralItemProperties.cs" />
     <Compile Include="Models\Resources\Items\Properties\GravityGunProperties.cs" />

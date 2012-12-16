@@ -8,13 +8,15 @@ namespace StasisCore.Models
     {
         private List<Vector2> _points;
         private BlueprintScrapProperties _blueprintScrapProperties;
+        private BlueprintScrapCraftingProperties _blueprintScrapCraftingProperties;
         private BlueprintItemResource _owner;
 
         public BlueprintScrapProperties blueprintScrapProperties { get { return _blueprintScrapProperties; } }
         public BlueprintItemResource owner { get { return _owner; } }
         public List<Vector2> points { get { return _points; } set { _points = value; } }
+        public BlueprintScrapCraftingProperties blueprintScrapCraftingProperties { get { return _blueprintScrapCraftingProperties; } set { _blueprintScrapCraftingProperties = value; } }
 
-        public BlueprintScrapItemResource(List<Vector2> points = null, ItemProperties generalProperties = null, ItemProperties blueprintScrapProperties = null)
+        public BlueprintScrapItemResource(List<Vector2> points = null, ItemProperties generalProperties = null, ItemProperties blueprintScrapProperties = null, ItemProperties blueprintScrapCraftingProperties = null)
             : base()
         {
             // Default points
@@ -32,13 +34,14 @@ namespace StasisCore.Models
             _points = points;
             _generalProperties = generalProperties as GeneralItemProperties;
             _blueprintScrapProperties = blueprintScrapProperties as BlueprintScrapProperties;
+            _blueprintScrapCraftingProperties = blueprintScrapCraftingProperties as BlueprintScrapCraftingProperties;
             _type = ItemType.BlueprintScrap;
         }
 
         // clone
         public override ItemResource clone()
         {
-            return new BlueprintScrapItemResource(new List<Vector2>(_points), _generalProperties.clone(), _blueprintScrapProperties.clone());
+            return new BlueprintScrapItemResource(new List<Vector2>(_points), _generalProperties.clone(), _blueprintScrapProperties.clone(), _blueprintScrapCraftingProperties.clone());
         }
     }
 }

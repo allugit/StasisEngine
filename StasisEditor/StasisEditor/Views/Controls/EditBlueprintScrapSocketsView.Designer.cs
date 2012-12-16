@@ -45,6 +45,7 @@
             this.pictureBox.Size = new System.Drawing.Size(675, 409);
             this.pictureBox.TabIndex = 0;
             this.pictureBox.TabStop = false;
+            this.pictureBox.Click += new System.EventHandler(this.pictureBox_Click);
             // 
             // cancelButton
             // 
