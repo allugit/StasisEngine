@@ -98,8 +98,6 @@ namespace StasisEditor.Controllers
                 {
                     // Load material
                     MaterialResource resource = MaterialResource.load(file);
-
-                    // Store material
                     _materials[(int)resource.type].Add(resource);
                 }
             }
@@ -121,6 +119,32 @@ namespace StasisEditor.Controllers
             string fullPath = String.Format("{0}\\{1}.mat", materialSubFolder, resource.tag);
             XElement element = resource.toXML();
             element.Save(fullPath);
+
+            // Clean up resources
+            foreach (MaterialType materialType in Enum.GetValues(typeof(MaterialType)))
+            {
+                string directoryName = materialType.ToString();
+                string materialDirectory = String.Format("{0}\\{1}", EditorController.MATERIAL_RESOURCE_DIRECTORY, directoryName);
+                foreach (string file in Directory.GetFiles(materialDirectory))
+                {
+                    string materialTag = Path.GetFileNameWithoutExtension(file);
+
+                    // Search materials for this tag
+                    bool found = false;
+                    foreach (MaterialResource materialResource in _materials[(int)materialType])
+                    {
+                        if (materialResource.tag == materialTag)
+                        {
+                            found = true;
+                            break;
+                        }
+                    }
+
+                    // Remove file if not found in material list -- This happens when materials are renamed
+                    if (!found)
+                        File.Delete(file);
+                }
+            }
         }
 
         // addTerrainLayer

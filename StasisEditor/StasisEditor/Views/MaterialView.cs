@@ -26,6 +26,12 @@ namespace StasisEditor.Views
                 materialTypesListBox.Items.Add(materialType);
         }
 
+        // getController
+        public MaterialController getController()
+        {
+            return _controller;
+        }
+
         // setController
         public void setController(MaterialController controller)
         {
@@ -53,7 +59,7 @@ namespace StasisEditor.Views
         // openProperties
         private void openProperties(MaterialResource material)
         {
-            _materialProperties = new MaterialProperties(_controller, material);
+            _materialProperties = new MaterialProperties(this, material);
             propertiesContainer.Controls.Add(_materialProperties);
 
             // Set material property grid's selected objects
@@ -69,6 +75,12 @@ namespace StasisEditor.Views
             propertiesContainer.Controls.Remove(_materialProperties);
             _materialProperties.Dispose();
             _materialProperties = null;
+        }
+
+        // Refresh material list
+        public void refreshMaterialList()
+        {
+            materialsListBox.RefreshItems();
         }
 
         // Material type selection changed
