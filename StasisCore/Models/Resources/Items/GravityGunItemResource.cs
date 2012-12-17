@@ -5,7 +5,7 @@ namespace StasisCore.Models
 {
     public class GravityGunItemResource : ItemResource
     {
-        public bool _wellGun;
+        private bool _wellGun;
         private float _range;
         private float _radius;
         private float _strength;

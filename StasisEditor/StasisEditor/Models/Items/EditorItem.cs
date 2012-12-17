@@ -5,7 +5,7 @@ using StasisCore.Models;
 
 namespace StasisEditor.Models
 {
-    public class EditorItem
+    abstract public class EditorItem
     {
         private ItemResource _resource;
         private bool _changed;
@@ -22,6 +22,18 @@ namespace StasisEditor.Models
         [CategoryAttribute("General")]
         [DisplayName("Tag")]
         public string tag { get { return _resource.tag; } set { _resource.tag = value; } }
+
+        [CategoryAttribute("General")]
+        [DisplayName("Quantity")]
+        public int quantity { get { return _resource.quantity; } set { _resource.quantity = value; } }
+
+        [CategoryAttribute("General")]
+        [DisplayName("Inventory Texture Tag")]
+        public string inventoryTextureTag { get { return _resource.inventoryTextureTag; } set { _resource.inventoryTextureTag = value; } }
+
+        [CategoryAttribute("General")]
+        [DisplayName("World Texture Tag")]
+        public string worldTextureTag { get { return _resource.worldTextureTag; } set { _resource.worldTextureTag = value; } }
 
         public EditorItem(ItemResource resource)
         {
@@ -42,8 +54,24 @@ namespace StasisEditor.Models
                     item = new EditorBlueprintScrap(resource);
                     break;
 
-                default:
-                    item = new EditorItem(resource);
+                case ItemType.GravityGun:
+                    item = new EditorBlueprintScrap(resource);
+                    break;
+
+                case ItemType.Grenade:
+                    item = new EditorGrenade(resource);
+                    break;
+
+                case ItemType.HealthPotion:
+                    item = new EditorHealthPotion(resource);
+                    break;
+
+                case ItemType.RopeGun:
+                    item = new EditorRopeGun(resource);
+                    break;
+
+                case ItemType.TreeSeed:
+                    item = new EditorTreeSeed(resource);
                     break;
             }
             return item;

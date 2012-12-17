@@ -60,13 +60,13 @@ namespace StasisEditor.Controllers
             _items = new List<EditorItem>();
 
             // Test data
-            _items.Add(new EditorItem(new RopeGunItemResource("rope_gun", 1, "single_anchor_rope_gun_crate", "single_anchor_rope_gun", false, 32f)));
-            _items.Add(new EditorItem(new GravityGunItemResource("gravity_gun", 1, "gravity_gun_crate", "gravity_gun", false, 32f, 4f, 1f)));
-            _items.Add(new EditorItem(new GrenadeItemResource("grenade", 1, "grenade_crate", "grenade", false, 2f, 1f)));
-            _items.Add(new EditorItem(new HealthPotionItemResource("small_health_potion", 1, "small_health_potion", "small_health_potion", 20)));
-            _items.Add(new EditorItem(new HealthPotionItemResource("medium_health_potion", 1, "medium_health_potion", "medium_health_potion", 40)));
-            _items.Add(new EditorItem(new HealthPotionItemResource("large_health_potion", 1, "large_health_potion", "large_health_potion", 60)));
-            _items.Add(new EditorItem(new TreeSeedItemResource("accuminate_tree_seed", 1, "tree_seed", "tree_seed", null, null)));
+            _items.Add(new EditorRopeGun(new RopeGunItemResource("rope_gun", 1, "single_anchor_rope_gun_crate", "single_anchor_rope_gun", false, 32f)));
+            _items.Add(new EditorGravityGun(new GravityGunItemResource("gravity_gun", 1, "gravity_gun_crate", "gravity_gun", false, 32f, 4f, 1f)));
+            _items.Add(new EditorGrenade(new GrenadeItemResource("grenade", 1, "grenade_crate", "grenade", false, 2f, 1f)));
+            _items.Add(new EditorHealthPotion(new HealthPotionItemResource("small_health_potion", 1, "small_health_potion", "small_health_potion", 20)));
+            _items.Add(new EditorHealthPotion(new HealthPotionItemResource("medium_health_potion", 1, "medium_health_potion", "medium_health_potion", 40)));
+            _items.Add(new EditorHealthPotion(new HealthPotionItemResource("large_health_potion", 1, "large_health_potion", "large_health_potion", 60)));
+            _items.Add(new EditorTreeSeed(new TreeSeedItemResource("accuminate_tree_seed", 1, "tree_seed", "tree_seed", null, null)));
             _items.Add(new EditorBlueprint(new BlueprintItemResource("test_blueprint_1", 1, "blueprint", "blueprint", "rope_gun")));
             _items.Add(new EditorBlueprintScrap(new BlueprintScrapItemResource("test_scrap_1", 1, "blueprint_scrap", "blueprint_scrap", "test_blueprint_1", "test_scrap_1", Vector2.Zero, 0)));
             _items.Add(new EditorBlueprintScrap(new BlueprintScrapItemResource("test_scrap_2", 1, "blueprint_scrap", "blueprint_scrap", "test_blueprint_1", "test_scrap_2", Vector2.Zero, 0)));
