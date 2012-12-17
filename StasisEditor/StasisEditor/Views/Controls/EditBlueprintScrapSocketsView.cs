@@ -82,7 +82,7 @@ namespace StasisEditor.Views.Controls
             // Draw scrap sockets
             foreach (EditorBlueprintScrap scrap in _editorScraps)
             {
-                foreach (BlueprintSocketResource socket in scrap.scrapResource.sockets)
+                foreach (BlueprintSocketResource socket in scrap.blueprintScrapResource.sockets)
                     drawLine(
                         socket.scrapA.craftingPosition,
                         socket.scrapA.craftingPosition + socket.relativePoint,
@@ -172,12 +172,12 @@ namespace StasisEditor.Views.Controls
                 else
                 {
                     // Create socket on first target
-                    BlueprintSocketResource firstSocket = new BlueprintSocketResource(_socketTargetA.scrapResource, target.scrapResource);
-                    _socketTargetA.scrapResource.sockets.Add(firstSocket);
+                    BlueprintSocketResource firstSocket = new BlueprintSocketResource(_socketTargetA.blueprintScrapResource, target.blueprintScrapResource);
+                    _socketTargetA.blueprintScrapResource.sockets.Add(firstSocket);
 
                     // Create socket on second target
-                    BlueprintSocketResource secondSocket = new BlueprintSocketResource(target.scrapResource, _socketTargetA.scrapResource);
-                    target.scrapResource.sockets.Add(secondSocket);
+                    BlueprintSocketResource secondSocket = new BlueprintSocketResource(target.blueprintScrapResource, _socketTargetA.blueprintScrapResource);
+                    target.blueprintScrapResource.sockets.Add(secondSocket);
 
                     // Set opposising socket
                     firstSocket.opposingSocket = secondSocket;

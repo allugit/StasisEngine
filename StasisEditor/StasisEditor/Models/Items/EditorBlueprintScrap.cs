@@ -4,33 +4,35 @@ using System.Collections.Generic;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using StasisCore.Models;
+using StasisEditor.Models;
 
 namespace StasisEditor.Models
 {
-    public class EditorBlueprintScrap
+    public class EditorBlueprintScrap : EditorItem
     {
-        private BlueprintScrapItemResource _scrapResource;
+        private BlueprintScrapItemResource _blueprintScrapResource;
         private Texture2D _texture;
         private Matrix _rotationMatrix;
         private Vector2 _textureCenter;
 
-        public BlueprintScrapItemResource scrapResource { get { return _scrapResource; } }
-        public Vector2 position { get { return _scrapResource.craftingPosition; } set { _scrapResource.craftingPosition = value; } }
-        public List<Vector2> points { get { return _scrapResource.points; } }
+        public BlueprintScrapItemResource blueprintScrapResource { get { return _blueprintScrapResource; } }
+        public Vector2 position { get { return _blueprintScrapResource.craftingPosition; } set { _blueprintScrapResource.craftingPosition = value; } }
+        public List<Vector2> points { get { return _blueprintScrapResource.points; } }
         public Texture2D texture { get { return _texture; } }
         public Vector2 textureCenter { get { return _textureCenter; } }
 
-        public EditorBlueprintScrap(BlueprintScrapItemResource scrapResource)
+        public EditorBlueprintScrap(ItemResource resource) 
+            : base(resource)
         {
-            _scrapResource = scrapResource;
+            _blueprintScrapResource = resource as BlueprintScrapItemResource;
 
             // Load texture
-            _texture = StasisCore.Controllers.TextureController.getTexture(scrapResource.scrapTextureTag);
+            _texture = StasisCore.Controllers.TextureController.getTexture(_blueprintScrapResource.scrapTextureTag);
             Debug.Assert(_texture != null);
             _textureCenter = new Vector2(_texture.Width, _texture.Height) / 2;
 
             // Initialize crafting properties
-            scrapResource.craftingPosition = _textureCenter;
+            _blueprintScrapResource.craftingPosition = _textureCenter;
 
             // Initialize rotation matrix
             _rotationMatrix = Matrix.Identity;

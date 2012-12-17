@@ -102,7 +102,14 @@
     <Compile Include="Controllers\LevelController.cs" />
     <Compile Include="Controllers\MaterialController.cs" />
     <Compile Include="Controllers\TextureController.cs" />
+    <Compile Include="Models\Items\EditorBlueprint.cs" />
     <Compile Include="Models\Items\EditorBlueprintScrap.cs" />
+    <Compile Include="Models\Items\EditorGravityGun.cs" />
+    <Compile Include="Models\Items\EditorGrenade.cs" />
+    <Compile Include="Models\Items\EditorHealthPotion.cs" />
+    <Compile Include="Models\Items\EditorItem.cs" />
+    <Compile Include="Models\Items\EditorRopeGun.cs" />
+    <Compile Include="Models\Items\EditorTreeSeed.cs" />
     <Compile Include="Models\Materials\EditorFluidMaterial.cs" />
     <Compile Include="Models\Materials\EditorItemMaterial.cs" />
     <Compile Include="Models\Materials\EditorMaterial.cs" />
