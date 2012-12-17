@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Linq;
 using System.Collections.Generic;
-using System.ComponentModel;
 using System.Xml.Linq;
 
 namespace StasisCore.Models
@@ -10,7 +9,6 @@ namespace StasisCore.Models
     {
         private TerrainRootLayerResource _rootLayer;
 
-        [Browsable(false)]
         public TerrainRootLayerResource rootLayer { get { return _rootLayer; } }
 
         // Constructor

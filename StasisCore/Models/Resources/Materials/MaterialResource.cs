@@ -2,7 +2,6 @@
 using System.IO;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
-using System.ComponentModel;
 using System.Xml.Linq;
 
 namespace StasisCore.Models
@@ -20,23 +19,13 @@ namespace StasisCore.Models
         protected string _tag;
         protected MaterialType _type;
 
-        [Browsable(false)]
         public MaterialType type { get { return _type; } }
-
-        [CategoryAttribute("General")]
-        [DisplayName("Tag")]
         public string tag { get { return _tag; } set { _tag = value; } }
 
         // Constructor
         public MaterialResource(string tag)
         {
             _tag = tag;
-        }
-
-        // Override default string
-        public override string ToString()
-        {
-            return _tag;
         }
 
         // copyFrom -- clones a list

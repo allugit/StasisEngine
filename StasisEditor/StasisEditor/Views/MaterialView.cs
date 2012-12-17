@@ -5,6 +5,7 @@ using System.Data;
 using System.Drawing;
 using System.Windows.Forms;
 using StasisCore.Models;
+using StasisEditor.Models;
 using StasisEditor.Controllers;
 using StasisEditor.Views.Controls;
 
@@ -41,7 +42,11 @@ namespace StasisEditor.Views
         // setChangesMade
         public void setChangesMade(bool status)
         {
-            saveButton.Enabled = true;
+            // Update button
+            saveButton.Enabled = status;
+
+            // Update selected material
+            getSelectedMaterial().changed = status;
         }
 
         // setAutoUpdatePreview -- this will trigger an event
@@ -51,13 +56,13 @@ namespace StasisEditor.Views
         }
 
         // getSelectedMaterial
-        public MaterialResource getSelectedMaterial()
+        public EditorMaterial getSelectedMaterial()
         {
-            return materialsListBox.SelectedItem as MaterialResource;
+            return materialsListBox.SelectedItem as EditorMaterial;
         }
 
         // openProperties
-        private void openProperties(MaterialResource material)
+        private void openProperties(EditorMaterial material)
         {
             _materialProperties = new MaterialProperties(this, material);
             propertiesContainer.Controls.Add(_materialProperties);
@@ -96,17 +101,20 @@ namespace StasisEditor.Views
         {
             // Update preview button
             previewButton.Enabled = materialsListBox.SelectedItem != null;
+
+            // Update save button
+            saveButton.Enabled = getSelectedMaterial().changed;
             
             // Open material properties
             closeProperties();
-            openProperties(materialsListBox.SelectedItem as MaterialResource);
+            openProperties(getSelectedMaterial());
         }
 
         // Material property changed
         private void materialProperties_PropertyValueChanged(object s, PropertyValueChangedEventArgs e)
         {
             // Changes are being made
-            setChangesMade(true);
+            getSelectedMaterial().changed = true;
 
             // Refresh the materials list
             (materialsListBox as RefreshingListBox).RefreshItems();
@@ -115,7 +123,7 @@ namespace StasisEditor.Views
         // Preview material
         private void previewButton_Click(object sender, EventArgs e)
         {
-            _controller.preview(materialsListBox.SelectedItem as MaterialResource);
+            _controller.preview(getSelectedMaterial());
         }
 
         // Auto update changed
@@ -127,7 +135,9 @@ namespace StasisEditor.Views
         // Material save button
         private void saveButton_Click(object sender, EventArgs e)
         {
-            _controller.saveResource(materialsListBox.SelectedItem as MaterialResource);
+            getSelectedMaterial().changed = false;
+            _controller.saveResource(getSelectedMaterial().resource);
+            saveButton.Enabled = false;
         }
     }
 }

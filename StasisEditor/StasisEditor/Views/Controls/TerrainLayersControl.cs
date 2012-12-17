@@ -9,16 +9,17 @@ using System.Text;
 using System.Windows.Forms;
 using StasisCore.Models;
 using StasisEditor.Controllers;
+using StasisEditor.Models;
 
 namespace StasisEditor.Views.Controls
 {
     public partial class TerrainLayersControl : UserControl
     {
         private MaterialController _controller;
-        private TerrainMaterialResource _material;
+        private EditorTerrainMaterial _material;
         //private List<TerrainLayerResource> _layers;
 
-        public TerrainLayersControl(MaterialController controller, TerrainMaterialResource material)
+        public TerrainLayersControl(MaterialController controller, EditorTerrainMaterial material)
         {
             _controller = controller;
             _material = material;

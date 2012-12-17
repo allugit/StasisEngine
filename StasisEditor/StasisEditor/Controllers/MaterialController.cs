@@ -9,6 +9,7 @@ using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using StasisCore;
 using StasisCore.Models;
+using StasisEditor.Models;
 using StasisEditor.Views;
 using StasisEditor.Views.Controls;
 
@@ -21,8 +22,7 @@ namespace StasisEditor.Controllers
         private TerrainRenderer _terrainRenderer;
         private MaterialView _materialView;
         private MaterialPreview _materialPreview;
-        private List<MaterialResource>[] _materials;
-        private bool _changesMade;
+        private List<EditorMaterial> _materials;
         private bool _autoUpdatePreview;
 
         public MaterialController(EditorController editorController, MaterialView materialView)
@@ -50,43 +50,41 @@ namespace StasisEditor.Controllers
             return _autoUpdatePreview;
         }
 
-        // getChangesMade
-        public bool getChangesMade()
-        {
-            return _changesMade;
-        }
-
         // setChangesMade
         public void setChangesMade(bool status)
         {
-            // Changes were made
-            _changesMade = status;
+            // Update view
             if (_materialView != null)
                 _materialView.setChangesMade(status);
 
             // Update if set to auto update
             if (_autoUpdatePreview)
             {
-                MaterialResource material = _materialView.getSelectedMaterial();
+                EditorMaterial material = _materialView.getSelectedMaterial();
                 if (material != null)
                     preview(material);
             }
         }
 
         // getMaterials
-        public List<MaterialResource> getMaterials(MaterialType type)
+        public List<EditorMaterial> getMaterials(MaterialType type)
         {
-            return _materials[(int)type];
+            List<EditorMaterial> results = new List<EditorMaterial>();
+            foreach (EditorMaterial material in _materials)
+            {
+                if (material.type == type)
+                    results.Add(material);
+            }
+            return results;
         }
 
         // loadResources
         protected override void loadResources()
         {
+            Debug.Assert(_materials == null);
+
             // Materials
-            int numMaterialTypes = Enum.GetValues(typeof(MaterialType)).Length;
-            _materials = new List<MaterialResource>[numMaterialTypes];
-            for (int i = 0; i < numMaterialTypes; i++)
-                _materials[i] = new List<MaterialResource>();
+            _materials = new List<EditorMaterial>();
 
             // Load resources
             string[] subDirectories = Directory.GetDirectories(EditorController.MATERIAL_RESOURCE_DIRECTORY);
@@ -98,7 +96,7 @@ namespace StasisEditor.Controllers
                 {
                     // Load material
                     MaterialResource resource = MaterialResource.load(file);
-                    _materials[(int)resource.type].Add(resource);
+                    _materials.Add(EditorMaterial.create(resource));
                 }
             }
         }
@@ -131,9 +129,9 @@ namespace StasisEditor.Controllers
 
                     // Search materials for this tag
                     bool found = false;
-                    foreach (MaterialResource materialResource in _materials[(int)materialType])
+                    foreach (EditorMaterial material in _materials)
                     {
-                        if (materialResource.tag == materialTag)
+                        if (material.tag == materialTag)
                         {
                             found = true;
                             break;
@@ -190,12 +188,12 @@ namespace StasisEditor.Controllers
         }
 
         // preview
-        public void preview(MaterialResource material)
+        public void preview(EditorMaterial material)
         {
             switch(material.type)
             {
                 case MaterialType.Terrain:
-                    TerrainMaterialResource terrainMaterial = material as TerrainMaterialResource;
+                    EditorTerrainMaterial terrainMaterial = material as EditorTerrainMaterial;
 
                     // Test data
                     /*
@@ -222,7 +220,7 @@ namespace StasisEditor.Controllers
                     int textureHeight = 512;
                     _editorController.resizeGraphicsDevice(textureWidth, textureHeight);
 
-                    Texture2D materialTexture = _terrainRenderer.renderMaterial(terrainMaterial, textureWidth, textureHeight);
+                    Texture2D materialTexture = _terrainRenderer.renderMaterial(terrainMaterial.terrainMaterialResource, textureWidth, textureHeight);
 
                     /*
                     // Create canvas
