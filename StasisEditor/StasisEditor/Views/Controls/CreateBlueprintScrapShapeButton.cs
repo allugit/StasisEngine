@@ -32,7 +32,7 @@ namespace StasisEditor.Views.Controls
         private void createBlueprintScrapButton_Click(object sender, EventArgs e)
         {
             // Test to see if the scrap texture exists
-            Texture2D texture = StasisCore.Controllers.TextureController.getTexture(_scrapResource.blueprintScrapProperties.scrapTextureTag);
+            Texture2D texture = StasisCore.Controllers.TextureController.getTexture(_scrapResource.scrapTextureTag);
 
             if (texture == null)
                 MessageBox.Show("Could not load scrap texture. Make sure it exists.");

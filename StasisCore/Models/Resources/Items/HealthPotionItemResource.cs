@@ -7,30 +7,21 @@ namespace StasisCore.Models
 {
     public class HealthPotionItemResource : ItemResource
     {
-        private HealthPotionProperties _healthPotionProperties;
+        private int _strength;
 
-        public HealthPotionProperties healthPotionProperties { get { return _healthPotionProperties; } }
+        public int strength { get { return _strength; } set { _strength = value; } }
 
-        public HealthPotionItemResource(ItemProperties generalProperties = null, ItemProperties healthPotionProperties = null)
-            : base()
+        public HealthPotionItemResource(string tag, int quantity, string worldTextureTag, string inventoryTextureTag, int strength)
+            : base(tag, quantity, worldTextureTag, inventoryTextureTag)
         {
-            // Default general properties
-            if (generalProperties == null)
-                generalProperties = new GeneralItemProperties("", 1, "", "");
-
-            // Default health potion properties
-            if (healthPotionProperties == null)
-                healthPotionProperties = new HealthPotionProperties(20);
-
-            _generalProperties = generalProperties as GeneralItemProperties;
-            _healthPotionProperties = healthPotionProperties as HealthPotionProperties;
+            _strength = strength;
             _type = ItemType.HealthPotion;
         }
 
         // clone
         public override ItemResource clone()
         {
-            return new HealthPotionItemResource(_generalProperties.clone(), _healthPotionProperties.clone());
+            return new HealthPotionItemResource(_tag, _quantity, _worldTextureTag, _inventoryTextureTag, _strength);
         }
     }
 }

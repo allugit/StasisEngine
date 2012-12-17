@@ -5,30 +5,24 @@ namespace StasisCore.Models
 {
     public class RopeGunItemResource : ItemResource
     {
-        private RopeGunProperties _ropeGunProperties;
+        private bool _doubleAnchor;
+        private float _range;
 
-        public RopeGunProperties ropeGunProperties { get { return _ropeGunProperties; } }
+        public bool doubleAnchor { get { return _doubleAnchor; } set { _doubleAnchor = value; } }
+        public float range { get { return _range; } set { _range = value; } }
 
-        public RopeGunItemResource(ItemProperties generalProperties = null, ItemProperties ropeGunProperties = null)
-            : base()
+        public RopeGunItemResource(string tag, int quantity, string worldTextureTag, string inventoryTextureTag, bool doubleAnchor, float range)
+            : base(tag, quantity, worldTextureTag, inventoryTextureTag)
         {
-            // Default base properties
-            if (generalProperties == null)
-                generalProperties = new GeneralItemProperties("", 1, "", "");
-
-            // Default rope gun properties
-            if (ropeGunProperties == null)
-                ropeGunProperties = new RopeGunProperties(false, 32f);
-
-            _generalProperties = generalProperties as GeneralItemProperties;
-            _ropeGunProperties = ropeGunProperties as RopeGunProperties;
+            _doubleAnchor = doubleAnchor;
+            _range = range;
             _type = ItemType.RopeGun;
         }
 
         // clone
         public override ItemResource clone()
         {
-            return new RopeGunItemResource(_generalProperties.clone(), _ropeGunProperties.clone());
+            return new RopeGunItemResource(_tag, _quantity, _worldTextureTag, _inventoryTextureTag, _doubleAnchor, _range);
         }
     }
 }

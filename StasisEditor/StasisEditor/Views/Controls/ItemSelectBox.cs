@@ -32,7 +32,7 @@ namespace StasisEditor.Views.Controls
             ItemResource item = allItemsListBox.SelectedItem as ItemResource;
 
             // Check world texture
-            Texture2D worldTexture = StasisCore.Controllers.TextureController.getTexture(item.generalProperties.worldTextureTag);
+            Texture2D worldTexture = StasisCore.Controllers.TextureController.getTexture(item.worldTextureTag);
             if (worldTexture == null)
             {
                 MessageBox.Show("Item has no world texture.", "World Texture Not Found");
@@ -55,7 +55,7 @@ namespace StasisEditor.Views.Controls
             }
 
             // Check world texture
-            Texture2D worldTexture = StasisCore.Controllers.TextureController.getTexture(item.generalProperties.worldTextureTag);
+            Texture2D worldTexture = StasisCore.Controllers.TextureController.getTexture(item.worldTextureTag);
             if (worldTexture == null)
             {
                 MessageBox.Show("Item has no world texture.", "World Texture Not Found");

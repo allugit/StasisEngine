@@ -84,8 +84,8 @@ namespace StasisEditor.Views.Controls
             {
                 foreach (BlueprintSocketResource socket in scrap.scrapResource.sockets)
                     drawLine(
-                        socket.scrapA.blueprintScrapCraftingProperties.position,
-                        socket.scrapA.blueprintScrapCraftingProperties.position + socket.relativePoint,
+                        socket.scrapA.craftingPosition,
+                        socket.scrapA.craftingPosition + socket.relativePoint,
                         Color.Green);
             }
 

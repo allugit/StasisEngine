@@ -18,7 +18,7 @@ namespace StasisCore.Models
         }
 
         // fromXML
-        public static TerrainRootLayerResource fromXML(XElement element)
+        new public static TerrainRootLayerResource fromXML(XElement element)
         {
             List<TerrainLayerResource> layers = new List<TerrainLayerResource>();
             foreach (XElement layerElement in element.Elements("Layer"))

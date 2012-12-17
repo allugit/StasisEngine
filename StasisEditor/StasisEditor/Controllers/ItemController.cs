@@ -26,7 +26,7 @@ namespace StasisEditor.Controllers
             for (int i = 0; i < _items.Length; i++)
             {
                 foreach (ItemResource itemResource in _items[i])
-                    if (itemResource.generalProperties.tag == tag)
+                    if (itemResource.tag == tag)
                         return itemResource;
             }
 
@@ -64,50 +64,18 @@ namespace StasisEditor.Controllers
                 _items[i] = new List<ItemResource>();
 
             // Test data
-            _items[(int)ItemType.RopeGun].Add(new RopeGunItemResource(new GeneralItemProperties("single_anchor_rope_gun", 1, "single_anchor_rope_gun_crate", "single_anchor_rope_gun")));
-            _items[(int)ItemType.GravityGun].Add(new GravityGunItemResource(new GeneralItemProperties("gravity_gun", 1, "gravity_gun_crate", "gravity_gun")));
-            _items[(int)ItemType.Grenade].Add(new GrenadeItemResource(new GeneralItemProperties("grenade", 1, "grenade_crate", "grenade")));
-            _items[(int)ItemType.HealthPotion].Add(new HealthPotionItemResource(new GeneralItemProperties("small_health_potion", 1, "small_health_potion", "small_health_potion"), new HealthPotionProperties(20)));
-            _items[(int)ItemType.HealthPotion].Add(new HealthPotionItemResource(new GeneralItemProperties("medium_health_potion", 1, "medium_health_potion", "medium_health_potion"), new HealthPotionProperties(40)));
-            _items[(int)ItemType.HealthPotion].Add(new HealthPotionItemResource(new GeneralItemProperties("large_health_potion", 1, "large_health_potion", "large_health_potion"), new HealthPotionProperties(60)));
-            _items[(int)ItemType.TreeSeed].Add(new TreeSeedItemResource(
-                new GeneralItemProperties("accuminate_tree_seed", 1, "tree_seed", "tree_seed"),
-                new TreeProperties(Vector2.Zero),
-                new GeneralPlantProperties(true, 0f, "")));
-
-            _items[(int)ItemType.BlueprintScrap].Add(new BlueprintScrapItemResource(
-                null,
-                null,
-                new GeneralItemProperties("test_scrap_1", 1, "blueprint_scrap", "blueprint_scrap"),
-                new BlueprintScrapProperties("test_scrap_1", "test_blueprint_1")));
-
-            _items[(int)ItemType.BlueprintScrap].Add(new BlueprintScrapItemResource(
-                null,
-                null,
-                new GeneralItemProperties("test_scrap_2", 1, "blueprint_scrap", "blueprint_scrap"),
-                new BlueprintScrapProperties("test_scrap_2", "test_blueprint_1")));
-
-            _items[(int)ItemType.BlueprintScrap].Add(new BlueprintScrapItemResource(
-                null,
-                null,
-                new GeneralItemProperties("test_scrap_3", 1, "blueprint_scrap", "blueprint_scrap"),
-                new BlueprintScrapProperties("test_scrap_3", "test_blueprint_1")));
-
-            _items[(int)ItemType.BlueprintScrap].Add(new BlueprintScrapItemResource(
-                null,
-                null,
-                new GeneralItemProperties("test_scrap_4", 1, "blueprint_scrap", "blueprint_scrap"),
-                new BlueprintScrapProperties("test_scrap_4", "test_blueprint_1")));
-
-            _items[(int)ItemType.BlueprintScrap].Add(new BlueprintScrapItemResource(
-                null,
-                null,
-                new GeneralItemProperties("test_scrap_5", 1, "blueprint_scrap", "blueprint_scrap"),
-                new BlueprintScrapProperties("test_scrap_5", "test_blueprint_1")));
-
-            _items[(int)ItemType.Blueprint].Add(new BlueprintItemResource(
-                new GeneralItemProperties("test_blueprint_1", 1, "blueprint", "blueprint"),
-                new BlueprintProperties("test_item")));
+            _items[(int)ItemType.RopeGun].Add(new RopeGunItemResource("rope_gun", 1, "single_anchor_rope_gun_crate", "single_anchor_rope_gun", false, 32f));
+            _items[(int)ItemType.GravityGun].Add(new GravityGunItemResource("gravity_gun", 1, "gravity_gun_crate", "gravity_gun", false, 32f, 4f, 1f));
+            _items[(int)ItemType.Grenade].Add(new GrenadeItemResource("grenade", 1, "grenade_crate", "grenade", false, 2f, 1f));
+            _items[(int)ItemType.HealthPotion].Add(new HealthPotionItemResource("small_health_potion", 1, "small_health_potion", "small_health_potion", 20));
+            _items[(int)ItemType.HealthPotion].Add(new HealthPotionItemResource("medium_health_potion", 1, "medium_health_potion", "medium_health_potion", 40));
+            _items[(int)ItemType.HealthPotion].Add(new HealthPotionItemResource("large_health_potion", 1, "large_health_potion", "large_health_potion", 60));
+            _items[(int)ItemType.TreeSeed].Add(new TreeSeedItemResource("accuminate_tree_seed", 1, "tree_seed", "tree_seed", null, null));
+            _items[(int)ItemType.Blueprint].Add(new BlueprintItemResource("test_blueprint_1", 1, "blueprint", "blueprint", "rope_gun"));
+            _items[(int)ItemType.BlueprintScrap].Add(new BlueprintScrapItemResource("test_scrap_1", 1, "blueprint_scrap", "blueprint_scrap", "test_blueprint_1", "test_scrap_1", Vector2.Zero, 0));
+            _items[(int)ItemType.BlueprintScrap].Add(new BlueprintScrapItemResource("test_scrap_2", 1, "blueprint_scrap", "blueprint_scrap", "test_blueprint_1", "test_scrap_2", Vector2.Zero, 0));
+            _items[(int)ItemType.BlueprintScrap].Add(new BlueprintScrapItemResource("test_scrap_3", 1, "blueprint_scrap", "blueprint_scrap", "test_blueprint_1", "test_scrap_3", Vector2.Zero, 0));
+            _items[(int)ItemType.BlueprintScrap].Add(new BlueprintScrapItemResource("test_scrap_4", 1, "blueprint_scrap", "blueprint_scrap", "test_blueprint_1", "test_scrap_4", Vector2.Zero, 0));
         }
 
         // getBlueprintScrapResources
@@ -129,7 +97,7 @@ namespace StasisEditor.Controllers
             for (int i = 0; i < scrapList.Count; i++)
             {
                 BlueprintScrapItemResource scrapItem = scrapList[i] as BlueprintScrapItemResource;
-                if (scrapItem.blueprintScrapProperties.blueprintTag == blueprintTag)
+                if (scrapItem.blueprintTag == blueprintTag)
                     list.Add(scrapItem);
             }
 

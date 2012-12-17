@@ -20,7 +20,7 @@ namespace StasisCore.Models
         {
             _scrapA = scrapA;
             _scrapB = scrapB;
-            _relativePoint = scrapB.blueprintScrapCraftingProperties.position - scrapA.blueprintScrapCraftingProperties.position;
+            _relativePoint = scrapB.craftingPosition - scrapA.craftingPosition;
         }
     }
 }

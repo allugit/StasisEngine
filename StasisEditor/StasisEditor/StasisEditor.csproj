@@ -102,12 +102,12 @@
     <Compile Include="Controllers\LevelController.cs" />
     <Compile Include="Controllers\MaterialController.cs" />
     <Compile Include="Controllers\TextureController.cs" />
-    <Compile Include="Models\EditorBlueprintScrap.cs" />
-    <Compile Include="Models\EditorFluidMaterial.cs" />
-    <Compile Include="Models\EditorItemMaterial.cs" />
-    <Compile Include="Models\EditorMaterial.cs" />
-    <Compile Include="Models\EditorTerrainMaterial.cs" />
-    <Compile Include="Models\EditorTreeMaterial.cs" />
+    <Compile Include="Models\Items\EditorBlueprintScrap.cs" />
+    <Compile Include="Models\Materials\EditorFluidMaterial.cs" />
+    <Compile Include="Models\Materials\EditorItemMaterial.cs" />
+    <Compile Include="Models\Materials\EditorMaterial.cs" />
+    <Compile Include="Models\Materials\EditorTerrainMaterial.cs" />
+    <Compile Include="Models\Materials\EditorTreeMaterial.cs" />
     <Compile Include="Views\Controls\ActorToolbar.cs">
       <SubType>UserControl</SubType>
     </Compile>

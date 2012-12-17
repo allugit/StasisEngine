@@ -12,13 +12,9 @@ namespace StasisCore.Models
         public TreeProperties treeProperties { get { return _treeProperties; } }
         public GeneralPlantProperties generalPlantProperties { get { return _generalPlantProperties; } }
 
-        public TreeSeedItemResource(ItemProperties generalItemProperties = null, ActorProperties treeProperties = null, ActorProperties generalPlantProperties = null)
-            : base()
+        public TreeSeedItemResource(string tag, int quantity, string worldTextureTag, string inventoryTextureTag, ActorProperties treeProperties = null, ActorProperties generalPlantProperties = null)
+            : base(tag, quantity, worldTextureTag, inventoryTextureTag)
         {
-            // Default general item properties
-            if (generalItemProperties == null)
-                generalItemProperties = new GeneralItemProperties("", 1, "", "");
-
             // Default tree properties
             if (treeProperties == null)
                 treeProperties = new TreeProperties(Vector2.Zero);
@@ -27,7 +23,6 @@ namespace StasisCore.Models
             if (generalPlantProperties == null)
                 generalPlantProperties = new GeneralPlantProperties(true, 0f, "");
 
-            _generalProperties = generalItemProperties as GeneralItemProperties;
             _treeProperties = treeProperties as TreeProperties;
             _generalPlantProperties = generalPlantProperties as GeneralPlantProperties;
             _type = ItemType.TreeSeed;
@@ -36,7 +31,7 @@ namespace StasisCore.Models
         // clone
         public override ItemResource clone()
         {
-            return new TreeSeedItemResource(_generalProperties.clone(), _treeProperties.clone(), _generalPlantProperties.clone());
+            return new TreeSeedItemResource(_tag, _quantity, _worldTextureTag, _inventoryTextureTag, _treeProperties.clone(), _generalPlantProperties.clone());
         }
     }
 }

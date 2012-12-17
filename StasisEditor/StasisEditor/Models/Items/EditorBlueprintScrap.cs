@@ -15,7 +15,7 @@ namespace StasisEditor.Models
         private Vector2 _textureCenter;
 
         public BlueprintScrapItemResource scrapResource { get { return _scrapResource; } }
-        public Vector2 position { get { return _scrapResource.blueprintScrapCraftingProperties.position; } set { _scrapResource.blueprintScrapCraftingProperties.position = value; } }
+        public Vector2 position { get { return _scrapResource.craftingPosition; } set { _scrapResource.craftingPosition = value; } }
         public List<Vector2> points { get { return _scrapResource.points; } }
         public Texture2D texture { get { return _texture; } }
         public Vector2 textureCenter { get { return _textureCenter; } }
@@ -25,12 +25,12 @@ namespace StasisEditor.Models
             _scrapResource = scrapResource;
 
             // Load texture
-            _texture = StasisCore.Controllers.TextureController.getTexture(scrapResource.blueprintScrapProperties.scrapTextureTag);
+            _texture = StasisCore.Controllers.TextureController.getTexture(scrapResource.scrapTextureTag);
             Debug.Assert(_texture != null);
             _textureCenter = new Vector2(_texture.Width, _texture.Height) / 2;
 
             // Initialize crafting properties
-            scrapResource.blueprintScrapCraftingProperties = new BlueprintScrapCraftingProperties(_textureCenter, 0);
+            scrapResource.craftingPosition = _textureCenter;
 
             // Initialize rotation matrix
             _rotationMatrix = Matrix.Identity;

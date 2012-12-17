@@ -34,10 +34,10 @@ namespace StasisEditor.Views.Controls
             // Validate scrap texture tags
             foreach (BlueprintScrapItemResource scrap in _scraps)
             {
-                Texture2D texture = StasisCore.Controllers.TextureController.getTexture(scrap.blueprintScrapProperties.scrapTextureTag);
+                Texture2D texture = StasisCore.Controllers.TextureController.getTexture(scrap.scrapTextureTag);
                 if (texture == null)
                 {
-                    MessageBox.Show(string.Format("Could not load the texture for scrap [{0}]", scrap.blueprintScrapProperties.scrapTextureTag));
+                    MessageBox.Show(string.Format("Could not load the texture for scrap [{0}]", scrap.scrapTextureTag));
                     return;
                 }
             }

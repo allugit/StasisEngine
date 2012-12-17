@@ -5,31 +5,21 @@ namespace StasisCore.Models
 {
     public class BlueprintItemResource : ItemResource
     {
-        private BlueprintProperties _blueprintProperties;
-        private List<BlueprintScrapItemResource> _blueprintScraps;
+        private string _itemTag;
 
-        public BlueprintProperties blueprintProperties { get { return _blueprintProperties; } }
+        public string itemTag { get { return _itemTag; } set { _itemTag = value; } }
 
-        public BlueprintItemResource(ItemProperties generalProperties = null, ItemProperties blueprintProperties = null)
-            : base()
+        public BlueprintItemResource(string tag, int quantity, string worldTextureTag, string inventoryTextureTag, string itemTag)
+            : base(tag, quantity, worldTextureTag, inventoryTextureTag)
         {
-            // Default general item properties
-            if (generalProperties == null)
-                generalProperties = new GeneralItemProperties("", 1, "", "");
-
-            // Default blueprint properties
-            if (blueprintProperties == null)
-                blueprintProperties = new BlueprintProperties("");
-
-            _generalProperties = generalProperties as GeneralItemProperties;
-            _blueprintProperties = blueprintProperties as BlueprintProperties;
+            _itemTag = itemTag;
             _type = ItemType.Blueprint;
         }
 
         // clone
         public override ItemResource clone()
         {
-            return new BlueprintItemResource(_generalProperties.clone(), _blueprintProperties.clone());
+            return new BlueprintItemResource(_tag, _quantity, _worldTextureTag, _inventoryTextureTag, _itemTag);
         }
     }
 }

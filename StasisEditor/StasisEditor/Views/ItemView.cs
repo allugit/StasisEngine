@@ -99,46 +99,18 @@ namespace StasisEditor.Views
 
             // Add item properties to the property container
             ItemResource itemResource = itemListBox.SelectedItem as ItemResource;
-            propertiesContainer.Controls.Add(new ItemPropertiesControl(this, itemResource.generalProperties));
+            propertiesContainer.Controls.Add(new ItemPropertiesControl(this, itemResource));
 
             switch (itemResource.type)
             {
-                case ItemType.RopeGun:
-                    RopeGunItemResource ropeGunItemResource = itemResource as RopeGunItemResource;
-                    propertiesContainer.Controls.Add(new ItemPropertiesControl(this, ropeGunItemResource.ropeGunProperties));
-                    break;
-
-                case ItemType.GravityGun:
-                    GravityGunItemResource gravityGunItemResource = itemResource as GravityGunItemResource;
-                    propertiesContainer.Controls.Add(new ItemPropertiesControl(this, gravityGunItemResource.gravityGunProperties));
-                    break;
-
-                case ItemType.Grenade:
-                    GrenadeItemResource grenadeItemResource = itemResource as GrenadeItemResource;
-                    propertiesContainer.Controls.Add(new ItemPropertiesControl(this, grenadeItemResource.grenadeProperties));
-                    break;
-
-                case ItemType.HealthPotion:
-                    HealthPotionItemResource healthPotionItemResource = itemResource as HealthPotionItemResource;
-                    propertiesContainer.Controls.Add(new ItemPropertiesControl(this, healthPotionItemResource.healthPotionProperties));
-                    break;
-
-                case ItemType.TreeSeed:
-                    TreeSeedItemResource treeSeedItemResource = itemResource as TreeSeedItemResource;
-                    propertiesContainer.Controls.Add(new ItemPropertiesControl(this, treeSeedItemResource.generalPlantProperties));
-                    propertiesContainer.Controls.Add(new ItemPropertiesControl(this, treeSeedItemResource.treeProperties));
-                    break;
-
                 case ItemType.BlueprintScrap:
                     BlueprintScrapItemResource blueprintScrapItemResource = itemResource as BlueprintScrapItemResource;
-                    propertiesContainer.Controls.Add(new ItemPropertiesControl(this, blueprintScrapItemResource.blueprintScrapProperties));
                     propertiesContainer.Controls.Add(new CreateBlueprintScrapShapeButton(this, blueprintScrapItemResource));
                     break;
 
                 case ItemType.Blueprint:
                     BlueprintItemResource blueprintItemResource = itemResource as BlueprintItemResource;
-                    List<BlueprintScrapItemResource> associatedScraps = _controller.getBlueprintScrapResources(blueprintItemResource.generalProperties.tag);
-                    propertiesContainer.Controls.Add(new ItemPropertiesControl(this, blueprintItemResource.blueprintProperties));
+                    List<BlueprintScrapItemResource> associatedScraps = _controller.getBlueprintScrapResources(blueprintItemResource.tag);
                     propertiesContainer.Controls.Add(new ViewBlueprintAssociateScraps(associatedScraps));
                     propertiesContainer.Controls.Add(new EditBlueprintScrapSocketsButton(this, associatedScraps));
                     break;
