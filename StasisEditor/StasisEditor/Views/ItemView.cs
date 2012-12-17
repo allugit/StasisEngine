@@ -9,6 +9,7 @@ using System.Windows.Forms;
 using StasisEditor.Controllers;
 using StasisEditor.Views.Controls;
 using StasisCore.Models;
+using StasisEditor.Models;
 
 namespace StasisEditor.Views
 {
@@ -62,6 +63,12 @@ namespace StasisEditor.Views
             saveButton.Enabled = status;
         }
 
+        // getSelectedItem
+        public EditorItem getSelectedItem()
+        {
+            return itemListBox.SelectedItem as EditorItem;
+        }
+
         // handleXNADraw
         public void handleXNADraw()
         {
@@ -98,19 +105,18 @@ namespace StasisEditor.Views
                 return;
 
             // Add item properties to the property container
-            ItemResource itemResource = itemListBox.SelectedItem as ItemResource;
-            propertiesContainer.Controls.Add(new ItemPropertiesControl(this, itemResource));
+            EditorItem selectedItem = getSelectedItem();
+            propertiesContainer.Controls.Add(new ItemPropertiesControl(this, selectedItem));
 
-            switch (itemResource.type)
+            switch (selectedItem.type)
             {
                 case ItemType.BlueprintScrap:
-                    BlueprintScrapItemResource blueprintScrapItemResource = itemResource as BlueprintScrapItemResource;
-                    propertiesContainer.Controls.Add(new CreateBlueprintScrapShapeButton(this, blueprintScrapItemResource));
+                    propertiesContainer.Controls.Add(new CreateBlueprintScrapShapeButton(this, selectedItem as EditorBlueprintScrap));
                     break;
 
                 case ItemType.Blueprint:
-                    BlueprintItemResource blueprintItemResource = itemResource as BlueprintItemResource;
-                    List<BlueprintScrapItemResource> associatedScraps = _controller.getBlueprintScrapResources(blueprintItemResource.tag);
+                    EditorBlueprint blueprint = selectedItem as EditorBlueprint;
+                    List<EditorBlueprintScrap> associatedScraps = _controller.getAssociatedBlueprintScraps(blueprint);
                     propertiesContainer.Controls.Add(new ViewBlueprintAssociateScraps(associatedScraps));
                     propertiesContainer.Controls.Add(new EditBlueprintScrapSocketsButton(this, associatedScraps));
                     break;

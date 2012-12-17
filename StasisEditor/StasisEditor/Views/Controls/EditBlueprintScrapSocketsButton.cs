@@ -9,6 +9,7 @@ using System.Windows.Forms;
 using Microsoft.Xna.Framework.Graphics;
 using StasisCore.Models;
 using StasisEditor.Controllers;
+using StasisEditor.Models;
 
 namespace StasisEditor.Views.Controls
 {
@@ -16,9 +17,9 @@ namespace StasisEditor.Views.Controls
     {
         private ItemController _itemController;
         private ItemView _itemView;
-        private List<BlueprintScrapItemResource> _scraps;
+        private List<EditorBlueprintScrap> _scraps;
 
-        public EditBlueprintScrapSocketsButton(ItemView itemView, List<BlueprintScrapItemResource> scraps)
+        public EditBlueprintScrapSocketsButton(ItemView itemView, List<EditorBlueprintScrap> scraps)
         {
             _itemController = itemView.getController();
             _itemView = itemView;
@@ -32,12 +33,12 @@ namespace StasisEditor.Views.Controls
         private void editSocketsButton_Click(object sender, EventArgs e)
         {
             // Validate scrap texture tags
-            foreach (BlueprintScrapItemResource scrap in _scraps)
+            foreach (EditorBlueprintScrap scrap in _scraps)
             {
-                Texture2D texture = StasisCore.Controllers.TextureController.getTexture(scrap.scrapTextureTag);
+                Texture2D texture = StasisCore.Controllers.TextureController.getTexture(scrap.blueprintScrapResource.scrapTextureTag);
                 if (texture == null)
                 {
-                    MessageBox.Show(string.Format("Could not load the texture for scrap [{0}]", scrap.scrapTextureTag));
+                    MessageBox.Show(string.Format("Could not load the texture for scrap [{0}]", scrap.blueprintScrapResource.scrapTextureTag));
                     return;
                 }
             }

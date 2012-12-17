@@ -9,20 +9,21 @@ using System.Windows.Forms;
 using Microsoft.Xna.Framework.Graphics;
 using StasisEditor.Controllers;
 using StasisCore.Models;
+using StasisEditor.Models;
 
 namespace StasisEditor.Views.Controls
 {
     public partial class CreateBlueprintScrapShapeButton : UserControl
     {
-        BlueprintScrapItemResource _scrapResource;
+        EditorBlueprintScrap _scrap;
         ItemView _itemView;
         ItemController _itemController;
 
-        public CreateBlueprintScrapShapeButton(ItemView itemView, BlueprintScrapItemResource scrapResource)
+        public CreateBlueprintScrapShapeButton(ItemView itemView, EditorBlueprintScrap scrap)
         {
             _itemView = itemView;
             _itemController = _itemView.getController();
-            _scrapResource = scrapResource;
+            _scrap = scrap;
 
             InitializeComponent();
             Dock = DockStyle.Top;
@@ -32,7 +33,7 @@ namespace StasisEditor.Views.Controls
         private void createBlueprintScrapButton_Click(object sender, EventArgs e)
         {
             // Test to see if the scrap texture exists
-            Texture2D texture = StasisCore.Controllers.TextureController.getTexture(_scrapResource.scrapTextureTag);
+            Texture2D texture = StasisCore.Controllers.TextureController.getTexture(_scrap.blueprintScrapResource.scrapTextureTag);
 
             if (texture == null)
                 MessageBox.Show("Could not load scrap texture. Make sure it exists.");
@@ -44,14 +45,14 @@ namespace StasisEditor.Views.Controls
                 _itemController.enableLevelXNADrawing(false);
 
                 // Create edit view
-                EditBlueprintScrapShape editForm = new EditBlueprintScrapShape(_itemView, texture, _scrapResource);
+                EditBlueprintScrapShape editForm = new EditBlueprintScrapShape(_itemView, texture, _scrap);
                 _itemView.setEditBlueprintScrapShapeView(editForm);
 
                 // Open edit view
                 if (editForm.ShowDialog() == DialogResult.OK)
                 {
                     // Set scrap points
-                    _scrapResource.points = editForm.getPoints();
+                    _scrap.points = editForm.getPoints();
                 }
 
                 // Close edit view

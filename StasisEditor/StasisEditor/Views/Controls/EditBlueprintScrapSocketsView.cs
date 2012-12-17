@@ -18,24 +18,20 @@ namespace StasisEditor.Views.Controls
     {
         private ItemView _itemView;
         private ItemController _itemController;
-        private List<EditorBlueprintScrap> _editorScraps;
+        private List<EditorBlueprintScrap> _scraps;
         private SpriteBatch _spriteBatch;
         private Texture2D _pixel;
         private Vector2 _mouse;
         private EditorBlueprintScrap _selectedScrap;
         private EditorBlueprintScrap _socketTargetA;
 
-        public EditBlueprintScrapSocketsView(ItemView itemView, List<BlueprintScrapItemResource> scraps)
+        public EditBlueprintScrapSocketsView(ItemView itemView, List<EditorBlueprintScrap> scraps)
         {
             _itemView = itemView;
             _itemController = itemView.getController();
+            _scraps = scraps;
             _spriteBatch = XNAResources.spriteBatch;
             _pixel = XNAResources.pixel;
-
-            // Initialize editor scraps
-            _editorScraps = new List<EditorBlueprintScrap>();
-            for (int i = 0; i < scraps.Count; i++)
-                _editorScraps.Add(new EditorBlueprintScrap(scraps[i]));
 
             InitializeComponent();
 
@@ -76,11 +72,11 @@ namespace StasisEditor.Views.Controls
         public void handleXNADraw()
         {
             // Draw scraps
-            for (int i = 0; i < _editorScraps.Count; i++)
-                _spriteBatch.Draw(_editorScraps[i].texture, _editorScraps[i].position, _editorScraps[i].texture.Bounds, Color.White, 0f, _editorScraps[i].textureCenter, 1f, SpriteEffects.None, 0);
+            for (int i = _scraps.Count - 1; i >= 0; i--)
+                _spriteBatch.Draw(_scraps[i].texture, _scraps[i].position, _scraps[i].texture.Bounds, Color.White, 0f, _scraps[i].textureCenter, 1f, SpriteEffects.None, 0);
 
             // Draw scrap sockets
-            foreach (EditorBlueprintScrap scrap in _editorScraps)
+            foreach (EditorBlueprintScrap scrap in _scraps)
             {
                 foreach (BlueprintSocketResource socket in scrap.blueprintScrapResource.sockets)
                     drawLine(
@@ -140,11 +136,11 @@ namespace StasisEditor.Views.Controls
         {
             // Hit test scraps
             EditorBlueprintScrap target = null;
-            for (int i = 0; i < _editorScraps.Count; i++)
+            for (int i = 0; i < _scraps.Count; i++)
             {
-                if (_editorScraps[i].hitTest(_mouse))
+                if (_scraps[i].hitTest(_mouse))
                 {
-                    target = _editorScraps[i];
+                    target = _scraps[i];
                     break;
                 }
             }

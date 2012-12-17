@@ -11,12 +11,13 @@ using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using StasisCore.Models;
 using StasisEditor.Controllers;
+using StasisEditor.Models;
 
 namespace StasisEditor.Views.Controls
 {
     public partial class EditBlueprintScrapShape : Form
     {
-        private BlueprintScrapItemResource _scrapResource;
+        private EditorBlueprintScrap _scrap;
         private SpriteBatch _spriteBatch;
         private Texture2D _pixel;
         private Texture2D _texture;
@@ -25,15 +26,15 @@ namespace StasisEditor.Views.Controls
         private Vector2 _mouse;
         private List<Vector2> _points;
 
-        public EditBlueprintScrapShape(ItemView itemView, Texture2D texture, BlueprintScrapItemResource scrapResource)
+        public EditBlueprintScrapShape(ItemView itemView, Texture2D texture, EditorBlueprintScrap scrap)
         {
             _itemView = itemView;
             _texture = texture;
             _textureCenter = new Vector2(_texture.Width, _texture.Height) / 2;
-            _scrapResource = scrapResource;
+            _scrap = scrap;
             _spriteBatch = XNAResources.spriteBatch;
             _pixel = XNAResources.pixel;
-            _points = new List<Vector2>(_scrapResource.points);
+            _points = new List<Vector2>(_scrap.points);
 
             InitializeComponent();
 

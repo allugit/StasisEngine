@@ -17,7 +17,7 @@ namespace StasisEditor.Models
 
         public BlueprintScrapItemResource blueprintScrapResource { get { return _blueprintScrapResource; } }
         public Vector2 position { get { return _blueprintScrapResource.craftingPosition; } set { _blueprintScrapResource.craftingPosition = value; } }
-        public List<Vector2> points { get { return _blueprintScrapResource.points; } }
+        public List<Vector2> points { get { return _blueprintScrapResource.points; } set { _blueprintScrapResource.points = value; } }
         public Texture2D texture { get { return _texture; } }
         public Vector2 textureCenter { get { return _textureCenter; } }
 

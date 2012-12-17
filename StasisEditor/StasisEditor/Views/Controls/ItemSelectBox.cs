@@ -10,6 +10,7 @@ using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using StasisEditor.Controllers;
 using StasisCore.Models;
+using StasisEditor.Models;
 
 namespace StasisEditor.Views.Controls
 {
@@ -23,16 +24,16 @@ namespace StasisEditor.Views.Controls
 
             InitializeComponent();
 
-            allItemsListBox.DataSource = _itemController.getAllItems();
+            allItemsListBox.DataSource = _itemController.getItems();
         }
 
         // List select button clicked
         private void listSelectButton_Click(object sender, EventArgs e)
         {
-            ItemResource item = allItemsListBox.SelectedItem as ItemResource;
+            EditorItem item = allItemsListBox.SelectedItem as EditorItem;
 
             // Check world texture
-            Texture2D worldTexture = StasisCore.Controllers.TextureController.getTexture(item.worldTextureTag);
+            Texture2D worldTexture = StasisCore.Controllers.TextureController.getTexture(item.itemResource.worldTextureTag);
             if (worldTexture == null)
             {
                 MessageBox.Show("Item has no world texture.", "World Texture Not Found");
@@ -45,7 +46,7 @@ namespace StasisEditor.Views.Controls
         // Tag select button clicked
         private void tagSelectButton_Click(object sender, EventArgs e)
         {
-            ItemResource item = _itemController.getItem(tagTextbox.Text);
+            EditorItem item = _itemController.getItem(tagTextbox.Text);
 
             // Check tag
             if (item == null)
@@ -55,7 +56,7 @@ namespace StasisEditor.Views.Controls
             }
 
             // Check world texture
-            Texture2D worldTexture = StasisCore.Controllers.TextureController.getTexture(item.worldTextureTag);
+            Texture2D worldTexture = StasisCore.Controllers.TextureController.getTexture(item.itemResource.worldTextureTag);
             if (worldTexture == null)
             {
                 MessageBox.Show("Item has no world texture.", "World Texture Not Found");

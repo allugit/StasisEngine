@@ -5,7 +5,7 @@ using StasisCore.Models;
 
 namespace StasisEditor.Models
 {
-    abstract public class EditorItem
+    public class EditorItem
     {
         private ItemResource _resource;
         private bool _changed;
@@ -42,27 +42,17 @@ namespace StasisEditor.Models
                     item = new EditorBlueprintScrap(resource);
                     break;
 
-                case ItemType.GravityGun:
-                    item = new EditorGravityGun(resource);
-                    break;
-
-                case ItemType.Grenade:
-                    item = new EditorGrenade(resource);
-                    break;
-
-                case ItemType.HealthPotion:
-                    item = new EditorHealthPotion(resource);
-                    break;
-
-                case ItemType.RopeGun:
-                    item = new EditorRopeGun(resource);
-                    break;
-
-                case ItemType.TreeSeed:
-                    item = new EditorTreeSeed(resource);
+                default:
+                    item = new EditorItem(resource);
                     break;
             }
             return item;
+        }
+
+        // ToString
+        public override string ToString()
+        {
+            return tag;
         }
     }
 }
