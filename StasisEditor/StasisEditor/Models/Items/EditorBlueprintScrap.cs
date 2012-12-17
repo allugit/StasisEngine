@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Diagnostics;
 using System.Collections.Generic;
+using System.ComponentModel;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using StasisCore.Models;
@@ -15,11 +16,28 @@ namespace StasisEditor.Models
         private Matrix _rotationMatrix;
         private Vector2 _textureCenter;
 
+        [Browsable(false)]
         public BlueprintScrapItemResource blueprintScrapResource { get { return _blueprintScrapResource; } }
+
+        [Browsable(false)]
         public Vector2 position { get { return _blueprintScrapResource.craftingPosition; } set { _blueprintScrapResource.craftingPosition = value; } }
+
+        [Browsable(false)]
         public List<Vector2> points { get { return _blueprintScrapResource.points; } set { _blueprintScrapResource.points = value; } }
+
+        [Browsable(false)]
         public Texture2D texture { get { return _texture; } }
+
+        [Browsable(false)]
         public Vector2 textureCenter { get { return _textureCenter; } }
+
+        [CategoryAttribute("Blueprint Scrap Properties")]
+        [DisplayName("Scrap Texture Tag")]
+        public string scrapTextureTag { get { return _blueprintScrapResource.scrapTextureTag; } set { _blueprintScrapResource.scrapTextureTag = value; } }
+
+        [CategoryAttribute("Blueprint Scrap Properties")]
+        [DisplayName("Blueprint Tag")]
+        public string blueprintTag { get { return _blueprintScrapResource.blueprintTag; } set { _blueprintScrapResource.blueprintTag = value; } }
 
         public EditorBlueprintScrap(ItemResource resource) 
             : base(resource)
