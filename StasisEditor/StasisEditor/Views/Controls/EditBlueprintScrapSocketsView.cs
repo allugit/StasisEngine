@@ -183,6 +183,16 @@ namespace StasisEditor.Views.Controls
                     _socketTargetA = null;
                 }
             }
+
+            // Enable save button
+            saveButton.Enabled = true;
+        }
+
+        // Save button clicked
+        private void saveButton_Click(object sender, EventArgs e)
+        {
+            DialogResult = System.Windows.Forms.DialogResult.OK;
+            Close();
         }
     }
 }

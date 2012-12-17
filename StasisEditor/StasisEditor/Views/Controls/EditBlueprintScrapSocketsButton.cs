@@ -55,7 +55,7 @@ namespace StasisEditor.Views.Controls
             // Open view
             if (editSocketsView.ShowDialog() == DialogResult.OK)
             {
-
+                Console.WriteLine("TODO: work on a copy of the blueprint scraps, otherwise the cancel button is not necessary.");
             }
 
             // Clean up view

@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Xml.Linq;
 using Microsoft.Xna.Framework;
 
 namespace StasisCore.Models
@@ -75,6 +76,28 @@ namespace StasisCore.Models
             _optimalGrowthWeight = optimalGrowthWeight;
             _tropismWeight = tropismWeight;
             _tropism = tropism;
+        }
+
+        // toXML
+        public XElement toXML()
+        {
+            return new XElement("TreeProperties",
+                new XAttribute("angle", _angle),
+                new XAttribute("seed", _seed),
+                new XAttribute("age", _age),
+                new XAttribute("internodeLength", _internodeLength),
+                new XAttribute("maxShootLength", _maxShootLength),
+                new XAttribute("maxBaseWidth", _maxBaseWidth),
+                new XAttribute("perceptionAngle", _perceptionAngle),
+                new XAttribute("perceptionRadius", _perceptionRadius),
+                new XAttribute("occupancyRadius", _occupancyRadius),
+                new XAttribute("lateralAngle", _lateralAngle),
+                new XAttribute("fullExposure", _fullExposure),
+                new XAttribute("penumbraA", _penumbraA),
+                new XAttribute("penumbraB", _penumbraB),
+                new XAttribute("optimalGrowthWeight", _optimalGrowthWeight),
+                new XAttribute("tropismWeight", _tropismWeight),
+                new XAttribute("tropism", _tropism));
         }
 
         // ToString

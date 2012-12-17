@@ -53,6 +53,9 @@ namespace StasisEditor.Views.Controls
                 {
                     // Set scrap points
                     _scrap.points = editForm.getPoints();
+
+                    // Set changes made
+                    _itemView.setChangesMade(true);
                 }
 
                 // Close edit view

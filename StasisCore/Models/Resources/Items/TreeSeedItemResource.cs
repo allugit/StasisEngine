@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Xml.Linq;
 using Microsoft.Xna.Framework;
 
 namespace StasisCore.Models
@@ -26,6 +27,19 @@ namespace StasisCore.Models
             _treeProperties = treeProperties as TreeProperties;
             _generalPlantProperties = generalPlantProperties as GeneralPlantProperties;
             _type = ItemType.TreeSeed;
+        }
+
+        // toXML
+        public override XElement toXML()
+        {
+            return new XElement("Item",
+                new XAttribute("type", _type),
+                new XAttribute("tag", _tag),
+                new XAttribute("quantity", _quantity),
+                new XAttribute("worldTextureTag", _worldTextureTag),
+                new XAttribute("inventoryTextureTag", _inventoryTextureTag),
+                _treeProperties.toXML(),
+                _generalPlantProperties.toXML());
         }
 
         // clone

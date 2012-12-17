@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Xml.Linq;
 
 namespace StasisCore.Models
 {
@@ -20,6 +21,20 @@ namespace StasisCore.Models
             _radius = radius;
             _strength = strength;
             _type = ItemType.Grenade;
+        }
+
+        // toXML
+        public override XElement toXML()
+        {
+            return new XElement("Item",
+                new XAttribute("type", _type),
+                new XAttribute("tag", _tag),
+                new XAttribute("quantity", _quantity),
+                new XAttribute("worldTextureTag", _worldTextureTag),
+                new XAttribute("inventoryTextureTag", _inventoryTextureTag),
+                new XAttribute("sticky", _sticky),
+                new XAttribute("radius", _radius),
+                new XAttribute("strength", _strength));
         }
 
         // clone

@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Xml.Linq;
 
 namespace StasisCore.Models
 {
@@ -35,6 +36,9 @@ namespace StasisCore.Models
             _worldTextureTag = worldTextureTag;
             _inventoryTextureTag = inventoryTextureTag;
         }
+
+        // toXML
+        abstract public XElement toXML();
 
         // clone
         abstract public ItemResource clone();

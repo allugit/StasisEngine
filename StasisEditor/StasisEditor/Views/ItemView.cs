@@ -60,7 +60,11 @@ namespace StasisEditor.Views
         // setChangesMade
         public void setChangesMade(bool status)
         {
+            // Update button
             saveButton.Enabled = status;
+
+            // Update selected item
+            getSelectedItem().changed = status;
         }
 
         // getSelectedItem
@@ -98,14 +102,18 @@ namespace StasisEditor.Views
         // Selected item changed
         private void itemListBox_SelectedValueChanged(object sender, EventArgs e)
         {
+            EditorItem selectedItem = getSelectedItem();
+
             // Clear properties container
             propertiesContainer.Controls.Clear();
 
-            if (itemListBox.SelectedItem == null)
+            if (selectedItem == null)
                 return;
 
+            // Update save button
+            saveButton.Enabled = selectedItem.changed;
+
             // Add item properties to the property container
-            EditorItem selectedItem = getSelectedItem();
             propertiesContainer.Controls.Add(new ItemPropertiesControl(this, selectedItem));
 
             switch (selectedItem.type)
@@ -121,6 +129,15 @@ namespace StasisEditor.Views
                     propertiesContainer.Controls.Add(new EditBlueprintScrapSocketsButton(this, associatedScraps));
                     break;
             }
+        }
+
+        // Save button clicked
+        private void saveButton_Click(object sender, EventArgs e)
+        {
+            EditorItem selectedItem = getSelectedItem();
+            selectedItem.changed = false;
+            _controller.saveResource(selectedItem.itemResource);
+            saveButton.Enabled = false;
         }
     }
 }

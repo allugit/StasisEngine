@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Xml.Linq;
 
 namespace StasisCore.Models
 {
@@ -17,6 +18,19 @@ namespace StasisCore.Models
             _doubleAnchor = doubleAnchor;
             _range = range;
             _type = ItemType.RopeGun;
+        }
+
+        // toXML
+        public override XElement toXML()
+        {
+            return new XElement("Item",
+                new XAttribute("type", _type),
+                new XAttribute("tag", _tag),
+                new XAttribute("quantity", _quantity),
+                new XAttribute("worldTextureTag", _worldTextureTag),
+                new XAttribute("inventoryTextureTag", _inventoryTextureTag),
+                new XAttribute("doubleAnchor", _doubleAnchor),
+                new XAttribute("range", _range));
         }
 
         // clone

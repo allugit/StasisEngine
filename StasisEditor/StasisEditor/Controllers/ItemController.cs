@@ -1,5 +1,7 @@
 ﻿using System;
+using System.IO;
 using System.Collections.Generic;
+using System.Xml.Linq;
 using Microsoft.Xna.Framework;
 using StasisCore.Models;
 using StasisEditor.Models;
@@ -72,6 +74,49 @@ namespace StasisEditor.Controllers
             _items.Add(new EditorBlueprintScrap(new BlueprintScrapItemResource("test_scrap_2", 1, "blueprint_scrap", "blueprint_scrap", "test_blueprint_1", "test_scrap_2", Vector2.Zero, 0)));
             _items.Add(new EditorBlueprintScrap(new BlueprintScrapItemResource("test_scrap_3", 1, "blueprint_scrap", "blueprint_scrap", "test_blueprint_1", "test_scrap_3", Vector2.Zero, 0)));
             _items.Add(new EditorBlueprintScrap(new BlueprintScrapItemResource("test_scrap_4", 1, "blueprint_scrap", "blueprint_scrap", "test_blueprint_1", "test_scrap_4", Vector2.Zero, 0)));
+        }
+
+        // Save resource
+        public void saveResource(ItemResource resource)
+        {
+            // Create item resource directory if necessary
+            if (!Directory.Exists(EditorController.ITEM_RESOURCE_DIRECTORY))
+                Directory.CreateDirectory(EditorController.ITEM_RESOURCE_DIRECTORY);
+
+            // Create item sub folder directory
+            string itemSubFolder = String.Format("{0}\\{1}", EditorController.ITEM_RESOURCE_DIRECTORY, resource.type.ToString());
+            if (!Directory.Exists(itemSubFolder))
+                Directory.CreateDirectory(itemSubFolder);
+
+            // Save item file
+            string fullPath = String.Format("{0}\\{1}.itm", itemSubFolder, resource.tag);
+            XElement element = resource.toXML();
+            element.Save(fullPath);
+
+            // Clean up resources
+            string[] subDirectories = Directory.GetDirectories(EditorController.ITEM_RESOURCE_DIRECTORY);
+            foreach (string subDirectory in subDirectories)
+            {
+                foreach (string file in Directory.GetFiles(subDirectory))
+                {
+                    string itemTag = Path.GetFileNameWithoutExtension(file);
+
+                    // Search items for this tag
+                    bool found = false;
+                    foreach (EditorItem item in _items)
+                    {
+                        if (item.tag == itemTag)
+                        {
+                            found = true;
+                            break;
+                        }
+                    }
+
+                    // Remove file if not found in items list -- This happens when items are renamed
+                    if (!found)
+                        File.Delete(file);
+                }
+            }
         }
 
         // getAssociatedBlueprintScraps

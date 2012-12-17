@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Xml.Linq;
 using Microsoft.Xna.Framework;
 
 namespace StasisCore.Models
@@ -38,6 +39,31 @@ namespace StasisCore.Models
             _craftingPosition = craftingPosition;
             _craftingAngle = craftingAngle;
             _type = ItemType.BlueprintScrap;
+        }
+
+        // toXML
+        public override XElement toXML()
+        {
+            List<XElement> pointsXML = new List<XElement>();
+            foreach (Vector2 point in _points)
+                pointsXML.Add(new XElement("Point", new XAttribute("x", point.X), new XAttribute("y", point.Y)));
+
+            List<XElement> socketsXML = new List<XElement>();
+            foreach (BlueprintSocketResource socket in _sockets)
+                socketsXML.Add(socket.toXML());
+
+            return new XElement("Item",
+                new XAttribute("type", _type),
+                new XAttribute("tag", _tag),
+                new XAttribute("quantity", _quantity),
+                new XAttribute("worldTextureTag", _worldTextureTag),
+                new XAttribute("inventoryTextureTag", _inventoryTextureTag),
+                new XAttribute("blueprintTag", _blueprintTag),
+                new XAttribute("scrapTextureTag", _scrapTextureTag),
+                new XAttribute("craftingPosition", _craftingPosition),
+                new XAttribute("craftingAngle", _craftingAngle),
+                pointsXML,
+                socketsXML);
         }
 
         // clone

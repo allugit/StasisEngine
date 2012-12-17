@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Xml.Linq;
 
 namespace StasisCore.Models
 {
@@ -24,6 +25,15 @@ namespace StasisCore.Models
             _dropsSeeds = dropsSeeds;
             _fruitFrequency = fruitFrequency;
             _fruitItemTag = fruitItemTag;
+        }
+
+        // toXML
+        public XElement toXML()
+        {
+            return new XElement("PlantProperties",
+                new XAttribute("dropsSeeds", _dropsSeeds),
+                new XAttribute("fruitFrequency", _fruitFrequency),
+                new XAttribute("fruitItemTag", _fruitItemTag));
         }
 
         // ToString

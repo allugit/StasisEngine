@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
+using System.Xml.Linq;
 
 namespace StasisCore.Models
 {
@@ -16,6 +15,18 @@ namespace StasisCore.Models
         {
             _strength = strength;
             _type = ItemType.HealthPotion;
+        }
+
+        // toXML
+        public override XElement toXML()
+        {
+            return new XElement("Item",
+                new XAttribute("type", _type),
+                new XAttribute("tag", _tag),
+                new XAttribute("quantity", _quantity),
+                new XAttribute("worldTextureTag", _worldTextureTag),
+                new XAttribute("inventoryTextureTag", _inventoryTextureTag),
+                new XAttribute("strength", _strength));
         }
 
         // clone
