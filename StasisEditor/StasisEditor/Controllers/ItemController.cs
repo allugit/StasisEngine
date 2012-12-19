@@ -109,20 +109,20 @@ namespace StasisEditor.Controllers
         }
 
         // Save resource
-        public void saveResource(ItemResource resource)
+        public void saveItem(EditorItem item)
         {
             // Create item resource directory if necessary
             if (!Directory.Exists(EditorController.ITEM_RESOURCE_DIRECTORY))
                 Directory.CreateDirectory(EditorController.ITEM_RESOURCE_DIRECTORY);
 
             // Create item sub folder directory
-            string itemSubFolder = String.Format("{0}\\{1}", EditorController.ITEM_RESOURCE_DIRECTORY, resource.type.ToString());
+            string itemSubFolder = String.Format("{0}\\{1}", EditorController.ITEM_RESOURCE_DIRECTORY, item.type.ToString());
             if (!Directory.Exists(itemSubFolder))
                 Directory.CreateDirectory(itemSubFolder);
 
             // Save item file
-            string fullPath = String.Format("{0}\\{1}.itm", itemSubFolder, resource.tag);
-            XElement element = resource.toXML();
+            string fullPath = String.Format("{0}\\{1}.itm", itemSubFolder, item.tag);
+            XElement element = item.toXML();
             element.Save(fullPath);
 
             // Clean up resources
@@ -135,9 +135,9 @@ namespace StasisEditor.Controllers
 
                     // Search items for this tag
                     bool found = false;
-                    foreach (EditorItem item in _items)
+                    foreach (EditorItem loadedItem in _items)
                     {
-                        if (item.tag == itemTag)
+                        if (loadedItem.tag == itemTag)
                         {
                             found = true;
                             break;

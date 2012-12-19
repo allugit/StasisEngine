@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Xml.Linq;
 using System.ComponentModel;
 using StasisCore.Models;
 
@@ -20,6 +21,12 @@ namespace StasisEditor.Models
             : base(resource)
         {
             _blueprintResource = resource as BlueprintItemResource;
+        }
+
+        // toXML
+        public override XElement toXML()
+        {
+            return _blueprintResource.toXML();
         }
     }
 }

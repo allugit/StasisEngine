@@ -136,7 +136,7 @@ namespace StasisEditor.Views
         {
             EditorItem selectedItem = getSelectedItem();
             selectedItem.changed = false;
-            _controller.saveResource(selectedItem.itemResource);
+            _controller.saveItem(selectedItem);
             saveButton.Enabled = false;
         }
     }

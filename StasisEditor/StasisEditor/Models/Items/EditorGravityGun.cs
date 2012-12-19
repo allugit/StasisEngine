@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel;
+using System.Xml.Linq;
 using StasisCore.Models;
 using StasisEditor.Models;
 
@@ -33,6 +34,12 @@ namespace StasisEditor.Models
             : base(resource)
         {
             _gravityGunItemResource = resource as GravityGunItemResource;
+        }
+
+        // toXML
+        public override XElement toXML()
+        {
+            return _gravityGunItemResource.toXML();
         }
     }
 }

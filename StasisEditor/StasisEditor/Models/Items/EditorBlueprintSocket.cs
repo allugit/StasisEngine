@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Xml.Linq;
 using StasisCore.Models;
 
 namespace StasisEditor.Models
@@ -21,6 +22,12 @@ namespace StasisEditor.Models
             _scrapA = scrapA;
             _scrapB = scrapB;
             _socketResource = resource;
+        }
+
+        // toXML
+        public XElement toXML()
+        {
+            return _socketResource.toXML();
         }
     }
 }

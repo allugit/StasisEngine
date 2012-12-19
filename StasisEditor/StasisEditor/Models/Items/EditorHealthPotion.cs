@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel;
+using System.Xml.Linq;
 using StasisCore.Models;
 using StasisEditor.Models;
 
@@ -21,6 +22,12 @@ namespace StasisEditor.Models
             : base(resource)
         {
             _healthPotionItemResource = resource as HealthPotionItemResource;
+        }
+
+        // toXML
+        public override XElement toXML()
+        {
+            return _healthPotionItemResource.toXML();
         }
     }
 }

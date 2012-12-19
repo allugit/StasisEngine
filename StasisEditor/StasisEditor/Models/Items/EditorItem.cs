@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel;
+using System.Xml.Linq;
 using StasisCore.Models;
 using StasisEditor.Controllers;
 
@@ -77,6 +78,9 @@ namespace StasisEditor.Models
             }
             return item;
         }
+
+        // toXML
+        abstract public XElement toXML();
 
         // ToString
         public override string ToString()

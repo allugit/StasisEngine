@@ -2,6 +2,7 @@
 using System.Diagnostics;
 using System.Collections.Generic;
 using System.ComponentModel;
+using System.Xml.Linq;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using StasisCore.Models;
@@ -79,6 +80,7 @@ namespace StasisEditor.Models
                 // Create socket
                 _sockets.Add(new EditorBlueprintSocket(scrapA, scrapB, socketResource));
             }
+            Console.WriteLine("Initialized {0} sockets on scrap: {1}", _sockets.Count, tag);
         }
 
         // hitTest -- http://www.ecse.rpi.edu/Homepages/wrf/Research/Short_Notes/pnpoly.html
@@ -98,6 +100,15 @@ namespace StasisEditor.Models
             }
 
             return hit;
+        }
+
+        // toXML
+        public override XElement toXML()
+        {
+            XElement scrapXML = _blueprintScrapResource.toXML();
+            foreach (EditorBlueprintSocket socket in _sockets)
+                scrapXML.Add(socket.toXML());
+            return scrapXML;
         }
     }
 }

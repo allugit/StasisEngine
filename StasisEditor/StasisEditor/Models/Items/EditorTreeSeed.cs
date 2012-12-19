@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel;
+using System.Xml.Linq;
 using StasisCore.Models;
 using StasisEditor.Models;
 using Microsoft.Xna.Framework;
@@ -94,6 +95,12 @@ namespace StasisEditor.Models
             : base(resource)
         {
             _treeSeedItemResource = resource as TreeSeedItemResource;
+        }
+
+        // toXML
+        public override XElement toXML()
+        {
+            return _treeSeedItemResource.toXML();
         }
     }
 }

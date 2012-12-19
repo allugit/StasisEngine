@@ -74,9 +74,9 @@ namespace StasisCore.Models
             foreach (Vector2 point in _points)
                 pointsXML.Add(new XElement("Point", point));
 
-            List<XElement> socketsXML = new List<XElement>();
-            foreach (BlueprintSocketResource socket in _sockets)
-                socketsXML.Add(socket.toXML());
+            //List<XElement> socketsXML = new List<XElement>();
+            //foreach (BlueprintSocketResource socket in _sockets)
+            //    socketsXML.Add(socket.toXML());
 
             return new XElement("Item",
                 new XAttribute("type", _type),
@@ -88,8 +88,7 @@ namespace StasisCore.Models
                 new XAttribute("scrapTextureTag", _scrapTextureTag),
                 new XAttribute("craftingPosition", _craftingPosition),
                 new XAttribute("craftingAngle", _craftingAngle),
-                pointsXML,
-                socketsXML);
+                pointsXML);
         }
 
         // clone
