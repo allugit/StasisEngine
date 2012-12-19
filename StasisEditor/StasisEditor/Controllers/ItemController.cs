@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Diagnostics;
 using System.IO;
 using System.Collections.Generic;
 using System.Xml.Linq;
@@ -58,6 +59,26 @@ namespace StasisEditor.Controllers
         // Load resources
         protected override void loadResources()
         {
+            Debug.Assert(_items == null);
+
+            // Items
+            _items = new List<EditorItem>();
+
+            // Load resources
+            string[] subDirectories = Directory.GetDirectories(EditorController.ITEM_RESOURCE_DIRECTORY);
+            foreach (string subDirectory in subDirectories)
+            {
+                // Read files in sub directory
+                string[] files = Directory.GetFiles(subDirectory);
+                foreach (string file in files)
+                {
+                    // Load item
+                    ItemResource resource = ItemResource.load(file);
+                    _items.Add(EditorItem.create(this, resource));
+                }
+            }
+
+            /*
             // Initialize items list
             _items = new List<EditorItem>();
 
@@ -70,10 +91,21 @@ namespace StasisEditor.Controllers
             _items.Add(new EditorHealthPotion(new HealthPotionItemResource("large_health_potion", 1, "large_health_potion", "large_health_potion", 60)));
             _items.Add(new EditorTreeSeed(new TreeSeedItemResource("accuminate_tree_seed", 1, "tree_seed", "tree_seed", null, null)));
             _items.Add(new EditorBlueprint(new BlueprintItemResource("test_blueprint_1", 1, "blueprint", "blueprint", "rope_gun")));
-            _items.Add(new EditorBlueprintScrap(new BlueprintScrapItemResource("test_scrap_1", 1, "blueprint_scrap", "blueprint_scrap", "test_blueprint_1", "test_scrap_1", Vector2.Zero, 0)));
-            _items.Add(new EditorBlueprintScrap(new BlueprintScrapItemResource("test_scrap_2", 1, "blueprint_scrap", "blueprint_scrap", "test_blueprint_1", "test_scrap_2", Vector2.Zero, 0)));
-            _items.Add(new EditorBlueprintScrap(new BlueprintScrapItemResource("test_scrap_3", 1, "blueprint_scrap", "blueprint_scrap", "test_blueprint_1", "test_scrap_3", Vector2.Zero, 0)));
-            _items.Add(new EditorBlueprintScrap(new BlueprintScrapItemResource("test_scrap_4", 1, "blueprint_scrap", "blueprint_scrap", "test_blueprint_1", "test_scrap_4", Vector2.Zero, 0)));
+            _items.Add(new EditorBlueprintScrap(this, new BlueprintScrapItemResource("test_scrap_1", 1, "blueprint_scrap", "blueprint_scrap", "test_blueprint_1", "test_scrap_1", Vector2.Zero, 0)));
+            _items.Add(new EditorBlueprintScrap(this, new BlueprintScrapItemResource("test_scrap_2", 1, "blueprint_scrap", "blueprint_scrap", "test_blueprint_1", "test_scrap_2", Vector2.Zero, 0)));
+            _items.Add(new EditorBlueprintScrap(this, new BlueprintScrapItemResource("test_scrap_3", 1, "blueprint_scrap", "blueprint_scrap", "test_blueprint_1", "test_scrap_3", Vector2.Zero, 0)));
+            _items.Add(new EditorBlueprintScrap(this, new BlueprintScrapItemResource("test_scrap_4", 1, "blueprint_scrap", "blueprint_scrap", "test_blueprint_1", "test_scrap_4", Vector2.Zero, 0)));
+            */
+
+            // Initialize scrap sockets
+            foreach (EditorItem item in _items)
+            {
+                if (item.type == ItemType.BlueprintScrap)
+                {
+                    EditorBlueprintScrap scrap = item as EditorBlueprintScrap;
+                    scrap.initializeSockets();
+                }
+            }
         }
 
         // Save resource

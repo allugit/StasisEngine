@@ -29,6 +29,18 @@ namespace StasisCore.Models
             _type = ItemType.TreeSeed;
         }
 
+        // fromXML
+        public static TreeSeedItemResource fromXML(XElement element)
+        {
+            return new TreeSeedItemResource(
+                element.Attribute("tag").Value,
+                int.Parse(element.Attribute("quantity").Value),
+                element.Attribute("worldTextureTag").Value,
+                element.Attribute("inventoryTextureTag").Value,
+                TreeProperties.fromXML(element.Element("TreeProperties")),
+                GeneralPlantProperties.fromXML(element.Element("PlantProperties")));
+        }
+
         // toXML
         public override XElement toXML()
         {

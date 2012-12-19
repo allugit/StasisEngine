@@ -104,6 +104,7 @@
     <Compile Include="Controllers\TextureController.cs" />
     <Compile Include="Models\Items\EditorBlueprint.cs" />
     <Compile Include="Models\Items\EditorBlueprintScrap.cs" />
+    <Compile Include="Models\Items\EditorBlueprintSocket.cs" />
     <Compile Include="Models\Items\EditorGravityGun.cs" />
     <Compile Include="Models\Items\EditorGrenade.cs" />
     <Compile Include="Models\Items\EditorHealthPotion.cs" />

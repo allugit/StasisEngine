@@ -27,6 +27,15 @@ namespace StasisCore.Models
             _fruitItemTag = fruitItemTag;
         }
 
+        // fromXML
+        public static GeneralPlantProperties fromXML(XElement element)
+        {
+            return new GeneralPlantProperties(
+                bool.Parse(element.Attribute("dropsSeeds").Value),
+                float.Parse(element.Attribute("fruitFrequency").Value),
+                element.Attribute("fruitItemTag").Value);
+        }
+
         // toXML
         public XElement toXML()
         {

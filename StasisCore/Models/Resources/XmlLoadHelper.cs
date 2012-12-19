@@ -8,7 +8,7 @@ namespace StasisCore.Models
         // Convert a string to Vector2
         public static Vector2 getVector2(string value)
         {
-            Regex regex = new Regex(@"X:([\d\.]+){1}\s+Y:([\d\.]+)");
+            Regex regex = new Regex(@"X:([-\d\.]+)\s+Y:([-\d\.]+)");
             Match match = regex.Match(value);
 
             if (match.Groups.Count != 3)

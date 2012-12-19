@@ -26,6 +26,20 @@ namespace StasisCore.Models
             _type = ItemType.GravityGun;
         }
 
+        // fromXML
+        public static GravityGunItemResource fromXML(XElement element)
+        {
+            return new GravityGunItemResource(
+                element.Attribute("tag").Value,
+                int.Parse(element.Attribute("quantity").Value),
+                element.Attribute("worldTextureTag").Value,
+                element.Attribute("inventoryTextureTag").Value,
+                bool.Parse(element.Attribute("wellGun").Value),
+                float.Parse(element.Attribute("range").Value),
+                float.Parse(element.Attribute("radius").Value),
+                float.Parse(element.Attribute("strength").Value));
+        }
+
         // toXML
         public override XElement toXML()
         {

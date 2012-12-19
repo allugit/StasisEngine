@@ -7,33 +7,38 @@ namespace StasisCore.Models
 {
     public class BlueprintSocketResource
     {
-        private BlueprintScrapItemResource _scrapA;
-        private BlueprintScrapItemResource _scrapB;
+        private string _scrapTagA;
+        private string _scrapTagB;
         private Vector2 _relativePoint;
-        private BlueprintSocketResource _opposingSocket;
 
-        public string tag { get { return String.Format("{0}_to_{1}", _scrapA.tag, _scrapB.tag); } }
-        public BlueprintScrapItemResource scrapA { get { return _scrapA; } }
-        public BlueprintScrapItemResource scrapB { get { return _scrapB; } }
+        public string scrapTagA { get { return _scrapTagA; } }
+        public string scrapTagB { get { return _scrapTagB; } }
         public Vector2 relativePoint { get { return _relativePoint; } }
-        public BlueprintSocketResource opposingSocket { get { return _opposingSocket; } set { _opposingSocket = value; } }
 
-        public BlueprintSocketResource(BlueprintScrapItemResource scrapA, BlueprintScrapItemResource scrapB)
+        public BlueprintSocketResource(string scrapTagA, string scrapTagB, Vector2 relativePoint)
         {
-            _scrapA = scrapA;
-            _scrapB = scrapB;
-            _relativePoint = scrapB.craftingPosition - scrapA.craftingPosition;
+            _scrapTagA = scrapTagA;
+            _scrapTagB = scrapTagB;
+            _relativePoint = relativePoint;
+        }
+
+        // fromXML
+        public static BlueprintSocketResource fromXML(XElement element)
+        {
+            return new BlueprintSocketResource(
+                element.Attribute("scrapTagA").Value,
+                element.Attribute("scrapTagB").Value,
+                XmlLoadHelper.getVector2(element.Attribute("relativePoint").Value));
+
         }
 
         // toXML
         public XElement toXML()
         {
             return new XElement("BlueprintSocket",
-                new XAttribute("tag", tag),
-                new XAttribute("scrapATag", _scrapA.tag),
-                new XAttribute("scrapBTag", _scrapB.tag),
-                new XAttribute("relativePoint", _relativePoint),
-                new XAttribute("opposingSocketTag", opposingSocket.tag));
+                new XAttribute("scrapTagA", _scrapTagA),
+                new XAttribute("scrapTagB", _scrapTagB),
+                new XAttribute("relativePoint", _relativePoint));
         }
     }
 }

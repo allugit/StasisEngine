@@ -41,12 +41,38 @@ namespace StasisCore.Models
             _type = ItemType.BlueprintScrap;
         }
 
+        // fromXML
+        public static BlueprintScrapItemResource fromXML(XElement element)
+        {
+            // Build points
+            List<Vector2> points = new List<Vector2>();
+            foreach (XElement pointXML in element.Elements("Point"))
+                points.Add(XmlLoadHelper.getVector2(pointXML.Value));
+
+            // Build sockets
+            List<BlueprintSocketResource> sockets = new List<BlueprintSocketResource>();
+            foreach (XElement socketXML in element.Elements("BlueprintSocket"))
+                sockets.Add(BlueprintSocketResource.fromXML(socketXML));
+
+            return new BlueprintScrapItemResource(
+                element.Attribute("tag").Value,
+                int.Parse(element.Attribute("quantity").Value),
+                element.Attribute("worldTextureTag").Value,
+                element.Attribute("inventoryTextureTag").Value,
+                element.Attribute("blueprintTag").Value,
+                element.Attribute("scrapTextureTag").Value,
+                XmlLoadHelper.getVector2(element.Attribute("craftingPosition").Value),
+                float.Parse(element.Attribute("craftingAngle").Value),
+                points,
+                sockets);
+        }
+
         // toXML
         public override XElement toXML()
         {
             List<XElement> pointsXML = new List<XElement>();
             foreach (Vector2 point in _points)
-                pointsXML.Add(new XElement("Point", new XAttribute("x", point.X), new XAttribute("y", point.Y)));
+                pointsXML.Add(new XElement("Point", point));
 
             List<XElement> socketsXML = new List<XElement>();
             foreach (BlueprintSocketResource socket in _sockets)

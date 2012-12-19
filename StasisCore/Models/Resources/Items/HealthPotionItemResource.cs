@@ -17,6 +17,17 @@ namespace StasisCore.Models
             _type = ItemType.HealthPotion;
         }
 
+        // fromXML
+        public static HealthPotionItemResource fromXML(XElement element)
+        {
+            return new HealthPotionItemResource(
+                element.Attribute("tag").Value,
+                int.Parse(element.Attribute("quantity").Value),
+                element.Attribute("worldTextureTag").Value,
+                element.Attribute("inventoryTextureTag").Value,
+                int.Parse(element.Attribute("strength").Value));
+        }
+
         // toXML
         public override XElement toXML()
         {

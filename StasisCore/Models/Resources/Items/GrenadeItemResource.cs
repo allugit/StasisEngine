@@ -23,6 +23,19 @@ namespace StasisCore.Models
             _type = ItemType.Grenade;
         }
 
+        // fromXML
+        public static GrenadeItemResource fromXML(XElement element)
+        {
+            return new GrenadeItemResource(
+                element.Attribute("tag").Value,
+                int.Parse(element.Attribute("quantity").Value),
+                element.Attribute("worldTextureTag").Value,
+                element.Attribute("inventoryTextureTag").Value,
+                bool.Parse(element.Attribute("sticky").Value),
+                float.Parse(element.Attribute("radius").Value),
+                float.Parse(element.Attribute("strength").Value));
+        }
+
         // toXML
         public override XElement toXML()
         {

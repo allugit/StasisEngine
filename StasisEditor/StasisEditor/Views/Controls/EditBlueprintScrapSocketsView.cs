@@ -78,10 +78,10 @@ namespace StasisEditor.Views.Controls
             // Draw scrap sockets
             foreach (EditorBlueprintScrap scrap in _scraps)
             {
-                foreach (BlueprintSocketResource socket in scrap.blueprintScrapResource.sockets)
+                foreach (EditorBlueprintSocket socket in scrap.sockets)
                     drawLine(
-                        socket.scrapA.craftingPosition,
-                        socket.scrapA.craftingPosition + socket.relativePoint,
+                        socket.scrapA.blueprintScrapResource.craftingPosition,
+                        socket.scrapA.blueprintScrapResource.craftingPosition + socket.socketResource.relativePoint,
                         Color.Green);
             }
 
@@ -168,14 +168,19 @@ namespace StasisEditor.Views.Controls
                 else
                 {
                     // Create socket on first target
-                    BlueprintSocketResource firstSocket = new BlueprintSocketResource(_socketTargetA.blueprintScrapResource, target.blueprintScrapResource);
-                    _socketTargetA.blueprintScrapResource.sockets.Add(firstSocket);
+                    //BlueprintSocketResource firstSocket = new BlueprintSocketResource(_socketTargetA.blueprintScrapResource, target.blueprintScrapResource);
+                    //_socketTargetA.blueprintScrapResource.sockets.Add(firstSocket);
+                    Vector2 relativePoint = target.position - _socketTargetA.position;
+                    EditorBlueprintSocket firstSocket = new EditorBlueprintSocket(_socketTargetA, target,  new BlueprintSocketResource(_socketTargetA.tag, target.tag, relativePoint));
+                    _socketTargetA.sockets.Add(firstSocket);
 
                     // Create socket on second target
-                    BlueprintSocketResource secondSocket = new BlueprintSocketResource(target.blueprintScrapResource, _socketTargetA.blueprintScrapResource);
-                    target.blueprintScrapResource.sockets.Add(secondSocket);
+                    //BlueprintSocketResource secondSocket = new BlueprintSocketResource(target.blueprintScrapResource, _socketTargetA.blueprintScrapResource);
+                    //target.blueprintScrapResource.sockets.Add(secondSocket);
+                    EditorBlueprintSocket secondSocket = new EditorBlueprintSocket(target, _socketTargetA, new BlueprintSocketResource(target.tag, _socketTargetA.tag, -relativePoint));
+                    target.sockets.Add(secondSocket);
 
-                    // Set opposising socket
+                    // Set opposing sockets
                     firstSocket.opposingSocket = secondSocket;
                     secondSocket.opposingSocket = firstSocket;
 

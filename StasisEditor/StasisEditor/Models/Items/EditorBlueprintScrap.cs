@@ -6,18 +6,24 @@ using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using StasisCore.Models;
 using StasisEditor.Models;
+using StasisEditor.Controllers;
 
 namespace StasisEditor.Models
 {
     public class EditorBlueprintScrap : EditorItem
     {
+        private ItemController _itemController;
         private BlueprintScrapItemResource _blueprintScrapResource;
+        private List<EditorBlueprintSocket> _sockets;
         private Texture2D _texture;
         private Matrix _rotationMatrix;
         private Vector2 _textureCenter;
 
         [Browsable(false)]
         public BlueprintScrapItemResource blueprintScrapResource { get { return _blueprintScrapResource; } }
+
+        [Browsable(false)]
+        public List<EditorBlueprintSocket> sockets { get { return _sockets; } }
 
         [Browsable(false)]
         public Vector2 position { get { return _blueprintScrapResource.craftingPosition; } set { _blueprintScrapResource.craftingPosition = value; } }
@@ -39,9 +45,10 @@ namespace StasisEditor.Models
         [DisplayName("Blueprint Tag")]
         public string blueprintTag { get { return _blueprintScrapResource.blueprintTag; } set { _blueprintScrapResource.blueprintTag = value; } }
 
-        public EditorBlueprintScrap(ItemResource resource) 
+        public EditorBlueprintScrap(ItemController itemController, ItemResource resource) 
             : base(resource)
         {
+            _itemController = itemController;
             _blueprintScrapResource = resource as BlueprintScrapItemResource;
 
             // Load texture
@@ -54,6 +61,24 @@ namespace StasisEditor.Models
 
             // Initialize rotation matrix
             _rotationMatrix = Matrix.Identity;
+        }
+
+        // initializeSockets -- Must be done after all scraps are initialized
+        public void initializeSockets()
+        {
+            // Initialize sockets
+            _sockets = new List<EditorBlueprintSocket>();
+            foreach (BlueprintSocketResource socketResource in _blueprintScrapResource.sockets)
+            {
+                // Find scrap A
+                EditorBlueprintScrap scrapA = _itemController.getItem(socketResource.scrapTagA) as EditorBlueprintScrap;
+
+                // Find scrap B
+                EditorBlueprintScrap scrapB = _itemController.getItem(socketResource.scrapTagB) as EditorBlueprintScrap;
+
+                // Create socket
+                _sockets.Add(new EditorBlueprintSocket(scrapA, scrapB, socketResource));
+            }
         }
 
         // hitTest -- http://www.ecse.rpi.edu/Homepages/wrf/Research/Short_Notes/pnpoly.html

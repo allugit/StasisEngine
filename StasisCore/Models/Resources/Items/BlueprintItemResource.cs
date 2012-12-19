@@ -17,6 +17,17 @@ namespace StasisCore.Models
             _type = ItemType.Blueprint;
         }
 
+        // fromXML
+        public static BlueprintItemResource fromXML(XElement element)
+        {
+            return new BlueprintItemResource(
+                element.Attribute("tag").Value,
+                int.Parse(element.Attribute("quantity").Value),
+                element.Attribute("worldTextureTag").Value,
+                element.Attribute("inventoryTextureTag").Value,
+                element.Attribute("itemTag").Value);
+        }
+
         // toXML
         public override XElement toXML()
         {

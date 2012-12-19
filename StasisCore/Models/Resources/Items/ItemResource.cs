@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Xml.Linq;
+using System.IO;
 
 namespace StasisCore.Models
 {
@@ -35,6 +36,51 @@ namespace StasisCore.Models
             _quantity = quantity;
             _worldTextureTag = worldTextureTag;
             _inventoryTextureTag = inventoryTextureTag;
+        }
+
+        // load
+        public static ItemResource load(string filePath)
+        {
+            ItemResource resource = null;
+
+            using (FileStream stream = new FileStream(filePath, FileMode.Open))
+            {
+                XElement element = XElement.Load(stream);
+                ItemType type = (ItemType)Enum.Parse(typeof(ItemType), element.Attribute("type").Value);
+
+                switch (type)
+                {
+                    case ItemType.Blueprint:
+                        resource = BlueprintItemResource.fromXML(element);
+                        break;
+
+                    case ItemType.BlueprintScrap:
+                        resource = BlueprintScrapItemResource.fromXML(element);
+                        break;
+
+                    case ItemType.GravityGun:
+                        resource = GravityGunItemResource.fromXML(element);
+                        break;
+
+                    case ItemType.Grenade:
+                        resource = GrenadeItemResource.fromXML(element);
+                        break;
+
+                    case ItemType.HealthPotion:
+                        resource = HealthPotionItemResource.fromXML(element);
+                        break;
+
+                    case ItemType.RopeGun:
+                        resource = RopeGunItemResource.fromXML(element);
+                        break;
+
+                    case ItemType.TreeSeed:
+                        resource = TreeSeedItemResource.fromXML(element);
+                        break;
+                }
+            }
+
+            return resource;
         }
 
         // toXML

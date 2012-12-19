@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.ComponentModel;
 using StasisCore.Models;
+using StasisEditor.Controllers;
 
 namespace StasisEditor.Models
 {
@@ -41,7 +42,7 @@ namespace StasisEditor.Models
         }
 
         // create
-        public static EditorItem create(ItemResource resource)
+        public static EditorItem create(ItemController itemController, ItemResource resource)
         {
             EditorItem item = null;
             switch (resource.type)
@@ -51,11 +52,11 @@ namespace StasisEditor.Models
                     break;
 
                 case ItemType.BlueprintScrap:
-                    item = new EditorBlueprintScrap(resource);
+                    item = new EditorBlueprintScrap(itemController, resource);
                     break;
 
                 case ItemType.GravityGun:
-                    item = new EditorBlueprintScrap(resource);
+                    item = new EditorGravityGun(resource);
                     break;
 
                 case ItemType.Grenade:

@@ -78,6 +78,28 @@ namespace StasisCore.Models
             _tropism = tropism;
         }
 
+        // fromXML
+        public static TreeProperties fromXML(XElement element)
+        {
+            return new TreeProperties(
+                XmlLoadHelper.getVector2(element.Attribute("tropism").Value),
+                float.Parse(element.Attribute("angle").Value),
+                int.Parse(element.Attribute("seed").Value),
+                float.Parse(element.Attribute("age").Value),
+                float.Parse(element.Attribute("internodeLength").Value),
+                int.Parse(element.Attribute("maxShootLength").Value),
+                float.Parse(element.Attribute("maxBaseWidth").Value),
+                float.Parse(element.Attribute("perceptionAngle").Value),
+                float.Parse(element.Attribute("perceptionRadius").Value),
+                float.Parse(element.Attribute("occupancyRadius").Value),
+                float.Parse(element.Attribute("lateralAngle").Value),
+                float.Parse(element.Attribute("fullExposure").Value),
+                float.Parse(element.Attribute("penumbraA").Value),
+                float.Parse(element.Attribute("penumbraB").Value),
+                float.Parse(element.Attribute("optimalGrowthWeight").Value),
+                float.Parse(element.Attribute("tropismWeight").Value));
+        }
+
         // toXML
         public XElement toXML()
         {

@@ -20,6 +20,18 @@ namespace StasisCore.Models
             _type = ItemType.RopeGun;
         }
 
+        // fromXML
+        public static RopeGunItemResource fromXML(XElement element)
+        {
+            return new RopeGunItemResource(
+                element.Attribute("tag").Value,
+                int.Parse(element.Attribute("quantity").Value),
+                element.Attribute("worldTextureTag").Value,
+                element.Attribute("inventoryTextureTag").Value,
+                bool.Parse(element.Attribute("doubleAnchor").Value),
+                float.Parse(element.Attribute("range").Value));
+        }
+
         // toXML
         public override XElement toXML()
         {
