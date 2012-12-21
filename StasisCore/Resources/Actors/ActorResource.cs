@@ -4,19 +4,6 @@ using Microsoft.Xna.Framework;
 
 namespace StasisCore.Resources
 {
-    public enum ActorType
-    {
-        BoxActor = 0,
-        CircleActor,
-        MovingPlatform,
-        PressurePlate,
-        Terrain,
-        Rope,
-        Fluid,
-        PlayerSpawn,
-        Tree
-    }
-
     abstract public class ActorResource
     {
         protected ActorType _type;

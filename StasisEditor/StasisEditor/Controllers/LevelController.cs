@@ -4,8 +4,9 @@ using System.Collections.Generic;
 using Microsoft.Xna.Framework;
 using StasisEditor.Controllers.Actors;
 using StasisEditor.Views;
-using StasisCore.Resources;
 using StasisEditor.Views.Controls;
+using StasisEditor.Models;
+using StasisCore;
 
 namespace StasisEditor.Controllers
 {
@@ -27,7 +28,7 @@ namespace StasisEditor.Controllers
         private List<ActorResourceController> _actorControllersAddQueue;
         private List<ActorResourceController> _actorControllersRemoveQueue;
 
-        private LevelResource _level;
+        private EditorLevel _level;
 
         private System.Drawing.Point _mouse;
         private Vector2 _screenCenter;
@@ -55,7 +56,7 @@ namespace StasisEditor.Controllers
         public Vector2 getWorldMouse() { return new Vector2(_mouse.X, _mouse.Y) / _editorController.getScale() - getWorldOffset(); }
 
         // getLevel
-        public LevelResource getLevel()
+        public EditorLevel getLevel()
         {
             return _level;
         }
@@ -179,7 +180,7 @@ namespace StasisEditor.Controllers
         // createNewLevel
         public void createNewLevel()
         {
-            _level = new LevelResource();
+            _level = new EditorLevel();
         }
 
         // closeLevel

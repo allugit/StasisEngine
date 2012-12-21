@@ -1,5 +1,23 @@
 ﻿namespace StasisCore
 {
+    public enum ActorType
+    {
+        BoxActor,
+        CircleActor,
+        MovingPlatform,
+        PressurePlate,
+        Terrain,
+        Rope,
+        Fluid,
+        PlayerSpawn,
+        Tree
+    };
+
+    public enum PlantType
+    {
+        Tree
+    };
+
     public enum LayerBlendType
     {
         Opaque,
@@ -12,7 +30,6 @@
         Perlin,
         Worley
     };
-
 
     public enum ScatterTextureOrder
     {

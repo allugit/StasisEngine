@@ -70,7 +70,6 @@ namespace StasisEditor.Views
             this.materialTypesListBox.Name = "materialTypesListBox";
             this.materialTypesListBox.Size = new System.Drawing.Size(221, 54);
             this.materialTypesListBox.TabIndex = 3;
-            this.materialTypesListBox.SelectedValueChanged += new System.EventHandler(this.materialTypesListBox_SelectedValueChanged);
             // 
             // materialsLabel
             // 

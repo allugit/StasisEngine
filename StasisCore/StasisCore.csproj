@@ -61,6 +61,7 @@
   <ItemGroup>
     <Compile Include="Controllers\ResourceController.cs" />
     <Compile Include="Enumerations.cs" />
+    <Compile Include="Models\Level.cs" />
     <Compile Include="Models\Material.cs" />
     <Compile Include="Models\MaterialGroupLayer.cs" />
     <Compile Include="Models\MaterialLayer.cs" />

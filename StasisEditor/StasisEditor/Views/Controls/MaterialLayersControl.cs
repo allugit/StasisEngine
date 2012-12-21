@@ -8,18 +8,17 @@ using System.Linq;
 using System.Text;
 using System.Windows.Forms;
 using StasisCore.Resources;
+using StasisCore.Models;
 using StasisEditor.Controllers;
-using StasisEditor.Models;
 
 namespace StasisEditor.Views.Controls
 {
-    public partial class TerrainLayersControl : UserControl
+    public partial class MaterialLayersControl : UserControl
     {
         private MaterialController _controller;
-        private EditorTerrainMaterial _material;
-        //private List<TerrainLayerResource> _layers;
+        private Material _material;
 
-        public TerrainLayersControl(MaterialController controller, EditorTerrainMaterial material)
+        public MaterialLayersControl(MaterialController controller, Material material)
         {
             _controller = controller;
             _material = material;
@@ -32,11 +31,11 @@ namespace StasisEditor.Views.Controls
         }
 
         // populate tree view
-        public void populateTreeView(TerrainRootLayerResource rootLayer)
+        public void populateTreeView(MaterialRootLayer rootLayer)
         {
             SuspendLayout();
 
-            List<TerrainLayerResource> layers = rootLayer.layers;
+            List<MaterialLayer> layers = rootLayer.layers;
 
             // Clear existing nodes
             layersTreeView.Nodes.Clear();
@@ -54,20 +53,20 @@ namespace StasisEditor.Views.Controls
         }
 
         // recursiveBuildNode
-        private LayerNode recursiveBuildNode(TerrainLayerResource layer)
+        private LayerNode recursiveBuildNode(MaterialLayer layer)
         {
             LayerNode node = new LayerNode(layer, layer.enabled);
             switch (layer.type)
             {
-                case TerrainLayerType.Root:
-                    TerrainRootLayerResource rootLayer = layer as TerrainRootLayerResource;
-                    foreach (TerrainLayerResource childLayer in rootLayer.layers)
+                case "root":
+                    MaterialRootLayer rootLayer = layer as MaterialRootLayer;
+                    foreach (MaterialLayer childLayer in rootLayer.layers)
                         node.Nodes.Add(recursiveBuildNode(childLayer));
                     break;
 
-                case TerrainLayerType.Group:
-                    TerrainGroupLayerResource groupLayer = layer as TerrainGroupLayerResource;
-                    foreach (TerrainLayerResource childLayer in groupLayer.layers)
+                case "group":
+                    MaterialGroupLayer groupLayer = layer as MaterialGroupLayer;
+                    foreach (MaterialLayer childLayer in groupLayer.layers)
                         node.Nodes.Add(recursiveBuildNode(childLayer));
                     break;
             }
@@ -75,7 +74,7 @@ namespace StasisEditor.Views.Controls
         }
 
         // Select layer
-        public void selectLayer(TerrainLayerResource layer)
+        public void selectLayer(MaterialLayer layer)
         {
             Debug.Assert(layersTreeView.Nodes[0] is LayerNode);
             LayerNode targetNode = recursiveGetNode(layersTreeView.Nodes[0] as LayerNode, layer);
@@ -83,13 +82,13 @@ namespace StasisEditor.Views.Controls
         }
 
         // recursiveGetNode
-        private LayerNode recursiveGetNode(LayerNode startNode, TerrainLayerResource layer)
+        private LayerNode recursiveGetNode(LayerNode startNode, MaterialLayer layer)
         {
             // Check this node's layer
             if (startNode.layer == layer)
                 return startNode;
 
-            if (startNode.layer.type == TerrainLayerType.Root || startNode.layer.type == TerrainLayerType.Group)
+            if (startNode.layer.type == "root" || startNode.layer.type == "group")
             {
                 // Spawn more searches, checking results
                 foreach (TreeNode node in startNode.Nodes)
@@ -110,7 +109,7 @@ namespace StasisEditor.Views.Controls
             LayerNode node = layersTreeView.SelectedNode as LayerNode;
 
             // Move layer up
-            TerrainGroupLayerResource parent = (node.Parent as LayerNode).layer as TerrainGroupLayerResource;
+            MaterialGroupLayer parent = (node.Parent as LayerNode).layer as MaterialGroupLayer;
             _controller.moveTerrainLayerUp(parent, node.layer);
 
             // Refresh tree view
@@ -130,7 +129,7 @@ namespace StasisEditor.Views.Controls
             LayerNode node = layersTreeView.SelectedNode as LayerNode;
 
             // Move layer down
-            TerrainGroupLayerResource parent = (node.Parent as LayerNode).layer as TerrainGroupLayerResource;
+            MaterialGroupLayer parent = (node.Parent as LayerNode).layer as MaterialGroupLayer;
             _controller.moveTerrainLayerDown(parent, node.layer);
 
             // Refresh tree view
@@ -148,16 +147,16 @@ namespace StasisEditor.Views.Controls
         {
             Debug.Assert(layersTreeView.SelectedNode is LayerNode);
 
-            NewTerrainLayerForm newLayerForm = new NewTerrainLayerForm();
+            SelectMaterialLayerType newLayerForm = new SelectMaterialLayerType();
             if (newLayerForm.ShowDialog() == DialogResult.OK)
             {
                 LayerNode node = layersTreeView.SelectedNode as LayerNode;
-                TerrainLayerResource newLayer = TerrainLayerResource.create(newLayerForm.getSelectedType());
+                MaterialLayer newLayer = MaterialLayer.create(newLayerForm.getSelectedType());
 
-                if (node.layer.type == TerrainLayerType.Root || node.layer.type == TerrainLayerType.Group)
+                if (node.layer.type == "root" || node.layer.type == "group")
                 {
                     // Insert into group
-                    _controller.addTerrainLayer(node.layer as TerrainGroupLayerResource, newLayer, node.Nodes.Count);
+                    _controller.addTerrainLayer(node.layer as MaterialGroupLayer, newLayer, node.Nodes.Count);
                 }
                 else
                 {
@@ -165,7 +164,7 @@ namespace StasisEditor.Views.Controls
                     LayerNode parent = node.Parent as LayerNode;
 
                     // Add new layer to parent
-                    _controller.addTerrainLayer(parent.layer as TerrainGroupLayerResource, newLayer, node.Index + 1);
+                    _controller.addTerrainLayer(parent.layer as MaterialGroupLayer, newLayer, node.Index + 1);
                 }
 
                 // Refresh tree
@@ -187,11 +186,11 @@ namespace StasisEditor.Views.Controls
         {
             Debug.Assert(layersTreeView.SelectedNode is LayerNode);
             LayerNode node = layersTreeView.SelectedNode as LayerNode;
-            Debug.Assert(node.layer.type != TerrainLayerType.Root);
+            Debug.Assert(node.layer.type != "root");
 
             // Display a warning that child nodes will be destroyed
             bool doRemove = false;
-            if (node.layer.type == TerrainLayerType.Root || node.layer.type == TerrainLayerType.Group)
+            if (node.layer.type == "group")
                 doRemove = MessageBox.Show("Are you sure you want to remove this node and all its child nodes?", "Remove Nodes", MessageBoxButtons.YesNo) == DialogResult.Yes;
             else
                 doRemove = true;
@@ -199,7 +198,7 @@ namespace StasisEditor.Views.Controls
             if (doRemove)
             {
                 // Remove layer
-                TerrainGroupLayerResource parent = (node.Parent as LayerNode).layer as TerrainGroupLayerResource;
+                MaterialGroupLayer parent = (node.Parent as LayerNode).layer as MaterialGroupLayer;
                 _controller.removeTerrainLayer(parent, node.layer);
 
                 // Refresh tree view
@@ -234,13 +233,13 @@ namespace StasisEditor.Views.Controls
             LayerNode node = e.Node as LayerNode;
 
             // Remove button's status
-            removeLayerButton.Enabled = node.layer.type != TerrainLayerType.Root;
+            removeLayerButton.Enabled = node.layer.type != "root";
 
             // Add button's status
             addLayerButton.Enabled = true;
 
             // Up/down buttons' status
-            if (node.layer.type == TerrainLayerType.Root)
+            if (node.layer.type == "root")
             {
                 upButton.Enabled = false;
                 downButton.Enabled = false;
@@ -252,7 +251,7 @@ namespace StasisEditor.Views.Controls
             }
 
             // Set layer's property grid
-            layerProperties.SelectedObject = node.layer.properties;
+            layerProperties.SelectedObject = node.layer;
         }
 
         // Node check changed
@@ -260,7 +259,7 @@ namespace StasisEditor.Views.Controls
         {
             Debug.Assert(e.Node is LayerNode);
             LayerNode node = e.Node as LayerNode;
-            Debug.Assert(node.layer.type != TerrainLayerType.Root);
+            Debug.Assert(node.layer.type != "root");
 
             // Set layer's enabled status
             node.layer.enabled = node.Checked;
@@ -280,7 +279,7 @@ namespace StasisEditor.Views.Controls
             // Prevent root node from being unchecked
             Debug.Assert(e.Node is LayerNode);
             LayerNode node = e.Node as LayerNode;
-            if (node.layer.type == TerrainLayerType.Root)
+            if (node.layer.type == "root")
                 e.Cancel = true;
         }
     }

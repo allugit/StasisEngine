@@ -7,8 +7,8 @@ using System.Linq;
 using System.Text;
 using System.Windows.Forms;
 using StasisCore.Resources;
+using StasisCore.Models;
 using StasisEditor.Controllers;
-using StasisEditor.Models;
 
 namespace StasisEditor.Views.Controls
 {
@@ -18,19 +18,14 @@ namespace StasisEditor.Views.Controls
         private MaterialView _materialView;
         public PropertyGrid PropertyGrid { get { return this.materialPropertyGrid; } }
 
-        public MaterialProperties(MaterialView materialView, EditorMaterial material)
+        public MaterialProperties(MaterialView materialView, Material material)
         {
             _materialView = materialView;
             _controller = materialView.getController();
 
-            switch (material.type)
-            {
-                case MaterialType.Terrain:
-                    TerrainLayersControl terrainLayers = new TerrainLayersControl(_controller, material as EditorTerrainMaterial);
-                    terrainLayers.populateTreeView((material as EditorTerrainMaterial).rootLayer);
-                    Controls.Add(terrainLayers);
-                    break;
-            }
+            MaterialLayersControl terrainLayers = new MaterialLayersControl(_controller, material);
+            terrainLayers.populateTreeView(material.rootLayer);
+            Controls.Add(terrainLayers);
 
             // Controls
             InitializeComponent();

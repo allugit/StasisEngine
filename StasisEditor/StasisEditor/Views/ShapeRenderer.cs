@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using StasisEditor.Controllers;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
-using StasisCore.Resources;
+using StasisCore;
 
 namespace StasisEditor.Views
 {

@@ -11,6 +11,7 @@ using Microsoft.Xna.Framework.Graphics;
 using StasisCore.Resources;
 using StasisEditor.Controllers;
 using StasisEditor.Views.Controls;
+using StasisEditor.Models;
 
 namespace StasisEditor.Views
 {
@@ -68,7 +69,7 @@ namespace StasisEditor.Views
         }
 
         // addLevelSettings
-        public void addLevelSettings(LevelResource level)
+        public void addLevelSettings(EditorLevel level)
         {
             _levelSettings = new LevelSettings();
             _levelSettings.setProperties(level);

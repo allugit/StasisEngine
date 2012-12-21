@@ -4,25 +4,18 @@ using System.Windows.Forms;
 using StasisCore.Resources;
 namespace StasisEditor.Views.Controls
 {
-    public class NewTerrainLayerForm : Form
+    public class SelectMaterialLayerType : Form
     {
         private ListBox layerTypeListBox;
         private Label label1;
         private Button addChildButton;
         private Button cancelButton;
     
-        public NewTerrainLayerForm()
+        public SelectMaterialLayerType()
         {
             InitializeComponent();
 
-            List<TerrainLayerType> types = new List<TerrainLayerType>();
-            foreach (TerrainLayerType type in Enum.GetValues(typeof(TerrainLayerType)))
-            {
-                if (type != TerrainLayerType.Group && type != TerrainLayerType.Root)
-                    types.Add(type);
-            }
-
-            layerTypeListBox.DataSource = types;
+            layerTypeListBox.DataSource = new string[] { "group", "texture", "noise", "scatter" };
         }
 
         private void InitializeComponent()
@@ -91,9 +84,9 @@ namespace StasisEditor.Views.Controls
         }
 
         // getSelectedType
-        public TerrainLayerType getSelectedType()
+        public string getSelectedType()
         {
-            return (TerrainLayerType)layerTypeListBox.SelectedItem;
+            return (string)layerTypeListBox.SelectedItem;
         }
 
         // Cancel button clicked

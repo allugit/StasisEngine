@@ -10,11 +10,18 @@ namespace StasisCore.Models
 
         public List<MaterialLayer> layers { get { return _layers; } set { _layers = value; } }
 
+        // Create new
+        public MaterialRootLayer() : base("root", true)
+        {
+            _layers = new List<MaterialLayer>();
+        }
+
+        // Create from xml
         public MaterialRootLayer(XElement data) : base(data)
         {
             _layers = new List<MaterialLayer>();
             foreach (XElement layerXml in data.Elements("Layer"))
-                _layers.Add(MaterialLayer.create(layerXml));
+                _layers.Add(MaterialLayer.load(layerXml));
         }
     }
 }

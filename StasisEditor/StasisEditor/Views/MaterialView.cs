@@ -5,7 +5,7 @@ using System.Data;
 using System.Drawing;
 using System.Windows.Forms;
 using StasisCore.Resources;
-using StasisEditor.Models;
+using StasisCore.Models;
 using StasisEditor.Controllers;
 using StasisEditor.Views.Controls;
 
@@ -18,13 +18,7 @@ namespace StasisEditor.Views
 
         public MaterialView()
         {
-            int numMaterialTypes = Enum.GetValues(typeof(MaterialType)).Length;
-
             InitializeComponent();
-
-            // Set material types
-            foreach (string materialType in Enum.GetNames(typeof(MaterialType)))
-                materialTypesListBox.Items.Add(materialType);
         }
 
         // getController
@@ -39,16 +33,6 @@ namespace StasisEditor.Views
             _controller = controller;
         }
 
-        // setChangesMade
-        public void setChangesMade(bool status)
-        {
-            // Update button
-            saveButton.Enabled = status;
-
-            // Update selected material
-            getSelectedMaterial().changed = status;
-        }
-
         // setAutoUpdatePreview -- this will trigger an event
         public void setAutoUpdatePreview(bool status)
         {
@@ -56,13 +40,13 @@ namespace StasisEditor.Views
         }
 
         // getSelectedMaterial
-        public EditorMaterial getSelectedMaterial()
+        public Material getSelectedMaterial()
         {
-            return materialsListBox.SelectedItem as EditorMaterial;
+            return materialsListBox.SelectedItem as Material;
         }
 
         // openProperties
-        private void openProperties(EditorMaterial material)
+        private void openProperties(Material material)
         {
             _materialProperties = new MaterialProperties(this, material);
             propertiesContainer.Controls.Add(_materialProperties);
@@ -88,22 +72,11 @@ namespace StasisEditor.Views
             materialsListBox.RefreshItems();
         }
 
-        // Material type selection changed
-        private void materialTypesListBox_SelectedValueChanged(object sender, EventArgs e)
-        {
-            ListBox listBox = (sender as ListBox);
-            MaterialType type = (MaterialType)Enum.Parse(typeof(MaterialType), listBox.SelectedItem as string);
-            materialsListBox.DataSource = _controller.getMaterials(type);
-        }
-
         // Selected materials changed
         private void materialsListBox_SelectedIndexChanged(object sender, EventArgs e)
         {
             // Update preview button
             previewButton.Enabled = materialsListBox.SelectedItem != null;
-
-            // Update save button
-            saveButton.Enabled = getSelectedMaterial().changed;
             
             // Open material properties
             closeProperties();
@@ -113,9 +86,6 @@ namespace StasisEditor.Views
         // Material property changed
         private void materialProperties_PropertyValueChanged(object s, PropertyValueChangedEventArgs e)
         {
-            // Changes are being made
-            getSelectedMaterial().changed = true;
-
             // Refresh the materials list
             (materialsListBox as RefreshingListBox).RefreshItems();
         }
@@ -135,9 +105,7 @@ namespace StasisEditor.Views
         // Material save button
         private void saveButton_Click(object sender, EventArgs e)
         {
-            getSelectedMaterial().changed = false;
             //_controller.saveResource(getSelectedMaterial().resource);
-            saveButton.Enabled = false;
         }
     }
 }

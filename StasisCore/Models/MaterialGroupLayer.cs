@@ -14,13 +14,24 @@ namespace StasisCore.Models
         public float multiplier { get { return _multiplier; } }
         public List<MaterialLayer> layers { get { return _layers; } }
 
+        // Create new
+        public MaterialGroupLayer()
+            : base("group", true)
+        {
+            _blendType = LayerBlendType.Opaque;
+            _multiplier = 1f;
+            _layers = new List<MaterialLayer>();
+        }
+
+        // Create from xml
         public MaterialGroupLayer(XElement data)
             : base(data)
         {
             _blendType = (LayerBlendType)Enum.Parse(typeof(LayerBlendType), data.Attribute("blend_type").Value, true);
+            _multiplier = float.Parse(data.Attribute("multiplier").Value);
             _layers = new List<MaterialLayer>();
             foreach (XElement layerXml in data.Elements("Layer"))
-                _layers.Add(MaterialLayer.create(layerXml));
+                _layers.Add(MaterialLayer.load(layerXml));
         }
     }
 }

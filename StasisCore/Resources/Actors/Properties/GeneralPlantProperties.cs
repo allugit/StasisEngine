@@ -4,11 +4,6 @@ using System.Xml.Linq;
 
 namespace StasisCore.Resources
 {
-    public enum PlantType
-    {
-        Tree = 0
-    };
-
     public class GeneralPlantProperties : ActorProperties
     {
         private bool _dropsSeeds;

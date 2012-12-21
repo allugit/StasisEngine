@@ -1,6 +1,6 @@
 ﻿namespace StasisEditor.Views.Controls
 {
-    partial class TerrainLayersControl
+    partial class MaterialLayersControl
     {
         /// <summary> 
         /// Required designer variable.

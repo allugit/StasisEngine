@@ -6,7 +6,7 @@ using System.Data;
 using System.Linq;
 using System.Text;
 using System.Windows.Forms;
-using StasisCore.Resources;
+using StasisEditor.Models;
 
 namespace StasisEditor.Views.Controls
 {
@@ -18,7 +18,7 @@ namespace StasisEditor.Views.Controls
             Dock = DockStyle.Top;
         }
 
-        public void setProperties(LevelResource level)
+        public void setProperties(EditorLevel level)
         {
             levelPropertiesGrid.SelectedObject = level;
         }

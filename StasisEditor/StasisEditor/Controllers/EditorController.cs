@@ -12,11 +12,6 @@ namespace StasisEditor.Controllers
 {
     public class EditorController : Controller
     {
-        public const string TEXTURE_RESOURCE_DIRECTORY = @"E:\_C#\StasisEngine\StasisGame\StasisGame\bin\x86\Debug\TextureResources";
-        public const string MATERIAL_RESOURCE_DIRECTORY = @"E:\_C#\StasisEngine\StasisGame\StasisGame\bin\x86\Debug\MaterialResources";
-        public const string ITEM_RESOURCE_DIRECTORY = @"E:\_C#\StasisEngine\StasisGame\StasisGame\bin\x86\Debug\ItemResources";
-        public const string TEMPORARY_TEXTURE_DIRECTORY = @"E:\_C#\StasisEngine\StasisEditor\StasisEditor\bin\x86\Debug\Temporary";
-
         private XNAController _xnaController;
         private MaterialController _materialController;
         private LevelController _levelController;

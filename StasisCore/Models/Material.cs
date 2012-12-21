@@ -16,8 +16,7 @@ namespace StasisCore.Models
         public Material(ResourceObject resource)
         {
             _uid = resource.uid;
-
-            _rootLayer = MaterialLayer.create(resource.data.Element("Layer")) as MaterialRootLayer;
+            _rootLayer = MaterialLayer.load(resource.data.Element("Layer")) as MaterialRootLayer;
         }
     }
 }

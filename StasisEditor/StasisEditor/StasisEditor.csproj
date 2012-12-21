@@ -100,6 +100,7 @@
     <Compile Include="Controllers\EditorController.cs" />
     <Compile Include="Controllers\LevelController.cs" />
     <Compile Include="Controllers\MaterialController.cs" />
+    <Compile Include="Models\EditorLevel.cs" />
     <Compile Include="Models\Items\EditorBlueprint.cs" />
     <Compile Include="Models\Items\EditorBlueprintScrap.cs" />
     <Compile Include="Models\Items\EditorBlueprintSocket.cs" />
@@ -180,13 +181,13 @@
     <Compile Include="Views\Controls\RefreshingListBox.cs">
       <SubType>Component</SubType>
     </Compile>
-    <Compile Include="Views\Controls\TerrainLayersControl.cs">
+    <Compile Include="Views\Controls\MaterialLayersControl.cs">
       <SubType>UserControl</SubType>
     </Compile>
-    <Compile Include="Views\Controls\TerrainLayersControl.Designer.cs">
-      <DependentUpon>TerrainLayersControl.cs</DependentUpon>
+    <Compile Include="Views\Controls\MaterialLayersControl.Designer.cs">
+      <DependentUpon>MaterialLayersControl.cs</DependentUpon>
     </Compile>
-    <Compile Include="Views\Controls\NewTerrainLayerForm.cs">
+    <Compile Include="Views\Controls\SelectMaterialLayerType.cs">
       <SubType>Form</SubType>
     </Compile>
     <Compile Include="Views\EditorView.cs">
@@ -302,11 +303,11 @@
     <EmbeddedResource Include="Views\LevelView.resx">
       <DependentUpon>LevelView.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="Views\Controls\TerrainLayersControl.resx">
-      <DependentUpon>TerrainLayersControl.cs</DependentUpon>
+    <EmbeddedResource Include="Views\Controls\MaterialLayersControl.resx">
+      <DependentUpon>MaterialLayersControl.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="Views\Controls\NewTerrainLayerForm.resx">
-      <DependentUpon>NewTerrainLayerForm.cs</DependentUpon>
+    <EmbeddedResource Include="Views\Controls\SelectMaterialLayerType.resx">
+      <DependentUpon>SelectMaterialLayerType.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Views\EditorView.resx">
       <DependentUpon>EditorView.cs</DependentUpon>
