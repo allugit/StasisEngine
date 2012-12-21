@@ -103,11 +103,6 @@
     <Compile Include="Models\Items\EditorBlueprint.cs" />
     <Compile Include="Models\Items\EditorBlueprintScrap.cs" />
     <Compile Include="Models\Items\EditorBlueprintSocket.cs" />
-    <Compile Include="Models\Materials\EditorFluidMaterial.cs" />
-    <Compile Include="Models\Materials\EditorItemMaterial.cs" />
-    <Compile Include="Models\Materials\EditorMaterial.cs" />
-    <Compile Include="Models\Materials\EditorTerrainMaterial.cs" />
-    <Compile Include="Models\Materials\EditorTreeMaterial.cs" />
     <Compile Include="Views\Controls\ActorToolbar.cs">
       <SubType>UserControl</SubType>
     </Compile>

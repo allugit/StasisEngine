@@ -19,7 +19,7 @@ namespace StasisEditor.Controllers
     public class MaterialController : Controller
     {
         private EditorController _editorController;
-        private TerrainRenderer _terrainRenderer;
+        private MaterialRenderer _terrainRenderer;
         private MaterialView _materialView;
         private MaterialPreview _materialPreview;
         private List<EditorMaterial> _materials;
@@ -36,7 +36,7 @@ namespace StasisEditor.Controllers
             materialView.setAutoUpdatePreview(true);
 
             // Create terrain renderer
-            _terrainRenderer = new TerrainRenderer(XNAResources.game as Game, XNAResources.spriteBatch);
+            _terrainRenderer = new MaterialRenderer(XNAResources.game as Game, XNAResources.spriteBatch);
         }
 
         // setAutoUpdatePreview

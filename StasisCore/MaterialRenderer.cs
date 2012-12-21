@@ -5,17 +5,12 @@ using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Content;
 using Microsoft.Xna.Framework.Graphics;
 using StasisCore.Resources;
+using StasisCore.Models;
+using StasisCore.Controllers;
 
 namespace StasisCore
 {
-    public enum NoiseType
-    {
-        Perlin = 0,
-        Worley,
-        InverseWorley
-    };
-
-    public class TerrainRenderer
+    public class MaterialRenderer
     {
         public const int MAX_TEXTURE_SIZE = 2048;
         private Game _game;
@@ -28,7 +23,7 @@ namespace StasisCore
         private Effect _noiseEffect;
         private Effect _textureEffect;
 
-        public TerrainRenderer(Game game, SpriteBatch spriteBatch, int randomTextureWidth = 32, int randomTextureHeight = 32, int seed = 1234)
+        public MaterialRenderer(Game game, SpriteBatch spriteBatch, int randomTextureWidth = 32, int randomTextureHeight = 32, int seed = 1234)
         {
             _game = game;
             _spriteBatch = spriteBatch;
@@ -67,7 +62,7 @@ namespace StasisCore
         }
 
         // Render material
-        public Texture2D renderMaterial(TerrainMaterialResource material, int textureWidth, int textureHeight)
+        public Texture2D renderMaterial(Material material, int textureWidth, int textureHeight)
         {
             // Create canvas
             Texture2D canvas = createCanvas(textureWidth, textureHeight);
@@ -79,7 +74,7 @@ namespace StasisCore
         }
 
         // recursiveRenderLayers
-        private Texture2D recursiveRenderLayers(Texture2D current, TerrainLayerResource layer)
+        private Texture2D recursiveRenderLayers(Texture2D current, MaterialLayer layer)
         {
             // Stop rendering at disabled layers
             if (!layer.enabled)
@@ -87,29 +82,34 @@ namespace StasisCore
 
             switch (layer.type)
             {
-                case TerrainLayerType.Root:
+                case "root":
                     // Render child layers without doing anything else
-                    TerrainRootLayerResource rootLayer = layer as TerrainRootLayerResource;
-                    foreach (TerrainLayerResource childLayer in rootLayer.layers)
+                    MaterialRootLayer rootLayer = layer as MaterialRootLayer;
+                    foreach (MaterialLayer childLayer in rootLayer.layers)
                         current = recursiveRenderLayers(current, childLayer);
                     break;
 
-                case TerrainLayerType.Group:
+                case "group":
                     // Render child layers, and do a texture pass at the end
-                    TerrainGroupLayerResource groupLayer = layer as TerrainGroupLayerResource;
+                    MaterialGroupLayer groupLayer = layer as MaterialGroupLayer;
                     Texture2D groupCanvas = createCanvas(current.Width, current.Height);
-                    foreach (TerrainLayerResource childLayer in groupLayer.layers)
+                    foreach (MaterialLayer childLayer in groupLayer.layers)
                         groupCanvas = recursiveRenderLayers(groupCanvas, childLayer);
-                    current = texturePass(current, groupCanvas, groupLayer.properties as GroupLayerProperties);
+                    current = texturePass(current, groupCanvas, groupLayer.blendType, 1f, groupLayer.multiplier);
                     break;
 
-                case TerrainLayerType.Texture:
-                    current = texturePass(current, (layer.properties as TextureLayerProperties));
+                case "texture":
+                    MaterialTextureLayer textureLayer = layer as MaterialTextureLayer;
+                    current = texturePass(current, ResourceController.getTexture(textureLayer.textureUID), textureLayer.blendType, textureLayer.scale, textureLayer.multiplier);
                     break;
 
-                case TerrainLayerType.Noise:
-                    current = noisePass(current, (layer.properties as NoiseLayerProperties));
+                case "noise":
+                    MaterialNoiseLayer noiseLayer = layer as MaterialNoiseLayer;
+                    current = noisePass(current, noiseLayer.noiseType, noiseLayer.position, noiseLayer.scale, noiseLayer.frequency, noiseLayer.gain, noiseLayer.lacunarity, noiseLayer.multiplier, noiseLayer.fbmOffset, noiseLayer.colorLow, noiseLayer.colorHigh, noiseLayer.iterations, noiseLayer.blendType, noiseLayer.invert, noiseLayer.worleyFeature);
                     break;
+
+                case "scatter":
+                    throw new NotImplementedException();
             }
 
             return current;
@@ -236,6 +236,7 @@ namespace StasisCore
         }
         */
 
+        /*
         // Overloaded texture pass (normal)
         private Texture2D texturePass(Texture2D current, TextureLayerProperties options)
         {
@@ -247,8 +248,10 @@ namespace StasisCore
         {
             return texturePass(canvas, groupCanvas, options.blendType, 1f, 1f);
         }
+        */
+
         // Texture pass
-        private Texture2D texturePass(Texture2D current, Texture2D texture, TerrainBlendType blendType, float scale, float multiplier)
+        private Texture2D texturePass(Texture2D current, Texture2D texture, LayerBlendType blendType, float scale, float multiplier)
         {
             // Initialize render targets and textures
             RenderTarget2D renderTarget = new RenderTarget2D(_game.GraphicsDevice, current.Width, current.Height);
@@ -268,15 +271,15 @@ namespace StasisCore
             // Initialize shader
             switch (blendType)
             {
-                case TerrainBlendType.Opaque:
+                case LayerBlendType.Opaque:
                     _textureEffect.CurrentTechnique = _textureEffect.Techniques["opaque"];
                     break;
 
-                case TerrainBlendType.Additive:
+                case LayerBlendType.Additive:
                     _textureEffect.CurrentTechnique = _textureEffect.Techniques["additive"];
                     break;
 
-                case TerrainBlendType.Overlay:
+                case LayerBlendType.Overlay:
                     _textureEffect.CurrentTechnique = _textureEffect.Techniques["overlay"];
                     break;
             }
@@ -309,7 +312,21 @@ namespace StasisCore
         }
 
         // Noise pass
-        private Texture2D noisePass(Texture2D current, NoiseLayerProperties options)
+        private Texture2D noisePass(Texture2D current,
+            NoiseType noiseType,
+            Vector2 position,
+            float scale,
+            float frequency,
+            float gain,
+            float lacunarity,
+            float multiplier,
+            Vector2 fbmOffset,
+            Color colorLow,
+            Color colorHigh,
+            int iterations,
+            LayerBlendType blendType,
+            bool invert,
+            WorleyFeatureType worleyFeature)
         {
             // Initialize vertex shader properties
             Matrix projection = Matrix.CreateOrthographicOffCenter(0, current.Width, current.Height, 0, 0, 1);
@@ -326,7 +343,7 @@ namespace StasisCore
 
             // Set options based on noise type and blend type
             Vector2 noiseSize = Vector2.Zero;
-            if (options.noiseType == NoiseType.Perlin)
+            if (noiseType == NoiseType.Perlin)
             {
                 _noiseEffect.CurrentTechnique = _noiseEffect.Techniques["perlin_noise"];
                 noiseSize = new Vector2(_perlinSource.Width, _perlinSource.Height);
@@ -343,21 +360,21 @@ namespace StasisCore
             _game.GraphicsDevice.Textures[2] = _worleySource;
             _game.GraphicsDevice.Clear(Color.Transparent);
             _noiseEffect.Parameters["aspectRatio"].SetValue(aspectRatio);
-            _noiseEffect.Parameters["offset"].SetValue(options.position);
-            _noiseEffect.Parameters["noiseScale"].SetValue(options.scale);
+            _noiseEffect.Parameters["offset"].SetValue(position);
+            _noiseEffect.Parameters["noiseScale"].SetValue(scale);
             _noiseEffect.Parameters["renderSize"].SetValue(new Vector2(current.Width, current.Height));
             _noiseEffect.Parameters["noiseSize"].SetValue(noiseSize);
-            _noiseEffect.Parameters["noiseFrequency"].SetValue(options.noiseFrequency);
-            _noiseEffect.Parameters["noiseGain"].SetValue(options.noiseGain);
-            _noiseEffect.Parameters["noiseLacunarity"].SetValue(options.noiseLacunarity);
-            _noiseEffect.Parameters["multiplier"].SetValue(options.multiplier);
-            _noiseEffect.Parameters["fbmOffset"].SetValue(options.fbmOffset);
-            _noiseEffect.Parameters["noiseLowColor"].SetValue(options.colorRangeLow.ToVector4());
-            _noiseEffect.Parameters["noiseHighColor"].SetValue(options.colorRangeHigh.ToVector4());
-            _noiseEffect.Parameters["fbmIterations"].SetValue(options.iterations);
-            _noiseEffect.Parameters["blendType"].SetValue((int)options.blendType);
-            _noiseEffect.Parameters["inverseWorley"].SetValue(options.noiseType == NoiseType.InverseWorley);
-            _noiseEffect.Parameters["worleyFeature"].SetValue((int)options.worleyFeature);
+            _noiseEffect.Parameters["noiseFrequency"].SetValue(frequency);
+            _noiseEffect.Parameters["noiseGain"].SetValue(gain);
+            _noiseEffect.Parameters["noiseLacunarity"].SetValue(lacunarity);
+            _noiseEffect.Parameters["multiplier"].SetValue(multiplier);
+            _noiseEffect.Parameters["fbmOffset"].SetValue(fbmOffset);
+            _noiseEffect.Parameters["noiseLowColor"].SetValue(colorLow.ToVector4());
+            _noiseEffect.Parameters["noiseHighColor"].SetValue(colorHigh.ToVector4());
+            _noiseEffect.Parameters["fbmIterations"].SetValue(iterations);
+            _noiseEffect.Parameters["blendType"].SetValue((int)blendType);
+            _noiseEffect.Parameters["invert"].SetValue(invert);
+            _noiseEffect.Parameters["worleyFeature"].SetValue((int)worleyFeature);
             _spriteBatch.Begin(SpriteSortMode.Immediate, null, null, null, null, _noiseEffect);
             _spriteBatch.Draw(current, renderTarget.Bounds, Color.White);
             _spriteBatch.End();
