@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Xml.Linq;
 
-namespace StasisCore.Models
+namespace StasisCore.Resources
 {
     public class TerrainRootLayerResource : TerrainGroupLayerResource
     {
@@ -11,7 +11,7 @@ namespace StasisCore.Models
         {
             // Default properties
             if (properties == null)
-                properties = new RootProperties();
+                properties = new RootLayerProperties();
 
             _properties = properties;
             _type = TerrainLayerType.Root;
@@ -24,7 +24,7 @@ namespace StasisCore.Models
             foreach (XElement layerElement in element.Elements("Layer"))
                 layers.Add(TerrainLayerResource.fromXML(layerElement));
 
-            return new TerrainRootLayerResource(layers, new RootProperties());
+            return new TerrainRootLayerResource(layers, new RootLayerProperties());
         }
 
         // toXML

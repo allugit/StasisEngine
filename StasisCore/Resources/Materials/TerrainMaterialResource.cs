@@ -3,7 +3,7 @@ using System.Linq;
 using System.Collections.Generic;
 using System.Xml.Linq;
 
-namespace StasisCore.Models
+namespace StasisCore.Resources
 {
     public class TerrainMaterialResource : MaterialResource
     {

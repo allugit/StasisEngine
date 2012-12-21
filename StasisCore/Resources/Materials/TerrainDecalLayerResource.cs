@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Xml.Linq;
 
-namespace StasisCore.Models
+namespace StasisCore.Resources
 {
     public class TerrainDecalSpatterLayerResource : TerrainLayerResource
     {
@@ -11,7 +11,7 @@ namespace StasisCore.Models
         {
             // Default options
             if (properties == null)
-                properties = new DecalProperties();
+                properties = new DecalLayerProperties();
 
             _properties = properties;
             _type = TerrainLayerType.DecalSpatter;
@@ -21,7 +21,7 @@ namespace StasisCore.Models
         new public static TerrainDecalSpatterLayerResource fromXML(XElement element)
         {
             return new TerrainDecalSpatterLayerResource(
-                new DecalProperties(),
+                new DecalLayerProperties(),
                 bool.Parse(element.Attribute("enabled").Value));
         }
 

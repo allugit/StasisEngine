@@ -6,7 +6,7 @@ using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Input;
 using Microsoft.Xna.Framework.Graphics;
 
-namespace StasisCore.Models
+namespace StasisCore.Resources
 {
     public class LevelResource
     {

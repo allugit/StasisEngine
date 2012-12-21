@@ -1,6 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
-using StasisCore.Models;
+using StasisCore.Resources;
 
 namespace StasisEditor.Models
 {

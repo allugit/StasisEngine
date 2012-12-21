@@ -6,7 +6,7 @@ using System.ComponentModel;
 using System.Windows.Forms;
 using StasisEditor.Views;
 using StasisEditor.Models;
-using StasisCore.Models;
+using StasisCore.Resources;
 
 namespace StasisEditor.Controllers
 {

@@ -4,7 +4,7 @@ using System.ComponentModel;
 using System.Data;
 using System.Drawing;
 using System.Windows.Forms;
-using StasisCore.Models;
+using StasisCore.Resources;
 using StasisEditor.Models;
 using StasisEditor.Controllers;
 using StasisEditor.Views.Controls;

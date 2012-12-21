@@ -3,7 +3,7 @@ using System.IO;
 using System.Collections.Generic;
 using System.ComponentModel;
 
-namespace StasisCore.Models
+namespace StasisCore.Resources
 {
     public class TextureResource
     {

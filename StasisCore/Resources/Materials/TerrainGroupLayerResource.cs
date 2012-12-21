@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Xml.Linq;
 
-namespace StasisCore.Models
+namespace StasisCore.Resources
 {
     public class TerrainGroupLayerResource : TerrainLayerResource
     {
@@ -18,7 +18,7 @@ namespace StasisCore.Models
 
             // Default properties
             if (properties == null)
-                properties = new GroupProperties(TerrainBlendType.Opaque);
+                properties = new GroupLayerProperties(TerrainBlendType.Opaque);
 
             _layers = layers;
             _properties = properties;
@@ -34,14 +34,14 @@ namespace StasisCore.Models
 
             return new TerrainGroupLayerResource(
                 layers,
-                new GroupProperties((TerrainBlendType)Enum.Parse(typeof(TerrainBlendType), element.Attribute("blendType").Value)),
+                new GroupLayerProperties((TerrainBlendType)Enum.Parse(typeof(TerrainBlendType), element.Attribute("blendType").Value)),
                 bool.Parse(element.Attribute("enabled").Value));
         }
 
         // toXML
         public override XElement toXML()
         {
-            GroupProperties properties = _properties as GroupProperties;
+            GroupLayerProperties properties = _properties as GroupLayerProperties;
 
             List<XElement> layersXML = new List<XElement>();
             for (int i = 0; i < _layers.Count; i++)

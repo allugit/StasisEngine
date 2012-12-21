@@ -5,7 +5,7 @@ using System.ComponentModel;
 using System.Xml.Linq;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
-using StasisCore.Models;
+using StasisCore.Resources;
 using StasisEditor.Models;
 using StasisEditor.Controllers;
 

@@ -4,7 +4,7 @@ using System.ComponentModel;
 using System.Xml.Linq;
 using StasisCore;
 
-namespace StasisCore.Models
+namespace StasisCore.Resources
 {
     public class TreeMaterialResource : MaterialResource
     {

@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Xml.Linq;
 using Microsoft.Xna.Framework;
 
-namespace StasisCore.Models
+namespace StasisCore.Resources
 {
     public class TerrainNoiseLayerResource : TerrainLayerResource
     {
@@ -13,7 +13,7 @@ namespace StasisCore.Models
             // Default options
             if (properties == null)
             {
-                properties = new NoiseProperties(
+                properties = new NoiseLayerProperties(
                     NoiseType.Perlin,
                     TerrainBlendType.Opaque,
                     WorleyFeature.F1,
@@ -37,7 +37,7 @@ namespace StasisCore.Models
         new public static TerrainNoiseLayerResource fromXML(XElement element)
         {
             TerrainNoiseLayerResource noiseLayer = new TerrainNoiseLayerResource(
-                new NoiseProperties(
+                new NoiseLayerProperties(
                     (NoiseType)Enum.Parse(typeof(NoiseType), element.Attribute("noiseType").Value),
                     (TerrainBlendType)Enum.Parse(typeof(TerrainBlendType), element.Attribute("blendType").Value),
                     (WorleyFeature)Enum.Parse(typeof(WorleyFeature), element.Attribute("worleyFeature").Value),
@@ -58,7 +58,7 @@ namespace StasisCore.Models
         // toXML
         public override XElement toXML()
         {
-            NoiseProperties properties = _properties as NoiseProperties;
+            NoiseLayerProperties properties = _properties as NoiseLayerProperties;
             XElement element = new XElement("Layer",
                 new XAttribute("type", _type),
                 new XAttribute("enabled", _enabled),

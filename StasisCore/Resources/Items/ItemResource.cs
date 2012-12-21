@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Xml.Linq;
 using System.IO;
 
-namespace StasisCore.Models
+namespace StasisCore.Resources
 {
     public enum ItemType
     {

@@ -1,5 +1,5 @@
 ﻿using System;
-using StasisCore.Models;
+using StasisCore.Resources;
 
 namespace StasisEditor.Models
 {

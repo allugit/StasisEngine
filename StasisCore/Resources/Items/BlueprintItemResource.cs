@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Xml.Linq;
 
-namespace StasisCore.Models
+namespace StasisCore.Resources
 {
     public class BlueprintItemResource : ItemResource
     {

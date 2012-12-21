@@ -2,9 +2,9 @@
 using System.Collections.Generic;
 using System.ComponentModel;
 
-namespace StasisCore.Models
+namespace StasisCore.Resources
 {
-    public class TextureProperties : LayerProperties
+    public class TextureLayerProperties : LayerProperties
     {
         private TerrainBlendType _blendType;
         private float _scale;
@@ -27,7 +27,7 @@ namespace StasisCore.Models
         [DisplayName("Texture Tag")]
         public string textureTag { get { return _textureTag; } set { _textureTag = value; } }
 
-        public TextureProperties(TerrainBlendType blendType, float scale, float multiplier, string textureTag)
+        public TextureLayerProperties(TerrainBlendType blendType, float scale, float multiplier, string textureTag)
             : base()
         {
             _blendType = blendType;
@@ -37,10 +37,10 @@ namespace StasisCore.Models
         }
 
         // copyFrom -- clones a list
-        public static List<LayerProperties> copyFrom(List<TextureProperties> list)
+        public static List<LayerProperties> copyFrom(List<TextureLayerProperties> list)
         {
             List<LayerProperties> copy = new List<LayerProperties>();
-            foreach (TextureProperties options in list)
+            foreach (TextureLayerProperties options in list)
                 copy.Add(options.clone());
             return copy;
         }
@@ -48,7 +48,7 @@ namespace StasisCore.Models
         // clone
         public override LayerProperties clone()
         {
-            return new TextureProperties(_blendType, _scale, _multiplier, _textureTag);
+            return new TextureLayerProperties(_blendType, _scale, _multiplier, _textureTag);
         }
     }
 }

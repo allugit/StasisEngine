@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Xml.Linq;
 using System.ComponentModel;
-using StasisCore.Models;
+using StasisCore.Resources;
 
 namespace StasisEditor.Models
 {

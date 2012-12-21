@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Xml.Linq;
 
-namespace StasisCore.Models
+namespace StasisCore.Resources
 {
     public class TerrainTextureLayerResource : TerrainLayerResource
     {
@@ -11,7 +11,7 @@ namespace StasisCore.Models
         {
             // Default options
             if (properties == null)
-                properties = new TextureProperties(TerrainBlendType.Opaque, 1, 1, "");
+                properties = new TextureLayerProperties(TerrainBlendType.Opaque, 1, 1, "");
 
             _properties = properties;
             _type = TerrainLayerType.Texture;
@@ -21,7 +21,7 @@ namespace StasisCore.Models
         new public static TerrainTextureLayerResource fromXML(XElement element)
         {
             TerrainTextureLayerResource textureLayer = new TerrainTextureLayerResource(
-                new TextureProperties(
+                new TextureLayerProperties(
                     (TerrainBlendType)Enum.Parse(typeof(TerrainBlendType), element.Attribute("blendType").Value),
                     float.Parse(element.Attribute("scale").Value),
                     float.Parse(element.Attribute("multiplier").Value),
@@ -33,7 +33,7 @@ namespace StasisCore.Models
         // toXML
         public override XElement toXML()
         {
-            TextureProperties properties = _properties as TextureProperties;
+            TextureLayerProperties properties = _properties as TextureLayerProperties;
             XElement element = new XElement("Layer",
                 new XAttribute("type", _type),
                 new XAttribute("enabled", _enabled),

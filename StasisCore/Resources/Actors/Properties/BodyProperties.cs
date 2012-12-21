@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 
-namespace StasisCore.Models
+namespace StasisCore.Resources
 {
     public enum CoreBodyType
     {

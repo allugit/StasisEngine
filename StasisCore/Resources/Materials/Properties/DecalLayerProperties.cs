@@ -3,18 +3,17 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 
-namespace StasisCore.Models
+namespace StasisCore.Resources
 {
-    public class RootProperties : LayerProperties
+    public class DecalLayerProperties : LayerProperties
     {
-        public RootProperties()
-            : base()
+        public DecalLayerProperties() : base()
         {
         }
 
         public override LayerProperties clone()
         {
-            return new RootProperties();
+            return new DecalLayerProperties();
         }
     }
 }

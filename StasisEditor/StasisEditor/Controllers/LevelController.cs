@@ -4,7 +4,7 @@ using System.Collections.Generic;
 using Microsoft.Xna.Framework;
 using StasisEditor.Controllers.Actors;
 using StasisEditor.Views;
-using StasisCore.Models;
+using StasisCore.Resources;
 using StasisEditor.Views.Controls;
 
 namespace StasisEditor.Controllers

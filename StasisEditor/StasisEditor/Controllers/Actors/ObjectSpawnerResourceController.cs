@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using Microsoft.Xna.Framework;
-using StasisCore.Models;
+using StasisCore.Resources;
 
 namespace StasisEditor.Controllers.Actors
 {

@@ -1,7 +1,7 @@
 ﻿using Microsoft.Xna.Framework;
 using System.Text.RegularExpressions;
 
-namespace StasisCore.Models
+namespace StasisCore.Resources
 {
     abstract public class XmlLoadHelper
     {

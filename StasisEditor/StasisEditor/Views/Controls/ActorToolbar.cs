@@ -8,7 +8,7 @@ using System.Text;
 using System.Windows.Forms;
 using StasisEditor.Controllers;
 using StasisEditor.Controllers.Actors;
-using StasisCore.Models;
+using StasisCore.Resources;
 
 namespace StasisEditor.Views.Controls
 {

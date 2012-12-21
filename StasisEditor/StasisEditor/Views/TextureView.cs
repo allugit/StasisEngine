@@ -9,7 +9,7 @@ using System.Windows.Forms;
 using System.IO;
 using StasisEditor.Controllers;
 using StasisEditor.Views;
-using StasisCore.Models;
+using StasisCore.Resources;
 
 namespace StasisEditor.Views
 {

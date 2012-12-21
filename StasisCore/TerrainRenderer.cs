@@ -4,7 +4,7 @@ using System.Collections.Generic;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Content;
 using Microsoft.Xna.Framework.Graphics;
-using StasisCore.Models;
+using StasisCore.Resources;
 
 namespace StasisCore
 {
@@ -100,15 +100,15 @@ namespace StasisCore
                     Texture2D groupCanvas = createCanvas(current.Width, current.Height);
                     foreach (TerrainLayerResource childLayer in groupLayer.layers)
                         groupCanvas = recursiveRenderLayers(groupCanvas, childLayer);
-                    current = texturePass(current, groupCanvas, groupLayer.properties as GroupProperties);
+                    current = texturePass(current, groupCanvas, groupLayer.properties as GroupLayerProperties);
                     break;
 
                 case TerrainLayerType.Texture:
-                    current = texturePass(current, (layer.properties as TextureProperties));
+                    current = texturePass(current, (layer.properties as TextureLayerProperties));
                     break;
 
                 case TerrainLayerType.Noise:
-                    current = noisePass(current, (layer.properties as NoiseProperties));
+                    current = noisePass(current, (layer.properties as NoiseLayerProperties));
                     break;
             }
 
@@ -237,13 +237,13 @@ namespace StasisCore
         */
 
         // Overloaded texture pass (normal)
-        private Texture2D texturePass(Texture2D current, TextureProperties options)
+        private Texture2D texturePass(Texture2D current, TextureLayerProperties options)
         {
             throw new NotImplementedException();
             //return texturePass(current, TextureController.getTexture(options.textureTag), options.blendType, options.scale, options.multiplier);
         }
         // Overloaded texture pass (group)
-        private Texture2D texturePass(Texture2D canvas, Texture2D groupCanvas, GroupProperties options)
+        private Texture2D texturePass(Texture2D canvas, Texture2D groupCanvas, GroupLayerProperties options)
         {
             return texturePass(canvas, groupCanvas, options.blendType, 1f, 1f);
         }
@@ -309,7 +309,7 @@ namespace StasisCore
         }
 
         // Noise pass
-        private Texture2D noisePass(Texture2D current, NoiseProperties options)
+        private Texture2D noisePass(Texture2D current, NoiseLayerProperties options)
         {
             // Initialize vertex shader properties
             Matrix projection = Matrix.CreateOrthographicOffCenter(0, current.Width, current.Height, 0, 0, 1);

@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using Microsoft.Xna.Framework;
 
-namespace StasisCore.Models
+namespace StasisCore.Resources
 {
     public class ObjectSpawnerResource : ActorResource
     {

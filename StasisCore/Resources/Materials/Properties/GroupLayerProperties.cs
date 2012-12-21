@@ -3,14 +3,14 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 
-namespace StasisCore.Models
+namespace StasisCore.Resources
 {
-    public class GroupProperties : LayerProperties
+    public class GroupLayerProperties : LayerProperties
     {
         private TerrainBlendType _blendType;
         public TerrainBlendType blendType { get { return _blendType; } set { _blendType = value; } }
 
-        public GroupProperties(TerrainBlendType blendType)
+        public GroupLayerProperties(TerrainBlendType blendType)
             : base()
         {
             _blendType = blendType;
@@ -18,7 +18,7 @@ namespace StasisCore.Models
 
         public override LayerProperties clone()
         {
-            return new GroupProperties(_blendType);
+            return new GroupLayerProperties(_blendType);
         }
     }
 }

@@ -8,7 +8,7 @@ using System.Text;
 using System.Windows.Forms;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
-using StasisCore.Models;
+using StasisCore.Resources;
 using StasisEditor.Controllers;
 using StasisEditor.Models;
 

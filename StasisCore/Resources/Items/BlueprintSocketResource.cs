@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Xml.Linq;
 using Microsoft.Xna.Framework;
 
-namespace StasisCore.Models
+namespace StasisCore.Resources
 {
     public class BlueprintSocketResource
     {

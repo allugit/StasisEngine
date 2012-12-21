@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.ComponentModel;
 using Microsoft.Xna.Framework;
 
-namespace StasisCore.Models
+namespace StasisCore.Resources
 {
     public enum WorleyFeature
     {
@@ -12,7 +12,7 @@ namespace StasisCore.Models
         F2mF1
     };
 
-    public class NoiseProperties : LayerProperties
+    public class NoiseLayerProperties : LayerProperties
     {
         private NoiseType _noiseType;
         private TerrainBlendType _blendType;
@@ -80,7 +80,7 @@ namespace StasisCore.Models
         [DisplayName("Features")]
         public WorleyFeature worleyFeature { get { return _worleyFeature; } set { _worleyFeature = value; } }
 
-        public NoiseProperties(
+        public NoiseLayerProperties(
             NoiseType noiseType,
             TerrainBlendType blendType,
             WorleyFeature worleyFeature,
@@ -111,10 +111,10 @@ namespace StasisCore.Models
         }
 
         // copyFrom -- clones a list
-        public static List<LayerProperties> copyFrom(List<NoiseProperties> list)
+        public static List<LayerProperties> copyFrom(List<NoiseLayerProperties> list)
         {
             List<LayerProperties> copy = new List<LayerProperties>();
-            foreach (NoiseProperties options in list)
+            foreach (NoiseLayerProperties options in list)
                 copy.Add(options.clone());
             return copy;
         }
@@ -122,7 +122,7 @@ namespace StasisCore.Models
         // clone
         public override LayerProperties clone()
         {
-            return new NoiseProperties(
+            return new NoiseLayerProperties(
                 _noiseType,
                 _blendType,
                 _worleyFeature,

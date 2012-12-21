@@ -4,7 +4,7 @@ using System.IO;
 using System.Collections.Generic;
 using System.Xml.Linq;
 using Microsoft.Xna.Framework;
-using StasisCore.Models;
+using StasisCore.Resources;
 using StasisEditor.Models;
 using StasisEditor.Views;
 using StasisEditor.Views.Controls;
