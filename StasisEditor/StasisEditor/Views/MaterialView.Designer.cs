@@ -30,22 +30,19 @@ namespace StasisEditor.Views
         private void InitializeComponent()
         {
             this.saveButton = new System.Windows.Forms.Button();
-            this.materialTypesLabel = new System.Windows.Forms.Label();
-            this.materialTypesListBox = new System.Windows.Forms.ListBox();
-            this.materialsLabel = new System.Windows.Forms.Label();
             this.previewButton = new System.Windows.Forms.Button();
             this.propertiesContainer = new System.Windows.Forms.Panel();
-            this.materialsListBox = new StasisEditor.Views.Controls.RefreshingListBox();
             this.autoUpdatePreview = new System.Windows.Forms.CheckBox();
             this.addButton = new System.Windows.Forms.Button();
             this.removeButton = new System.Windows.Forms.Button();
+            this.materialsListBox = new StasisEditor.Views.Controls.RefreshingListBox();
             this.SuspendLayout();
             // 
             // saveButton
             // 
             this.saveButton.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
             this.saveButton.Enabled = false;
-            this.saveButton.Location = new System.Drawing.Point(592, 512);
+            this.saveButton.Location = new System.Drawing.Point(592, 503);
             this.saveButton.Name = "saveButton";
             this.saveButton.Size = new System.Drawing.Size(75, 23);
             this.saveButton.TabIndex = 0;
@@ -53,38 +50,11 @@ namespace StasisEditor.Views
             this.saveButton.UseVisualStyleBackColor = true;
             this.saveButton.Click += new System.EventHandler(this.saveButton_Click);
             // 
-            // materialTypesLabel
-            // 
-            this.materialTypesLabel.AutoSize = true;
-            this.materialTypesLabel.Location = new System.Drawing.Point(9, 12);
-            this.materialTypesLabel.Name = "materialTypesLabel";
-            this.materialTypesLabel.Size = new System.Drawing.Size(36, 13);
-            this.materialTypesLabel.TabIndex = 2;
-            this.materialTypesLabel.Text = "Types";
-            // 
-            // materialTypesListBox
-            // 
-            this.materialTypesListBox.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-            this.materialTypesListBox.FormattingEnabled = true;
-            this.materialTypesListBox.Location = new System.Drawing.Point(12, 29);
-            this.materialTypesListBox.Name = "materialTypesListBox";
-            this.materialTypesListBox.Size = new System.Drawing.Size(221, 54);
-            this.materialTypesListBox.TabIndex = 3;
-            // 
-            // materialsLabel
-            // 
-            this.materialsLabel.AutoSize = true;
-            this.materialsLabel.Location = new System.Drawing.Point(9, 109);
-            this.materialsLabel.Name = "materialsLabel";
-            this.materialsLabel.Size = new System.Drawing.Size(49, 13);
-            this.materialsLabel.TabIndex = 5;
-            this.materialsLabel.Text = "Materials";
-            // 
             // previewButton
             // 
             this.previewButton.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
             this.previewButton.Enabled = false;
-            this.previewButton.Location = new System.Drawing.Point(511, 512);
+            this.previewButton.Location = new System.Drawing.Point(511, 503);
             this.previewButton.Name = "previewButton";
             this.previewButton.Size = new System.Drawing.Size(75, 23);
             this.previewButton.TabIndex = 8;
@@ -100,26 +70,14 @@ namespace StasisEditor.Views
             this.propertiesContainer.AutoScroll = true;
             this.propertiesContainer.Location = new System.Drawing.Point(250, 12);
             this.propertiesContainer.Name = "propertiesContainer";
-            this.propertiesContainer.Size = new System.Drawing.Size(418, 493);
+            this.propertiesContainer.Size = new System.Drawing.Size(418, 484);
             this.propertiesContainer.TabIndex = 9;
-            // 
-            // materialsListBox
-            // 
-            this.materialsListBox.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom)
-                        | System.Windows.Forms.AnchorStyles.Left)));
-            this.materialsListBox.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-            this.materialsListBox.FormattingEnabled = true;
-            this.materialsListBox.Location = new System.Drawing.Point(12, 125);
-            this.materialsListBox.Name = "materialsListBox";
-            this.materialsListBox.Size = new System.Drawing.Size(221, 379);
-            this.materialsListBox.TabIndex = 4;
-            this.materialsListBox.SelectedIndexChanged += new System.EventHandler(this.materialsListBox_SelectedIndexChanged);
             // 
             // autoUpdatePreview
             // 
             this.autoUpdatePreview.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
             this.autoUpdatePreview.AutoSize = true;
-            this.autoUpdatePreview.Location = new System.Drawing.Point(378, 516);
+            this.autoUpdatePreview.Location = new System.Drawing.Point(378, 507);
             this.autoUpdatePreview.Name = "autoUpdatePreview";
             this.autoUpdatePreview.Size = new System.Drawing.Size(127, 17);
             this.autoUpdatePreview.TabIndex = 10;
@@ -130,7 +88,7 @@ namespace StasisEditor.Views
             // addButton
             // 
             this.addButton.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
-            this.addButton.Location = new System.Drawing.Point(12, 512);
+            this.addButton.Location = new System.Drawing.Point(12, 503);
             this.addButton.Name = "addButton";
             this.addButton.Size = new System.Drawing.Size(75, 23);
             this.addButton.TabIndex = 11;
@@ -140,12 +98,24 @@ namespace StasisEditor.Views
             // removeButton
             // 
             this.removeButton.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
-            this.removeButton.Location = new System.Drawing.Point(94, 512);
+            this.removeButton.Location = new System.Drawing.Point(94, 503);
             this.removeButton.Name = "removeButton";
             this.removeButton.Size = new System.Drawing.Size(75, 23);
             this.removeButton.TabIndex = 12;
             this.removeButton.Text = "Remove";
             this.removeButton.UseVisualStyleBackColor = true;
+            // 
+            // materialsListBox
+            // 
+            this.materialsListBox.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom)
+                        | System.Windows.Forms.AnchorStyles.Left)));
+            this.materialsListBox.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.materialsListBox.FormattingEnabled = true;
+            this.materialsListBox.Location = new System.Drawing.Point(12, 12);
+            this.materialsListBox.Name = "materialsListBox";
+            this.materialsListBox.Size = new System.Drawing.Size(221, 483);
+            this.materialsListBox.TabIndex = 4;
+            this.materialsListBox.SelectedIndexChanged += new System.EventHandler(this.materialsListBox_SelectedIndexChanged);
             // 
             // MaterialView
             // 
@@ -157,12 +127,9 @@ namespace StasisEditor.Views
             this.Controls.Add(this.propertiesContainer);
             this.Controls.Add(this.previewButton);
             this.Controls.Add(this.materialsListBox);
-            this.Controls.Add(this.materialsLabel);
-            this.Controls.Add(this.materialTypesListBox);
-            this.Controls.Add(this.materialTypesLabel);
             this.Controls.Add(this.saveButton);
             this.Name = "MaterialView";
-            this.Size = new System.Drawing.Size(680, 546);
+            this.Size = new System.Drawing.Size(680, 537);
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -171,9 +138,6 @@ namespace StasisEditor.Views
         #endregion
 
         private System.Windows.Forms.Button saveButton;
-        private System.Windows.Forms.Label materialTypesLabel;
-        private System.Windows.Forms.ListBox materialTypesListBox;
-        private System.Windows.Forms.Label materialsLabel;
         private RefreshingListBox materialsListBox;
         private System.Windows.Forms.Button previewButton;
         private System.Windows.Forms.Panel propertiesContainer;
