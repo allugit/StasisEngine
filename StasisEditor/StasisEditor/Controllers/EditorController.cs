@@ -60,11 +60,6 @@ namespace StasisEditor.Controllers
         // setScale
         public void setScale(float value) { _scale = value; }
 
-        // loadResources
-        protected override void loadResources()
-        {
-        }
-
         // resizeGraphicsDevice
         public void resizeGraphicsDevice(int width, int height)
         {

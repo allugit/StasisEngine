@@ -65,9 +65,6 @@
             this.textureDataGrid.Name = "textureDataGrid";
             this.textureDataGrid.Size = new System.Drawing.Size(267, 352);
             this.textureDataGrid.TabIndex = 9;
-            this.textureDataGrid.CellEndEdit += new System.Windows.Forms.DataGridViewCellEventHandler(this.newTextureResourcesGrid_CellEndEdit);
-            this.textureDataGrid.CellValidating += new System.Windows.Forms.DataGridViewCellValidatingEventHandler(this.newTextureResourcesGrid_CellValidating);
-            this.textureDataGrid.SelectionChanged += new System.EventHandler(this.textureDataGrid_SelectionChanged);
             // 
             // label1
             // 

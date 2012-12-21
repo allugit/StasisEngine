@@ -53,7 +53,8 @@ namespace StasisEditor.Models
             _blueprintScrapResource = resource as BlueprintScrapItemResource;
 
             // Load texture
-            _texture = StasisCore.Controllers.TextureController.getTexture(_blueprintScrapResource.scrapTextureTag);
+            throw new NotImplementedException();
+            //_texture = StasisCore.Controllers.TextureController.getTexture(_blueprintScrapResource.scrapTextureTag);
             Debug.Assert(_texture != null);
             _textureCenter = new Vector2(_texture.Width, _texture.Height) / 2;
 

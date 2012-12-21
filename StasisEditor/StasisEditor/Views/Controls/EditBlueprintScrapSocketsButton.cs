@@ -35,12 +35,13 @@ namespace StasisEditor.Views.Controls
             // Validate scrap texture tags
             foreach (EditorBlueprintScrap scrap in _scraps)
             {
-                Texture2D texture = StasisCore.Controllers.TextureController.getTexture(scrap.blueprintScrapResource.scrapTextureTag);
-                if (texture == null)
-                {
-                    MessageBox.Show(string.Format("Could not load the texture for scrap [{0}]", scrap.blueprintScrapResource.scrapTextureTag));
-                    return;
-                }
+                throw new NotImplementedException();
+                //Texture2D texture = StasisCore.Controllers.TextureController.getTexture(scrap.blueprintScrapResource.scrapTextureTag);
+                //if (texture == null)
+                //{
+                //    MessageBox.Show(string.Format("Could not load the texture for scrap [{0}]", scrap.blueprintScrapResource.scrapTextureTag));
+                //    return;
+                //}
             }
 
             // Unhook XNA from level view

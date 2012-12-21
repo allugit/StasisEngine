@@ -4,9 +4,6 @@
     {
         public Controller()
         {
-            loadResources();
         }
-
-        abstract protected void loadResources();
     }
 }

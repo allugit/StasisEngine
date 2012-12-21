@@ -5,7 +5,6 @@ using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Content;
 using Microsoft.Xna.Framework.Graphics;
 using StasisCore.Models;
-using StasisCore.Controllers;
 
 namespace StasisCore
 {
@@ -240,7 +239,8 @@ namespace StasisCore
         // Overloaded texture pass (normal)
         private Texture2D texturePass(Texture2D current, TextureProperties options)
         {
-            return texturePass(current, TextureController.getTexture(options.textureTag), options.blendType, options.scale, options.multiplier);
+            throw new NotImplementedException();
+            //return texturePass(current, TextureController.getTexture(options.textureTag), options.blendType, options.scale, options.multiplier);
         }
         // Overloaded texture pass (group)
         private Texture2D texturePass(Texture2D canvas, Texture2D groupCanvas, GroupProperties options)

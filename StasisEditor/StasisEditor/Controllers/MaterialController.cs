@@ -29,6 +29,7 @@ namespace StasisEditor.Controllers
         {
             _editorController = editorController;
             _materialView = materialView;
+            _materials = new List<EditorMaterial>();
 
             // Initialize material view
             materialView.setController(this);
@@ -76,73 +77,6 @@ namespace StasisEditor.Controllers
                     results.Add(material);
             }
             return results;
-        }
-
-        // loadResources
-        protected override void loadResources()
-        {
-            Debug.Assert(_materials == null);
-
-            // Materials
-            _materials = new List<EditorMaterial>();
-
-            // Load resources
-            string[] subDirectories = Directory.GetDirectories(EditorController.MATERIAL_RESOURCE_DIRECTORY);
-            foreach (string subDirectory in subDirectories)
-            {
-                // Read files in sub directory
-                string[] files = Directory.GetFiles(subDirectory);
-                foreach (string file in files)
-                {
-                    // Load material
-                    MaterialResource resource = MaterialResource.load(file);
-                    _materials.Add(EditorMaterial.create(resource));
-                }
-            }
-        }
-
-        // saveResource
-        public void saveResource(MaterialResource resource)
-        {
-            // Create material resource directory if necessary
-            if (!Directory.Exists(EditorController.MATERIAL_RESOURCE_DIRECTORY))
-                Directory.CreateDirectory(EditorController.MATERIAL_RESOURCE_DIRECTORY);
-
-            // Create material sub folder directory
-            string materialSubFolder = String.Format("{0}\\{1}", EditorController.MATERIAL_RESOURCE_DIRECTORY, resource.type.ToString());
-            if (!Directory.Exists(materialSubFolder))
-                Directory.CreateDirectory(materialSubFolder);
-
-            // Save material file
-            string fullPath = String.Format("{0}\\{1}.mat", materialSubFolder, resource.tag);
-            XElement element = resource.toXML();
-            element.Save(fullPath);
-
-            // Clean up resources
-            foreach (MaterialType materialType in Enum.GetValues(typeof(MaterialType)))
-            {
-                string directoryName = materialType.ToString();
-                string materialDirectory = String.Format("{0}\\{1}", EditorController.MATERIAL_RESOURCE_DIRECTORY, directoryName);
-                foreach (string file in Directory.GetFiles(materialDirectory))
-                {
-                    string materialTag = Path.GetFileNameWithoutExtension(file);
-
-                    // Search materials for this tag
-                    bool found = false;
-                    foreach (EditorMaterial material in _materials)
-                    {
-                        if (material.tag == materialTag)
-                        {
-                            found = true;
-                            break;
-                        }
-                    }
-
-                    // Remove file if not found in material list -- This happens when materials are renamed
-                    if (!found)
-                        File.Delete(file);
-                }
-            }
         }
 
         // addTerrainLayer

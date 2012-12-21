@@ -116,6 +116,7 @@
     <Compile Include="Models\Materials\EditorMaterial.cs" />
     <Compile Include="Models\Materials\EditorTerrainMaterial.cs" />
     <Compile Include="Models\Materials\EditorTreeMaterial.cs" />
+    <Compile Include="Models\Textures\EditorTexture.cs" />
     <Compile Include="Views\Controls\ActorToolbar.cs">
       <SubType>UserControl</SubType>
     </Compile>

@@ -22,6 +22,7 @@ namespace StasisEditor.Controllers
             _editorController = editorController;
             _itemView = itemView;
             _itemView.setController(this);
+            _items = new List<EditorItem>();
         }
 
         // getItem
@@ -54,101 +55,6 @@ namespace StasisEditor.Controllers
         public void setChangesMade(bool status)
         {
             _itemView.setChangesMade(status);
-        }
-
-        // Load resources
-        protected override void loadResources()
-        {
-            Debug.Assert(_items == null);
-
-            // Items
-            _items = new List<EditorItem>();
-
-            // Load resources
-            string[] subDirectories = Directory.GetDirectories(EditorController.ITEM_RESOURCE_DIRECTORY);
-            foreach (string subDirectory in subDirectories)
-            {
-                // Read files in sub directory
-                string[] files = Directory.GetFiles(subDirectory);
-                foreach (string file in files)
-                {
-                    // Load item
-                    ItemResource resource = ItemResource.load(file);
-                    _items.Add(EditorItem.create(this, resource));
-                }
-            }
-
-            /*
-            // Initialize items list
-            _items = new List<EditorItem>();
-
-            // Test data
-            _items.Add(new EditorRopeGun(new RopeGunItemResource("rope_gun", 1, "single_anchor_rope_gun_crate", "single_anchor_rope_gun", false, 32f)));
-            _items.Add(new EditorGravityGun(new GravityGunItemResource("gravity_gun", 1, "gravity_gun_crate", "gravity_gun", false, 32f, 4f, 1f)));
-            _items.Add(new EditorGrenade(new GrenadeItemResource("grenade", 1, "grenade_crate", "grenade", false, 2f, 1f)));
-            _items.Add(new EditorHealthPotion(new HealthPotionItemResource("small_health_potion", 1, "small_health_potion", "small_health_potion", 20)));
-            _items.Add(new EditorHealthPotion(new HealthPotionItemResource("medium_health_potion", 1, "medium_health_potion", "medium_health_potion", 40)));
-            _items.Add(new EditorHealthPotion(new HealthPotionItemResource("large_health_potion", 1, "large_health_potion", "large_health_potion", 60)));
-            _items.Add(new EditorTreeSeed(new TreeSeedItemResource("accuminate_tree_seed", 1, "tree_seed", "tree_seed", null, null)));
-            _items.Add(new EditorBlueprint(new BlueprintItemResource("test_blueprint_1", 1, "blueprint", "blueprint", "rope_gun")));
-            _items.Add(new EditorBlueprintScrap(this, new BlueprintScrapItemResource("test_scrap_1", 1, "blueprint_scrap", "blueprint_scrap", "test_blueprint_1", "test_scrap_1", Vector2.Zero, 0)));
-            _items.Add(new EditorBlueprintScrap(this, new BlueprintScrapItemResource("test_scrap_2", 1, "blueprint_scrap", "blueprint_scrap", "test_blueprint_1", "test_scrap_2", Vector2.Zero, 0)));
-            _items.Add(new EditorBlueprintScrap(this, new BlueprintScrapItemResource("test_scrap_3", 1, "blueprint_scrap", "blueprint_scrap", "test_blueprint_1", "test_scrap_3", Vector2.Zero, 0)));
-            _items.Add(new EditorBlueprintScrap(this, new BlueprintScrapItemResource("test_scrap_4", 1, "blueprint_scrap", "blueprint_scrap", "test_blueprint_1", "test_scrap_4", Vector2.Zero, 0)));
-            */
-
-            // Initialize scrap sockets
-            foreach (EditorItem item in _items)
-            {
-                if (item.type == ItemType.BlueprintScrap)
-                {
-                    EditorBlueprintScrap scrap = item as EditorBlueprintScrap;
-                    scrap.initializeSockets();
-                }
-            }
-        }
-
-        // Save resource
-        public void saveItem(EditorItem item)
-        {
-            // Create item resource directory if necessary
-            if (!Directory.Exists(EditorController.ITEM_RESOURCE_DIRECTORY))
-                Directory.CreateDirectory(EditorController.ITEM_RESOURCE_DIRECTORY);
-
-            // Create item sub folder directory
-            string itemSubFolder = String.Format("{0}\\{1}", EditorController.ITEM_RESOURCE_DIRECTORY, item.type.ToString());
-            if (!Directory.Exists(itemSubFolder))
-                Directory.CreateDirectory(itemSubFolder);
-
-            // Save item file
-            string fullPath = String.Format("{0}\\{1}.itm", itemSubFolder, item.tag);
-            XElement element = item.toXML();
-            element.Save(fullPath);
-
-            // Clean up resources
-            string[] subDirectories = Directory.GetDirectories(EditorController.ITEM_RESOURCE_DIRECTORY);
-            foreach (string subDirectory in subDirectories)
-            {
-                foreach (string file in Directory.GetFiles(subDirectory))
-                {
-                    string itemTag = Path.GetFileNameWithoutExtension(file);
-
-                    // Search items for this tag
-                    bool found = false;
-                    foreach (EditorItem loadedItem in _items)
-                    {
-                        if (loadedItem.tag == itemTag)
-                        {
-                            found = true;
-                            break;
-                        }
-                    }
-
-                    // Remove file if not found in items list -- This happens when items are renamed
-                    if (!found)
-                        File.Delete(file);
-                }
-            }
         }
 
         // getAssociatedBlueprintScraps

@@ -136,7 +136,7 @@ namespace StasisEditor.Views
         private void saveButton_Click(object sender, EventArgs e)
         {
             getSelectedMaterial().changed = false;
-            _controller.saveResource(getSelectedMaterial().resource);
+            //_controller.saveResource(getSelectedMaterial().resource);
             saveButton.Enabled = false;
         }
     }

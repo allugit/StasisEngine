@@ -48,11 +48,6 @@ namespace StasisEditor.Controllers
             _actorControllersRemoveQueue = new List<ActorResourceController>();
         }
 
-        // loadResources
-        protected override void loadResources()
-        {
-        }
-
         #region Getters/Setters
 
         public float getScale() { return _editorController.getScale(); }

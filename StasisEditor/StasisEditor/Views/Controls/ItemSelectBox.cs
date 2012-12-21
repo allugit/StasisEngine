@@ -33,13 +33,15 @@ namespace StasisEditor.Views.Controls
             EditorItem item = allItemsListBox.SelectedItem as EditorItem;
 
             // Check world texture
+            throw new NotImplementedException();
+            /*
             Texture2D worldTexture = StasisCore.Controllers.TextureController.getTexture(item.itemResource.worldTextureTag);
             if (worldTexture == null)
             {
                 MessageBox.Show("Item has no world texture.", "World Texture Not Found");
                 return;
             }
-
+            */
             Console.WriteLine("select item.");
         }
 
@@ -56,12 +58,14 @@ namespace StasisEditor.Views.Controls
             }
 
             // Check world texture
+            throw new NotImplementedException();
+            /*
             Texture2D worldTexture = StasisCore.Controllers.TextureController.getTexture(item.itemResource.worldTextureTag);
             if (worldTexture == null)
             {
                 MessageBox.Show("Item has no world texture.", "World Texture Not Found");
                 return;
-            }
+            }*/
 
             Console.WriteLine("select item.");
         }
