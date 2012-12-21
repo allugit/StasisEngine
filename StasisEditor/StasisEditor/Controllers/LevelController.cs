@@ -317,11 +317,7 @@ namespace StasisEditor.Controllers
         // selectItem
         public void selectItem()
         {
-            ItemSelectBox itemSelectBox = new ItemSelectBox(_editorController.getItemController());
-            if (itemSelectBox.ShowDialog() == System.Windows.Forms.DialogResult.OK)
-            {
-
-            }
+            throw new NotImplementedException();
         }
 
         #endregion

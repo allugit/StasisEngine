@@ -98,25 +98,16 @@
     <Compile Include="Controllers\Actors\TreeActorResourceController.cs" />
     <Compile Include="Controllers\Controller.cs" />
     <Compile Include="Controllers\EditorController.cs" />
-    <Compile Include="Controllers\ItemController.cs" />
     <Compile Include="Controllers\LevelController.cs" />
     <Compile Include="Controllers\MaterialController.cs" />
-    <Compile Include="Controllers\TextureController.cs" />
     <Compile Include="Models\Items\EditorBlueprint.cs" />
     <Compile Include="Models\Items\EditorBlueprintScrap.cs" />
     <Compile Include="Models\Items\EditorBlueprintSocket.cs" />
-    <Compile Include="Models\Items\EditorGravityGun.cs" />
-    <Compile Include="Models\Items\EditorGrenade.cs" />
-    <Compile Include="Models\Items\EditorHealthPotion.cs" />
-    <Compile Include="Models\Items\EditorItem.cs" />
-    <Compile Include="Models\Items\EditorRopeGun.cs" />
-    <Compile Include="Models\Items\EditorTreeSeed.cs" />
     <Compile Include="Models\Materials\EditorFluidMaterial.cs" />
     <Compile Include="Models\Materials\EditorItemMaterial.cs" />
     <Compile Include="Models\Materials\EditorMaterial.cs" />
     <Compile Include="Models\Materials\EditorTerrainMaterial.cs" />
     <Compile Include="Models\Materials\EditorTreeMaterial.cs" />
-    <Compile Include="Models\Textures\EditorTexture.cs" />
     <Compile Include="Views\Controls\ActorToolbar.cs">
       <SubType>UserControl</SubType>
     </Compile>
@@ -149,18 +140,6 @@
     </Compile>
     <Compile Include="Views\Controls\FileSafeTextBox.cs">
       <SubType>Component</SubType>
-    </Compile>
-    <Compile Include="Views\Controls\ItemPropertiesControl.cs">
-      <SubType>UserControl</SubType>
-    </Compile>
-    <Compile Include="Views\Controls\ItemPropertiesControl.Designer.cs">
-      <DependentUpon>ItemPropertiesControl.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Views\Controls\ItemSelectBox.cs">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="Views\Controls\ItemSelectBox.Designer.cs">
-      <DependentUpon>ItemSelectBox.cs</DependentUpon>
     </Compile>
     <Compile Include="Views\Controls\LayerNode.cs" />
     <Compile Include="Views\Controls\LayersTreeView.cs">
@@ -196,12 +175,6 @@
     <Compile Include="Views\Controls\ViewBlueprintAssociateScraps.Designer.cs">
       <DependentUpon>ViewBlueprintAssociateScraps.cs</DependentUpon>
     </Compile>
-    <Compile Include="Views\ItemView.cs">
-      <SubType>UserControl</SubType>
-    </Compile>
-    <Compile Include="Views\ItemView.Designer.cs">
-      <DependentUpon>ItemView.cs</DependentUpon>
-    </Compile>
     <Compile Include="Views\LevelView.cs">
       <SubType>UserControl</SubType>
     </Compile>
@@ -209,12 +182,6 @@
       <DependentUpon>LevelView.cs</DependentUpon>
     </Compile>
     <Compile Include="Views\ShapeRenderer.cs" />
-    <Compile Include="Views\TextureView.cs">
-      <SubType>UserControl</SubType>
-    </Compile>
-    <Compile Include="Views\TextureView.Designer.cs">
-      <DependentUpon>TextureView.cs</DependentUpon>
-    </Compile>
     <Compile Include="Views\Controls\RefreshingListBox.cs">
       <SubType>Component</SubType>
     </Compile>
@@ -322,12 +289,6 @@
     <EmbeddedResource Include="Views\Controls\EditBlueprintScrapSocketsView.resx">
       <DependentUpon>EditBlueprintScrapSocketsView.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="Views\Controls\ItemPropertiesControl.resx">
-      <DependentUpon>ItemPropertiesControl.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Views\Controls\ItemSelectBox.resx">
-      <DependentUpon>ItemSelectBox.cs</DependentUpon>
-    </EmbeddedResource>
     <EmbeddedResource Include="Views\Controls\LevelSettings.resx">
       <DependentUpon>LevelSettings.cs</DependentUpon>
     </EmbeddedResource>
@@ -343,14 +304,8 @@
     <EmbeddedResource Include="Views\Controls\ViewBlueprintAssociateScraps.resx">
       <DependentUpon>ViewBlueprintAssociateScraps.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="Views\ItemView.resx">
-      <DependentUpon>ItemView.cs</DependentUpon>
-    </EmbeddedResource>
     <EmbeddedResource Include="Views\LevelView.resx">
       <DependentUpon>LevelView.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Views\TextureView.resx">
-      <DependentUpon>TextureView.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Views\Controls\TerrainLayersControl.resx">
       <DependentUpon>TerrainLayersControl.cs</DependentUpon>

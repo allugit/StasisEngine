@@ -11,9 +11,8 @@ using StasisEditor.Controllers;
 
 namespace StasisEditor.Models
 {
-    public class EditorBlueprintScrap : EditorItem
+    public class EditorBlueprintScrap
     {
-        private ItemController _itemController;
         private BlueprintScrapItemResource _blueprintScrapResource;
         private List<EditorBlueprintSocket> _sockets;
         private Texture2D _texture;
@@ -46,10 +45,8 @@ namespace StasisEditor.Models
         [DisplayName("Blueprint Tag")]
         public string blueprintTag { get { return _blueprintScrapResource.blueprintTag; } set { _blueprintScrapResource.blueprintTag = value; } }
 
-        public EditorBlueprintScrap(ItemController itemController, ItemResource resource) 
-            : base(resource)
+        public EditorBlueprintScrap(ItemResource resource) 
         {
-            _itemController = itemController;
             _blueprintScrapResource = resource as BlueprintScrapItemResource;
 
             // Load texture
@@ -68,20 +65,21 @@ namespace StasisEditor.Models
         // initializeSockets -- Must be done after all scraps are initialized
         public void initializeSockets()
         {
+            throw new NotImplementedException();
+
             // Initialize sockets
             _sockets = new List<EditorBlueprintSocket>();
             foreach (BlueprintSocketResource socketResource in _blueprintScrapResource.sockets)
             {
                 // Find scrap A
-                EditorBlueprintScrap scrapA = _itemController.getItem(socketResource.scrapTagA) as EditorBlueprintScrap;
+                //EditorBlueprintScrap scrapA = _itemController.getItem(socketResource.scrapTagA) as EditorBlueprintScrap;
 
                 // Find scrap B
-                EditorBlueprintScrap scrapB = _itemController.getItem(socketResource.scrapTagB) as EditorBlueprintScrap;
+                //EditorBlueprintScrap scrapB = _itemController.getItem(socketResource.scrapTagB) as EditorBlueprintScrap;
 
                 // Create socket
-                _sockets.Add(new EditorBlueprintSocket(scrapA, scrapB, socketResource));
+                //_sockets.Add(new EditorBlueprintSocket(scrapA, scrapB, socketResource));
             }
-            Console.WriteLine("Initialized {0} sockets on scrap: {1}", _sockets.Count, tag);
         }
 
         // hitTest -- http://www.ecse.rpi.edu/Homepages/wrf/Research/Short_Notes/pnpoly.html
@@ -104,7 +102,7 @@ namespace StasisEditor.Models
         }
 
         // toXML
-        public override XElement toXML()
+        public XElement toXML()
         {
             XElement scrapXML = _blueprintScrapResource.toXML();
             foreach (EditorBlueprintSocket socket in _sockets)

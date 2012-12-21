@@ -15,14 +15,12 @@ namespace StasisEditor.Views.Controls
 {
     public partial class EditBlueprintScrapSocketsButton : UserControl
     {
-        private ItemController _itemController;
-        private ItemView _itemView;
+        private EditorController _editorController;
         private List<EditorBlueprintScrap> _scraps;
 
-        public EditBlueprintScrapSocketsButton(ItemView itemView, List<EditorBlueprintScrap> scraps)
+        public EditBlueprintScrapSocketsButton(EditorController editorController, List<EditorBlueprintScrap> scraps)
         {
-            _itemController = itemView.getController();
-            _itemView = itemView;
+            _editorController = editorController;
             _scraps = scraps;
 
             InitializeComponent();
@@ -32,10 +30,11 @@ namespace StasisEditor.Views.Controls
         // Edit button clicked
         private void editSocketsButton_Click(object sender, EventArgs e)
         {
+            throw new NotImplementedException();
+
             // Validate scrap texture tags
             foreach (EditorBlueprintScrap scrap in _scraps)
             {
-                throw new NotImplementedException();
                 //Texture2D texture = StasisCore.Controllers.TextureController.getTexture(scrap.blueprintScrapResource.scrapTextureTag);
                 //if (texture == null)
                 //{
@@ -44,13 +43,14 @@ namespace StasisEditor.Views.Controls
                 //}
             }
 
+            /*
             // Unhook XNA from level view
             _itemController.unhookXNAFromLevel();
             _itemController.enableLevelXNAInput(false);
             _itemController.enableLevelXNADrawing(false);
 
             // Create view
-            EditBlueprintScrapSocketsView editSocketsView = new EditBlueprintScrapSocketsView(_itemView, _scraps);
+            EditBlueprintScrapSocketsView editSocketsView = new EditBlueprintScrapSocketsView(_scraps);
             _itemView.setEditBlueprintScrapSocketsView(editSocketsView);
 
             // Open view
@@ -66,6 +66,7 @@ namespace StasisEditor.Views.Controls
             _itemController.hookXNAToLevel();
             _itemController.enableLevelXNAInput(true);
             _itemController.enableLevelXNADrawing(true);
+            */
         }
     }
 }

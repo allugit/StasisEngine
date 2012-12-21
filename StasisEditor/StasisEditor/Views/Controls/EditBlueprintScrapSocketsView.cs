@@ -16,8 +16,6 @@ namespace StasisEditor.Views.Controls
 {
     public partial class EditBlueprintScrapSocketsView : Form
     {
-        private ItemView _itemView;
-        private ItemController _itemController;
         private List<EditorBlueprintScrap> _scraps;
         private SpriteBatch _spriteBatch;
         private Texture2D _pixel;
@@ -25,10 +23,8 @@ namespace StasisEditor.Views.Controls
         private EditorBlueprintScrap _selectedScrap;
         private EditorBlueprintScrap _socketTargetA;
 
-        public EditBlueprintScrapSocketsView(ItemView itemView, List<EditorBlueprintScrap> scraps)
+        public EditBlueprintScrapSocketsView(List<EditorBlueprintScrap> scraps)
         {
-            _itemView = itemView;
-            _itemController = itemView.getController();
             _scraps = scraps;
             _spriteBatch = XNAResources.spriteBatch;
             _pixel = XNAResources.pixel;
@@ -42,7 +38,7 @@ namespace StasisEditor.Views.Controls
             Resize += new EventHandler(EditBlueprintScrapSocketsView_Resize);
 
             // Initial resize
-            _itemController.resizeGraphicsDevice(pictureBox.Width, pictureBox.Height);
+            //_itemController.resizeGraphicsDevice(pictureBox.Width, pictureBox.Height);
         }
 
         // updateMousePosition
@@ -114,7 +110,7 @@ namespace StasisEditor.Views.Controls
         // Form resized
         void EditBlueprintScrapSocketsView_Resize(object sender, EventArgs e)
         {
-            _itemController.resizeGraphicsDevice(pictureBox.Width, pictureBox.Height);
+            //_itemController.resizeGraphicsDevice(pictureBox.Width, pictureBox.Height);
         }
 
         // Cancel clicked
@@ -167,6 +163,8 @@ namespace StasisEditor.Views.Controls
                 }
                 else
                 {
+                    throw new NotImplementedException();
+                    /*
                     // Create socket on first target
                     //BlueprintSocketResource firstSocket = new BlueprintSocketResource(_socketTargetA.blueprintScrapResource, target.blueprintScrapResource);
                     //_socketTargetA.blueprintScrapResource.sockets.Add(firstSocket);
@@ -183,7 +181,7 @@ namespace StasisEditor.Views.Controls
                     // Set opposing sockets
                     firstSocket.opposingSocket = secondSocket;
                     secondSocket.opposingSocket = firstSocket;
-
+                    */
                     // Clear socket target
                     _socketTargetA = null;
                 }

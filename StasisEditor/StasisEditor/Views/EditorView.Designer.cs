@@ -44,19 +44,13 @@
             this.levelView = new StasisEditor.Views.LevelView();
             this.materialsTab = new System.Windows.Forms.TabPage();
             this.materialView = new StasisEditor.Views.MaterialView();
-            this.texturesTab = new System.Windows.Forms.TabPage();
-            this.textureView = new StasisEditor.Views.TextureView();
-            this.itemsTab = new System.Windows.Forms.TabPage();
-            this.itemView = new StasisEditor.Views.ItemView();
-            this.scriptsTab = new System.Windows.Forms.TabPage();
+            this.blueprintsTab = new System.Windows.Forms.TabPage();
             ((System.ComponentModel.ISupportInitialize)(this.mainSplit)).BeginInit();
             this.mainSplit.Panel2.SuspendLayout();
             this.mainSplit.SuspendLayout();
             this.editorTabControl.SuspendLayout();
             this.levelTab.SuspendLayout();
             this.materialsTab.SuspendLayout();
-            this.texturesTab.SuspendLayout();
-            this.itemsTab.SuspendLayout();
             this.SuspendLayout();
             // 
             // mainMenu1
@@ -145,9 +139,7 @@
             // 
             this.editorTabControl.Controls.Add(this.levelTab);
             this.editorTabControl.Controls.Add(this.materialsTab);
-            this.editorTabControl.Controls.Add(this.texturesTab);
-            this.editorTabControl.Controls.Add(this.itemsTab);
-            this.editorTabControl.Controls.Add(this.scriptsTab);
+            this.editorTabControl.Controls.Add(this.blueprintsTab);
             this.editorTabControl.Dock = System.Windows.Forms.DockStyle.Fill;
             this.editorTabControl.Location = new System.Drawing.Point(0, 0);
             this.editorTabControl.Margin = new System.Windows.Forms.Padding(0);
@@ -195,52 +187,15 @@
             this.materialView.Size = new System.Drawing.Size(729, 541);
             this.materialView.TabIndex = 0;
             // 
-            // texturesTab
+            // blueprintsTab
             // 
-            this.texturesTab.Controls.Add(this.textureView);
-            this.texturesTab.Location = new System.Drawing.Point(4, 22);
-            this.texturesTab.Margin = new System.Windows.Forms.Padding(0);
-            this.texturesTab.Name = "texturesTab";
-            this.texturesTab.Size = new System.Drawing.Size(729, 541);
-            this.texturesTab.TabIndex = 2;
-            this.texturesTab.Text = "Textures";
-            this.texturesTab.UseVisualStyleBackColor = true;
-            // 
-            // textureView
-            // 
-            this.textureView.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.textureView.Location = new System.Drawing.Point(0, 0);
-            this.textureView.Margin = new System.Windows.Forms.Padding(0);
-            this.textureView.Name = "textureView";
-            this.textureView.Size = new System.Drawing.Size(729, 541);
-            this.textureView.TabIndex = 0;
-            // 
-            // itemsTab
-            // 
-            this.itemsTab.Controls.Add(this.itemView);
-            this.itemsTab.Location = new System.Drawing.Point(4, 22);
-            this.itemsTab.Name = "itemsTab";
-            this.itemsTab.Size = new System.Drawing.Size(729, 541);
-            this.itemsTab.TabIndex = 3;
-            this.itemsTab.Text = "Items";
-            this.itemsTab.UseVisualStyleBackColor = true;
-            // 
-            // itemView
-            // 
-            this.itemView.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.itemView.Location = new System.Drawing.Point(0, 0);
-            this.itemView.Name = "itemView";
-            this.itemView.Size = new System.Drawing.Size(729, 541);
-            this.itemView.TabIndex = 0;
-            // 
-            // scriptsTab
-            // 
-            this.scriptsTab.Location = new System.Drawing.Point(4, 22);
-            this.scriptsTab.Name = "scriptsTab";
-            this.scriptsTab.Size = new System.Drawing.Size(729, 541);
-            this.scriptsTab.TabIndex = 4;
-            this.scriptsTab.Text = "Scripts";
-            this.scriptsTab.UseVisualStyleBackColor = true;
+            this.blueprintsTab.Location = new System.Drawing.Point(4, 22);
+            this.blueprintsTab.Name = "blueprintsTab";
+            this.blueprintsTab.Padding = new System.Windows.Forms.Padding(3);
+            this.blueprintsTab.Size = new System.Drawing.Size(729, 541);
+            this.blueprintsTab.TabIndex = 2;
+            this.blueprintsTab.Text = "Blueprints";
+            this.blueprintsTab.UseVisualStyleBackColor = true;
             // 
             // EditorView
             // 
@@ -258,8 +213,6 @@
             this.editorTabControl.ResumeLayout(false);
             this.levelTab.ResumeLayout(false);
             this.materialsTab.ResumeLayout(false);
-            this.texturesTab.ResumeLayout(false);
-            this.itemsTab.ResumeLayout(false);
             this.ResumeLayout(false);
 
         }
@@ -279,13 +232,9 @@
         private System.Windows.Forms.TabControl editorTabControl;
         private System.Windows.Forms.TabPage levelTab;
         private System.Windows.Forms.TabPage materialsTab;
-        private System.Windows.Forms.TabPage texturesTab;
         private MaterialView materialView;
-        private TextureView textureView;
-        private System.Windows.Forms.TabPage itemsTab;
-        private System.Windows.Forms.TabPage scriptsTab;
         private LevelView levelView;
-        private ItemView itemView;
+        private System.Windows.Forms.TabPage blueprintsTab;
 
     }
 }

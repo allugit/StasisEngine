@@ -6,7 +6,7 @@ using StasisCore.Resources;
 
 namespace StasisEditor.Models
 {
-    public class EditorBlueprint : EditorItem
+    public class EditorBlueprint
     {
         private BlueprintItemResource _blueprintResource;
 
@@ -18,13 +18,13 @@ namespace StasisEditor.Models
         public string itemTag { get { return _blueprintResource.itemTag; } set { _blueprintResource.itemTag = value; } }
 
         public EditorBlueprint(ItemResource resource)
-            : base(resource)
+            : base()
         {
             _blueprintResource = resource as BlueprintItemResource;
         }
 
         // toXML
-        public override XElement toXML()
+        public XElement toXML()
         {
             return _blueprintResource.toXML();
         }

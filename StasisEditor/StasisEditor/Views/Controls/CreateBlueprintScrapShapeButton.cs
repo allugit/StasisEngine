@@ -16,13 +16,9 @@ namespace StasisEditor.Views.Controls
     public partial class CreateBlueprintScrapShapeButton : UserControl
     {
         EditorBlueprintScrap _scrap;
-        ItemView _itemView;
-        ItemController _itemController;
 
-        public CreateBlueprintScrapShapeButton(ItemView itemView, EditorBlueprintScrap scrap)
+        public CreateBlueprintScrapShapeButton(EditorBlueprintScrap scrap)
         {
-            _itemView = itemView;
-            _itemController = _itemView.getController();
             _scrap = scrap;
 
             InitializeComponent();

@@ -19,9 +19,7 @@ namespace StasisEditor.Controllers
 
         private XNAController _xnaController;
         private MaterialController _materialController;
-        private TextureController _textureController;
         private LevelController _levelController;
-        private ItemController _itemController;
 
         private EditorView _editorView;
         private ShapeRenderer _shapeRenderer;
@@ -39,12 +37,6 @@ namespace StasisEditor.Controllers
 
             // Create material controller
             _materialController = new MaterialController(this, _editorView.getMaterialView());
-
-            // Create texture controller
-            _textureController = new TextureController(this, _editorView.getTextureView());
-
-            // Create item controller
-            _itemController = new ItemController(this, _editorView.getItemView());
 
             // Create level controller
             _levelController = new LevelController(this, _editorView.getLevelView());
@@ -70,12 +62,6 @@ namespace StasisEditor.Controllers
         public void setActorToolbarEnabled(bool status)
         {
             _actorToolbar.Enabled = status;
-        }
-
-        // getItemController
-        public ItemController getItemController()
-        {
-            return _itemController;
         }
 
         // unhookXNAFromLevel
@@ -145,9 +131,6 @@ namespace StasisEditor.Controllers
         {
             // Level controller draw
             _levelController.handleXNADraw();
-
-            // Item controller draw
-            _itemController.handleXNADraw();
         }
 
         // update
@@ -159,9 +142,6 @@ namespace StasisEditor.Controllers
             
             // Level controller update
             _levelController.update();
-
-            // Item controller update
-            _itemController.update();
         }
 
         // exit

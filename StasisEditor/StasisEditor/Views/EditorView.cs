@@ -39,22 +39,10 @@ namespace StasisEditor.Views
             return materialView;
         }
 
-        // getTextureView
-        public TextureView getTextureView()
-        {
-            return textureView;
-        }
-
         // getLevelView
         public LevelView getLevelView()
         {
             return levelView;
-        }
-
-        // getItemView
-        public ItemView getItemView()
-        {
-            return itemView;
         }
 
         // getLevelContainerSize
