@@ -135,5 +135,27 @@ namespace StasisEditor.Views
                 MessageBox.Show(exception.Message, "Resource Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
         }
+
+        // Remove scrap
+        private void removeScrapButton_Click(object sender, EventArgs e)
+        {
+            System.Diagnostics.Debug.Assert(selectedScrap != null);
+
+            try
+            {
+                _controller.removeBlueprintScrap(selectedBlueprint, selectedScrap.uid);
+                //propertiesContainer.Controls.Clear();
+                removeScrapButton.Enabled = false;
+                scrapList.RefreshItems();
+            }
+            catch (InvalidResourceException exception)
+            {
+                MessageBox.Show(exception.Message, "Resource Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
+            catch (ResourceNotFoundException exception)
+            {
+                MessageBox.Show(exception.Message, "Resource Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
+        }
     }
 }

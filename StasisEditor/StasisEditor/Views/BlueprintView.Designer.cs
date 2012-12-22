@@ -89,6 +89,7 @@ namespace StasisEditor.Views
             this.removeScrapButton.TabIndex = 7;
             this.removeScrapButton.Text = "Remove";
             this.removeScrapButton.UseVisualStyleBackColor = true;
+            this.removeScrapButton.Click += new System.EventHandler(this.removeScrapButton_Click);
             // 
             // saveButton
             // 

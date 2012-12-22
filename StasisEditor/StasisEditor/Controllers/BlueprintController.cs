@@ -145,5 +145,23 @@ namespace StasisEditor.Controllers
                 System.Windows.Forms.MessageBox.Show(String.Format("Could not destroy resource.\n{0}", e.Message), "Resource Error", System.Windows.Forms.MessageBoxButtons.OK, System.Windows.Forms.MessageBoxIcon.Error);
             }
         }
+
+        // removeBlueprintScrap
+        public void removeBlueprintScrap(Blueprint blueprint, string uid)
+        {
+            BlueprintScrap scrapToRemove = null;
+            foreach (BlueprintScrap scrap in blueprint.scraps)
+            {
+                if (scrap.uid == uid)
+                {
+                    scrapToRemove = scrap;
+                    break;
+                }
+            }
+
+            System.Diagnostics.Debug.Assert(scrapToRemove != null);
+
+            blueprint.scraps.Remove(scrapToRemove);
+        }
     }
 }
