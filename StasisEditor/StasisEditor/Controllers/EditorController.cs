@@ -16,6 +16,7 @@ namespace StasisEditor.Controllers
         private XNAController _xnaController;
         private MaterialController _materialController;
         private LevelController _levelController;
+        private BlueprintController _blueprintController;
 
         private EditorView _editorView;
         private ShapeRenderer _shapeRenderer;
@@ -39,6 +40,9 @@ namespace StasisEditor.Controllers
 
             // Create level controller
             _levelController = new LevelController(this, _editorView.getLevelView());
+
+            // Create blueprint controller
+            _blueprintController = new BlueprintController(this, _editorView.getBlueprintView());
 
             // Create shape renderer
             _shapeRenderer = new ShapeRenderer(_levelController);

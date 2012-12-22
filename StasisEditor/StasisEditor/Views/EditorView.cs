@@ -46,6 +46,12 @@ namespace StasisEditor.Views
             return levelView;
         }
 
+        // getBlueprintView
+        public BlueprintView getBlueprintView()
+        {
+            return blueprintView;
+        }
+
         // getLevelContainerSize
         public System.Drawing.Point getLevelContainerSize()
         {

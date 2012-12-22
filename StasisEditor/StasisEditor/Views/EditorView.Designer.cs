@@ -45,12 +45,14 @@
             this.materialsTab = new System.Windows.Forms.TabPage();
             this.materialView = new StasisEditor.Views.MaterialView();
             this.blueprintsTab = new System.Windows.Forms.TabPage();
+            this.blueprintView = new StasisEditor.Views.BlueprintView();
             ((System.ComponentModel.ISupportInitialize)(this.mainSplit)).BeginInit();
             this.mainSplit.Panel2.SuspendLayout();
             this.mainSplit.SuspendLayout();
             this.editorTabControl.SuspendLayout();
             this.levelTab.SuspendLayout();
             this.materialsTab.SuspendLayout();
+            this.blueprintsTab.SuspendLayout();
             this.SuspendLayout();
             // 
             // mainMenu1
@@ -189,13 +191,23 @@
             // 
             // blueprintsTab
             // 
+            this.blueprintsTab.Controls.Add(this.blueprintView);
             this.blueprintsTab.Location = new System.Drawing.Point(4, 22);
+            this.blueprintsTab.Margin = new System.Windows.Forms.Padding(0);
             this.blueprintsTab.Name = "blueprintsTab";
-            this.blueprintsTab.Padding = new System.Windows.Forms.Padding(3);
             this.blueprintsTab.Size = new System.Drawing.Size(729, 541);
             this.blueprintsTab.TabIndex = 2;
             this.blueprintsTab.Text = "Blueprints";
             this.blueprintsTab.UseVisualStyleBackColor = true;
+            // 
+            // blueprintView
+            // 
+            this.blueprintView.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.blueprintView.Location = new System.Drawing.Point(0, 0);
+            this.blueprintView.Margin = new System.Windows.Forms.Padding(0);
+            this.blueprintView.Name = "blueprintView";
+            this.blueprintView.Size = new System.Drawing.Size(729, 541);
+            this.blueprintView.TabIndex = 0;
             // 
             // EditorView
             // 
@@ -213,6 +225,7 @@
             this.editorTabControl.ResumeLayout(false);
             this.levelTab.ResumeLayout(false);
             this.materialsTab.ResumeLayout(false);
+            this.blueprintsTab.ResumeLayout(false);
             this.ResumeLayout(false);
 
         }
@@ -235,6 +248,7 @@
         private MaterialView materialView;
         private LevelView levelView;
         private System.Windows.Forms.TabPage blueprintsTab;
+        private BlueprintView blueprintView;
 
     }
 }

@@ -96,6 +96,7 @@
     <Compile Include="Controllers\Actors\TerrainActorResourceController.cs" />
     <Compile Include="Controllers\Actors\CircleActorResourceController.cs" />
     <Compile Include="Controllers\Actors\TreeActorResourceController.cs" />
+    <Compile Include="Controllers\BlueprintController.cs" />
     <Compile Include="Controllers\Controller.cs" />
     <Compile Include="Controllers\EditorController.cs" />
     <Compile Include="Controllers\LevelController.cs" />
@@ -104,6 +105,12 @@
     <Compile Include="Models\Items\EditorBlueprint.cs" />
     <Compile Include="Models\Items\EditorBlueprintScrap.cs" />
     <Compile Include="Models\Items\EditorBlueprintSocket.cs" />
+    <Compile Include="Views\BlueprintView.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="Views\BlueprintView.Designer.cs">
+      <DependentUpon>BlueprintView.cs</DependentUpon>
+    </Compile>
     <Compile Include="Views\Controls\ActorToolbar.cs">
       <SubType>UserControl</SubType>
     </Compile>
@@ -276,6 +283,9 @@
     </BootstrapperPackage>
   </ItemGroup>
   <ItemGroup>
+    <EmbeddedResource Include="Views\BlueprintView.resx">
+      <DependentUpon>BlueprintView.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="Views\Controls\ActorToolbar.resx">
       <DependentUpon>ActorToolbar.cs</DependentUpon>
     </EmbeddedResource>
