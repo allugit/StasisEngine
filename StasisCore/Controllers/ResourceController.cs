@@ -31,8 +31,8 @@ namespace StasisCore.Controllers
         public static string levelPath { get { return String.Format("{0}\\levels", RESOURCE_PATH); } }
         public static string materialPath { get { return String.Format("{0}\\materials.xml", RESOURCE_PATH); } }
         public static string itemPath { get { return String.Format("{0}\\items.xml", RESOURCE_PATH); } }
-        public static string characterPath { get { return String.Format("{0}\\materials.xml", RESOURCE_PATH); } }
-        public static string dialoguePath { get { return String.Format("{0}\\materials.xml", RESOURCE_PATH); } }
+        public static string characterPath { get { return String.Format("{0}\\characters.xml", RESOURCE_PATH); } }
+        public static string dialoguePath { get { return String.Format("{0}\\dialogues.xml", RESOURCE_PATH); } }
 
         // Initialize -- Called once when the application starts
         public static void initialize(GraphicsDevice graphicsDevice)
