@@ -1,11 +1,13 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel;
-using System.Drawing;
+//using System.Drawing;
 using System.Data;
 using System.Linq;
 using System.Text;
 using System.Windows.Forms;
+using Microsoft.Xna.Framework;
+using StasisCore.Controllers;
 using StasisCore.Models;
 using StasisCore.Resources;
 using StasisEditor.Controllers;
@@ -155,6 +157,25 @@ namespace StasisEditor.Views
             catch (ResourceNotFoundException exception)
             {
                 MessageBox.Show(exception.Message, "Resource Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
+        }
+
+        // Edit scrap shape
+        private void defineShapeButton_Click(object sender, EventArgs e)
+        {
+            System.Diagnostics.Debug.Assert(selectedScrap != null);
+
+            try
+            {
+                EditBlueprintScrapShape editScrapView = new EditBlueprintScrapShape(ResourceController.getTexture(selectedScrap.scrapTextureUID), selectedScrap);
+                if (editScrapView.ShowDialog() == DialogResult.OK)
+                {
+                    selectedScrap.points = editScrapView.getPoints();
+                }
+            }
+            catch (ResourceNotFoundException ex)
+            {
+                MessageBox.Show(ex.Message, "Resource Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
         }
     }

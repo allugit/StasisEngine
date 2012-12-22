@@ -111,6 +111,7 @@ namespace StasisEditor.Views
             this.defineShapeButton.TabIndex = 9;
             this.defineShapeButton.Text = "Define Scrap Shape";
             this.defineShapeButton.UseVisualStyleBackColor = true;
+            this.defineShapeButton.Click += new System.EventHandler(this.defineShapeButton_Click);
             // 
             // arrangeScrapsButton
             // 
