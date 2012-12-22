@@ -10,6 +10,7 @@ using System.Windows.Forms;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using StasisCore.Resources;
+using StasisCore.Models;
 using StasisEditor.Controllers;
 using StasisEditor.Models;
 
@@ -17,7 +18,7 @@ namespace StasisEditor.Views.Controls
 {
     public partial class EditBlueprintScrapShape : Form
     {
-        private EditorBlueprintScrap _scrap;
+        private BlueprintScrap _scrap;
         private SpriteBatch _spriteBatch;
         private Texture2D _pixel;
         private Texture2D _texture;
@@ -25,7 +26,7 @@ namespace StasisEditor.Views.Controls
         private Vector2 _mouse;
         private List<Vector2> _points;
 
-        public EditBlueprintScrapShape(Texture2D texture, EditorBlueprintScrap scrap)
+        public EditBlueprintScrapShape(Texture2D texture, BlueprintScrap scrap)
         {
             _texture = texture;
             _textureCenter = new Vector2(_texture.Width, _texture.Height) / 2;

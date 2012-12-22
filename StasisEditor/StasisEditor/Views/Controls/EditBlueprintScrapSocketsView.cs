@@ -9,6 +9,7 @@ using System.Windows.Forms;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using StasisCore.Resources;
+using StasisCore.Models;
 using StasisEditor.Controllers;
 using StasisEditor.Models;
 
@@ -16,16 +17,16 @@ namespace StasisEditor.Views.Controls
 {
     public partial class EditBlueprintScrapSocketsView : Form
     {
-        private List<EditorBlueprintScrap> _scraps;
+        private Blueprint _blueprint;
         private SpriteBatch _spriteBatch;
         private Texture2D _pixel;
         private Vector2 _mouse;
-        private EditorBlueprintScrap _selectedScrap;
-        private EditorBlueprintScrap _socketTargetA;
+        private BlueprintScrap _selectedScrap;
+        private BlueprintScrap _socketTargetA;
 
-        public EditBlueprintScrapSocketsView(List<EditorBlueprintScrap> scraps)
+        public EditBlueprintScrapSocketsView(Blueprint blueprint)
         {
-            _scraps = scraps;
+            _blueprint = blueprint;
             _spriteBatch = XNAResources.spriteBatch;
             _pixel = XNAResources.pixel;
 
@@ -57,7 +58,7 @@ namespace StasisEditor.Views.Controls
 
             // Move selected scrap
             if (_selectedScrap != null)
-                _selectedScrap.position += new Vector2(deltaX, deltaY);
+                _selectedScrap.currentCraftPosition += new Vector2(deltaX, deltaY);
 
             // Store screen space mouse coordinates
             _mouse.X = x;
@@ -68,17 +69,16 @@ namespace StasisEditor.Views.Controls
         public void handleXNADraw()
         {
             // Draw scraps
-            for (int i = _scraps.Count - 1; i >= 0; i--)
-                _spriteBatch.Draw(_scraps[i].texture, _scraps[i].position, _scraps[i].texture.Bounds, Color.White, 0f, _scraps[i].textureCenter, 1f, SpriteEffects.None, 0);
+            for (int i = _blueprint.scraps.Count - 1; i >= 0; i--)
+                _spriteBatch.Draw(_blueprint.scraps[i].scrapTexture, _blueprint.scraps[i].currentCraftPosition, _blueprint.scraps[i].scrapTexture.Bounds, Color.White, 0f, _blueprint.scraps[i].textureCenter, 1f, SpriteEffects.None, 0);
 
             // Draw scrap sockets
-            foreach (EditorBlueprintScrap scrap in _scraps)
+            foreach (BlueprintSocket socket in _blueprint.sockets)
             {
-                foreach (EditorBlueprintSocket socket in scrap.sockets)
-                    drawLine(
-                        socket.scrapA.blueprintScrapResource.craftingPosition,
-                        socket.scrapA.blueprintScrapResource.craftingPosition + socket.socketResource.relativePoint,
-                        Color.Green);
+                drawLine(
+                    socket.scrapA.currentCraftPosition,
+                    socket.scrapA.currentCraftPosition + socket.relativePoint,
+                    Color.Green);
             }
 
             // Draw mouse position
@@ -87,7 +87,7 @@ namespace StasisEditor.Views.Controls
             if (_socketTargetA != null)
             {
                 // Draw socket line
-                drawLine(_socketTargetA.position, _mouse, Color.Blue);
+                drawLine(_socketTargetA.currentCraftPosition, _mouse, Color.Blue);
             }
         }
 
@@ -131,12 +131,12 @@ namespace StasisEditor.Views.Controls
         private void pictureBox_MouseDown(object sender, MouseEventArgs e)
         {
             // Hit test scraps
-            EditorBlueprintScrap target = null;
-            for (int i = 0; i < _scraps.Count; i++)
+            BlueprintScrap target = null;
+            for (int i = 0; i < _blueprint.scraps.Count; i++)
             {
-                if (_scraps[i].hitTest(_mouse))
+                if (_blueprint.scraps[i].hitTest(_mouse))
                 {
-                    target = _scraps[i];
+                    target = _blueprint.scraps[i];
                     break;
                 }
             }
@@ -163,25 +163,19 @@ namespace StasisEditor.Views.Controls
                 }
                 else
                 {
-                    throw new NotImplementedException();
-                    /*
                     // Create socket on first target
-                    //BlueprintSocketResource firstSocket = new BlueprintSocketResource(_socketTargetA.blueprintScrapResource, target.blueprintScrapResource);
-                    //_socketTargetA.blueprintScrapResource.sockets.Add(firstSocket);
-                    Vector2 relativePoint = target.position - _socketTargetA.position;
-                    EditorBlueprintSocket firstSocket = new EditorBlueprintSocket(_socketTargetA, target,  new BlueprintSocketResource(_socketTargetA.tag, target.tag, relativePoint));
-                    _socketTargetA.sockets.Add(firstSocket);
+                    Vector2 relativePoint = target.currentCraftPosition - _socketTargetA.currentCraftPosition;
+                    BlueprintSocket firstSocket = new BlueprintSocket(_socketTargetA, target, relativePoint);
+                    _blueprint.sockets.Add(firstSocket);
 
                     // Create socket on second target
-                    //BlueprintSocketResource secondSocket = new BlueprintSocketResource(target.blueprintScrapResource, _socketTargetA.blueprintScrapResource);
-                    //target.blueprintScrapResource.sockets.Add(secondSocket);
-                    EditorBlueprintSocket secondSocket = new EditorBlueprintSocket(target, _socketTargetA, new BlueprintSocketResource(target.tag, _socketTargetA.tag, -relativePoint));
-                    target.sockets.Add(secondSocket);
+                    BlueprintSocket secondSocket = new BlueprintSocket(target, _socketTargetA, -relativePoint);
+                    _blueprint.sockets.Add(secondSocket);
 
                     // Set opposing sockets
                     firstSocket.opposingSocket = secondSocket;
                     secondSocket.opposingSocket = firstSocket;
-                    */
+
                     // Clear socket target
                     _socketTargetA = null;
                 }

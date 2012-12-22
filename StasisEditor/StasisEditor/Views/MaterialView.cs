@@ -115,10 +115,10 @@ namespace StasisEditor.Views
         // Add material clicked
         private void addButton_Click(object sender, EventArgs e)
         {
-            CreateMaterialView createMaterialView = new CreateMaterialView();
-            if (createMaterialView.ShowDialog() == DialogResult.OK)
+            CreateResourceView createResourceView = new CreateResourceView();
+            if (createResourceView.ShowDialog() == DialogResult.OK)
             {
-                _controller.createMaterial(createMaterialView.uid);
+                _controller.createMaterial(createResourceView.uid);
                 materialsListBox.RefreshItems();
             }
         }

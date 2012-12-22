@@ -7,7 +7,9 @@ using System.Linq;
 using System.Text;
 using System.Windows.Forms;
 using Microsoft.Xna.Framework.Graphics;
+using StasisCore.Controllers;
 using StasisCore.Resources;
+using StasisCore.Models;
 using StasisEditor.Controllers;
 using StasisEditor.Models;
 
@@ -16,12 +18,13 @@ namespace StasisEditor.Views.Controls
     public partial class EditBlueprintScrapSocketsButton : UserControl
     {
         private EditorController _editorController;
-        private List<EditorBlueprintScrap> _scraps;
+        private Blueprint _blueprint;
+        private BlueprintView _view;
 
-        public EditBlueprintScrapSocketsButton(EditorController editorController, List<EditorBlueprintScrap> scraps)
+        public EditBlueprintScrapSocketsButton(EditorController editorController, Blueprint blueprint)
         {
             _editorController = editorController;
-            _scraps = scraps;
+            _blueprint = blueprint;
 
             InitializeComponent();
             Dock = DockStyle.Top;
@@ -33,25 +36,23 @@ namespace StasisEditor.Views.Controls
             throw new NotImplementedException();
 
             // Validate scrap texture tags
-            foreach (EditorBlueprintScrap scrap in _scraps)
+            foreach (BlueprintScrap scrap in _blueprint.scraps)
             {
-                //Texture2D texture = StasisCore.Controllers.TextureController.getTexture(scrap.blueprintScrapResource.scrapTextureTag);
-                //if (texture == null)
-                //{
-                //    MessageBox.Show(string.Format("Could not load the texture for scrap [{0}]", scrap.blueprintScrapResource.scrapTextureTag));
-                //    return;
-                //}
+                if (!ResourceController.exists(scrap.scrapTextureUID))
+                {
+                    MessageBox.Show(string.Format("Could not load the texture for scrap [{0}]", scrap.scrapTextureUID));
+                    return;
+                }
             }
 
-            /*
             // Unhook XNA from level view
-            _itemController.unhookXNAFromLevel();
-            _itemController.enableLevelXNAInput(false);
-            _itemController.enableLevelXNADrawing(false);
+            _editorController.unhookXNAFromLevel();
+            _editorController.enableLevelXNAInput(false);
+            _editorController.enableLevelXNADrawing(false);
 
             // Create view
-            EditBlueprintScrapSocketsView editSocketsView = new EditBlueprintScrapSocketsView(_scraps);
-            _itemView.setEditBlueprintScrapSocketsView(editSocketsView);
+            EditBlueprintScrapSocketsView editSocketsView = new EditBlueprintScrapSocketsView(_blueprint);
+            _view.setEditBlueprintScrapSocketsView(editSocketsView);
 
             // Open view
             if (editSocketsView.ShowDialog() == DialogResult.OK)
@@ -60,13 +61,12 @@ namespace StasisEditor.Views.Controls
             }
 
             // Clean up view
-            _itemView.setEditBlueprintScrapSocketsView(null);
+            _view.setEditBlueprintScrapSocketsView(null);
 
             // Hook XNA to level view
-            _itemController.hookXNAToLevel();
-            _itemController.enableLevelXNAInput(true);
-            _itemController.enableLevelXNADrawing(true);
-            */
+            _editorController.hookXNAToLevel();
+            _editorController.enableLevelXNAInput(true);
+            _editorController.enableLevelXNADrawing(true);
         }
     }
 }

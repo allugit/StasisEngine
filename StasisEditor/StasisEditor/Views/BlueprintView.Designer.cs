@@ -73,6 +73,7 @@
             this.addBlueprintButton.TabIndex = 4;
             this.addBlueprintButton.Text = "Add";
             this.addBlueprintButton.UseVisualStyleBackColor = true;
+            this.addBlueprintButton.Click += new System.EventHandler(this.addBlueprintButton_Click);
             // 
             // removeBlueprintButton
             // 

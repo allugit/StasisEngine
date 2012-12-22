@@ -7,13 +7,14 @@ using System.Linq;
 using System.Text;
 using System.Windows.Forms;
 using StasisCore.Resources;
+using StasisCore.Models;
 using StasisEditor.Models;
 
 namespace StasisEditor.Views.Controls
 {
     public partial class ViewBlueprintAssociateScraps : UserControl
     {
-        public ViewBlueprintAssociateScraps(List<EditorBlueprintScrap> scraps)
+        public ViewBlueprintAssociateScraps(List<BlueprintScrap> scraps)
         {
             InitializeComponent();
             Dock = DockStyle.Top;

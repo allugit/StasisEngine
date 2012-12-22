@@ -9,15 +9,16 @@ using System.Windows.Forms;
 using Microsoft.Xna.Framework.Graphics;
 using StasisEditor.Controllers;
 using StasisCore.Resources;
+using StasisCore.Models;
 using StasisEditor.Models;
 
 namespace StasisEditor.Views.Controls
 {
     public partial class CreateBlueprintScrapShapeButton : UserControl
     {
-        EditorBlueprintScrap _scrap;
+        BlueprintScrap _scrap;
 
-        public CreateBlueprintScrapShapeButton(EditorBlueprintScrap scrap)
+        public CreateBlueprintScrapShapeButton(BlueprintScrap scrap)
         {
             _scrap = scrap;
 

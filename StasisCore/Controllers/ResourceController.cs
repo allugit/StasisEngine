@@ -239,20 +239,26 @@ namespace StasisCore.Controllers
         }
 
         // Load items
-        public static void loadItems()
+        public static List<ResourceObject> loadItems(string type = "")
         {
             _itemResources.Clear();
 
+            List<ResourceObject> resourcesLoaded = new List<ResourceObject>();
             using (FileStream fs = new FileStream(itemPath, FileMode.Open))
             {
                 XElement data = XElement.Load(fs);
 
                 foreach (XElement itemData in data.Elements("Item"))
                 {
-                    ResourceObject resource = new ResourceObject(itemData);
-                    _itemResources[resource.uid] = resource;
+                    if (type == "" || type == itemData.Attribute("type").Value)
+                    {
+                        ResourceObject resource = new ResourceObject(itemData);
+                        _itemResources[resource.uid] = resource;
+                        resourcesLoaded.Add(resource);
+                    }
                 }
             }
+            return resourcesLoaded;
         }
 
         // Load characters

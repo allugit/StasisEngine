@@ -61,6 +61,10 @@
   <ItemGroup>
     <Compile Include="Controllers\ResourceController.cs" />
     <Compile Include="Enumerations.cs" />
+    <Compile Include="Models\Blueprint.cs" />
+    <Compile Include="Models\BlueprintScrap.cs" />
+    <Compile Include="Models\BlueprintSocket.cs" />
+    <Compile Include="Models\Item.cs" />
     <Compile Include="Models\Level.cs" />
     <Compile Include="Models\Material.cs" />
     <Compile Include="Models\MaterialGroupLayer.cs" />
@@ -90,15 +94,6 @@
     <Compile Include="Resources\Exceptions\DuplicateResourceException.cs" />
     <Compile Include="Resources\Exceptions\InvalidResourceException.cs" />
     <Compile Include="Resources\Exceptions\ResourceNotFoundException.cs" />
-    <Compile Include="Resources\Items\BlueprintItemResource.cs" />
-    <Compile Include="Resources\Items\BlueprintScrapItemResource.cs" />
-    <Compile Include="Resources\Items\BlueprintSocketResource.cs" />
-    <Compile Include="Resources\Items\GravityGunItemResource.cs" />
-    <Compile Include="Resources\Items\GrenadeItemResource.cs" />
-    <Compile Include="Resources\Items\HealthPotionItemResource.cs" />
-    <Compile Include="Resources\Items\ItemResource.cs" />
-    <Compile Include="Resources\Items\RopeGunItemResource.cs" />
-    <Compile Include="Resources\Items\TreeSeedItemResource.cs" />
     <Compile Include="Resources\ResourceObject.cs" />
     <Compile Include="Resources\XmlLoadHelper.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

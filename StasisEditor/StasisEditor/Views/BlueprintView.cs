@@ -7,12 +7,13 @@ using System.Linq;
 using System.Text;
 using System.Windows.Forms;
 using StasisEditor.Controllers;
+using StasisEditor.Views.Controls;
 
 namespace StasisEditor.Views
 {
     public partial class BlueprintView : UserControl
     {
-        private BlueprintController _blueprintController;
+        private BlueprintController _controller;
 
         public BlueprintView()
         {
@@ -22,7 +23,17 @@ namespace StasisEditor.Views
         // Set controller
         public void setController(BlueprintController controller)
         {
-            _blueprintController = controller;
+            _controller = controller;
+        }
+
+        // Add blueprint
+        private void addBlueprintButton_Click(object sender, EventArgs e)
+        {
+            CreateResourceView createResourceView = new CreateResourceView();
+            if (createResourceView.ShowDialog() == DialogResult.OK)
+            {
+                _controller.createBlueprint(createResourceView.uid);
+            }
         }
     }
 }
