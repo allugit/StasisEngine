@@ -11,10 +11,10 @@ namespace StasisCore.Models
         private float _multiplier;
         private LayerBlendType _blendType;
 
-        public string textureUID { get { return _textureUID; } }
-        public float scale { get { return _scale; } }
-        public float multiplier { get { return _multiplier; } }
-        public LayerBlendType blendType { get { return _blendType; } }
+        public string textureUID { get { return _textureUID; } set { _textureUID = value; } }
+        public float scale { get { return _scale; } set { _scale = value; } }
+        public float multiplier { get { return _multiplier; } set { _multiplier = value; } }
+        public LayerBlendType blendType { get { return _blendType; } set { _blendType = value; } }
 
         // Create new
         public MaterialTextureLayer()

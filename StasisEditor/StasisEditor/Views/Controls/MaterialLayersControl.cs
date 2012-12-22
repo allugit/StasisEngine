@@ -196,6 +196,12 @@ namespace StasisEditor.Views.Controls
                 // Refresh tree view
                 populateTreeView(_material.rootLayer);
 
+                // Select different layer
+                if (parent.layers.Count > 0)
+                    selectLayer(parent.layers[parent.layers.Count - 1]);
+                else
+                    selectLayer(parent);
+
                 // Set changes made
                 _controller.setChangesMade(true);
             }

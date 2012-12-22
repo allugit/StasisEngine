@@ -10,8 +10,8 @@ namespace StasisCore.Models
         private float _multiplier;
         private List<MaterialLayer> _layers;
 
-        public LayerBlendType blendType { get { return _blendType; } }
-        public float multiplier { get { return _multiplier; } }
+        public LayerBlendType blendType { get { return _blendType; } set { _blendType = value; } }
+        public float multiplier { get { return _multiplier; } set { _multiplier = value; } }
         public List<MaterialLayer> layers { get { return _layers; } }
 
         // Create new
