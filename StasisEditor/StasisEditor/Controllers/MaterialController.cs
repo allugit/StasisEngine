@@ -76,6 +76,16 @@ namespace StasisEditor.Controllers
         // createMaterial
         public void createMaterial(string uid)
         {
+            // Check unsaved materials
+            foreach (Material m in _materials)
+            {
+                if (m.uid == uid)
+                {
+                    System.Windows.Forms.MessageBox.Show(String.Format("An unsaved resource material with the uid [{0}] already exists.", uid), "Material Error", System.Windows.Forms.MessageBoxButtons.OK);
+                    return;
+                }
+            }
+
             Material material = new Material(uid);
             _materials.Add(material);
         }

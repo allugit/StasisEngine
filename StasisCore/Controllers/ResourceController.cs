@@ -16,8 +16,6 @@ namespace StasisCore.Controllers
     public class ResourceController
     {
         public const string RESOURCE_PATH = @"E:\StasisResources";
-        public const string LEVEL_PATH =    @"E:\StasisResources\levels";
-        public const string TEXTURE_PATH =  @"E:\StasisResources\textures";
 
         private static GraphicsDevice _graphicsDevice;
         private static Dictionary<string, ResourceObject> _materialResources;
@@ -26,6 +24,13 @@ namespace StasisCore.Controllers
         private static Dictionary<string, ResourceObject> _dialogueResources;
         private static Dictionary<string, ResourceObject> _levelResources;
         private static Dictionary<string, Texture2D> _cachedTextures;
+
+        public static string texturePath { get { return String.Format("{0}\\textures", RESOURCE_PATH); } }
+        public static string levelPath { get { return String.Format("{0}\\levels", RESOURCE_PATH); } }
+        public static string materialPath { get { return String.Format("{0}\\materials.xml", RESOURCE_PATH); } }
+        public static string itemPath { get { return String.Format("{0}\\items.xml", RESOURCE_PATH); } }
+        public static string characterPath { get { return String.Format("{0}\\materials.xml", RESOURCE_PATH); } }
+        public static string dialoguePath { get { return String.Format("{0}\\materials.xml", RESOURCE_PATH); } }
 
         // Initialize -- Called once when the application starts
         public static void initialize(GraphicsDevice graphicsDevice)
@@ -79,7 +84,7 @@ namespace StasisCore.Controllers
                     return true;
 
                 // Check materials
-                using (FileStream fs = new FileStream(String.Format("{0}\\materials.xml", RESOURCE_PATH), FileMode.Open))
+                using (FileStream fs = new FileStream(materialPath, FileMode.Open))
                 {
                     XElement data = XElement.Load(fs);
                     foreach (XElement materialData in data.Elements("Material"))
@@ -90,7 +95,7 @@ namespace StasisCore.Controllers
                 }
 
                 // Check items
-                using (FileStream fs = new FileStream(String.Format("{0}\\items.xml", RESOURCE_PATH), FileMode.Open))
+                using (FileStream fs = new FileStream(itemPath, FileMode.Open))
                 {
                     XElement data = XElement.Load(fs);
                     foreach (XElement itemData in data.Elements("Item"))
@@ -101,7 +106,7 @@ namespace StasisCore.Controllers
                 }
 
                 // Check characters
-                using (FileStream fs = new FileStream(String.Format("{0}\\characters.xml", RESOURCE_PATH), FileMode.Open))
+                using (FileStream fs = new FileStream(characterPath, FileMode.Open))
                 {
                     XElement data = XElement.Load(fs);
                     foreach (XElement characterData in data.Elements("Character"))
@@ -112,7 +117,7 @@ namespace StasisCore.Controllers
                 }
 
                 // Check dialogue
-                using (FileStream fs = new FileStream(String.Format("{0}\\dialogue.xml", RESOURCE_PATH), FileMode.Open))
+                using (FileStream fs = new FileStream(dialoguePath, FileMode.Open))
                 {
                     XElement data = XElement.Load(fs);
                     foreach (XElement dialogueData in data.Elements("Dialogue"))
@@ -137,66 +142,39 @@ namespace StasisCore.Controllers
         // Destroy a resource
         public static void destroy(string uid)
         {
-            // TEMPORARY -- Make this method actually save changes
-            throw new NotImplementedException();
-
             try
             {
-                // Check materials
-                using (FileStream fs = new FileStream(String.Format("{0}\\materials.xml", RESOURCE_PATH), FileMode.Open))
-                {
-                    XElement data = XElement.Load(fs);
-                    foreach (XElement materialData in data.Elements("Material"))
+                // XML helper method
+                Func<string, string, string, bool> updateXml = (string filePath, string parentElement, string element) =>
                     {
-                        if (materialData.Attribute("uid").Value == uid)
+                        XDocument doc = XDocument.Load(filePath);
+                        foreach (XElement data in doc.Element(parentElement).Elements(element))
                         {
-                            materialData.Remove();
-                            return;
+                            if (data.Attribute("uid").Value == uid)
+                            {
+                                data.Remove();
+                                doc.Save(filePath);
+                                return true;
+                            }
                         }
-                    }
-                }
+                        return false;
+                    };
 
-                // Check items
-                using (FileStream fs = new FileStream(String.Format("{0}\\items.xml", RESOURCE_PATH), FileMode.Open))
-                {
-                    XElement data = XElement.Load(fs);
-                    foreach (XElement itemData in data.Elements("Item"))
-                    {
-                        if (itemData.Attribute("uid").Value == uid)
-                        {
-                            itemData.Remove();
-                            return;
-                        }
-                    }
-                }
+                // Materials
+                if (updateXml(materialPath, "Materials", "Material"))
+                    return;
 
-                // Check characters
-                using (FileStream fs = new FileStream(String.Format("{0}\\characters.xml", RESOURCE_PATH), FileMode.Open))
-                {
-                    XElement data = XElement.Load(fs);
-                    foreach (XElement characterData in data.Elements("Character"))
-                    {
-                        if (characterData.Attribute("uid").Value == uid)
-                        {
-                            characterData.Remove();
-                            return;
-                        }
-                    }
-                }
+                // Items
+                if (updateXml(itemPath, "Items", "Item"))
+                    return;
 
-                // Check dialogue
-                using (FileStream fs = new FileStream(String.Format("{0}\\dialogue.xml", RESOURCE_PATH), FileMode.Open))
-                {
-                    XElement data = XElement.Load(fs);
-                    foreach (XElement dialogueData in data.Elements("Dialogue"))
-                    {
-                        if (dialogueData.Attribute("uid").Value == uid)
-                        {
-                            dialogueData.Remove();
-                            return;
-                        }
-                    }
-                }
+                // Characters
+                if (updateXml(characterPath, "Characters", "Character"))
+                    return;
+
+                // Dialogue
+                if (updateXml(dialoguePath, "Dialogues", "Dialogue"))
+                    return;
             }
             catch (XmlException e)
             {
@@ -211,7 +189,7 @@ namespace StasisCore.Controllers
             if (!_cachedTextures.TryGetValue(textureUID, out texture))
             {
                 // Find file
-                string[] textureFiles = Directory.GetFiles(TEXTURE_PATH, String.Format("{0}.*", textureUID));
+                string[] textureFiles = Directory.GetFiles(texturePath, String.Format("{0}.*", textureUID));
                 if (textureFiles.Length == 0)
                     throw new ResourceNotFoundException(textureUID);
 
@@ -231,7 +209,7 @@ namespace StasisCore.Controllers
             _materialResources.Clear();
 
             List<ResourceObject> resourcesLoaded = new List<ResourceObject>();
-            using (FileStream fs = new FileStream(String.Format("{0}\\materials.xml", RESOURCE_PATH), FileMode.Open))
+            using (FileStream fs = new FileStream(materialPath, FileMode.Open))
             {
                 XElement data = XElement.Load(fs);
 
@@ -251,7 +229,7 @@ namespace StasisCore.Controllers
         {
             _itemResources.Clear();
 
-            using (FileStream fs = new FileStream(String.Format("{0}\\items.xml", RESOURCE_PATH), FileMode.Open))
+            using (FileStream fs = new FileStream(itemPath, FileMode.Open))
             {
                 XElement data = XElement.Load(fs);
 
@@ -268,7 +246,7 @@ namespace StasisCore.Controllers
         {
             _characterResources.Clear();
 
-            using (FileStream fs = new FileStream(String.Format("{0}\\characters.xml", RESOURCE_PATH), FileMode.Open))
+            using (FileStream fs = new FileStream(characterPath, FileMode.Open))
             {
                 XElement data = XElement.Load(fs);
                 foreach (XElement characterData in data.Elements("Character"))
@@ -284,7 +262,7 @@ namespace StasisCore.Controllers
         {
             _dialogueResources.Clear();
 
-            using (FileStream fs = new FileStream(String.Format("{0}\\dialogue.xml", RESOURCE_PATH), FileMode.Open))
+            using (FileStream fs = new FileStream(dialoguePath, FileMode.Open))
             {
                 XElement data = XElement.Load(fs);
                 foreach (XElement dialogueData in data.Elements("Dialogue"))
