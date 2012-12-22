@@ -162,7 +162,7 @@ namespace StasisCore.Controllers
                 Func<string, string, string, bool> updateXml = (string filePath, string parentElement, string element) =>
                     {
                         XDocument doc = XDocument.Load(filePath);
-                        foreach (XElement data in doc.Element(parentElement).Elements(element))
+                        foreach (XElement data in doc.Element(parentElement).Descendants(element))
                         {
                             if (data.Attribute("uid").Value == uid)
                             {
@@ -247,8 +247,7 @@ namespace StasisCore.Controllers
             using (FileStream fs = new FileStream(itemPath, FileMode.Open))
             {
                 XElement data = XElement.Load(fs);
-
-                foreach (XElement itemData in data.Elements("Item"))
+                foreach (XElement itemData in data.Descendants("Item"))
                 {
                     if (type == "" || type == itemData.Attribute("type").Value)
                     {
