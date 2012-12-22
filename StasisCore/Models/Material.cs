@@ -8,23 +8,23 @@ namespace StasisCore.Models
     public class Material
     {
         private string _uid;
-        private MaterialRootLayer _rootLayer;
+        private MaterialGroupLayer _rootLayer;
 
         public string uid { get { return _uid; } set { _uid = value; } }
-        public MaterialRootLayer rootLayer { get { return _rootLayer; } }
+        public MaterialGroupLayer rootLayer { get { return _rootLayer; } }
 
         // Create new
         public Material(string uid)
         {
             _uid = uid;
-            _rootLayer = new MaterialRootLayer();
+            _rootLayer = new MaterialGroupLayer("root");
         }
 
         // Create from xml
         public Material(ResourceObject resource)
         {
             _uid = resource.uid;
-            _rootLayer = MaterialLayer.load(resource.data.Element("Layer")) as MaterialRootLayer;
+            _rootLayer = MaterialLayer.load(resource.data.Element("Layer")) as MaterialGroupLayer;
         }
     }
 }

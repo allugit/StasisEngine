@@ -15,8 +15,8 @@ namespace StasisCore.Models
         public List<MaterialLayer> layers { get { return _layers; } }
 
         // Create new
-        public MaterialGroupLayer()
-            : base("group", true)
+        public MaterialGroupLayer(string type = "group", bool enabled = true)
+            : base(type, enabled)
         {
             _blendType = LayerBlendType.Opaque;
             _multiplier = 1f;

@@ -31,7 +31,7 @@ namespace StasisEditor.Views.Controls
         }
 
         // populate tree view
-        public void populateTreeView(MaterialRootLayer rootLayer)
+        public void populateTreeView(MaterialGroupLayer rootLayer)
         {
             SuspendLayout();
 
@@ -56,19 +56,11 @@ namespace StasisEditor.Views.Controls
         private LayerNode recursiveBuildNode(MaterialLayer layer)
         {
             LayerNode node = new LayerNode(layer, layer.enabled);
-            switch (layer.type)
+            if (layer.type == "group")
             {
-                case "root":
-                    MaterialRootLayer rootLayer = layer as MaterialRootLayer;
-                    foreach (MaterialLayer childLayer in rootLayer.layers)
-                        node.Nodes.Add(recursiveBuildNode(childLayer));
-                    break;
-
-                case "group":
-                    MaterialGroupLayer groupLayer = layer as MaterialGroupLayer;
-                    foreach (MaterialLayer childLayer in groupLayer.layers)
-                        node.Nodes.Add(recursiveBuildNode(childLayer));
-                    break;
+                MaterialGroupLayer groupLayer = layer as MaterialGroupLayer;
+                foreach (MaterialLayer childLayer in groupLayer.layers)
+                    node.Nodes.Add(recursiveBuildNode(childLayer));
             }
             return node;
         }

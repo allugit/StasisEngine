@@ -84,7 +84,7 @@ namespace StasisCore
             {
                 case "root":
                     // Render child layers without doing anything else
-                    MaterialRootLayer rootLayer = layer as MaterialRootLayer;
+                    MaterialGroupLayer rootLayer = layer as MaterialGroupLayer;
                     foreach (MaterialLayer childLayer in rootLayer.layers)
                         current = recursiveRenderLayers(current, childLayer);
                     break;
