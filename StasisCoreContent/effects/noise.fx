@@ -25,7 +25,7 @@ int overlayBlend = 1;
 int additiveBlend = 2;
 int blendType;
 int worleyFeature;	// 0 = F1, 1 = F2, 2 = F2-F1 -- defined in noise_functions.fx
-bool inverseWorley;
+bool invert;
 float4x4 matrixTransform;
 
 // scaleTexCoords
@@ -66,11 +66,12 @@ float getPerlin(float2 texCoords)
 	
 	// Calculate noise
 	float2 coords = scaleTexCoords(texCoords) + baseValue * fbmOffset;
-	return fbmPerlin(coords, fbmIterations, noiseFrequency, noiseGain, noiseLacunarity);
+	float value = fbmPerlin(coords, fbmIterations, noiseFrequency, noiseGain, noiseLacunarity);
+	return invert ? 1 - value : value;
 }
 
 // getWorley
-float getWorley(float2 texCoords, int feature, bool inverse)
+float getWorley(float2 texCoords, int feature)
 {
 	// Base values
 	float4 base = tex2D(baseSampler, texCoords);
@@ -78,7 +79,8 @@ float getWorley(float2 texCoords, int feature, bool inverse)
 	
 	// Calculate noise
 	float2 coords = scaleTexCoords(texCoords) + baseValue * fbmOffset;
-	return fbmWorley(coords, feature, inverse, fbmIterations, noiseFrequency, noiseGain, noiseLacunarity);
+	float value = fbmWorley(coords, feature, fbmIterations, noiseFrequency, noiseGain, noiseLacunarity);
+	return invert ? 1 - value : value;
 }
 
 // Vertex shader
@@ -99,7 +101,7 @@ float4 PSPerlin(float2 texCoords:TEXCOORD0) : COLOR0
 // Worley pixel shaders
 float4 PSWorley(float2 texCoords:TEXCOORD0) : COLOR0
 {
-	float value = getWorley(texCoords, worleyFeature, inverseWorley) * multiplier;
+	float value = getWorley(texCoords, worleyFeature) * multiplier;
 	float4 final = blend(value, texCoords);
 
 	return final;

@@ -70,7 +70,7 @@ float4 getWorleyCell(int x, int y, float jitter)
 	float v = (x * 3) / noiseSize.y;
 	return tex2D(worleySampler, float2(u, v)) * jitter;
 }
-float worley(float2 p, int feature = 0, bool inverse = false, float jitter = 2.0)
+float worley(float2 p, int feature = 0, float jitter = 2.0)
 {
 	// Resize coords
 	p *= 16;
@@ -115,14 +115,8 @@ float worley(float2 p, int feature = 0, bool inverse = false, float jitter = 2.0
 	else if (feature == worleyFeatureF2mF1)
 		value = sqrt(distance2) - sqrt(distance1);
 
-	// Inverse -- value is inversed by default
-	if (!inverse)
-		value = 1 - value;
-
-	return value;
-
-	//float2 value = float2(sqrt(distance1), sqrt(distance2));
-	//return inverse ? value : 1 - value;
+	// This algorithm inverts worley by default
+	return 1 - value;
 }
 
 ///////////////////////////////////////////
@@ -142,14 +136,14 @@ float fbmPerlin(float2 p, int count, float frequency, float gain, float lacunari
 
 	return total;
 }
-float fbmWorley(float2 p, int feature, bool inverse, int count, float frequency, float gain, float lacunarity)
+float fbmWorley(float2 p, int feature, int count, float frequency, float gain, float lacunarity)
 {
 	float total = 0;
 	float amplitude = gain;
 
 	for (int i = 0; i < count; i++)
 	{
-		total += worley(p * frequency, feature, inverse) * amplitude;
+		total += worley(p * frequency, feature) * amplitude;
 		frequency *= lacunarity;
 		amplitude *= gain;
 	}
