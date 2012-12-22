@@ -67,22 +67,55 @@ namespace StasisEditor.Controllers
         public void enableLevelXNAInput(bool status) { _editorController.enableLevelXNAInput(status); }
         public void enableLevelXNADrawing(bool status) { _editorController.enableLevelXNADrawing(status); }
 
-        // createBlueprint
-        public Blueprint createBlueprint(string uid)
+        // checkUnsavedBlueprints
+        private bool isUnsavedResourceUsed(string uid)
         {
             // Check unsaved materials
             foreach (Blueprint b in _blueprints)
             {
                 if (b.uid == uid)
+                    return true;
+                else
                 {
-                    System.Windows.Forms.MessageBox.Show(String.Format("An unsaved resource with the uid [{0}] already exists.", uid), "Blueprint Error", System.Windows.Forms.MessageBoxButtons.OK);
-                    return null;
+                    foreach (BlueprintScrap scrap in b.scraps)
+                    {
+                        if (scrap.uid == uid)
+                            return true;
+                    }
                 }
+            }
+
+            return false;
+        }
+
+        // createBlueprint
+        public Blueprint createBlueprint(string uid)
+        {
+            // Check unsaved resources
+            if (isUnsavedResourceUsed(uid))
+            {
+                System.Windows.Forms.MessageBox.Show(String.Format("An unsaved resource with the uid [{0}] already exists.", uid), "Blueprint Error", System.Windows.Forms.MessageBoxButtons.OK);
+                return null;
             }
 
             Blueprint blueprint = new Blueprint(uid);
             _blueprints.Add(blueprint);
             return blueprint;
+        }
+
+        // createBlueprintScrap
+        public BlueprintScrap createBlueprintScrap(Blueprint blueprint, string uid)
+        {
+            // Check unsaved resources
+            if (isUnsavedResourceUsed(uid))
+            {
+                System.Windows.Forms.MessageBox.Show(String.Format("An unsaved resource with the uid [{0}] already exists.", uid), "Blueprint Error", System.Windows.Forms.MessageBoxButtons.OK);
+                return null;
+            }
+
+            BlueprintScrap scrap = new BlueprintScrap(uid);
+            blueprint.scraps.Add(scrap);
+            return scrap;
         }
     }
 }

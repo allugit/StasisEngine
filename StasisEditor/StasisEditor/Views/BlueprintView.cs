@@ -20,6 +20,8 @@ namespace StasisEditor.Views
 
         public EditBlueprintScrapShape editBlueprintScrapShapeView { get { return _editBlueprintScrapShapeView; } set { _editBlueprintScrapShapeView = value; } }
         public EditBlueprintSocketsView editBlueprintSocketsView { get { return _editBlueprintSocketsView; } set { _editBlueprintSocketsView = value; } }
+        public Blueprint selectedBlueprint { get { return blueprintList.SelectedItem as Blueprint; } }
+        public BlueprintScrap selectedScrap { get { return scrapList.SelectedItem as BlueprintScrap; } }
 
         public BlueprintView()
         {
@@ -59,6 +61,12 @@ namespace StasisEditor.Views
             blueprintList.SelectedIndex = _controller.blueprints.IndexOf(blueprint);
         }
 
+        // selectBlueprintScrap
+        public void selectBlueprintScrap(BlueprintScrap scrap)
+        {
+            scrapList.SelectedIndex = selectedBlueprint.scraps.IndexOf(scrap);
+        }
+
         // Add blueprint
         private void addBlueprintButton_Click(object sender, EventArgs e)
         {
@@ -71,6 +79,38 @@ namespace StasisEditor.Views
                 if (blueprint != null)
                     selectBlueprint(blueprint);
             }
+        }
+
+        // Add blueprint scrap
+        private void addScrapButton_Click(object sender, EventArgs e)
+        {
+            System.Diagnostics.Debug.Assert(selectedBlueprint != null);
+
+            CreateResourceView createResourceView = new CreateResourceView();
+            if (createResourceView.ShowDialog() == DialogResult.OK)
+            {
+                BlueprintScrap scrap = _controller.createBlueprintScrap(selectedBlueprint, createResourceView.uid);
+                scrapList.RefreshItems();
+
+                if (scrap != null)
+                    selectBlueprintScrap(scrap);
+            }
+        }
+
+        // Selected blueprint changed
+        private void blueprintList_SelectedValueChanged(object sender, EventArgs e)
+        {
+            removeBlueprintButton.Enabled = selectedBlueprint != null;
+            arrangeScrapsButton.Enabled = selectedBlueprint != null;
+            addScrapButton.Enabled = selectedBlueprint != null;
+            scrapList.DataSource = selectedBlueprint.scraps;
+        }
+
+        // Selected scrap changed
+        private void scrapList_SelectedValueChanged(object sender, EventArgs e)
+        {
+            removeScrapButton.Enabled = selectedScrap != null;
+            defineShapeButton.Enabled = selectedScrap != null;
         }
     }
 }
