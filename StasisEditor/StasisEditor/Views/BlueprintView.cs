@@ -109,10 +109,15 @@ namespace StasisEditor.Views
         // Selected blueprint changed
         private void blueprintList_SelectedValueChanged(object sender, EventArgs e)
         {
+            // Update blueprint controls
             removeBlueprintButton.Enabled = selectedBlueprint != null;
             arrangeScrapsButton.Enabled = selectedBlueprint != null;
             addScrapButton.Enabled = selectedBlueprint != null;
+            blueprintProperties.SelectedObject = selectedBlueprint;
+
+            // Update scrap controls
             scrapList.DataSource = selectedBlueprint == null ? null : selectedBlueprint.scraps;
+            scrapProperties.SelectedObject = (selectedBlueprint == null || selectedScrap == null) ? null : selectedScrap;
         }
 
         // Selected scrap changed
@@ -120,6 +125,7 @@ namespace StasisEditor.Views
         {
             removeScrapButton.Enabled = selectedScrap != null;
             defineShapeButton.Enabled = selectedScrap != null;
+            scrapProperties.SelectedObject = selectedScrap;
         }
 
         // Remove blueprint

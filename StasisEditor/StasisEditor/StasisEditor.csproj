@@ -114,12 +114,6 @@
     <Compile Include="Views\Controls\ActorToolbar.Designer.cs">
       <DependentUpon>ActorToolbar.cs</DependentUpon>
     </Compile>
-    <Compile Include="Views\Controls\CreateBlueprintScrapShapeButton.cs">
-      <SubType>UserControl</SubType>
-    </Compile>
-    <Compile Include="Views\Controls\CreateBlueprintScrapShapeButton.Designer.cs">
-      <DependentUpon>CreateBlueprintScrapShapeButton.cs</DependentUpon>
-    </Compile>
     <Compile Include="Views\Controls\CreateResourceView.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -285,9 +279,6 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Views\Controls\ActorToolbar.resx">
       <DependentUpon>ActorToolbar.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Views\Controls\CreateBlueprintScrapShapeButton.resx">
-      <DependentUpon>CreateBlueprintScrapShapeButton.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Views\Controls\CreateResourceView.resx">
       <DependentUpon>CreateResourceView.cs</DependentUpon>

@@ -89,6 +89,7 @@
             this.Controls.Add(this.pictureBox);
             this.Controls.Add(this.cancelButton);
             this.Controls.Add(this.saveButton);
+            this.MinimumSize = new System.Drawing.Size(243, 128);
             this.Name = "EditBlueprintScrapShape";
             this.SizeGripStyle = System.Windows.Forms.SizeGripStyle.Hide;
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;
