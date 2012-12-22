@@ -20,7 +20,7 @@ namespace StasisCore.Models
         public MaterialTextureLayer()
             : base("texture", true)
         {
-            _textureUID = "";
+            _textureUID = "default";
             _scale = 1f;
             _multiplier = 1f;
         }

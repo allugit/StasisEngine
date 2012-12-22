@@ -56,7 +56,7 @@ namespace StasisEditor.Views.Controls
         private LayerNode recursiveBuildNode(MaterialLayer layer)
         {
             LayerNode node = new LayerNode(layer, layer.enabled);
-            if (layer.type == "group")
+            if (layer.type == "root" || layer.type == "group")
             {
                 MaterialGroupLayer groupLayer = layer as MaterialGroupLayer;
                 foreach (MaterialLayer childLayer in groupLayer.layers)

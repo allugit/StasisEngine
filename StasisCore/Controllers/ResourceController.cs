@@ -141,7 +141,7 @@ namespace StasisCore.Controllers
             if (!_cachedTextures.TryGetValue(textureUID, out texture))
             {
                 // Find file
-                string[] textureFiles = Directory.GetFiles(TEXTURE_PATH, textureUID);
+                string[] textureFiles = Directory.GetFiles(TEXTURE_PATH, String.Format("{0}.*", textureUID));
                 if (textureFiles.Length == 0)
                     throw new ResourceNotFoundException(textureUID);
 

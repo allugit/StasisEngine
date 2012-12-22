@@ -126,16 +126,17 @@ namespace StasisEditor.Controllers
             int textureHeight = 512;
             _editorController.resizeGraphicsDevice(textureWidth, textureHeight);
 
-            Texture2D materialTexture = _materialRenderer.renderMaterial(material, textureWidth, textureHeight);
-
-            /*
-            // Create canvas
-            Texture2D canvas = _terrainRenderer.createCanvas(35, vertices);
-
-            // Render layers
-            foreach (TerrainLayerResource layer in terrainMaterial.layers)
-                canvas = _terrainRenderer.renderLayer(canvas, layer);
-            */
+            // Render material
+            Texture2D materialTexture = null;
+            try
+            {
+                materialTexture = _materialRenderer.renderMaterial(material, textureWidth, textureHeight);
+            }
+            catch (ResourceNotFoundException e)
+            {
+                System.Windows.Forms.MessageBox.Show(e.Message, "Resource Error", System.Windows.Forms.MessageBoxButtons.OK, System.Windows.Forms.MessageBoxIcon.Error);
+                return;
+            }
 
             if (_materialPreview == null)
             {
