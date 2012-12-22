@@ -15,7 +15,7 @@ using StasisEditor.Models;
 
 namespace StasisEditor.Views.Controls
 {
-    public partial class EditBlueprintScrapSocketsView : Form
+    public partial class EditBlueprintSocketsView : Form
     {
         private Blueprint _blueprint;
         private SpriteBatch _spriteBatch;
@@ -24,7 +24,7 @@ namespace StasisEditor.Views.Controls
         private BlueprintScrap _selectedScrap;
         private BlueprintScrap _socketTargetA;
 
-        public EditBlueprintScrapSocketsView(Blueprint blueprint)
+        public EditBlueprintSocketsView(Blueprint blueprint)
         {
             _blueprint = blueprint;
             _spriteBatch = XNAResources.spriteBatch;

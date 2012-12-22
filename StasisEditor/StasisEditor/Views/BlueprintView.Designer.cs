@@ -1,4 +1,5 @@
-﻿namespace StasisEditor.Views
+﻿using StasisEditor.Views.Controls;
+namespace StasisEditor.Views
 {
     partial class BlueprintView
     {
@@ -28,8 +29,8 @@
         /// </summary>
         private void InitializeComponent()
         {
-            this.blueprintList = new System.Windows.Forms.ListBox();
-            this.scrapList = new System.Windows.Forms.ListBox();
+            this.blueprintList = new RefreshingListBox();
+            this.scrapList = new RefreshingListBox();
             this.addBlueprintButton = new System.Windows.Forms.Button();
             this.removeBlueprintButton = new System.Windows.Forms.Button();
             this.addScrapButton = new System.Windows.Forms.Button();
@@ -183,8 +184,8 @@
 
         #endregion
 
-        private System.Windows.Forms.ListBox blueprintList;
-        private System.Windows.Forms.ListBox scrapList;
+        private RefreshingListBox blueprintList;
+        private RefreshingListBox scrapList;
         private System.Windows.Forms.Button addBlueprintButton;
         private System.Windows.Forms.Button removeBlueprintButton;
         private System.Windows.Forms.Button addScrapButton;

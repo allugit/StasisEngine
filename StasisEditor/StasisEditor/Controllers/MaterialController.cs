@@ -87,7 +87,7 @@ namespace StasisEditor.Controllers
             {
                 if (m.uid == uid)
                 {
-                    System.Windows.Forms.MessageBox.Show(String.Format("An unsaved resource material with the uid [{0}] already exists.", uid), "Material Error", System.Windows.Forms.MessageBoxButtons.OK);
+                    System.Windows.Forms.MessageBox.Show(String.Format("An unsaved resource with the uid [{0}] already exists.", uid), "Material Error", System.Windows.Forms.MessageBoxButtons.OK);
                     return;
                 }
             }

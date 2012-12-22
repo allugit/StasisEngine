@@ -15,16 +15,17 @@ using StasisEditor.Models;
 
 namespace StasisEditor.Views.Controls
 {
-    public partial class EditBlueprintScrapSocketsButton : UserControl
+    public partial class EditBlueprintSocketsButton : UserControl
     {
-        private EditorController _editorController;
+        private BlueprintController _blueprintController;
         private Blueprint _blueprint;
         private BlueprintView _view;
 
-        public EditBlueprintScrapSocketsButton(EditorController editorController, Blueprint blueprint)
+        public EditBlueprintSocketsButton(BlueprintController blueprintController, Blueprint blueprint)
         {
-            _editorController = editorController;
+            _blueprintController = blueprintController;
             _blueprint = blueprint;
+            _view = _blueprintController.view;
 
             InitializeComponent();
             Dock = DockStyle.Top;
@@ -33,8 +34,6 @@ namespace StasisEditor.Views.Controls
         // Edit button clicked
         private void editSocketsButton_Click(object sender, EventArgs e)
         {
-            throw new NotImplementedException();
-
             // Validate scrap texture tags
             foreach (BlueprintScrap scrap in _blueprint.scraps)
             {
@@ -46,13 +45,13 @@ namespace StasisEditor.Views.Controls
             }
 
             // Unhook XNA from level view
-            _editorController.unhookXNAFromLevel();
-            _editorController.enableLevelXNAInput(false);
-            _editorController.enableLevelXNADrawing(false);
+            _blueprintController.unhookXNAFromLevel();
+            _blueprintController.enableLevelXNAInput(false);
+            _blueprintController.enableLevelXNADrawing(false);
 
             // Create view
-            EditBlueprintScrapSocketsView editSocketsView = new EditBlueprintScrapSocketsView(_blueprint);
-            _view.setEditBlueprintScrapSocketsView(editSocketsView);
+            EditBlueprintSocketsView editSocketsView = new EditBlueprintSocketsView(_blueprint);
+            _view.editBlueprintSocketsView = editSocketsView;
 
             // Open view
             if (editSocketsView.ShowDialog() == DialogResult.OK)
@@ -61,12 +60,12 @@ namespace StasisEditor.Views.Controls
             }
 
             // Clean up view
-            _view.setEditBlueprintScrapSocketsView(null);
+            _view.editBlueprintSocketsView = null;
 
             // Hook XNA to level view
-            _editorController.hookXNAToLevel();
-            _editorController.enableLevelXNAInput(true);
-            _editorController.enableLevelXNADrawing(true);
+            _blueprintController.hookXNAToLevel();
+            _blueprintController.enableLevelXNAInput(true);
+            _blueprintController.enableLevelXNADrawing(true);
         }
     }
 }

@@ -132,17 +132,17 @@
     <Compile Include="Views\Controls\EditBlueprintScrapShape.Designer.cs">
       <DependentUpon>EditBlueprintScrapShape.cs</DependentUpon>
     </Compile>
-    <Compile Include="Views\Controls\EditBlueprintScrapSocketsButton.cs">
+    <Compile Include="Views\Controls\EditBlueprintSocketsButton.cs">
       <SubType>UserControl</SubType>
     </Compile>
-    <Compile Include="Views\Controls\EditBlueprintScrapSocketsButton.Designer.cs">
-      <DependentUpon>EditBlueprintScrapSocketsButton.cs</DependentUpon>
+    <Compile Include="Views\Controls\EditBlueprintSocketsButton.Designer.cs">
+      <DependentUpon>EditBlueprintSocketsButton.cs</DependentUpon>
     </Compile>
-    <Compile Include="Views\Controls\EditBlueprintScrapSocketsView.cs">
+    <Compile Include="Views\Controls\EditBlueprintSocketsView.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="Views\Controls\EditBlueprintScrapSocketsView.Designer.cs">
-      <DependentUpon>EditBlueprintScrapSocketsView.cs</DependentUpon>
+    <Compile Include="Views\Controls\EditBlueprintSocketsView.Designer.cs">
+      <DependentUpon>EditBlueprintSocketsView.cs</DependentUpon>
     </Compile>
     <Compile Include="Views\Controls\FileSafeTextBox.cs">
       <SubType>Component</SubType>
@@ -295,11 +295,11 @@
     <EmbeddedResource Include="Views\Controls\EditBlueprintScrapShape.resx">
       <DependentUpon>EditBlueprintScrapShape.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="Views\Controls\EditBlueprintScrapSocketsButton.resx">
-      <DependentUpon>EditBlueprintScrapSocketsButton.cs</DependentUpon>
+    <EmbeddedResource Include="Views\Controls\EditBlueprintSocketsButton.resx">
+      <DependentUpon>EditBlueprintSocketsButton.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="Views\Controls\EditBlueprintScrapSocketsView.resx">
-      <DependentUpon>EditBlueprintScrapSocketsView.cs</DependentUpon>
+    <EmbeddedResource Include="Views\Controls\EditBlueprintSocketsView.resx">
+      <DependentUpon>EditBlueprintSocketsView.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Views\Controls\LevelSettings.resx">
       <DependentUpon>LevelSettings.cs</DependentUpon>

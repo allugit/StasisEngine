@@ -1,6 +1,6 @@
 ﻿namespace StasisEditor.Views.Controls
 {
-    partial class EditBlueprintScrapSocketsView
+    partial class EditBlueprintSocketsView
     {
         /// <summary>
         /// Required designer variable.
