@@ -31,6 +31,7 @@ namespace StasisEditor.Views
         public void setController(MaterialController controller)
         {
             _controller = controller;
+            materialsListBox.DataSource = controller.materials;
         }
 
         // setAutoUpdatePreview -- this will trigger an event
@@ -114,7 +115,8 @@ namespace StasisEditor.Views
             CreateMaterialView createMaterialView = new CreateMaterialView();
             if (createMaterialView.ShowDialog() == DialogResult.OK)
             {
-                Console.WriteLine("material uid: {0}", createMaterialView.uid);
+                _controller.createMaterial(createMaterialView.uid);
+                materialsListBox.RefreshItems();
             }
         }
     }

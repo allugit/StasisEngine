@@ -8,6 +8,7 @@ using System.Xml.Linq;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using StasisCore;
+using StasisCore.Controllers;
 using StasisCore.Models;
 using StasisCore.Resources;
 using StasisEditor.Models;
@@ -64,6 +65,13 @@ namespace StasisEditor.Controllers
                 if (material != null)
                     preview(material);
             }
+        }
+
+        // createMaterial
+        public void createMaterial(string uid)
+        {
+            Material material = new Material(uid);
+            _materials.Add(material);
         }
 
         // addTerrainLayer

@@ -10,9 +10,17 @@ namespace StasisCore.Models
         private string _uid;
         private MaterialRootLayer _rootLayer;
 
-        public string uid { get { return uid; } set { _uid = value; } }
+        public string uid { get { return _uid; } set { _uid = value; } }
         public MaterialRootLayer rootLayer { get { return _rootLayer; } }
 
+        // Create new
+        public Material(string uid)
+        {
+            _uid = uid;
+            _rootLayer = new MaterialRootLayer();
+        }
+
+        // Create from xml
         public Material(ResourceObject resource)
         {
             _uid = resource.uid;
