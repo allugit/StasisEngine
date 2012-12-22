@@ -38,6 +38,12 @@ namespace StasisEditor.Views
             blueprintList.DataSource = _controller.blueprints;
         }
 
+        // Get controller
+        public BlueprintController getController()
+        {
+            return _controller;
+        }
+
         // handleXNADraw
         public void handleXNADraw()
         {
@@ -167,11 +173,29 @@ namespace StasisEditor.Views
 
             try
             {
-                EditBlueprintScrapShape editScrapView = new EditBlueprintScrapShape(ResourceController.getTexture(selectedScrap.scrapTextureUID), selectedScrap);
+                // Unhook XNA from level view
+                _controller.unhookXNAFromLevel();
+                _controller.enableLevelXNAInput(false);
+                _controller.enableLevelXNADrawing(false);
+
+                // Create edit view
+                EditBlueprintScrapShape editScrapView = new EditBlueprintScrapShape(this, ResourceController.getTexture(selectedScrap.scrapTextureUID), selectedScrap);
+                editBlueprintScrapShapeView = editScrapView;
+
+                // Open edit view
                 if (editScrapView.ShowDialog() == DialogResult.OK)
                 {
+                    // Set scrap points
                     selectedScrap.points = editScrapView.getPoints();
                 }
+
+                // Close edit view
+                editBlueprintScrapShapeView = null;
+
+                // Hook XNA to level view
+                _controller.hookXNAToLevel();
+                _controller.enableLevelXNAInput(true);
+                _controller.enableLevelXNADrawing(true);
             }
             catch (ResourceNotFoundException ex)
             {

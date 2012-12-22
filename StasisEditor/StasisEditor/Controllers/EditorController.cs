@@ -134,6 +134,9 @@ namespace StasisEditor.Controllers
         {
             // Level controller draw
             _levelController.handleXNADraw();
+
+            // Blueprint controller draw
+            _blueprintController.handleXNADraw();
         }
 
         // update
@@ -145,6 +148,9 @@ namespace StasisEditor.Controllers
             
             // Level controller update
             _levelController.update();
+
+            // Blueprint controller update
+            _blueprintController.update();
         }
 
         // exit

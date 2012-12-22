@@ -39,7 +39,7 @@ namespace StasisCore.Models
         public BlueprintScrap(string uid) : base(uid)
         {
             _points = new List<Vector2>();
-            _scrapTextureUID = "";
+            _scrapTextureUID = "default_texture";
             _blueprintUID = "";
             _currentCraftPosition = Vector2.Zero;
             _currentCraftAngle = 0;

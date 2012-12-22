@@ -18,6 +18,7 @@ namespace StasisEditor.Views.Controls
 {
     public partial class EditBlueprintScrapShape : Form
     {
+        private BlueprintView _view;
         private BlueprintScrap _scrap;
         private SpriteBatch _spriteBatch;
         private Texture2D _pixel;
@@ -26,8 +27,9 @@ namespace StasisEditor.Views.Controls
         private Vector2 _mouse;
         private List<Vector2> _points;
 
-        public EditBlueprintScrapShape(Texture2D texture, BlueprintScrap scrap)
+        public EditBlueprintScrapShape(BlueprintView view, Texture2D texture, BlueprintScrap scrap)
         {
+            _view = view;
             _texture = texture;
             _textureCenter = new Vector2(_texture.Width, _texture.Height) / 2;
             _scrap = scrap;
@@ -40,7 +42,7 @@ namespace StasisEditor.Views.Controls
             // Hook to XNA
             XNAResources.graphics.PreparingDeviceSettings += new EventHandler<PreparingDeviceSettingsEventArgs>(preparingDeviceSettings);
             Microsoft.Xna.Framework.Input.Mouse.WindowHandle = pictureBox.FindForm().Handle;
-            //_itemView.getController().resizeGraphicsDevice(texture.Width, texture.Height);
+            _view.getController().resizeGraphicsDevice(texture.Width, texture.Height);
 
             // Resize picturebox and form
             int widthDelta = texture.Width - pictureBox.Width;

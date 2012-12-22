@@ -66,6 +66,19 @@ namespace StasisEditor.Controllers
         public void unhookXNAFromLevel() { _editorController.unhookXNAFromLevel(); }
         public void enableLevelXNAInput(bool status) { _editorController.enableLevelXNAInput(status); }
         public void enableLevelXNADrawing(bool status) { _editorController.enableLevelXNADrawing(status); }
+        public void resizeGraphicsDevice(int width, int height) { _editorController.resizeGraphicsDevice(width, height); }
+
+        // Handle XNA draw
+        public void handleXNADraw()
+        {
+            _view.handleXNADraw();
+        }
+
+        // Update
+        public void update()
+        {
+            _view.updateMousePosition();
+        }
 
         // checkUnsavedBlueprints
         private bool isUnsavedResourceUsed(string uid)
