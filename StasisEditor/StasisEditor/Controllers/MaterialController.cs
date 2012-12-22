@@ -3,6 +3,7 @@ using System.IO;
 using System.Diagnostics;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.ComponentModel;
 using System.Xml;
 using System.Xml.Linq;
 using Microsoft.Xna.Framework;
@@ -24,16 +25,21 @@ namespace StasisEditor.Controllers
         private MaterialRenderer _materialRenderer;
         private MaterialView _materialView;
         private MaterialPreview _materialPreview;
-        private List<Material> _materials;
+        private BindingList<Material> _materials;
         private bool _autoUpdatePreview;
 
-        public List<Material> materials { get { return _materials; } }
+        public BindingList<Material> materials { get { return _materials; } }
 
         public MaterialController(EditorController editorController, MaterialView materialView)
         {
             _editorController = editorController;
             _materialView = materialView;
-            _materials = new List<Material>();
+            _materials = new BindingList<Material>();
+
+            // Load materials
+            List<ResourceObject> resources = ResourceController.loadMaterials();
+            foreach (ResourceObject resource in resources)
+                _materials.Add(new Material(resource));
 
             // Initialize material view
             materialView.setController(this);
@@ -72,6 +78,34 @@ namespace StasisEditor.Controllers
         {
             Material material = new Material(uid);
             _materials.Add(material);
+        }
+
+        // removeMaterial
+        public void removeMaterial(string uid, bool destroy = true)
+        {
+            Material materialToRemove = null;
+            foreach (Material material in _materials)
+            {
+                if (material.uid == uid)
+                {
+                    materialToRemove = material;
+                    break;
+                }
+            }
+
+            Debug.Assert(materialToRemove != null);
+
+            _materials.Remove(materialToRemove);
+
+            try
+            {
+                if (destroy)
+                    ResourceController.destroy(uid);
+            }
+            catch (ResourceNotFoundException e)
+            {
+                System.Windows.Forms.MessageBox.Show(String.Format("Could not destroy resource.\n{0}", e.Message), "Resource Error", System.Windows.Forms.MessageBoxButtons.OK, System.Windows.Forms.MessageBoxIcon.Error);
+            }
         }
 
         // addTerrainLayer

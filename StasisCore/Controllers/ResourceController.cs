@@ -134,6 +134,76 @@ namespace StasisCore.Controllers
             return false;
         }
 
+        // Destroy a resource
+        public static void destroy(string uid)
+        {
+            // TEMPORARY -- Make this method actually save changes
+            throw new NotImplementedException();
+
+            try
+            {
+                // Check materials
+                using (FileStream fs = new FileStream(String.Format("{0}\\materials.xml", RESOURCE_PATH), FileMode.Open))
+                {
+                    XElement data = XElement.Load(fs);
+                    foreach (XElement materialData in data.Elements("Material"))
+                    {
+                        if (materialData.Attribute("uid").Value == uid)
+                        {
+                            materialData.Remove();
+                            return;
+                        }
+                    }
+                }
+
+                // Check items
+                using (FileStream fs = new FileStream(String.Format("{0}\\items.xml", RESOURCE_PATH), FileMode.Open))
+                {
+                    XElement data = XElement.Load(fs);
+                    foreach (XElement itemData in data.Elements("Item"))
+                    {
+                        if (itemData.Attribute("uid").Value == uid)
+                        {
+                            itemData.Remove();
+                            return;
+                        }
+                    }
+                }
+
+                // Check characters
+                using (FileStream fs = new FileStream(String.Format("{0}\\characters.xml", RESOURCE_PATH), FileMode.Open))
+                {
+                    XElement data = XElement.Load(fs);
+                    foreach (XElement characterData in data.Elements("Character"))
+                    {
+                        if (characterData.Attribute("uid").Value == uid)
+                        {
+                            characterData.Remove();
+                            return;
+                        }
+                    }
+                }
+
+                // Check dialogue
+                using (FileStream fs = new FileStream(String.Format("{0}\\dialogue.xml", RESOURCE_PATH), FileMode.Open))
+                {
+                    XElement data = XElement.Load(fs);
+                    foreach (XElement dialogueData in data.Elements("Dialogue"))
+                    {
+                        if (dialogueData.Attribute("uid").Value == uid)
+                        {
+                            dialogueData.Remove();
+                            return;
+                        }
+                    }
+                }
+            }
+            catch (XmlException e)
+            {
+                throw new InvalidResourceException();
+            }
+        }
+
         // Get texture -- Try to get the texture from the cache before loading it from file
         public static Texture2D getTexture(string textureUID)
         {
@@ -156,10 +226,11 @@ namespace StasisCore.Controllers
         }
 
         // Load materials
-        public static void loadMaterials()
+        public static List<ResourceObject> loadMaterials()
         {
             _materialResources.Clear();
 
+            List<ResourceObject> resourcesLoaded = new List<ResourceObject>();
             using (FileStream fs = new FileStream(String.Format("{0}\\materials.xml", RESOURCE_PATH), FileMode.Open))
             {
                 XElement data = XElement.Load(fs);
@@ -168,8 +239,11 @@ namespace StasisCore.Controllers
                 {
                     ResourceObject resource = new ResourceObject(materialData);
                     _materialResources[resource.uid] = resource;
+                    resourcesLoaded.Add(resource);
                 }
             }
+
+            return resourcesLoaded;
         }
 
         // Load items

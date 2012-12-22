@@ -30,6 +30,10 @@ namespace StasisCore.Models
             MaterialLayer layer = null;
             switch (data.Attribute("type").Value)
             {
+                case "root":
+                    layer = new MaterialGroupLayer(data);
+                    break;
+
                 case "group":
                     layer = new MaterialGroupLayer(data);
                     break;

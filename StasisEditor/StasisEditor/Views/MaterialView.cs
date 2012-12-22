@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
+using System.Diagnostics;
 using System.Drawing;
 using System.Windows.Forms;
 using StasisCore.Resources;
@@ -76,12 +77,20 @@ namespace StasisEditor.Views
         // Selected materials changed
         private void materialsListBox_SelectedIndexChanged(object sender, EventArgs e)
         {
-            // Update preview button
-            previewButton.Enabled = materialsListBox.SelectedItem != null;
+            Material selectedMaterial = getSelectedMaterial();
+
+            // Enabled/disable preview button
+            previewButton.Enabled = selectedMaterial != null;
+
+            // Enabled/disbale remove button
+            removeButton.Enabled = selectedMaterial != null;
             
-            // Open material properties
+            // Close current properties
             closeProperties();
-            openProperties(getSelectedMaterial());
+
+            // Open material properties
+            if (selectedMaterial != null)
+            openProperties(selectedMaterial);
         }
 
         // Material property changed
@@ -117,6 +126,29 @@ namespace StasisEditor.Views
             {
                 _controller.createMaterial(createMaterialView.uid);
                 materialsListBox.RefreshItems();
+            }
+        }
+
+        // Remove material clicked
+        private void removeButton_Click(object sender, EventArgs e)
+        {
+            Material selectedMaterial = getSelectedMaterial();
+            Debug.Assert(selectedMaterial != null);
+
+            try
+            {
+                _controller.removeMaterial(selectedMaterial.uid, true);
+                propertiesContainer.Controls.Clear();
+                removeButton.Enabled = false;
+                materialsListBox.RefreshItems();
+            }
+            catch (InvalidResourceException exception)
+            {
+                MessageBox.Show(exception.Message, "Resource Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
+            catch (ResourceNotFoundException exception)
+            {
+                MessageBox.Show(exception.Message, "Resource Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
         }
     }
