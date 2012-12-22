@@ -7,6 +7,7 @@ using System.Linq;
 using System.Text;
 using System.Windows.Forms;
 using StasisCore.Models;
+using StasisCore.Resources;
 using StasisEditor.Controllers;
 using StasisEditor.Views.Controls;
 
@@ -103,7 +104,7 @@ namespace StasisEditor.Views
             removeBlueprintButton.Enabled = selectedBlueprint != null;
             arrangeScrapsButton.Enabled = selectedBlueprint != null;
             addScrapButton.Enabled = selectedBlueprint != null;
-            scrapList.DataSource = selectedBlueprint.scraps;
+            scrapList.DataSource = selectedBlueprint == null ? null : selectedBlueprint.scraps;
         }
 
         // Selected scrap changed
@@ -111,6 +112,28 @@ namespace StasisEditor.Views
         {
             removeScrapButton.Enabled = selectedScrap != null;
             defineShapeButton.Enabled = selectedScrap != null;
+        }
+
+        // Remove blueprint
+        private void removeBlueprintButton_Click(object sender, EventArgs e)
+        {
+            System.Diagnostics.Debug.Assert(selectedBlueprint != null);
+
+            try
+            {
+                _controller.removeBlueprint(selectedBlueprint.uid, true);
+                //propertiesContainer.Controls.Clear();
+                removeBlueprintButton.Enabled = false;
+                blueprintList.RefreshItems();
+            }
+            catch (InvalidResourceException exception)
+            {
+                MessageBox.Show(exception.Message, "Resource Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
+            catch (ResourceNotFoundException exception)
+            {
+                MessageBox.Show(exception.Message, "Resource Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
         }
     }
 }

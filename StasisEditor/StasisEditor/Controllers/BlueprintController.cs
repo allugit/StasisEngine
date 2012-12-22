@@ -117,5 +117,33 @@ namespace StasisEditor.Controllers
             blueprint.scraps.Add(scrap);
             return scrap;
         }
+
+        // removeBlueprint
+        public void removeBlueprint(string uid, bool destroy = true)
+        {
+            Blueprint blueprintToRemove = null;
+            foreach (Blueprint blueprint in _blueprints)
+            {
+                if (blueprint.uid == uid)
+                {
+                    blueprintToRemove = blueprint;
+                    break;
+                }
+            }
+
+            System.Diagnostics.Debug.Assert(blueprintToRemove != null);
+
+            _blueprints.Remove(blueprintToRemove);
+
+            try
+            {
+                if (destroy)
+                    ResourceController.destroy(uid);
+            }
+            catch (ResourceNotFoundException e)
+            {
+                System.Windows.Forms.MessageBox.Show(String.Format("Could not destroy resource.\n{0}", e.Message), "Resource Error", System.Windows.Forms.MessageBoxButtons.OK, System.Windows.Forms.MessageBoxIcon.Error);
+            }
+        }
     }
 }
