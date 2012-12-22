@@ -89,6 +89,7 @@
     <Compile Include="Resources\Actors\TerrainActorResource.cs" />
     <Compile Include="Resources\Actors\TreeActorResource.cs" />
     <Compile Include="Resources\Exceptions\DuplicateResourceException.cs" />
+    <Compile Include="Resources\Exceptions\InvalidResourceException.cs" />
     <Compile Include="Resources\Exceptions\ResourceNotFoundException.cs" />
     <Compile Include="Resources\Items\BlueprintItemResource.cs" />
     <Compile Include="Resources\Items\BlueprintScrapItemResource.cs" />

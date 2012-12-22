@@ -116,6 +116,12 @@
     <Compile Include="Views\Controls\CreateBlueprintScrapShapeButton.Designer.cs">
       <DependentUpon>CreateBlueprintScrapShapeButton.cs</DependentUpon>
     </Compile>
+    <Compile Include="Views\Controls\CreateMaterialView.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Views\Controls\CreateMaterialView.Designer.cs">
+      <DependentUpon>CreateMaterialView.cs</DependentUpon>
+    </Compile>
     <Compile Include="Views\Controls\EditBlueprintScrapShape.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -275,6 +281,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Views\Controls\CreateBlueprintScrapShapeButton.resx">
       <DependentUpon>CreateBlueprintScrapShapeButton.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Views\Controls\CreateMaterialView.resx">
+      <DependentUpon>CreateMaterialView.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Views\Controls\EditBlueprintScrapShape.resx">
       <DependentUpon>EditBlueprintScrapShape.cs</DependentUpon>

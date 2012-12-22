@@ -107,5 +107,15 @@ namespace StasisEditor.Views
         {
             //_controller.saveResource(getSelectedMaterial().resource);
         }
+
+        // Add material clicked
+        private void addButton_Click(object sender, EventArgs e)
+        {
+            CreateMaterialView createMaterialView = new CreateMaterialView();
+            if (createMaterialView.ShowDialog() == DialogResult.OK)
+            {
+                Console.WriteLine("material uid: {0}", createMaterialView.uid);
+            }
+        }
     }
 }

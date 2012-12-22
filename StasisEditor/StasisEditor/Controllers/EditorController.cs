@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
 using Microsoft.Xna.Framework;
+using StasisCore.Controllers;
 using StasisCore.Resources;
 using StasisEditor.Views;
 using StasisEditor.Views.Controls;
@@ -25,6 +26,9 @@ namespace StasisEditor.Controllers
         public EditorController(XNAController xnaController)
         {
             _xnaController = xnaController;
+
+            // Initialize core resource controller
+            ResourceController.initialize(XNAResources.graphicsDevice);
 
             // Create editor view
             _editorView = new EditorView();
