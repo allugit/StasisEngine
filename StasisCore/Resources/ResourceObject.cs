@@ -10,7 +10,7 @@ namespace StasisCore.Resources
         protected XElement _data;
 
         public string uid { get { return _uid; } }
-        public XElement data { get { return _data; } }
+        public XElement data { get { return _data; } set { _data = value; } }
 
         public ResourceObject(XElement data)
             : this(data.Attribute("uid").Value)

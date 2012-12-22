@@ -37,6 +37,29 @@ namespace StasisCore.Models
         public bool invert { get { return _invert; } set { _invert = value; } }
         public WorleyFeatureType worleyFeature { get { return _worleyFeature; } set { _worleyFeature = value; } }
 
+        public override XElement data
+        {
+            get
+            {
+                XElement d = base.data;
+                d.SetAttributeValue("noise_type", _noiseType.ToString().ToLower());
+                d.SetAttributeValue("position", _position);
+                d.SetAttributeValue("scale", _scale);
+                d.SetAttributeValue("frequency", _frequency);
+                d.SetAttributeValue("gain", _gain);
+                d.SetAttributeValue("lacunarity", _lacunarity);
+                d.SetAttributeValue("multiplier", _multiplier);
+                d.SetAttributeValue("fbm_offset", _fbmOffset);
+                d.SetAttributeValue("color_low", _colorLow);
+                d.SetAttributeValue("color_high", _colorHigh);
+                d.SetAttributeValue("iterations", _iterations);
+                d.SetAttributeValue("blend_type", _blendType.ToString().ToLower());
+                d.SetAttributeValue("invert", _invert);
+                d.SetAttributeValue("worley_feature", _worleyFeature.ToString().ToLower());
+                return d;
+            }
+        }
+
         // Create new
         public MaterialNoiseLayer()
             : base("noise", true)

@@ -13,6 +13,16 @@ namespace StasisCore.Models
         public string uid { get { return _uid; } set { _uid = value; } }
         public MaterialGroupLayer rootLayer { get { return _rootLayer; } }
 
+        public XElement data
+        {
+            get
+            {
+                return new XElement("Material",
+                    new XAttribute("uid", _uid),
+                    _rootLayer.data);
+            }
+        }
+
         // Create new
         public Material(string uid)
         {

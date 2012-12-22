@@ -5,6 +5,7 @@ using System.Xml;
 using System.Xml.Linq;
 using Microsoft.Xna.Framework.Graphics;
 using StasisCore.Resources;
+using StasisCore.Models;
 
 namespace StasisCore.Controllers
 {
@@ -24,6 +25,7 @@ namespace StasisCore.Controllers
         private static Dictionary<string, ResourceObject> _dialogueResources;
         private static Dictionary<string, ResourceObject> _levelResources;
         private static Dictionary<string, Texture2D> _cachedTextures;
+        private static List<Dictionary<string, ResourceObject>> _resources;
 
         public static string texturePath { get { return String.Format("{0}\\textures", RESOURCE_PATH); } }
         public static string levelPath { get { return String.Format("{0}\\levels", RESOURCE_PATH); } }
@@ -41,35 +43,25 @@ namespace StasisCore.Controllers
             _characterResources = new Dictionary<string, ResourceObject>();
             _dialogueResources = new Dictionary<string, ResourceObject>();
             _levelResources = new Dictionary<string, ResourceObject>();
+            _resources = new List<Dictionary<string, ResourceObject>>();
             _cachedTextures = new Dictionary<string, Texture2D>();
+
+            // Store all resource dictionaries in a list
+            _resources.Add(_materialResources);
+            _resources.Add(_itemResources);
+            _resources.Add(_characterResources);
+            _resources.Add(_dialogueResources);
+            _resources.Add(_levelResources);
         }
 
         // Checks to see if a resource has been loaded
         public static bool isResourceLoaded(string uid)
         {
-            // Check texture resources
-            if (_cachedTextures.ContainsKey(uid))
-                return true;
-
-            // Check material resources
-            if (_materialResources.ContainsKey(uid))
-                return true;
-
-            // Check item resources
-            if (_itemResources.ContainsKey(uid))
-                return true;
-
-            // Check character resources
-            if (_characterResources.ContainsKey(uid))
-                return true;
-
-            // Check dialogue resources
-            if (_dialogueResources.ContainsKey(uid))
-                return true;
-
-            // Check level resources
-            if (_levelResources.ContainsKey(uid))
-                return true;
+            foreach (Dictionary<string, ResourceObject> dictionary in _resources)
+            {
+                if (dictionary.ContainsKey(uid))
+                    return true;
+            }
 
             return false;
         }
@@ -137,6 +129,28 @@ namespace StasisCore.Controllers
             }
 
             return false;
+        }
+
+        // Save material resources
+        public static void saveMaterialResources(List<Material> materials, bool backup = true)
+        {
+            // Backup materials
+            if (backup)
+            {
+                string backupFile = String.Format("{0}.bak", materialPath);
+                if (File.Exists(backupFile))
+                    File.Delete(backupFile);
+                File.Move(materialPath, backupFile);
+            }
+
+            // Save materials
+            XDocument doc = new XDocument(new XElement("Materials"));
+            foreach (Material material in materials)
+                doc.Element("Materials").Add(material.data);
+            doc.Save(materialPath);
+
+            // Reload materials
+            loadMaterials();
         }
 
         // Destroy a resource

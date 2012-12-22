@@ -34,6 +34,30 @@ namespace StasisCore.Models
         public int randomBlue { get { return _randomBlue; } set { _randomBlue = value; } }
         public int ranomdAlpha { get { return _randomAlpha; } set { _randomAlpha = value; } }
 
+        public override XElement data
+        {
+            get
+            {
+                XElement d = base.data;
+                foreach (string textureUID in _textureUIDs)
+                    d.Add(new XElement("Texture", new XAttribute("uid", textureUID)));
+
+                d.SetAttributeValue("texture_order", textureOrder.ToString().ToLower());
+                d.SetAttributeValue("scatter_style", _scatterStyle.ToString().ToLower());
+                d.SetAttributeValue("interest_point", _interestPoint);
+                d.SetAttributeValue("restrict_distance", _restictDistance);
+                d.SetAttributeValue("min_distance", _minDistance);
+                d.SetAttributeValue("max_distance", _maxDistance);
+                d.SetAttributeValue("base_color", _baseColor);
+                d.SetAttributeValue("random_red", _randomRed);
+                d.SetAttributeValue("random_green", _randomGreen);
+                d.SetAttributeValue("random_blue", _randomBlue);
+                d.SetAttributeValue("random_alpha", _randomAlpha);
+
+                return d;
+            }
+        }
+
         // Create new
         public MaterialScatterLayer()
             : base("scatter", true)

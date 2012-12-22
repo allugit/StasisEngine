@@ -17,6 +17,8 @@ namespace StasisEditor.Views
         private MaterialController _controller;
         private MaterialProperties _materialProperties;
 
+        public Material selectedMaterial { get { return materialsListBox.SelectedItem as Material; } }
+
         public MaterialView()
         {
             InitializeComponent();
@@ -39,12 +41,6 @@ namespace StasisEditor.Views
         public void setAutoUpdatePreview(bool status)
         {
             autoUpdatePreview.Checked = status;
-        }
-
-        // getSelectedMaterial
-        public Material getSelectedMaterial()
-        {
-            return materialsListBox.SelectedItem as Material;
         }
 
         // openProperties
@@ -77,8 +73,6 @@ namespace StasisEditor.Views
         // Selected materials changed
         private void materialsListBox_SelectedIndexChanged(object sender, EventArgs e)
         {
-            Material selectedMaterial = getSelectedMaterial();
-
             // Enabled/disable preview button
             previewButton.Enabled = selectedMaterial != null;
 
@@ -103,7 +97,7 @@ namespace StasisEditor.Views
         // Preview material
         private void previewButton_Click(object sender, EventArgs e)
         {
-            _controller.preview(getSelectedMaterial());
+            _controller.preview(selectedMaterial);
         }
 
         // Auto update changed
@@ -115,7 +109,7 @@ namespace StasisEditor.Views
         // Material save button
         private void saveButton_Click(object sender, EventArgs e)
         {
-            //_controller.saveResource(getSelectedMaterial().resource);
+            _controller.saveMaterials();
         }
 
         // Add material clicked
@@ -132,7 +126,6 @@ namespace StasisEditor.Views
         // Remove material clicked
         private void removeButton_Click(object sender, EventArgs e)
         {
-            Material selectedMaterial = getSelectedMaterial();
             Debug.Assert(selectedMaterial != null);
 
             try

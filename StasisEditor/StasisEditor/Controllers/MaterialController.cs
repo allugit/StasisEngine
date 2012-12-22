@@ -67,10 +67,16 @@ namespace StasisEditor.Controllers
             // Update if set to auto update
             if (_autoUpdatePreview)
             {
-                Material material = _materialView.getSelectedMaterial();
+                Material material = _materialView.selectedMaterial;
                 if (material != null)
                     preview(material);
             }
+        }
+
+        // saveMaterials
+        public void saveMaterials()
+        {
+            ResourceController.saveMaterialResources(new List<Material>(_materials));
         }
 
         // createMaterial

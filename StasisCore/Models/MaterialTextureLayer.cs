@@ -16,6 +16,19 @@ namespace StasisCore.Models
         public float multiplier { get { return _multiplier; } set { _multiplier = value; } }
         public LayerBlendType blendType { get { return _blendType; } set { _blendType = value; } }
 
+        public override XElement data
+        {
+            get
+            {
+                XElement d = base.data;
+                d.SetAttributeValue("texture_uid", _textureUID);
+                d.SetAttributeValue("scale", _scale);
+                d.SetAttributeValue("multiplier", _multiplier);
+                d.SetAttributeValue("blend_type", _blendType.ToString().ToLower());
+                return d;
+            }
+        }
+
         // Create new
         public MaterialTextureLayer()
             : base("texture", true)

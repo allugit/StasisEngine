@@ -14,6 +14,19 @@ namespace StasisCore.Models
         public float multiplier { get { return _multiplier; } set { _multiplier = value; } }
         public List<MaterialLayer> layers { get { return _layers; } }
 
+        public override XElement data
+        {
+            get
+            {
+                XElement d = base.data;
+                d.SetAttributeValue("blend_type", _blendType.ToString().ToLower());
+                d.SetAttributeValue("multiplier", _multiplier);
+                foreach (MaterialLayer layer in _layers)
+                    d.Add(layer.data);
+                return d;
+            }
+        }
+
         // Create new
         public MaterialGroupLayer(string type = "group", bool enabled = true)
             : base(type, enabled)

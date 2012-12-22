@@ -11,6 +11,16 @@ namespace StasisCore.Models
         public bool enabled { get { return _enabled; } set { _enabled = value; } }
         public string type { get { return _type; } }
 
+        virtual public XElement data
+        {
+            get
+            {
+                return new XElement("Layer",
+                    new XAttribute("type", _type),
+                    new XAttribute("enabled", enabled));
+            }
+        }
+
         // Create new
         public MaterialLayer(string type, bool enabled)
         {
