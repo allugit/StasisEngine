@@ -203,6 +203,8 @@
             // blueprintView
             // 
             this.blueprintView.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.blueprintView.editBlueprintScrapShapeView = null;
+            this.blueprintView.editBlueprintSocketsView = null;
             this.blueprintView.Location = new System.Drawing.Point(0, 0);
             this.blueprintView.Margin = new System.Windows.Forms.Padding(0);
             this.blueprintView.Name = "blueprintView";

@@ -62,6 +62,7 @@ namespace StasisEditor.Controllers
             _actorToolbar.Enabled = status;
         }
 
+        /*
         // enableLevelXNAInput
         public void enableLevelXNAInput(bool status)
         {
@@ -73,6 +74,7 @@ namespace StasisEditor.Controllers
         {
             _levelController.enableXNADrawing(status);
         }
+        */
 
         // createNewLevel
         public void createNewLevel()
@@ -86,7 +88,7 @@ namespace StasisEditor.Controllers
             _editorView.enableSaveLevel(true);
 
             // Add level settings
-            _editorView.addLevelSettings(_levelController.getLevel());
+            _editorView.addLevelSettings(_levelController.level);
 
             // Create actor toolbar
             _actorToolbar = new ActorToolbar();
@@ -122,20 +124,21 @@ namespace StasisEditor.Controllers
             _blueprintController.handleXNADraw();
         }
         */
+        /*
         // update
         public void update()
         {
             // Handle mouse wheel event through XNA
-            if (Input.deltaScrollValue != 0)
-                _scale += (float)Input.deltaScrollValue * 0.01f;
+            //if (Input.deltaScrollValue != 0)
+            //    _scale += (float)Input.deltaScrollValue * 0.01f;
             
             // Level controller update
-            _levelController.update();
+            _//levelController.update();
 
             // Blueprint controller update
-            _blueprintController.update();
+            //_blueprintController.update();
         }
-
+        */
         // exit
         public void exit()
         {

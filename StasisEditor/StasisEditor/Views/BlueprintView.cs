@@ -181,7 +181,7 @@ namespace StasisEditor.Views
             {
                 // Unhook XNA from level view
                 //_controller.unhookXNAFromLevel();
-                _controller.enableLevelXNAInput(false);
+                //_controller.enableLevelXNAInput(false);
                 //_controller.enableLevelXNADrawing(false);
 
                 // Create edit view
@@ -200,7 +200,7 @@ namespace StasisEditor.Views
 
                 // Hook XNA to level view
                 //_controller.hookXNAToLevel();
-                _controller.enableLevelXNAInput(true);
+                //_controller.enableLevelXNAInput(true);
                 //_controller.enableLevelXNADrawing(true);
             }
             catch (ResourceNotFoundException ex)

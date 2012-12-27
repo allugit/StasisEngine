@@ -16,8 +16,6 @@ namespace StasisEditor.Controllers
 
         private EditorController _editorController;
         private LevelView _levelView;
-        private bool _xnaInputEnabled = true;
-        private bool _xnaDrawingEnabled = true;
 
         private List<ActorSubController> _selectedSubControllers;
         private List<ActorSubController> _subControllerSelectQueue;
@@ -31,6 +29,9 @@ namespace StasisEditor.Controllers
 
         private System.Drawing.Point _mouse;
         private Vector2 _screenCenter;
+
+        public System.Drawing.Point mouse { get { return _mouse; } set { _mouse = value; } }
+        public EditorLevel level { get { return _level; } set { _level = value; } }
 
         public LevelController(EditorController editorController, LevelView levelView)
         {
@@ -52,12 +53,6 @@ namespace StasisEditor.Controllers
         public float getScale() { return _editorController.getScale(); }
         public Vector2 getWorldOffset() { return _screenCenter + (new Vector2(_levelView.Width, _levelView.Height) / 2) / _editorController.getScale(); }
         public Vector2 getWorldMouse() { return new Vector2(_mouse.X, _mouse.Y) / _editorController.getScale() - getWorldOffset(); }
-
-        // getLevel
-        public EditorLevel getLevel()
-        {
-            return _level;
-        }
 
         // getActorControllers
         public List<ActorResourceController> getActorControllers()
@@ -97,6 +92,7 @@ namespace StasisEditor.Controllers
             _levelView.unhookFromXNA();
         }
         */
+        /*
         // enableXNAInput
         public void enableXNAInput(bool status)
         {
@@ -108,7 +104,8 @@ namespace StasisEditor.Controllers
         {
             _xnaDrawingEnabled = status;
         }
-
+        */
+        /*
         // update
         public void update()
         {
@@ -143,7 +140,7 @@ namespace StasisEditor.Controllers
                 _actorControllers.Remove(_actorControllersRemoveQueue[index]);
                 _actorControllersRemoveQueue.Remove(_actorControllersRemoveQueue[index]);
             }
-
+          
             if (_xnaInputEnabled)
             {
                 // Update mouse position
@@ -158,7 +155,7 @@ namespace StasisEditor.Controllers
                     controller.globalCheckKey();
             }
         }
-
+        */
         #endregion
 
         #region Levels
@@ -311,6 +308,7 @@ namespace StasisEditor.Controllers
 
         #region Input
 
+        /*
         // Update mouse position
         private void updateMousePosition()
         {
@@ -363,7 +361,7 @@ namespace StasisEditor.Controllers
                 }
             }
         }
-        
+        */
         #endregion
     }
 }

@@ -64,7 +64,7 @@ namespace StasisEditor.Controllers
         // XNA hooks
         //public void hookXNAToLevel() { _editorController.hookXNAToLevel(); }
         //public void unhookXNAFromLevel() { _editorController.unhookXNAFromLevel(); }
-        public void enableLevelXNAInput(bool status) { _editorController.enableLevelXNAInput(status); }
+        //public void enableLevelXNAInput(bool status) { _editorController.enableLevelXNAInput(status); }
         //public void enableLevelXNADrawing(bool status) { _editorController.enableLevelXNADrawing(status); }
         //public void resizeGraphicsDevice(int width, int height) { _editorController.resizeGraphicsDevice(width, height); }
 
