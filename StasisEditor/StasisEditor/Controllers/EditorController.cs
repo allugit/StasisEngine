@@ -13,27 +13,31 @@ namespace StasisEditor.Controllers
 {
     public class EditorController : Controller
     {
-        private XNAController _xnaController;
         private MaterialController _materialController;
         private LevelController _levelController;
         private BlueprintController _blueprintController;
 
         private EditorView _editorView;
-        private ShapeRenderer _shapeRenderer;
         private ActorToolbar _actorToolbar;
 
         private float _scale = 35f;
 
-        public EditorController(XNAController xnaController)
+        public EditorView view { get { return _editorView; } }
+
+        public EditorController(EditorView view)
         {
-            _xnaController = xnaController;
+            // Initialize core resource controller
+            ResourceController.initialize();
+
+            _editorView = view;
+            view.setController(this);
 
             // Initialize core resource controller
-            ResourceController.initialize(XNAResources.graphicsDevice);
+            //ResourceController.initialize(XNAResources.graphicsDevice);
 
             // Create editor view
-            _editorView = new EditorView();
-            _editorView.setController(this);
+            //_editorView = new EditorView();
+            //_editorView.setController(this);
 
             // Create material controller
             _materialController = new MaterialController(this, _editorView.getMaterialView());
@@ -44,9 +48,6 @@ namespace StasisEditor.Controllers
             // Create blueprint controller
             _blueprintController = new BlueprintController(this, _editorView.getBlueprintView());
 
-            // Create shape renderer
-            _shapeRenderer = new ShapeRenderer(_levelController);
-            _levelController.setShapeRenderer(_shapeRenderer);
         }
 
         // getScale
@@ -55,28 +56,10 @@ namespace StasisEditor.Controllers
         // setScale
         public void setScale(float value) { _scale = value; }
 
-        // resizeGraphicsDevice
-        public void resizeGraphicsDevice(int width, int height)
-        {
-            _xnaController.resizeGraphicsDevice(width, height);
-        }
-
         // setActorToolbarEnabled
         public void setActorToolbarEnabled(bool status)
         {
             _actorToolbar.Enabled = status;
-        }
-
-        // unhookXNAFromLevel
-        public void unhookXNAFromLevel()
-        {
-            _levelController.unhookXNAFromView();
-        }
-
-        // hookXNAToLevel
-        public void hookXNAToLevel()
-        {
-            _levelController.hookXNAToView();
         }
 
         // enableLevelXNAInput
@@ -128,7 +111,7 @@ namespace StasisEditor.Controllers
             // Remove actor toolbar
             _editorView.removeActorToolbar(_actorToolbar);
         }
-
+        /*
         // handleXNADraw
         public void handleXNADraw()
         {
@@ -138,7 +121,7 @@ namespace StasisEditor.Controllers
             // Blueprint controller draw
             _blueprintController.handleXNADraw();
         }
-
+        */
         // update
         public void update()
         {

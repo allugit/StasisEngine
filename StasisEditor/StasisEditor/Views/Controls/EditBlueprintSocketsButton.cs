@@ -45,9 +45,9 @@ namespace StasisEditor.Views.Controls
             }
 
             // Unhook XNA from level view
-            _blueprintController.unhookXNAFromLevel();
+            //_blueprintController.unhookXNAFromLevel();
             _blueprintController.enableLevelXNAInput(false);
-            _blueprintController.enableLevelXNADrawing(false);
+            //_blueprintController.enableLevelXNADrawing(false);
 
             // Create view
             EditBlueprintSocketsView editSocketsView = new EditBlueprintSocketsView(_blueprint);
@@ -63,9 +63,9 @@ namespace StasisEditor.Views.Controls
             _view.editBlueprintSocketsView = null;
 
             // Hook XNA to level view
-            _blueprintController.hookXNAToLevel();
+            //_blueprintController.hookXNAToLevel();
             _blueprintController.enableLevelXNAInput(true);
-            _blueprintController.enableLevelXNADrawing(true);
+            //_blueprintController.enableLevelXNADrawing(true);
         }
     }
 }

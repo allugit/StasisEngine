@@ -20,7 +20,6 @@ namespace StasisEditor.Views.Controls
     {
         private BlueprintView _view;
         private BlueprintScrap _scrap;
-        private SpriteBatch _spriteBatch;
         private Texture2D _pixel;
         private Texture2D _texture;
         private Vector2 _textureCenter;
@@ -33,16 +32,14 @@ namespace StasisEditor.Views.Controls
             _texture = texture;
             _textureCenter = new Vector2(_texture.Width, _texture.Height) / 2;
             _scrap = scrap;
-            _spriteBatch = XNAResources.spriteBatch;
-            _pixel = XNAResources.pixel;
             _points = new List<Vector2>(_scrap.points);
 
             InitializeComponent();
 
             // Hook to XNA
-            XNAResources.graphics.PreparingDeviceSettings += new EventHandler<PreparingDeviceSettingsEventArgs>(preparingDeviceSettings);
-            Microsoft.Xna.Framework.Input.Mouse.WindowHandle = pictureBox.FindForm().Handle;
-            _view.getController().resizeGraphicsDevice(texture.Width, texture.Height);
+            //XNAResources.graphics.PreparingDeviceSettings += new EventHandler<PreparingDeviceSettingsEventArgs>(preparingDeviceSettings);
+            //Microsoft.Xna.Framework.Input.Mouse.WindowHandle = pictureBox.FindForm().Handle;
+            //_view.getController().resizeGraphicsDevice(texture.Width, texture.Height);
 
             // Resize picturebox and form
             int widthDelta = texture.Width - pictureBox.Width;
@@ -58,7 +55,7 @@ namespace StasisEditor.Views.Controls
         {
             return _points;
         }
-
+        /*
         // handleXNADraw
         public void handleXNADraw()
         {
@@ -97,7 +94,7 @@ namespace StasisEditor.Views.Controls
             Rectangle rect = new Rectangle(0, 0, (int)length, 2);
             _spriteBatch.Draw(_pixel, pointA, rect, color, angle, new Vector2(0, 1), 1f, SpriteEffects.None, 0);
         }
-
+        */
         // updateMousePosition
         public void updateMousePosition()
         {
@@ -139,13 +136,13 @@ namespace StasisEditor.Views.Controls
             // Enable done button
             saveButton.Enabled = _points.Count > 2;
         }
-
+        /*
         // Unhook from XNA
         private void EditBlueprintScrapShape_FormClosing(object sender, FormClosingEventArgs e)
         {
             XNAResources.graphics.PreparingDeviceSettings -= new EventHandler<PreparingDeviceSettingsEventArgs>(preparingDeviceSettings);
         }
-
+        */
         // Click on form
         private void EditBlueprintScrapShape_Click(object sender, EventArgs e)
         {

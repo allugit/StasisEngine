@@ -27,6 +27,7 @@ namespace StasisCore.Controllers
         private static Dictionary<string, Texture2D> _cachedTextures;
         private static List<Dictionary<string, ResourceObject>> _resources;
 
+        public static GraphicsDevice graphicsDevice { get { return _graphicsDevice; } set { _graphicsDevice = value; } }
         public static string texturePath { get { return String.Format("{0}\\textures", RESOURCE_PATH); } }
         public static string levelPath { get { return String.Format("{0}\\levels", RESOURCE_PATH); } }
         public static string materialPath { get { return String.Format("{0}\\materials.xml", RESOURCE_PATH); } }
@@ -35,9 +36,8 @@ namespace StasisCore.Controllers
         public static string dialoguePath { get { return String.Format("{0}\\dialogues.xml", RESOURCE_PATH); } }
 
         // Initialize -- Called once when the application starts
-        public static void initialize(GraphicsDevice graphicsDevice)
+        public static void initialize()
         {
-            _graphicsDevice = graphicsDevice;
             _materialResources = new Dictionary<string, ResourceObject>();
             _itemResources = new Dictionary<string, ResourceObject>();
             _characterResources = new Dictionary<string, ResourceObject>();

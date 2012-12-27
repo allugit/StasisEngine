@@ -93,11 +93,11 @@ namespace StasisEditor.Controllers.Actors
         public override void draw()
         {
             // Draw circle
-            _renderer.drawCircle(_objectSpawnerResource.position, 0.5f, Color.LightGreen);
+            //_renderer.drawCircle(_objectSpawnerResource.position, 0.5f, Color.LightGreen);
 
             // Draw velocity control
-            _renderer.drawLine(_actor.position, _velocitySubController.position, Color.Gray);
-            _renderer.drawPoint(_velocitySubController.position, Color.White);
+            //_renderer.drawLine(_actor.position, _velocitySubController.position, Color.Gray);
+            //_renderer.drawPoint(_velocitySubController.position, Color.White);
         }
 
         // clone

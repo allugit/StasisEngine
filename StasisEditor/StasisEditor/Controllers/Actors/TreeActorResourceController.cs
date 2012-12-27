@@ -123,14 +123,14 @@ namespace StasisEditor.Controllers.Actors
         public override void draw()
         {
             // Draw base circle
-            _renderer.drawPoint(_actor.position, Color.DarkGray);
+            //_renderer.drawPoint(_actor.position, Color.DarkGray);
 
             // Draw box
-            _renderer.drawBox(_actor.position + _boxController.alignmentOffset, _treeActorResource.treeProperties.maxBaseWidth, _treeActorResource.treeProperties.internodeLength, _treeActorResource.treeProperties.angle, Color.Green);
+            //_renderer.drawBox(_actor.position + _boxController.alignmentOffset, _treeActorResource.treeProperties.maxBaseWidth, _treeActorResource.treeProperties.internodeLength, _treeActorResource.treeProperties.angle, Color.Green);
 
             // Draw tropism control
-            _renderer.drawLine(_actor.position, _tropismController.position, Color.Gray);
-            _renderer.drawPoint(_tropismController.position, Color.Yellow);
+            //_renderer.drawLine(_actor.position, _tropismController.position, Color.Gray);
+            //_renderer.drawPoint(_tropismController.position, Color.Yellow);
         }
 
         // clone

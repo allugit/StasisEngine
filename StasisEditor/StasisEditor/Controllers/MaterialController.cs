@@ -46,7 +46,7 @@ namespace StasisEditor.Controllers
             materialView.setAutoUpdatePreview(true);
 
             // Create terrain renderer
-            _materialRenderer = new MaterialRenderer(XNAResources.game as Game, XNAResources.spriteBatch);
+            //_materialRenderer = new MaterialRenderer(XNAResources.game as Game, XNAResources.spriteBatch);
         }
 
         // setAutoUpdatePreview
@@ -169,6 +169,8 @@ namespace StasisEditor.Controllers
         // preview
         public void preview(Material material)
         {
+            throw new NotImplementedException();
+            /*
             // Resize graphics device
             int graphicsDeviceWidth = XNAResources.graphicsDevice.Viewport.Width;
             int graphicsDeviceHeight = XNAResources.graphicsDevice.Viewport.Height;
@@ -205,6 +207,7 @@ namespace StasisEditor.Controllers
             // Restore graphics device
             _editorController.resizeGraphicsDevice(graphicsDeviceWidth, graphicsDeviceHeight);
             XNAResources.graphicsDevice.Clear(Color.Black);
+            */
         }
 
         // previewClosed

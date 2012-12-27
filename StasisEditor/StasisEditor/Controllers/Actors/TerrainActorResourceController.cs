@@ -186,7 +186,7 @@ namespace StasisEditor.Controllers.Actors
             LinkedPointSubController current = _headLinkedPointController;
             while (current.next != null)
             {
-                _renderer.drawLine(current.position, current.next.position, Color.Orange);
+                //_renderer.drawLine(current.position, current.next.position, Color.Orange);
                 current = current.next;
             }
 
@@ -194,7 +194,7 @@ namespace StasisEditor.Controllers.Actors
             current = _headLinkedPointController;
             while (current != null)
             {
-                _renderer.drawPoint(current.position, Color.Yellow);
+                //_renderer.drawPoint(current.position, Color.Yellow);
                 current = current.next;
             }
         }

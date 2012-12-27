@@ -10,7 +10,6 @@ namespace StasisEditor.Controllers.Actors
     abstract public class ActorResourceController
     {
         protected ActorResource _actor;
-        protected ShapeRenderer _renderer;
         protected LevelController _levelController;
 
         public ActorType type { get { return _actor.type; } }
@@ -18,7 +17,6 @@ namespace StasisEditor.Controllers.Actors
         public ActorResourceController(LevelController levelController)
         {
             _levelController = levelController;
-            _renderer = levelController.getShapeRenderer();
         }
 
         // getLevelController

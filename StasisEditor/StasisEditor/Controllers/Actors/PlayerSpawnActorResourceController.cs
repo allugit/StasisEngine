@@ -65,8 +65,7 @@ namespace StasisEditor.Controllers.Actors
         // draw
         public override void draw()
         {
-            // Draw icon
-            _renderer.drawIcon(_actor.type, _positionSubController.position);
+            throw new NotImplementedException();
         }
 
         // clone

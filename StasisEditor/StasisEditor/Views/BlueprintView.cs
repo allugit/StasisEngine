@@ -43,7 +43,7 @@ namespace StasisEditor.Views
         {
             return _controller;
         }
-
+        /*
         // handleXNADraw
         public void handleXNADraw()
         {
@@ -52,7 +52,7 @@ namespace StasisEditor.Views
 
             if (_editBlueprintSocketsView != null)
                 _editBlueprintSocketsView.handleXNADraw();
-        }
+        }*/
 
         // updateMousePosition
         public void updateMousePosition()
@@ -180,9 +180,9 @@ namespace StasisEditor.Views
             try
             {
                 // Unhook XNA from level view
-                _controller.unhookXNAFromLevel();
+                //_controller.unhookXNAFromLevel();
                 _controller.enableLevelXNAInput(false);
-                _controller.enableLevelXNADrawing(false);
+                //_controller.enableLevelXNADrawing(false);
 
                 // Create edit view
                 EditBlueprintScrapShape editScrapView = new EditBlueprintScrapShape(this, ResourceController.getTexture(selectedScrap.scrapTextureUID), selectedScrap);
@@ -199,9 +199,9 @@ namespace StasisEditor.Views
                 editBlueprintScrapShapeView = null;
 
                 // Hook XNA to level view
-                _controller.hookXNAToLevel();
+                //_controller.hookXNAToLevel();
                 _controller.enableLevelXNAInput(true);
-                _controller.enableLevelXNADrawing(true);
+                //_controller.enableLevelXNADrawing(true);
             }
             catch (ResourceNotFoundException ex)
             {

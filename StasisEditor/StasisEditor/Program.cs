@@ -1,23 +1,20 @@
 using System;
+using System.Windows.Forms;
 using StasisEditor.Controllers;
+using StasisEditor.Views;
 
 namespace StasisEditor
 {
-#if WINDOWS || XBOX
     static class Program
     {
-        /// <summary>
-        /// The main entry point for the application.
-        /// </summary>
+        private static EditorController _editorController;
+
         [STAThread]
         static void Main(string[] args)
         {
-            using (XNAController xnaController = new XNAController())
-            {
-                xnaController.Run();
-            }
+            _editorController = new EditorController(new EditorView());
+            Application.Run(_editorController.view);
         }
     }
-#endif
 }
 

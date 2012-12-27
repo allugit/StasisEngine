@@ -18,7 +18,6 @@ namespace StasisEditor.Views.Controls
     public partial class EditBlueprintSocketsView : Form
     {
         private Blueprint _blueprint;
-        private SpriteBatch _spriteBatch;
         private Texture2D _pixel;
         private Vector2 _mouse;
         private BlueprintScrap _selectedScrap;
@@ -27,19 +26,8 @@ namespace StasisEditor.Views.Controls
         public EditBlueprintSocketsView(Blueprint blueprint)
         {
             _blueprint = blueprint;
-            _spriteBatch = XNAResources.spriteBatch;
-            _pixel = XNAResources.pixel;
 
             InitializeComponent();
-
-            // Hook to XNA
-            XNAResources.graphics.PreparingDeviceSettings += new EventHandler<PreparingDeviceSettingsEventArgs>(preparingDeviceSettings);
-            Microsoft.Xna.Framework.Input.Mouse.WindowHandle = pictureBox.FindForm().Handle;
-
-            Resize += new EventHandler(EditBlueprintScrapSocketsView_Resize);
-
-            // Initial resize
-            //_itemController.resizeGraphicsDevice(pictureBox.Width, pictureBox.Height);
         }
 
         // updateMousePosition
@@ -64,7 +52,7 @@ namespace StasisEditor.Views.Controls
             _mouse.X = x;
             _mouse.Y = y;
         }
-
+        /*
         // handleXNADraw
         public void handleXNADraw()
         {
@@ -99,7 +87,7 @@ namespace StasisEditor.Views.Controls
             float angle = (float)Math.Atan2(relative.Y, relative.X);
             Rectangle rect = new Rectangle(0, 0, (int)length, 2);
             _spriteBatch.Draw(_pixel, pointA, rect, color, angle, new Vector2(0, 1), 1f, SpriteEffects.None, 0);
-        }
+        }*/
 
         // Set the graphics device window handle to the surface handle
         private void preparingDeviceSettings(object sender, PreparingDeviceSettingsEventArgs e)
@@ -119,14 +107,14 @@ namespace StasisEditor.Views.Controls
             DialogResult = System.Windows.Forms.DialogResult.Cancel;
             Close();
         }
-
+        /*
         // Unhook from XNA
         private void EditBlueprintScrapSocketsView_FormClosing(object sender, FormClosingEventArgs e)
         {
             XNAResources.graphics.PreparingDeviceSettings -= new EventHandler<PreparingDeviceSettingsEventArgs>(preparingDeviceSettings);
             Resize -= new EventHandler(EditBlueprintScrapSocketsView_Resize);
         }
-
+        */
         // Picture box clicked
         private void pictureBox_MouseDown(object sender, MouseEventArgs e)
         {

@@ -16,7 +16,6 @@ namespace StasisEditor.Controllers
 
         private EditorController _editorController;
         private LevelView _levelView;
-        private ShapeRenderer _shapeRenderer;
         private bool _xnaInputEnabled = true;
         private bool _xnaDrawingEnabled = true;
 
@@ -38,7 +37,6 @@ namespace StasisEditor.Controllers
             _editorController = editorController;
             _levelView = levelView;
             _levelView.setController(this);
-            _levelView.hookToXNA();
 
             _selectedSubControllers = new List<ActorSubController>();
             _subControllerSelectQueue = new List<ActorSubController>();
@@ -52,7 +50,7 @@ namespace StasisEditor.Controllers
         #region Getters/Setters
 
         public float getScale() { return _editorController.getScale(); }
-        public Vector2 getWorldOffset() { return _screenCenter + (new Vector2(_levelView.getWidth(), _levelView.getHeight()) / 2) / _editorController.getScale(); }
+        public Vector2 getWorldOffset() { return _screenCenter + (new Vector2(_levelView.Width, _levelView.Height) / 2) / _editorController.getScale(); }
         public Vector2 getWorldMouse() { return new Vector2(_mouse.X, _mouse.Y) / _editorController.getScale() - getWorldOffset(); }
 
         // getLevel
@@ -67,22 +65,10 @@ namespace StasisEditor.Controllers
             return _actorControllers;
         }
 
-        // setShapeRenderer
-        public void setShapeRenderer(ShapeRenderer shapeRenderer)
-        {
-            _shapeRenderer = shapeRenderer;
-        }
-
-        // getShapeRenderer
-        public ShapeRenderer getShapeRenderer()
-        {
-            return _shapeRenderer;
-        }
-
         #endregion
 
         #region XNA Methods
-
+        /*
         // resizeGraphicsDevice
         public void resizeGraphicsDevice(int width, int height)
         {
@@ -97,8 +83,8 @@ namespace StasisEditor.Controllers
                 if (_level != null)
                     _levelView.handleXNADraw();
             }
-        }
-
+        }*/
+        /*
         // hookXNAToView
         public void hookXNAToView()
         {
@@ -110,7 +96,7 @@ namespace StasisEditor.Controllers
         {
             _levelView.unhookFromXNA();
         }
-
+        */
         // enableXNAInput
         public void enableXNAInput(bool status)
         {
@@ -332,8 +318,8 @@ namespace StasisEditor.Controllers
             System.Drawing.Point viewOffset = _levelView.FindForm().PointToClient(_levelView.Parent.PointToScreen(_levelView.Location));
 
             // Set mouse boundaries
-            int x = Math.Min(Math.Max(0, Input.newMouse.X - viewOffset.X), _levelView.getWidth());
-            int y = Math.Min(Math.Max(0, Input.newMouse.Y - viewOffset.Y), _levelView.getHeight());
+            int x = Math.Min(Math.Max(0, Input.newMouse.X - viewOffset.X), _levelView.Width);
+            int y = Math.Min(Math.Max(0, Input.newMouse.Y - viewOffset.Y), _levelView.Height);
 
             // Calculate change in mouse position (for screen and world coordinates)
             int deltaX = x - _mouse.X;

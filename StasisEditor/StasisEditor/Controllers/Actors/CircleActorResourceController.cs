@@ -93,7 +93,7 @@ namespace StasisEditor.Controllers.Actors
         public override void draw()
         {
             // Draw circle
-            _renderer.drawCircle(_circleActorResource.position, _circleActorResource.circleProperties.radius, Color.LightBlue);
+            //_renderer.drawCircle(_circleActorResource.position, _circleActorResource.circleProperties.radius, Color.LightBlue);
         }
 
         // clone

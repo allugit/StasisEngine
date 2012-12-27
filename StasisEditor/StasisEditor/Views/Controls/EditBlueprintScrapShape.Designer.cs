@@ -94,7 +94,6 @@
             this.SizeGripStyle = System.Windows.Forms.SizeGripStyle.Hide;
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;
             this.Text = "Edit Blueprint Scrap Shape";
-            this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.EditBlueprintScrapShape_FormClosing);
             this.Click += new System.EventHandler(this.EditBlueprintScrapShape_Click);
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox)).EndInit();
             this.ResumeLayout(false);

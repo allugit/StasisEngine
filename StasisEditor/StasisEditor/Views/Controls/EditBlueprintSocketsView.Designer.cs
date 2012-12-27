@@ -81,7 +81,6 @@
             this.Name = "EditBlueprintScrapSocketsView";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;
             this.Text = "Edit Sockets";
-            this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.EditBlueprintScrapSocketsView_FormClosing);
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox)).EndInit();
             this.ResumeLayout(false);
 
