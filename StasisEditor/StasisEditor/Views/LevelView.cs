@@ -36,6 +36,8 @@ namespace StasisEditor.Views
             _pixel = new Texture2D(GraphicsDevice, 1, 1);
             _pixel.SetData<Color>(new[] { Color.White });
             _circle = _contentManager.Load<Texture2D>("circle");
+            _playerSpawnIcon = _contentManager.Load<Texture2D>("actor_controller_icons\\player_spawn");
+            _timerIcon = _contentManager.Load<Texture2D>("actor_controller_icons\\timer");
 
             // Draw loop
             Application.Idle += delegate { Invalidate(); };
