@@ -29,7 +29,6 @@ namespace StasisEditor.Views.Controls
             try
             {
                 _materialRenderer = new MaterialRenderer(GraphicsDevice, _contentManager, _spriteBatch);
-                ResourceController.graphicsDevice = GraphicsDevice;
             }
             catch (ContentLoadException e)
             {

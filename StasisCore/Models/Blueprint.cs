@@ -42,7 +42,7 @@ namespace StasisCore.Models
         // Create from xml
         public Blueprint(XElement data, List<BlueprintScrap> scraps, List<BlueprintSocket> sockets) : base(data)
         {
-            _itemUID = data.Attribute("itemUID").Value;
+            _itemUID = data.Attribute("item_uid").Value;
             _scraps = scraps;
             _sockets = sockets;
         }

@@ -57,7 +57,7 @@ namespace StasisEditor.Controllers
                 }
 
                 // Create blueprint
-                Blueprint blueprint = new Blueprint(resource.data, scraps, sockets);
+                _blueprints.Add(new Blueprint(resource.data, scraps, sockets));
             }
         }
 

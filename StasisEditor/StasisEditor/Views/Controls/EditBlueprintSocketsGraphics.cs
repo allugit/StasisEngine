@@ -99,8 +99,6 @@ namespace StasisEditor.Views.Controls
             _pixel = new Texture2D(GraphicsDevice, 1, 1);
             _pixel.SetData<Color>(new[] { Color.White });
 
-            ResourceController.graphicsDevice = GraphicsDevice;
-
             // Initialize blueprint scrap textures
             foreach (BlueprintScrap scrap in _blueprint.scraps)
             {

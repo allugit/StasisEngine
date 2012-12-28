@@ -16,6 +16,7 @@ namespace StasisEditor.Controllers
         private MaterialController _materialController;
         private LevelController _levelController;
         private BlueprintController _blueprintController;
+        private GraphicsDeviceService _graphicsDeviceService;
 
         private EditorView _editorView;
         private ActorToolbar _actorToolbar;
@@ -26,18 +27,15 @@ namespace StasisEditor.Controllers
 
         public EditorController(EditorView view)
         {
-            // Initialize core resource controller
-            ResourceController.initialize();
+            // Initialize graphics device service
+            _graphicsDeviceService = GraphicsDeviceService.AddRef(view.Handle, view.Width, view.Height);
 
+            // Initialize core resource controller
+            ResourceController.initialize(_graphicsDeviceService.GraphicsDevice);
+
+            // Initialize view
             _editorView = view;
             view.setController(this);
-
-            // Initialize core resource controller
-            //ResourceController.initialize(XNAResources.graphicsDevice);
-
-            // Create editor view
-            //_editorView = new EditorView();
-            //_editorView.setController(this);
 
             // Create material controller
             _materialController = new MaterialController(this, _editorView.getMaterialView());
@@ -61,20 +59,6 @@ namespace StasisEditor.Controllers
         {
             _actorToolbar.Enabled = status;
         }
-
-        /*
-        // enableLevelXNAInput
-        public void enableLevelXNAInput(bool status)
-        {
-            _levelController.enableXNAInput(status);
-        }
-
-        // enableLevelXNADrawing
-        public void enableLevelXNADrawing(bool status)
-        {
-            _levelController.enableXNADrawing(status);
-        }
-        */
 
         // createNewLevel
         public void createNewLevel()
@@ -113,32 +97,7 @@ namespace StasisEditor.Controllers
             // Remove actor toolbar
             _editorView.removeActorToolbar(_actorToolbar);
         }
-        /*
-        // handleXNADraw
-        public void handleXNADraw()
-        {
-            // Level controller draw
-            _levelController.handleXNADraw();
 
-            // Blueprint controller draw
-            _blueprintController.handleXNADraw();
-        }
-        */
-        /*
-        // update
-        public void update()
-        {
-            // Handle mouse wheel event through XNA
-            //if (Input.deltaScrollValue != 0)
-            //    _scale += (float)Input.deltaScrollValue * 0.01f;
-            
-            // Level controller update
-            _//levelController.update();
-
-            // Blueprint controller update
-            //_blueprintController.update();
-        }
-        */
         // exit
         public void exit()
         {

@@ -70,7 +70,6 @@ namespace StasisEditor.Views.Controls
 
             try
             {
-                ResourceController.graphicsDevice = GraphicsDevice;
                 _texture = ResourceController.getTexture(_textureUID);
                 _textureCenter = new Vector2(_texture.Width, _texture.Height) / 2;
             }
