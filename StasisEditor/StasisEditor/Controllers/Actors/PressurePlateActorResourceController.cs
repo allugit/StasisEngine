@@ -132,11 +132,11 @@ namespace StasisEditor.Controllers.Actors
         public override void draw()
         {
             // Draw box
-            //_renderer.drawBox(_actor.position, _pressurePlateActor.boxProperties.halfWidth, _pressurePlateActor.boxProperties.halfHeight, _pressurePlateActor.boxProperties.angle, Color.Aqua);
+            _levelController.view.drawBox(_actor.position, _pressurePlateActor.boxProperties.halfWidth, _pressurePlateActor.boxProperties.halfHeight, _pressurePlateActor.boxProperties.angle, Color.Aqua);
 
             // Draw axis sub controller
-            //_renderer.drawLine(_actor.position, _axisSubController.position, Color.Gray);
-            //_renderer.drawPoint(_axisSubController.position, Color.White);
+            _levelController.view.drawLine(_actor.position, _axisSubController.position, Color.Gray);
+            _levelController.view.drawPoint(_axisSubController.position, Color.White);
         }
 
         // clone

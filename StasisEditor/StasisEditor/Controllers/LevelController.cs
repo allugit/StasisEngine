@@ -32,6 +32,7 @@ namespace StasisEditor.Controllers
 
         public System.Drawing.Point mouse { get { return _mouse; } set { _mouse = value; } }
         public EditorLevel level { get { return _level; } set { _level = value; } }
+        public LevelView view { get { return _levelView; } }
 
         public LevelController(EditorController editorController, LevelView levelView)
         {
@@ -46,6 +47,8 @@ namespace StasisEditor.Controllers
             _actorControllers = new List<ActorResourceController>();
             _actorControllersAddQueue = new List<ActorResourceController>();
             _actorControllersRemoveQueue = new List<ActorResourceController>();
+
+            System.Windows.Forms.Application.Idle += delegate { processActorControllerQueue(); };
         }
 
         #region Getters/Setters
@@ -105,9 +108,9 @@ namespace StasisEditor.Controllers
             _xnaDrawingEnabled = status;
         }
         */
-        /*
-        // update
-        public void update()
+
+        // Process actor controller queues
+        public void processActorControllerQueue()
         {
             // Selection queue
             while (_subControllerSelectQueue.Count > 0)
@@ -140,7 +143,8 @@ namespace StasisEditor.Controllers
                 _actorControllers.Remove(_actorControllersRemoveQueue[index]);
                 _actorControllersRemoveQueue.Remove(_actorControllersRemoveQueue[index]);
             }
-          
+
+          /*
             if (_xnaInputEnabled)
             {
                 // Update mouse position
@@ -153,9 +157,9 @@ namespace StasisEditor.Controllers
                 // Let all actor resource controllers listen to key presses
                 foreach (ActorResourceController controller in _actorControllers)
                     controller.globalCheckKey();
-            }
+            }*/
         }
-        */
+        
         #endregion
 
         #region Levels
@@ -229,7 +233,8 @@ namespace StasisEditor.Controllers
             if (actorController != null)
             {
                 // Add actor controller to list
-                _actorControllers.Add(actorController);
+                //_actorControllers.Add(actorController);
+                addActorController(actorController);
 
                 // Select all sub controllers
                 actorController.selectAllSubControllers();

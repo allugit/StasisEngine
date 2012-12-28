@@ -122,7 +122,7 @@ namespace StasisEditor.Controllers.Actors
         // draw
         public override void draw()
         {
-            //_renderer.drawBox(_actor.position, _boxActor.boxProperties.halfWidth, _boxActor.boxProperties.halfHeight, _boxActor.boxProperties.angle, Color.LightBlue);
+            _levelController.view.drawBox(_actor.position, _boxActor.boxProperties.halfWidth, _boxActor.boxProperties.halfHeight, _boxActor.boxProperties.angle, Color.LightBlue);
         }
 
         // clone

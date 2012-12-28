@@ -75,11 +75,11 @@ namespace StasisEditor.Controllers.Actors
         public override void draw()
         {
             // Draw line
-            //_renderer.drawLine(_pointASubController.position, _pointBSubController.position, Color.Tan);
+            _levelController.view.drawLine(_pointASubController.position, _pointBSubController.position, Color.Tan);
 
             // Draw points
-            //_renderer.drawPoint(_pointASubController.position, Color.Yellow);
-            //_renderer.drawPoint(_pointBSubController.position, Color.DarkGoldenrod);
+            _levelController.view.drawPoint(_pointASubController.position, Color.Yellow);
+            _levelController.view.drawPoint(_pointBSubController.position, Color.DarkGoldenrod);
         }
 
         // clone
