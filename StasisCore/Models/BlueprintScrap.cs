@@ -8,6 +8,10 @@ using StasisCore.Resources;
 
 namespace StasisCore.Models
 {
+    /*
+     * Blueprint scrap -- A piece of a blueprint. It consists of:
+     * - Connections - Links between scraps that form whenever sockets are correctly positioned
+     */
     public class BlueprintScrap : Item
     {
         private Texture2D _scrapTexture;
@@ -18,6 +22,7 @@ namespace StasisCore.Models
         private string _scrapTextureUID;
         private string _blueprintUID;
         private Matrix _rotationMatrix;
+        private List<BlueprintScrap> _connected;
 
         public Texture2D scrapTexture { get { return _scrapTexture; } set { _scrapTexture = value; } }
         public Vector2 textureCenter { get { return _textureCenter; } set { _textureCenter = value; } }
@@ -34,6 +39,8 @@ namespace StasisCore.Models
         }
         public string scrapTextureUID { get { return _scrapTextureUID; } set { _scrapTextureUID = value; } }
         public string blueprintUID { get { return _blueprintUID; } set { _blueprintUID = value; } }
+        public Matrix rotationMatrix { get { return _rotationMatrix; } }
+        public List<BlueprintScrap> connected { get { return _connected; } }
 
         public override XElement data
         {
@@ -62,6 +69,7 @@ namespace StasisCore.Models
             _currentCraftAngle = 0;
             _textureCenter = Vector2.Zero;
             _rotationMatrix = Matrix.Identity;
+            _connected = new List<BlueprintScrap>();
         }
 
         // Create from xml
@@ -78,6 +86,70 @@ namespace StasisCore.Models
             _points = new List<Vector2>();
             foreach (XElement childData in data.Elements("Point"))
                 _points.Add(XmlLoadHelper.getVector2(childData.Value));
+
+            _connected = new List<BlueprintScrap>();
+        }
+
+        // connectScrap
+        public void connectScrap(BlueprintScrap scrap)
+        {
+            _connected.Add(scrap);
+        }
+
+        // getConnected
+        public List<BlueprintScrap> getConnected()
+        {
+            List<BlueprintScrap> list = new List<BlueprintScrap>();
+            recursiveGetConnected(list);
+            list.Remove(this);
+            return list;
+        }
+
+        // recursiveGetConnected
+        private void recursiveGetConnected(List<BlueprintScrap> results)
+        {
+            //Console.WriteLine("results: {0}", results.Count);
+            foreach (BlueprintScrap scrap in _connected)
+            {
+                if (!results.Contains(scrap))
+                {
+                    results.Add(scrap);
+                    scrap.recursiveGetConnected(results);
+                }
+            }
+        }
+
+        // move
+        public void move(Vector2 delta, bool moveConnected = true)
+        {
+            // Move
+            _currentCraftPosition += delta;
+
+            if (moveConnected)
+            {
+                List<BlueprintScrap> allConnections = getConnected();
+                foreach (BlueprintScrap scrap in allConnections)
+                    scrap.move(delta, false);
+            }
+        }
+
+        // rotate
+        public void rotate(float delta)
+        {
+            // Rotate
+            currentCraftAngle += delta;
+
+            // Rotate connected
+            List<BlueprintScrap> allConnections = getConnected();
+            foreach (BlueprintScrap scrap in allConnections)
+            {
+                // Update scrap position
+                Vector2 relative = scrap.currentCraftPosition - currentCraftPosition;
+                scrap.currentCraftPosition = currentCraftPosition + Vector2.Transform(relative, Matrix.CreateRotationZ(delta));
+
+                // Update scrap angle
+                scrap.currentCraftAngle += delta;
+            }
         }
 
         // hitTest -- http://www.ecse.rpi.edu/Homepages/wrf/Research/Short_Notes/pnpoly.html

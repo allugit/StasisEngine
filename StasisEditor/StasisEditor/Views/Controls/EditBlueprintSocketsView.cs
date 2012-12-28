@@ -40,7 +40,10 @@ namespace StasisEditor.Views.Controls
                 scrap.textureCenter = new Vector2(scrap.scrapTexture.Width, scrap.scrapTexture.Height) / 2;
             }
 
-            // Position blueprint scraps using sockets
+            // Move blueprint scraps into their ideal positions by testing sockets with a large tolerance
+            Console.WriteLine("testing");
+            foreach (BlueprintSocket socket in _blueprint.sockets)
+                socket.test(float.MaxValue);
 
             editBlueprintSocketsGraphics.blueprint = _blueprint;
         }

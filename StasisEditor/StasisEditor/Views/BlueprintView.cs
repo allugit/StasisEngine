@@ -190,9 +190,19 @@ namespace StasisEditor.Views
                 Console.WriteLine("do something");
             }
 
-            // Reset scrap craft positions
+            // Reset scraps
             foreach (BlueprintScrap scrap in selectedBlueprint.scraps)
+            {
                 scrap.currentCraftPosition = Vector2.Zero;
+                scrap.connected.Clear();
+            }
+
+            // Reset sockets
+            foreach (BlueprintSocket socket in selectedBlueprint.sockets)
+            {
+                socket.satisfied = false;
+                socket.opposingSocket.satisfied = false;
+            }
 
             // Close view
             editBlueprintSocketsView = null;

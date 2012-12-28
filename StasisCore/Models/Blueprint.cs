@@ -5,6 +5,12 @@ using System.Xml.Linq;
 
 namespace StasisCore.Models
 {
+    /*
+     * Blueprint -- an item that is used to craft other items. It consists of:
+     * - Scraps: The scraps that have to be pieced together to create the
+     * whole blueprint.
+     * - Sockets: The information needed to create a connection between scraps
+     */
     public class Blueprint : Item
     {
         private string _itemUID;
@@ -45,6 +51,13 @@ namespace StasisCore.Models
             _itemUID = data.Attribute("item_uid").Value;
             _scraps = scraps;
             _sockets = sockets;
+        }
+
+        // checkSockets
+        private void checkSockets()
+        {
+            foreach (BlueprintSocket socket in _sockets)
+                socket.test();
         }
     }
 }

@@ -12,11 +12,13 @@ namespace StasisCore.Models
         private BlueprintScrap _scrapB;
         private BlueprintSocket _opposingSocket;
         private Vector2 _relativePoint;
+        private bool _satisfied;
 
         public BlueprintScrap scrapA { get { return _scrapA; } }
         public BlueprintScrap scrapB { get { return _scrapB; } }
         public BlueprintSocket opposingSocket { get { return _opposingSocket; } set { _opposingSocket = value; } }
         public Vector2 relativePoint { get { return _relativePoint; } set { _relativePoint = value; } }
+        public bool satisfied { get { return _satisfied; } set { _satisfied = value; } }
 
         public XElement data
         {
@@ -43,6 +45,30 @@ namespace StasisCore.Models
             _relativePoint = XmlLoadHelper.getVector2(data.Attribute("relative_point").Value);
             _scrapA = scrapA;
             _scrapB = scrapB;
+        }
+
+        // test
+        public void test(float distanceTolerance = 10f)
+        {
+            if (_satisfied && _opposingSocket.satisfied)
+                return;
+
+            // Check socket
+            Vector2 transformedRelativePointA = _scrapA.currentCraftPosition + Vector2.Transform(_relativePoint, _scrapA.rotationMatrix);
+            Vector2 difference = _scrapB.currentCraftPosition - transformedRelativePointA;
+            float distance = difference.Length();
+            _satisfied = distance <= distanceTolerance;
+
+            if (_satisfied && _opposingSocket.satisfied)
+            {
+                // Snap to ideal position before connecting
+                _scrapB.move(-difference);
+                _scrapB.rotate(_scrapA.currentCraftAngle - _scrapB.currentCraftAngle);
+
+                // Form a connection
+                _scrapA.connectScrap(_scrapB);
+                _scrapB.connectScrap(_scrapA);
+            }
         }
     }
 }

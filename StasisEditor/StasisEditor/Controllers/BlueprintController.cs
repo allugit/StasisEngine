@@ -55,6 +55,17 @@ namespace StasisEditor.Controllers
                     sockets.Add(new BlueprintSocket(childData, scrapA, scrapB));
                 }
 
+                // Assign opposing sockets
+                foreach (BlueprintSocket socket in sockets)
+                {
+                    // Select the socket where this socket's scrapA is the other socket's scrapB
+                    socket.opposingSocket = (from oSocket in sockets
+                                                where oSocket.scrapB == socket.scrapA
+                                                select oSocket).First();
+
+                    System.Diagnostics.Debug.Assert(socket.opposingSocket != null);
+                }
+
                 // Create blueprint
                 _blueprints.Add(new Blueprint(resource.data, scraps, sockets));
             }
