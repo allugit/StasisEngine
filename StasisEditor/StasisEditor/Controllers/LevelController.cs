@@ -30,6 +30,8 @@ namespace StasisEditor.Controllers
         private System.Drawing.Point _mouse;
         private System.Drawing.Point _oldMouse;
         private Vector2 _screenCenter;
+        private bool _shift;
+        private bool _ctrl;
 
         public System.Drawing.Point mouse
         {
@@ -39,6 +41,9 @@ namespace StasisEditor.Controllers
         public EditorLevel level { get { return _level; } set { _level = value; } }
         public LevelView view { get { return _levelView; } }
         public List<ActorSubController> selectedSubControllers { get { return _selectedSubControllers; } }
+        public Vector2 screenCenter { get { return _screenCenter; } set { _screenCenter = value; } }
+        public bool shift { get { return _shift; } set { _shift = value; } }
+        public bool ctrl { get { return _ctrl; } set { _ctrl = value; } }
 
         public LevelController(EditorController editorController, LevelView levelView)
         {
@@ -324,12 +329,6 @@ namespace StasisEditor.Controllers
 
         #region Input
 
-        public void moveSelectedSubControllers()
-        {
-            foreach (ActorSubController subController in _selectedSubControllers)
-                subController.handleMouseMove(getWorldMouse() - getOldWorldMouse());
-        }
-
         /*
         // Update mouse position
         private void updateMousePosition()
@@ -359,6 +358,26 @@ namespace StasisEditor.Controllers
                 subController.handleMouseMove(worldDelta);
         }
         */
+
+        // handleMouseMove
+        public void handleMouseMove(System.Windows.Forms.MouseEventArgs e)
+        {
+            // Update mouse position
+            mouse = e.Location;
+            Vector2 worldDelta = getWorldMouse() - getOldWorldMouse();
+
+            if (ctrl)
+            {
+                // Move screen
+                _screenCenter += worldDelta;
+            }
+            else
+            {
+                // Move selected sub controllers
+                foreach (ActorSubController subController in _selectedSubControllers)
+                    subController.handleMouseMove(worldDelta);
+            }
+        }
 
         // handleMouseDown
         public void handleMouseDown(System.Windows.Forms.MouseEventArgs e)

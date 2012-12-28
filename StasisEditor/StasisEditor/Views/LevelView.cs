@@ -23,6 +23,8 @@ namespace StasisEditor.Views
         private bool _keysEnabled = true;
 
         public bool keysEnabled { get { return _keysEnabled; } set { _keysEnabled = value; } }
+        public bool shift { get { return _controller.shift; } }
+        public bool ctrl { get { return _controller.ctrl; } }
 
         // setController
         public void setController(LevelController controller)
@@ -57,8 +59,10 @@ namespace StasisEditor.Views
         {
             if (_keysEnabled)
             {
-                foreach (ActorResourceController actorController in _controller.getActorControllers())
-                    actorController.globalKeyUp(e.KeyCode);
+                if (e.KeyCode == Keys.Shift || e.KeyCode == Keys.ShiftKey || e.KeyCode == Keys.LShiftKey || e.KeyCode == Keys.RShiftKey)
+                    _controller.shift = false;
+                else if (e.KeyCode == Keys.Control || e.KeyCode == Keys.ControlKey || e.KeyCode == Keys.LControlKey || e.KeyCode == Keys.RControlKey)
+                    _controller.ctrl = false;
             }
         }
 
@@ -73,6 +77,11 @@ namespace StasisEditor.Views
         {
             if (_keysEnabled)
             {
+                if (e.KeyCode == Keys.Shift || e.KeyCode == Keys.ShiftKey || e.KeyCode == Keys.LShiftKey || e.KeyCode == Keys.RShiftKey)
+                    _controller.shift = true;
+                else if (e.KeyCode == Keys.Control || e.KeyCode == Keys.ControlKey || e.KeyCode == Keys.LControlKey || e.KeyCode == Keys.RControlKey)
+                    _controller.ctrl = true;
+
                 // Pass input to all actors' global key handler
                 foreach (ActorResourceController actorController in _controller.getActorControllers())
                     actorController.globalKeyDown(e.KeyCode);
@@ -86,8 +95,7 @@ namespace StasisEditor.Views
         // Mouse move
         void LevelView_MouseMove(object sender, MouseEventArgs e)
         {
-            _controller.mouse = e.Location;
-            _controller.moveSelectedSubControllers();
+            _controller.handleMouseMove(e);
         }
 
         // Draw
