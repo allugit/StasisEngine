@@ -48,6 +48,7 @@ namespace StasisEditor.Views
         void LevelView_MouseMove(object sender, MouseEventArgs e)
         {
             _controller.mouse = e.Location;
+            _controller.moveSelectedSubControllers();
         }
 
         // Draw

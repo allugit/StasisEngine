@@ -28,9 +28,14 @@ namespace StasisEditor.Controllers
         private EditorLevel _level;
 
         private System.Drawing.Point _mouse;
+        private System.Drawing.Point _oldMouse;
         private Vector2 _screenCenter;
 
-        public System.Drawing.Point mouse { get { return _mouse; } set { _mouse = value; } }
+        public System.Drawing.Point mouse
+        {
+            get { return _mouse; }
+            set { _oldMouse = _mouse; _mouse = value; } 
+        }
         public EditorLevel level { get { return _level; } set { _level = value; } }
         public LevelView view { get { return _levelView; } }
 
@@ -56,6 +61,7 @@ namespace StasisEditor.Controllers
         public float getScale() { return _editorController.getScale(); }
         public Vector2 getWorldOffset() { return _screenCenter + (new Vector2(_levelView.Width, _levelView.Height) / 2) / _editorController.getScale(); }
         public Vector2 getWorldMouse() { return new Vector2(_mouse.X, _mouse.Y) / _editorController.getScale() - getWorldOffset(); }
+        public Vector2 getOldWorldMouse() { return new Vector2(_oldMouse.X, _oldMouse.Y) / _editorController.getScale() - getWorldOffset(); }
 
         // getActorControllers
         public List<ActorResourceController> getActorControllers()
@@ -284,6 +290,10 @@ namespace StasisEditor.Controllers
             ActorResourceController actorController = null;
             if (plantSelectBox.ShowDialog() == System.Windows.Forms.DialogResult.OK)
             {
+                // Adjust mouse position since movement isn't tracked when a form is open
+                _mouse = _levelView.PointToClient(System.Windows.Forms.Cursor.Position);
+                _oldMouse = _mouse;
+
                 PlantType selectedPlantType = plantSelectBox.selectedPlantType;
                 switch (selectedPlantType)
                 {
@@ -312,6 +322,12 @@ namespace StasisEditor.Controllers
         #endregion
 
         #region Input
+
+        public void moveSelectedSubControllers()
+        {
+            foreach (ActorSubController subController in _selectedSubControllers)
+                subController.handleMouseMove(getWorldMouse() - getOldWorldMouse());
+        }
 
         /*
         // Update mouse position
