@@ -117,19 +117,15 @@ namespace StasisEditor.Controllers.Actors
         // handleMouseMove
         public override void handleMouseMove(Vector2 worldDelta)
         {
-            bool ctrl = Input.newKey.IsKeyDown(Keys.LeftControl) || Input.newKey.IsKeyDown(Keys.RightControl);
-
-            if (!ctrl)
+            if (!_actorResourceController.ctrl)
                 _position = _position + worldDelta;
         }
 
         // handleLeftMouseDown
         public override void handleLeftMouseDown()
         {
-            bool shift = Input.newKey.IsKeyDown(Microsoft.Xna.Framework.Input.Keys.LeftShift);
-
             // Create new linked points by pressing shift (disabled when both next and previous links exist)
-            if (shift && (_next == null || _previous == null))
+            if (_actorResourceController.shift && (_next == null || _previous == null))
             {
                 // Deselect current controller
                 _actorResourceController.deselectSubController(this);

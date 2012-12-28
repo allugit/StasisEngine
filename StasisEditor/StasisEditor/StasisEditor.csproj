@@ -204,7 +204,6 @@
     <Compile Include="Views\EditorView.Designer.cs">
       <DependentUpon>EditorView.cs</DependentUpon>
     </Compile>
-    <Compile Include="Input.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Views\MaterialView.cs">

@@ -1,10 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
 using Microsoft.Xna.Framework;
-using Microsoft.Xna.Framework.Input;
 
 namespace StasisEditor.Controllers.Actors
 {
+    using Keys = System.Windows.Forms.Keys;
+
     public class CircleSubController : ActorSubController
     {
         private ICircleSubControllable _actorResourceController;
@@ -28,9 +29,9 @@ namespace StasisEditor.Controllers.Actors
         // handleMouseMove
         public override void handleMouseMove(Vector2 worldDelta)
         {
-            bool ctrl = Input.newKey.IsKeyDown(Keys.LeftControl) || Input.newKey.IsKeyDown(Keys.RightControl);
+            //bool ctrl = Input.newKey.IsKeyDown(Keys.LeftControl) || Input.newKey.IsKeyDown(Keys.RightControl);
 
-            if (!ctrl)
+            //if (!ctrl)
                 _actorResourceController.setPosition(_actorResourceController.getPosition() + worldDelta);
         }
 
@@ -40,13 +41,13 @@ namespace StasisEditor.Controllers.Actors
             _actorResourceController.deselectSubController(this);
         }
 
-        // checkXNAKeys
-        public override void checkXNAKeys()
+        // keyDown
+        public override void keyDown(Keys key)
         {
             // Update width
-            if (Input.newKey.IsKeyDown(Keys.A) || Input.newKey.IsKeyDown(Keys.W))
+            if (key == Keys.A || key == Keys.W)
                 _actorResourceController.setRadius(_actorResourceController.getRadius() + _radiusChangeAmount);
-            if (Input.newKey.IsKeyDown(Keys.D) || Input.newKey.IsKeyDown(Keys.S))
+            if (key == Keys.D || key == Keys.S)
                 _actorResourceController.setRadius(_actorResourceController.getRadius() - _radiusChangeAmount);
         }
     }

@@ -38,6 +38,7 @@ namespace StasisEditor.Controllers
         }
         public EditorLevel level { get { return _level; } set { _level = value; } }
         public LevelView view { get { return _levelView; } }
+        public List<ActorSubController> selectedSubControllers { get { return _selectedSubControllers; } }
 
         public LevelController(EditorController editorController, LevelView levelView)
         {
@@ -357,6 +358,7 @@ namespace StasisEditor.Controllers
             foreach (ActorSubController subController in _selectedSubControllers)
                 subController.handleMouseMove(worldDelta);
         }
+        */
 
         // handleMouseDown
         public void handleMouseDown(System.Windows.Forms.MouseEventArgs e)
@@ -382,7 +384,7 @@ namespace StasisEditor.Controllers
                 }
             }
         }
-        */
+
         #endregion
     }
 }

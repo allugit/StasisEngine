@@ -9,6 +9,8 @@ namespace StasisEditor.Controllers.Actors
 
         void selectSubController(ActorSubController subController);
         void deselectSubController(ActorSubController subController);
+        bool shift { get; }
+        bool ctrl { get; }
 
         void delete();
     }

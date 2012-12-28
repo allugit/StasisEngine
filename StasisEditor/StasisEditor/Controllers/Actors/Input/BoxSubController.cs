@@ -1,10 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
 using Microsoft.Xna.Framework;
-using Microsoft.Xna.Framework.Input;
 
 namespace StasisEditor.Controllers.Actors
 {
+    using Keys = System.Windows.Forms.Keys;
+
     public enum BoxSubControllerAlignment
     {
         Center = 0,
@@ -61,9 +62,9 @@ namespace StasisEditor.Controllers.Actors
         // handleMouseMove
         public override void handleMouseMove(Vector2 worldDelta)
         {
-            bool ctrl = Input.newKey.IsKeyDown(Keys.LeftControl) || Input.newKey.IsKeyDown(Keys.RightControl);
+            //bool ctrl = Input.newKey.IsKeyDown(Keys.LeftControl) || Input.newKey.IsKeyDown(Keys.RightControl);
 
-            if (!ctrl)
+            //if (!ctrl)
                 _actorResourceController.setPosition(_actorResourceController.getPosition() + worldDelta);
         }
 
@@ -73,25 +74,25 @@ namespace StasisEditor.Controllers.Actors
             _actorResourceController.deselectSubController(this);
         }
 
-        // checkXNAKeys
-        public override void checkXNAKeys()
+        // keyDown
+        public override void keyDown(Keys key)
         {
             // Update width
-            if (Input.newKey.IsKeyDown(Keys.A))
+            if (key == Keys.A)
                 _actorResourceController.setHalfWidth(_actorResourceController.getHalfWidth() + _sizeChangeAmount);
-            if (Input.newKey.IsKeyDown(Keys.D))
+            if (key == Keys.D)
                 _actorResourceController.setHalfWidth(_actorResourceController.getHalfWidth() - _sizeChangeAmount);
 
             // Update height
-            if (Input.newKey.IsKeyDown(Keys.W))
+            if (key == Keys.W)
                 _actorResourceController.setHalfHeight(_actorResourceController.getHalfHeight() + _sizeChangeAmount);
-            if (Input.newKey.IsKeyDown(Keys.S))
+            if (key == Keys.S)
                 _actorResourceController.setHalfHeight(_actorResourceController.getHalfHeight() - _sizeChangeAmount);
 
             // Update angle
-            if (Input.newKey.IsKeyDown(Keys.E))
+            if (key == Keys.E)
                 _actorResourceController.setAngle(_actorResourceController.getAngle() + _rotationChangeAmount);
-            if (Input.newKey.IsKeyDown(Keys.Q))
+            if (key == Keys.Q)
                 _actorResourceController.setAngle(_actorResourceController.getAngle() - _rotationChangeAmount);
 
             // Calculate alignment offset

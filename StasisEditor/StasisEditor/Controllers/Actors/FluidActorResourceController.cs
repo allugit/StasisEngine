@@ -150,6 +150,8 @@ namespace StasisEditor.Controllers.Actors
                     }
                 }
             }
+
+            base.globalKeyDown(key);
         }
 
         #endregion

@@ -33,6 +33,7 @@ namespace StasisEditor.Views.Controls
         // updateMousePosition
         public void updateMousePosition()
         {
+            /*
             // View offset
             System.Drawing.Point viewOffset = FindForm().PointToClient(PointToScreen(pictureBox.Location));
 
@@ -51,6 +52,7 @@ namespace StasisEditor.Views.Controls
             // Store screen space mouse coordinates
             _mouse.X = x;
             _mouse.Y = y;
+            */
         }
         /*
         // handleXNADraw

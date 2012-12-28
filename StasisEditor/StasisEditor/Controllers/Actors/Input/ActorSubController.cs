@@ -26,8 +26,8 @@ namespace StasisEditor.Controllers.Actors
         {
         }
 
-        // checkXNAKeys
-        virtual public void checkXNAKeys()
+        // keyDown
+        virtual public void keyDown(System.Windows.Forms.Keys key)
         {
         }
     }

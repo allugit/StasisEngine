@@ -102,6 +102,8 @@ namespace StasisEditor.Controllers.Actors
             // Delete test
             if (_boxSubController.selected && key == Keys.Delete)
                 delete();
+
+            base.globalKeyDown(key);
         }
 
         #endregion

@@ -47,7 +47,25 @@ namespace StasisEditor.Views
 
             // Input
             MouseMove += new MouseEventHandler(LevelView_MouseMove);
+            MouseDown += new MouseEventHandler(LevelView_MouseDown);
             Parent.Parent.KeyDown += new KeyEventHandler(Parent_KeyDown);
+            Parent.Parent.KeyUp += new KeyEventHandler(Parent_KeyUp);
+        }
+
+        // Key up
+        void Parent_KeyUp(object sender, KeyEventArgs e)
+        {
+            if (_keysEnabled)
+            {
+                foreach (ActorResourceController actorController in _controller.getActorControllers())
+                    actorController.globalKeyUp(e.KeyCode);
+            }
+        }
+
+        // Mouse down
+        void LevelView_MouseDown(object sender, MouseEventArgs e)
+        {
+            _controller.handleMouseDown(e);
         }
 
         // Key down
@@ -58,6 +76,10 @@ namespace StasisEditor.Views
                 // Pass input to all actors' global key handler
                 foreach (ActorResourceController actorController in _controller.getActorControllers())
                     actorController.globalKeyDown(e.KeyCode);
+
+                // Pass input to selected sub actor controllers
+                foreach (ActorSubController subController in _controller.selectedSubControllers)
+                    subController.keyDown(e.KeyCode);
             }
         }
 

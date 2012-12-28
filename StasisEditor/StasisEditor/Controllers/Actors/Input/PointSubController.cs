@@ -1,10 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
 using Microsoft.Xna.Framework;
-using Microsoft.Xna.Framework.Input;
 
 namespace StasisEditor.Controllers.Actors
 {
+    using Keys = System.Windows.Forms.Keys;
+
     public class PointSubController : ActorSubController
     {
         private Vector2 _position;
@@ -71,9 +72,9 @@ namespace StasisEditor.Controllers.Actors
         // handleMouseMove
         public override void handleMouseMove(Vector2 worldDelta)
         {
-            bool ctrl = Input.newKey.IsKeyDown(Keys.LeftControl) || Input.newKey.IsKeyDown(Keys.RightControl);
+            //bool ctrl = Input.newKey.IsKeyDown(Keys.LeftControl) || Input.newKey.IsKeyDown(Keys.RightControl);
 
-            if (!ctrl)
+            //if (!ctrl)
                 _position = _position + worldDelta;
         }
 

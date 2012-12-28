@@ -12,8 +12,12 @@ namespace StasisEditor.Controllers.Actors
     {
         protected ActorResource _actor;
         protected LevelController _levelController;
+        protected bool _shift;
+        protected bool _ctrl;
 
         public ActorType type { get { return _actor.type; } }
+        public bool shift { get { return _shift; } }
+        public bool ctrl { get { return _ctrl; } }
 
         public ActorResourceController(LevelController levelController)
         {
@@ -55,10 +59,22 @@ namespace StasisEditor.Controllers.Actors
         }
 
         // globalKeyDown
-        virtual public void globalKeyDown(Keys keys) { }
+        virtual public void globalKeyDown(Keys key) 
+        {
+            if (key == Keys.Shift || key == Keys.ShiftKey || key == Keys.LShiftKey || key == Keys.RShiftKey)
+                _shift = true;
+            else if (key == Keys.Control || key == Keys.ControlKey || key == Keys.LControlKey || key == Keys.RControlKey)
+                _ctrl = true;
+        }
 
         // globalKeyUp
-        //virtual public void globalKeyUp(Keys keys) { }
+        virtual public void globalKeyUp(Keys key)
+        {
+            if (key == Keys.Shift || key == Keys.ShiftKey || key == Keys.LShiftKey || key == Keys.RShiftKey)
+                _shift = false;
+            else if (key == Keys.Control || key == Keys.ControlKey || key == Keys.LControlKey || key == Keys.RControlKey)
+                _ctrl = false;
+        }
 
         // draw
         abstract public void draw();
