@@ -13,7 +13,8 @@ namespace StasisCore
     public class MaterialRenderer
     {
         public const int MAX_TEXTURE_SIZE = 2048;
-        private Game _game;
+        private GraphicsDevice _graphicsDevice;
+        private ContentManager _contentManager;
         private SpriteBatch _spriteBatch;
         private Random _random;
         private Texture2D _perlinSource;
@@ -23,15 +24,16 @@ namespace StasisCore
         private Effect _noiseEffect;
         private Effect _textureEffect;
 
-        public MaterialRenderer(Game game, SpriteBatch spriteBatch, int randomTextureWidth = 32, int randomTextureHeight = 32, int seed = 1234)
+        public MaterialRenderer(GraphicsDevice graphicsDevice, ContentManager contentManager, SpriteBatch spriteBatch, int randomTextureWidth = 32, int randomTextureHeight = 32, int seed = 1234)
         {
-            _game = game;
+            _graphicsDevice = graphicsDevice;
+            _contentManager = contentManager;
             _spriteBatch = spriteBatch;
             
             // Load content
-            _primitivesEffect = game.Content.Load<Effect>("../StasisCoreContent/effects/primitives");
-            _noiseEffect = game.Content.Load<Effect>("../StasisCoreContent/effects/noise");
-            _textureEffect = game.Content.Load<Effect>("../StasisCoreContent/effects/texture");
+            _primitivesEffect = _contentManager.Load<Effect>("../StasisCoreContent/effects/primitives");
+            _noiseEffect = _contentManager.Load<Effect>("../StasisCoreContent/effects/noise");
+            _textureEffect = _contentManager.Load<Effect>("../StasisCoreContent/effects/texture");
 
             // Create random generator
             _random = new Random(seed);
@@ -43,7 +45,7 @@ namespace StasisCore
                 for (int j = 0; j < randomTextureHeight; j++)
                     _perlinSourceData[i + j * randomTextureWidth] = new Color((float)_random.Next(3) / 2, (float)_random.Next(3) / 2, (float)_random.Next(3) / 2);
             }
-            _perlinSource = new Texture2D(game.GraphicsDevice, randomTextureWidth, randomTextureHeight);
+            _perlinSource = new Texture2D(_graphicsDevice, randomTextureWidth, randomTextureHeight);
             _perlinSource.SetData<Color>(_perlinSourceData);
 
             // Initialize worley texture
@@ -53,11 +55,11 @@ namespace StasisCore
                 for (int j = 0; j < randomTextureHeight; j++)
                     data[i + j * randomTextureWidth] = new Color((float)_random.NextDouble(), (float)_random.NextDouble(), (float)_random.NextDouble(), (float)_random.NextDouble());
             }
-            _worleySource = new Texture2D(game.GraphicsDevice, randomTextureWidth, randomTextureHeight);
+            _worleySource = new Texture2D(_graphicsDevice, randomTextureWidth, randomTextureHeight);
             _worleySource.SetData<Color>(data);
 
             // Initialize pixel texture
-            pixel = new Texture2D(_game.GraphicsDevice, 1, 1);
+            pixel = new Texture2D(_graphicsDevice, 1, 1);
             pixel.SetData<Color>(new[] { Color.White });
         }
 
@@ -135,7 +137,7 @@ namespace StasisCore
             int height = (int)((bottomRightBoundary.Y - topLeftBoundary.Y) * worldScale);
             */
 
-            Texture2D canvas = new Texture2D(_game.GraphicsDevice, width, height);
+            Texture2D canvas = new Texture2D(_graphicsDevice, width, height);
             Color[] data = new Color[width * height];
             for (int i = 0; i < (width * height); i++)
                 data[i] = Color.Transparent;
@@ -197,8 +199,8 @@ namespace StasisCore
             int width = (int)((bottomRightBoundary.X - topLeftBoundary.X) * worldScale);
             int height = (int)((bottomRightBoundary.Y - topLeftBoundary.Y) * worldScale);
 
-            RenderTarget2D renderTarget = new RenderTarget2D(_game.GraphicsDevice, width, height);
-            Texture2D baseTexture = new Texture2D(_game.GraphicsDevice, renderTarget.Width, renderTarget.Height);
+            RenderTarget2D renderTarget = new RenderTarget2D(_graphicsDevice, width, height);
+            Texture2D baseTexture = new Texture2D(_graphicsDevice, renderTarget.Width, renderTarget.Height);
             Color[] data = new Color[renderTarget.Width * renderTarget.Height];
             //Vector2 offset = topLeftBoundary * worldScale;
 
@@ -211,8 +213,8 @@ namespace StasisCore
             _primitivesEffect.Parameters["projection"].SetValue(Matrix.CreateOrthographic(renderTarget.Width, renderTarget.Height, 0, 1));
 
             // Draw polygons
-            _game.GraphicsDevice.SetRenderTarget(renderTarget);
-            _game.GraphicsDevice.Clear(Color.Transparent);
+            _graphicsDevice.SetRenderTarget(renderTarget);
+            _graphicsDevice.Clear(Color.Transparent);
             if (texture == null)
             {
                 _primitivesEffect.CurrentTechnique.Passes["primitives"].Apply();
@@ -220,10 +222,10 @@ namespace StasisCore
             else
             {
                 _primitivesEffect.CurrentTechnique.Passes["textured_primitives"].Apply();
-                _game.GraphicsDevice.Textures[0] = texture;
+                _graphicsDevice.Textures[0] = texture;
             }
-            _game.GraphicsDevice.DrawUserPrimitives(PrimitiveType.TriangleList, vertices, 0, primitiveCount, TexturedVertexFormat.VertexDeclaration);
-            _game.GraphicsDevice.SetRenderTarget(null);
+            _graphicsDevice.DrawUserPrimitives(PrimitiveType.TriangleList, vertices, 0, primitiveCount, TexturedVertexFormat.VertexDeclaration);
+            _graphicsDevice.SetRenderTarget(null);
 
             // Save base texture
             renderTarget.GetData<Color>(data);
@@ -254,8 +256,8 @@ namespace StasisCore
         private Texture2D texturePass(Texture2D current, Texture2D texture, LayerBlendType blendType, float scale, float multiplier)
         {
             // Initialize render targets and textures
-            RenderTarget2D renderTarget = new RenderTarget2D(_game.GraphicsDevice, current.Width, current.Height);
-            Texture2D baseTexture = new Texture2D(_game.GraphicsDevice, renderTarget.Width, renderTarget.Height);
+            RenderTarget2D renderTarget = new RenderTarget2D(_graphicsDevice, current.Width, current.Height);
+            Texture2D baseTexture = new Texture2D(_graphicsDevice, renderTarget.Width, renderTarget.Height);
             Color[] data = new Color[renderTarget.Width * renderTarget.Height];
             for (int i = 0; i < (renderTarget.Width * renderTarget.Height); i++)
                 data[i] = Color.Transparent;
@@ -264,7 +266,7 @@ namespace StasisCore
             // Handle missing texture
             if (texture == null)
             {
-                texture = new Texture2D(_game.GraphicsDevice, renderTarget.Width, renderTarget.Height);
+                texture = new Texture2D(_graphicsDevice, renderTarget.Width, renderTarget.Height);
                 texture.SetData<Color>(data);
             }
 
@@ -289,9 +291,9 @@ namespace StasisCore
             _textureEffect.Parameters["multiplier"].SetValue(multiplier);
             
             // Switch render target
-            _game.GraphicsDevice.SetRenderTarget(renderTarget);
-            _game.GraphicsDevice.Clear(Color.Transparent);
-            _game.GraphicsDevice.Textures[1] = texture;
+            _graphicsDevice.SetRenderTarget(renderTarget);
+            _graphicsDevice.Clear(Color.Transparent);
+            _graphicsDevice.Textures[1] = texture;
 
             // Draw
             _spriteBatch.Begin(SpriteSortMode.Immediate, BlendState.AlphaBlend, null, null, null, _textureEffect);
@@ -299,7 +301,7 @@ namespace StasisCore
             _spriteBatch.End();
 
             // Switch render target
-            _game.GraphicsDevice.SetRenderTarget(null);
+            _graphicsDevice.SetRenderTarget(null);
 
             // Save base texture
             renderTarget.GetData<Color>(data);
@@ -335,7 +337,7 @@ namespace StasisCore
             _noiseEffect.Parameters["matrixTransform"].SetValue(matrixTransform);
 
             // Initialize render target
-            RenderTarget2D renderTarget = new RenderTarget2D(_game.GraphicsDevice, current.Width, current.Height);
+            RenderTarget2D renderTarget = new RenderTarget2D(_graphicsDevice, current.Width, current.Height);
 
             // Aspect ratio
             float shortest = Math.Min(current.Width, current.Height);
@@ -355,10 +357,10 @@ namespace StasisCore
             }
 
             // Draw noise effect to render target
-            _game.GraphicsDevice.SetRenderTarget(renderTarget);
-            _game.GraphicsDevice.Textures[1] = _perlinSource;
-            _game.GraphicsDevice.Textures[2] = _worleySource;
-            _game.GraphicsDevice.Clear(Color.Transparent);
+            _graphicsDevice.SetRenderTarget(renderTarget);
+            _graphicsDevice.Textures[1] = _perlinSource;
+            _graphicsDevice.Textures[2] = _worleySource;
+            _graphicsDevice.Clear(Color.Transparent);
             _noiseEffect.Parameters["aspectRatio"].SetValue(aspectRatio);
             _noiseEffect.Parameters["offset"].SetValue(position);
             _noiseEffect.Parameters["noiseScale"].SetValue(scale);
@@ -378,11 +380,11 @@ namespace StasisCore
             _spriteBatch.Begin(SpriteSortMode.Immediate, null, null, null, null, _noiseEffect);
             _spriteBatch.Draw(current, renderTarget.Bounds, Color.White);
             _spriteBatch.End();
-            _game.GraphicsDevice.SetRenderTarget(null);
+            _graphicsDevice.SetRenderTarget(null);
 
             // Store
             Color[] data = new Color[current.Width * current.Height];
-            Texture2D output = new Texture2D(_game.GraphicsDevice, current.Width, current.Height);
+            Texture2D output = new Texture2D(_graphicsDevice, current.Width, current.Height);
             renderTarget.GetData<Color>(data);
             output.SetData<Color>(data);
 

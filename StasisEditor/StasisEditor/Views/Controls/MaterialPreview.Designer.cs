@@ -28,38 +28,37 @@
         /// </summary>
         private void InitializeComponent()
         {
-            this.pictureBox = new System.Windows.Forms.PictureBox();
-            ((System.ComponentModel.ISupportInitialize)(this.pictureBox)).BeginInit();
+            this.materialPreviewGraphics = new StasisEditor.Views.Controls.MaterialPreviewGraphics();
             this.SuspendLayout();
             // 
-            // pictureBox
+            // materialPreviewGraphics
             // 
-            this.pictureBox.BackColor = System.Drawing.Color.Transparent;
-            this.pictureBox.Location = new System.Drawing.Point(0, 0);
-            this.pictureBox.Name = "pictureBox";
-            this.pictureBox.Size = new System.Drawing.Size(168, 146);
-            this.pictureBox.TabIndex = 0;
-            this.pictureBox.TabStop = false;
+            this.materialPreviewGraphics.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.materialPreviewGraphics.Location = new System.Drawing.Point(0, 0);
+            this.materialPreviewGraphics.Margin = new System.Windows.Forms.Padding(0);
+            this.materialPreviewGraphics.Name = "materialPreviewGraphics";
+            this.materialPreviewGraphics.Size = new System.Drawing.Size(496, 474);
+            this.materialPreviewGraphics.TabIndex = 0;
+            this.materialPreviewGraphics.Text = "materialPreviewGraphics1";
             // 
             // MaterialPreview
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.AutoSize = true;
             this.BackColor = System.Drawing.Color.Gray;
-            this.ClientSize = new System.Drawing.Size(168, 146);
-            this.Controls.Add(this.pictureBox);
+            this.ClientSize = new System.Drawing.Size(496, 474);
+            this.Controls.Add(this.materialPreviewGraphics);
             this.Name = "MaterialPreview";
             this.ShowIcon = false;
             this.StartPosition = System.Windows.Forms.FormStartPosition.Manual;
             this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.MaterialPreview_FormClosing);
-            ((System.ComponentModel.ISupportInitialize)(this.pictureBox)).EndInit();
             this.ResumeLayout(false);
 
         }
 
         #endregion
 
-        private System.Windows.Forms.PictureBox pictureBox;
+        private MaterialPreviewGraphics materialPreviewGraphics;
+
     }
 }

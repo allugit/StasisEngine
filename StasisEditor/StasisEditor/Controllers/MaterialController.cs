@@ -22,7 +22,6 @@ namespace StasisEditor.Controllers
     public class MaterialController : Controller
     {
         private EditorController _editorController;
-        private MaterialRenderer _materialRenderer;
         private MaterialView _materialView;
         private MaterialPreview _materialPreview;
         private BindingList<Material> _materials;
@@ -169,7 +168,23 @@ namespace StasisEditor.Controllers
         // preview
         public void preview(Material material)
         {
-            throw new NotImplementedException();
+            // Render material
+            if (_materialPreview == null)
+            {
+                // Open material preview
+                _materialPreview = new MaterialPreview(this, material);
+                _materialPreview.Show();
+                Console.WriteLine("material preview created and shown.");
+                _materialPreview.updateMaterial(material);
+            }
+            else
+            {
+                // Put preview window on top
+                //_materialPreview.Focus();
+                _materialPreview.updateMaterial(material);
+                //_materialView.Focus();
+            }
+
             /*
             // Resize graphics device
             int graphicsDeviceWidth = XNAResources.graphicsDevice.Viewport.Width;

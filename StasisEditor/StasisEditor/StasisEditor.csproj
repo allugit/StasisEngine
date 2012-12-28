@@ -162,6 +162,9 @@
     <Compile Include="Views\Controls\MaterialPreview.Designer.cs">
       <DependentUpon>MaterialPreview.cs</DependentUpon>
     </Compile>
+    <Compile Include="Views\Controls\MaterialPreviewGraphics.cs">
+      <SubType>Component</SubType>
+    </Compile>
     <Compile Include="Views\Controls\MaterialProperties.cs">
       <SubType>UserControl</SubType>
     </Compile>
