@@ -14,15 +14,12 @@ namespace StasisEditor.Views.Controls
         private Blueprint _blueprint;
         private Vector2 _mouse;
         private EditBlueprintSocketsView _view;
-        private Dictionary<string, Vector2> _scrapPositions;
 
         public Blueprint blueprint { get { return _blueprint; } set { _blueprint = value; } }
 
         public EditBlueprintSocketsGraphics()
             : base()
         {
-            _scrapPositions = new Dictionary<string, Vector2>();
-
             System.Windows.Forms.Application.Idle += delegate { Invalidate(); };
             MouseMove += new System.Windows.Forms.MouseEventHandler(EditBlueprintSocketsGraphics_MouseMove);
             MouseDown += new System.Windows.Forms.MouseEventHandler(EditBlueprintSocketsGraphics_MouseDown);
@@ -65,7 +62,7 @@ namespace StasisEditor.Views.Controls
                 else
                 {
                     // Create socket on first target
-                    Vector2 relativePoint = _scrapPositions[target.uid] - _scrapPositions[_view.socketTargetA.uid];
+                    Vector2 relativePoint = target.currentCraftPosition - _view.socketTargetA.currentCraftPosition;
                     BlueprintSocket firstSocket = new BlueprintSocket(_view.socketTargetA, target, relativePoint);
                     _blueprint.sockets.Add(firstSocket);
 
@@ -90,7 +87,7 @@ namespace StasisEditor.Views.Controls
             _mouse = new Vector2(e.X, e.Y);
 
             if (_view.selectedScrap != null)
-                _scrapPositions[_view.selectedScrap.uid] += _mouse - oldMouse;
+                _view.selectedScrap.currentCraftPosition += _mouse - oldMouse;
         }
 
         // Initialize
@@ -109,9 +106,6 @@ namespace StasisEditor.Views.Controls
                 if (scrap.scrapTexture == null)
                     scrap.scrapTexture = ResourceController.getTexture(scrap.scrapTextureUID);
                 scrap.textureCenter = new Vector2(scrap.scrapTexture.Width, scrap.scrapTexture.Height) / 2;
-
-                // Copy scrap positions
-                _scrapPositions[scrap.uid] = scrap.currentCraftPosition;
             }
         }
 
@@ -126,14 +120,14 @@ namespace StasisEditor.Views.Controls
 
                 // Draw scraps
                 for (int i = _blueprint.scraps.Count - 1; i >= 0; i--)
-                    _spriteBatch.Draw(_blueprint.scraps[i].scrapTexture, _scrapPositions[_blueprint.scraps[i].uid], _blueprint.scraps[i].scrapTexture.Bounds, Color.White, 0f, _blueprint.scraps[i].textureCenter, 1f, SpriteEffects.None, 0);
+                    _spriteBatch.Draw(_blueprint.scraps[i].scrapTexture, _blueprint.scraps[i].currentCraftPosition, _blueprint.scraps[i].scrapTexture.Bounds, Color.White, 0f, _blueprint.scraps[i].textureCenter, 1f, SpriteEffects.None, 0);
 
                 // Draw scrap sockets
                 foreach (BlueprintSocket socket in _blueprint.sockets)
                 {
                     drawLine(
-                        _scrapPositions[socket.scrapA.uid],
-                        _scrapPositions[socket.scrapB.uid] + socket.relativePoint,
+                        socket.scrapA.currentCraftPosition,
+                        socket.scrapA.currentCraftPosition + socket.relativePoint,
                         Color.Green);
                 }
 
@@ -143,7 +137,7 @@ namespace StasisEditor.Views.Controls
                 if (_view.socketTargetA != null)
                 {
                     // Draw socket line
-                    drawLine(_scrapPositions[_view.socketTargetA.uid], _mouse, Color.Blue);
+                    drawLine(_view.socketTargetA.currentCraftPosition, _mouse, Color.Blue);
                 }
 
                 _spriteBatch.End();

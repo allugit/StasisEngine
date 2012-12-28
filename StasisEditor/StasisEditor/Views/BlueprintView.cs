@@ -44,13 +44,6 @@ namespace StasisEditor.Views
             return _controller;
         }
 
-        // updateMousePosition
-        public void updateMousePosition()
-        {
-            if (_editBlueprintSocketsView != null)
-                _editBlueprintSocketsView.updateMousePosition();
-        }
-
         // selectBlueprint
         public void selectBlueprint(Blueprint blueprint)
         {
@@ -196,6 +189,10 @@ namespace StasisEditor.Views
             {
                 Console.WriteLine("do something");
             }
+
+            // Reset scrap craft positions
+            foreach (BlueprintScrap scrap in selectedBlueprint.scraps)
+                scrap.currentCraftPosition = Vector2.Zero;
 
             // Close view
             editBlueprintSocketsView = null;

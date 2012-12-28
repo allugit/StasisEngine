@@ -51,9 +51,8 @@ namespace StasisEditor.Controllers
                     BlueprintScrap scrapB = (from scrap in scraps
                                              where scrap.uid == childData.Attribute("scrap_b_uid").Value
                                              select scrap).First();
-                    
-                    if (childData.Attribute("type").Value == "blueprint_socket")
-                        sockets.Add(new BlueprintSocket(childData, scrapA, scrapB));
+
+                    sockets.Add(new BlueprintSocket(childData, scrapA, scrapB));
                 }
 
                 // Create blueprint
