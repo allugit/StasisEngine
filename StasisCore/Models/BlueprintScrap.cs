@@ -35,6 +35,23 @@ namespace StasisCore.Models
         public string scrapTextureUID { get { return _scrapTextureUID; } set { _scrapTextureUID = value; } }
         public string blueprintUID { get { return _blueprintUID; } set { _blueprintUID = value; } }
 
+        public override XElement data
+        {
+            get
+            {
+                XElement d = base.data;
+                d.SetAttributeValue("type", "blueprint_scrap");
+                d.SetAttributeValue("current_craft_angle", _currentCraftAngle);
+                d.SetAttributeValue("current_craft_position", _currentCraftPosition);
+                d.SetAttributeValue("scrap_texture_uid", _scrapTextureUID);
+                d.SetAttributeValue("blueprint_uid", _blueprintUID);
+                foreach (Vector2 point in _points)
+                    d.Add(new XElement("Point", point));
+
+                return d;
+            }
+        }
+
         // Create new
         public BlueprintScrap(string uid) : base(uid)
         {

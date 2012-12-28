@@ -42,7 +42,7 @@ namespace StasisEditor.Controllers
 
                 // Create sockets
                 List<BlueprintSocket> sockets = new List<BlueprintSocket>();
-                foreach (XElement childData in resource.data.Elements("Item"))
+                foreach (XElement childData in resource.data.Elements("Socket"))
                 {
                     // Find associated scraps
                     BlueprintScrap scrapA = (from scrap in scraps
@@ -61,24 +61,10 @@ namespace StasisEditor.Controllers
             }
         }
 
-        // XNA hooks
-        //public void hookXNAToLevel() { _editorController.hookXNAToLevel(); }
-        //public void unhookXNAFromLevel() { _editorController.unhookXNAFromLevel(); }
-        //public void enableLevelXNAInput(bool status) { _editorController.enableLevelXNAInput(status); }
-        //public void enableLevelXNADrawing(bool status) { _editorController.enableLevelXNADrawing(status); }
-        //public void resizeGraphicsDevice(int width, int height) { _editorController.resizeGraphicsDevice(width, height); }
-
-        /*
-        // Handle XNA draw
-        public void handleXNADraw()
+        // saveBlueprints
+        public void saveBlueprints()
         {
-            _view.handleXNADraw();
-        }*/
-
-        // Update
-        public void update()
-        {
-            _view.updateMousePosition();
+            ResourceController.saveBlueprintResources(new List<Blueprint>(_blueprints));
         }
 
         // checkUnsavedBlueprints

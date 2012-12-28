@@ -18,6 +18,17 @@ namespace StasisCore.Models
         public BlueprintSocket opposingSocket { get { return _opposingSocket; } set { _opposingSocket = value; } }
         public Vector2 relativePoint { get { return _relativePoint; } set { _relativePoint = value; } }
 
+        public XElement data
+        {
+            get
+            {
+                return new XElement("Socket",
+                    new XAttribute("scrap_a_uid", _scrapA.uid),
+                    new XAttribute("scrap_b_uid", _scrapB.uid),
+                    new XAttribute("relative_point", _relativePoint));
+            }
+        }
+
         // Create new
         public BlueprintSocket(BlueprintScrap scrapA, BlueprintScrap scrapB, Vector2 relativePoint)
         {

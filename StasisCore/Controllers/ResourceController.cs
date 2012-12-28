@@ -32,6 +32,7 @@ namespace StasisCore.Controllers
         public static string levelPath { get { return String.Format("{0}\\levels", RESOURCE_PATH); } }
         public static string materialPath { get { return String.Format("{0}\\materials.xml", RESOURCE_PATH); } }
         public static string itemPath { get { return String.Format("{0}\\items.xml", RESOURCE_PATH); } }
+        public static string blueprintPath { get { return String.Format("{0}\\blueprints.xml", RESOURCE_PATH); } }
         public static string characterPath { get { return String.Format("{0}\\characters.xml", RESOURCE_PATH); } }
         public static string dialoguePath { get { return String.Format("{0}\\dialogues.xml", RESOURCE_PATH); } }
 
@@ -137,7 +138,7 @@ namespace StasisCore.Controllers
             // Backup materials
             if (backup)
             {
-                string backupFile = String.Format("{0}.bak", materialPath);
+                string backupFile = materialPath + ".bak";
                 if (File.Exists(backupFile))
                     File.Delete(backupFile);
                 File.Move(materialPath, backupFile);
@@ -151,6 +152,28 @@ namespace StasisCore.Controllers
 
             // Reload materials
             loadMaterials();
+        }
+
+        // Save blueprint resources
+        public static void saveBlueprintResources(List<Blueprint> blueprints, bool backup = true)
+        {
+            // Backup blueprints
+            if (backup)
+            {
+                string backupFile = blueprintPath + ".bak";
+                if (File.Exists(backupFile))
+                    File.Delete(backupFile);
+                File.Move(blueprintPath, backupFile);
+            }
+
+            // Save blueprints
+            XDocument doc = new XDocument(new XElement("Items"));
+            foreach (Blueprint blueprint in blueprints)
+                doc.Element("Items").Add(blueprint.data);
+            doc.Save(blueprintPath);
+
+            // Reload blueprints
+            loadItems();
         }
 
         // Destroy a resource
@@ -244,16 +267,22 @@ namespace StasisCore.Controllers
             _itemResources.Clear();
 
             List<ResourceObject> resourcesLoaded = new List<ResourceObject>();
-            using (FileStream fs = new FileStream(itemPath, FileMode.Open))
+
+            string[] paths = new[] { itemPath, blueprintPath };
+
+            foreach (string path in paths)
             {
-                XElement data = XElement.Load(fs);
-                foreach (XElement itemData in data.Descendants("Item"))
+                using (FileStream fs = new FileStream(path, FileMode.Open))
                 {
-                    if (type == "" || type == itemData.Attribute("type").Value)
+                    XElement data = XElement.Load(fs);
+                    foreach (XElement itemData in data.Descendants("Item"))
                     {
-                        ResourceObject resource = new ResourceObject(itemData);
-                        _itemResources[resource.uid] = resource;
-                        resourcesLoaded.Add(resource);
+                        if (type == "" || type == itemData.Attribute("type").Value)
+                        {
+                            ResourceObject resource = new ResourceObject(itemData);
+                            _itemResources[resource.uid] = resource;
+                            resourcesLoaded.Add(resource);
+                        }
                     }
                 }
             }

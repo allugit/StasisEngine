@@ -16,6 +16,18 @@ namespace StasisCore.Models
         public string inventoryTextureUID { get { return _inventoryTextureUID; } set { _inventoryTextureUID = value; } }
         public int quantity { get { return _quantity; } set { _quantity = value; } }
 
+        virtual public XElement data
+        {
+            get
+            {
+                return new XElement("Item",
+                    new XAttribute("uid", _uid),
+                    new XAttribute("world_texture_uid", _worldTextureUID),
+                    new XAttribute("inventory_texture_uid", _inventoryTextureUID),
+                    new XAttribute("quantity", _quantity));
+            }
+        }
+
         // Create new
         public Item(string uid)
         {
@@ -29,8 +41,8 @@ namespace StasisCore.Models
         public Item(XElement data)
         {
             _uid = data.Attribute("uid").Value;
-            _worldTextureUID = data.Attribute("worldTextureUID").Value;
-            _inventoryTextureUID = data.Attribute("inventoryTextureUID").Value;
+            _worldTextureUID = data.Attribute("world_texture_uid").Value;
+            _inventoryTextureUID = data.Attribute("inventory_texture_uid").Value;
             _quantity = int.Parse(data.Attribute("quantity").Value);
         }
     }

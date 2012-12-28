@@ -15,6 +15,22 @@ namespace StasisCore.Models
         public List<BlueprintScrap> scraps { get { return _scraps; } }
         public List<BlueprintSocket> sockets { get { return _sockets; } }
 
+        override public XElement data
+        {
+            get
+            {
+                XElement d = base.data;
+                d.SetAttributeValue("type", "blueprint");
+                d.SetAttributeValue("item_uid", _itemUID);
+                foreach (BlueprintScrap scrap in _scraps)
+                    d.Add(scrap.data);
+                foreach (BlueprintSocket socket in _sockets)
+                    d.Add(socket.data);
+
+                return d;
+            }
+        }
+
         // Create new
         public Blueprint(string uid) : base(uid)
         {

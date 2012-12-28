@@ -200,5 +200,11 @@ namespace StasisEditor.Views
             // Close view
             editBlueprintSocketsView = null;
         }
+
+        // Save button
+        private void saveButton_Click(object sender, EventArgs e)
+        {
+            _controller.saveBlueprints();
+        }
     }
 }
