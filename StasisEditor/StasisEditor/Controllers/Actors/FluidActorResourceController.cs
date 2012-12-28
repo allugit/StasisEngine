@@ -1,11 +1,12 @@
 ﻿using System;
 using System.Collections.Generic;
 using Microsoft.Xna.Framework;
-using Microsoft.Xna.Framework.Input;
 using StasisCore.Resources;
 
 namespace StasisEditor.Controllers.Actors
 {
+    using Keys = System.Windows.Forms.Keys;
+
     public class FluidActorResourceController : ActorResourceController, ILinkedPointSubControllable
     {
         private FluidActorResource _fluidActorResource;
@@ -88,8 +89,8 @@ namespace StasisEditor.Controllers.Actors
             return false;
         }
 
-        // globalCheckKeys
-        public override void globalCheckKey()
+        // globalKeyDown
+        public override void globalKeyDown(Keys key)
         {
             ////////////////////////////
             // Test for delete
@@ -104,7 +105,7 @@ namespace StasisEditor.Controllers.Actors
                 }
                 current = current.next;
             }
-            if (anyLinkSelected && Input.newKey.IsKeyDown(Keys.Delete) && Input.oldKey.IsKeyUp(Keys.Delete))
+            if (anyLinkSelected && key == Keys.Delete)
             {
                 if (System.Windows.Forms.MessageBox.Show("Are you sure you want to delete this controller and all the points? \n (Use the minus key [-] to remove single points)", "Remove entire controller?", System.Windows.Forms.MessageBoxButtons.YesNo) == System.Windows.Forms.DialogResult.Yes)
                     delete();
@@ -114,8 +115,8 @@ namespace StasisEditor.Controllers.Actors
             // Test for point insertion / removal
             if (!anyLinkSelected)
             {
-                bool plusPressed = Input.newKey.IsKeyDown(Keys.OemPlus) && Input.oldKey.IsKeyUp(Keys.OemPlus);
-                bool minusPressed = Input.newKey.IsKeyDown(Keys.OemMinus) && Input.oldKey.IsKeyUp(Keys.OemMinus);
+                bool plusPressed = key == Keys.Oemplus;
+                bool minusPressed = key == Keys.OemMinus;
                 Vector2 worldMouse = _levelController.getWorldMouse();
 
                 if (plusPressed)

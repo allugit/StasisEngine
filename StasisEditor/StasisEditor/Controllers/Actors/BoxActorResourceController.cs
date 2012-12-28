@@ -1,12 +1,13 @@
 ﻿using System;
 using System.Collections.Generic;
 using Microsoft.Xna.Framework;
-using Microsoft.Xna.Framework.Input;
 using StasisCore.Resources;
 using StasisEditor.Views;
 
 namespace StasisEditor.Controllers.Actors
 {
+    using Keys = System.Windows.Forms.Keys;
+
     public class BoxActorResourceController : ActorResourceController, IBoxSubControllable
     {
         private BoxActorResource _boxActor;
@@ -96,10 +97,10 @@ namespace StasisEditor.Controllers.Actors
         }
 
         // globalCheckKeys
-        public override void globalCheckKey()
+        public override void globalKeyDown(Keys key)
         {
             // Delete test
-            if (_boxSubController.selected && Input.newKey.IsKeyDown(Keys.Delete) && Input.oldKey.IsKeyUp(Keys.Delete))
+            if (_boxSubController.selected && key == Keys.Delete)
                 delete();
         }
 

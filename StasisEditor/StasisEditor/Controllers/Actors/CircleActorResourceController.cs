@@ -1,11 +1,12 @@
 ﻿using System;
 using System.Collections.Generic;
 using Microsoft.Xna.Framework;
-using Microsoft.Xna.Framework.Input;
 using StasisCore.Resources;
 
 namespace StasisEditor.Controllers.Actors
 {
+    using Keys = System.Windows.Forms.Keys;
+
     public class CircleActorResourceController : ActorResourceController, ICircleSubControllable
     {
         private CircleActorResource _circleActorResource;
@@ -66,10 +67,10 @@ namespace StasisEditor.Controllers.Actors
         }
 
         // globalCheckKeys
-        public override void globalCheckKey()
+        public override void globalKeyDown(Keys key)
         {
             // Delete test
-            if (_circleSubController.selected && Input.newKey.IsKeyDown(Keys.Delete) && Input.oldKey.IsKeyUp(Keys.Delete))
+            if (_circleSubController.selected && key == Keys.Delete)
                 delete();
         }
 

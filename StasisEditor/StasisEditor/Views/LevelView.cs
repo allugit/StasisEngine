@@ -20,6 +20,9 @@ namespace StasisEditor.Views
         private SpriteBatch _spriteBatch;
         private Texture2D _pixel;
         private Texture2D _circle;
+        private bool _keysEnabled = true;
+
+        public bool keysEnabled { get { return _keysEnabled; } set { _keysEnabled = value; } }
 
         // setController
         public void setController(LevelController controller)
@@ -44,6 +47,18 @@ namespace StasisEditor.Views
 
             // Input
             MouseMove += new MouseEventHandler(LevelView_MouseMove);
+            Parent.Parent.KeyDown += new KeyEventHandler(Parent_KeyDown);
+        }
+
+        // Key down
+        void Parent_KeyDown(object sender, KeyEventArgs e)
+        {
+            if (_keysEnabled)
+            {
+                // Pass input to all actors' global key handler
+                foreach (ActorResourceController actorController in _controller.getActorControllers())
+                    actorController.globalKeyDown(e.KeyCode);
+            }
         }
 
         // Mouse move

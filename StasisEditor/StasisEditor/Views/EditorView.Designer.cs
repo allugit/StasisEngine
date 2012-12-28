@@ -149,6 +149,7 @@
             this.editorTabControl.SelectedIndex = 0;
             this.editorTabControl.Size = new System.Drawing.Size(737, 567);
             this.editorTabControl.TabIndex = 0;
+            this.editorTabControl.SelectedIndexChanged += new System.EventHandler(this.editorTabControl_SelectedIndexChanged);
             // 
             // levelTab
             // 
@@ -163,6 +164,7 @@
             // levelView
             // 
             this.levelView.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.levelView.keysEnabled = true;
             this.levelView.Location = new System.Drawing.Point(0, 0);
             this.levelView.Margin = new System.Windows.Forms.Padding(0);
             this.levelView.Name = "levelView";

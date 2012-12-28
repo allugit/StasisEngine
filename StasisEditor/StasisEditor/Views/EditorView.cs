@@ -153,5 +153,11 @@ namespace StasisEditor.Views
                 _controller.closeLevel();
             }
         }
+
+        // Selected tab changed
+        private void editorTabControl_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            levelView.keysEnabled = editorTabControl.SelectedIndex == 0;
+        }
     }
 }

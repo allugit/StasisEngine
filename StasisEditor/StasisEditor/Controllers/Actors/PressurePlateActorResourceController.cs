@@ -1,11 +1,12 @@
 ﻿using System;
 using System.Collections.Generic;
 using Microsoft.Xna.Framework;
-using Microsoft.Xna.Framework.Input;
 using StasisCore.Resources;
 
 namespace StasisEditor.Controllers.Actors
 {
+    using Keys = System.Windows.Forms.Keys;
+
     public class PressurePlateActorResourceController : ActorResourceController, IBoxSubControllable, IPointSubControllable
     {
         private PressurePlateActorResource _pressurePlateActor;
@@ -102,11 +103,11 @@ namespace StasisEditor.Controllers.Actors
             return false;
         }
 
-        // globalCheckKeys
-        public override void globalCheckKey()
+        // globalKeyDown
+        public override void globalKeyDown(Keys key)
         {
             // Delete test
-            if (_boxSubController.selected && Input.newKey.IsKeyDown(Keys.Delete) && Input.oldKey.IsKeyUp(Keys.Delete))
+            if (_boxSubController.selected && key == Keys.Delete)
                 delete();
         }
 

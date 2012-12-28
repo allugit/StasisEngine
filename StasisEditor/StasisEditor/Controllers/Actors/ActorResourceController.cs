@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Windows.Forms;
 using Microsoft.Xna.Framework;
 using StasisCore;
 using StasisCore.Resources;
@@ -53,8 +54,11 @@ namespace StasisEditor.Controllers.Actors
             _levelController.removeActorController(this);
         }
 
-        // globalCheckKey
-        virtual public void globalCheckKey() { }
+        // globalKeyDown
+        virtual public void globalKeyDown(Keys keys) { }
+
+        // globalKeyUp
+        //virtual public void globalKeyUp(Keys keys) { }
 
         // draw
         abstract public void draw();
