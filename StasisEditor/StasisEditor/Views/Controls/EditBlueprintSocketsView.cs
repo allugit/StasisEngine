@@ -23,11 +23,16 @@ namespace StasisEditor.Views.Controls
         private BlueprintScrap _selectedScrap;
         private BlueprintScrap _socketTargetA;
 
+        public BlueprintScrap socketTargetA { get { return _socketTargetA; } set { _socketTargetA = value; } }
+        public BlueprintScrap selectedScrap { get { return _selectedScrap; } set { _selectedScrap = value; } }
+
         public EditBlueprintSocketsView(Blueprint blueprint)
         {
             _blueprint = blueprint;
 
             InitializeComponent();
+
+            editBlueprintSocketsGraphics.blueprint = _blueprint;
         }
 
         // updateMousePosition
@@ -90,19 +95,20 @@ namespace StasisEditor.Views.Controls
             Rectangle rect = new Rectangle(0, 0, (int)length, 2);
             _spriteBatch.Draw(_pixel, pointA, rect, color, angle, new Vector2(0, 1), 1f, SpriteEffects.None, 0);
         }*/
-
+        /*
         // Set the graphics device window handle to the surface handle
         private void preparingDeviceSettings(object sender, PreparingDeviceSettingsEventArgs e)
         {
             e.GraphicsDeviceInformation.PresentationParameters.DeviceWindowHandle = pictureBox.Handle;
         }
-
+        */
+        /*
         // Form resized
         void EditBlueprintScrapSocketsView_Resize(object sender, EventArgs e)
         {
             //_itemController.resizeGraphicsDevice(pictureBox.Width, pictureBox.Height);
         }
-
+        */
         // Cancel clicked
         private void cancelButton_Click(object sender, EventArgs e)
         {
@@ -117,6 +123,7 @@ namespace StasisEditor.Views.Controls
             Resize -= new EventHandler(EditBlueprintScrapSocketsView_Resize);
         }
         */
+        /*
         // Picture box clicked
         private void pictureBox_MouseDown(object sender, MouseEventArgs e)
         {
@@ -173,7 +180,7 @@ namespace StasisEditor.Views.Controls
 
             // Enable save button
             saveButton.Enabled = true;
-        }
+        }*/
 
         // Save button clicked
         private void saveButton_Click(object sender, EventArgs e)

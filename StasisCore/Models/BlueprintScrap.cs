@@ -19,8 +19,8 @@ namespace StasisCore.Models
         private string _blueprintUID;
         private Matrix _rotationMatrix;
 
-        public Texture2D scrapTexture { get { return _scrapTexture; } }
-        public Vector2 textureCenter { get { return _textureCenter; } }
+        public Texture2D scrapTexture { get { return _scrapTexture; } set { _scrapTexture = value; } }
+        public Vector2 textureCenter { get { return _textureCenter; } set { _textureCenter = value; } }
         public List<Vector2> points { get { return _points; } set { _points = value; } }
         public Vector2 currentCraftPosition { get { return _currentCraftPosition; } set { _currentCraftPosition = value; } }
         public float currentCraftAngle

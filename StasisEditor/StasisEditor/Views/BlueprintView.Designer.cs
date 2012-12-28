@@ -37,13 +37,13 @@ namespace StasisEditor.Views
             this.defineShapeButton = new System.Windows.Forms.Button();
             this.arrangeScrapsButton = new System.Windows.Forms.Button();
             this.groupBox1 = new System.Windows.Forms.GroupBox();
+            this.blueprintList = new StasisEditor.Views.Controls.RefreshingListBox();
             this.groupBox2 = new System.Windows.Forms.GroupBox();
             this.scrapList = new StasisEditor.Views.Controls.RefreshingListBox();
-            this.blueprintList = new StasisEditor.Views.Controls.RefreshingListBox();
             this.groupBox3 = new System.Windows.Forms.GroupBox();
+            this.scrapProperties = new System.Windows.Forms.PropertyGrid();
             this.groupBox4 = new System.Windows.Forms.GroupBox();
             this.blueprintProperties = new System.Windows.Forms.PropertyGrid();
-            this.scrapProperties = new System.Windows.Forms.PropertyGrid();
             this.groupBox1.SuspendLayout();
             this.groupBox2.SuspendLayout();
             this.groupBox3.SuspendLayout();
@@ -129,6 +129,7 @@ namespace StasisEditor.Views
             this.arrangeScrapsButton.TabIndex = 10;
             this.arrangeScrapsButton.Text = "Arrange Scraps";
             this.arrangeScrapsButton.UseVisualStyleBackColor = true;
+            this.arrangeScrapsButton.Click += new System.EventHandler(this.arrangeScrapsButton_Click);
             // 
             // groupBox1
             // 
@@ -142,6 +143,18 @@ namespace StasisEditor.Views
             this.groupBox1.TabIndex = 11;
             this.groupBox1.TabStop = false;
             this.groupBox1.Text = "Blueprints";
+            // 
+            // blueprintList
+            // 
+            this.blueprintList.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom)
+                        | System.Windows.Forms.AnchorStyles.Left)
+                        | System.Windows.Forms.AnchorStyles.Right)));
+            this.blueprintList.FormattingEnabled = true;
+            this.blueprintList.Location = new System.Drawing.Point(6, 15);
+            this.blueprintList.Name = "blueprintList";
+            this.blueprintList.Size = new System.Drawing.Size(286, 147);
+            this.blueprintList.TabIndex = 0;
+            this.blueprintList.SelectedValueChanged += new System.EventHandler(this.blueprintList_SelectedValueChanged);
             // 
             // groupBox2
             // 
@@ -170,18 +183,6 @@ namespace StasisEditor.Views
             this.scrapList.TabIndex = 2;
             this.scrapList.SelectedValueChanged += new System.EventHandler(this.scrapList_SelectedValueChanged);
             // 
-            // blueprintList
-            // 
-            this.blueprintList.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom)
-                        | System.Windows.Forms.AnchorStyles.Left)
-                        | System.Windows.Forms.AnchorStyles.Right)));
-            this.blueprintList.FormattingEnabled = true;
-            this.blueprintList.Location = new System.Drawing.Point(6, 15);
-            this.blueprintList.Name = "blueprintList";
-            this.blueprintList.Size = new System.Drawing.Size(286, 147);
-            this.blueprintList.TabIndex = 0;
-            this.blueprintList.SelectedValueChanged += new System.EventHandler(this.blueprintList_SelectedValueChanged);
-            // 
             // groupBox3
             // 
             this.groupBox3.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom)
@@ -194,6 +195,16 @@ namespace StasisEditor.Views
             this.groupBox3.TabIndex = 13;
             this.groupBox3.TabStop = false;
             this.groupBox3.Text = "Scrap Properties";
+            // 
+            // scrapProperties
+            // 
+            this.scrapProperties.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom)
+                        | System.Windows.Forms.AnchorStyles.Left)
+                        | System.Windows.Forms.AnchorStyles.Right)));
+            this.scrapProperties.Location = new System.Drawing.Point(6, 19);
+            this.scrapProperties.Name = "scrapProperties";
+            this.scrapProperties.Size = new System.Drawing.Size(397, 236);
+            this.scrapProperties.TabIndex = 0;
             // 
             // groupBox4
             // 
@@ -216,16 +227,6 @@ namespace StasisEditor.Views
             this.blueprintProperties.Name = "blueprintProperties";
             this.blueprintProperties.Size = new System.Drawing.Size(287, 236);
             this.blueprintProperties.TabIndex = 0;
-            // 
-            // scrapProperties
-            // 
-            this.scrapProperties.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom)
-                        | System.Windows.Forms.AnchorStyles.Left)
-                        | System.Windows.Forms.AnchorStyles.Right)));
-            this.scrapProperties.Location = new System.Drawing.Point(6, 19);
-            this.scrapProperties.Name = "scrapProperties";
-            this.scrapProperties.Size = new System.Drawing.Size(397, 236);
-            this.scrapProperties.TabIndex = 0;
             // 
             // BlueprintView
             // 

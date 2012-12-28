@@ -184,5 +184,21 @@ namespace StasisEditor.Views
             //    MessageBox.Show(ex.Message, "Resource Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
             //}
         }
+
+        // Arrange scraps button clicked
+        private void arrangeScrapsButton_Click(object sender, EventArgs e)
+        {
+            // Create edit view
+            editBlueprintSocketsView = new EditBlueprintSocketsView(selectedBlueprint);
+
+            // Open view
+            if (editBlueprintSocketsView.ShowDialog() == DialogResult.OK)
+            {
+                Console.WriteLine("do something");
+            }
+
+            // Close view
+            editBlueprintSocketsView = null;
+        }
     }
 }

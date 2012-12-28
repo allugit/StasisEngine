@@ -186,6 +186,9 @@
     <Compile Include="Views\Controls\ViewBlueprintAssociateScraps.Designer.cs">
       <DependentUpon>ViewBlueprintAssociateScraps.cs</DependentUpon>
     </Compile>
+    <Compile Include="Views\Controls\EditBlueprintSocketsGraphics.cs">
+      <SubType>Component</SubType>
+    </Compile>
     <Compile Include="Views\LevelView.cs">
       <SubType>Component</SubType>
     </Compile>

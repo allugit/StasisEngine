@@ -28,24 +28,10 @@
         /// </summary>
         private void InitializeComponent()
         {
-            this.pictureBox = new System.Windows.Forms.PictureBox();
             this.cancelButton = new System.Windows.Forms.Button();
             this.saveButton = new System.Windows.Forms.Button();
-            ((System.ComponentModel.ISupportInitialize)(this.pictureBox)).BeginInit();
+            this.editBlueprintSocketsGraphics = new StasisEditor.Views.Controls.EditBlueprintSocketsGraphics();
             this.SuspendLayout();
-            // 
-            // pictureBox
-            // 
-            this.pictureBox.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom)
-                        | System.Windows.Forms.AnchorStyles.Left)
-                        | System.Windows.Forms.AnchorStyles.Right)));
-            this.pictureBox.BackColor = System.Drawing.Color.Black;
-            this.pictureBox.Location = new System.Drawing.Point(12, 12);
-            this.pictureBox.Name = "pictureBox";
-            this.pictureBox.Size = new System.Drawing.Size(675, 409);
-            this.pictureBox.TabIndex = 0;
-            this.pictureBox.TabStop = false;
-            this.pictureBox.MouseDown += new System.Windows.Forms.MouseEventHandler(this.pictureBox_MouseDown);
             // 
             // cancelButton
             // 
@@ -70,26 +56,37 @@
             this.saveButton.UseVisualStyleBackColor = true;
             this.saveButton.Click += new System.EventHandler(this.saveButton_Click);
             // 
-            // EditBlueprintScrapSocketsView
+            // editBlueprintSocketsGraphics
+            // 
+            this.editBlueprintSocketsGraphics.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom)
+                        | System.Windows.Forms.AnchorStyles.Left)
+                        | System.Windows.Forms.AnchorStyles.Right)));
+            this.editBlueprintSocketsGraphics.blueprint = null;
+            this.editBlueprintSocketsGraphics.Location = new System.Drawing.Point(12, 12);
+            this.editBlueprintSocketsGraphics.Name = "editBlueprintSocketsGraphics";
+            this.editBlueprintSocketsGraphics.Size = new System.Drawing.Size(675, 409);
+            this.editBlueprintSocketsGraphics.TabIndex = 3;
+            this.editBlueprintSocketsGraphics.Text = "editBlueprintSocketsGraphics";
+            // 
+            // EditBlueprintSocketsView
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(699, 463);
+            this.Controls.Add(this.editBlueprintSocketsGraphics);
             this.Controls.Add(this.saveButton);
             this.Controls.Add(this.cancelButton);
-            this.Controls.Add(this.pictureBox);
-            this.Name = "EditBlueprintScrapSocketsView";
+            this.Name = "EditBlueprintSocketsView";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;
             this.Text = "Edit Sockets";
-            ((System.ComponentModel.ISupportInitialize)(this.pictureBox)).EndInit();
             this.ResumeLayout(false);
 
         }
 
         #endregion
 
-        private System.Windows.Forms.PictureBox pictureBox;
         private System.Windows.Forms.Button cancelButton;
         private System.Windows.Forms.Button saveButton;
+        private EditBlueprintSocketsGraphics editBlueprintSocketsGraphics;
     }
 }
