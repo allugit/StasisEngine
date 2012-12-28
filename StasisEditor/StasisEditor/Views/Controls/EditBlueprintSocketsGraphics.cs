@@ -7,22 +7,57 @@ using StasisCore.Controllers;
 
 namespace StasisEditor.Views.Controls
 {
+    using Keys = System.Windows.Forms.Keys;
+
     public class EditBlueprintSocketsGraphics : GraphicsDeviceControl
     {
         private SpriteBatch _spriteBatch;
         private Texture2D _pixel;
         private Blueprint _blueprint;
         private Vector2 _mouse;
+        private Vector2 _screenCenter;
         private EditBlueprintSocketsView _view;
+        private bool _ctrl;
 
         public Blueprint blueprint { get { return _blueprint; } set { _blueprint = value; } }
+        private Vector2 offset { get { return _screenCenter + new Vector2(Width, Height) / 2; } }
 
         public EditBlueprintSocketsGraphics()
             : base()
         {
+        }
+
+        // Initialize
+        protected override void Initialize()
+        {
+            _view = Parent as EditBlueprintSocketsView;
+
+            // Resources
+            _spriteBatch = new SpriteBatch(GraphicsDevice);
+            _pixel = new Texture2D(GraphicsDevice, 1, 1);
+            _pixel.SetData<Color>(new[] { Color.White });
+
+            // Input
             System.Windows.Forms.Application.Idle += delegate { Invalidate(); };
             MouseMove += new System.Windows.Forms.MouseEventHandler(EditBlueprintSocketsGraphics_MouseMove);
             MouseDown += new System.Windows.Forms.MouseEventHandler(EditBlueprintSocketsGraphics_MouseDown);
+            FindForm().KeyPreview = true;
+            FindForm().KeyDown += new System.Windows.Forms.KeyEventHandler(Parent_KeyDown);
+            FindForm().KeyUp += new System.Windows.Forms.KeyEventHandler(EditBlueprintSocketsGraphics_KeyUp);
+        }
+
+        // Key up
+        void EditBlueprintSocketsGraphics_KeyUp(object sender, System.Windows.Forms.KeyEventArgs e)
+        {
+            if (e.KeyCode == Keys.Control || e.KeyCode == Keys.ControlKey || e.KeyCode == Keys.LControlKey || e.KeyCode == Keys.RControlKey)
+                _ctrl = false;
+        }
+
+        // Key down
+        void Parent_KeyDown(object sender, System.Windows.Forms.KeyEventArgs e)
+        {
+            if (e.KeyCode == Keys.Control || e.KeyCode == Keys.ControlKey || e.KeyCode == Keys.LControlKey || e.KeyCode == Keys.RControlKey)
+                _ctrl = true;
         }
 
         // Mouse down
@@ -32,7 +67,7 @@ namespace StasisEditor.Views.Controls
             BlueprintScrap target = null;
             for (int i = 0; i < _blueprint.scraps.Count; i++)
             {
-                if (_blueprint.scraps[i].hitTest(_mouse))
+                if (_blueprint.scraps[i].hitTest(_mouse - offset))
                 {
                     target = _blueprint.scraps[i];
                     break;
@@ -85,27 +120,18 @@ namespace StasisEditor.Views.Controls
         {
             Vector2 oldMouse = _mouse;
             _mouse = new Vector2(e.X, e.Y);
+            Vector2 delta = _mouse - oldMouse;
 
-            if (_view.selectedScrap != null)
-                _view.selectedScrap.currentCraftPosition += _mouse - oldMouse;
-        }
-
-        // Initialize
-        protected override void Initialize()
-        {
-            _view = Parent as EditBlueprintSocketsView;
-
-            _spriteBatch = new SpriteBatch(GraphicsDevice);
-            _pixel = new Texture2D(GraphicsDevice, 1, 1);
-            _pixel.SetData<Color>(new[] { Color.White });
-
-            // Initialize blueprint scraps
-            foreach (BlueprintScrap scrap in _blueprint.scraps)
+            if (_ctrl)
             {
-                // Texture
-                if (scrap.scrapTexture == null)
-                    scrap.scrapTexture = ResourceController.getTexture(scrap.scrapTextureUID);
-                scrap.textureCenter = new Vector2(scrap.scrapTexture.Width, scrap.scrapTexture.Height) / 2;
+                // Move screen
+                _screenCenter += delta;
+            }
+            else
+            {
+                // Move selected scrap
+                if (_view.selectedScrap != null)
+                    _view.selectedScrap.currentCraftPosition += delta;
             }
         }
 
@@ -120,7 +146,7 @@ namespace StasisEditor.Views.Controls
 
                 // Draw scraps
                 for (int i = _blueprint.scraps.Count - 1; i >= 0; i--)
-                    _spriteBatch.Draw(_blueprint.scraps[i].scrapTexture, _blueprint.scraps[i].currentCraftPosition, _blueprint.scraps[i].scrapTexture.Bounds, Color.White, 0f, _blueprint.scraps[i].textureCenter, 1f, SpriteEffects.None, 0);
+                    _spriteBatch.Draw(_blueprint.scraps[i].scrapTexture, _blueprint.scraps[i].currentCraftPosition + offset, _blueprint.scraps[i].scrapTexture.Bounds, Color.White, 0f, _blueprint.scraps[i].textureCenter, 1f, SpriteEffects.None, 0);
 
                 // Draw scrap sockets
                 foreach (BlueprintSocket socket in _blueprint.sockets)
@@ -151,7 +177,7 @@ namespace StasisEditor.Views.Controls
             float length = relative.Length();
             float angle = (float)Math.Atan2(relative.Y, relative.X);
             Rectangle rect = new Rectangle(0, 0, (int)length, 2);
-            _spriteBatch.Draw(_pixel, pointA, rect, color, angle, new Vector2(0, 1), 1f, SpriteEffects.None, 0);
+            _spriteBatch.Draw(_pixel, pointA + offset, rect, color, angle, new Vector2(0, 1), 1f, SpriteEffects.None, 0);
         }
     }
 }

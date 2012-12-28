@@ -10,6 +10,7 @@ using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using StasisCore.Resources;
 using StasisCore.Models;
+using StasisCore.Controllers;
 using StasisEditor.Controllers;
 using StasisEditor.Models;
 
@@ -30,67 +31,19 @@ namespace StasisEditor.Views.Controls
 
             InitializeComponent();
 
+            // Initialize blueprint scrap textures
+            foreach (BlueprintScrap scrap in _blueprint.scraps)
+            {
+                // Texture
+                if (scrap.scrapTexture == null)
+                    scrap.scrapTexture = ResourceController.getTexture(scrap.scrapTextureUID);
+                scrap.textureCenter = new Vector2(scrap.scrapTexture.Width, scrap.scrapTexture.Height) / 2;
+            }
+
+            // Position blueprint scraps using sockets
+
             editBlueprintSocketsGraphics.blueprint = _blueprint;
         }
-
-        /*
-        // Picture box clicked
-        private void pictureBox_MouseDown(object sender, MouseEventArgs e)
-        {
-            // Hit test scraps
-            BlueprintScrap target = null;
-            for (int i = 0; i < _blueprint.scraps.Count; i++)
-            {
-                if (_blueprint.scraps[i].hitTest(_mouse))
-                {
-                    target = _blueprint.scraps[i];
-                    break;
-                }
-            }
-
-            if (e.Button == System.Windows.Forms.MouseButtons.Left)
-            {
-                if (_selectedScrap == null)
-                {
-                    // Select scrap
-                    _selectedScrap = target;
-                }
-                else
-                {
-                    // Place selected scrap
-                    _selectedScrap = null;
-                }
-            }
-            else if (e.Button == System.Windows.Forms.MouseButtons.Right)
-            {
-                if (_socketTargetA == null)
-                {
-                    // Set first socket target
-                    _socketTargetA = target;
-                }
-                else
-                {
-                    // Create socket on first target
-                    Vector2 relativePoint = target.currentCraftPosition - _socketTargetA.currentCraftPosition;
-                    BlueprintSocket firstSocket = new BlueprintSocket(_socketTargetA, target, relativePoint);
-                    _blueprint.sockets.Add(firstSocket);
-
-                    // Create socket on second target
-                    BlueprintSocket secondSocket = new BlueprintSocket(target, _socketTargetA, -relativePoint);
-                    _blueprint.sockets.Add(secondSocket);
-
-                    // Set opposing sockets
-                    firstSocket.opposingSocket = secondSocket;
-                    secondSocket.opposingSocket = firstSocket;
-
-                    // Clear socket target
-                    _socketTargetA = null;
-                }
-            }
-
-            // Enable save button
-            saveButton.Enabled = true;
-        }*/
 
         // Save button clicked
         private void saveButton_Click(object sender, EventArgs e)
