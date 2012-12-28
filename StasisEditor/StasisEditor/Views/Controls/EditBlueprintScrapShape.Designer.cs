@@ -30,16 +30,15 @@
         {
             this.saveButton = new System.Windows.Forms.Button();
             this.cancelButton = new System.Windows.Forms.Button();
-            this.pictureBox = new System.Windows.Forms.PictureBox();
             this.clearButton = new System.Windows.Forms.Button();
-            ((System.ComponentModel.ISupportInitialize)(this.pictureBox)).BeginInit();
+            this.editBlueprintScrapShapeGraphics = new StasisEditor.Views.Controls.EditBlueprintScrapShapeGraphics();
             this.SuspendLayout();
             // 
             // saveButton
             // 
             this.saveButton.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
             this.saveButton.Enabled = false;
-            this.saveButton.Location = new System.Drawing.Point(59, 124);
+            this.saveButton.Location = new System.Drawing.Point(71, 201);
             this.saveButton.Name = "saveButton";
             this.saveButton.Size = new System.Drawing.Size(75, 23);
             this.saveButton.TabIndex = 0;
@@ -50,7 +49,7 @@
             // cancelButton
             // 
             this.cancelButton.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
-            this.cancelButton.Location = new System.Drawing.Point(140, 124);
+            this.cancelButton.Location = new System.Drawing.Point(152, 201);
             this.cancelButton.Name = "cancelButton";
             this.cancelButton.Size = new System.Drawing.Size(75, 23);
             this.cancelButton.TabIndex = 1;
@@ -58,44 +57,41 @@
             this.cancelButton.UseVisualStyleBackColor = true;
             this.cancelButton.Click += new System.EventHandler(this.cancelButton_Click);
             // 
-            // pictureBox
-            // 
-            this.pictureBox.BackColor = System.Drawing.Color.Black;
-            this.pictureBox.Location = new System.Drawing.Point(13, 13);
-            this.pictureBox.Name = "pictureBox";
-            this.pictureBox.Size = new System.Drawing.Size(202, 105);
-            this.pictureBox.TabIndex = 2;
-            this.pictureBox.TabStop = false;
-            this.pictureBox.Click += new System.EventHandler(this.pictureBox_Click);
-            // 
             // clearButton
             // 
             this.clearButton.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
-            this.clearButton.Location = new System.Drawing.Point(13, 124);
+            this.clearButton.Location = new System.Drawing.Point(12, 201);
             this.clearButton.Name = "clearButton";
-            this.clearButton.Size = new System.Drawing.Size(39, 23);
+            this.clearButton.Size = new System.Drawing.Size(52, 23);
             this.clearButton.TabIndex = 3;
             this.clearButton.Text = "Clear";
             this.clearButton.UseVisualStyleBackColor = true;
             this.clearButton.Click += new System.EventHandler(this.clearButton_Click);
             // 
+            // editBlueprintScrapShapeGraphics
+            // 
+            this.editBlueprintScrapShapeGraphics.Location = new System.Drawing.Point(13, 13);
+            this.editBlueprintScrapShapeGraphics.MinimumSize = new System.Drawing.Size(213, 148);
+            this.editBlueprintScrapShapeGraphics.Name = "editBlueprintScrapShapeGraphics";
+            this.editBlueprintScrapShapeGraphics.Size = new System.Drawing.Size(213, 148);
+            this.editBlueprintScrapShapeGraphics.TabIndex = 4;
+            this.editBlueprintScrapShapeGraphics.Text = "editBlueprintScrapShapeGraphics1";
+            // 
             // EditBlueprintScrapShape
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
-            this.ClientSize = new System.Drawing.Size(227, 159);
+            this.ClientSize = new System.Drawing.Size(238, 236);
+            this.Controls.Add(this.editBlueprintScrapShapeGraphics);
             this.Controls.Add(this.clearButton);
-            this.Controls.Add(this.pictureBox);
             this.Controls.Add(this.cancelButton);
             this.Controls.Add(this.saveButton);
-            this.MinimumSize = new System.Drawing.Size(243, 128);
+            this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedSingle;
             this.Name = "EditBlueprintScrapShape";
             this.SizeGripStyle = System.Windows.Forms.SizeGripStyle.Hide;
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;
             this.Text = "Edit Blueprint Scrap Shape";
             this.Click += new System.EventHandler(this.EditBlueprintScrapShape_Click);
-            ((System.ComponentModel.ISupportInitialize)(this.pictureBox)).EndInit();
             this.ResumeLayout(false);
 
         }
@@ -104,7 +100,7 @@
 
         private System.Windows.Forms.Button saveButton;
         private System.Windows.Forms.Button cancelButton;
-        private System.Windows.Forms.PictureBox pictureBox;
         private System.Windows.Forms.Button clearButton;
+        private EditBlueprintScrapShapeGraphics editBlueprintScrapShapeGraphics;
     }
 }

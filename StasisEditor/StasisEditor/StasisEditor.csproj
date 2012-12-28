@@ -128,6 +128,9 @@
     <Compile Include="Views\Controls\EditBlueprintScrapShape.Designer.cs">
       <DependentUpon>EditBlueprintScrapShape.cs</DependentUpon>
     </Compile>
+    <Compile Include="Views\Controls\EditBlueprintScrapShapeGraphics.cs">
+      <SubType>Component</SubType>
+    </Compile>
     <Compile Include="Views\Controls\EditBlueprintSocketsButton.cs">
       <SubType>UserControl</SubType>
     </Compile>

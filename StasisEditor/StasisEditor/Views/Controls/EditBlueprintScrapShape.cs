@@ -20,34 +20,21 @@ namespace StasisEditor.Views.Controls
     {
         private BlueprintView _view;
         private BlueprintScrap _scrap;
-        private Texture2D _pixel;
-        private Texture2D _texture;
-        private Vector2 _textureCenter;
-        private Vector2 _mouse;
         private List<Vector2> _points;
 
-        public EditBlueprintScrapShape(BlueprintView view, Texture2D texture, BlueprintScrap scrap)
+        public List<Vector2> points { get { return _points; } }
+
+        public EditBlueprintScrapShape(BlueprintView view, BlueprintScrap scrap)
         {
             _view = view;
-            _texture = texture;
-            _textureCenter = new Vector2(_texture.Width, _texture.Height) / 2;
+            //_textureCenter = new Vector2(_texture.Width, _texture.Height) / 2;
             _scrap = scrap;
             _points = new List<Vector2>(_scrap.points);
 
             InitializeComponent();
 
-            // Hook to XNA
-            //XNAResources.graphics.PreparingDeviceSettings += new EventHandler<PreparingDeviceSettingsEventArgs>(preparingDeviceSettings);
-            //Microsoft.Xna.Framework.Input.Mouse.WindowHandle = pictureBox.FindForm().Handle;
-            //_view.getController().resizeGraphicsDevice(texture.Width, texture.Height);
-
-            // Resize picturebox and form
-            int widthDelta = texture.Width - pictureBox.Width;
-            int heightDelta = texture.Height - pictureBox.Height;
-            pictureBox.Width = texture.Width;
-            pictureBox.Height = texture.Height;
-            Width = Width + widthDelta;
-            Height = Height + heightDelta;
+            // Set scrap texture
+            editBlueprintScrapShapeGraphics.setTexture(scrap.scrapTextureUID);
         }
 
         // getPoints
@@ -55,71 +42,11 @@ namespace StasisEditor.Views.Controls
         {
             return _points;
         }
-        /*
-        // handleXNADraw
-        public void handleXNADraw()
+
+        // Enable save button
+        public void enableSaveButton(bool status)
         {
-            // Draw texture
-            _spriteBatch.Draw(_texture, _textureCenter, _texture.Bounds, Color.White, 0, _textureCenter, 1f, SpriteEffects.None, 0);
-
-            // Draw mouse position
-            _spriteBatch.Draw(_pixel, new Vector2(_mouse.X, _mouse.Y), new Rectangle(0, 0, 4, 4), Color.Yellow, 0, new Vector2(2, 2), 1f, SpriteEffects.None, 0);
-
-            // Draw lines
-            for (int i = 0; i < _points.Count; i++)
-            {
-                // Point
-                _spriteBatch.Draw(_pixel, _points[i] + _textureCenter, new Rectangle(0, 0, 4, 4), Color.Orange, 0, new Vector2(2, 2), 1f, SpriteEffects.None, 0);
-
-                // Lines
-                if (i > 0)
-                {
-                    drawLine(_points[i - 1] + _textureCenter,  _points[i] + _textureCenter, Color.Purple);
-                }
-            }
-
-            if (_points.Count > 0)
-            {
-                // Draw line between last point and first point
-                drawLine(_points[0] + _textureCenter, _points[_points.Count - 1] + _textureCenter, Color.DarkBlue);
-            }
-        }
-
-        // drawLine
-        private void drawLine(Vector2 pointA, Vector2 pointB, Color color)
-        {
-            Vector2 relative = pointB - pointA;
-            float length = relative.Length();
-            float angle = (float)Math.Atan2(relative.Y, relative.X);
-            Rectangle rect = new Rectangle(0, 0, (int)length, 2);
-            _spriteBatch.Draw(_pixel, pointA, rect, color, angle, new Vector2(0, 1), 1f, SpriteEffects.None, 0);
-        }
-        */
-        // updateMousePosition
-        public void updateMousePosition()
-        {
-            /*
-            // View offset
-            System.Drawing.Point viewOffset = FindForm().PointToClient(PointToScreen(pictureBox.Location));
-
-            // Set mouse boundaries
-            int x = Math.Min(Math.Max(0, Input.newMouse.X - viewOffset.X), pictureBox.Width);
-            int y = Math.Min(Math.Max(0, Input.newMouse.Y - viewOffset.Y), pictureBox.Height);
-
-            // Calculate change in mouse position (for screen and world coordinates)
-            int deltaX = x - (int)_mouse.X;
-            int deltaY = y - (int)_mouse.Y;
-
-            // Store screen space mouse coordinates
-            _mouse.X = x;
-            _mouse.Y = y;
-            */
-        }
-
-        // Set the graphics device window handle to the surface handle
-        private void preparingDeviceSettings(object sender, PreparingDeviceSettingsEventArgs e)
-        {
-            e.GraphicsDeviceInformation.PresentationParameters.DeviceWindowHandle = pictureBox.Handle;
+            saveButton.Enabled = status;
         }
 
         // Cancel button clicked
@@ -129,32 +56,10 @@ namespace StasisEditor.Views.Controls
             Close();
         }
 
-        // Action click
-        public void click()
-        {
-            // Add point
-            _points.Add(_mouse - _textureCenter);
-
-            // Enable done button
-            saveButton.Enabled = _points.Count > 2;
-        }
-        /*
-        // Unhook from XNA
-        private void EditBlueprintScrapShape_FormClosing(object sender, FormClosingEventArgs e)
-        {
-            XNAResources.graphics.PreparingDeviceSettings -= new EventHandler<PreparingDeviceSettingsEventArgs>(preparingDeviceSettings);
-        }
-        */
         // Click on form
         private void EditBlueprintScrapShape_Click(object sender, EventArgs e)
         {
-            click();
-        }
-
-        // Click on picture box
-        private void pictureBox_Click(object sender, EventArgs e)
-        {
-            click();
+            editBlueprintScrapShapeGraphics.click();
         }
 
         // Done clicked

@@ -43,23 +43,10 @@ namespace StasisEditor.Views
         {
             return _controller;
         }
-        /*
-        // handleXNADraw
-        public void handleXNADraw()
-        {
-            if (_editBlueprintScrapShapeView != null)
-                _editBlueprintScrapShapeView.handleXNADraw();
-
-            if (_editBlueprintSocketsView != null)
-                _editBlueprintSocketsView.handleXNADraw();
-        }*/
 
         // updateMousePosition
         public void updateMousePosition()
         {
-            if (_editBlueprintScrapShapeView != null)
-                _editBlueprintScrapShapeView.updateMousePosition();
-
             if (_editBlueprintSocketsView != null)
                 _editBlueprintSocketsView.updateMousePosition();
         }
@@ -177,36 +164,25 @@ namespace StasisEditor.Views
         {
             System.Diagnostics.Debug.Assert(selectedScrap != null);
 
-            try
-            {
-                // Unhook XNA from level view
-                //_controller.unhookXNAFromLevel();
-                //_controller.enableLevelXNAInput(false);
-                //_controller.enableLevelXNADrawing(false);
-
+            //try
+            //{
                 // Create edit view
-                EditBlueprintScrapShape editScrapView = new EditBlueprintScrapShape(this, ResourceController.getTexture(selectedScrap.scrapTextureUID), selectedScrap);
-                editBlueprintScrapShapeView = editScrapView;
+                editBlueprintScrapShapeView = new EditBlueprintScrapShape(this, selectedScrap);
 
                 // Open edit view
-                if (editScrapView.ShowDialog() == DialogResult.OK)
+                if (editBlueprintScrapShapeView.ShowDialog() == DialogResult.OK)
                 {
                     // Set scrap points
-                    selectedScrap.points = editScrapView.getPoints();
+                    selectedScrap.points = editBlueprintScrapShapeView.getPoints();
                 }
 
                 // Close edit view
                 editBlueprintScrapShapeView = null;
-
-                // Hook XNA to level view
-                //_controller.hookXNAToLevel();
-                //_controller.enableLevelXNAInput(true);
-                //_controller.enableLevelXNADrawing(true);
-            }
-            catch (ResourceNotFoundException ex)
-            {
-                MessageBox.Show(ex.Message, "Resource Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
-            }
+            //}
+            //catch (ResourceNotFoundException ex)
+            //{
+            //    MessageBox.Show(ex.Message, "Resource Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            //}
         }
     }
 }
