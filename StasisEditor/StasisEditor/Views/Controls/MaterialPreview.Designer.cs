@@ -37,7 +37,7 @@
             this.materialPreviewGraphics.Location = new System.Drawing.Point(0, 0);
             this.materialPreviewGraphics.Margin = new System.Windows.Forms.Padding(0);
             this.materialPreviewGraphics.Name = "materialPreviewGraphics";
-            this.materialPreviewGraphics.Size = new System.Drawing.Size(496, 474);
+            this.materialPreviewGraphics.Size = new System.Drawing.Size(512, 512);
             this.materialPreviewGraphics.TabIndex = 0;
             this.materialPreviewGraphics.Text = "materialPreviewGraphics1";
             // 
@@ -46,7 +46,7 @@
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.BackColor = System.Drawing.Color.Gray;
-            this.ClientSize = new System.Drawing.Size(496, 474);
+            this.ClientSize = new System.Drawing.Size(512, 512);
             this.Controls.Add(this.materialPreviewGraphics);
             this.Name = "MaterialPreview";
             this.ShowIcon = false;
