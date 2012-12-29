@@ -181,13 +181,17 @@ namespace StasisEditor.Views
         // Arrange scraps button clicked
         private void arrangeScrapsButton_Click(object sender, EventArgs e)
         {
+
+            // Create a copy of the blueprint
+            Blueprint copy = _controller.initializeBlueprint(selectedBlueprint.data);
+
             // Create edit view
-            editBlueprintSocketsView = new EditBlueprintSocketsView(selectedBlueprint);
+            editBlueprintSocketsView = new EditBlueprintSocketsView(copy);
 
             // Open view
             if (editBlueprintSocketsView.ShowDialog() == DialogResult.OK)
             {
-                Console.WriteLine("do something");
+                _controller.swapBlueprint(selectedBlueprint, copy);
             }
 
             // Reset scraps

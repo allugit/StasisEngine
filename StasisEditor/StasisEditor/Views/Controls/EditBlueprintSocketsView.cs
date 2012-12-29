@@ -32,20 +32,6 @@ namespace StasisEditor.Views.Controls
             InitializeComponent();
         }
 
-        // Save button clicked
-        private void doneButton_Click(object sender, EventArgs e)
-        {
-            DialogResult = System.Windows.Forms.DialogResult.OK;
-            Close();
-        }
-
-        // Cancel clicked
-        private void cancelButton_Click(object sender, EventArgs e)
-        {
-            DialogResult = System.Windows.Forms.DialogResult.Cancel;
-            Close();
-        }
-
         // Form load
         private void EditBlueprintSocketsView_Load(object sender, EventArgs e)
         {
@@ -94,10 +80,17 @@ namespace StasisEditor.Views.Controls
             }
         }
 
-        // Save clicked
+        // OK clicked
         private void saveButton_Click(object sender, EventArgs e)
         {
             DialogResult = System.Windows.Forms.DialogResult.OK;
+            Close();
+        }
+
+        // Cancel clicked
+        private void cancelButton_Click(object sender, EventArgs e)
+        {
+            DialogResult = System.Windows.Forms.DialogResult.Cancel;
             Close();
         }
     }

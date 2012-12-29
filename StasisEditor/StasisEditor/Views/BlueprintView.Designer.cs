@@ -100,11 +100,11 @@ namespace StasisEditor.Views
             // saveButton
             // 
             this.saveButton.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
-            this.saveButton.Location = new System.Drawing.Point(653, 478);
+            this.saveButton.Location = new System.Drawing.Point(607, 478);
             this.saveButton.Name = "saveButton";
-            this.saveButton.Size = new System.Drawing.Size(59, 23);
+            this.saveButton.Size = new System.Drawing.Size(105, 23);
             this.saveButton.TabIndex = 8;
-            this.saveButton.Text = "Save";
+            this.saveButton.Text = "Save Blueprints";
             this.saveButton.UseVisualStyleBackColor = true;
             this.saveButton.Click += new System.EventHandler(this.saveButton_Click);
             // 

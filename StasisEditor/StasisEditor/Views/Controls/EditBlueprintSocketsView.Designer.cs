@@ -32,7 +32,7 @@
             this.clearSocketsButton = new System.Windows.Forms.Button();
             this.resetPositionsButton = new System.Windows.Forms.Button();
             this.editBlueprintSocketsGraphics = new StasisEditor.Views.Controls.EditBlueprintSocketsGraphics();
-            this.saveButton = new System.Windows.Forms.Button();
+            this.okayButton = new System.Windows.Forms.Button();
             this.SuspendLayout();
             // 
             // cancelButton
@@ -44,7 +44,7 @@
             this.cancelButton.TabIndex = 1;
             this.cancelButton.Text = "Cancel";
             this.cancelButton.UseVisualStyleBackColor = true;
-            this.cancelButton.Click += new System.EventHandler(this.doneButton_Click);
+            this.cancelButton.Click += new System.EventHandler(this.cancelButton_Click);
             // 
             // clearSocketsButton
             // 
@@ -80,23 +80,23 @@
             this.editBlueprintSocketsGraphics.TabIndex = 3;
             this.editBlueprintSocketsGraphics.Text = "editBlueprintSocketsGraphics";
             // 
-            // saveButton
+            // okayButton
             // 
-            this.saveButton.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
-            this.saveButton.Location = new System.Drawing.Point(531, 427);
-            this.saveButton.Name = "saveButton";
-            this.saveButton.Size = new System.Drawing.Size(75, 23);
-            this.saveButton.TabIndex = 6;
-            this.saveButton.Text = "Save";
-            this.saveButton.UseVisualStyleBackColor = true;
-            this.saveButton.Click += new System.EventHandler(this.saveButton_Click);
+            this.okayButton.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
+            this.okayButton.Location = new System.Drawing.Point(531, 427);
+            this.okayButton.Name = "okayButton";
+            this.okayButton.Size = new System.Drawing.Size(75, 23);
+            this.okayButton.TabIndex = 6;
+            this.okayButton.Text = "OK";
+            this.okayButton.UseVisualStyleBackColor = true;
+            this.okayButton.Click += new System.EventHandler(this.saveButton_Click);
             // 
             // EditBlueprintSocketsView
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(699, 463);
-            this.Controls.Add(this.saveButton);
+            this.Controls.Add(this.okayButton);
             this.Controls.Add(this.resetPositionsButton);
             this.Controls.Add(this.clearSocketsButton);
             this.Controls.Add(this.editBlueprintSocketsGraphics);
@@ -115,6 +115,6 @@
         private EditBlueprintSocketsGraphics editBlueprintSocketsGraphics;
         private System.Windows.Forms.Button clearSocketsButton;
         private System.Windows.Forms.Button resetPositionsButton;
-        private System.Windows.Forms.Button saveButton;
+        private System.Windows.Forms.Button okayButton;
     }
 }

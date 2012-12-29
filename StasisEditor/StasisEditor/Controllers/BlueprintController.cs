@@ -32,6 +32,7 @@ namespace StasisEditor.Controllers
             List<ResourceObject> resources = ResourceController.loadItems("blueprint");
             foreach (ResourceObject resource in resources)
             {
+                /*
                 // Create scraps
                 List<BlueprintScrap> scraps = new List<BlueprintScrap>();
                 foreach (XElement childData in resource.data.Elements("Item"))
@@ -68,7 +69,58 @@ namespace StasisEditor.Controllers
 
                 // Create blueprint
                 _blueprints.Add(new Blueprint(resource.data, scraps, sockets));
+                */
+
+                _blueprints.Add(initializeBlueprint(resource.data));
             }
+        }
+
+        // initializeBlueprint
+        public Blueprint initializeBlueprint(XElement data)
+        {
+            // Create scraps
+            List<BlueprintScrap> scraps = new List<BlueprintScrap>();
+            foreach (XElement childData in data.Elements("Item"))
+            {
+                if (childData.Attribute("type").Value == "blueprint_scrap")
+                    scraps.Add(new BlueprintScrap(childData));
+            }
+
+            // Create sockets
+            List<BlueprintSocket> sockets = new List<BlueprintSocket>();
+            foreach (XElement childData in data.Elements("Socket"))
+            {
+                // Find associated scraps
+                BlueprintScrap scrapA = (from scrap in scraps
+                                         where scrap.uid == childData.Attribute("scrap_a_uid").Value
+                                         select scrap).First();
+                BlueprintScrap scrapB = (from scrap in scraps
+                                         where scrap.uid == childData.Attribute("scrap_b_uid").Value
+                                         select scrap).First();
+
+                sockets.Add(new BlueprintSocket(childData, scrapA, scrapB));
+            }
+
+            // Assign opposing sockets
+            foreach (BlueprintSocket socket in sockets)
+            {
+                // Select the socket where this socket's scrapA is the other socket's scrapB
+                socket.opposingSocket = (from oSocket in sockets
+                                         where oSocket.scrapB == socket.scrapA
+                                         select oSocket).First();
+
+                System.Diagnostics.Debug.Assert(socket.opposingSocket != null);
+            }
+
+            // Create blueprint
+            return new Blueprint(data, scraps, sockets);
+        }
+
+        // swapBlueprint
+        public void swapBlueprint(Blueprint old, Blueprint replacement)
+        {
+            Console.WriteLine("swapping blueprints");
+            _blueprints[_blueprints.IndexOf(old)] = replacement;
         }
 
         // saveBlueprints
