@@ -163,7 +163,7 @@ namespace StasisEditor.Views.Controls
                 if (_view.socketTargetA != null)
                 {
                     // Draw socket line
-                    drawLine(_view.socketTargetA.currentCraftPosition, _mouse, Color.Blue);
+                    drawLine(_view.socketTargetA.currentCraftPosition, _mouse - offset, Color.Blue);
                 }
 
                 _spriteBatch.End();
