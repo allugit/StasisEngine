@@ -30,7 +30,25 @@ namespace StasisEditor.Views.Controls
             _blueprint = blueprint;
 
             InitializeComponent();
+        }
 
+        // Save button clicked
+        private void doneButton_Click(object sender, EventArgs e)
+        {
+            DialogResult = System.Windows.Forms.DialogResult.OK;
+            Close();
+        }
+
+        // Cancel clicked
+        private void cancelButton_Click(object sender, EventArgs e)
+        {
+            DialogResult = System.Windows.Forms.DialogResult.Cancel;
+            Close();
+        }
+
+        // Form load
+        private void EditBlueprintSocketsView_Load(object sender, EventArgs e)
+        {
             // Initialize blueprint scrap textures
             foreach (BlueprintScrap scrap in _blueprint.scraps)
             {
@@ -41,24 +59,44 @@ namespace StasisEditor.Views.Controls
             }
 
             // Move blueprint scraps into their ideal positions by testing sockets with a large tolerance
-            Console.WriteLine("testing");
             foreach (BlueprintSocket socket in _blueprint.sockets)
                 socket.test(float.MaxValue);
 
             editBlueprintSocketsGraphics.blueprint = _blueprint;
         }
 
-        // Save button clicked
+        // Clear sockets (and connections)
+        private void clearSocketsButton_Click(object sender, EventArgs e)
+        {
+            _blueprint.sockets.Clear();
+            foreach (BlueprintScrap scrap in _blueprint.scraps)
+                scrap.connected.Clear();
+        }
+
+        // Reset position
+        private void resetPositionsButton_Click(object sender, EventArgs e)
+        {
+            bool doClear = true;
+            if (_blueprint.sockets.Count > 0)
+            {
+                if (MessageBox.Show("Resetting positions will clear all sockets and their connections. Continue?", "Clear connections too?", MessageBoxButtons.OKCancel) == System.Windows.Forms.DialogResult.Cancel)
+                    doClear = false;
+            }
+
+            if (doClear)
+            {
+                _blueprint.sockets.Clear();
+                foreach (BlueprintScrap scrap in _blueprint.scraps)
+                {
+                    scrap.currentCraftPosition = Vector2.Zero;
+                    scrap.connected.Clear();
+                }
+            }
+        }
+
         private void saveButton_Click(object sender, EventArgs e)
         {
             DialogResult = System.Windows.Forms.DialogResult.OK;
-            Close();
-        }
-
-        // Cancel clicked
-        private void cancelButton_Click(object sender, EventArgs e)
-        {
-            DialogResult = System.Windows.Forms.DialogResult.Cancel;
             Close();
         }
     }

@@ -30,20 +30,23 @@ namespace StasisEditor.Views.Controls
         // Initialize
         protected override void Initialize()
         {
-            _view = Parent as EditBlueprintSocketsView;
+            if (!DesignMode)
+            {
+                _view = Parent as EditBlueprintSocketsView;
 
-            // Resources
-            _spriteBatch = new SpriteBatch(GraphicsDevice);
-            _pixel = new Texture2D(GraphicsDevice, 1, 1);
-            _pixel.SetData<Color>(new[] { Color.White });
+                // Resources
+                _spriteBatch = new SpriteBatch(GraphicsDevice);
+                _pixel = new Texture2D(GraphicsDevice, 1, 1);
+                _pixel.SetData<Color>(new[] { Color.White });
 
-            // Input
-            System.Windows.Forms.Application.Idle += delegate { Invalidate(); };
-            MouseMove += new System.Windows.Forms.MouseEventHandler(EditBlueprintSocketsGraphics_MouseMove);
-            MouseDown += new System.Windows.Forms.MouseEventHandler(EditBlueprintSocketsGraphics_MouseDown);
-            FindForm().KeyPreview = true;
-            FindForm().KeyDown += new System.Windows.Forms.KeyEventHandler(Parent_KeyDown);
-            FindForm().KeyUp += new System.Windows.Forms.KeyEventHandler(EditBlueprintSocketsGraphics_KeyUp);
+                // Input
+                System.Windows.Forms.Application.Idle += delegate { Invalidate(); };
+                MouseMove += new System.Windows.Forms.MouseEventHandler(EditBlueprintSocketsGraphics_MouseMove);
+                MouseDown += new System.Windows.Forms.MouseEventHandler(EditBlueprintSocketsGraphics_MouseDown);
+                FindForm().KeyPreview = true;
+                FindForm().KeyDown += new System.Windows.Forms.KeyEventHandler(Parent_KeyDown);
+                FindForm().KeyUp += new System.Windows.Forms.KeyEventHandler(EditBlueprintSocketsGraphics_KeyUp);
+            }
         }
 
         // Key up
