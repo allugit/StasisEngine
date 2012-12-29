@@ -131,12 +131,6 @@
     <Compile Include="Views\Controls\EditBlueprintScrapShapeGraphics.cs">
       <SubType>Component</SubType>
     </Compile>
-    <Compile Include="Views\Controls\EditBlueprintSocketsButton.cs">
-      <SubType>UserControl</SubType>
-    </Compile>
-    <Compile Include="Views\Controls\EditBlueprintSocketsButton.Designer.cs">
-      <DependentUpon>EditBlueprintSocketsButton.cs</DependentUpon>
-    </Compile>
     <Compile Include="Views\Controls\EditBlueprintSocketsView.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -292,9 +286,6 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Views\Controls\EditBlueprintScrapShape.resx">
       <DependentUpon>EditBlueprintScrapShape.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Views\Controls\EditBlueprintSocketsButton.resx">
-      <DependentUpon>EditBlueprintSocketsButton.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Views\Controls\EditBlueprintSocketsView.resx">
       <DependentUpon>EditBlueprintSocketsView.cs</DependentUpon>
