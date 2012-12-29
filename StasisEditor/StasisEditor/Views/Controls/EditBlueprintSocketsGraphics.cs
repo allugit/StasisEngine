@@ -112,6 +112,10 @@ namespace StasisEditor.Views.Controls
                     firstSocket.opposingSocket = secondSocket;
                     secondSocket.opposingSocket = firstSocket;
 
+                    // Form connection
+                    _view.socketTargetA.connectScrap(target);
+                    target.connectScrap(_view.socketTargetA);
+
                     // Clear socket target
                     _view.socketTargetA = null;
                 }
@@ -134,7 +138,9 @@ namespace StasisEditor.Views.Controls
             {
                 // Move selected scrap
                 if (_view.selectedScrap != null)
-                    _view.selectedScrap.currentCraftPosition += delta;
+                    _view.selectedScrap.move(delta);
+                //if (_view.selectedScrap != null)
+                //    _view.selectedScrap.currentCraftPosition += delta;
             }
         }
 
