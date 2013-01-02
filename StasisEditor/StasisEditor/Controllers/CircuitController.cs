@@ -1,6 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel;
+using System.Xml.Linq;
 using Microsoft.Xna.Framework;
+using StasisCore.Controllers;
+using StasisCore.Resources;
+using StasisCore.Models;
 using StasisEditor.Views;
 
 namespace StasisEditor.Controllers
@@ -9,6 +14,7 @@ namespace StasisEditor.Controllers
     {
         private EditorController _editorController;
         private CircuitsView _view;
+        private BindingList<Circuit> _circuits;
         private System.Drawing.Point _mouse;
         private System.Drawing.Point _oldMouse;
         private Vector2 _screenCenter;
@@ -33,6 +39,13 @@ namespace StasisEditor.Controllers
             _editorController = editorController;
             _view = circuitsView;
             _view.setController(this);
+
+            // Initialize resources
+            _circuits = new BindingList<Circuit>();
+            List<ResourceObject> resources = ResourceController.loadCircuits();
+            foreach (ResourceObject resource in resources)
+                _circuits.Add(new Circuit(resource.data));
+            Console.WriteLine("Loaded {0} circuits.", _circuits.Count);
         }
 
         // handleMouseMove

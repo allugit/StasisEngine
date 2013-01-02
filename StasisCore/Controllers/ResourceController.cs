@@ -24,6 +24,7 @@ namespace StasisCore.Controllers
         private static Dictionary<string, ResourceObject> _characterResources;
         private static Dictionary<string, ResourceObject> _dialogueResources;
         private static Dictionary<string, ResourceObject> _levelResources;
+        private static Dictionary<string, ResourceObject> _circuitResources;
         private static Dictionary<string, Texture2D> _cachedTextures;
         private static List<Dictionary<string, ResourceObject>> _resources;
 
@@ -34,6 +35,7 @@ namespace StasisCore.Controllers
         public static string blueprintPath { get { return String.Format("{0}\\blueprints.xml", RESOURCE_PATH); } }
         public static string characterPath { get { return String.Format("{0}\\characters.xml", RESOURCE_PATH); } }
         public static string dialoguePath { get { return String.Format("{0}\\dialogues.xml", RESOURCE_PATH); } }
+        public static string circuitPath { get { return String.Format("{0}\\circuits.xml", RESOURCE_PATH); } }
 
         // Initialize -- Called once when the application starts
         public static void initialize(GraphicsDevice graphicsDevice)
@@ -44,15 +46,17 @@ namespace StasisCore.Controllers
             _characterResources = new Dictionary<string, ResourceObject>();
             _dialogueResources = new Dictionary<string, ResourceObject>();
             _levelResources = new Dictionary<string, ResourceObject>();
-            _resources = new List<Dictionary<string, ResourceObject>>();
+            _circuitResources = new Dictionary<string, ResourceObject>();
             _cachedTextures = new Dictionary<string, Texture2D>();
 
             // Store all resource dictionaries in a list
+            _resources = new List<Dictionary<string, ResourceObject>>();
             _resources.Add(_materialResources);
             _resources.Add(_itemResources);
             _resources.Add(_characterResources);
             _resources.Add(_dialogueResources);
             _resources.Add(_levelResources);
+            _resources.Add(_circuitResources);
         }
 
         // Checks to see if a resource has been loaded
@@ -116,6 +120,17 @@ namespace StasisCore.Controllers
                     foreach (XElement dialogueData in data.Elements("Dialogue"))
                     {
                         if (dialogueData.Attribute("uid").Value == uid)
+                            return true;
+                    }
+                }
+
+                // Check circuits
+                using (FileStream fs = new FileStream(dialoguePath, FileMode.Open))
+                {
+                    XElement data = XElement.Load(fs);
+                    foreach (XElement circuitData in data.Elements("Circuit"))
+                    {
+                        if (circuitData.Attribute("uid").Value == uid)
                             return true;
                     }
                 }
@@ -319,6 +334,26 @@ namespace StasisCore.Controllers
                     _dialogueResources[resource.uid] = resource;
                 }
             }
+        }
+
+        // Load circuits
+        public static List<ResourceObject> loadCircuits()
+        {
+            _circuitResources.Clear();
+
+            List<ResourceObject> loaded = new List<ResourceObject>();
+            using (FileStream fs = new FileStream(circuitPath, FileMode.Open))
+            {
+                XElement data = XElement.Load(fs);
+                foreach (XElement circuitData in data.Elements("Circuit"))
+                {
+                    ResourceObject resource = new ResourceObject(circuitData);
+                    _circuitResources[resource.uid] = resource;
+                    loaded.Add(resource);
+                }
+            }
+
+            return loaded;
         }
     }
 }

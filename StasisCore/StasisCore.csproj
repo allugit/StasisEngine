@@ -64,6 +64,8 @@
     <Compile Include="Models\Blueprint.cs" />
     <Compile Include="Models\BlueprintScrap.cs" />
     <Compile Include="Models\BlueprintSocket.cs" />
+    <Compile Include="Models\Circuit.cs" />
+    <Compile Include="Models\Gate.cs" />
     <Compile Include="Models\Item.cs" />
     <Compile Include="Models\Level.cs" />
     <Compile Include="Models\Material.cs" />
