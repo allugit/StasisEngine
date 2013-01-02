@@ -34,10 +34,12 @@
             this.circuitRemoveButton = new System.Windows.Forms.Button();
             this.circuitsList = new System.Windows.Forms.ListBox();
             this.circuitDisplay1 = new StasisEditor.Views.Controls.CircuitDisplay();
+            this.panel1 = new System.Windows.Forms.Panel();
             ((System.ComponentModel.ISupportInitialize)(this.splitContainer1)).BeginInit();
             this.splitContainer1.Panel1.SuspendLayout();
             this.splitContainer1.Panel2.SuspendLayout();
             this.splitContainer1.SuspendLayout();
+            this.panel1.SuspendLayout();
             this.SuspendLayout();
             // 
             // splitContainer1
@@ -49,13 +51,13 @@
             // 
             // splitContainer1.Panel1
             // 
-            this.splitContainer1.Panel1.Controls.Add(this.saveCircuitsButton);
             this.splitContainer1.Panel1.Controls.Add(this.circuitAddButton);
             this.splitContainer1.Panel1.Controls.Add(this.circuitRemoveButton);
             this.splitContainer1.Panel1.Controls.Add(this.circuitsList);
             // 
             // splitContainer1.Panel2
             // 
+            this.splitContainer1.Panel2.Controls.Add(this.panel1);
             this.splitContainer1.Panel2.Controls.Add(this.circuitDisplay1);
             this.splitContainer1.Size = new System.Drawing.Size(674, 401);
             this.splitContainer1.SplitterDistance = 242;
@@ -64,7 +66,7 @@
             // saveCircuitsButton
             // 
             this.saveCircuitsButton.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
-            this.saveCircuitsButton.Location = new System.Drawing.Point(164, 374);
+            this.saveCircuitsButton.Location = new System.Drawing.Point(350, 6);
             this.saveCircuitsButton.Name = "saveCircuitsButton";
             this.saveCircuitsButton.Size = new System.Drawing.Size(75, 23);
             this.saveCircuitsButton.TabIndex = 3;
@@ -97,20 +99,34 @@
                         | System.Windows.Forms.AnchorStyles.Left)
                         | System.Windows.Forms.AnchorStyles.Right)));
             this.circuitsList.FormattingEnabled = true;
+            this.circuitsList.IntegralHeight = false;
             this.circuitsList.Location = new System.Drawing.Point(3, 3);
             this.circuitsList.Name = "circuitsList";
-            this.circuitsList.Size = new System.Drawing.Size(236, 342);
+            this.circuitsList.Size = new System.Drawing.Size(236, 365);
             this.circuitsList.TabIndex = 0;
             this.circuitsList.SelectedValueChanged += new System.EventHandler(this.circuitsList_SelectedValueChanged);
             // 
             // circuitDisplay1
             // 
-            this.circuitDisplay1.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.circuitDisplay1.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom)
+                        | System.Windows.Forms.AnchorStyles.Left)
+                        | System.Windows.Forms.AnchorStyles.Right)));
             this.circuitDisplay1.Location = new System.Drawing.Point(0, 0);
             this.circuitDisplay1.Name = "circuitDisplay1";
-            this.circuitDisplay1.Size = new System.Drawing.Size(428, 401);
+            this.circuitDisplay1.selectedGate = null;
+            this.circuitDisplay1.Size = new System.Drawing.Size(428, 368);
             this.circuitDisplay1.TabIndex = 0;
             this.circuitDisplay1.Text = "circuitDisplay1";
+            // 
+            // panel1
+            // 
+            this.panel1.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)
+                        | System.Windows.Forms.AnchorStyles.Right)));
+            this.panel1.Controls.Add(this.saveCircuitsButton);
+            this.panel1.Location = new System.Drawing.Point(0, 368);
+            this.panel1.Name = "panel1";
+            this.panel1.Size = new System.Drawing.Size(428, 33);
+            this.panel1.TabIndex = 1;
             // 
             // CircuitsView
             // 
@@ -123,6 +139,7 @@
             this.splitContainer1.Panel2.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)(this.splitContainer1)).EndInit();
             this.splitContainer1.ResumeLayout(false);
+            this.panel1.ResumeLayout(false);
             this.ResumeLayout(false);
 
         }
@@ -135,5 +152,6 @@
         private System.Windows.Forms.Button circuitRemoveButton;
         private System.Windows.Forms.ListBox circuitsList;
         private Controls.CircuitDisplay circuitDisplay1;
+        private System.Windows.Forms.Panel panel1;
     }
 }
