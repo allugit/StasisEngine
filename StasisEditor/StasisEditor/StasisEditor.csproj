@@ -97,6 +97,7 @@
     <Compile Include="Controllers\Actors\CircleActorResourceController.cs" />
     <Compile Include="Controllers\Actors\TreeActorResourceController.cs" />
     <Compile Include="Controllers\BlueprintController.cs" />
+    <Compile Include="Controllers\CircuitController.cs" />
     <Compile Include="Controllers\Controller.cs" />
     <Compile Include="Controllers\EditorController.cs" />
     <Compile Include="Controllers\LevelController.cs" />
@@ -115,6 +116,9 @@
     </Compile>
     <Compile Include="Views\Controls\ActorToolbar.Designer.cs">
       <DependentUpon>ActorToolbar.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Views\CircuitsView.cs">
+      <SubType>Component</SubType>
     </Compile>
     <Compile Include="Views\Controls\CreateResourceView.cs">
       <SubType>Form</SubType>

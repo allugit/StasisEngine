@@ -16,6 +16,7 @@ namespace StasisEditor.Controllers
         private MaterialController _materialController;
         private LevelController _levelController;
         private BlueprintController _blueprintController;
+        private CircuitController _circuitController;
         private GraphicsDeviceService _graphicsDeviceService;
 
         private EditorView _editorView;
@@ -38,14 +39,16 @@ namespace StasisEditor.Controllers
             view.setController(this);
 
             // Create material controller
-            _materialController = new MaterialController(this, _editorView.getMaterialView());
+            _materialController = new MaterialController(this, _editorView.materialView);
 
             // Create level controller
-            _levelController = new LevelController(this, _editorView.getLevelView());
+            _levelController = new LevelController(this, _editorView.levelView);
 
             // Create blueprint controller
-            _blueprintController = new BlueprintController(this, _editorView.getBlueprintView());
+            _blueprintController = new BlueprintController(this, _editorView.blueprintView);
 
+            // Create circuit controller
+            _circuitController = new CircuitController(this, _editorView.circuitsView);
         }
 
         // getScale

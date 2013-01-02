@@ -41,11 +41,18 @@
             this.mainSplit = new System.Windows.Forms.SplitContainer();
             this.editorTabControl = new System.Windows.Forms.TabControl();
             this.levelTab = new System.Windows.Forms.TabPage();
-            this.levelView = new StasisEditor.Views.LevelView();
+            this.levelView1 = new StasisEditor.Views.LevelView();
             this.materialsTab = new System.Windows.Forms.TabPage();
-            this.materialView = new StasisEditor.Views.MaterialView();
+            this.materialView1 = new StasisEditor.Views.MaterialView();
             this.blueprintsTab = new System.Windows.Forms.TabPage();
-            this.blueprintView = new StasisEditor.Views.BlueprintView();
+            this.blueprintView1 = new StasisEditor.Views.BlueprintView();
+            this.circuitsTab = new System.Windows.Forms.TabPage();
+            this.splitContainer1 = new System.Windows.Forms.SplitContainer();
+            this.circuitAddButton = new System.Windows.Forms.Button();
+            this.circuitRemoveButton = new System.Windows.Forms.Button();
+            this.circuitsList = new System.Windows.Forms.ListBox();
+            this.circuitsView1 = new StasisEditor.Views.CircuitsView();
+            this.saveCircuitsButton = new System.Windows.Forms.Button();
             ((System.ComponentModel.ISupportInitialize)(this.mainSplit)).BeginInit();
             this.mainSplit.Panel2.SuspendLayout();
             this.mainSplit.SuspendLayout();
@@ -53,6 +60,11 @@
             this.levelTab.SuspendLayout();
             this.materialsTab.SuspendLayout();
             this.blueprintsTab.SuspendLayout();
+            this.circuitsTab.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.splitContainer1)).BeginInit();
+            this.splitContainer1.Panel1.SuspendLayout();
+            this.splitContainer1.Panel2.SuspendLayout();
+            this.splitContainer1.SuspendLayout();
             this.SuspendLayout();
             // 
             // mainMenu1
@@ -132,7 +144,7 @@
             // 
             this.mainSplit.Panel2.BackColor = System.Drawing.SystemColors.Control;
             this.mainSplit.Panel2.Controls.Add(this.editorTabControl);
-            this.mainSplit.Size = new System.Drawing.Size(1004, 569);
+            this.mainSplit.Size = new System.Drawing.Size(1004, 548);
             this.mainSplit.SplitterDistance = 261;
             this.mainSplit.TabIndex = 1;
             this.mainSplit.TabStop = false;
@@ -142,82 +154,165 @@
             this.editorTabControl.Controls.Add(this.levelTab);
             this.editorTabControl.Controls.Add(this.materialsTab);
             this.editorTabControl.Controls.Add(this.blueprintsTab);
+            this.editorTabControl.Controls.Add(this.circuitsTab);
             this.editorTabControl.Dock = System.Windows.Forms.DockStyle.Fill;
             this.editorTabControl.Location = new System.Drawing.Point(0, 0);
             this.editorTabControl.Margin = new System.Windows.Forms.Padding(0);
             this.editorTabControl.Name = "editorTabControl";
             this.editorTabControl.SelectedIndex = 0;
-            this.editorTabControl.Size = new System.Drawing.Size(737, 567);
+            this.editorTabControl.Size = new System.Drawing.Size(737, 546);
             this.editorTabControl.TabIndex = 0;
             this.editorTabControl.SelectedIndexChanged += new System.EventHandler(this.editorTabControl_SelectedIndexChanged);
             // 
             // levelTab
             // 
             this.levelTab.BackColor = System.Drawing.SystemColors.ControlDark;
-            this.levelTab.Controls.Add(this.levelView);
+            this.levelTab.Controls.Add(this.levelView1);
             this.levelTab.Location = new System.Drawing.Point(4, 22);
             this.levelTab.Name = "levelTab";
-            this.levelTab.Size = new System.Drawing.Size(729, 541);
+            this.levelTab.Size = new System.Drawing.Size(729, 520);
             this.levelTab.TabIndex = 0;
             this.levelTab.Text = "Level";
             // 
-            // levelView
+            // levelView1
             // 
-            this.levelView.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.levelView.keysEnabled = true;
-            this.levelView.Location = new System.Drawing.Point(0, 0);
-            this.levelView.Margin = new System.Windows.Forms.Padding(0);
-            this.levelView.Name = "levelView";
-            this.levelView.Size = new System.Drawing.Size(729, 541);
-            this.levelView.TabIndex = 0;
+            this.levelView1.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.levelView1.keysEnabled = true;
+            this.levelView1.Location = new System.Drawing.Point(0, 0);
+            this.levelView1.Margin = new System.Windows.Forms.Padding(0);
+            this.levelView1.Name = "levelView1";
+            this.levelView1.Size = new System.Drawing.Size(729, 520);
+            this.levelView1.TabIndex = 0;
             // 
             // materialsTab
             // 
-            this.materialsTab.Controls.Add(this.materialView);
+            this.materialsTab.Controls.Add(this.materialView1);
             this.materialsTab.Location = new System.Drawing.Point(4, 22);
             this.materialsTab.Margin = new System.Windows.Forms.Padding(0);
             this.materialsTab.Name = "materialsTab";
-            this.materialsTab.Size = new System.Drawing.Size(729, 541);
+            this.materialsTab.Size = new System.Drawing.Size(729, 520);
             this.materialsTab.TabIndex = 1;
             this.materialsTab.Text = "Materials";
             this.materialsTab.UseVisualStyleBackColor = true;
             // 
-            // materialView
+            // materialView1
             // 
-            this.materialView.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.materialView.Location = new System.Drawing.Point(0, 0);
-            this.materialView.Margin = new System.Windows.Forms.Padding(0);
-            this.materialView.Name = "materialView";
-            this.materialView.Size = new System.Drawing.Size(729, 541);
-            this.materialView.TabIndex = 0;
+            this.materialView1.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.materialView1.Location = new System.Drawing.Point(0, 0);
+            this.materialView1.Margin = new System.Windows.Forms.Padding(0);
+            this.materialView1.Name = "materialView1";
+            this.materialView1.Size = new System.Drawing.Size(729, 520);
+            this.materialView1.TabIndex = 0;
             // 
             // blueprintsTab
             // 
-            this.blueprintsTab.Controls.Add(this.blueprintView);
+            this.blueprintsTab.Controls.Add(this.blueprintView1);
             this.blueprintsTab.Location = new System.Drawing.Point(4, 22);
             this.blueprintsTab.Margin = new System.Windows.Forms.Padding(0);
             this.blueprintsTab.Name = "blueprintsTab";
-            this.blueprintsTab.Size = new System.Drawing.Size(729, 541);
+            this.blueprintsTab.Size = new System.Drawing.Size(729, 520);
             this.blueprintsTab.TabIndex = 2;
             this.blueprintsTab.Text = "Blueprints";
             this.blueprintsTab.UseVisualStyleBackColor = true;
             // 
-            // blueprintView
+            // blueprintView1
             // 
-            this.blueprintView.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.blueprintView.editBlueprintScrapShapeView = null;
-            this.blueprintView.editBlueprintSocketsView = null;
-            this.blueprintView.Location = new System.Drawing.Point(0, 0);
-            this.blueprintView.Margin = new System.Windows.Forms.Padding(0);
-            this.blueprintView.Name = "blueprintView";
-            this.blueprintView.Size = new System.Drawing.Size(729, 541);
-            this.blueprintView.TabIndex = 0;
+            this.blueprintView1.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.blueprintView1.editBlueprintScrapShapeView = null;
+            this.blueprintView1.editBlueprintSocketsView = null;
+            this.blueprintView1.Location = new System.Drawing.Point(0, 0);
+            this.blueprintView1.Margin = new System.Windows.Forms.Padding(0);
+            this.blueprintView1.Name = "blueprintView1";
+            this.blueprintView1.Size = new System.Drawing.Size(729, 520);
+            this.blueprintView1.TabIndex = 0;
+            // 
+            // circuitsTab
+            // 
+            this.circuitsTab.Controls.Add(this.splitContainer1);
+            this.circuitsTab.Location = new System.Drawing.Point(4, 22);
+            this.circuitsTab.Name = "circuitsTab";
+            this.circuitsTab.Padding = new System.Windows.Forms.Padding(3);
+            this.circuitsTab.Size = new System.Drawing.Size(729, 520);
+            this.circuitsTab.TabIndex = 3;
+            this.circuitsTab.Text = "Circuits";
+            this.circuitsTab.UseVisualStyleBackColor = true;
+            // 
+            // splitContainer1
+            // 
+            this.splitContainer1.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.splitContainer1.Location = new System.Drawing.Point(3, 3);
+            this.splitContainer1.Name = "splitContainer1";
+            // 
+            // splitContainer1.Panel1
+            // 
+            this.splitContainer1.Panel1.Controls.Add(this.saveCircuitsButton);
+            this.splitContainer1.Panel1.Controls.Add(this.circuitAddButton);
+            this.splitContainer1.Panel1.Controls.Add(this.circuitRemoveButton);
+            this.splitContainer1.Panel1.Controls.Add(this.circuitsList);
+            // 
+            // splitContainer1.Panel2
+            // 
+            this.splitContainer1.Panel2.Controls.Add(this.circuitsView1);
+            this.splitContainer1.Size = new System.Drawing.Size(723, 514);
+            this.splitContainer1.SplitterDistance = 260;
+            this.splitContainer1.TabIndex = 1;
+            // 
+            // circuitAddButton
+            // 
+            this.circuitAddButton.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
+            this.circuitAddButton.Location = new System.Drawing.Point(3, 487);
+            this.circuitAddButton.Name = "circuitAddButton";
+            this.circuitAddButton.Size = new System.Drawing.Size(75, 23);
+            this.circuitAddButton.TabIndex = 2;
+            this.circuitAddButton.Text = "Add";
+            this.circuitAddButton.UseVisualStyleBackColor = true;
+            // 
+            // circuitRemoveButton
+            // 
+            this.circuitRemoveButton.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
+            this.circuitRemoveButton.Location = new System.Drawing.Point(84, 487);
+            this.circuitRemoveButton.Name = "circuitRemoveButton";
+            this.circuitRemoveButton.Size = new System.Drawing.Size(75, 23);
+            this.circuitRemoveButton.TabIndex = 1;
+            this.circuitRemoveButton.Text = "Remove";
+            this.circuitRemoveButton.UseVisualStyleBackColor = true;
+            // 
+            // circuitsList
+            // 
+            this.circuitsList.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom)
+                        | System.Windows.Forms.AnchorStyles.Left)
+                        | System.Windows.Forms.AnchorStyles.Right)));
+            this.circuitsList.FormattingEnabled = true;
+            this.circuitsList.Location = new System.Drawing.Point(3, 3);
+            this.circuitsList.Name = "circuitsList";
+            this.circuitsList.Size = new System.Drawing.Size(254, 472);
+            this.circuitsList.TabIndex = 0;
+            // 
+            // circuitsView1
+            // 
+            this.circuitsView1.active = false;
+            this.circuitsView1.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.circuitsView1.Location = new System.Drawing.Point(0, 0);
+            this.circuitsView1.Name = "circuitsView1";
+            this.circuitsView1.Size = new System.Drawing.Size(459, 514);
+            this.circuitsView1.TabIndex = 0;
+            this.circuitsView1.Text = "circuitsView";
+            // 
+            // saveCircuitsButton
+            // 
+            this.saveCircuitsButton.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
+            this.saveCircuitsButton.Location = new System.Drawing.Point(182, 487);
+            this.saveCircuitsButton.Name = "saveCircuitsButton";
+            this.saveCircuitsButton.Size = new System.Drawing.Size(75, 23);
+            this.saveCircuitsButton.TabIndex = 3;
+            this.saveCircuitsButton.Text = "Save";
+            this.saveCircuitsButton.UseVisualStyleBackColor = true;
             // 
             // EditorView
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(1004, 569);
+            this.ClientSize = new System.Drawing.Size(1004, 548);
             this.Controls.Add(this.mainSplit);
             this.Menu = this.mainMenu1;
             this.Name = "EditorView";
@@ -230,6 +325,11 @@
             this.levelTab.ResumeLayout(false);
             this.materialsTab.ResumeLayout(false);
             this.blueprintsTab.ResumeLayout(false);
+            this.circuitsTab.ResumeLayout(false);
+            this.splitContainer1.Panel1.ResumeLayout(false);
+            this.splitContainer1.Panel2.ResumeLayout(false);
+            ((System.ComponentModel.ISupportInitialize)(this.splitContainer1)).EndInit();
+            this.splitContainer1.ResumeLayout(false);
             this.ResumeLayout(false);
 
         }
@@ -249,10 +349,17 @@
         private System.Windows.Forms.TabControl editorTabControl;
         private System.Windows.Forms.TabPage levelTab;
         private System.Windows.Forms.TabPage materialsTab;
-        private MaterialView materialView;
-        private LevelView levelView;
+        private MaterialView materialView1;
+        private LevelView levelView1;
         private System.Windows.Forms.TabPage blueprintsTab;
-        private BlueprintView blueprintView;
+        private BlueprintView blueprintView1;
+        private System.Windows.Forms.TabPage circuitsTab;
+        private CircuitsView circuitsView1;
+        private System.Windows.Forms.SplitContainer splitContainer1;
+        private System.Windows.Forms.ListBox circuitsList;
+        private System.Windows.Forms.Button circuitAddButton;
+        private System.Windows.Forms.Button circuitRemoveButton;
+        private System.Windows.Forms.Button saveCircuitsButton;
 
     }
 }

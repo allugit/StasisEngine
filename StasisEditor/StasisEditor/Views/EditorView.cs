@@ -21,6 +21,11 @@ namespace StasisEditor.Views
         private LevelView _levelView;
         private LevelSettings _levelSettings;
 
+        public CircuitsView circuitsView { get { return circuitsView1; } }
+        public MaterialView materialView { get { return materialView1; } }
+        public LevelView levelView { get { return levelView1; } }
+        public BlueprintView blueprintView { get { return blueprintView1; } }
+
         // Constructor
         public EditorView()
         {
@@ -34,29 +39,12 @@ namespace StasisEditor.Views
             _controller = controller;
         }
 
-        // getMaterialView
-        public MaterialView getMaterialView()
-        {
-            return materialView;
-        }
-
-        // getLevelView
-        public LevelView getLevelView()
-        {
-            return levelView;
-        }
-
-        // getBlueprintView
-        public BlueprintView getBlueprintView()
-        {
-            return blueprintView;
-        }
-
+        /*
         // getLevelContainerSize
         public System.Drawing.Point getLevelContainerSize()
         {
             return new System.Drawing.Point(mainSplit.Panel2.Width, mainSplit.Panel2.Height);
-        }
+        }*/
 
         // addLevelView
         public void addLevelView(LevelView levelView)
@@ -157,7 +145,8 @@ namespace StasisEditor.Views
         // Selected tab changed
         private void editorTabControl_SelectedIndexChanged(object sender, EventArgs e)
         {
-            levelView.keysEnabled = editorTabControl.SelectedIndex == 0;
+            levelView1.keysEnabled = editorTabControl.SelectedIndex == 0;
+            circuitsView1.active = editorTabControl.SelectedIndex == 3;
         }
     }
 }
