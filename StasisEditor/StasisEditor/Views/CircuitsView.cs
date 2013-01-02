@@ -29,6 +29,9 @@ namespace StasisEditor.Views
         public CircuitsView()
         {
             InitializeComponent();
+
+            // Initialize gate types
+            gateTypes.DataSource = new[] { "input", "output", "and", "or", "not" };
         }
 
         // setController
