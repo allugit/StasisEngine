@@ -22,10 +22,7 @@ namespace StasisEditor.Views.Controls
         private Texture2D _input;
         private Texture2D _output;
         private CircuitsView _view;
-        private Gate _selectedGate;
         private Gate _inputSource;
-
-        public Gate selectedGate { get { return _selectedGate; } set { _selectedGate = value; } }
 
         public CircuitDisplay()
             : base()
@@ -76,9 +73,9 @@ namespace StasisEditor.Views.Controls
             else
             {
                 // Move gate
-                if (selectedGate != null)
+                if (_view.selectedGate != null)
                 {
-                    selectedGate.position += worldDelta;
+                    _view.selectedGate.position += worldDelta;
                 }
             }
         }
@@ -107,7 +104,7 @@ namespace StasisEditor.Views.Controls
 
                 if (e.KeyCode == Keys.Escape)
                 {
-                    _selectedGate = null;
+                    _view.deselectGate();
                     _inputSource = null;
                 }
             }
@@ -131,15 +128,15 @@ namespace StasisEditor.Views.Controls
 
             if (e.Button == System.Windows.Forms.MouseButtons.Left)
             {
-                if (selectedGate == null && target != null)
+                if (_view.selectedGate == null && target != null)
                 {
                     // Select target
-                    selectedGate = target;
+                    _view.selectGate(target);
                 }
-                else if (selectedGate != null)
+                else if (_view.selectedGate != null)
                 {
                     // Drop selected gate
-                    selectedGate = null;
+                    _view.deselectGate();
                 }
             }
             else if (e.Button == System.Windows.Forms.MouseButtons.Right)

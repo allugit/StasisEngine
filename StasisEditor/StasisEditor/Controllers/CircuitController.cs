@@ -48,5 +48,25 @@ namespace StasisEditor.Controllers
             foreach (ResourceObject resource in resources)
                 _circuits.Add(new Circuit(resource.data));
         }
+
+        public int getUnusedGateID(Circuit circuit)
+        {
+            int id = 0;
+            while (true)
+            {
+                foreach (Gate gate in circuit.gates)
+                {
+                    if (gate.id == id)
+                    {
+                        // Increment id and try again
+                        id++;
+                        break;
+                    }
+                }
+
+                // Existing id was not found, so use this one
+                return id;
+            }
+        }
     }
 }

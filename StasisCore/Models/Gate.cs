@@ -13,6 +13,7 @@ namespace StasisCore.Models
         private List<Gate> _outputs;
         private List<Gate> _inputs;
 
+        public int id { get { return _id; } }
         public string type { get { return _type; } set { _type = value; } }
         public Vector2 position { get { return _position; } set { _position = value; } }
         public List<Gate> outputs { get { return _outputs; } set { _outputs = value; } }
