@@ -49,6 +49,7 @@ namespace StasisEditor.Controllers
                 _circuits.Add(new Circuit(resource.data));
         }
 
+        // Get unused gate id
         public int getUnusedGateID(Circuit circuit)
         {
             int id = 0;
@@ -67,6 +68,22 @@ namespace StasisEditor.Controllers
                 // Existing id was not found, so use this one
                 return id;
             }
+        }
+
+        // Delete circuit gate
+        public void deleteCircuitGate(Circuit circuit, Gate gate)
+        {
+            // Disconnect gate connections
+            foreach (Gate input in gate.inputs)
+                input.outputs.Remove(gate);
+            foreach (Gate output in gate.outputs)
+                output.inputs.Remove(gate);
+
+            // Remove gate from circuit
+            circuit.gates.Remove(gate);
+
+            // Deselect gate
+            _view.deselectGate();
         }
     }
 }

@@ -23,6 +23,7 @@ namespace StasisEditor.Views.Controls
         private Texture2D _output;
         private CircuitsView _view;
         private Gate _inputSource;
+        private CircuitController _controller;
 
         public CircuitDisplay()
             : base()
@@ -36,8 +37,10 @@ namespace StasisEditor.Views.Controls
             {
                 _spriteBatch = new SpriteBatch(GraphicsDevice);
                 _contentManager = new ContentManager(Services, "Content");
-                _view = Parent.Parent.Parent as CircuitsView;
+
                 System.Diagnostics.Debug.Assert(Parent.Parent.Parent is CircuitsView);
+                _view = Parent.Parent.Parent as CircuitsView;
+                _controller = _view.controller;
 
                 // Resources
                 _pixel = new Texture2D(GraphicsDevice, 1, 1);
@@ -95,6 +98,9 @@ namespace StasisEditor.Views.Controls
         // Key down
         void Parent_KeyDown(object sender, KeyEventArgs e)
         {
+            if (_view.selectedCircuit == null)
+                return;
+
             if (_view.keysEnabled)
             {
                 if (e.KeyCode == Keys.Shift || e.KeyCode == Keys.ShiftKey || e.KeyCode == Keys.LShiftKey || e.KeyCode == Keys.RShiftKey)
@@ -106,6 +112,27 @@ namespace StasisEditor.Views.Controls
                 {
                     _view.deselectGate();
                     _inputSource = null;
+                }
+                else if (e.KeyCode == Keys.Delete)
+                {
+                    if (_view.selectedGate != null)
+                    {
+                        // Remove selected gate
+                        _controller.deleteCircuitGate(_view.selectedCircuit, _view.selectedGate);
+                    }
+                    else
+                    {
+                        // Hit test gates and try to remove one
+                        float maxDistance = 20f / _view.controller.getScale();
+                        foreach (Gate gate in _view.selectedCircuit.gates)
+                        {
+                            if ((_view.controller.getWorldMouse() - gate.position).Length() <= maxDistance)
+                            {
+                                _controller.deleteCircuitGate(_view.selectedCircuit, gate);
+                                return;
+                            }
+                        }
+                    }
                 }
             }
         }
