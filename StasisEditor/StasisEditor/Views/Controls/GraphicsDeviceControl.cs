@@ -54,6 +54,21 @@ namespace StasisEditor.Views.Controls
 
         ServiceContainer services = new ServiceContainer();
 
+        public bool IsDesignerHosted
+        {
+            get
+            {
+                Control ctrl = this;
+
+                while (ctrl != null)
+                {
+                    if ((ctrl.Site != null) && ctrl.Site.DesignMode)
+                        return true;
+                    ctrl = ctrl.Parent;
+                }
+                return false;
+            }
+        }
 
         #endregion
 

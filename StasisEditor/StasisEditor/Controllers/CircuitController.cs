@@ -33,19 +33,19 @@ namespace StasisEditor.Controllers
         public Vector2 getOldWorldMouse() { return new Vector2(_oldMouse.X, _oldMouse.Y) / _scale - getWorldOffset(); }
         public bool shift { get { return _shift; } set { _shift = value; } }
         public bool ctrl { get { return _ctrl; } set { _ctrl = value; } }
+        public BindingList<Circuit> circuits { get { return _circuits; } }
 
         public CircuitController(EditorController editorController, CircuitsView circuitsView) : base()
         {
             _editorController = editorController;
             _view = circuitsView;
+            _circuits = new BindingList<Circuit>();
             _view.setController(this);
 
             // Initialize resources
-            _circuits = new BindingList<Circuit>();
             List<ResourceObject> resources = ResourceController.loadCircuits();
             foreach (ResourceObject resource in resources)
                 _circuits.Add(new Circuit(resource.data));
-            Console.WriteLine("Loaded {0} circuits.", _circuits.Count);
         }
 
         // handleMouseMove

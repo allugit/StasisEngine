@@ -111,13 +111,19 @@
     <Compile Include="Views\BlueprintView.Designer.cs">
       <DependentUpon>BlueprintView.cs</DependentUpon>
     </Compile>
+    <Compile Include="Views\CircuitsView.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="Views\CircuitsView.Designer.cs">
+      <DependentUpon>CircuitsView.cs</DependentUpon>
+    </Compile>
     <Compile Include="Views\Controls\ActorToolbar.cs">
       <SubType>UserControl</SubType>
     </Compile>
     <Compile Include="Views\Controls\ActorToolbar.Designer.cs">
       <DependentUpon>ActorToolbar.cs</DependentUpon>
     </Compile>
-    <Compile Include="Views\CircuitsView.cs">
+    <Compile Include="Views\Controls\CircuitDisplay.cs">
       <SubType>Component</SubType>
     </Compile>
     <Compile Include="Views\Controls\CreateResourceView.cs">
@@ -281,6 +287,9 @@
   <ItemGroup>
     <EmbeddedResource Include="Views\BlueprintView.resx">
       <DependentUpon>BlueprintView.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Views\CircuitsView.resx">
+      <DependentUpon>CircuitsView.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Views\Controls\ActorToolbar.resx">
       <DependentUpon>ActorToolbar.cs</DependentUpon>
