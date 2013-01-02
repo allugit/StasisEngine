@@ -39,10 +39,13 @@ namespace StasisCore.Models
             foreach (XElement gateData in data.Elements("Gate"))
             {
                 Gate gate = initialGates[int.Parse(gateData.Attribute("id").Value)];
-                
-                // Outputs
+
                 foreach (XElement outputData in gateData.Elements("Output"))
-                    gate.outputs.Add(initialGates[int.Parse(outputData.Attribute("to").Value)]);
+                {
+                    Gate output = initialGates[int.Parse(outputData.Attribute("to").Value)];
+                    gate.outputs.Add(output);
+                    output.inputs.Add(gate);
+                }
 
                 _gates.Add(gate);
             }

@@ -125,12 +125,12 @@ namespace StasisEditor.Views.Controls
 
             if (e.Button == System.Windows.Forms.MouseButtons.Left)
             {
-                if (selectedGate == null)
+                if (selectedGate == null && target != null)
                 {
                     // Select target
                     selectedGate = target;
                 }
-                else
+                else if (selectedGate != null)
                 {
                     // Drop selected gate
                     selectedGate = null;
@@ -138,19 +138,48 @@ namespace StasisEditor.Views.Controls
             }
             else if (e.Button == System.Windows.Forms.MouseButtons.Right)
             {
-                if (_inputSource == null)
+                if (target != null)
                 {
-                    // Set input source
-                    _inputSource = target;
-                }
-                else
-                {
-                    // Set output
-                    _inputSource.outputs.Add(target);
-                    _inputSource = null;
+                    if (_inputSource == null)
+                    {
+                        // Set input source
+                        _inputSource = target;
+                    }
+                    else
+                    {
+                        // Set output
+                        bool setOutput = false;
+                        switch (target.type)
+                        {
+                            case "input":
+                                setOutput = false;
+                                break;
+
+                            case "output":
+                                setOutput = target.inputs.Count < 1;
+                                break;
+
+                            case "and":
+                                setOutput = target.inputs.Count < 2;
+                                break;
+
+                            case "or":
+                                setOutput = target.inputs.Count < 2;
+                                break;
+
+                            case "not":
+                                setOutput = target.inputs.Count < 1;
+                                break;
+                        }
+
+                        if (setOutput)
+                        {
+                            _inputSource.outputs.Add(target);
+                            _inputSource = null;
+                        }
+                    }
                 }
             }
-
         }
 
         // Draw
