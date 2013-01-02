@@ -91,5 +91,12 @@ namespace StasisEditor.Controllers
             // Deselect gate
             _view.deselectGate();
         }
+
+        // Disconect gates
+        public void disconnectGates(Gate gateA, Gate gateB)
+        {
+            gateA.outputs.Remove(gateB);
+            gateB.inputs.Remove(gateA);
+        }
     }
 }

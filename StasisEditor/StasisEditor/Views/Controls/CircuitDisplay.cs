@@ -83,6 +83,56 @@ namespace StasisEditor.Views.Controls
             }
         }
 
+        // Hit test gates
+        private Gate hitTestGates(Circuit circuit, Vector2 worldMouse)
+        {
+            float maxDistance = 20f / _view.controller.getScale();
+            Gate target = null;
+            foreach (Gate gate in circuit.gates)
+            {
+                if ((_view.controller.getWorldMouse() - gate.position).Length() <= maxDistance)
+                    target = gate;
+            }
+            return target;
+        }
+
+        // Hit test connections
+        private bool connectionHitTest(Gate gateA, Gate gateB)
+        {
+            Vector2 worldMouse = _controller.getWorldMouse();
+
+            // Treat line as a thin box
+            Vector2 boxCenter = (gateA.position + gateB.position) / 2;
+            Vector2 linkRelative = gateB.position - gateA.position;
+            float boxHalfWidth = linkRelative.Length() / 2;
+            float boxHalfHeight = 0.15f;
+            float angle = (float)Math.Atan2(linkRelative.Y, linkRelative.X);
+
+            // Get the mouse position relative to the box's center
+            Vector2 relative = boxCenter - worldMouse;
+
+            // Rotate the relative mouse position by the negative angle of the box
+            Vector2 alignedRelative = Vector2.Transform(relative, Matrix.CreateRotationZ(-angle));
+
+            // Get the local, cartiasian-aligned bounding-box
+            Vector2 topLeft = -(new Vector2(boxHalfWidth, boxHalfHeight));
+            Vector2 bottomRight = -topLeft;
+
+            // Check if the relative mouse point is inside the bounding box
+            Vector2 d1, d2;
+            d1 = alignedRelative - topLeft;
+            d2 = bottomRight - alignedRelative;
+
+            // One of these components will be less than zero if the alignedRelative position is outside of the bounds
+            if (d1.X < 0 || d1.Y < 0)
+                return false;
+
+            if (d2.X < 0 || d2.Y < 0)
+                return false;
+
+            return true;
+        }
+
         // Key up
         void Parent_KeyUp(object sender, KeyEventArgs e)
         {
@@ -98,7 +148,8 @@ namespace StasisEditor.Views.Controls
         // Key down
         void Parent_KeyDown(object sender, KeyEventArgs e)
         {
-            if (_view.selectedCircuit == null)
+            Circuit circuit = _view.selectedCircuit;
+            if (circuit == null)
                 return;
 
             if (_view.keysEnabled)
@@ -118,20 +169,39 @@ namespace StasisEditor.Views.Controls
                     if (_view.selectedGate != null)
                     {
                         // Remove selected gate
-                        _controller.deleteCircuitGate(_view.selectedCircuit, _view.selectedGate);
+                        _controller.deleteCircuitGate(circuit, _view.selectedGate);
                     }
                     else
                     {
                         // Hit test gates and try to remove one
                         float maxDistance = 20f / _view.controller.getScale();
-                        foreach (Gate gate in _view.selectedCircuit.gates)
+                        foreach (Gate gate in circuit.gates)
                         {
                             if ((_view.controller.getWorldMouse() - gate.position).Length() <= maxDistance)
                             {
-                                _controller.deleteCircuitGate(_view.selectedCircuit, gate);
+                                _controller.deleteCircuitGate(circuit, gate);
                                 return;
                             }
                         }
+                        
+                        // Hit test connections and try to remove one
+                        Gate gateA = null;
+                        Gate gateB = null;
+                        foreach (Gate gate in circuit.gates)
+                        {
+                            foreach (Gate output in gate.outputs)
+                            {
+                                if (connectionHitTest(gate, output))
+                                {
+                                    gateA = gate;
+                                    gateB = output;
+                                    break;
+                                    //_controller.disconnectGates(gate, output);
+                                }
+                            }
+                        }
+                        if (gateA != null && gateB != null)
+                            _controller.disconnectGates(gateA, gateB);
                     }
                 }
             }
@@ -145,13 +215,7 @@ namespace StasisEditor.Views.Controls
                 return;
 
             // Hit test gates
-            float maxDistance = 20f / _view.controller.getScale();
-            Gate target = null;
-            foreach (Gate gate in circuit.gates)
-            {
-                if ((_view.controller.getWorldMouse() - gate.position).Length() <= maxDistance)
-                    target = gate;
-            }
+            Gate target = hitTestGates(circuit, _controller.getWorldMouse());
 
             if (e.Button == System.Windows.Forms.MouseButtons.Left)
             {
