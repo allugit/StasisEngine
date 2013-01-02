@@ -23,6 +23,7 @@ namespace StasisEditor.Views.Controls
         private Texture2D _output;
         private CircuitsView _view;
         private Gate _selectedGate;
+        private Gate _inputSource;
 
         public Gate selectedGate { get { return _selectedGate; } set { _selectedGate = value; } }
 
@@ -113,23 +114,41 @@ namespace StasisEditor.Views.Controls
             if (circuit == null)
                 return;
 
-            if (selectedGate == null)
+            // Hit test gates
+            float maxDistance = 20f / _view.controller.getScale();
+            Gate target = null;
+            foreach (Gate gate in circuit.gates)
             {
-                // Hit test gates
-                float maxDistance = 20f / _view.controller.getScale();
-                foreach (Gate gate in circuit.gates)
+                if ((_view.controller.getWorldMouse() - gate.position).Length() <= maxDistance)
+                    target = gate;
+            }
+
+            if (e.Button == System.Windows.Forms.MouseButtons.Left)
+            {
+                if (selectedGate == null)
                 {
-                    Vector2 relative = _view.controller.getWorldMouse() - gate.position;
-                    if (relative.Length() <= maxDistance)
-                    {
-                        _selectedGate = gate;
-                    }
+                    // Select target
+                    selectedGate = target;
+                }
+                else
+                {
+                    // Drop selected gate
+                    selectedGate = null;
                 }
             }
-            else
+            else if (e.Button == System.Windows.Forms.MouseButtons.Right)
             {
-                // Drop selected gate
-                selectedGate = null;
+                if (_inputSource == null)
+                {
+                    // Set input source
+                    _inputSource = target;
+                }
+                else
+                {
+                    // Set output
+                    _inputSource.outputs.Add(target);
+                    _inputSource = null;
+                }
             }
 
         }
@@ -157,6 +176,17 @@ namespace StasisEditor.Views.Controls
 
                     // Draw selected circuit
                     drawCircuit();
+
+                    if (_inputSource != null)
+                    {
+                        // Draw connection line
+                        Vector2 pointA = _inputSource.position;
+                        Vector2 pointB = _view.controller.getWorldMouse();
+                        Vector2 relative = pointB - pointA;
+                        Rectangle rect = new Rectangle(0, 0, (int)(relative.Length() * _view.controller.getScale()), 2);
+                        float angle = (float)Math.Atan2(relative.Y, relative.X);
+                        _spriteBatch.Draw(_pixel, (pointA + _view.controller.getWorldOffset()) * _view.controller.getScale(), rect, Color.Blue, angle, new Vector2(0, 1), 1f, SpriteEffects.None, 0);
+                    }
 
                     _spriteBatch.End();
                 }
@@ -206,29 +236,43 @@ namespace StasisEditor.Views.Controls
         private void drawCircuit()
         {
             Circuit circuit = _view.selectedCircuit;
+            float scale = _view.controller.getScale();
+            Vector2 worldOffset = _view.controller.getWorldOffset();
 
             foreach (Gate gate in circuit.gates)
             {
+                // Draw output lines
+                foreach (Gate output in gate.outputs)
+                {
+                    Vector2 pointA = gate.position;
+                    Vector2 pointB = output.position;
+                    Vector2 relative = pointB - pointA;
+                    Rectangle rect = new Rectangle(0, 0, (int)(relative.Length() * scale), 2);
+                    float angle = (float)Math.Atan2(relative.Y, relative.X);
+                    _spriteBatch.Draw(_pixel, (pointA + worldOffset) * scale, rect, Color.Green, angle, new Vector2(0, 1), 1f, SpriteEffects.None, 0);
+                }
+
+                // Draw gate icon
                 switch (gate.type)
                 {
                     case "input":
-                        _spriteBatch.Draw(_input, (gate.position + _view.controller.getWorldOffset()) * _view.controller.getScale(), _input.Bounds, Color.White, 0, new Vector2(_input.Width, _input.Height) / 2, 1f, SpriteEffects.None, 0);
+                        _spriteBatch.Draw(_input, (gate.position + worldOffset) * scale, _input.Bounds, Color.White, 0, new Vector2(_input.Width, _input.Height) / 2, 1f, SpriteEffects.None, 0);
                         break;
 
                     case "output":
-                        _spriteBatch.Draw(_output, (gate.position + _view.controller.getWorldOffset()) * _view.controller.getScale(), _output.Bounds, Color.White, 0, new Vector2(_output.Width, _output.Height) / 2, 1f, SpriteEffects.None, 0);
+                        _spriteBatch.Draw(_output, (gate.position + worldOffset) * scale, _output.Bounds, Color.White, 0, new Vector2(_output.Width, _output.Height) / 2, 1f, SpriteEffects.None, 0);
                         break;
 
                     case "and":
-                        _spriteBatch.Draw(_and, (gate.position + _view.controller.getWorldOffset()) * _view.controller.getScale(), _and.Bounds, Color.White, 0, new Vector2(_and.Width, _and.Height) / 2, 1f, SpriteEffects.None, 0);
+                        _spriteBatch.Draw(_and, (gate.position + worldOffset) * scale, _and.Bounds, Color.White, 0, new Vector2(_and.Width, _and.Height) / 2, 1f, SpriteEffects.None, 0);
                         break;
 
                     case "not":
-                        _spriteBatch.Draw(_not, (gate.position + _view.controller.getWorldOffset()) * _view.controller.getScale(), _not.Bounds, Color.White, 0, new Vector2(_not.Width, _not.Height) / 2, 1f, SpriteEffects.None, 0);
+                        _spriteBatch.Draw(_not, (gate.position + worldOffset) * scale, _not.Bounds, Color.White, 0, new Vector2(_not.Width, _not.Height) / 2, 1f, SpriteEffects.None, 0);
                         break;
 
                     case "or":
-                        _spriteBatch.Draw(_or, (gate.position + _view.controller.getWorldOffset()) * _view.controller.getScale(), _or.Bounds, Color.White, 0, new Vector2(_or.Width, _or.Height) / 2, 1f, SpriteEffects.None, 0);
+                        _spriteBatch.Draw(_or, (gate.position + worldOffset) * scale, _or.Bounds, Color.White, 0, new Vector2(_or.Width, _or.Height) / 2, 1f, SpriteEffects.None, 0);
                         break;
                 }
             }
