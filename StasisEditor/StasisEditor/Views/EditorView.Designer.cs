@@ -48,11 +48,11 @@
             this.blueprintView1 = new StasisEditor.Views.BlueprintView();
             this.circuitsTab = new System.Windows.Forms.TabPage();
             this.splitContainer1 = new System.Windows.Forms.SplitContainer();
+            this.saveCircuitsButton = new System.Windows.Forms.Button();
             this.circuitAddButton = new System.Windows.Forms.Button();
             this.circuitRemoveButton = new System.Windows.Forms.Button();
             this.circuitsList = new System.Windows.Forms.ListBox();
             this.circuitsView1 = new StasisEditor.Views.CircuitsView();
-            this.saveCircuitsButton = new System.Windows.Forms.Button();
             ((System.ComponentModel.ISupportInitialize)(this.mainSplit)).BeginInit();
             this.mainSplit.Panel2.SuspendLayout();
             this.mainSplit.SuspendLayout();
@@ -144,7 +144,7 @@
             // 
             this.mainSplit.Panel2.BackColor = System.Drawing.SystemColors.Control;
             this.mainSplit.Panel2.Controls.Add(this.editorTabControl);
-            this.mainSplit.Size = new System.Drawing.Size(1004, 548);
+            this.mainSplit.Size = new System.Drawing.Size(1004, 485);
             this.mainSplit.SplitterDistance = 261;
             this.mainSplit.TabIndex = 1;
             this.mainSplit.TabStop = false;
@@ -160,7 +160,7 @@
             this.editorTabControl.Margin = new System.Windows.Forms.Padding(0);
             this.editorTabControl.Name = "editorTabControl";
             this.editorTabControl.SelectedIndex = 0;
-            this.editorTabControl.Size = new System.Drawing.Size(737, 546);
+            this.editorTabControl.Size = new System.Drawing.Size(737, 483);
             this.editorTabControl.TabIndex = 0;
             this.editorTabControl.SelectedIndexChanged += new System.EventHandler(this.editorTabControl_SelectedIndexChanged);
             // 
@@ -170,18 +170,18 @@
             this.levelTab.Controls.Add(this.levelView1);
             this.levelTab.Location = new System.Drawing.Point(4, 22);
             this.levelTab.Name = "levelTab";
-            this.levelTab.Size = new System.Drawing.Size(729, 520);
+            this.levelTab.Size = new System.Drawing.Size(729, 457);
             this.levelTab.TabIndex = 0;
             this.levelTab.Text = "Level";
             // 
             // levelView1
             // 
+            this.levelView1.active = true;
             this.levelView1.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.levelView1.keysEnabled = true;
             this.levelView1.Location = new System.Drawing.Point(0, 0);
             this.levelView1.Margin = new System.Windows.Forms.Padding(0);
             this.levelView1.Name = "levelView1";
-            this.levelView1.Size = new System.Drawing.Size(729, 520);
+            this.levelView1.Size = new System.Drawing.Size(729, 457);
             this.levelView1.TabIndex = 0;
             // 
             // materialsTab
@@ -190,7 +190,7 @@
             this.materialsTab.Location = new System.Drawing.Point(4, 22);
             this.materialsTab.Margin = new System.Windows.Forms.Padding(0);
             this.materialsTab.Name = "materialsTab";
-            this.materialsTab.Size = new System.Drawing.Size(729, 520);
+            this.materialsTab.Size = new System.Drawing.Size(729, 457);
             this.materialsTab.TabIndex = 1;
             this.materialsTab.Text = "Materials";
             this.materialsTab.UseVisualStyleBackColor = true;
@@ -201,7 +201,7 @@
             this.materialView1.Location = new System.Drawing.Point(0, 0);
             this.materialView1.Margin = new System.Windows.Forms.Padding(0);
             this.materialView1.Name = "materialView1";
-            this.materialView1.Size = new System.Drawing.Size(729, 520);
+            this.materialView1.Size = new System.Drawing.Size(729, 478);
             this.materialView1.TabIndex = 0;
             // 
             // blueprintsTab
@@ -210,7 +210,7 @@
             this.blueprintsTab.Location = new System.Drawing.Point(4, 22);
             this.blueprintsTab.Margin = new System.Windows.Forms.Padding(0);
             this.blueprintsTab.Name = "blueprintsTab";
-            this.blueprintsTab.Size = new System.Drawing.Size(729, 520);
+            this.blueprintsTab.Size = new System.Drawing.Size(729, 457);
             this.blueprintsTab.TabIndex = 2;
             this.blueprintsTab.Text = "Blueprints";
             this.blueprintsTab.UseVisualStyleBackColor = true;
@@ -223,7 +223,7 @@
             this.blueprintView1.Location = new System.Drawing.Point(0, 0);
             this.blueprintView1.Margin = new System.Windows.Forms.Padding(0);
             this.blueprintView1.Name = "blueprintView1";
-            this.blueprintView1.Size = new System.Drawing.Size(729, 520);
+            this.blueprintView1.Size = new System.Drawing.Size(729, 478);
             this.blueprintView1.TabIndex = 0;
             // 
             // circuitsTab
@@ -232,7 +232,7 @@
             this.circuitsTab.Location = new System.Drawing.Point(4, 22);
             this.circuitsTab.Name = "circuitsTab";
             this.circuitsTab.Padding = new System.Windows.Forms.Padding(3);
-            this.circuitsTab.Size = new System.Drawing.Size(729, 520);
+            this.circuitsTab.Size = new System.Drawing.Size(729, 457);
             this.circuitsTab.TabIndex = 3;
             this.circuitsTab.Text = "Circuits";
             this.circuitsTab.UseVisualStyleBackColor = true;
@@ -253,14 +253,24 @@
             // splitContainer1.Panel2
             // 
             this.splitContainer1.Panel2.Controls.Add(this.circuitsView1);
-            this.splitContainer1.Size = new System.Drawing.Size(723, 514);
+            this.splitContainer1.Size = new System.Drawing.Size(723, 472);
             this.splitContainer1.SplitterDistance = 260;
             this.splitContainer1.TabIndex = 1;
+            // 
+            // saveCircuitsButton
+            // 
+            this.saveCircuitsButton.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
+            this.saveCircuitsButton.Location = new System.Drawing.Point(182, 445);
+            this.saveCircuitsButton.Name = "saveCircuitsButton";
+            this.saveCircuitsButton.Size = new System.Drawing.Size(75, 23);
+            this.saveCircuitsButton.TabIndex = 3;
+            this.saveCircuitsButton.Text = "Save";
+            this.saveCircuitsButton.UseVisualStyleBackColor = true;
             // 
             // circuitAddButton
             // 
             this.circuitAddButton.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
-            this.circuitAddButton.Location = new System.Drawing.Point(3, 487);
+            this.circuitAddButton.Location = new System.Drawing.Point(3, 445);
             this.circuitAddButton.Name = "circuitAddButton";
             this.circuitAddButton.Size = new System.Drawing.Size(75, 23);
             this.circuitAddButton.TabIndex = 2;
@@ -270,7 +280,7 @@
             // circuitRemoveButton
             // 
             this.circuitRemoveButton.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
-            this.circuitRemoveButton.Location = new System.Drawing.Point(84, 487);
+            this.circuitRemoveButton.Location = new System.Drawing.Point(84, 445);
             this.circuitRemoveButton.Name = "circuitRemoveButton";
             this.circuitRemoveButton.Size = new System.Drawing.Size(75, 23);
             this.circuitRemoveButton.TabIndex = 1;
@@ -285,7 +295,7 @@
             this.circuitsList.FormattingEnabled = true;
             this.circuitsList.Location = new System.Drawing.Point(3, 3);
             this.circuitsList.Name = "circuitsList";
-            this.circuitsList.Size = new System.Drawing.Size(254, 472);
+            this.circuitsList.Size = new System.Drawing.Size(254, 420);
             this.circuitsList.TabIndex = 0;
             // 
             // circuitsView1
@@ -294,25 +304,15 @@
             this.circuitsView1.Dock = System.Windows.Forms.DockStyle.Fill;
             this.circuitsView1.Location = new System.Drawing.Point(0, 0);
             this.circuitsView1.Name = "circuitsView1";
-            this.circuitsView1.Size = new System.Drawing.Size(459, 514);
+            this.circuitsView1.Size = new System.Drawing.Size(459, 472);
             this.circuitsView1.TabIndex = 0;
             this.circuitsView1.Text = "circuitsView";
-            // 
-            // saveCircuitsButton
-            // 
-            this.saveCircuitsButton.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
-            this.saveCircuitsButton.Location = new System.Drawing.Point(182, 487);
-            this.saveCircuitsButton.Name = "saveCircuitsButton";
-            this.saveCircuitsButton.Size = new System.Drawing.Size(75, 23);
-            this.saveCircuitsButton.TabIndex = 3;
-            this.saveCircuitsButton.Text = "Save";
-            this.saveCircuitsButton.UseVisualStyleBackColor = true;
             // 
             // EditorView
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(1004, 548);
+            this.ClientSize = new System.Drawing.Size(1004, 485);
             this.Controls.Add(this.mainSplit);
             this.Menu = this.mainMenu1;
             this.Name = "EditorView";

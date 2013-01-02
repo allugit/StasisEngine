@@ -20,9 +20,14 @@ namespace StasisEditor.Views
         private SpriteBatch _spriteBatch;
         private Texture2D _pixel;
         private Texture2D _circle;
+        private bool _draw = true;
         private bool _keysEnabled = true;
 
-        public bool keysEnabled { get { return _keysEnabled; } set { _keysEnabled = value; } }
+        public bool active
+        {
+            get { return _draw && _keysEnabled; }
+            set { _draw = value; _keysEnabled = value; }
+        }
         public bool shift { get { return _controller.shift; } }
         public bool ctrl { get { return _controller.ctrl; } }
 
@@ -50,8 +55,8 @@ namespace StasisEditor.Views
             // Input
             MouseMove += new MouseEventHandler(LevelView_MouseMove);
             MouseDown += new MouseEventHandler(LevelView_MouseDown);
-            Parent.Parent.KeyDown += new KeyEventHandler(Parent_KeyDown);
-            Parent.Parent.KeyUp += new KeyEventHandler(Parent_KeyUp);
+            FindForm().KeyDown += new KeyEventHandler(Parent_KeyDown);
+            FindForm().KeyUp += new KeyEventHandler(Parent_KeyUp);
         }
 
         // Key up
@@ -103,7 +108,7 @@ namespace StasisEditor.Views
         {
             GraphicsDevice.Clear(Color.Black);
 
-            if (_controller.level != null)
+            if (_draw && _controller.level != null)
             {
                 _spriteBatch.Begin();
 

@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Windows.Forms;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using StasisEditor.Views.Controls;
@@ -11,15 +12,19 @@ namespace StasisEditor.Views
     {
         private SpriteBatch _spriteBatch;
         private CircuitController _controller;
-        private bool _active;
+        private bool _draw;
         private Texture2D _pixel;
+        private bool _keysEnabled;
 
-        public bool active { get { return _active; } set { _active = value; } }
+        public bool active
+        { 
+            get { return _draw && _keysEnabled; }
+            set { _draw = value; _keysEnabled = value; }
+        }
 
         public CircuitsView()
             : base()
         {
-            
         }
 
         // Initialize
@@ -28,6 +33,11 @@ namespace StasisEditor.Views
             _spriteBatch = new SpriteBatch(GraphicsDevice);
             _pixel = new Texture2D(GraphicsDevice, 1, 1);
             _pixel.SetData<Color>(new[] { Color.White });
+
+            Application.Idle += delegate { Invalidate(); };
+            MouseMove += new System.Windows.Forms.MouseEventHandler(CircuitsView_MouseMove);
+            FindForm().KeyDown += new KeyEventHandler(Parent_KeyDown);
+            FindForm().KeyUp += new KeyEventHandler(Parent_KeyUp);
         }
 
         // setController
@@ -36,12 +46,42 @@ namespace StasisEditor.Views
             _controller = controller;
         }
 
+        // Mouse move
+        void CircuitsView_MouseMove(object sender, System.Windows.Forms.MouseEventArgs e)
+        {
+            _controller.handleMouseMove(e);
+        }
+
+        // Key up
+        void Parent_KeyUp(object sender, KeyEventArgs e)
+        {
+            if (_keysEnabled)
+            {
+                if (e.KeyCode == Keys.Shift || e.KeyCode == Keys.ShiftKey || e.KeyCode == Keys.LShiftKey || e.KeyCode == Keys.RShiftKey)
+                    _controller.shift = false;
+                else if (e.KeyCode == Keys.Control || e.KeyCode == Keys.ControlKey || e.KeyCode == Keys.LControlKey || e.KeyCode == Keys.RControlKey)
+                    _controller.ctrl = false;
+            }
+        }
+
+        // Key down
+        void Parent_KeyDown(object sender, KeyEventArgs e)
+        {
+            if (_keysEnabled)
+            {
+                if (e.KeyCode == Keys.Shift || e.KeyCode == Keys.ShiftKey || e.KeyCode == Keys.LShiftKey || e.KeyCode == Keys.RShiftKey)
+                    _controller.shift = true;
+                else if (e.KeyCode == Keys.Control || e.KeyCode == Keys.ControlKey || e.KeyCode == Keys.LControlKey || e.KeyCode == Keys.RControlKey)
+                    _controller.ctrl = true;
+            }
+        }
+
         // Draw
         protected override void Draw()
         {
             GraphicsDevice.Clear(Color.DarkSlateBlue);
 
-            if (_active)
+            if (_draw)
             {
                 _spriteBatch.Begin();
 
