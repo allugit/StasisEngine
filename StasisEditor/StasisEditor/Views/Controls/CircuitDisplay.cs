@@ -104,6 +104,12 @@ namespace StasisEditor.Views.Controls
                     _view.controller.shift = true;
                 else if (e.KeyCode == Keys.Control || e.KeyCode == Keys.ControlKey || e.KeyCode == Keys.LControlKey || e.KeyCode == Keys.RControlKey)
                     _view.controller.ctrl = true;
+
+                if (e.KeyCode == Keys.Escape)
+                {
+                    _selectedGate = null;
+                    _inputSource = null;
+                }
             }
         }
 
@@ -175,9 +181,15 @@ namespace StasisEditor.Views.Controls
                         if (setOutput)
                         {
                             _inputSource.outputs.Add(target);
+                            target.inputs.Add(_inputSource);
                             _inputSource = null;
                         }
                     }
+                }
+                else
+                {
+                    // Clear input source
+                    _inputSource = null;
                 }
             }
         }
