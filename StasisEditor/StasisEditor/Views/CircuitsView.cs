@@ -7,6 +7,7 @@ using System.Linq;
 using System.Text;
 using System.Windows.Forms;
 using StasisEditor.Controllers;
+using StasisCore.Models;
 
 namespace StasisEditor.Views
 {
@@ -23,6 +24,7 @@ namespace StasisEditor.Views
         public bool draw { get { return _draw; } }
         public bool keysEnabled { get { return _keysEnabled; } }
         public CircuitController controller { get { return _controller; } }
+        public Circuit selectedCircuit { get { return circuitsList.SelectedItem as Circuit; } }
 
         public CircuitsView()
         {
@@ -34,6 +36,13 @@ namespace StasisEditor.Views
         {
             _controller = controller;
             circuitsList.DataSource = _controller.circuits;
+        }
+
+        // Selected circuit changed
+        private void circuitsList_SelectedValueChanged(object sender, EventArgs e)
+        {
+            // Clear any selected gates
+            circuitDisplay1.selectedGate = null;
         }
     }
 }

@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Xml.Linq;
+using StasisCore.Resources;
 
 namespace StasisCore.Models
 {
@@ -31,7 +32,7 @@ namespace StasisCore.Models
             foreach (XElement gateData in data.Elements("Gate"))
             {
                 int id = int.Parse(gateData.Attribute("id").Value);
-                initialGates[id] = new Gate(id, gateData.Attribute("type").Value);
+                initialGates[id] = new Gate(id, gateData.Attribute("type").Value, XmlLoadHelper.getVector2(gateData.Attribute("position").Value));
             }
 
             // Associate gates
@@ -42,6 +43,8 @@ namespace StasisCore.Models
                 // Outputs
                 foreach (XElement outputData in gateData.Elements("Output"))
                     gate.outputs.Add(initialGates[int.Parse(outputData.Attribute("to").Value)]);
+
+                _gates.Add(gate);
             }
         }
     }

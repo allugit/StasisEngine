@@ -4,6 +4,7 @@ using System.Windows.Forms;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Content;
 using Microsoft.Xna.Framework.Graphics;
+using StasisCore.Models;
 using StasisEditor.Views.Controls;
 using StasisEditor.Controllers;
 
@@ -14,10 +15,16 @@ namespace StasisEditor.Views.Controls
         private SpriteBatch _spriteBatch;
         private ContentManager _contentManager;
         private Texture2D _pixel;
+        private Texture2D _circle;
         private Texture2D _and;
         private Texture2D _or;
         private Texture2D _not;
+        private Texture2D _input;
+        private Texture2D _output;
         private CircuitsView _view;
+        private Gate _selectedGate;
+
+        public Gate selectedGate { get { return _selectedGate; } set { _selectedGate = value; } }
 
         public CircuitDisplay()
             : base()
@@ -40,10 +47,14 @@ namespace StasisEditor.Views.Controls
                 _and = _contentManager.Load<Texture2D>("logic_gate_icons\\and");
                 _or = _contentManager.Load<Texture2D>("logic_gate_icons\\or");
                 _not = _contentManager.Load<Texture2D>("logic_gate_icons\\not");
+                _input = _contentManager.Load<Texture2D>("logic_gate_icons\\input");
+                _output = _contentManager.Load<Texture2D>("logic_gate_icons\\output");
+                _circle = _contentManager.Load<Texture2D>("circle");
 
                 // Events
                 Application.Idle += delegate { Invalidate(); };
                 MouseMove += new System.Windows.Forms.MouseEventHandler(CircuitsView_MouseMove);
+                MouseDown += new MouseEventHandler(CircuitDisplay_MouseDown);
                 FindForm().KeyDown += new KeyEventHandler(Parent_KeyDown);
                 FindForm().KeyUp += new KeyEventHandler(Parent_KeyUp);
             }
@@ -52,7 +63,23 @@ namespace StasisEditor.Views.Controls
         // Mouse move
         void CircuitsView_MouseMove(object sender, System.Windows.Forms.MouseEventArgs e)
         {
-            _view.controller.handleMouseMove(e);
+            // Update mouse position
+            _view.controller.mouse = e.Location;
+            Vector2 worldDelta = _view.controller.getWorldMouse() - _view.controller.getOldWorldMouse();
+
+            if (_view.controller.ctrl)
+            {
+                // Move screen
+                _view.controller.screenCenter += worldDelta;
+            }
+            else
+            {
+                // Move gate
+                if (selectedGate != null)
+                {
+                    selectedGate.position += worldDelta;
+                }
+            }
         }
 
         // Key up
@@ -79,22 +106,60 @@ namespace StasisEditor.Views.Controls
             }
         }
 
+        // Mouse down
+        void CircuitDisplay_MouseDown(object sender, MouseEventArgs e)
+        {
+            Circuit circuit = _view.selectedCircuit;
+            if (circuit == null)
+                return;
+
+            if (selectedGate == null)
+            {
+                // Hit test gates
+                float maxDistance = 20f / _view.controller.getScale();
+                foreach (Gate gate in circuit.gates)
+                {
+                    Vector2 relative = _view.controller.getWorldMouse() - gate.position;
+                    if (relative.Length() <= maxDistance)
+                    {
+                        _selectedGate = gate;
+                    }
+                }
+            }
+            else
+            {
+                // Drop selected gate
+                selectedGate = null;
+            }
+
+        }
+
         // Draw
         protected override void Draw()
         {
-            GraphicsDevice.Clear(Color.DarkSlateBlue);
-
             if (_view != null && _view.draw)
             {
-                _spriteBatch.Begin();
+                if (_view.selectedCircuit == null)
+                {
+                    GraphicsDevice.Clear(Color.Black);
+                }
+                else
+                {
+                    GraphicsDevice.Clear(Color.DarkSlateBlue);
 
-                // Draw grid
-                drawGrid();
+                    _spriteBatch.Begin();
 
-                // Draw mouse position
-                drawMousePosition();
+                    // Draw grid
+                    drawGrid();
 
-                _spriteBatch.End();
+                    // Draw mouse position
+                    drawMousePosition();
+
+                    // Draw selected circuit
+                    drawCircuit();
+
+                    _spriteBatch.End();
+                }
             }
         }
 
@@ -135,6 +200,38 @@ namespace StasisEditor.Views.Controls
                 Microsoft.Xna.Framework.Graphics.SpriteEffects.None,
                 0);
 
+        }
+
+        // drawCircuit
+        private void drawCircuit()
+        {
+            Circuit circuit = _view.selectedCircuit;
+
+            foreach (Gate gate in circuit.gates)
+            {
+                switch (gate.type)
+                {
+                    case "input":
+                        _spriteBatch.Draw(_input, (gate.position + _view.controller.getWorldOffset()) * _view.controller.getScale(), _input.Bounds, Color.White, 0, new Vector2(_input.Width, _input.Height) / 2, 1f, SpriteEffects.None, 0);
+                        break;
+
+                    case "output":
+                        _spriteBatch.Draw(_output, (gate.position + _view.controller.getWorldOffset()) * _view.controller.getScale(), _output.Bounds, Color.White, 0, new Vector2(_output.Width, _output.Height) / 2, 1f, SpriteEffects.None, 0);
+                        break;
+
+                    case "and":
+                        _spriteBatch.Draw(_and, (gate.position + _view.controller.getWorldOffset()) * _view.controller.getScale(), _and.Bounds, Color.White, 0, new Vector2(_and.Width, _and.Height) / 2, 1f, SpriteEffects.None, 0);
+                        break;
+
+                    case "not":
+                        _spriteBatch.Draw(_not, (gate.position + _view.controller.getWorldOffset()) * _view.controller.getScale(), _not.Bounds, Color.White, 0, new Vector2(_not.Width, _not.Height) / 2, 1f, SpriteEffects.None, 0);
+                        break;
+
+                    case "or":
+                        _spriteBatch.Draw(_or, (gate.position + _view.controller.getWorldOffset()) * _view.controller.getScale(), _or.Bounds, Color.White, 0, new Vector2(_or.Width, _or.Height) / 2, 1f, SpriteEffects.None, 0);
+                        break;
+                }
+            }
         }
     }
 }

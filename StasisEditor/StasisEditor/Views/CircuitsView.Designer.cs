@@ -101,6 +101,7 @@
             this.circuitsList.Name = "circuitsList";
             this.circuitsList.Size = new System.Drawing.Size(236, 342);
             this.circuitsList.TabIndex = 0;
+            this.circuitsList.SelectedValueChanged += new System.EventHandler(this.circuitsList_SelectedValueChanged);
             // 
             // circuitDisplay1
             // 

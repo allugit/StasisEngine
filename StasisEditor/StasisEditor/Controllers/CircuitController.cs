@@ -33,6 +33,7 @@ namespace StasisEditor.Controllers
         public Vector2 getOldWorldMouse() { return new Vector2(_oldMouse.X, _oldMouse.Y) / _scale - getWorldOffset(); }
         public bool shift { get { return _shift; } set { _shift = value; } }
         public bool ctrl { get { return _ctrl; } set { _ctrl = value; } }
+        public Vector2 screenCenter { get { return _screenCenter; } set { _screenCenter = value; } }
         public BindingList<Circuit> circuits { get { return _circuits; } }
 
         public CircuitController(EditorController editorController, CircuitsView circuitsView) : base()
@@ -46,24 +47,6 @@ namespace StasisEditor.Controllers
             List<ResourceObject> resources = ResourceController.loadCircuits();
             foreach (ResourceObject resource in resources)
                 _circuits.Add(new Circuit(resource.data));
-        }
-
-        // handleMouseMove
-        public void handleMouseMove(System.Windows.Forms.MouseEventArgs e)
-        {
-            // Update mouse position
-            mouse = e.Location;
-            Vector2 worldDelta = getWorldMouse() - getOldWorldMouse();
-
-            if (ctrl)
-            {
-                // Move screen
-                _screenCenter += worldDelta;
-            }
-            else
-            {
-
-            }
         }
     }
 }
