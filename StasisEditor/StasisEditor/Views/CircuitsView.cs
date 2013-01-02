@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Windows.Forms;
 using Microsoft.Xna.Framework;
+using Microsoft.Xna.Framework.Content;
 using Microsoft.Xna.Framework.Graphics;
 using StasisEditor.Views.Controls;
 using StasisEditor.Controllers;
@@ -11,10 +12,14 @@ namespace StasisEditor.Views
     public class CircuitsView : GraphicsDeviceControl
     {
         private SpriteBatch _spriteBatch;
+        private ContentManager _contentManager;
         private CircuitController _controller;
         private bool _draw;
         private Texture2D _pixel;
         private bool _keysEnabled;
+        private Texture2D _and;
+        private Texture2D _or;
+        private Texture2D _not;
 
         public bool active
         { 
@@ -31,9 +36,16 @@ namespace StasisEditor.Views
         protected override void Initialize()
         {
             _spriteBatch = new SpriteBatch(GraphicsDevice);
+            _contentManager = new ContentManager(Services, "Content");
+
+            // Resources
             _pixel = new Texture2D(GraphicsDevice, 1, 1);
             _pixel.SetData<Color>(new[] { Color.White });
+            _and = _contentManager.Load<Texture2D>("logic_gate_icons\\and");
+            _or = _contentManager.Load<Texture2D>("logic_gate_icons\\or");
+            _not = _contentManager.Load<Texture2D>("logic_gate_icons\\not");
 
+            // Events
             Application.Idle += delegate { Invalidate(); };
             MouseMove += new System.Windows.Forms.MouseEventHandler(CircuitsView_MouseMove);
             FindForm().KeyDown += new KeyEventHandler(Parent_KeyDown);
