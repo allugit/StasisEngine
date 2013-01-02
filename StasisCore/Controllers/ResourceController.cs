@@ -191,6 +191,28 @@ namespace StasisCore.Controllers
             loadItems();
         }
 
+        // Save circuit resources
+        public static void saveCircuitResources(List<Circuit> circuits, bool backup = true)
+        {
+            // Backup circuits
+            if (backup)
+            {
+                string backupFile = circuitPath + ".bak";
+                if (File.Exists(backupFile))
+                    File.Delete(backupFile);
+                File.Move(circuitPath, backupFile);
+            }
+
+            // Save circuits
+            XDocument doc = new XDocument(new XElement("Circuits"));
+            foreach (Circuit circuit in circuits)
+                doc.Element("Circuits").Add(circuit.data);
+            doc.Save(circuitPath);
+
+            // Reload circuits
+            loadCircuits();
+        }
+
         // Destroy a resource
         public static void destroy(string uid)
         {

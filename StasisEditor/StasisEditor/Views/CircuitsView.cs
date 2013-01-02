@@ -110,5 +110,11 @@ namespace StasisEditor.Views
                 _selectedGate = gate;
             }
         }
+
+        // Save circuits clicked
+        private void saveCircuitsButton_Click(object sender, EventArgs e)
+        {
+            _controller.saveCircuits();
+        }
     }
 }

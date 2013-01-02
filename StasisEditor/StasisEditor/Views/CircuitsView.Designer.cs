@@ -131,6 +131,7 @@
             this.saveCircuitsButton.TabIndex = 3;
             this.saveCircuitsButton.Text = "Save Circuits";
             this.saveCircuitsButton.UseVisualStyleBackColor = true;
+            this.saveCircuitsButton.Click += new System.EventHandler(this.saveCircuitsButton_Click);
             // 
             // circuitDisplay1
             // 

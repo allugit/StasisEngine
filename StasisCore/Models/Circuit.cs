@@ -12,6 +12,19 @@ namespace StasisCore.Models
 
         public string uid { get { return _uid; } set { _uid = value; } }
         public List<Gate> gates { get { return _gates; } }
+        public XElement data
+        {
+            get
+            {
+                List<XElement> gatesData = new List<XElement>();
+                foreach (Gate gate in _gates)
+                    gatesData.Add(gate.data);
+
+                return new XElement("Circuit",
+                    new XAttribute("uid", _uid),
+                    gatesData);
+            }
+        }
 
         // Create new circuit
         public Circuit(string uid)

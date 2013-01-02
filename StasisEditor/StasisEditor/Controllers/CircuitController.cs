@@ -70,6 +70,12 @@ namespace StasisEditor.Controllers
             }
         }
 
+        // Save circuits
+        public void saveCircuits()
+        {
+            ResourceController.saveCircuitResources(new List<Circuit>(_circuits));
+        }
+
         // Delete circuit gate
         public void deleteCircuitGate(Circuit circuit, Gate gate)
         {

@@ -18,6 +18,21 @@ namespace StasisCore.Models
         public Vector2 position { get { return _position; } set { _position = value; } }
         public List<Gate> outputs { get { return _outputs; } set { _outputs = value; } }
         public List<Gate> inputs { get { return _inputs; } set { _inputs = value; } }
+        public XElement data
+        {
+            get
+            {
+                List<XElement> outputsData = new List<XElement>();
+                foreach (Gate gate in outputs)
+                    outputsData.Add(new XElement("Output", new XAttribute("to", gate.id)));
+
+                return new XElement("Gate",
+                    new XAttribute("type", _type),
+                    new XAttribute("id", _id),
+                    new XAttribute("position", _position),
+                    outputsData);
+            }
+        }
 
         public Gate(int id, string type, Vector2 position)
         {
