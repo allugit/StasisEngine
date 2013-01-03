@@ -32,20 +32,7 @@ namespace StasisEditor.Views.Controls
         // Toolbar item clicked
         private void anchorToolStrip_ItemClicked(object sender, ToolStripItemClickedEventArgs e)
         {
-            switch (e.ClickedItem.Name)
-            {
-                case "plantsButton":
-                    _levelController.selectPlantType();
-                    break;
-
-                case "itemsButton":
-                    _levelController.selectItem();
-                    break;
-
-                default:
-                    _levelController.createActorControllerFromToolbar(e.ClickedItem.Name);
-                    break;
-            }
+            _levelController.createActorControllerFromToolbar(e.ClickedItem.Name);
         }
     }
 }

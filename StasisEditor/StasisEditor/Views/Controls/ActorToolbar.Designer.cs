@@ -35,14 +35,15 @@
             this.terrainButton = new System.Windows.Forms.ToolStripButton();
             this.movingPlatformButton = new System.Windows.Forms.ToolStripButton();
             this.pressurePlateButton = new System.Windows.Forms.ToolStripButton();
-            this.objectSpawnerButton = new System.Windows.Forms.ToolStripButton();
             this.ropeButton = new System.Windows.Forms.ToolStripButton();
-            this.timerButton = new System.Windows.Forms.ToolStripButton();
+            this.circuitsButton = new System.Windows.Forms.ToolStripButton();
             this.fluidButton = new System.Windows.Forms.ToolStripButton();
             this.itemsButton = new System.Windows.Forms.ToolStripButton();
             this.plantsButton = new System.Windows.Forms.ToolStripButton();
             this.playerSpawnButton = new System.Windows.Forms.ToolStripButton();
             this.goalButton = new System.Windows.Forms.ToolStripButton();
+            this.timerButton = new System.Windows.Forms.ToolStripButton();
+            this.objectSpawnerButton = new System.Windows.Forms.ToolStripButton();
             this.anchorToolStrip.SuspendLayout();
             this.SuspendLayout();
             // 
@@ -61,14 +62,15 @@
             this.terrainButton,
             this.movingPlatformButton,
             this.pressurePlateButton,
-            this.objectSpawnerButton,
             this.ropeButton,
-            this.timerButton,
+            this.circuitsButton,
             this.fluidButton,
             this.itemsButton,
             this.plantsButton,
             this.playerSpawnButton,
-            this.goalButton});
+            this.goalButton,
+            this.timerButton,
+            this.objectSpawnerButton});
             this.anchorToolStrip.LayoutStyle = System.Windows.Forms.ToolStripLayoutStyle.Flow;
             this.anchorToolStrip.Location = new System.Drawing.Point(0, 0);
             this.anchorToolStrip.Name = "anchorToolStrip";
@@ -127,16 +129,6 @@
             this.pressurePlateButton.Size = new System.Drawing.Size(26, 26);
             this.pressurePlateButton.Text = "Pressure Plate (Signal Transmitter)";
             // 
-            // objectSpawnerButton
-            // 
-            this.objectSpawnerButton.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
-            this.objectSpawnerButton.Enabled = false;
-            this.objectSpawnerButton.Image = ((System.Drawing.Image)(resources.GetObject("objectSpawnerButton.Image")));
-            this.objectSpawnerButton.ImageTransparentColor = System.Drawing.Color.Magenta;
-            this.objectSpawnerButton.Name = "objectSpawnerButton";
-            this.objectSpawnerButton.Size = new System.Drawing.Size(26, 26);
-            this.objectSpawnerButton.Text = "Object Spawner (Signal Receiver)";
-            // 
             // ropeButton
             // 
             this.ropeButton.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
@@ -147,16 +139,14 @@
             this.ropeButton.Size = new System.Drawing.Size(26, 26);
             this.ropeButton.Text = "Rope";
             // 
-            // timerButton
+            // circuitsButton
             // 
-            this.timerButton.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
-            this.timerButton.Enabled = false;
-            this.timerButton.Image = ((System.Drawing.Image)(resources.GetObject("timerButton.Image")));
-            this.timerButton.ImageTransparentColor = System.Drawing.Color.Magenta;
-            this.timerButton.Margin = new System.Windows.Forms.Padding(0);
-            this.timerButton.Name = "timerButton";
-            this.timerButton.Size = new System.Drawing.Size(26, 26);
-            this.timerButton.Text = "Timer (Signal Transmitter)";
+            this.circuitsButton.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
+            this.circuitsButton.Image = ((System.Drawing.Image)(resources.GetObject("circuitsButton.Image")));
+            this.circuitsButton.ImageTransparentColor = System.Drawing.Color.Magenta;
+            this.circuitsButton.Name = "circuitsButton";
+            this.circuitsButton.Size = new System.Drawing.Size(26, 26);
+            this.circuitsButton.Text = "Circuits";
             // 
             // fluidButton
             // 
@@ -208,6 +198,28 @@
             this.goalButton.Size = new System.Drawing.Size(26, 26);
             this.goalButton.Text = "Goal";
             // 
+            // timerButton
+            // 
+            this.timerButton.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
+            this.timerButton.Enabled = false;
+            this.timerButton.Image = ((System.Drawing.Image)(resources.GetObject("timerButton.Image")));
+            this.timerButton.ImageTransparentColor = System.Drawing.Color.Magenta;
+            this.timerButton.Margin = new System.Windows.Forms.Padding(0);
+            this.timerButton.Name = "timerButton";
+            this.timerButton.Size = new System.Drawing.Size(26, 26);
+            this.timerButton.Text = "Timer (Signal Transmitter)";
+            // 
+            // objectSpawnerButton
+            // 
+            this.objectSpawnerButton.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
+            this.objectSpawnerButton.Enabled = false;
+            this.objectSpawnerButton.Image = ((System.Drawing.Image)(resources.GetObject("objectSpawnerButton.Image")));
+            this.objectSpawnerButton.ImageTransparentColor = System.Drawing.Color.Magenta;
+            this.objectSpawnerButton.Margin = new System.Windows.Forms.Padding(0);
+            this.objectSpawnerButton.Name = "objectSpawnerButton";
+            this.objectSpawnerButton.Size = new System.Drawing.Size(26, 26);
+            this.objectSpawnerButton.Text = "Object Spawner (Signal Receiver)";
+            // 
             // ActorToolbar
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -237,5 +249,6 @@
         private System.Windows.Forms.ToolStripButton itemsButton;
         private System.Windows.Forms.ToolStripButton plantsButton;
         private System.Windows.Forms.ToolStripButton objectSpawnerButton;
+        private System.Windows.Forms.ToolStripButton circuitsButton;
     }
 }

@@ -77,50 +77,6 @@ namespace StasisEditor.Controllers
 
         #endregion
 
-        #region XNA Methods
-        /*
-        // resizeGraphicsDevice
-        public void resizeGraphicsDevice(int width, int height)
-        {
-            _editorController.resizeGraphicsDevice(width, height);
-        }
-
-        // handleXNADraw
-        public void handleXNADraw()
-        {
-            if (_xnaDrawingEnabled)
-            {
-                if (_level != null)
-                    _levelView.handleXNADraw();
-            }
-        }*/
-        /*
-        // hookXNAToView
-        public void hookXNAToView()
-        {
-            _levelView.hookToXNA();
-        }
-
-        // unhookXNAFromView
-        public void unhookXNAFromView()
-        {
-            _levelView.unhookFromXNA();
-        }
-        */
-        /*
-        // enableXNAInput
-        public void enableXNAInput(bool status)
-        {
-            _xnaInputEnabled = status;
-        }
-
-        // enableXNADrawing
-        public void enableXNADrawing(bool status)
-        {
-            _xnaDrawingEnabled = status;
-        }
-        */
-
         // Process actor controller queues
         public void processActorControllerQueue()
         {
@@ -171,10 +127,6 @@ namespace StasisEditor.Controllers
                     controller.globalCheckKey();
             }*/
         }
-        
-        #endregion
-
-        #region Levels
 
         // createNewLevel
         public void createNewLevel()
@@ -187,10 +139,6 @@ namespace StasisEditor.Controllers
         {
             _level = null;
         }
-
-        #endregion
-
-        #region Actor Controllers
 
         // createActorControllerFromToolbar
         public void createActorControllerFromToolbar(string buttonName)
@@ -240,12 +188,41 @@ namespace StasisEditor.Controllers
                     }
                     actorController = new PlayerSpawnActorResourceController(this);
                     break;
+
+                case "plantsButton":
+                    PlantSelectBox plantSelectBox = new PlantSelectBox();
+                    if (plantSelectBox.ShowDialog() == System.Windows.Forms.DialogResult.OK)
+                    {
+                        // Adjust mouse position since movement isn't tracked when a form is open
+                        _mouse = _levelView.PointToClient(System.Windows.Forms.Cursor.Position);
+                        _oldMouse = _mouse;
+
+                        PlantType selectedPlantType = plantSelectBox.selectedPlantType;
+                        switch (selectedPlantType)
+                        {
+                            case PlantType.Tree:
+                                actorController = new TreeActorResourceController(this);
+                                break;
+                        }
+                    }
+                    break;
+
+                case "itemsButton":
+                    // TODO: Implement item actors
+                    break;
+
+                case "circuitsButton":
+                    SelectCircuit selectCircuitForm = new SelectCircuit(_editorController.circuitController);
+                    if (selectCircuitForm.ShowDialog() == System.Windows.Forms.DialogResult.OK)
+                    {
+
+                    }
+                    break;
             }
 
             if (actorController != null)
             {
                 // Add actor controller to list
-                //_actorControllers.Add(actorController);
                 addActorController(actorController);
 
                 // Select all sub controllers
@@ -288,76 +265,6 @@ namespace StasisEditor.Controllers
             // actual removal of actor controller is handled in update() in the 'XNA Methods' region
             _actorControllersRemoveQueue.Add(actorController);
         }
-
-        // selectPlantType
-        public void selectPlantType()
-        {
-            PlantSelectBox plantSelectBox = new PlantSelectBox();
-            ActorResourceController actorController = null;
-            if (plantSelectBox.ShowDialog() == System.Windows.Forms.DialogResult.OK)
-            {
-                // Adjust mouse position since movement isn't tracked when a form is open
-                _mouse = _levelView.PointToClient(System.Windows.Forms.Cursor.Position);
-                _oldMouse = _mouse;
-
-                PlantType selectedPlantType = plantSelectBox.selectedPlantType;
-                switch (selectedPlantType)
-                {
-                    case PlantType.Tree:
-                        actorController = new TreeActorResourceController(this);
-                        break;
-                }
-            }
-
-            if (actorController != null)
-            {
-                // Add actor to controller list
-                addActorController(actorController);
-
-                // Select sub controllers
-                actorController.selectAllSubControllers();
-            }
-        }
-
-        // selectItem
-        public void selectItem()
-        {
-            throw new NotImplementedException();
-        }
-
-        #endregion
-
-        #region Input
-
-        /*
-        // Update mouse position
-        private void updateMousePosition()
-        {
-            // View offset
-            System.Drawing.Point viewOffset = _levelView.FindForm().PointToClient(_levelView.Parent.PointToScreen(_levelView.Location));
-
-            // Set mouse boundaries
-            int x = Math.Min(Math.Max(0, Input.newMouse.X - viewOffset.X), _levelView.Width);
-            int y = Math.Min(Math.Max(0, Input.newMouse.Y - viewOffset.Y), _levelView.Height);
-
-            // Calculate change in mouse position (for screen and world coordinates)
-            int deltaX = x - _mouse.X;
-            int deltaY = y - _mouse.Y;
-            Vector2 worldDelta = new Vector2(deltaX, deltaY) / _editorController.getScale();
-
-            // Move screen
-            if (Input.newKey.IsKeyDown(Microsoft.Xna.Framework.Input.Keys.LeftControl))
-                _screenCenter += worldDelta;
-
-            // Store screen space mouse coordinates
-            _mouse.X = x;
-            _mouse.Y = y;
-
-            // Pass input to selected sub controllers
-            foreach (ActorSubController subController in _selectedSubControllers)
-                subController.handleMouseMove(worldDelta);
-        }
-        */
 
         // handleMouseMove
         public void handleMouseMove(System.Windows.Forms.MouseEventArgs e)
@@ -403,7 +310,5 @@ namespace StasisEditor.Controllers
                 }
             }
         }
-
-        #endregion
     }
 }

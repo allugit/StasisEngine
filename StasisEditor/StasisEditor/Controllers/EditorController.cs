@@ -25,6 +25,10 @@ namespace StasisEditor.Controllers
         private float _scale = 35f;
 
         public EditorView view { get { return _editorView; } }
+        public MaterialController materialController { get { return _materialController; } }
+        public LevelController levelController { get { return _levelController; } }
+        public BlueprintController blueprintController { get { return _blueprintController; } }
+        public CircuitController circuitController { get { return _circuitController; } }
 
         public EditorController(EditorView view)
         {

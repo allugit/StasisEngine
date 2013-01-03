@@ -184,6 +184,12 @@
     <Compile Include="Views\Controls\PlantSelectBox.Designer.cs">
       <DependentUpon>PlantSelectBox.cs</DependentUpon>
     </Compile>
+    <Compile Include="Views\Controls\SelectCircuit.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Views\Controls\SelectCircuit.Designer.cs">
+      <DependentUpon>SelectCircuit.cs</DependentUpon>
+    </Compile>
     <Compile Include="Views\Controls\SelectGateType.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -234,6 +240,7 @@
     <Content Include="GameThumbnail.png">
       <XnaPlatformSpecific>true</XnaPlatformSpecific>
     </Content>
+    <Content Include="Resources\circuits.png" />
     <None Include="Resources\object_spawner.png" />
     <None Include="Resources\timer.png" />
     <None Include="Resources\terrain.png" />
@@ -320,6 +327,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Views\Controls\PlantSelectBox.resx">
       <DependentUpon>PlantSelectBox.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Views\Controls\SelectCircuit.resx">
+      <DependentUpon>SelectCircuit.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Views\Controls\SelectGateType.resx">
       <DependentUpon>SelectGateType.cs</DependentUpon>
