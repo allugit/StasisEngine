@@ -6,6 +6,7 @@ using Microsoft.Xna.Framework;
 using StasisCore.Controllers;
 using StasisCore.Resources;
 using StasisCore.Models;
+using StasisEditor.Models;
 using StasisEditor.Views;
 
 namespace StasisEditor.Controllers
@@ -14,7 +15,7 @@ namespace StasisEditor.Controllers
     {
         private EditorController _editorController;
         private CircuitsView _view;
-        private BindingList<Circuit> _circuits;
+        private BindingList<EditorCircuit> _circuits;
         private System.Drawing.Point _mouse;
         private System.Drawing.Point _oldMouse;
         private Vector2 _screenCenter;
@@ -34,19 +35,19 @@ namespace StasisEditor.Controllers
         public bool shift { get { return _shift; } set { _shift = value; } }
         public bool ctrl { get { return _ctrl; } set { _ctrl = value; } }
         public Vector2 screenCenter { get { return _screenCenter; } set { _screenCenter = value; } }
-        public BindingList<Circuit> circuits { get { return _circuits; } }
+        public BindingList<EditorCircuit> circuits { get { return _circuits; } }
 
         public CircuitController(EditorController editorController, CircuitsView circuitsView) : base()
         {
             _editorController = editorController;
             _view = circuitsView;
-            _circuits = new BindingList<Circuit>();
+            _circuits = new BindingList<EditorCircuit>();
             _view.setController(this);
 
             // Initialize resources
             List<ResourceObject> resources = ResourceController.loadCircuits();
             foreach (ResourceObject resource in resources)
-                _circuits.Add(new Circuit(resource.data));
+                _circuits.Add(new EditorCircuit(resource.data));
         }
 
         // Get unused gate id

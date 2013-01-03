@@ -103,6 +103,7 @@
     <Compile Include="Controllers\LevelController.cs" />
     <Compile Include="Controllers\MaterialController.cs" />
     <Compile Include="GraphicsDeviceService.cs" />
+    <Compile Include="Models\EditorCircuit.cs" />
     <Compile Include="Models\EditorLevel.cs" />
     <Compile Include="ServiceContainer.cs" />
     <Compile Include="Views\BlueprintView.cs">

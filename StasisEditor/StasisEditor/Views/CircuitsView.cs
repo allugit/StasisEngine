@@ -7,6 +7,7 @@ using System.Linq;
 using System.Text;
 using System.Windows.Forms;
 using StasisCore.Models;
+using StasisEditor.Models;
 using StasisEditor.Controllers;
 using StasisEditor.Views.Controls;
 
@@ -27,7 +28,7 @@ namespace StasisEditor.Views
         public bool draw { get { return _draw; } }
         public bool keysEnabled { get { return _keysEnabled; } }
         public CircuitController controller { get { return _controller; } }
-        public Circuit selectedCircuit { get { return circuitsList.SelectedItem as Circuit; } }
+        public EditorCircuit selectedCircuit { get { return circuitsList.SelectedItem as EditorCircuit; } }
         public Gate selectedGate { get { return _selectedGate; } }
 
         public CircuitsView()
@@ -43,7 +44,7 @@ namespace StasisEditor.Views
         }
 
         // selectCircuit
-        public void selectCircuit(Circuit circuit)
+        public void selectCircuit(EditorCircuit circuit)
         {
             circuitsList.SelectedIndex = _controller.circuits.IndexOf(circuit);
         }
@@ -79,7 +80,7 @@ namespace StasisEditor.Views
             CreateResourceView resourceView = new CreateResourceView();
             if (resourceView.ShowDialog() == DialogResult.OK)
             {
-                Circuit circuit = new Circuit(resourceView.uid);
+                EditorCircuit circuit = new EditorCircuit(resourceView.uid);
                 _controller.circuits.Add(circuit);
                 selectCircuit(circuit);
             }

@@ -7,8 +7,8 @@ namespace StasisCore.Models
 {
     public class Circuit
     {
-        private string _uid;
-        private List<Gate> _gates;
+        protected string _uid;
+        protected List<Gate> _gates;
 
         public string uid { get { return _uid; } set { _uid = value; } }
         public List<Gate> gates { get { return _gates; } }
