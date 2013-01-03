@@ -7,8 +7,8 @@ namespace StasisCore.Models
 {
     public class Material
     {
-        private string _uid;
-        private MaterialGroupLayer _rootLayer;
+        protected string _uid;
+        protected MaterialGroupLayer _rootLayer;
 
         public string uid { get { return _uid; } set { _uid = value; } }
         public MaterialGroupLayer rootLayer { get { return _rootLayer; } }
@@ -31,10 +31,10 @@ namespace StasisCore.Models
         }
 
         // Create from xml
-        public Material(ResourceObject resource)
+        public Material(XElement data)
         {
-            _uid = resource.uid;
-            _rootLayer = MaterialLayer.load(resource.data.Element("Layer")) as MaterialGroupLayer;
+            _uid = data.Attribute("uid").Value;
+            _rootLayer = MaterialLayer.load(data.Element("Layer")) as MaterialGroupLayer;
         }
     }
 }

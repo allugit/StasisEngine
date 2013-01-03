@@ -24,21 +24,21 @@ namespace StasisEditor.Controllers
         private EditorController _editorController;
         private MaterialView _materialView;
         private MaterialPreview _materialPreview;
-        private BindingList<Material> _materials;
+        private BindingList<EditorMaterial> _materials;
         private bool _autoUpdatePreview;
 
-        public BindingList<Material> materials { get { return _materials; } }
+        public BindingList<EditorMaterial> materials { get { return _materials; } }
 
         public MaterialController(EditorController editorController, MaterialView materialView)
         {
             _editorController = editorController;
             _materialView = materialView;
-            _materials = new BindingList<Material>();
+            _materials = new BindingList<EditorMaterial>();
 
             // Load materials
             List<ResourceObject> resources = ResourceController.loadMaterials();
             foreach (ResourceObject resource in resources)
-                _materials.Add(new Material(resource));
+                _materials.Add(new EditorMaterial(resource.data));
 
             // Initialize material view
             materialView.setController(this);
@@ -91,15 +91,15 @@ namespace StasisEditor.Controllers
                 }
             }
 
-            Material material = new Material(uid);
+            EditorMaterial material = new EditorMaterial(uid);
             _materials.Add(material);
         }
 
         // removeMaterial
         public void removeMaterial(string uid, bool destroy = true)
         {
-            Material materialToRemove = null;
-            foreach (Material material in _materials)
+            EditorMaterial materialToRemove = null;
+            foreach (EditorMaterial material in _materials)
             {
                 if (material.uid == uid)
                 {
@@ -184,45 +184,6 @@ namespace StasisEditor.Controllers
                 _materialPreview.updateMaterial(material);
                 //_materialView.Focus();
             }
-
-            /*
-            // Resize graphics device
-            int graphicsDeviceWidth = XNAResources.graphicsDevice.Viewport.Width;
-            int graphicsDeviceHeight = XNAResources.graphicsDevice.Viewport.Height;
-            int textureWidth = 512;
-            int textureHeight = 512;
-            _editorController.resizeGraphicsDevice(textureWidth, textureHeight);
-
-            // Render material
-            Texture2D materialTexture = null;
-            try
-            {
-                materialTexture = _materialRenderer.renderMaterial(material, textureWidth, textureHeight);
-            }
-            catch (ResourceNotFoundException e)
-            {
-                System.Windows.Forms.MessageBox.Show(e.Message, "Resource Error", System.Windows.Forms.MessageBoxButtons.OK, System.Windows.Forms.MessageBoxIcon.Error);
-                return;
-            }
-
-            if (_materialPreview == null)
-            {
-                // Open material preview
-                _materialPreview = new MaterialPreview(this, materialTexture, String.Format("{0} Preview", material.uid));
-                _materialPreview.Show();
-            }
-            else
-            {
-                // Put preview window on top
-                //_materialPreview.Focus();
-                _materialPreview.updatePreview(materialTexture);
-                //_materialView.Focus();
-            }
-
-            // Restore graphics device
-            _editorController.resizeGraphicsDevice(graphicsDeviceWidth, graphicsDeviceHeight);
-            XNAResources.graphicsDevice.Clear(Color.Black);
-            */
         }
 
         // previewClosed
