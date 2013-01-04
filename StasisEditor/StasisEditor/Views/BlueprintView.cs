@@ -12,6 +12,7 @@ using StasisCore.Models;
 using StasisCore.Resources;
 using StasisEditor.Controllers;
 using StasisEditor.Views.Controls;
+using StasisEditor.Models;
 
 namespace StasisEditor.Views
 {
@@ -23,7 +24,7 @@ namespace StasisEditor.Views
 
         public EditBlueprintScrapShape editBlueprintScrapShapeView { get { return _editBlueprintScrapShapeView; } set { _editBlueprintScrapShapeView = value; } }
         public EditBlueprintSocketsView editBlueprintSocketsView { get { return _editBlueprintSocketsView; } set { _editBlueprintSocketsView = value; } }
-        public Blueprint selectedBlueprint { get { return blueprintList.SelectedItem as Blueprint; } }
+        public EditorBlueprint selectedBlueprint { get { return blueprintList.SelectedItem as EditorBlueprint; } }
         public BlueprintScrap selectedScrap { get { return scrapList.SelectedItem as BlueprintScrap; } }
 
         public BlueprintView()
@@ -45,7 +46,7 @@ namespace StasisEditor.Views
         }
 
         // selectBlueprint
-        public void selectBlueprint(Blueprint blueprint)
+        public void selectBlueprint(EditorBlueprint blueprint)
         {
             blueprintList.SelectedIndex = _controller.blueprints.IndexOf(blueprint);
         }
@@ -62,7 +63,7 @@ namespace StasisEditor.Views
             CreateResourceView createResourceView = new CreateResourceView();
             if (createResourceView.ShowDialog() == DialogResult.OK)
             {
-                Blueprint blueprint = _controller.createBlueprint(createResourceView.uid);
+                EditorBlueprint blueprint = _controller.createBlueprint(createResourceView.uid);
                 blueprintList.RefreshItems();
 
                 if (blueprint != null)
@@ -183,7 +184,7 @@ namespace StasisEditor.Views
         {
 
             // Create a copy of the blueprint
-            Blueprint copy = _controller.initializeBlueprint(selectedBlueprint.data);
+            EditorBlueprint copy = _controller.initializeBlueprint(selectedBlueprint.data);
 
             // Create edit view
             editBlueprintSocketsView = new EditBlueprintSocketsView(copy);

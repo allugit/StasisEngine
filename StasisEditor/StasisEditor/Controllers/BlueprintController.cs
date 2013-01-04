@@ -15,16 +15,16 @@ namespace StasisEditor.Controllers
     {
         private EditorController _editorController;
         private BlueprintView _view;
-        private BindingList<Blueprint> _blueprints;
+        private BindingList<EditorBlueprint> _blueprints;
 
         public BlueprintView view { get { return _view; } }
-        public BindingList<Blueprint> blueprints { get { return _blueprints; } }
+        public BindingList<EditorBlueprint> blueprints { get { return _blueprints; } }
 
         public BlueprintController(EditorController controller, BlueprintView blueprintView)
             : base()
         {
             _editorController = controller;
-            _blueprints = new BindingList<Blueprint>();
+            _blueprints = new BindingList<EditorBlueprint>();
             _view = blueprintView;
             _view.setController(this);
 
@@ -35,14 +35,14 @@ namespace StasisEditor.Controllers
         }
 
         // initializeBlueprint
-        public Blueprint initializeBlueprint(XElement data)
+        public EditorBlueprint initializeBlueprint(XElement data)
         {
             // Create scraps
             List<BlueprintScrap> scraps = new List<BlueprintScrap>();
             foreach (XElement childData in data.Elements("Item"))
             {
                 if (childData.Attribute("type").Value == "blueprint_scrap")
-                    scraps.Add(new BlueprintScrap(childData));
+                    scraps.Add(new EditorBlueprintScrap(childData));
             }
 
             // Create sockets
@@ -72,13 +72,12 @@ namespace StasisEditor.Controllers
             }
 
             // Create blueprint
-            return new Blueprint(data, scraps, sockets);
+            return new EditorBlueprint(data, scraps, sockets);
         }
 
         // swapBlueprint
-        public void swapBlueprint(Blueprint old, Blueprint replacement)
+        public void swapBlueprint(EditorBlueprint old, EditorBlueprint replacement)
         {
-            Console.WriteLine("swapping blueprints");
             _blueprints[_blueprints.IndexOf(old)] = replacement;
         }
 
@@ -110,7 +109,7 @@ namespace StasisEditor.Controllers
         }
 
         // createBlueprint
-        public Blueprint createBlueprint(string uid)
+        public EditorBlueprint createBlueprint(string uid)
         {
             // Check unsaved resources
             if (isUnsavedResourceUsed(uid))
@@ -119,7 +118,7 @@ namespace StasisEditor.Controllers
                 return null;
             }
 
-            Blueprint blueprint = new Blueprint(uid);
+            EditorBlueprint blueprint = new EditorBlueprint(uid);
             _blueprints.Add(blueprint);
             return blueprint;
         }
@@ -142,8 +141,8 @@ namespace StasisEditor.Controllers
         // removeBlueprint
         public void removeBlueprint(string uid, bool destroy = true)
         {
-            Blueprint blueprintToRemove = null;
-            foreach (Blueprint blueprint in _blueprints)
+            EditorBlueprint blueprintToRemove = null;
+            foreach (EditorBlueprint blueprint in _blueprints)
             {
                 if (blueprint.uid == uid)
                 {
@@ -168,7 +167,7 @@ namespace StasisEditor.Controllers
         }
 
         // removeBlueprintScrap
-        public void removeBlueprintScrap(Blueprint blueprint, string uid)
+        public void removeBlueprintScrap(EditorBlueprint blueprint, string uid)
         {
             BlueprintScrap scrapToRemove = null;
             foreach (BlueprintScrap scrap in blueprint.scraps)
