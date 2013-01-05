@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Xml.Linq;
 
-namespace StasisCore.Resources
+namespace StasisEditor.Models
 {
     public class GeneralPlantProperties : ActorProperties
     {

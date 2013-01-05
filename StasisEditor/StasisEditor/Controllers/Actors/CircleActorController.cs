@@ -1,26 +1,26 @@
 ﻿using System;
 using System.Collections.Generic;
 using Microsoft.Xna.Framework;
-using StasisCore.Resources;
+using StasisEditor.Models;
 
 namespace StasisEditor.Controllers.Actors
 {
     using Keys = System.Windows.Forms.Keys;
 
-    public class CircleActorResourceController : ActorResourceController, ICircleSubControllable
+    public class CircleActorController : ActorController, ICircleSubControllable
     {
-        private CircleActorResource _circleActorResource;
+        private EditorCircleActor _circleActor;
         private CircleSubController _circleSubController;
 
-        public CircleActorResourceController(LevelController levelController, ActorResource actor = null)
+        public CircleActorController(LevelController levelController, EditorActor actor = null)
             : base(levelController)
         {
             // Default actor resource
             if (actor == null)
-                actor = new CircleActorResource(_levelController.getWorldMouse());
+                actor = new EditorCircleActor(_levelController.getWorldMouse());
 
             _actor = actor;
-            _circleActorResource = actor as CircleActorResource;
+            _circleActor = actor as EditorCircleActor;
 
             // Create subcontrollers
             _circleSubController = new CircleSubController(this);
@@ -29,10 +29,10 @@ namespace StasisEditor.Controllers.Actors
         #region General Subcontroller interface
 
         // getPosition
-        public Vector2 getPosition() { return _circleActorResource.position; }
+        public Vector2 getPosition() { return _circleActor.position; }
         
         // setPosition
-        public void setPosition(Vector2 position) { _circleActorResource.position = position; }
+        public void setPosition(Vector2 position) { _circleActor.position = position; }
 
         #endregion
 
@@ -41,13 +41,13 @@ namespace StasisEditor.Controllers.Actors
         // getRadius
         public float getRadius()
         {
-            return _circleActorResource.circleProperties.radius;
+            return _circleActor.circleProperties.radius;
         }
 
         // setRadius
         public void setRadius(float radius)
         {
-            _circleActorResource.circleProperties.radius = radius;
+            _circleActor.circleProperties.radius = radius;
         }
 
         #endregion
@@ -96,13 +96,13 @@ namespace StasisEditor.Controllers.Actors
         public override void draw()
         {
             // Draw circle
-            _levelController.view.drawCircle(_circleActorResource.position, _circleActorResource.circleProperties.radius, Color.LightBlue);
+            _levelController.view.drawCircle(_circleActor.position, _circleActor.circleProperties.radius, Color.LightBlue);
         }
 
         // clone
-        public override ActorResourceController clone()
+        public override ActorController clone()
         {
-            return new CircleActorResourceController(_levelController, _actor.clone());
+            return new CircleActorController(_levelController, _actor.clone());
         }
 
         #endregion

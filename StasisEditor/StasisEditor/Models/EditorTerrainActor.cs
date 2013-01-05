@@ -1,10 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
 using Microsoft.Xna.Framework;
+using StasisCore;
 
-namespace StasisCore.Resources
+namespace StasisEditor.Models
 {
-    public class TerrainActorResource : ActorResource
+    public class EditorTerrainActor : EditorActor
     {
         private BodyProperties _bodyProperties;
         private List<Vector2> _points;
@@ -12,7 +13,7 @@ namespace StasisCore.Resources
         public BodyProperties bodyProperties { get { return _bodyProperties; } }
         public List<Vector2> points { get { return _points; } }
 
-        public TerrainActorResource(List<Vector2> points = null, ActorProperties bodyProperties = null)
+        public EditorTerrainActor(List<Vector2> points = null, ActorProperties bodyProperties = null)
             : base(Vector2.Zero)
         {
             // Default points
@@ -29,9 +30,9 @@ namespace StasisCore.Resources
         }
 
         // clone
-        public override ActorResource clone()
+        public override EditorActor clone()
         {
-            return new TerrainActorResource(new List<Vector2>(_points), bodyProperties.clone());
+            return new EditorTerrainActor(new List<Vector2>(_points), bodyProperties.clone());
         }
     }
 }

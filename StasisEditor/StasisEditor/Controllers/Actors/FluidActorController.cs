@@ -1,37 +1,37 @@
 ﻿using System;
 using System.Collections.Generic;
 using Microsoft.Xna.Framework;
-using StasisCore.Resources;
+using StasisEditor.Models;
 
 namespace StasisEditor.Controllers.Actors
 {
     using Keys = System.Windows.Forms.Keys;
 
-    public class TerrainActorResourceController : ActorResourceController, ILinkedPointSubControllable
+    public class FluidActorController : ActorController, ILinkedPointSubControllable
     {
-        private TerrainActorResource _terrainActorResource;
+        private EditorFluidActor _fluidActor;
         private LinkedPointSubController _headLinkedPointController;
 
-        public TerrainActorResourceController(LevelController levelController, ActorResource actorResource = null)
+        public FluidActorController(LevelController levelController, EditorActor actor = null)
             : base(levelController)
         {
             // Default actor
-            if (actorResource == null)
-                actorResource = new TerrainActorResource();
+            if (actor == null)
+                actor = new EditorFluidActor();
 
             // Set actor resources
-            _actor = actorResource;
-            _terrainActorResource = actorResource as TerrainActorResource;
+            _actor = actor;
+            _fluidActor = actor as EditorFluidActor;
 
             // Initialize points
             List<Vector2> actorResourcePoints = new List<Vector2>();
-            if (_terrainActorResource.points.Count == 0)
+            if (_fluidActor.points.Count == 0)
             {
                 actorResourcePoints.Add(_levelController.getWorldMouse() - new Vector2(1f, 0));
                 actorResourcePoints.Add(_levelController.getWorldMouse() + new Vector2(1f, 0));
             }
             else
-                actorResourcePoints = _terrainActorResource.points;
+                actorResourcePoints = _fluidActor.points;
 
             // Create linked point controllers
             _headLinkedPointController = new LinkedPointSubController(actorResourcePoints[0], this);
@@ -119,8 +119,6 @@ namespace StasisEditor.Controllers.Actors
                 bool minusPressed = key == Keys.OemMinus;
                 Vector2 worldMouse = _levelController.getWorldMouse();
 
-                // Only test for insertions if there are no links selected -- insertion while selected is handled in the sub controller's
-                // checkXNAKeys method since this methods requires a hit test
                 if (plusPressed)
                 {
                     // Hit test link line
@@ -189,7 +187,7 @@ namespace StasisEditor.Controllers.Actors
             LinkedPointSubController current = _headLinkedPointController;
             while (current.next != null)
             {
-                _levelController.view.drawLine(current.position, current.next.position, Color.Orange);
+                _levelController.view.drawLine(current.position, current.next.position, Color.Blue);
                 current = current.next;
             }
 
@@ -197,15 +195,15 @@ namespace StasisEditor.Controllers.Actors
             current = _headLinkedPointController;
             while (current != null)
             {
-                _levelController.view.drawPoint(current.position, Color.Yellow);
+                _levelController.view.drawPoint(current.position, Color.LightBlue);
                 current = current.next;
             }
         }
 
         // clone
-        public override ActorResourceController clone()
+        public override ActorController clone()
         {
-            return new TerrainActorResourceController(_levelController, _actor.clone());
+            return new FluidActorController(_levelController, _actor.clone());
         }
 
         #endregion

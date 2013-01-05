@@ -1,10 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
 using Microsoft.Xna.Framework;
+using StasisCore;
 
-namespace StasisCore.Resources
+namespace StasisEditor.Models
 {
-    public class CircleActorResource : ActorResource
+    public class EditorCircleActor : EditorActor
     {
         private CircleProperties _circleProperties;
         private BodyProperties _bodyProperties;
@@ -12,7 +13,7 @@ namespace StasisCore.Resources
         public CircleProperties circleProperties { get { return _circleProperties; } }
         public BodyProperties bodyProperties { get { return _bodyProperties; } }
 
-        public CircleActorResource(Vector2 position, ActorProperties circleProperties = null, ActorProperties bodyProperties = null)
+        public EditorCircleActor(Vector2 position, ActorProperties circleProperties = null, ActorProperties bodyProperties = null)
             : base(position)
         {
             // Default circle properties
@@ -25,12 +26,13 @@ namespace StasisCore.Resources
 
             _circleProperties = circleProperties as CircleProperties;
             _bodyProperties = bodyProperties as BodyProperties;
+            _type = ActorType.CircleActor;
         }
 
         // clone
-        public override ActorResource clone()
+        public override EditorActor clone()
         {
-            return new CircleActorResource(_position, _circleProperties.clone(), _bodyProperties.clone());
+            return new EditorCircleActor(_position, _circleProperties.clone(), _bodyProperties.clone());
         }
     }
 }

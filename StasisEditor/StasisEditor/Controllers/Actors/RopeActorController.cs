@@ -1,25 +1,25 @@
 ﻿using System;
 using System.Collections.Generic;
 using Microsoft.Xna.Framework;
-using StasisCore.Resources;
+using StasisEditor.Models;
 
 namespace StasisEditor.Controllers.Actors
 {
-    public class RopeActorResourceController : ActorResourceController, IPointSubControllable
+    public class RopeActorController : ActorController, IPointSubControllable
     {
-        private RopeActorResource _ropeActor;
+        private EditorRopeActor _ropeActor;
         private PointSubController _pointASubController;
         private PointSubController _pointBSubController;
 
-        public RopeActorResourceController(LevelController levelController, ActorResource actorResource = null)
+        public RopeActorController(LevelController levelController, EditorActor actor = null)
             : base(levelController)
         {
             // Default actor resource
-            if (actorResource == null)
-                actorResource = new RopeActorResource(Vector2.Zero, Vector2.Zero);
+            if (actor == null)
+                actor = new EditorRopeActor(Vector2.Zero, Vector2.Zero);
 
-            _actor = actorResource;
-            _ropeActor = actorResource as RopeActorResource;
+            _actor = actor;
+            _ropeActor = actor as EditorRopeActor;
 
             // Create sub controllers
             _pointASubController = new PointSubController(_levelController.getWorldMouse() - new Vector2(1f, 0), this);
@@ -83,9 +83,9 @@ namespace StasisEditor.Controllers.Actors
         }
 
         // clone
-        public override ActorResourceController clone()
+        public override ActorController clone()
         {
-            return new RopeActorResourceController(_levelController, _ropeActor.clone());
+            return new RopeActorController(_levelController, _ropeActor.clone());
         }
 
         #endregion

@@ -21,9 +21,9 @@ namespace StasisEditor.Controllers
         private List<ActorSubController> _subControllerSelectQueue;
         private List<ActorSubController> _subControllerDeselectQueue;
 
-        private List<ActorResourceController> _actorControllers;
-        private List<ActorResourceController> _actorControllersAddQueue;
-        private List<ActorResourceController> _actorControllersRemoveQueue;
+        private List<ActorController> _actorControllers;
+        private List<ActorController> _actorControllersAddQueue;
+        private List<ActorController> _actorControllersRemoveQueue;
 
         private EditorLevel _level;
 
@@ -55,9 +55,9 @@ namespace StasisEditor.Controllers
             _subControllerSelectQueue = new List<ActorSubController>();
             _subControllerDeselectQueue = new List<ActorSubController>();
 
-            _actorControllers = new List<ActorResourceController>();
-            _actorControllersAddQueue = new List<ActorResourceController>();
-            _actorControllersRemoveQueue = new List<ActorResourceController>();
+            _actorControllers = new List<ActorController>();
+            _actorControllersAddQueue = new List<ActorController>();
+            _actorControllersRemoveQueue = new List<ActorController>();
 
             System.Windows.Forms.Application.Idle += delegate { processActorControllerQueue(); };
         }
@@ -70,7 +70,7 @@ namespace StasisEditor.Controllers
         public Vector2 getOldWorldMouse() { return new Vector2(_oldMouse.X, _oldMouse.Y) / _editorController.getScale() - getWorldOffset(); }
 
         // getActorControllers
-        public List<ActorResourceController> getActorControllers()
+        public List<ActorController> getActorControllers()
         {
             return _actorControllers;
         }
@@ -144,49 +144,49 @@ namespace StasisEditor.Controllers
         public void createActorControllerFromToolbar(string buttonName)
         {
             // Create actor controller based on button name
-            ActorResourceController actorController = null;
+            ActorController actorController = null;
             switch (buttonName)
             {
                 case "boxButton":
-                    actorController = new BoxActorResourceController(this);
+                    actorController = new BoxActorController(this);
                     break;
 
                 case "circleButton":
-                    actorController = new CircleActorResourceController(this);
+                    actorController = new CircleActorController(this);
                     break;
 
                 case "movingPlatformButton":
-                    actorController = new MovingPlatformActorResourceController(this);
+                    actorController = new PlatformActorController(this);
                     break;
 
                 case "pressurePlateButton":
-                    actorController = new PressurePlateActorResourceController(this);
+                    //actorController = new PressurePlateActorResourceController(this);
                     break;
 
                 case "terrainButton":
-                    actorController = new TerrainActorResourceController(this);
+                    actorController = new TerrainActorController(this);
                     break;
 
                 case "objectSpawnerButton":
-                    actorController = new ObjectSpawnerResourceController(this);
+                    //actorController = new ObjectSpawnerResourceController(this);
                     break;
 
                 case "ropeButton":
-                    actorController = new RopeActorResourceController(this);
+                    actorController = new RopeActorController(this);
                     break;
 
                 case "fluidButton":
-                    actorController = new FluidActorResourceController(this);
+                    actorController = new FluidActorController(this);
                     break;
 
                 case "playerSpawnButton":
                     // Remove existing player spawns before adding a new one
-                    foreach (ActorResourceController controller in _actorControllers)
+                    foreach (ActorController controller in _actorControllers)
                     {
                         if (controller.type == ActorType.PlayerSpawn)
                             removeActorController(controller);
                     }
-                    actorController = new PlayerSpawnActorResourceController(this);
+                    actorController = new PlayerSpawnActorController(this);
                     break;
 
                 case "plantsButton":
@@ -201,7 +201,7 @@ namespace StasisEditor.Controllers
                         switch (selectedPlantType)
                         {
                             case PlantType.Tree:
-                                actorController = new TreeActorResourceController(this);
+                                actorController = new TreeActorController(this);
                                 break;
                         }
                     }
@@ -253,14 +253,14 @@ namespace StasisEditor.Controllers
         }
 
         // addActorController
-        public void addActorController(ActorResourceController actorController)
+        public void addActorController(ActorController actorController)
         {
             // actual addition of actor controller is handled in update() in the 'XNA Methods' region
             _actorControllersAddQueue.Add(actorController);
         }
 
         // removeActorController
-        public void removeActorController(ActorResourceController actorController)
+        public void removeActorController(ActorController actorController)
         {
             // actual removal of actor controller is handled in update() in the 'XNA Methods' region
             _actorControllersRemoveQueue.Add(actorController);
@@ -295,7 +295,7 @@ namespace StasisEditor.Controllers
                 if (_selectedSubControllers.Count == 0)
                 {
                     // Try to select a sub controller
-                    foreach (ActorResourceController actorResourceController in _actorControllers)
+                    foreach (ActorController actorResourceController in _actorControllers)
                     {
                         // Stop searching if a hit test returns true (actor controller will handle the selection of the appropriate sub controls)
                         if (actorResourceController.hitTest(getWorldMouse()))

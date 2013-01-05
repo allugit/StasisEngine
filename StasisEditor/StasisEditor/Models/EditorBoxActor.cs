@@ -1,10 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
 using Microsoft.Xna.Framework;
+using StasisCore;
 
-namespace StasisCore.Resources
+namespace StasisEditor.Models
 {
-    public class PressurePlateActorResource : ActorResource
+    public class EditorBoxActor : EditorActor
     {
         private BoxProperties _boxProperties;
         private BodyProperties _bodyProperties;
@@ -12,7 +13,7 @@ namespace StasisCore.Resources
         public BoxProperties boxProperties { get { return _boxProperties; } }
         public BodyProperties bodyProperties { get { return _bodyProperties; } }
 
-        public PressurePlateActorResource(Vector2 position, ActorProperties boxProperties = null, ActorProperties bodyProperties = null)
+        public EditorBoxActor(Vector2 position, ActorProperties boxProperties = null, ActorProperties bodyProperties = null)
             : base(position)
         {
             // Default box properties
@@ -21,17 +22,17 @@ namespace StasisCore.Resources
 
             // Default body properties
             if (bodyProperties == null)
-                bodyProperties = new BodyProperties(CoreBodyType.Dynamic, 1f, 1f, 0f);
+                bodyProperties = new BodyProperties(CoreBodyType.Static, 1f, 1f, 0f);
 
             _boxProperties = boxProperties as BoxProperties;
             _bodyProperties = bodyProperties as BodyProperties;
-            _type = ActorType.PressurePlate;
+            _type = ActorType.BoxActor;
         }
 
         // clone
-        public override ActorResource clone()
+        public override EditorActor clone()
         {
-            return new PressurePlateActorResource(_position, _boxProperties.clone(), _bodyProperties.clone());
+            return new EditorBoxActor(_position, _boxProperties.clone(), _bodyProperties.clone());
         }
     }
 }

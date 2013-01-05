@@ -1,10 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
 using Microsoft.Xna.Framework;
+using StasisCore;
 
-namespace StasisCore.Resources
+namespace StasisEditor.Models
 {
-    public class FluidActorResource : ActorResource
+    public class EditorFluidActor : EditorActor
     {
         private List<Vector2> _points;
         private FluidProperties _fluidProperties;
@@ -12,7 +13,7 @@ namespace StasisCore.Resources
         public List<Vector2> points { get { return _points; } }
         public FluidProperties fluidProperties { get { return _fluidProperties; } }
 
-        public FluidActorResource(List<Vector2> points = null, ActorProperties fluidProperties = null)
+        public EditorFluidActor(List<Vector2> points = null, ActorProperties fluidProperties = null)
             : base(Vector2.Zero)
         {
             // Default points
@@ -29,9 +30,9 @@ namespace StasisCore.Resources
         }
 
         // clone
-        public override ActorResource clone()
+        public override EditorActor clone()
         {
-            return new TerrainActorResource(new List<Vector2>(_points), fluidProperties.clone());
+            return new EditorTerrainActor(new List<Vector2>(_points), fluidProperties.clone());
         }
     }
 }

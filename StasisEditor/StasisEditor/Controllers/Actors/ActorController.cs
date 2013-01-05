@@ -3,21 +3,20 @@ using System.Collections.Generic;
 using System.Windows.Forms;
 using Microsoft.Xna.Framework;
 using StasisCore;
-using StasisCore.Resources;
-using StasisEditor.Views;
+using StasisEditor.Models;
 
 namespace StasisEditor.Controllers.Actors
 {
-    abstract public class ActorResourceController
+    abstract public class ActorController
     {
-        protected ActorResource _actor;
+        protected EditorActor _actor;
         protected LevelController _levelController;
 
         public ActorType type { get { return _actor.type; } }
         public bool shift { get { return _levelController.shift; } }
         public bool ctrl { get { return _levelController.ctrl; } }
 
-        public ActorResourceController(LevelController levelController)
+        public ActorController(LevelController levelController)
         {
             _levelController = levelController;
         }
@@ -66,6 +65,6 @@ namespace StasisEditor.Controllers.Actors
         abstract public void draw();
 
         // clone
-        abstract public ActorResourceController clone();
+        abstract public ActorController clone();
     }
 }

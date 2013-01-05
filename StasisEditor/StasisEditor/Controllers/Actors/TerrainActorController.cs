@@ -1,44 +1,44 @@
 ﻿using System;
 using System.Collections.Generic;
 using Microsoft.Xna.Framework;
-using StasisCore.Resources;
+using StasisEditor.Models;
 
 namespace StasisEditor.Controllers.Actors
 {
     using Keys = System.Windows.Forms.Keys;
 
-    public class FluidActorResourceController : ActorResourceController, ILinkedPointSubControllable
+    public class TerrainActorController : ActorController, ILinkedPointSubControllable
     {
-        private FluidActorResource _fluidActorResource;
+        private EditorTerrainActor _terrainActor;
         private LinkedPointSubController _headLinkedPointController;
 
-        public FluidActorResourceController(LevelController levelController, ActorResource actorResource = null)
+        public TerrainActorController(LevelController levelController, EditorActor actor = null)
             : base(levelController)
         {
             // Default actor
-            if (actorResource == null)
-                actorResource = new FluidActorResource();
+            if (actor == null)
+                actor = new EditorTerrainActor();
 
             // Set actor resources
-            _actor = actorResource;
-            _fluidActorResource = actorResource as FluidActorResource;
+            _actor = actor;
+            _terrainActor = actor as EditorTerrainActor;
 
             // Initialize points
-            List<Vector2> actorResourcePoints = new List<Vector2>();
-            if (_fluidActorResource.points.Count == 0)
+            List<Vector2> actorPoints = new List<Vector2>();
+            if (_terrainActor.points.Count == 0)
             {
-                actorResourcePoints.Add(_levelController.getWorldMouse() - new Vector2(1f, 0));
-                actorResourcePoints.Add(_levelController.getWorldMouse() + new Vector2(1f, 0));
+                actorPoints.Add(_levelController.getWorldMouse() - new Vector2(1f, 0));
+                actorPoints.Add(_levelController.getWorldMouse() + new Vector2(1f, 0));
             }
             else
-                actorResourcePoints = _fluidActorResource.points;
+                actorPoints = _terrainActor.points;
 
             // Create linked point controllers
-            _headLinkedPointController = new LinkedPointSubController(actorResourcePoints[0], this);
+            _headLinkedPointController = new LinkedPointSubController(actorPoints[0], this);
             LinkedPointSubController current = _headLinkedPointController;
-            for (int i = 1; i < actorResourcePoints.Count; i++)
+            for (int i = 1; i < actorPoints.Count; i++)
             {
-                current.next = new LinkedPointSubController(actorResourcePoints[i], this);
+                current.next = new LinkedPointSubController(actorPoints[i], this);
                 current.next.previous = current;
                 current = current.next;
             }
@@ -119,6 +119,8 @@ namespace StasisEditor.Controllers.Actors
                 bool minusPressed = key == Keys.OemMinus;
                 Vector2 worldMouse = _levelController.getWorldMouse();
 
+                // Only test for insertions if there are no links selected -- insertion while selected is handled in the sub controller's
+                // checkXNAKeys method since this methods requires a hit test
                 if (plusPressed)
                 {
                     // Hit test link line
@@ -187,7 +189,7 @@ namespace StasisEditor.Controllers.Actors
             LinkedPointSubController current = _headLinkedPointController;
             while (current.next != null)
             {
-                _levelController.view.drawLine(current.position, current.next.position, Color.Blue);
+                _levelController.view.drawLine(current.position, current.next.position, Color.Orange);
                 current = current.next;
             }
 
@@ -195,15 +197,15 @@ namespace StasisEditor.Controllers.Actors
             current = _headLinkedPointController;
             while (current != null)
             {
-                _levelController.view.drawPoint(current.position, Color.LightBlue);
+                _levelController.view.drawPoint(current.position, Color.Yellow);
                 current = current.next;
             }
         }
 
         // clone
-        public override ActorResourceController clone()
+        public override ActorController clone()
         {
-            return new FluidActorResourceController(_levelController, _actor.clone());
+            return new TerrainActorController(_levelController, _actor.clone());
         }
 
         #endregion

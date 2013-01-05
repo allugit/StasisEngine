@@ -1,31 +1,31 @@
 ﻿using System;
 using System.Collections.Generic;
 using Microsoft.Xna.Framework;
-using StasisCore.Resources;
+using StasisEditor.Models;
 
 namespace StasisEditor.Controllers.Actors
 {
     using Keys = System.Windows.Forms.Keys;
 
-    public class MovingPlatformActorResourceController : ActorResourceController, IBoxSubControllable, IPointSubControllable
+    public class PlatformActorController : ActorController, IBoxSubControllable, IPointSubControllable
     {
-        private MovingPlatformActorResource _movingPlatformActor;
+        private EditorPlatformActor _platformActor;
         private BoxSubController _boxSubController;
         private PointSubController _axisSubController;
 
-        public MovingPlatformActorResourceController(LevelController levelController, ActorResource actorResource = null)
+        public PlatformActorController(LevelController levelController, EditorActor actor = null)
             : base(levelController)
         {
             // Default actor resource
-            if (actorResource == null)
-                actorResource = new MovingPlatformActorResource(_levelController.getWorldMouse());
+            if (actor == null)
+                actor = new EditorPlatformActor(_levelController.getWorldMouse());
 
-            _actor = actorResource;
-            _movingPlatformActor = actorResource as MovingPlatformActorResource;
+            _actor = actor;
+            _platformActor = actor as EditorPlatformActor;
 
             // Create sub controllers
             _boxSubController = new BoxSubController(this);
-            _axisSubController = new PointSubController(actorResource.position + new Vector2(1f, 0), this);
+            _axisSubController = new PointSubController(actor.position + new Vector2(1f, 0), this);
         }
 
         #region Box SubController Interface
@@ -45,37 +45,37 @@ namespace StasisEditor.Controllers.Actors
         // getHalfWidth
         public float getHalfWidth()
         {
-            return _movingPlatformActor.boxProperties.halfWidth;
+            return _platformActor.boxProperties.halfWidth;
         }
 
         // getHalfHeight
         public float getHalfHeight()
         {
-            return _movingPlatformActor.boxProperties.halfHeight;
+            return _platformActor.boxProperties.halfHeight;
         }
 
         // getAngle
         public float getAngle()
         {
-            return _movingPlatformActor.boxProperties.angle;
+            return _platformActor.boxProperties.angle;
         }
 
         // setHalfWidth
         public void setHalfWidth(float value)
         {
-            _movingPlatformActor.boxProperties.halfWidth = Math.Max(value, LevelController.MIN_ACTOR_SIZE);
+            _platformActor.boxProperties.halfWidth = Math.Max(value, LevelController.MIN_ACTOR_SIZE);
         }
 
         // setHalfHeight
         public void setHalfHeight(float value)
         {
-            _movingPlatformActor.boxProperties.halfHeight = Math.Max(value, LevelController.MIN_ACTOR_SIZE);
+            _platformActor.boxProperties.halfHeight = Math.Max(value, LevelController.MIN_ACTOR_SIZE);
         }
 
         // setAngle
         public void setAngle(float value)
         {
-            _movingPlatformActor.boxProperties.angle = value;
+            _platformActor.boxProperties.angle = value;
         }
 
         #endregion
@@ -135,7 +135,7 @@ namespace StasisEditor.Controllers.Actors
         public override void draw()
         {
             // Draw box
-            _levelController.view.drawBox(_actor.position, _movingPlatformActor.boxProperties.halfWidth, _movingPlatformActor.boxProperties.halfHeight, _movingPlatformActor.boxProperties.angle, Color.Blue);
+            _levelController.view.drawBox(_actor.position, _platformActor.boxProperties.halfWidth, _platformActor.boxProperties.halfHeight, _platformActor.boxProperties.angle, Color.Blue);
 
             // Draw axis sub controller
             _levelController.view.drawLine(_actor.position, _axisSubController.position, Color.Gray);
@@ -143,9 +143,9 @@ namespace StasisEditor.Controllers.Actors
         }
 
         // clone
-        public override ActorResourceController clone()
+        public override ActorController clone()
         {
-            return new MovingPlatformActorResourceController(_levelController, _actor.clone());
+            return new PlatformActorController(_levelController, _actor.clone());
         }
 
         #endregion

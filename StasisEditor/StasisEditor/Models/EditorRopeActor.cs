@@ -1,10 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
 using Microsoft.Xna.Framework;
+using StasisCore;
 
-namespace StasisCore.Resources
+namespace StasisEditor.Models
 {
-    public class RopeActorResource : ActorResource
+    public class EditorRopeActor : EditorActor
     {
         private Vector2 _pointA;
         private Vector2 _pointB;
@@ -14,7 +15,7 @@ namespace StasisCore.Resources
         public Vector2 pointB { get { return _pointB; } set { _pointB = value; } }
         public BodyProperties bodyProperties { get { return _bodyProperties; } }
 
-        public RopeActorResource(Vector2 pointA, Vector2 pointB, ActorProperties bodyProperties = null)
+        public EditorRopeActor(Vector2 pointA, Vector2 pointB, ActorProperties bodyProperties = null)
             : base(Vector2.Zero)
         {
             // Default body properties
@@ -26,9 +27,9 @@ namespace StasisCore.Resources
         }
         
         // clone
-        public override ActorResource clone()
+        public override EditorActor clone()
         {
-            return new RopeActorResource(_pointA, _pointB, bodyProperties.clone());
+            return new EditorRopeActor(_pointA, _pointB, bodyProperties.clone());
         }
     }
 }

@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using Microsoft.Xna.Framework;
 
-namespace StasisCore.Resources
+namespace StasisEditor.Models
 {
     public class FluidProperties : ActorProperties
     {

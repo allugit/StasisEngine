@@ -75,12 +75,12 @@
     <Reference Include="System.Net" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Controllers\Actors\ActorResourceController.cs" />
-    <Compile Include="Controllers\Actors\FluidActorResourceController.cs" />
+    <Compile Include="Controllers\Actors\ActorController.cs" />
+    <Compile Include="Controllers\Actors\FluidActorController.cs" />
     <Compile Include="Controllers\Actors\Input\ICircleSubControllable.cs" />
     <Compile Include="Controllers\Actors\Input\ILinkedPointSubControllable.cs" />
     <Compile Include="Controllers\Actors\Input\ActorSubController.cs" />
-    <Compile Include="Controllers\Actors\BoxActorResourceController.cs" />
+    <Compile Include="Controllers\Actors\BoxActorController.cs" />
     <Compile Include="Controllers\Actors\Input\BoxSubController.cs" />
     <Compile Include="Controllers\Actors\Input\IBoxSubControllable.cs" />
     <Compile Include="Controllers\Actors\Input\CircleSubController.cs" />
@@ -88,14 +88,12 @@
     <Compile Include="Controllers\Actors\Input\PointSubController.cs" />
     <Compile Include="Controllers\Actors\Input\IPointSubControllable.cs" />
     <Compile Include="Controllers\Actors\Input\ISubControllable.cs" />
-    <Compile Include="Controllers\Actors\MovingPlatformActorResourceController.cs" />
-    <Compile Include="Controllers\Actors\ObjectSpawnerResourceController.cs" />
-    <Compile Include="Controllers\Actors\PlayerSpawnActorResourceController.cs" />
-    <Compile Include="Controllers\Actors\PressurePlateActorResourceController.cs" />
-    <Compile Include="Controllers\Actors\RopeActorResourceController.cs" />
-    <Compile Include="Controllers\Actors\TerrainActorResourceController.cs" />
-    <Compile Include="Controllers\Actors\CircleActorResourceController.cs" />
-    <Compile Include="Controllers\Actors\TreeActorResourceController.cs" />
+    <Compile Include="Controllers\Actors\PlatformActorController.cs" />
+    <Compile Include="Controllers\Actors\PlayerSpawnActorController.cs" />
+    <Compile Include="Controllers\Actors\RopeActorController.cs" />
+    <Compile Include="Controllers\Actors\TerrainActorController.cs" />
+    <Compile Include="Controllers\Actors\CircleActorController.cs" />
+    <Compile Include="Controllers\Actors\TreeActorController.cs" />
     <Compile Include="Controllers\BlueprintController.cs" />
     <Compile Include="Controllers\CircuitController.cs" />
     <Compile Include="Controllers\Controller.cs" />
@@ -103,6 +101,22 @@
     <Compile Include="Controllers\LevelController.cs" />
     <Compile Include="Controllers\MaterialController.cs" />
     <Compile Include="GraphicsDeviceService.cs" />
+    <Compile Include="Models\EditorActor.cs" />
+    <Compile Include="Models\EditorBoxActor.cs" />
+    <Compile Include="Models\EditorCircleActor.cs" />
+    <Compile Include="Models\EditorFluidActor.cs" />
+    <Compile Include="Models\EditorPlatformActor.cs" />
+    <Compile Include="Models\EditorPlayerSpawnActor.cs" />
+    <Compile Include="Models\Properties\ActorProperties.cs" />
+    <Compile Include="Models\Properties\BodyProperties.cs" />
+    <Compile Include="Models\Properties\BoxProperties.cs" />
+    <Compile Include="Models\Properties\CircleProperties.cs" />
+    <Compile Include="Models\Properties\FluidProperties.cs" />
+    <Compile Include="Models\Properties\GeneralPlantProperties.cs" />
+    <Compile Include="Models\Properties\TreeProperties.cs" />
+    <Compile Include="Models\EditorRopeActor.cs" />
+    <Compile Include="Models\EditorTerrainActor.cs" />
+    <Compile Include="Models\EditorTreeActor.cs" />
     <Compile Include="Models\EditorBlueprint.cs" />
     <Compile Include="Models\EditorBlueprintScrap.cs" />
     <Compile Include="Models\EditorCircuit.cs" />
@@ -354,9 +368,7 @@
       <DependentUpon>MaterialView.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
-  <ItemGroup>
-    <Folder Include="Models\Items\" />
-  </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <Import Project="$(MSBuildExtensionsPath)\Microsoft\XNA Game Studio\Microsoft.Xna.GameStudio.targets" />
   <!--

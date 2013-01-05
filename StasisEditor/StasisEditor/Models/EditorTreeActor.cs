@@ -1,10 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
 using Microsoft.Xna.Framework;
+using StasisCore;
 
-namespace StasisCore.Resources
+namespace StasisEditor.Models
 {
-    public class TreeActorResource : ActorResource
+    public class EditorTreeActor : EditorActor
     {
         private GeneralPlantProperties _generalPlantProperties;
         private TreeProperties _treeProperties;
@@ -12,7 +13,7 @@ namespace StasisCore.Resources
         public GeneralPlantProperties generalPlantProperties { get { return _generalPlantProperties; } }
         public TreeProperties treeProperties { get { return _treeProperties; } }
 
-        public TreeActorResource(Vector2 position, ActorProperties generalPlantProperties = null, ActorProperties treeProperties = null)
+        public EditorTreeActor(Vector2 position, ActorProperties generalPlantProperties = null, ActorProperties treeProperties = null)
             : base(position)
         {
             // Default general plant properties
@@ -29,9 +30,9 @@ namespace StasisCore.Resources
         }
 
         // clone
-        public override ActorResource clone()
+        public override EditorActor clone()
         {
-            return new TreeActorResource(_position, _generalPlantProperties.clone(), _treeProperties.clone());
+            return new EditorTreeActor(_position, _generalPlantProperties.clone(), _treeProperties.clone());
         }
     }
 }

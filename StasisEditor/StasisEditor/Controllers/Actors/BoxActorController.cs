@@ -1,29 +1,28 @@
 ﻿using System;
 using System.Collections.Generic;
 using Microsoft.Xna.Framework;
-using StasisCore.Resources;
-using StasisEditor.Views;
+using StasisEditor.Models;
 
 namespace StasisEditor.Controllers.Actors
 {
     using Keys = System.Windows.Forms.Keys;
 
-    public class BoxActorResourceController : ActorResourceController, IBoxSubControllable
+    public class BoxActorController : ActorController, IBoxSubControllable
     {
-        private BoxActorResource _boxActor;
+        private EditorBoxActor _boxActor;
         private BoxSubController _boxSubController;
 
-        public BoxActorResourceController(LevelController levelController, ActorResource actor = null)
+        public BoxActorController(LevelController levelController, EditorActor actor = null)
             : base(levelController)
         {
             // Default actor
             if (actor == null)
-                actor = new BoxActorResource(_levelController.getWorldMouse());
+                actor = new EditorBoxActor(_levelController.getWorldMouse());
 
             _actor = actor;
 
             // Store reference to typed actor resource
-            _boxActor = _actor as BoxActorResource;
+            _boxActor = _actor as EditorBoxActor;
 
             // Create input controls
             _boxSubController = new BoxSubController(this);
@@ -129,9 +128,9 @@ namespace StasisEditor.Controllers.Actors
         }
 
         // clone
-        public override ActorResourceController clone()
+        public override ActorController clone()
         {
-            return new BoxActorResourceController(_levelController, _actor.clone());
+            return new BoxActorController(_levelController, _actor.clone());
         }
 
         #endregion

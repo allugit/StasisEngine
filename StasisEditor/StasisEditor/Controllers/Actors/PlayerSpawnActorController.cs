@@ -1,24 +1,24 @@
 ﻿using System;
 using System.Collections.Generic;
 using Microsoft.Xna.Framework;
-using StasisCore.Resources;
+using StasisEditor.Models;
 
 namespace StasisEditor.Controllers.Actors
 {
     using Keys = System.Windows.Forms.Keys;
 
-    public class PlayerSpawnActorResourceController : ActorResourceController, IPointSubControllable
+    public class PlayerSpawnActorController : ActorController, IPointSubControllable
     {
         private PointSubController _positionSubController;
 
-        public PlayerSpawnActorResourceController(LevelController levelController, ActorResource actorResource = null)
+        public PlayerSpawnActorController(LevelController levelController, EditorActor actor = null)
             : base(levelController)
         {
             // Default player spawn actor resource
-            if (actorResource == null)
-                actorResource = new PlayerSpawnActorResource(Vector2.Zero);
+            if (actor == null)
+                actor = new EditorPlayerSpawnActor(Vector2.Zero);
 
-            _actor = actorResource;
+            _actor = actor;
 
             // Create sub controllers
             _positionSubController = new PointSubController(_levelController.getWorldMouse(), this, 12f);
@@ -72,9 +72,9 @@ namespace StasisEditor.Controllers.Actors
         }
 
         // clone
-        public override ActorResourceController clone()
+        public override ActorController clone()
         {
-            return new PlayerSpawnActorResourceController(_levelController, _actor.clone());
+            return new PlayerSpawnActorController(_levelController, _actor.clone());
         }
 
         #endregion
