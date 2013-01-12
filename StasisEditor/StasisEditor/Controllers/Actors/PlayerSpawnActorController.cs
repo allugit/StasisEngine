@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Xml.Linq;
 using Microsoft.Xna.Framework;
 using StasisEditor.Models;
 
@@ -11,10 +12,26 @@ namespace StasisEditor.Controllers.Actors
     {
         private PointSubController _positionSubController;
 
+        // Create new
         public PlayerSpawnActorController(LevelController levelController)
             : base(levelController)
         {
-            // Create sub controllers
+            _type = StasisCore.ActorType.PlayerSpawn;
+
+            // Initialize controls
+            initializeControls();
+        }
+
+        // Load from xml
+        public PlayerSpawnActorController(LevelController levelController, XElement data)
+            : base(levelController)
+        {
+            throw new NotImplementedException();
+        }
+
+        // Initialize controls
+        private void initializeControls()
+        {
             _positionSubController = new PointSubController(_levelController.getWorldMouse(), this, 12f);
         }
 

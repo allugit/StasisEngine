@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Xml.Linq;
 using Microsoft.Xna.Framework;
 using StasisEditor.Models;
 
@@ -9,22 +10,39 @@ namespace StasisEditor.Controllers.Actors
 
     public class BoxActorController : ActorController, IBoxSubControllable
     {
-        private EditorBoxActor _boxActor;
+        private Vector2 _position;
+        private BoxProperties _boxProperties;
         private BoxSubController _boxSubController;
 
-        public BoxActorController(LevelController levelController, EditorActor actor = null)
+        // Create new
+        public BoxActorController(LevelController levelController)
             : base(levelController)
         {
-            // Default actor
-            if (actor == null)
-                actor = new EditorBoxActor(_levelController.getWorldMouse());
+            // Defaults
+            _position = levelController.getWorldMouse();
+            _boxProperties = new BoxProperties(0.5f, 0.5f, 0);
+            _type = StasisCore.ActorType.Box;
 
-            _actor = actor;
+            // Initialize controls
+            initializeControls();
+        }
 
-            // Store reference to typed actor resource
-            _boxActor = _actor as EditorBoxActor;
+        // Load from xml
+        public BoxActorController(LevelController levelController, XElement data)
+            : base(levelController)
+        {
+            // TODO: Initialize from xml
+            // _boxProperites = new BoxProperties(data)...
+            _boxProperties = new BoxProperties(0.5f, 0.5f, 0);
+            _type = StasisCore.ActorType.Box;
 
-            // Create input controls
+            // Initialize controls
+            initializeControls();
+        }
+
+        // Initialize controls
+        private void initializeControls()
+        {
             _boxSubController = new BoxSubController(this);
         }
         
@@ -33,49 +51,49 @@ namespace StasisEditor.Controllers.Actors
         // getPosition
         public Vector2 getPosition()
         {
-            return _boxActor.position;
+            return _position;
         }
 
         // setPosition
         public void setPosition(Vector2 position)
         {
-            _boxActor.position = position;
+            _position = position;
         }
 
         // getHalfWidth
         public float getHalfWidth()
         {
-            return _boxActor.boxProperties.halfWidth;
+            return _boxProperties.halfWidth;
         }
 
         // getHalfHeight
         public float getHalfHeight()
         {
-            return _boxActor.boxProperties.halfHeight;
+            return _boxProperties.halfHeight;
         }
 
         // getAngle
         public float getAngle()
         {
-            return _boxActor.boxProperties.angle;
+            return _boxProperties.angle;
         }
 
         // setHalfWidth
         public void setHalfWidth(float value)
         {
-            _boxActor.boxProperties.halfWidth = Math.Max(value, LevelController.MIN_ACTOR_SIZE);
+            _boxProperties.halfWidth = Math.Max(value, LevelController.MIN_ACTOR_SIZE);
         }
 
         // setHalfHeight
         public void setHalfHeight(float value)
         {
-            _boxActor.boxProperties.halfHeight = Math.Max(value, LevelController.MIN_ACTOR_SIZE);
+            _boxProperties.halfHeight = Math.Max(value, LevelController.MIN_ACTOR_SIZE);
         }
 
         // setAngle
         public void setAngle(float value)
         {
-            _boxActor.boxProperties.angle = value;
+            _boxProperties.angle = value;
         }
 
         #endregion
@@ -124,13 +142,13 @@ namespace StasisEditor.Controllers.Actors
         // draw
         public override void draw()
         {
-            _levelController.view.drawBox(_actor.position, _boxActor.boxProperties.halfWidth, _boxActor.boxProperties.halfHeight, _boxActor.boxProperties.angle, Color.LightBlue);
+            _levelController.view.drawBox(_position, _boxProperties.halfWidth, _boxProperties.halfHeight, _boxProperties.angle, Color.LightBlue);
         }
 
         // clone
         public override ActorController clone()
         {
-            return new BoxActorController(_levelController, _actor.clone());
+            return new BoxActorController(_levelController);
         }
 
         #endregion

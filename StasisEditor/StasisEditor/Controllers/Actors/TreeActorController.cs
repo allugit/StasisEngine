@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Xml.Linq;
 using Microsoft.Xna.Framework;
 using StasisEditor.Models;
 
@@ -7,23 +8,40 @@ namespace StasisEditor.Controllers.Actors
 {
     public class TreeActorController : ActorController, IPointSubControllable, IBoxSubControllable
     {
-        private EditorTreeActor _treeActor;
-
+        private Vector2 _position;
+        private TreeProperties _treeProperties;
         private BoxSubController _boxController;
         private PointSubController _tropismController;
 
-        public TreeActorController(LevelController levelController, EditorActor actor = null)
+        // Create new
+        public TreeActorController(LevelController levelController)
             : base(levelController)
         {
-            // Default actor resource
-            if (actor == null)
-                actor = new EditorTreeActor(_levelController.getWorldMouse());
+            // Defaults
+            _position = levelController.getWorldMouse();
+            _treeProperties = new TreeProperties(new Vector2(0, -1f));
+            _type = StasisCore.ActorType.Tree;
 
-            _actor = actor;
-            _treeActor = actor as EditorTreeActor;
+            // Initialize controls
+            initializeControls();
+        }
 
-            // Create sub controllers
-            _tropismController = new PointSubController(actor.position + new Vector2(0f, -1f), this);
+        // Load from xml
+        public TreeActorController(LevelController levelController, XElement data)
+            : base(levelController)
+        {
+            // TODO: Initialize from xml
+            // _treeProperties = new TreeProperties(data)
+            _treeProperties = new TreeProperties(new Vector2(0, -1f));
+
+            // Initialize controls
+            initializeControls();
+        }
+
+        // Initialize controls
+        private void initializeControls()
+        {
+            _tropismController = new PointSubController(_position + new Vector2(0f, -1f), this);
             _boxController = new BoxSubController(this, BoxSubControllerAlignment.Edge);
         }
 
@@ -32,49 +50,49 @@ namespace StasisEditor.Controllers.Actors
         // getPosition
         public Vector2 getPosition()
         {
-            return _treeActor.position;
+            return _position;
         }
 
         // setPosition
         public void setPosition(Vector2 position)
         {
-            _treeActor.position = position;
+            _position = position;
         }
 
         // getHalfWidth
         public float getHalfWidth()
         {
-            return _treeActor.treeProperties.maxBaseWidth;
+            return _treeProperties.maxBaseWidth;
         }
 
         // getHalfHeight
         public float getHalfHeight()
         {
-            return _treeActor.treeProperties.internodeLength;
+            return _treeProperties.internodeLength;
         }
 
         // getAngle
         public float getAngle()
         {
-            return _treeActor.treeProperties.angle;
+            return _treeProperties.angle;
         }
 
         // setHalfWidth
         public void setHalfWidth(float value)
         {
-            _treeActor.treeProperties.maxBaseWidth = Math.Max(value, LevelController.MIN_ACTOR_SIZE);
+            _treeProperties.maxBaseWidth = Math.Max(value, LevelController.MIN_ACTOR_SIZE);
         }
 
         // setHalfHeight
         public void setHalfHeight(float value)
         {
-            _treeActor.treeProperties.internodeLength = Math.Max(value, LevelController.MIN_ACTOR_SIZE);
+            _treeProperties.internodeLength = Math.Max(value, LevelController.MIN_ACTOR_SIZE);
         }
 
         // setAngle
         public void setAngle(float value)
         {
-            _treeActor.treeProperties.angle = value;
+            _treeProperties.angle = value;
         }
 
         #endregion
@@ -123,20 +141,20 @@ namespace StasisEditor.Controllers.Actors
         public override void draw()
         {
             // Draw base circle
-            _levelController.view.drawPoint(_actor.position, Color.DarkGray);
+            _levelController.view.drawPoint(_position, Color.DarkGray);
 
             // Draw box
-            _levelController.view.drawBox(_actor.position + _boxController.alignmentOffset, _treeActor.treeProperties.maxBaseWidth, _treeActor.treeProperties.internodeLength, _treeActor.treeProperties.angle, Color.Green);
+            _levelController.view.drawBox(_position + _boxController.alignmentOffset, _treeProperties.maxBaseWidth, _treeProperties.internodeLength, _treeProperties.angle, Color.Green);
 
             // Draw tropism control
-            _levelController.view.drawLine(_actor.position, _tropismController.position, Color.Gray);
+            _levelController.view.drawLine(_position, _tropismController.position, Color.Gray);
             _levelController.view.drawPoint(_tropismController.position, Color.Yellow);
         }
 
         // clone
         public override ActorController clone()
         {
-            return new TreeActorController(_levelController, _actor.clone());
+            return new TreeActorController(_levelController);
         }
 
         #endregion

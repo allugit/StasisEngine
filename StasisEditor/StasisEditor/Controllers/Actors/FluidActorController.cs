@@ -12,26 +12,31 @@ namespace StasisEditor.Controllers.Actors
     {
         private LinkedPointSubController _headLinkedPointController;
 
-        // New fluid actor
+        // Create new
         public FluidActorController(LevelController levelController)
             : base(levelController)
         {
+            _type = StasisCore.ActorType.Fluid;
+
+            // Initialize controls
             List<Vector2> actorResourcePoints = new List<Vector2>();
             actorResourcePoints.Add(_levelController.getWorldMouse() - new Vector2(1f, 0));
             actorResourcePoints.Add(_levelController.getWorldMouse() + new Vector2(1f, 0));
-            initializePoints(actorResourcePoints);
+            initializeControls(actorResourcePoints);
         }
 
-        // Fluid actor from xml
+        // Load from xml
         public FluidActorController(LevelController levelController, XElement data)
             : base(levelController)
         {
+            _type = StasisCore.ActorType.Fluid;
+
             // TODO: Initialize points from xml
             // initializePoints(...);
         }
 
-        // Initialize points
-        private void initializePoints(List<Vector2> points)
+        // Initialize controls
+        private void initializeControls(List<Vector2> points)
         {
             // Create linked point controllers
             _headLinkedPointController = new LinkedPointSubController(points[0], this);

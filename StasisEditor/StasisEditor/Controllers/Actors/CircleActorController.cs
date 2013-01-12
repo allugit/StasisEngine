@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Xml.Linq;
 using Microsoft.Xna.Framework;
 using StasisEditor.Models;
 
@@ -9,30 +10,49 @@ namespace StasisEditor.Controllers.Actors
 
     public class CircleActorController : ActorController, ICircleSubControllable
     {
-        private EditorCircleActor _circleActor;
+        private Vector2 _position;
+        private CircleProperties _circleProperties;
         private CircleSubController _circleSubController;
 
-        public CircleActorController(LevelController levelController, EditorActor actor = null)
+        // Create new
+        public CircleActorController(LevelController levelController)
             : base(levelController)
         {
-            // Default actor resource
-            if (actor == null)
-                actor = new EditorCircleActor(_levelController.getWorldMouse());
+            // Defaults
+            _position = levelController.getWorldMouse();
+            _circleProperties = new CircleProperties(0.5f);
+            _type = StasisCore.ActorType.Circle;
 
-            _actor = actor;
-            _circleActor = actor as EditorCircleActor;
+            // Initialize controls
+            initializeControls();
+        }
 
-            // Create subcontrollers
+        // Load from xml
+        public CircleActorController(LevelController levelController, XElement data)
+            : base(levelController)
+        {
+            // TODO: Initialize circle properties from xml
+            // _circleProperties = new CircleProperties(data)
+            _circleProperties = new CircleProperties(0.5f);
+            _type = StasisCore.ActorType.Circle;
+
+            // Initialize controls
+            initializeControls();
+        }
+
+        // Initialize controls
+        private void initializeControls()
+        {
             _circleSubController = new CircleSubController(this);
         }
 
         #region General Subcontroller interface
 
         // getPosition
-        public Vector2 getPosition() { return _circleActor.position; }
+        public Vector2 getPosition() { return _position; }
         
         // setPosition
-        public void setPosition(Vector2 position) { _circleActor.position = position; }
+        public void setPosition(Vector2 position) { _position = position; }
 
         #endregion
 
@@ -41,13 +61,13 @@ namespace StasisEditor.Controllers.Actors
         // getRadius
         public float getRadius()
         {
-            return _circleActor.circleProperties.radius;
+            return _circleProperties.radius;
         }
 
         // setRadius
         public void setRadius(float radius)
         {
-            _circleActor.circleProperties.radius = radius;
+            _circleProperties.radius = radius;
         }
 
         #endregion
@@ -96,13 +116,13 @@ namespace StasisEditor.Controllers.Actors
         public override void draw()
         {
             // Draw circle
-            _levelController.view.drawCircle(_circleActor.position, _circleActor.circleProperties.radius, Color.LightBlue);
+            _levelController.view.drawCircle(_position, _circleProperties.radius, Color.LightBlue);
         }
 
         // clone
         public override ActorController clone()
         {
-            return new CircleActorController(_levelController, _actor.clone());
+            return new CircleActorController(_levelController);
         }
 
         #endregion

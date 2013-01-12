@@ -12,26 +12,29 @@ namespace StasisEditor.Controllers.Actors
     {
         private LinkedPointSubController _headLinkedPointController;
 
-        // New terrain actor
+        // Create new
         public TerrainActorController(LevelController levelController)
             : base(levelController)
         {
+            _type = StasisCore.ActorType.Terrain;
+
+            // Initialize controls
             List<Vector2> actorResourcePoints = new List<Vector2>();
             actorResourcePoints.Add(_levelController.getWorldMouse() - new Vector2(1f, 0));
             actorResourcePoints.Add(_levelController.getWorldMouse() + new Vector2(1f, 0));
-            initializePoints(actorResourcePoints);
+            initializeControls(actorResourcePoints);
         }
 
-        // Fluid actor from xml
+        // Load from xml
         public TerrainActorController(LevelController levelController, XElement data)
             : base(levelController)
         {
             // TODO: Initialize points from xml
-            // initializePoints(...);
+            // initializeControls(...);
         }
 
-        // Initialize points
-        private void initializePoints(List<Vector2> points)
+        // Initialize controls
+        private void initializeControls(List<Vector2> points)
         {
             // Create linked point controllers
             _headLinkedPointController = new LinkedPointSubController(points[0], this);

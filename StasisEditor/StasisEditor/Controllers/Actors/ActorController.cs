@@ -9,10 +9,10 @@ namespace StasisEditor.Controllers.Actors
 {
     abstract public class ActorController
     {
-        protected EditorActor _actor;
+        protected ActorType _type;
         protected LevelController _levelController;
 
-        public ActorType type { get { return _actor.type; } }
+        public ActorType type { get { return _type; } }
         public bool shift { get { return _levelController.shift; } }
         public bool ctrl { get { return _levelController.ctrl; } }
 

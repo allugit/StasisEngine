@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Xml.Linq;
 using Microsoft.Xna.Framework;
 using StasisEditor.Models;
 
@@ -7,25 +8,37 @@ namespace StasisEditor.Controllers.Actors
 {
     public class RopeActorController : ActorController, IPointSubControllable
     {
-        private EditorRopeActor _ropeActor;
+
         private PointSubController _pointASubController;
         private PointSubController _pointBSubController;
 
-        public RopeActorController(LevelController levelController, EditorActor actor = null)
+        // Create new
+        public RopeActorController(LevelController levelController)
             : base(levelController)
         {
-            // Default actor resource
-            if (actor == null)
-                actor = new EditorRopeActor(Vector2.Zero, Vector2.Zero);
+            _type = StasisCore.ActorType.Rope;
 
-            _actor = actor;
-            _ropeActor = actor as EditorRopeActor;
-
-            // Create sub controllers
-            _pointASubController = new PointSubController(_levelController.getWorldMouse() - new Vector2(1f, 0), this);
-            _pointBSubController = new PointSubController(_levelController.getWorldMouse() + new Vector2(1f, 0), this);
+            // Initialize controls
+            initializeControls(
+                _levelController.getWorldMouse() - new Vector2(1f, 0),
+                _levelController.getWorldMouse() + new Vector2(1f, 0));
         }
 
+        // Load from xml
+        public RopeActorController(LevelController levelController, XElement data)
+            : base(levelController)
+        {
+            // Initialize controls
+            // TODO: Initialize from xml:
+            initializeControls(Vector2.Zero, Vector2.Zero);
+        }
+
+        // Initialize controls
+        private void initializeControls(Vector2 pointA, Vector2 pointB)
+        {
+            _pointASubController = new PointSubController(pointA, this);
+            _pointBSubController = new PointSubController(pointB, this);
+        }
 
         #region Actor Resource Controller Methods
 
@@ -85,7 +98,7 @@ namespace StasisEditor.Controllers.Actors
         // clone
         public override ActorController clone()
         {
-            return new RopeActorController(_levelController, _ropeActor.clone());
+            return new RopeActorController(_levelController);
         }
 
         #endregion

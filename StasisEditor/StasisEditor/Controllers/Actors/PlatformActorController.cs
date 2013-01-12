@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Xml.Linq;
 using Microsoft.Xna.Framework;
 using StasisEditor.Models;
 
@@ -9,23 +10,41 @@ namespace StasisEditor.Controllers.Actors
 
     public class PlatformActorController : ActorController, IBoxSubControllable, IPointSubControllable
     {
-        private EditorPlatformActor _platformActor;
+        private Vector2 _position;
+        private BoxProperties _boxProperties;
         private BoxSubController _boxSubController;
         private PointSubController _axisSubController;
 
-        public PlatformActorController(LevelController levelController, EditorActor actor = null)
+        // Create new
+        public PlatformActorController(LevelController levelController)
             : base(levelController)
         {
-            // Default actor resource
-            if (actor == null)
-                actor = new EditorPlatformActor(_levelController.getWorldMouse());
+            // Defaults
+            _position = levelController.getWorldMouse();
+            _boxProperties = new BoxProperties(0.5f, 0.5f, 0);
+            _type = StasisCore.ActorType.MovingPlatform;
 
-            _actor = actor;
-            _platformActor = actor as EditorPlatformActor;
+            // Initialize controls
+            initializeControls();
+        }
 
-            // Create sub controllers
+        // Load from xml
+        public PlatformActorController(LevelController levelController, XElement data)
+            : base(levelController)
+        {
+            // TODO: Initialize from xml
+            // _boxProperties = new BoxProperties(data)
+            _boxProperties = new BoxProperties(0.5f, 0.5f, 0);
+
+            // Initialize controls
+            initializeControls();
+        }
+
+        // Initialize controls
+        private void initializeControls()
+        {
             _boxSubController = new BoxSubController(this);
-            _axisSubController = new PointSubController(actor.position + new Vector2(1f, 0), this);
+            _axisSubController = new PointSubController(_position + new Vector2(1f, 0), this);
         }
 
         #region Box SubController Interface
@@ -33,49 +52,49 @@ namespace StasisEditor.Controllers.Actors
         // getPosition
         public Vector2 getPosition()
         {
-            return _actor.position;
+            return _position;
         }
 
         // setPosition
         public void setPosition(Vector2 position)
         {
-            _actor.position = position;
+            _position = position;
         }
 
         // getHalfWidth
         public float getHalfWidth()
         {
-            return _platformActor.boxProperties.halfWidth;
+            return _boxProperties.halfWidth;
         }
 
         // getHalfHeight
         public float getHalfHeight()
         {
-            return _platformActor.boxProperties.halfHeight;
+            return _boxProperties.halfHeight;
         }
 
         // getAngle
         public float getAngle()
         {
-            return _platformActor.boxProperties.angle;
+            return _boxProperties.angle;
         }
 
         // setHalfWidth
         public void setHalfWidth(float value)
         {
-            _platformActor.boxProperties.halfWidth = Math.Max(value, LevelController.MIN_ACTOR_SIZE);
+            _boxProperties.halfWidth = Math.Max(value, LevelController.MIN_ACTOR_SIZE);
         }
 
         // setHalfHeight
         public void setHalfHeight(float value)
         {
-            _platformActor.boxProperties.halfHeight = Math.Max(value, LevelController.MIN_ACTOR_SIZE);
+            _boxProperties.halfHeight = Math.Max(value, LevelController.MIN_ACTOR_SIZE);
         }
 
         // setAngle
         public void setAngle(float value)
         {
-            _platformActor.boxProperties.angle = value;
+            _boxProperties.angle = value;
         }
 
         #endregion
@@ -135,17 +154,17 @@ namespace StasisEditor.Controllers.Actors
         public override void draw()
         {
             // Draw box
-            _levelController.view.drawBox(_actor.position, _platformActor.boxProperties.halfWidth, _platformActor.boxProperties.halfHeight, _platformActor.boxProperties.angle, Color.Blue);
+            _levelController.view.drawBox(_position, _boxProperties.halfWidth, _boxProperties.halfHeight, _boxProperties.angle, Color.Blue);
 
             // Draw axis sub controller
-            _levelController.view.drawLine(_actor.position, _axisSubController.position, Color.Gray);
+            _levelController.view.drawLine(_position, _axisSubController.position, Color.Gray);
             _levelController.view.drawPoint(_axisSubController.position, Color.White);
         }
 
         // clone
         public override ActorController clone()
         {
-            return new PlatformActorController(_levelController, _actor.clone());
+            return new PlatformActorController(_levelController);
         }
 
         #endregion

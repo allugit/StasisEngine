@@ -101,11 +101,6 @@
     <Compile Include="Controllers\LevelController.cs" />
     <Compile Include="Controllers\MaterialController.cs" />
     <Compile Include="GraphicsDeviceService.cs" />
-    <Compile Include="Models\EditorActor.cs" />
-    <Compile Include="Models\EditorBoxActor.cs" />
-    <Compile Include="Models\EditorCircleActor.cs" />
-    <Compile Include="Models\EditorItemActor.cs" />
-    <Compile Include="Models\EditorPlatformActor.cs" />
     <Compile Include="Models\Properties\ActorProperties.cs" />
     <Compile Include="Models\Properties\BodyProperties.cs" />
     <Compile Include="Models\Properties\BoxProperties.cs" />
@@ -114,8 +109,6 @@
     <Compile Include="Models\Properties\GeneralItemProperties.cs" />
     <Compile Include="Models\Properties\GeneralPlantProperties.cs" />
     <Compile Include="Models\Properties\TreeProperties.cs" />
-    <Compile Include="Models\EditorRopeActor.cs" />
-    <Compile Include="Models\EditorTreeActor.cs" />
     <Compile Include="Models\EditorBlueprint.cs" />
     <Compile Include="Models\EditorBlueprintScrap.cs" />
     <Compile Include="Models\EditorCircuit.cs" />
