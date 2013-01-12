@@ -38,12 +38,14 @@ namespace StasisEditor.Controllers.Actors
         #region Input
 
         // hitTest
-        public override bool hitTest(Vector2 worldMouse)
+        public override bool hitTest(Vector2 worldMouse, bool select = true)
         {
             // Hit test
             if (_positionSubController.hitTest(worldMouse))
             {
-                _levelController.selectSubController(_positionSubController);
+                // Select appropriate controls
+                if (select)
+                    _levelController.selectSubController(_positionSubController);
                 return true;
             }
 

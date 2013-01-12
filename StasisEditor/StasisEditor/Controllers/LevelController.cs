@@ -111,21 +111,6 @@ namespace StasisEditor.Controllers
                 _actorControllers.Remove(_actorControllersRemoveQueue[index]);
                 _actorControllersRemoveQueue.Remove(_actorControllersRemoveQueue[index]);
             }
-
-          /*
-            if (_xnaInputEnabled)
-            {
-                // Update mouse position
-                updateMousePosition();
-
-                // Check XNA keys in selected sub controllers
-                foreach (ActorSubController subController in _selectedSubControllers)
-                    subController.checkXNAKeys();
-
-                // Let all actor resource controllers listen to key presses
-                foreach (ActorResourceController controller in _actorControllers)
-                    controller.globalCheckKey();
-            }*/
         }
 
         // createNewLevel
@@ -247,15 +232,25 @@ namespace StasisEditor.Controllers
         // addActorController
         public void addActorController(ActorController actorController)
         {
-            // actual addition of actor controller is handled in update() in the 'XNA Methods' region
             _actorControllersAddQueue.Add(actorController);
         }
 
         // removeActorController
         public void removeActorController(ActorController actorController)
         {
-            // actual removal of actor controller is handled in update() in the 'XNA Methods' region
             _actorControllersRemoveQueue.Add(actorController);
+        }
+
+        // openActorProperties
+        public void openActorProperties(List<ActorProperties> properties)
+        {
+            _editorController.openActorProperties(properties);
+        }
+
+        // closeActorProperties
+        public void closeActorProperties()
+        {
+            _editorController.closeActorProperties();
         }
 
         // handleMouseMove
@@ -299,6 +294,20 @@ namespace StasisEditor.Controllers
                     // Pass input to selected sub controllers
                     foreach (ActorSubController subController in _selectedSubControllers)
                         subController.handleLeftMouseDown();
+                }
+            }
+            else if (e.Button == System.Windows.Forms.MouseButtons.Right)
+            {
+                // Try to select a sub controller
+                foreach (ActorController actorResourceController in _actorControllers)
+                {
+                    // Stop searching if a hit test returns true (actor controller will handle the selection of the appropriate sub controls)
+                    if (actorResourceController.hitTest(getWorldMouse(), false))
+                    {
+                        closeActorProperties();
+                        openActorProperties(actorResourceController.properties);
+                        break;
+                    }
                 }
             }
         }

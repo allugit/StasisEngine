@@ -8,6 +8,7 @@ using StasisCore.Controllers;
 using StasisCore.Resources;
 using StasisEditor.Views;
 using StasisEditor.Views.Controls;
+using StasisEditor.Models;
 
 namespace StasisEditor.Controllers
 {
@@ -65,6 +66,18 @@ namespace StasisEditor.Controllers
         public void setActorToolbarEnabled(bool status)
         {
             _actorToolbar.Enabled = status;
+        }
+
+        // openActorProperties
+        public void openActorProperties(List<ActorProperties> properties)
+        {
+            _editorView.openActorProperties(properties);
+        }
+
+        // closeActorProperties
+        public void closeActorProperties()
+        {
+            _editorView.closeActorProperties();
         }
 
         // createNewLevel

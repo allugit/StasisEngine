@@ -8,7 +8,6 @@ namespace StasisEditor.Controllers.Actors
 {
     public class RopeActorController : ActorController, IPointSubControllable
     {
-
         private PointSubController _pointASubController;
         private PointSubController _pointBSubController;
 
@@ -57,27 +56,35 @@ namespace StasisEditor.Controllers.Actors
         }
 
         // hitTest
-        public override bool hitTest(Vector2 worldMouse)
+        public override bool hitTest(Vector2 worldMouse, bool select = true)
         {
             // Hit test point A
             if (_pointASubController.hitTest(worldMouse))
             {
-                _levelController.selectSubController(_pointASubController);
+                // Select appropriate controls
+                if (select)
+                    _levelController.selectSubController(_pointASubController);
                 return true;
             }
 
             // Hit test point B
             if (_pointBSubController.hitTest(worldMouse))
             {
-                _levelController.selectSubController(_pointBSubController);
+                // Select appropriate controls
+                if (select)
+                    _levelController.selectSubController(_pointBSubController);
                 return true;
             }
 
             // Hit test line
             if (_pointASubController.lineHitTest(worldMouse, _pointBSubController.position))
             {
-                _levelController.selectSubController(_pointASubController);
-                _levelController.selectSubController(_pointBSubController);
+                // Select appropriate controls
+                if (select)
+                {
+                    _levelController.selectSubController(_pointASubController);
+                    _levelController.selectSubController(_pointBSubController);
+                }
                 return true;
             }
 

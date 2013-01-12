@@ -60,7 +60,7 @@ namespace StasisEditor.Controllers.Actors
         #region Input
 
         // hitTest
-        public override bool hitTest(Vector2 worldMouse)
+        public override bool hitTest(Vector2 worldMouse, bool select = true)
         {
             // Hit test linked point sub controllers
             LinkedPointSubController current = _headLinkedPointController;
@@ -68,7 +68,9 @@ namespace StasisEditor.Controllers.Actors
             {
                 if (current.hitTest(worldMouse))
                 {
-                    _levelController.selectSubController(current);
+                    // Select appropriate controls
+                    if (select)
+                        _levelController.selectSubController(current);
                     return true;
                 }
 
@@ -81,8 +83,12 @@ namespace StasisEditor.Controllers.Actors
             {
                 if (current.linkHitTest(worldMouse))
                 {
-                    _levelController.selectSubController(current);
-                    _levelController.selectSubController(current.next);
+                    // Select appropriate controls
+                    if (select)
+                    {
+                        _levelController.selectSubController(current);
+                        _levelController.selectSubController(current.next);
+                    }
                     return true;
                 }
 

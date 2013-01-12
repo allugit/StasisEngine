@@ -15,6 +15,7 @@ namespace StasisEditor.Controllers.Actors
         public ActorType type { get { return _type; } }
         public bool shift { get { return _levelController.shift; } }
         public bool ctrl { get { return _levelController.ctrl; } }
+        virtual public List<ActorProperties> properties { get { return new List<ActorProperties>(); } }
 
         public ActorController(LevelController levelController)
         {
@@ -46,7 +47,7 @@ namespace StasisEditor.Controllers.Actors
         }
 
         // hitTest
-        abstract public bool hitTest(Vector2 worldMouse);
+        abstract public bool hitTest(Vector2 worldMouse, bool select = true);
 
         // delete
         virtual public void delete()

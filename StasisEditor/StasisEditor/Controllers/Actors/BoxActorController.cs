@@ -14,6 +14,16 @@ namespace StasisEditor.Controllers.Actors
         private BoxProperties _boxProperties;
         private BoxSubController _boxSubController;
 
+        public override List<ActorProperties> properties
+        {
+            get
+            {
+                List<ActorProperties> results = base.properties;
+                results.Add(_boxProperties);
+                return results;
+            }
+        }
+
         // Create new
         public BoxActorController(LevelController levelController)
             : base(levelController)
@@ -101,14 +111,17 @@ namespace StasisEditor.Controllers.Actors
         #region Input
 
         // hitTest
-        public override bool hitTest(Vector2 worldMouse)
+        public override bool hitTest(Vector2 worldMouse, bool select = true)
         {
             // Box hit test
             bool hit = _boxSubController.hitTest(worldMouse);
 
             // Select appropriate sub control
-            if (hit)
-                _levelController.selectSubController(_boxSubController);
+            if (select)
+            {
+                if (hit)
+                    _levelController.selectSubController(_boxSubController);
+            }
 
             return hit;
         }

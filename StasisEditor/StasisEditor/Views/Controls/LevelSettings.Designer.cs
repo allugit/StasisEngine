@@ -35,9 +35,11 @@
             // label1
             // 
             this.label1.AutoSize = true;
-            this.label1.Location = new System.Drawing.Point(3, 0);
+            this.label1.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.label1.Location = new System.Drawing.Point(0, 0);
+            this.label1.Margin = new System.Windows.Forms.Padding(0);
             this.label1.Name = "label1";
-            this.label1.Size = new System.Drawing.Size(74, 13);
+            this.label1.Size = new System.Drawing.Size(88, 13);
             this.label1.TabIndex = 0;
             this.label1.Text = "Level Settings";
             // 
@@ -49,7 +51,7 @@
             this.levelPropertiesGrid.Location = new System.Drawing.Point(0, 16);
             this.levelPropertiesGrid.Margin = new System.Windows.Forms.Padding(0);
             this.levelPropertiesGrid.Name = "levelPropertiesGrid";
-            this.levelPropertiesGrid.Size = new System.Drawing.Size(234, 251);
+            this.levelPropertiesGrid.Size = new System.Drawing.Size(234, 190);
             this.levelPropertiesGrid.TabIndex = 1;
             // 
             // LevelSettings
@@ -59,7 +61,7 @@
             this.Controls.Add(this.levelPropertiesGrid);
             this.Controls.Add(this.label1);
             this.Name = "LevelSettings";
-            this.Size = new System.Drawing.Size(234, 267);
+            this.Size = new System.Drawing.Size(234, 206);
             this.ResumeLayout(false);
             this.PerformLayout();
 

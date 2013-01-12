@@ -13,6 +13,16 @@ namespace StasisEditor.Controllers.Actors
         private BoxSubController _boxController;
         private PointSubController _tropismController;
 
+        public override List<ActorProperties> properties
+        {
+            get
+            {
+                List<ActorProperties> results = base.properties;
+                results.Add(_treeProperties);
+                return results;
+            }
+        }
+
         // Create new
         public TreeActorController(LevelController levelController)
             : base(levelController)
@@ -99,20 +109,26 @@ namespace StasisEditor.Controllers.Actors
 
         #region Input
 
-        public override bool hitTest(Vector2 worldMouse)
+        public override bool hitTest(Vector2 worldMouse, bool select = true)
         {
             // Hit test tropism control
             if (_tropismController.hitTest(worldMouse))
             {
-                _levelController.selectSubController(_tropismController);
+                // Select appropriate controls
+                if (select)
+                    _levelController.selectSubController(_tropismController);
                 return true;
             }
 
             // Hit test box
             if (_boxController.hitTest(worldMouse))
             {
-                _levelController.selectSubController(_boxController);
-                _levelController.selectSubController(_tropismController);
+                // Select appropriate controls
+                if (select)
+                {
+                    _levelController.selectSubController(_boxController);
+                    _levelController.selectSubController(_tropismController);
+                }
                 return true;
             }
 

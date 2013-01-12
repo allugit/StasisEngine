@@ -14,6 +14,16 @@ namespace StasisEditor.Controllers.Actors
         private CircleProperties _circleProperties;
         private CircleSubController _circleSubController;
 
+        public override List<ActorProperties> properties
+        {
+            get
+            {
+                List<ActorProperties> results = base.properties;
+                results.Add(_circleProperties);
+                return results;
+            }
+        }
+
         // Create new
         public CircleActorController(LevelController levelController)
             : base(levelController)
@@ -75,11 +85,14 @@ namespace StasisEditor.Controllers.Actors
         #region Input
 
         // hitTest
-        public override bool hitTest(Vector2 worldMouse)
+        public override bool hitTest(Vector2 worldMouse, bool select = true)
         {
             if (_circleSubController.hitTest(worldMouse))
             {
-                _levelController.selectSubController(_circleSubController);
+                // Select appropriate control
+                if (select)
+                    _levelController.selectSubController(_circleSubController);
+
                 return true;
             }
 

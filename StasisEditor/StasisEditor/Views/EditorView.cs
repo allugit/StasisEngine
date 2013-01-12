@@ -20,6 +20,7 @@ namespace StasisEditor.Views
         private EditorController _controller;
         private LevelView _levelView;
         private LevelSettings _levelSettings;
+        private List<ActorPropertiesView> actorPropertiesViews;
 
         public CircuitsView circuitsView { get { return circuitsView1; } }
         public MaterialView materialView { get { return materialView1; } }
@@ -29,6 +30,7 @@ namespace StasisEditor.Views
         // Constructor
         public EditorView()
         {
+            actorPropertiesViews = new List<ActorPropertiesView>();
             InitializeComponent();
             KeyPreview = true;
         }
@@ -111,6 +113,26 @@ namespace StasisEditor.Views
         public void enableLoadLevel(bool enabled)
         {
             menuLevelLoad.Enabled = enabled;
+        }
+
+        // openActorProperties
+        public void openActorProperties(List<ActorProperties> properties)
+        {
+            foreach (ActorProperties p in properties)
+            {
+                ActorPropertiesView view = new ActorPropertiesView(p);
+                actorPropertiesViews.Add(view);
+                mainSplit.Panel1.Controls.Add(view);
+                view.BringToFront();
+            }
+        }
+
+        // closeActorProperties
+        public void closeActorProperties()
+        {
+            foreach (ActorPropertiesView view in actorPropertiesViews)
+                mainSplit.Panel1.Controls.Remove(view);
+            actorPropertiesViews.Clear();
         }
 
         // New level clicked

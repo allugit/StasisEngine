@@ -127,6 +127,12 @@
     <Compile Include="Views\CircuitsView.Designer.cs">
       <DependentUpon>CircuitsView.cs</DependentUpon>
     </Compile>
+    <Compile Include="Views\Controls\ActorPropertiesView.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="Views\Controls\ActorPropertiesView.Designer.cs">
+      <DependentUpon>ActorPropertiesView.cs</DependentUpon>
+    </Compile>
     <Compile Include="Views\Controls\ActorToolbar.cs">
       <SubType>UserControl</SubType>
     </Compile>
@@ -313,6 +319,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Views\CircuitsView.resx">
       <DependentUpon>CircuitsView.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Views\Controls\ActorPropertiesView.resx">
+      <DependentUpon>ActorPropertiesView.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Views\Controls\ActorToolbar.resx">
       <DependentUpon>ActorToolbar.cs</DependentUpon>
