@@ -11,15 +11,9 @@ namespace StasisEditor.Controllers.Actors
     {
         private PointSubController _positionSubController;
 
-        public PlayerSpawnActorController(LevelController levelController, EditorActor actor = null)
+        public PlayerSpawnActorController(LevelController levelController)
             : base(levelController)
         {
-            // Default player spawn actor resource
-            if (actor == null)
-                actor = new EditorPlayerSpawnActor(Vector2.Zero);
-
-            _actor = actor;
-
             // Create sub controllers
             _positionSubController = new PointSubController(_levelController.getWorldMouse(), this, 12f);
         }
@@ -74,7 +68,7 @@ namespace StasisEditor.Controllers.Actors
         // clone
         public override ActorController clone()
         {
-            return new PlayerSpawnActorController(_levelController, _actor.clone());
+            return new PlayerSpawnActorController(_levelController);
         }
 
         #endregion

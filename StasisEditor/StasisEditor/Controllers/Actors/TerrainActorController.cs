@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Xml.Linq;
 using Microsoft.Xna.Framework;
 using StasisEditor.Models;
 
@@ -9,36 +10,35 @@ namespace StasisEditor.Controllers.Actors
 
     public class TerrainActorController : ActorController, ILinkedPointSubControllable
     {
-        private EditorTerrainActor _terrainActor;
         private LinkedPointSubController _headLinkedPointController;
 
-        public TerrainActorController(LevelController levelController, EditorActor actor = null)
+        // New terrain actor
+        public TerrainActorController(LevelController levelController)
             : base(levelController)
         {
-            // Default actor
-            if (actor == null)
-                actor = new EditorTerrainActor();
+            List<Vector2> actorResourcePoints = new List<Vector2>();
+            actorResourcePoints.Add(_levelController.getWorldMouse() - new Vector2(1f, 0));
+            actorResourcePoints.Add(_levelController.getWorldMouse() + new Vector2(1f, 0));
+            initializePoints(actorResourcePoints);
+        }
 
-            // Set actor resources
-            _actor = actor;
-            _terrainActor = actor as EditorTerrainActor;
+        // Fluid actor from xml
+        public TerrainActorController(LevelController levelController, XElement data)
+            : base(levelController)
+        {
+            // TODO: Initialize points from xml
+            // initializePoints(...);
+        }
 
-            // Initialize points
-            List<Vector2> actorPoints = new List<Vector2>();
-            if (_terrainActor.points.Count == 0)
-            {
-                actorPoints.Add(_levelController.getWorldMouse() - new Vector2(1f, 0));
-                actorPoints.Add(_levelController.getWorldMouse() + new Vector2(1f, 0));
-            }
-            else
-                actorPoints = _terrainActor.points;
-
+        // Initialize points
+        private void initializePoints(List<Vector2> points)
+        {
             // Create linked point controllers
-            _headLinkedPointController = new LinkedPointSubController(actorPoints[0], this);
+            _headLinkedPointController = new LinkedPointSubController(points[0], this);
             LinkedPointSubController current = _headLinkedPointController;
-            for (int i = 1; i < actorPoints.Count; i++)
+            for (int i = 1; i < points.Count; i++)
             {
-                current.next = new LinkedPointSubController(actorPoints[i], this);
+                current.next = new LinkedPointSubController(points[i], this);
                 current.next.previous = current;
                 current = current.next;
             }
@@ -205,7 +205,7 @@ namespace StasisEditor.Controllers.Actors
         // clone
         public override ActorController clone()
         {
-            return new TerrainActorController(_levelController, _actor.clone());
+            return new TerrainActorController(_levelController);
         }
 
         #endregion

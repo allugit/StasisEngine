@@ -26,7 +26,7 @@ namespace StasisEditor.Models
 
             _boxProperties = boxProperties as BoxProperties;
             _bodyProperties = bodyProperties as BodyProperties;
-            _type = ActorType.BoxActor;
+            _type = ActorType.Box;
         }
 
         // clone

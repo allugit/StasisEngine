@@ -2,15 +2,16 @@
 {
     public enum ActorType
     {
-        BoxActor,
-        CircleActor,
+        Box,
+        Circle,
         MovingPlatform,
         PressurePlate,
         Terrain,
         Rope,
         Fluid,
         PlayerSpawn,
-        Tree
+        Tree,
+        Item
     };
 
     public enum PlantType

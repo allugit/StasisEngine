@@ -26,7 +26,7 @@ namespace StasisEditor.Models
 
             _circleProperties = circleProperties as CircleProperties;
             _bodyProperties = bodyProperties as BodyProperties;
-            _type = ActorType.CircleActor;
+            _type = ActorType.Circle;
         }
 
         // clone

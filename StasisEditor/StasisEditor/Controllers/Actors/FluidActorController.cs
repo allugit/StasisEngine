@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Xml.Linq;
 using Microsoft.Xna.Framework;
 using StasisEditor.Models;
 
@@ -9,36 +10,35 @@ namespace StasisEditor.Controllers.Actors
 
     public class FluidActorController : ActorController, ILinkedPointSubControllable
     {
-        private EditorFluidActor _fluidActor;
         private LinkedPointSubController _headLinkedPointController;
 
-        public FluidActorController(LevelController levelController, EditorActor actor = null)
+        // New fluid actor
+        public FluidActorController(LevelController levelController)
             : base(levelController)
         {
-            // Default actor
-            if (actor == null)
-                actor = new EditorFluidActor();
-
-            // Set actor resources
-            _actor = actor;
-            _fluidActor = actor as EditorFluidActor;
-
-            // Initialize points
             List<Vector2> actorResourcePoints = new List<Vector2>();
-            if (_fluidActor.points.Count == 0)
-            {
-                actorResourcePoints.Add(_levelController.getWorldMouse() - new Vector2(1f, 0));
-                actorResourcePoints.Add(_levelController.getWorldMouse() + new Vector2(1f, 0));
-            }
-            else
-                actorResourcePoints = _fluidActor.points;
+            actorResourcePoints.Add(_levelController.getWorldMouse() - new Vector2(1f, 0));
+            actorResourcePoints.Add(_levelController.getWorldMouse() + new Vector2(1f, 0));
+            initializePoints(actorResourcePoints);
+        }
 
+        // Fluid actor from xml
+        public FluidActorController(LevelController levelController, XElement data)
+            : base(levelController)
+        {
+            // TODO: Initialize points from xml
+            // initializePoints(...);
+        }
+
+        // Initialize points
+        private void initializePoints(List<Vector2> points)
+        {
             // Create linked point controllers
-            _headLinkedPointController = new LinkedPointSubController(actorResourcePoints[0], this);
+            _headLinkedPointController = new LinkedPointSubController(points[0], this);
             LinkedPointSubController current = _headLinkedPointController;
-            for (int i = 1; i < actorResourcePoints.Count; i++)
+            for (int i = 1; i < points.Count; i++)
             {
-                current.next = new LinkedPointSubController(actorResourcePoints[i], this);
+                current.next = new LinkedPointSubController(points[i], this);
                 current.next.previous = current;
                 current = current.next;
             }
@@ -203,7 +203,7 @@ namespace StasisEditor.Controllers.Actors
         // clone
         public override ActorController clone()
         {
-            return new FluidActorController(_levelController, _actor.clone());
+            return new FluidActorController(_levelController);
         }
 
         #endregion

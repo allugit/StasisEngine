@@ -5,18 +5,17 @@ using StasisCore;
 
 namespace StasisEditor.Models
 {
-    public class EditorPlayerSpawnActor : EditorActor
+    public class EditorItemActor : EditorActor
     {
-        public EditorPlayerSpawnActor(Vector2 position)
+        public EditorItemActor(Vector2 position)
             : base(position)
         {
-            _type = ActorType.PlayerSpawn;
+            _type = ActorType.Item;
         }
 
-        // clone
         public override EditorActor clone()
         {
-            return new EditorPlayerSpawnActor(_position);
+            return new EditorItemActor(_position);
         }
     }
 }
