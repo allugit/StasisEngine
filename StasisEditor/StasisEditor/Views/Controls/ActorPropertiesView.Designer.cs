@@ -48,9 +48,10 @@
             this.propertiesGrid.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom)
                         | System.Windows.Forms.AnchorStyles.Left)
                         | System.Windows.Forms.AnchorStyles.Right)));
+            this.propertiesGrid.HelpVisible = false;
             this.propertiesGrid.Location = new System.Drawing.Point(0, 42);
             this.propertiesGrid.Name = "propertiesGrid";
-            this.propertiesGrid.Size = new System.Drawing.Size(251, 305);
+            this.propertiesGrid.Size = new System.Drawing.Size(251, 183);
             this.propertiesGrid.TabIndex = 1;
             // 
             // ActorPropertiesView
@@ -60,7 +61,7 @@
             this.Controls.Add(this.propertiesGrid);
             this.Controls.Add(this.propertiesTitle);
             this.Name = "ActorPropertiesView";
-            this.Size = new System.Drawing.Size(251, 347);
+            this.Size = new System.Drawing.Size(251, 225);
             this.ResumeLayout(false);
             this.PerformLayout();
 
