@@ -6,6 +6,7 @@ using System.Data;
 using System.Linq;
 using System.Text;
 using System.Windows.Forms;
+using StasisEditor.Models;
 
 namespace StasisEditor.Views.Controls
 {
@@ -19,6 +20,14 @@ namespace StasisEditor.Views.Controls
             // Set properties and title
             propertiesGrid.SelectedObject = properties;
             propertiesTitle.Text = properties.ToString();
+
+            // Calculate height
+            if (properties is TreeProperties)
+                Height = 360;
+            else if (properties is BoxProperties)
+                Height = 150;
+            else if (properties is CircleProperties)
+                Height = 150;
         }
     }
 }

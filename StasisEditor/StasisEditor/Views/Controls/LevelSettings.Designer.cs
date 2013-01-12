@@ -52,7 +52,7 @@
             this.levelPropertiesGrid.Location = new System.Drawing.Point(0, 16);
             this.levelPropertiesGrid.Margin = new System.Windows.Forms.Padding(0);
             this.levelPropertiesGrid.Name = "levelPropertiesGrid";
-            this.levelPropertiesGrid.Size = new System.Drawing.Size(234, 139);
+            this.levelPropertiesGrid.Size = new System.Drawing.Size(234, 101);
             this.levelPropertiesGrid.TabIndex = 1;
             // 
             // LevelSettings
@@ -62,7 +62,7 @@
             this.Controls.Add(this.levelPropertiesGrid);
             this.Controls.Add(this.label1);
             this.Name = "LevelSettings";
-            this.Size = new System.Drawing.Size(234, 155);
+            this.Size = new System.Drawing.Size(234, 117);
             this.ResumeLayout(false);
             this.PerformLayout();
 
