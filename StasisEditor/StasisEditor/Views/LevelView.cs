@@ -22,6 +22,7 @@ namespace StasisEditor.Views
         private Texture2D _circle;
         private bool _draw = true;
         private bool _keysEnabled = true;
+        private bool _mouseOverView;
 
         public bool active
         {
@@ -57,12 +58,26 @@ namespace StasisEditor.Views
             MouseDown += new MouseEventHandler(LevelView_MouseDown);
             FindForm().KeyDown += new KeyEventHandler(Parent_KeyDown);
             FindForm().KeyUp += new KeyEventHandler(Parent_KeyUp);
+            MouseEnter += new EventHandler(LevelView_MouseEnter);
+            MouseLeave += new EventHandler(LevelView_MouseLeave);
+        }
+
+        // Mouse leave
+        void LevelView_MouseLeave(object sender, EventArgs e)
+        {
+            _mouseOverView = false;
+        }
+
+        // Mouse enter
+        void LevelView_MouseEnter(object sender, EventArgs e)
+        {
+            _mouseOverView = true;
         }
 
         // Key up
         void Parent_KeyUp(object sender, KeyEventArgs e)
         {
-            if (_keysEnabled)
+            if (_mouseOverView && _keysEnabled)
             {
                 if (e.KeyCode == Keys.Shift || e.KeyCode == Keys.ShiftKey || e.KeyCode == Keys.LShiftKey || e.KeyCode == Keys.RShiftKey)
                     _controller.shift = false;
@@ -74,13 +89,14 @@ namespace StasisEditor.Views
         // Mouse down
         void LevelView_MouseDown(object sender, MouseEventArgs e)
         {
+            Focus();
             _controller.handleMouseDown(e);
         }
 
         // Key down
         void Parent_KeyDown(object sender, KeyEventArgs e)
         {
-            if (_keysEnabled)
+            if (_mouseOverView && _keysEnabled)
             {
                 if (e.KeyCode == Keys.Shift || e.KeyCode == Keys.ShiftKey || e.KeyCode == Keys.LShiftKey || e.KeyCode == Keys.RShiftKey)
                     _controller.shift = true;
@@ -94,6 +110,9 @@ namespace StasisEditor.Views
                 // Pass input to selected sub actor controllers
                 foreach (ActorSubController subController in _controller.selectedSubControllers)
                     subController.keyDown(e.KeyCode);
+
+                // Refresh actor properties
+                _controller.refreshActorProperties();
             }
         }
 

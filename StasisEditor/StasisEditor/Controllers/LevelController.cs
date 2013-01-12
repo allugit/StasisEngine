@@ -253,6 +253,12 @@ namespace StasisEditor.Controllers
             _editorController.closeActorProperties();
         }
 
+        // refreshActorProperties
+        public void refreshActorProperties()
+        {
+            _editorController.refreshActorProperties();
+        }
+
         // handleMouseMove
         public void handleMouseMove(System.Windows.Forms.MouseEventArgs e)
         {

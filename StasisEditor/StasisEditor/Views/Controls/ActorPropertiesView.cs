@@ -29,5 +29,11 @@ namespace StasisEditor.Views.Controls
             else if (properties is CircleProperties)
                 Height = 150;
         }
+
+        // refreshActorProperties
+        public void refreshActorProperties()
+        {
+            propertiesGrid.Refresh();
+        }
     }
 }

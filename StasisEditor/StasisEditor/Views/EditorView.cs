@@ -135,6 +135,13 @@ namespace StasisEditor.Views
             actorPropertiesViews.Clear();
         }
 
+        // refreshActorProperties
+        public void refreshActorProperties()
+        {
+            foreach (ActorPropertiesView view in actorPropertiesViews)
+                view.refreshActorProperties();
+        }
+
         // New level clicked
         private void menuLevelNew_Click(object sender, EventArgs e)
         {

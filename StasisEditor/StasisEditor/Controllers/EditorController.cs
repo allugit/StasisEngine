@@ -80,6 +80,12 @@ namespace StasisEditor.Controllers
             _editorView.closeActorProperties();
         }
 
+        // refreshActorProperties
+        public void refreshActorProperties()
+        {
+            _editorView.refreshActorProperties();
+        }
+
         // createNewLevel
         public void createNewLevel()
         {
