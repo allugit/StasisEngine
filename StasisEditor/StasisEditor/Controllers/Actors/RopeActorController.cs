@@ -68,39 +68,33 @@ namespace StasisEditor.Controllers.Actors
         }
 
         // hitTest
-        public override bool hitTest(Vector2 worldMouse, bool select = true)
+        public override List<ActorSubController> hitTest(Vector2 worldMouse)
         {
+            List<ActorSubController> results = new List<ActorSubController>();
+
             // Hit test point A
             if (_pointASubController.hitTest(worldMouse))
             {
-                // Select appropriate controls
-                if (select)
-                    _levelController.selectSubController(_pointASubController);
-                return true;
+                results.Add(_pointASubController);
+                return results;
             }
 
             // Hit test point B
             if (_pointBSubController.hitTest(worldMouse))
             {
-                // Select appropriate controls
-                if (select)
-                    _levelController.selectSubController(_pointBSubController);
-                return true;
+                results.Add(_pointBSubController);
+                return results;
             }
 
             // Hit test line
             if (_pointASubController.lineHitTest(worldMouse, _pointBSubController.position))
             {
-                // Select appropriate controls
-                if (select)
-                {
-                    _levelController.selectSubController(_pointASubController);
-                    _levelController.selectSubController(_pointBSubController);
-                }
-                return true;
+                results.Add(_pointASubController);
+                results.Add(_pointBSubController);
+                return results;
             }
 
-            return false;
+            return results;
         }
 
         // draw

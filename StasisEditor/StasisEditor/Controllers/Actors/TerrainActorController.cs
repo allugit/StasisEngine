@@ -82,42 +82,39 @@ namespace StasisEditor.Controllers.Actors
         #region Input
 
         // hitTest
-        public override bool hitTest(Vector2 worldMouse, bool select = true)
+        public override List<ActorSubController> hitTest(Vector2 worldMouse)
         {
+            List<ActorSubController> results = new List<ActorSubController>();
+
             // Hit test linked point sub controllers
             LinkedPointSubController current = _headLinkedPointController;
             while (current != null)
             {
                 if (current.hitTest(worldMouse))
-                {
-                    // Select appropriate controls
-                    if (select)
-                        _levelController.selectSubController(current);
-                    return true;
-                }
+                    results.Add(current);
 
                 current = current.next;
             }
 
-            // Hit test link lines
-            current = _headLinkedPointController;
-            while (current.next != null)
+            // Test links if no results found
+            if (results.Count == 0)
             {
-                if (current.linkHitTest(worldMouse))
+                // Hit test link lines
+                current = _headLinkedPointController;
+                while (current.next != null)
                 {
-                    // Select appropriate controls
-                    if (select)
+                    if (current.linkHitTest(worldMouse))
                     {
-                        _levelController.selectSubController(current);
-                        _levelController.selectSubController(current.next);
+                        results.Add(current);
+                        results.Add(current.next);
+                        break;
                     }
-                    return true;
-                }
 
-                current = current.next;
+                    current = current.next;
+                }
             }
 
-            return false;
+            return results;
         }
 
         // globalKeyDown

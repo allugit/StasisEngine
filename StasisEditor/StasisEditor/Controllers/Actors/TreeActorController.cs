@@ -116,30 +116,23 @@ namespace StasisEditor.Controllers.Actors
 
         #region Input
 
-        public override bool hitTest(Vector2 worldMouse, bool select = true)
+        public override List<ActorSubController> hitTest(Vector2 worldMouse)
         {
-            // Hit test tropism control
+            List<ActorSubController> results = new List<ActorSubController>();
+
             if (_tropismController.hitTest(worldMouse))
             {
-                // Select appropriate controls
-                if (select)
-                    _levelController.selectSubController(_tropismController);
-                return true;
+                // Tropism controller hit
+                results.Add(_tropismController);
             }
-
-            // Hit test box
-            if (_boxController.hitTest(worldMouse))
+            else if (_boxController.hitTest(worldMouse))
             {
-                // Select appropriate controls
-                if (select)
-                {
-                    _levelController.selectSubController(_boxController);
-                    _levelController.selectSubController(_tropismController);
-                }
-                return true;
+                // Box controller hit
+                results.Add(_boxController);
+                results.Add(_tropismController);
             }
 
-            return false;
+            return results;
         }
 
         #endregion

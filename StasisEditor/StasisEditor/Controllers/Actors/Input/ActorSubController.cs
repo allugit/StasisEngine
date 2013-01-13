@@ -21,8 +21,8 @@ namespace StasisEditor.Controllers.Actors
         {
         }
 
-        // handleLeftMouseDown
-        virtual public void handleLeftMouseDown()
+        // handleMouseDown
+        virtual public void handleMouseDown()
         {
         }
 

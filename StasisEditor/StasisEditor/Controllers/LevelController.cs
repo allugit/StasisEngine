@@ -296,38 +296,18 @@ namespace StasisEditor.Controllers
         // handleMouseDown
         public void handleMouseDown(System.Windows.Forms.MouseEventArgs e)
         {
-            // Handle left mouse down
-            if (e.Button == System.Windows.Forms.MouseButtons.Left)
+            // Handle mouse down for selected sub controllers
+            foreach (ActorSubController subController in _selectedSubControllers)
+                subController.handleMouseDown();
+
+            // Try to select a sub controller
+            if (_selectedSubControllers.Count == 0)
             {
-                if (_selectedSubControllers.Count == 0)
+                foreach (ActorController actorController in _actorControllers)
                 {
-                    // Try to select a sub controller
-                    foreach (ActorController actorResourceController in _actorControllers)
-                    {
-                        // Stop searching if a hit test returns true (actor controller will handle the selection of the appropriate sub controls)
-                        if (actorResourceController.hitTest(getWorldMouse()))
-                            break;
-                    }
-                }
-                else
-                {
-                    // Pass input to selected sub controllers
-                    foreach (ActorSubController subController in _selectedSubControllers)
-                        subController.handleLeftMouseDown();
-                }
-            }
-            else if (e.Button == System.Windows.Forms.MouseButtons.Right)
-            {
-                // Try to select a sub controller
-                foreach (ActorController actorResourceController in _actorControllers)
-                {
-                    // Stop searching if a hit test returns true (actor controller will handle the selection of the appropriate sub controls)
-                    if (actorResourceController.hitTest(getWorldMouse(), false))
-                    {
-                        closeActorProperties();
-                        openActorProperties(actorResourceController.properties);
-                        break;
-                    }
+                    // If actor controller's mouse handler returns true, mouse input has been handled and this loop can be stopped
+                    if (actorController.handleMouseDown(e))
+                        return;
                 }
             }
         }

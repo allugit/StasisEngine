@@ -79,7 +79,7 @@ namespace StasisEditor.Controllers.Actors
         }
 
         // handleLeftMouseDown
-        public override void handleLeftMouseDown()
+        public override void handleMouseDown()
         {
             _actorResourceController.deselectSubController(this);
         }

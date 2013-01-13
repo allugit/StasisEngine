@@ -96,18 +96,14 @@ namespace StasisEditor.Controllers.Actors
         #region Input
 
         // hitTest
-        public override bool hitTest(Vector2 worldMouse, bool select = true)
+        public override List<ActorSubController> hitTest(Vector2 worldMouse)
         {
+            List<ActorSubController> results = new List<ActorSubController>();
+
             if (_circleSubController.hitTest(worldMouse))
-            {
-                // Select appropriate control
-                if (select)
-                    _levelController.selectSubController(_circleSubController);
+                results.Add(_circleSubController);
 
-                return true;
-            }
-
-            return false;
+            return results;
         }
 
         // globalCheckKeys

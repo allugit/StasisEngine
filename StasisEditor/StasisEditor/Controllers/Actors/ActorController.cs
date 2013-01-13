@@ -49,13 +49,44 @@ namespace StasisEditor.Controllers.Actors
         }
 
         // hitTest
-        abstract public bool hitTest(Vector2 worldMouse, bool select = true);
+        abstract public List<ActorSubController> hitTest(Vector2 worldMouse);
 
         // delete
         virtual public void delete()
         {
             deselectAllSubControllers();
             _levelController.removeActorController(this);
+        }
+
+        // handleMouseDown
+        virtual public bool handleMouseDown(System.Windows.Forms.MouseEventArgs e)
+        {
+            if (e.Button == MouseButtons.Left)
+            {
+                List<ActorSubController> results = hitTest(_levelController.getWorldMouse());
+                foreach (ActorSubController subController in results)
+                    _levelController.selectSubController(subController);
+
+                // Mouse has been handled
+                if (results.Count > 0)
+                    return true;
+            }
+            else if (e.Button == MouseButtons.Right)
+            {
+                List<ActorSubController> results = hitTest(_levelController.getWorldMouse());
+
+                if (results.Count > 0)
+                {
+                    // Show actor properties
+                    _levelController.closeActorProperties();
+                    _levelController.openActorProperties(properties);
+
+                    // Mouse has been handled
+                    return true;
+                }
+            }
+
+            return false;
         }
 
         // globalKeyDown

@@ -122,7 +122,7 @@ namespace StasisEditor.Controllers.Actors
         }
 
         // handleLeftMouseDown
-        public override void handleLeftMouseDown()
+        public override void handleMouseDown()
         {
             // Create new linked points by pressing shift (disabled when both next and previous links exist)
             if (_actorResourceController.shift && (_next == null || _previous == null))
