@@ -58,33 +58,43 @@ namespace StasisEditor.Controllers.Actors
             _levelController.removeActorController(this);
         }
 
+        // handleLeftMouseDown
+        virtual public bool handleLeftMouseDown()
+        {
+            List<ActorSubController> results = hitTest(_levelController.getWorldMouse());
+            foreach (ActorSubController subController in results)
+                _levelController.selectSubController(subController);
+
+            // Mouse has been handled if results exist
+            return results.Count > 0;
+        }
+
+        // handleRightMouseDown
+        virtual public bool handleRightMouseDown()
+        {
+            List<ActorSubController> results = hitTest(_levelController.getWorldMouse());
+
+            if (results.Count > 0)
+            {
+                // Show actor properties
+                _levelController.closeActorProperties();
+                _levelController.openActorProperties(properties);
+
+                // Mouse has been handled
+                return true;
+            }
+
+            return false;
+        }
+
         // handleMouseDown
         virtual public bool handleMouseDown(System.Windows.Forms.MouseEventArgs e)
         {
+            // Handle left and right clicks
             if (e.Button == MouseButtons.Left)
-            {
-                List<ActorSubController> results = hitTest(_levelController.getWorldMouse());
-                foreach (ActorSubController subController in results)
-                    _levelController.selectSubController(subController);
-
-                // Mouse has been handled
-                if (results.Count > 0)
-                    return true;
-            }
+                return handleLeftMouseDown();
             else if (e.Button == MouseButtons.Right)
-            {
-                List<ActorSubController> results = hitTest(_levelController.getWorldMouse());
-
-                if (results.Count > 0)
-                {
-                    // Show actor properties
-                    _levelController.closeActorProperties();
-                    _levelController.openActorProperties(properties);
-
-                    // Mouse has been handled
-                    return true;
-                }
-            }
+                return handleRightMouseDown();
 
             return false;
         }

@@ -75,7 +75,7 @@ namespace StasisEditor.Controllers.Actors
         // Draw
         public override void draw()
         {
-            _levelController.view.drawBox(_positionSubController.position, 0.5f, 0.5f, 0, Color.DarkGray);
+            _levelController.view.drawIcon(StasisCore.ActorType.Circuit, _positionSubController.position);
         }
 
         // Clone

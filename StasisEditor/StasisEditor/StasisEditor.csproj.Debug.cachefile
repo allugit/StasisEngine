@@ -10,6 +10,7 @@ Content\logic_gate_icons\and.xnb
 Content\logic_gate_icons\not.xnb
 Content\logic_gate_icons\or.xnb
 Content\actor_controller_icons\item.xnb
+Content\actor_controller_icons\circuit.xnb
 StasisCoreContent\effects\primitives.xnb
 StasisCoreContent\effects\texture.xnb
 StasisCoreContent\effects\noise.xnb

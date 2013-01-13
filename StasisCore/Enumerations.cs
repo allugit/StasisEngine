@@ -11,7 +11,8 @@
         Fluid,
         PlayerSpawn,
         Tree,
-        Item
+        Item,
+        Circuit
     };
 
     public enum PlantType
