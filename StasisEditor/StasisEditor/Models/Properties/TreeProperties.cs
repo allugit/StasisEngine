@@ -44,7 +44,7 @@ namespace StasisEditor.Models
 
         public TreeProperties(
             Vector2 tropism,
-            float angle = (float)(-Math.PI / 2),
+            float angle = 0,
             int seed = 1,
             float age = 0f,
             float internodeLength = 1f,

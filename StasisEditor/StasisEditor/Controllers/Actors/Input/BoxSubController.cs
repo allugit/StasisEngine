@@ -27,6 +27,20 @@ namespace StasisEditor.Controllers.Actors
         {
             _actorResourceController = actorResourceController;
             _alignment = alignment;
+            calculateAlignmentOffset();
+        }
+
+        // Calculate alignment offset
+        private void calculateAlignmentOffset()
+        {
+            _alignmentOffset = Vector2.Zero;
+            if (_alignment == BoxSubControllerAlignment.Edge)
+            {
+                float halfHeight = _actorResourceController.getHalfHeight();
+                float angle = _actorResourceController.getAngle();
+                float halfPi = (float)(Math.PI / 2);
+                _alignmentOffset = new Vector2((float)Math.Cos(angle - halfPi), (float)Math.Sin(angle - halfPi)) * halfHeight;
+            }
         }
 
         #region Input
@@ -96,14 +110,7 @@ namespace StasisEditor.Controllers.Actors
                 _actorResourceController.setAngle(_actorResourceController.getAngle() - _rotationChangeAmount);
 
             // Calculate alignment offset
-            _alignmentOffset = Vector2.Zero;
-            if (_alignment == BoxSubControllerAlignment.Edge)
-            {
-                float halfHeight = _actorResourceController.getHalfHeight();
-                float angle = _actorResourceController.getAngle();
-                float halfPi = (float)(Math.PI / 2);
-                _alignmentOffset = new Vector2((float)Math.Cos(angle - halfPi), (float)Math.Sin(angle - halfPi)) * halfHeight;
-            }
+            calculateAlignmentOffset();
         }
 
         #endregion
