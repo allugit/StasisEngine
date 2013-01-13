@@ -301,12 +301,14 @@ namespace StasisCore.Controllers
         // Load items
         public static List<ResourceObject> loadItems(string type = "")
         {
+            // Clear current item resources
             _itemResources.Clear();
 
-            List<ResourceObject> resourcesLoaded = new List<ResourceObject>();
-
+            // Include blueprint items
             string[] paths = new[] { itemPath, blueprintPath };
 
+            // Load resources
+            List<ResourceObject> resourcesLoaded = new List<ResourceObject>();
             foreach (string path in paths)
             {
                 using (FileStream fs = new FileStream(path, FileMode.Open))

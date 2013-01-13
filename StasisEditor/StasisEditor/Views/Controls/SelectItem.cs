@@ -6,21 +6,24 @@ using System.Drawing;
 using System.Linq;
 using System.Text;
 using System.Windows.Forms;
+using StasisCore.Controllers;
+using StasisCore.Resources;
 using StasisEditor.Controllers;
-using StasisEditor.Models;
 
 namespace StasisEditor.Views.Controls
 {
-    public partial class SelectCircuit : Form
+    public partial class SelectItem : Form
     {
-        public EditorCircuit circuit { get { return circuitUIDs.SelectedItem as EditorCircuit; } }
+        public string uid { get { return itemUIDs.SelectedItem as string; } }
 
-        public SelectCircuit(CircuitController controller)
+        public SelectItem(EditorController controller)
         {
             InitializeComponent();
 
-            // Initialize circuit uids
-            circuitUIDs.DataSource = controller.circuits;
+            // Populate item uids
+            List<ResourceObject> resources = ResourceController.loadItems();
+            List<string> uids = new List<string>(from resource in resources select resource.uid);
+            itemUIDs.DataSource = uids;
         }
 
         // Select button clicked

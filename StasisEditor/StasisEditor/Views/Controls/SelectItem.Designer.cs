@@ -1,6 +1,6 @@
 ﻿namespace StasisEditor.Views.Controls
 {
-    partial class SelectCircuit
+    partial class SelectItem
     {
         /// <summary>
         /// Required designer variable.
@@ -28,23 +28,23 @@
         /// </summary>
         private void InitializeComponent()
         {
-            this.circuitUIDs = new System.Windows.Forms.ListBox();
+            this.itemUIDs = new System.Windows.Forms.ListBox();
             this.label1 = new System.Windows.Forms.Label();
             this.filter = new System.Windows.Forms.TextBox();
             this.selectButton = new System.Windows.Forms.Button();
             this.cancelButton = new System.Windows.Forms.Button();
             this.SuspendLayout();
             // 
-            // circuitUIDs
+            // itemUIDs
             // 
-            this.circuitUIDs.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom)
+            this.itemUIDs.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom)
                         | System.Windows.Forms.AnchorStyles.Left)
                         | System.Windows.Forms.AnchorStyles.Right)));
-            this.circuitUIDs.FormattingEnabled = true;
-            this.circuitUIDs.Location = new System.Drawing.Point(12, 36);
-            this.circuitUIDs.Name = "circuitUIDs";
-            this.circuitUIDs.Size = new System.Drawing.Size(242, 160);
-            this.circuitUIDs.TabIndex = 0;
+            this.itemUIDs.FormattingEnabled = true;
+            this.itemUIDs.Location = new System.Drawing.Point(12, 36);
+            this.itemUIDs.Name = "itemUIDs";
+            this.itemUIDs.Size = new System.Drawing.Size(242, 160);
+            this.itemUIDs.TabIndex = 0;
             // 
             // label1
             // 
@@ -86,7 +86,7 @@
             this.cancelButton.UseVisualStyleBackColor = true;
             this.cancelButton.Click += new System.EventHandler(this.cancelButton_Click);
             // 
-            // SelectCircuit
+            // SelectItem
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
@@ -95,9 +95,9 @@
             this.Controls.Add(this.selectButton);
             this.Controls.Add(this.filter);
             this.Controls.Add(this.label1);
-            this.Controls.Add(this.circuitUIDs);
-            this.Name = "SelectCircuit";
-            this.Text = "Select Circuit";
+            this.Controls.Add(this.itemUIDs);
+            this.Name = "SelectItem";
+            this.Text = "Select Item";
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -105,7 +105,7 @@
 
         #endregion
 
-        private System.Windows.Forms.ListBox circuitUIDs;
+        private System.Windows.Forms.ListBox itemUIDs;
         private System.Windows.Forms.Label label1;
         private System.Windows.Forms.TextBox filter;
         private System.Windows.Forms.Button selectButton;

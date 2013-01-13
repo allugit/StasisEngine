@@ -185,14 +185,18 @@ namespace StasisEditor.Controllers
                     break;
 
                 case "itemsButton":
-                    // TODO: Implement item actors
+                    SelectItem selectItemForm = new SelectItem(_editorController);
+                    if (selectItemForm.ShowDialog() == System.Windows.Forms.DialogResult.OK)
+                    {
+                        Console.WriteLine("selected item: {0}", selectItemForm.uid);
+                    }
                     break;
 
                 case "circuitsButton":
                     SelectCircuit selectCircuitForm = new SelectCircuit(_editorController.circuitController);
                     if (selectCircuitForm.ShowDialog() == System.Windows.Forms.DialogResult.OK)
                     {
-
+                        Console.WriteLine("selected circuit: {0}", selectCircuitForm.circuit.uid);
                     }
                     break;
             }
