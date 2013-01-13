@@ -29,6 +29,8 @@ namespace StasisEditor.Controllers.Actors
         public FluidActorController(LevelController levelController, XElement data)
             : base(levelController)
         {
+            throw new NotImplementedException();
+
             _type = StasisCore.ActorType.Fluid;
 
             // TODO: Initialize points from xml

@@ -28,6 +28,8 @@ namespace StasisEditor.Views.Controls
                 Height = 150;
             else if (properties is CircleProperties)
                 Height = 150;
+            else if (properties is BodyProperties)
+                Height = 180;
         }
 
         // refreshActorProperties

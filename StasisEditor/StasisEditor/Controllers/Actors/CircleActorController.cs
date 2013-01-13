@@ -12,6 +12,7 @@ namespace StasisEditor.Controllers.Actors
     {
         private Vector2 _position;
         private CircleProperties _circleProperties;
+        private BodyProperties _bodyProperties;
         private CircleSubController _circleSubController;
 
         public override List<ActorProperties> properties
@@ -20,6 +21,7 @@ namespace StasisEditor.Controllers.Actors
             {
                 List<ActorProperties> results = base.properties;
                 results.Add(_circleProperties);
+                results.Add(_bodyProperties);
                 return results;
             }
         }
@@ -31,6 +33,7 @@ namespace StasisEditor.Controllers.Actors
             // Defaults
             _position = levelController.getWorldMouse();
             _circleProperties = new CircleProperties(0.5f);
+            _bodyProperties = new BodyProperties(CoreBodyType.Static, 1f, 1f, 0f);
             _type = StasisCore.ActorType.Circle;
 
             // Initialize controls
@@ -42,8 +45,9 @@ namespace StasisEditor.Controllers.Actors
             : base(levelController)
         {
             // TODO: Initialize circle properties from xml
-            // _circleProperties = new CircleProperties(data)
+            // _circleProperties = new CircleProperties(data)...
             _circleProperties = new CircleProperties(0.5f);
+            _bodyProperties = new BodyProperties(CoreBodyType.Static, 1f, 1f, 0f);
             _type = StasisCore.ActorType.Circle;
 
             // Initialize controls

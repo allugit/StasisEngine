@@ -12,6 +12,7 @@ namespace StasisEditor.Controllers.Actors
     {
         private Vector2 _position;
         private BoxProperties _boxProperties;
+        private BodyProperties _bodyProperties;
         private BoxSubController _boxSubController;
         private PointSubController _axisSubController;
 
@@ -21,6 +22,7 @@ namespace StasisEditor.Controllers.Actors
             {
                 List<ActorProperties> results = base.properties;
                 results.Add(_boxProperties);
+                results.Add(_bodyProperties);
                 return results;
             }
         }
@@ -32,6 +34,7 @@ namespace StasisEditor.Controllers.Actors
             // Defaults
             _position = levelController.getWorldMouse();
             _boxProperties = new BoxProperties(0.5f, 0.5f, 0);
+            _bodyProperties = new BodyProperties(CoreBodyType.Static, 1f, 1f, 0f);
             _type = StasisCore.ActorType.MovingPlatform;
 
             // Initialize controls
@@ -43,8 +46,9 @@ namespace StasisEditor.Controllers.Actors
             : base(levelController)
         {
             // TODO: Initialize from xml
-            // _boxProperties = new BoxProperties(data)
+            // _boxProperties = new BoxProperties(data)...
             _boxProperties = new BoxProperties(0.5f, 0.5f, 0);
+            _bodyProperties = new BodyProperties(CoreBodyType.Static, 1f, 1f, 0f);
 
             // Initialize controls
             initializeControls();

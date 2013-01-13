@@ -136,7 +136,7 @@
             // 
             this.mainSplit.Panel2.BackColor = System.Drawing.SystemColors.Control;
             this.mainSplit.Panel2.Controls.Add(this.editorTabControl);
-            this.mainSplit.Size = new System.Drawing.Size(1004, 359);
+            this.mainSplit.Size = new System.Drawing.Size(987, 557);
             this.mainSplit.SplitterDistance = 261;
             this.mainSplit.TabIndex = 1;
             this.mainSplit.TabStop = false;
@@ -152,7 +152,7 @@
             this.editorTabControl.Margin = new System.Windows.Forms.Padding(0);
             this.editorTabControl.Name = "editorTabControl";
             this.editorTabControl.SelectedIndex = 0;
-            this.editorTabControl.Size = new System.Drawing.Size(737, 357);
+            this.editorTabControl.Size = new System.Drawing.Size(720, 555);
             this.editorTabControl.TabIndex = 0;
             this.editorTabControl.SelectedIndexChanged += new System.EventHandler(this.editorTabControl_SelectedIndexChanged);
             // 
@@ -162,7 +162,7 @@
             this.levelTab.Controls.Add(this.levelView1);
             this.levelTab.Location = new System.Drawing.Point(4, 22);
             this.levelTab.Name = "levelTab";
-            this.levelTab.Size = new System.Drawing.Size(729, 331);
+            this.levelTab.Size = new System.Drawing.Size(712, 529);
             this.levelTab.TabIndex = 0;
             this.levelTab.Text = "Level";
             // 
@@ -173,7 +173,7 @@
             this.levelView1.Location = new System.Drawing.Point(0, 0);
             this.levelView1.Margin = new System.Windows.Forms.Padding(0);
             this.levelView1.Name = "levelView1";
-            this.levelView1.Size = new System.Drawing.Size(729, 331);
+            this.levelView1.Size = new System.Drawing.Size(712, 529);
             this.levelView1.TabIndex = 0;
             // 
             // materialsTab
@@ -242,7 +242,7 @@
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(1004, 359);
+            this.ClientSize = new System.Drawing.Size(987, 557);
             this.Controls.Add(this.mainSplit);
             this.Menu = this.mainMenu1;
             this.Name = "EditorView";

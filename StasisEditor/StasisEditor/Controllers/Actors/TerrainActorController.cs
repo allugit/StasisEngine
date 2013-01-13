@@ -10,12 +10,25 @@ namespace StasisEditor.Controllers.Actors
 
     public class TerrainActorController : ActorController, ILinkedPointSubControllable
     {
+        private BodyProperties _bodyProperties;
         private LinkedPointSubController _headLinkedPointController;
+
+        public override List<ActorProperties> properties
+        {
+            get
+            {
+                List<ActorProperties> results = base.properties;
+                results.Add(_bodyProperties);
+                return results;
+            }
+        }
 
         // Create new
         public TerrainActorController(LevelController levelController)
             : base(levelController)
         {
+            // Defaults
+            _bodyProperties = new BodyProperties(CoreBodyType.Static, 1f, 1f, 0f);
             _type = StasisCore.ActorType.Terrain;
 
             // Initialize controls
@@ -29,8 +42,10 @@ namespace StasisEditor.Controllers.Actors
         public TerrainActorController(LevelController levelController, XElement data)
             : base(levelController)
         {
+            throw new NotImplementedException();
             // TODO: Initialize points from xml
             // initializeControls(...);
+            _bodyProperties = new BodyProperties(CoreBodyType.Static, 1f, 1f, 0f);
         }
 
         // Initialize controls
