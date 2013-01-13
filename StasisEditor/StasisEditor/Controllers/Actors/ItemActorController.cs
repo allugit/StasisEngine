@@ -6,16 +6,15 @@ using StasisEditor.Models;
 
 namespace StasisEditor.Controllers.Actors
 {
-    using Keys = System.Windows.Forms.Keys;
-
-    public class PlayerSpawnActorController : ActorController, IPointSubControllable
+    public class ItemActorController : ActorController, IPointSubControllable
     {
+        private ItemProperties _itemProperties;
         private PointSubController _positionSubController;
 
         // Properties
         public override List<ActorProperties> properties
         {
-            get { return new List<ActorProperties>(); }
+            get { return new List<ActorProperties>(new[] { _itemProperties }); }
         }
 
         // Data
@@ -25,31 +24,25 @@ namespace StasisEditor.Controllers.Actors
         }
 
         // Create new
-        public PlayerSpawnActorController(LevelController levelController)
+        public ItemActorController(LevelController levelController, string itemUID)
             : base(levelController)
         {
-            _type = StasisCore.ActorType.PlayerSpawn;
-
-            // Initialize controls
-            initializeControls();
+            _itemProperties = new ItemProperties(itemUID, 1);
+            _positionSubController = new PointSubController(levelController.getWorldMouse(), this);
         }
 
         // Load from xml
-        public PlayerSpawnActorController(LevelController levelController, XElement data)
+        public ItemActorController(LevelController levelController, XElement data)
             : base(levelController)
         {
             throw new NotImplementedException();
-        }
-
-        // Initialize controls
-        private void initializeControls()
-        {
-            _positionSubController = new PointSubController(_levelController.getWorldMouse(), this, 12f);
+            // TODO: Initialize from xml
+            // ...
         }
 
         #region Input
 
-        // hitTest
+        // Hit test
         public override bool hitTest(Vector2 worldMouse, bool select = true)
         {
             // Hit test
@@ -64,44 +57,34 @@ namespace StasisEditor.Controllers.Actors
             return false;
         }
 
-        // globalKeyDown
-        public override void globalKeyDown(Keys key)
-        {
-            // Delete test
-            if (_positionSubController.selected && key == Keys.Delete)
-                delete();
-
-            base.globalKeyDown(key);
-        }
-
         #endregion
 
-        #region Actor Resource Controller Methods
+        #region Point controller
 
-        // selectAllSubControllers
+        // Select all sub controllers
         public override void selectAllSubControllers()
         {
             _levelController.selectSubController(_positionSubController);
         }
 
-        // deselectAllSubControllers
+        // Deselect all sub controllers
         public override void deselectAllSubControllers()
         {
             _levelController.deselectSubController(_positionSubController);
         }
 
-        // draw
+        #endregion
+
+        // Draw
         public override void draw()
         {
-            _levelController.view.drawIcon(StasisCore.ActorType.PlayerSpawn, _positionSubController.position);
+            _levelController.view.drawIcon(StasisCore.ActorType.Item, _positionSubController.position);
         }
 
-        // clone
+        // Clone
         public override ActorController clone()
         {
-            return new PlayerSpawnActorController(_levelController);
+            return new ItemActorController(_levelController, data);
         }
-
-        #endregion
     }
 }

@@ -16,7 +16,7 @@ namespace StasisEditor.Views
         private LevelController _controller;
         private ContentManager _contentManager;
         private Texture2D _playerSpawnIcon;
-        private Texture2D _timerIcon;
+        private Texture2D _itemIcon;
         private SpriteBatch _spriteBatch;
         private Texture2D _pixel;
         private Texture2D _circle;
@@ -48,7 +48,7 @@ namespace StasisEditor.Views
             _pixel.SetData<Color>(new[] { Color.White });
             _circle = _contentManager.Load<Texture2D>("circle");
             _playerSpawnIcon = _contentManager.Load<Texture2D>("actor_controller_icons\\player_spawn");
-            _timerIcon = _contentManager.Load<Texture2D>("actor_controller_icons\\timer");
+            _itemIcon = _contentManager.Load<Texture2D>("actor_controller_icons\\item");
 
             // Draw loop
             Application.Idle += delegate { Invalidate(); };
@@ -239,6 +239,10 @@ namespace StasisEditor.Views
             {
                 case ActorType.PlayerSpawn:
                     texture = _playerSpawnIcon;
+                    break;
+
+                case ActorType.Item:
+                    texture = _itemIcon;
                     break;
             }
 

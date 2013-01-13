@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Windows.Forms;
+using System.Xml.Linq;
 using Microsoft.Xna.Framework;
 using StasisCore;
 using StasisEditor.Models;
@@ -15,7 +16,8 @@ namespace StasisEditor.Controllers.Actors
         public ActorType type { get { return _type; } }
         public bool shift { get { return _levelController.shift; } }
         public bool ctrl { get { return _levelController.ctrl; } }
-        virtual public List<ActorProperties> properties { get { return new List<ActorProperties>(); } }
+        abstract public List<ActorProperties> properties { get; }
+        abstract public XElement data { get; }
 
         public ActorController(LevelController levelController)
         {

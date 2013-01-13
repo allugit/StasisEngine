@@ -188,7 +188,7 @@ namespace StasisEditor.Controllers
                     SelectItem selectItemForm = new SelectItem(_editorController);
                     if (selectItemForm.ShowDialog() == System.Windows.Forms.DialogResult.OK)
                     {
-                        Console.WriteLine("selected item: {0}", selectItemForm.uid);
+                        actorController = new ItemActorController(this, selectItemForm.uid);
                     }
                     break;
 

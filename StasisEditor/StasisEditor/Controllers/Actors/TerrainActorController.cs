@@ -13,14 +13,21 @@ namespace StasisEditor.Controllers.Actors
         private BodyProperties _bodyProperties;
         private LinkedPointSubController _headLinkedPointController;
 
+        // Properties
         public override List<ActorProperties> properties
         {
             get
             {
-                List<ActorProperties> results = base.properties;
+                List<ActorProperties> results = new List<ActorProperties>();
                 results.Add(_bodyProperties);
                 return results;
             }
+        }
+
+        // Data
+        public override XElement data
+        {
+            get { throw new NotImplementedException(); }
         }
 
         // Create new

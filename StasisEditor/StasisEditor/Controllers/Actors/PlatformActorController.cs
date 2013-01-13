@@ -16,15 +16,22 @@ namespace StasisEditor.Controllers.Actors
         private BoxSubController _boxSubController;
         private PointSubController _axisSubController;
 
+        // Properties
         public override List<ActorProperties> properties
         {
             get
             {
-                List<ActorProperties> results = base.properties;
+                List<ActorProperties> results = new List<ActorProperties>();
                 results.Add(_boxProperties);
                 results.Add(_bodyProperties);
                 return results;
             }
+        }
+
+        // Data
+        public override XElement data
+        {
+            get { throw new NotImplementedException(); }
         }
 
         // Create new

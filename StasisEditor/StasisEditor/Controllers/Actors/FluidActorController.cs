@@ -12,6 +12,18 @@ namespace StasisEditor.Controllers.Actors
     {
         private LinkedPointSubController _headLinkedPointController;
 
+        // Properties
+        public override List<ActorProperties> properties
+        {
+            get { return new List<ActorProperties>(); }
+        }
+
+        // Data
+        public override XElement data
+        {
+            get { throw new NotImplementedException(); }
+        }
+
         // Create new
         public FluidActorController(LevelController levelController)
             : base(levelController)

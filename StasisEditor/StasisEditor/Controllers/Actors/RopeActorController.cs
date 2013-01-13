@@ -11,6 +11,18 @@ namespace StasisEditor.Controllers.Actors
         private PointSubController _pointASubController;
         private PointSubController _pointBSubController;
 
+        // Properties
+        public override List<ActorProperties> properties
+        {
+            get { return new List<ActorProperties>(); }
+        }
+
+        // Data
+        public override XElement data
+        {
+            get { throw new NotImplementedException(); }
+        }
+
         // Create new
         public RopeActorController(LevelController levelController)
             : base(levelController)

@@ -49,11 +49,6 @@
       <Importer>TextureImporter</Importer>
       <Processor>TextureProcessor</Processor>
     </Compile>
-    <Compile Include="actor_controller_icons\timer.png">
-      <Name>timer</Name>
-      <Importer>TextureImporter</Importer>
-      <Processor>TextureProcessor</Processor>
-    </Compile>
   </ItemGroup>
   <ItemGroup>
     <Compile Include="logic_gate_icons\input.png">
@@ -80,6 +75,13 @@
     </Compile>
     <Compile Include="logic_gate_icons\or.png">
       <Name>or</Name>
+      <Importer>TextureImporter</Importer>
+      <Processor>TextureProcessor</Processor>
+    </Compile>
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="actor_controller_icons\item.png">
+      <Name>item</Name>
       <Importer>TextureImporter</Importer>
       <Processor>TextureProcessor</Processor>
     </Compile>

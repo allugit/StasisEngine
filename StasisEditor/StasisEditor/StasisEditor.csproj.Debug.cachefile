@@ -4,12 +4,12 @@ StasisCoreContent\effects\noise.xnb
 Content\arial.xnb
 Content\circle.xnb
 Content\actor_controller_icons\player_spawn.xnb
-Content\actor_controller_icons\timer.xnb
 Content\logic_gate_icons\input.xnb
 Content\logic_gate_icons\output.xnb
 Content\logic_gate_icons\and.xnb
 Content\logic_gate_icons\not.xnb
 Content\logic_gate_icons\or.xnb
+Content\actor_controller_icons\item.xnb
 StasisCoreContent\effects\primitives.xnb
 StasisCoreContent\effects\texture.xnb
 StasisCoreContent\effects\noise.xnb

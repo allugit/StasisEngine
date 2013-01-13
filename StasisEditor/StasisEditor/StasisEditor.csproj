@@ -88,6 +88,7 @@
     <Compile Include="Controllers\Actors\Input\PointSubController.cs" />
     <Compile Include="Controllers\Actors\Input\IPointSubControllable.cs" />
     <Compile Include="Controllers\Actors\Input\ISubControllable.cs" />
+    <Compile Include="Controllers\Actors\ItemActorController.cs" />
     <Compile Include="Controllers\Actors\PlatformActorController.cs" />
     <Compile Include="Controllers\Actors\PlayerSpawnActorController.cs" />
     <Compile Include="Controllers\Actors\RopeActorController.cs" />
@@ -106,7 +107,7 @@
     <Compile Include="Models\Properties\BoxProperties.cs" />
     <Compile Include="Models\Properties\CircleProperties.cs" />
     <Compile Include="Models\Properties\FluidProperties.cs" />
-    <Compile Include="Models\Properties\GeneralItemProperties.cs" />
+    <Compile Include="Models\Properties\ItemProperties.cs" />
     <Compile Include="Models\Properties\GeneralPlantProperties.cs" />
     <Compile Include="Models\Properties\TreeProperties.cs" />
     <Compile Include="Models\EditorBlueprint.cs" />
