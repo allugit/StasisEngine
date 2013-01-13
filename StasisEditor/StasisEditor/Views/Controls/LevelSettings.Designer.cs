@@ -28,49 +28,50 @@
         /// </summary>
         private void InitializeComponent()
         {
-            this.label1 = new System.Windows.Forms.Label();
             this.levelPropertiesGrid = new System.Windows.Forms.PropertyGrid();
+            this.groupBox1 = new System.Windows.Forms.GroupBox();
+            this.groupBox1.SuspendLayout();
             this.SuspendLayout();
-            // 
-            // label1
-            // 
-            this.label1.AutoSize = true;
-            this.label1.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label1.Location = new System.Drawing.Point(0, 0);
-            this.label1.Margin = new System.Windows.Forms.Padding(0);
-            this.label1.Name = "label1";
-            this.label1.Size = new System.Drawing.Size(88, 13);
-            this.label1.TabIndex = 0;
-            this.label1.Text = "Level Settings";
             // 
             // levelPropertiesGrid
             // 
-            this.levelPropertiesGrid.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom)
-                        | System.Windows.Forms.AnchorStyles.Left)
-                        | System.Windows.Forms.AnchorStyles.Right)));
+            this.levelPropertiesGrid.Dock = System.Windows.Forms.DockStyle.Fill;
             this.levelPropertiesGrid.HelpVisible = false;
-            this.levelPropertiesGrid.Location = new System.Drawing.Point(0, 16);
+            this.levelPropertiesGrid.Location = new System.Drawing.Point(3, 17);
             this.levelPropertiesGrid.Margin = new System.Windows.Forms.Padding(0);
             this.levelPropertiesGrid.Name = "levelPropertiesGrid";
-            this.levelPropertiesGrid.Size = new System.Drawing.Size(234, 101);
+            this.levelPropertiesGrid.Size = new System.Drawing.Size(219, 61);
             this.levelPropertiesGrid.TabIndex = 1;
+            this.levelPropertiesGrid.ToolbarVisible = false;
+            // 
+            // groupBox1
+            // 
+            this.groupBox1.Controls.Add(this.levelPropertiesGrid);
+            this.groupBox1.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.groupBox1.Location = new System.Drawing.Point(4, 4);
+            this.groupBox1.Name = "groupBox1";
+            this.groupBox1.Padding = new System.Windows.Forms.Padding(3, 4, 4, 4);
+            this.groupBox1.Size = new System.Drawing.Size(226, 82);
+            this.groupBox1.TabIndex = 2;
+            this.groupBox1.TabStop = false;
+            this.groupBox1.Text = "Level Settings";
             // 
             // LevelSettings
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.Controls.Add(this.levelPropertiesGrid);
-            this.Controls.Add(this.label1);
+            this.Controls.Add(this.groupBox1);
             this.Name = "LevelSettings";
-            this.Size = new System.Drawing.Size(234, 117);
+            this.Padding = new System.Windows.Forms.Padding(4);
+            this.Size = new System.Drawing.Size(234, 90);
+            this.groupBox1.ResumeLayout(false);
             this.ResumeLayout(false);
-            this.PerformLayout();
 
         }
 
         #endregion
 
-        private System.Windows.Forms.Label label1;
         private System.Windows.Forms.PropertyGrid levelPropertiesGrid;
+        private System.Windows.Forms.GroupBox groupBox1;
     }
 }

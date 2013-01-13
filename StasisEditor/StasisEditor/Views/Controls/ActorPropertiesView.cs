@@ -19,17 +19,17 @@ namespace StasisEditor.Views.Controls
 
             // Set properties and title
             propertiesGrid.SelectedObject = properties;
-            propertiesTitle.Text = properties.ToString();
+            groupBox.Text = properties.ToString();
 
             // Calculate height
             if (properties is TreeProperties)
-                Height = 360;
+                Height = 330;
             else if (properties is BoxProperties)
-                Height = 150;
+                Height = 100;
             else if (properties is CircleProperties)
-                Height = 150;
+                Height = 90;
             else if (properties is BodyProperties)
-                Height = 180;
+                Height = 140;
         }
 
         // refreshActorProperties

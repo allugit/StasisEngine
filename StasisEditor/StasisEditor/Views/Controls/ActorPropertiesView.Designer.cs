@@ -28,48 +28,49 @@
         /// </summary>
         private void InitializeComponent()
         {
-            this.propertiesTitle = new System.Windows.Forms.Label();
             this.propertiesGrid = new System.Windows.Forms.PropertyGrid();
+            this.groupBox = new System.Windows.Forms.GroupBox();
+            this.groupBox.SuspendLayout();
             this.SuspendLayout();
-            // 
-            // propertiesTitle
-            // 
-            this.propertiesTitle.AutoSize = true;
-            this.propertiesTitle.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.propertiesTitle.Location = new System.Drawing.Point(0, 26);
-            this.propertiesTitle.Margin = new System.Windows.Forms.Padding(0);
-            this.propertiesTitle.Name = "propertiesTitle";
-            this.propertiesTitle.Size = new System.Drawing.Size(98, 13);
-            this.propertiesTitle.TabIndex = 0;
-            this.propertiesTitle.Text = "Actor Properties";
             // 
             // propertiesGrid
             // 
-            this.propertiesGrid.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom)
-                        | System.Windows.Forms.AnchorStyles.Left)
-                        | System.Windows.Forms.AnchorStyles.Right)));
+            this.propertiesGrid.Dock = System.Windows.Forms.DockStyle.Fill;
             this.propertiesGrid.HelpVisible = false;
-            this.propertiesGrid.Location = new System.Drawing.Point(0, 42);
+            this.propertiesGrid.Location = new System.Drawing.Point(3, 17);
             this.propertiesGrid.Name = "propertiesGrid";
-            this.propertiesGrid.Size = new System.Drawing.Size(251, 102);
+            this.propertiesGrid.Size = new System.Drawing.Size(236, 99);
             this.propertiesGrid.TabIndex = 1;
+            this.propertiesGrid.ToolbarVisible = false;
+            // 
+            // groupBox
+            // 
+            this.groupBox.Controls.Add(this.propertiesGrid);
+            this.groupBox.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.groupBox.Location = new System.Drawing.Point(4, 20);
+            this.groupBox.Name = "groupBox";
+            this.groupBox.Padding = new System.Windows.Forms.Padding(3, 4, 4, 4);
+            this.groupBox.Size = new System.Drawing.Size(243, 120);
+            this.groupBox.TabIndex = 2;
+            this.groupBox.TabStop = false;
+            this.groupBox.Text = "Actor Properties";
             // 
             // ActorPropertiesView
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.Controls.Add(this.propertiesGrid);
-            this.Controls.Add(this.propertiesTitle);
+            this.Controls.Add(this.groupBox);
             this.Name = "ActorPropertiesView";
+            this.Padding = new System.Windows.Forms.Padding(4, 20, 4, 4);
             this.Size = new System.Drawing.Size(251, 144);
+            this.groupBox.ResumeLayout(false);
             this.ResumeLayout(false);
-            this.PerformLayout();
 
         }
 
         #endregion
 
-        private System.Windows.Forms.Label propertiesTitle;
         private System.Windows.Forms.PropertyGrid propertiesGrid;
+        private System.Windows.Forms.GroupBox groupBox;
     }
 }
