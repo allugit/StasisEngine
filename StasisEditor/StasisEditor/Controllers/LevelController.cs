@@ -203,6 +203,9 @@ namespace StasisEditor.Controllers
 
             if (actorController != null)
             {
+                // Show level
+                _editorController.view.selectLevelTab();
+
                 // Add actor controller to list
                 addActorController(actorController);
 

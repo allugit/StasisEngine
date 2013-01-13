@@ -85,6 +85,12 @@ namespace StasisEditor.Views
             mainSplit.Panel1.Controls.Remove(actorToolbar);
         }
 
+        // selectLevelTab
+        public void selectLevelTab()
+        {
+            editorTabControl.SelectedIndex = 0;
+        }
+
         // EditorForm closed event
         private void EditorForm_Closed(object sender, FormClosedEventArgs e)
         {
