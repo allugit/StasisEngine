@@ -60,6 +60,13 @@ namespace StasisEditor.Views
             FindForm().KeyUp += new KeyEventHandler(Parent_KeyUp);
             MouseEnter += new EventHandler(LevelView_MouseEnter);
             MouseLeave += new EventHandler(LevelView_MouseLeave);
+            MouseWheel += new MouseEventHandler(LevelView_MouseWheel);
+        }
+
+        // Mouse wheel
+        void LevelView_MouseWheel(object sender, MouseEventArgs e)
+        {
+            _controller.zoom(e.Delta);
         }
 
         // Mouse leave

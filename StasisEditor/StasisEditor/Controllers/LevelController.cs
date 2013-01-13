@@ -64,10 +64,10 @@ namespace StasisEditor.Controllers
 
         #region Getters/Setters
 
-        public float getScale() { return _editorController.getScale(); }
-        public Vector2 getWorldOffset() { return _screenCenter + (new Vector2(_levelView.Width, _levelView.Height) / 2) / _editorController.getScale(); }
-        public Vector2 getWorldMouse() { return new Vector2(_mouse.X, _mouse.Y) / _editorController.getScale() - getWorldOffset(); }
-        public Vector2 getOldWorldMouse() { return new Vector2(_oldMouse.X, _oldMouse.Y) / _editorController.getScale() - getWorldOffset(); }
+        public float getScale() { return _editorController.scale; }
+        public Vector2 getWorldOffset() { return _screenCenter + (new Vector2(_levelView.Width, _levelView.Height) / 2) / _editorController.scale; }
+        public Vector2 getWorldMouse() { return new Vector2(_mouse.X, _mouse.Y) / _editorController.scale - getWorldOffset(); }
+        public Vector2 getOldWorldMouse() { return new Vector2(_oldMouse.X, _oldMouse.Y) / _editorController.scale - getWorldOffset(); }
 
         // getActorControllers
         public List<ActorController> getActorControllers()
@@ -257,6 +257,13 @@ namespace StasisEditor.Controllers
         public void refreshActorProperties()
         {
             _editorController.refreshActorProperties();
+        }
+
+        // zoom
+        public void zoom(int delta)
+        {
+            float modifier = 0.01f;
+            _editorController.scale += modifier * delta;
         }
 
         // handleMouseMove

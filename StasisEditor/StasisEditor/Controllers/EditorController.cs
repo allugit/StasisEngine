@@ -30,6 +30,7 @@ namespace StasisEditor.Controllers
         public LevelController levelController { get { return _levelController; } }
         public BlueprintController blueprintController { get { return _blueprintController; } }
         public CircuitController circuitController { get { return _circuitController; } }
+        public float scale { get { return _scale; } set { _scale = value; } }
 
         public EditorController(EditorView view)
         {
@@ -55,12 +56,6 @@ namespace StasisEditor.Controllers
             // Create circuit controller
             _circuitController = new CircuitController(this, _editorView.circuitsView);
         }
-
-        // getScale
-        public float getScale() { return _scale; }
-
-        // setScale
-        public void setScale(float value) { _scale = value; }
 
         // setActorToolbarEnabled
         public void setActorToolbarEnabled(bool status)
