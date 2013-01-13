@@ -25,7 +25,7 @@ namespace StasisEditor.Views.Controls
             if (properties is TreeProperties)
                 Height = 330;
             else if (properties is BoxProperties)
-                Height = 100;
+                Height = 130;
             else if (properties is CircleProperties)
                 Height = 90;
             else if (properties is BodyProperties)
