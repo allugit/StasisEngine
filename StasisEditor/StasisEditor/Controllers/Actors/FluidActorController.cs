@@ -26,7 +26,7 @@ namespace StasisEditor.Controllers.Actors
 
         // Create new
         public FluidActorController(LevelController levelController)
-            : base(levelController)
+            : base(levelController, levelController.getUnusedActorID())
         {
             _type = StasisCore.ActorType.Fluid;
 
@@ -39,14 +39,13 @@ namespace StasisEditor.Controllers.Actors
 
         // Load from xml
         public FluidActorController(LevelController levelController, XElement data)
-            : base(levelController)
+            : base(levelController, int.Parse(data.Attribute("id").Value))
         {
             throw new NotImplementedException();
 
-            _type = StasisCore.ActorType.Fluid;
+            //_type = StasisCore.ActorType.Fluid;
 
             // TODO: Initialize points from xml
-            // initializePoints(...);
         }
 
         // Initialize controls

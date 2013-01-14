@@ -32,7 +32,7 @@ namespace StasisEditor.Controllers.Actors
 
         // Create new
         public TerrainActorController(LevelController levelController)
-            : base(levelController)
+            : base(levelController, levelController.getUnusedActorID())
         {
             // Defaults
             _bodyProperties = new BodyProperties(CoreBodyType.Static, 1f, 1f, 0f);
@@ -47,12 +47,12 @@ namespace StasisEditor.Controllers.Actors
 
         // Load from xml
         public TerrainActorController(LevelController levelController, XElement data)
-            : base(levelController)
+            : base(levelController, int.Parse(data.Attribute("id").Value))
         {
             throw new NotImplementedException();
             // TODO: Initialize points from xml
             // initializeControls(...);
-            _bodyProperties = new BodyProperties(CoreBodyType.Static, 1f, 1f, 0f);
+            //_bodyProperties = new BodyProperties(CoreBodyType.Static, 1f, 1f, 0f);
         }
 
         // Initialize controls

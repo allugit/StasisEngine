@@ -10,18 +10,22 @@ namespace StasisEditor.Controllers.Actors
 {
     abstract public class ActorController
     {
+        protected int _id;
         protected ActorType _type;
         protected LevelController _levelController;
 
+        public int id { get { return _id; } }
         public ActorType type { get { return _type; } }
         public bool shift { get { return _levelController.shift; } }
         public bool ctrl { get { return _levelController.ctrl; } }
         abstract public List<ActorProperties> properties { get; }
         abstract public XElement data { get; }
 
-        public ActorController(LevelController levelController)
+        public ActorController(LevelController levelController, int id)
         {
             _levelController = levelController;
+            _id = id;
+            Console.WriteLine("Actor created with id: {0}", _id);
         }
 
         // getLevelController

@@ -25,7 +25,7 @@ namespace StasisEditor.Controllers.Actors
 
         // Create new
         public CircuitActorController(LevelController levelController, EditorCircuit circuit)
-            : base(levelController)
+            : base(levelController, levelController.getUnusedActorID())
         {
             _circuit = circuit;
             _positionSubController = new PointSubController(levelController.getWorldMouse(), this);
@@ -33,7 +33,7 @@ namespace StasisEditor.Controllers.Actors
 
         // Load from xml
         public CircuitActorController(LevelController levelController, EditorCircuit circuit, XElement data)
-            : base(levelController)
+            : base(levelController, int.Parse(data.Attribute("id").Value))
         {
             _circuit = circuit;
 

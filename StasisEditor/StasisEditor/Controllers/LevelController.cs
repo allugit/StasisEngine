@@ -62,8 +62,6 @@ namespace StasisEditor.Controllers
             System.Windows.Forms.Application.Idle += delegate { processActorControllerQueue(); };
         }
 
-        #region Getters/Setters
-
         public float getScale() { return _editorController.scale; }
         public Vector2 getWorldOffset() { return _screenCenter + (new Vector2(_levelView.Width, _levelView.Height) / 2) / _editorController.scale; }
         public Vector2 getWorldMouse() { return new Vector2(_mouse.X, _mouse.Y) / _editorController.scale - getWorldOffset(); }
@@ -75,7 +73,30 @@ namespace StasisEditor.Controllers
             return _actorControllers;
         }
 
-        #endregion
+        // Get unused actor id
+        public int getUnusedActorID()
+        {
+            // Method to test if an id is being used
+            Func<int, bool> isIdUsed = (id) =>
+                {
+                    foreach (ActorController actorController in _actorControllers)
+                    {
+                        if (actorController.id == id)
+                        {
+                            id++;
+                            return true;
+                        }
+                    }
+                    return false;
+                };
+
+            // Start at zero, and increment until an id is not used
+            int current = 0;
+            while (isIdUsed(current))
+                current++;
+
+            return current;
+        }
 
         // Process actor controller queues
         public void processActorControllerQueue()

@@ -35,7 +35,7 @@ namespace StasisEditor.Controllers.Actors
 
         // Create new
         public CircleActorController(LevelController levelController)
-            : base(levelController)
+            : base(levelController, levelController.getUnusedActorID())
         {
             // Defaults
             _position = levelController.getWorldMouse();
@@ -49,7 +49,7 @@ namespace StasisEditor.Controllers.Actors
 
         // Load from xml
         public CircleActorController(LevelController levelController, XElement data)
-            : base(levelController)
+            : base(levelController, int.Parse(data.Attribute("id").Value))
         {
             // TODO: Initialize circle properties from xml
             // _circleProperties = new CircleProperties(data)...

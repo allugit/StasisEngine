@@ -26,7 +26,7 @@ namespace StasisEditor.Controllers.Actors
 
         // Create new
         public PlayerSpawnActorController(LevelController levelController)
-            : base(levelController)
+            : base(levelController, levelController.getUnusedActorID())
         {
             _type = StasisCore.ActorType.PlayerSpawn;
 
@@ -36,7 +36,7 @@ namespace StasisEditor.Controllers.Actors
 
         // Load from xml
         public PlayerSpawnActorController(LevelController levelController, XElement data)
-            : base(levelController)
+            : base(levelController, int.Parse(data.Attribute("id").Value))
         {
             throw new NotImplementedException();
         }

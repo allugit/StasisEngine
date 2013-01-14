@@ -25,7 +25,7 @@ namespace StasisEditor.Controllers.Actors
 
         // Create new
         public ItemActorController(LevelController levelController, string itemUID)
-            : base(levelController)
+            : base(levelController, levelController.getUnusedActorID())
         {
             _itemProperties = new ItemProperties(itemUID, 1);
             _positionSubController = new PointSubController(levelController.getWorldMouse(), this);
@@ -33,7 +33,7 @@ namespace StasisEditor.Controllers.Actors
 
         // Load from xml
         public ItemActorController(LevelController levelController, XElement data)
-            : base(levelController)
+            : base(levelController, int.Parse(data.Attribute("id").Value))
         {
             throw new NotImplementedException();
             // TODO: Initialize from xml

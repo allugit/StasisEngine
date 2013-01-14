@@ -53,22 +53,26 @@ namespace StasisEditor.Controllers
         // Get unused gate id
         public int getUnusedGateID(Circuit circuit)
         {
-            int id = 0;
-            while (true)
+            // Method to test if an id is being used
+            Func<int, bool> isIdUsed = (id) =>
             {
                 foreach (Gate gate in circuit.gates)
                 {
                     if (gate.id == id)
                     {
-                        // Increment id and try again
                         id++;
-                        break;
+                        return true;
                     }
                 }
+                return false;
+            };
 
-                // Existing id was not found, so use this one
-                return id;
-            }
+            // Start at zero, and increment until an id is not used
+            int current = 0;
+            while (isIdUsed(current))
+                current++;
+
+            return current;
         }
 
         // Save circuits

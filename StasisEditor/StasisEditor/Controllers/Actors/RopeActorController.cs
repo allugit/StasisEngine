@@ -25,7 +25,7 @@ namespace StasisEditor.Controllers.Actors
 
         // Create new
         public RopeActorController(LevelController levelController)
-            : base(levelController)
+            : base(levelController, levelController.getUnusedActorID())
         {
             _type = StasisCore.ActorType.Rope;
 
@@ -37,10 +37,11 @@ namespace StasisEditor.Controllers.Actors
 
         // Load from xml
         public RopeActorController(LevelController levelController, XElement data)
-            : base(levelController)
+            : base(levelController, int.Parse(data.Attribute("id").Value))
         {
-            // Initialize controls
-            // TODO: Initialize from xml:
+            // TODO: Load id
+
+            // TODO: Initialize from xml...
             initializeControls(Vector2.Zero, Vector2.Zero);
         }
 

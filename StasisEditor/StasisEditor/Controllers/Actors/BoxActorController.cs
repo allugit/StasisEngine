@@ -35,7 +35,7 @@ namespace StasisEditor.Controllers.Actors
 
         // Create new
         public BoxActorController(LevelController levelController)
-            : base(levelController)
+            : base(levelController, levelController.getUnusedActorID())
         {
             // Defaults
             _position = levelController.getWorldMouse();
@@ -49,7 +49,7 @@ namespace StasisEditor.Controllers.Actors
 
         // Load from xml
         public BoxActorController(LevelController levelController, XElement data)
-            : base(levelController)
+            : base(levelController, int.Parse(data.Attribute("id").Value))
         {
             // TODO: Initialize from xml
             // _boxProperites = new BoxProperties(data)...
