@@ -78,6 +78,7 @@
     <Compile Include="Controllers\Actors\ActorController.cs" />
     <Compile Include="Controllers\Actors\CircuitActorController.cs" />
     <Compile Include="Controllers\Actors\FluidActorController.cs" />
+    <Compile Include="Controllers\Actors\Input\CircuitConnectionSubController.cs" />
     <Compile Include="Controllers\Actors\Input\ICircleSubControllable.cs" />
     <Compile Include="Controllers\Actors\Input\ILinkedPointSubControllable.cs" />
     <Compile Include="Controllers\Actors\Input\ActorSubController.cs" />
