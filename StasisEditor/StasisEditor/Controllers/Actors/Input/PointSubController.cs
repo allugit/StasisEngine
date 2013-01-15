@@ -8,9 +8,9 @@ namespace StasisEditor.Controllers.Actors
 
     public class PointSubController : ActorSubController
     {
-        private Vector2 _position;
-        private IPointSubControllable _actorResourceController;
-        private float _marginInPixels;
+        protected Vector2 _position;
+        protected IPointSubControllable _actorController;
+        protected float _marginInPixels;
 
         public Vector2 position { get { return _position; } }
 
@@ -18,7 +18,7 @@ namespace StasisEditor.Controllers.Actors
             : base()
         {
             _position = position;
-            _actorResourceController = actorResourceController;
+            _actorController = actorResourceController;
             _marginInPixels = marginInPixels;
         }
 
@@ -27,7 +27,7 @@ namespace StasisEditor.Controllers.Actors
         // hitTest
         public override bool hitTest(Vector2 worldMouse)
         {
-            float margin = _marginInPixels / _actorResourceController.getLevelController().getScale();
+            float margin = _marginInPixels / _actorController.getLevelController().getScale();
             Vector2 relative = _position - worldMouse;
             float length = relative.Length();
 
@@ -72,16 +72,13 @@ namespace StasisEditor.Controllers.Actors
         // handleMouseMove
         public override void handleMouseMove(Vector2 worldDelta)
         {
-            //bool ctrl = Input.newKey.IsKeyDown(Keys.LeftControl) || Input.newKey.IsKeyDown(Keys.RightControl);
-
-            //if (!ctrl)
-                _position = _position + worldDelta;
+            _position = _position + worldDelta;
         }
 
         // handleLeftMouseDown
         public override void handleMouseDown()
         {
-            _actorResourceController.deselectSubController(this);
+            _actorController.deselectSubController(this);
         }
 
         #endregion
