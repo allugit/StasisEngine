@@ -111,6 +111,41 @@ namespace StasisEditor.Controllers.Actors
 
         #region Input
 
+        // Handle left mouse down
+        public override bool handleLeftMouseDown(List<ActorSubController> results)
+        {
+            // Disable selection of connected CircuitConnectionControllers
+            if (results.Count > 0)
+            {
+                if (results[0] is CircuitConnectionSubController && (results[0] as CircuitConnectionSubController).connected)
+                    return false;
+                else
+                    return base.handleLeftMouseDown(results);
+            }
+            else
+                return false;
+        }
+
+        // Handle right mouse down
+        public override bool handleRightMouseDown(List<ActorSubController> results)
+        {
+            if (results.Count > 0)
+            {
+                _levelController.closeActorProperties();
+                if (results[0] is CircuitConnectionSubController)
+                {
+                    _levelController.openActorProperties((results[0] as CircuitConnectionSubController).properties);
+                }
+                else
+                {
+                    _levelController.openActorProperties(properties);
+                }
+                return true;
+            }
+
+            return false;
+        }
+
         // Hit test
         public override List<ActorSubController> hitTest(Vector2 worldMouse)
         {
@@ -126,7 +161,7 @@ namespace StasisEditor.Controllers.Actors
             // Test connections
             foreach (CircuitConnectionSubController subController in _inputControllers)
             {
-                if (!subController.connected && subController.hitTest(worldMouse))
+                if (subController.hitTest(worldMouse) || subController.lineHitTest(worldMouse, _positionSubController.position))
                 {
                     results.Add(subController);
                     return results;
@@ -134,7 +169,7 @@ namespace StasisEditor.Controllers.Actors
             }
             foreach (CircuitConnectionSubController subController in _outputControllers)
             {
-                if (!subController.connected && subController.hitTest(worldMouse))
+                if (subController.hitTest(worldMouse) || subController.lineHitTest(worldMouse, _positionSubController.position))
                 {
                     results.Add(subController);
                     return results;

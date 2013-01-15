@@ -3,21 +3,25 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using Microsoft.Xna.Framework;
 using StasisCore.Models;
+using StasisEditor.Models;
 
 namespace StasisEditor.Controllers.Actors
 {
     public class CircuitConnectionSubController : PointSubController
     {
         private ActorController _connectedActorController;
+        private CircuitConnectionProperties _properties;
         private Gate _gate;
 
         public bool connected { get { return _connectedActorController != null; } }
         public Gate gate { get { return _gate; } }
+        public List<ActorProperties> properties { get { return new List<ActorProperties>(new[] { _properties }); } }
 
         public CircuitConnectionSubController(Vector2 position, IPointSubControllable actorController, Gate gate)
             : base(position, actorController)
         {
             _gate = gate;
+            _properties = new CircuitConnectionProperties("");
         }
 
         // Handle mouse down

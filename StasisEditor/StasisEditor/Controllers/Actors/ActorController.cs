@@ -70,8 +70,10 @@ namespace StasisEditor.Controllers.Actors
         {
             deselectAllSubControllers();
             _levelController.removeActorController(this);
-            foreach (CircuitConnectionSubController circuitConnection in _circuitConnections)
+            List<CircuitConnectionSubController> copy = new List<CircuitConnectionSubController>(_circuitConnections);
+            foreach (CircuitConnectionSubController circuitConnection in copy)
                 circuitConnection.disconnect();
+            copy.Clear();
             _circuitConnections.Clear();
         }
 
@@ -90,9 +92,8 @@ namespace StasisEditor.Controllers.Actors
         }
 
         // handleLeftMouseDown
-        virtual public bool handleLeftMouseDown()
+        virtual public bool handleLeftMouseDown(List<ActorSubController> results)
         {
-            List<ActorSubController> results = hitTest(_levelController.getWorldMouse());
             foreach (ActorSubController subController in results)
                 _levelController.selectSubController(subController);
 
@@ -101,10 +102,8 @@ namespace StasisEditor.Controllers.Actors
         }
 
         // handleRightMouseDown
-        virtual public bool handleRightMouseDown()
+        virtual public bool handleRightMouseDown(List<ActorSubController> results)
         {
-            List<ActorSubController> results = hitTest(_levelController.getWorldMouse());
-
             if (results.Count > 0)
             {
                 // Show actor properties
@@ -123,9 +122,9 @@ namespace StasisEditor.Controllers.Actors
         {
             // Handle left and right clicks
             if (e.Button == MouseButtons.Left)
-                return handleLeftMouseDown();
+                return handleLeftMouseDown(hitTest(_levelController.getWorldMouse()));
             else if (e.Button == MouseButtons.Right)
-                return handleRightMouseDown();
+                return handleRightMouseDown(hitTest(_levelController.getWorldMouse()));
 
             return false;
         }
