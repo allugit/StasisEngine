@@ -310,7 +310,9 @@ namespace StasisEditor.Controllers
             {
                 // Move selected sub controllers
                 foreach (ActorSubController subController in _selectedSubControllers)
+                {
                     subController.handleMouseMove(worldDelta);
+                }
             }
         }
 

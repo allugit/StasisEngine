@@ -13,6 +13,7 @@ namespace StasisEditor.Controllers.Actors
         protected int _id;
         protected ActorType _type;
         protected LevelController _levelController;
+        protected List<CircuitConnectionSubController> _circuitConnections;
 
         public int id { get { return _id; } }
         public ActorType type { get { return _type; } }
@@ -20,12 +21,21 @@ namespace StasisEditor.Controllers.Actors
         public bool ctrl { get { return _levelController.ctrl; } }
         abstract public List<ActorProperties> properties { get; }
         abstract public XElement data { get; }
+        abstract public Vector2 connectionPosition { get; }
 
         public ActorController(LevelController levelController, int id)
         {
             _levelController = levelController;
             _id = id;
-            Console.WriteLine("Actor created with id: {0}", _id);
+            _circuitConnections = new List<CircuitConnectionSubController>();
+            Application.Idle += new EventHandler(Application_Idle);
+        }
+
+        // Constantly update the position of circuit connection sub controllers
+        void Application_Idle(object sender, EventArgs e)
+        {
+            foreach (CircuitConnectionSubController circuitConnectionSubController in _circuitConnections)
+                circuitConnectionSubController.updatePosition(connectionPosition);
         }
 
         // getLevelController
@@ -60,6 +70,20 @@ namespace StasisEditor.Controllers.Actors
         {
             deselectAllSubControllers();
             _levelController.removeActorController(this);
+        }
+
+        // Connect circuit
+        public void connectCircuit(CircuitConnectionSubController circuitConnection)
+        {
+            System.Diagnostics.Debug.Assert(!_circuitConnections.Contains(circuitConnection));
+            _circuitConnections.Add(circuitConnection);
+        }
+
+        // Disconnect circuit
+        public void disconnectCircuit(CircuitConnectionSubController circuitConnection)
+        {
+            System.Diagnostics.Debug.Assert(_circuitConnections.Contains(circuitConnection));
+            _circuitConnections.Remove(circuitConnection);
         }
 
         // handleLeftMouseDown

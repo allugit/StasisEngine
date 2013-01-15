@@ -13,13 +13,11 @@ namespace StasisEditor.Controllers.Actors
         private PointSubController _positionSubController;
         private Dictionary<int, CircuitConnectionSubController> _inputControllers;
 
-        // Properties
+        public override Vector2 connectionPosition { get { return _positionSubController.position; } }
         public override List<ActorProperties> properties
         {
             get { return new List<ActorProperties>(); }
         }
-
-        // Data
         public override XElement data
         {
             get { throw new NotImplementedException(); }
@@ -73,7 +71,7 @@ namespace StasisEditor.Controllers.Actors
             // Test connections
             foreach (CircuitConnectionSubController subController in _inputControllers.Values)
             {
-                if (subController.hitTest(worldMouse))
+                if (!subController.connected && subController.hitTest(worldMouse))
                 {
                     results.Add(subController);
                     return results;

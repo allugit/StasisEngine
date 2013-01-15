@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using Microsoft.Xna.Framework;
 using StasisCore.Models;
 
@@ -7,7 +8,10 @@ namespace StasisEditor.Controllers.Actors
 {
     public class CircuitConnectionSubController : PointSubController
     {
+        private ActorController _connectedActorController;
         private Gate _gate;
+
+        public bool connected { get { return _connectedActorController != null; } }
 
         public CircuitConnectionSubController(Vector2 position, IPointSubControllable actorController, Gate gate)
             : base(position, actorController)
@@ -27,9 +31,25 @@ namespace StasisEditor.Controllers.Actors
                 if (!(actorController is CircuitActorController))
                 {
                     if (actorController.hitTest(_actorController.getLevelController().getWorldMouse()).Count > 0)
-                        Console.WriteLine("form connection with: {0}", actorController);
+                    {
+                        connectToActorController(actorController);
+                    }
                 }
             }
+        }
+
+        // Connect to actor controller
+        public void connectToActorController(ActorController actorController)
+        {
+            Debug.Assert(_connectedActorController == null);
+            _connectedActorController = actorController;
+            actorController.connectCircuit(this);
+        }
+
+        // Update position
+        public void updatePosition(Vector2 position)
+        {
+            _position = position;
         }
     }
 }

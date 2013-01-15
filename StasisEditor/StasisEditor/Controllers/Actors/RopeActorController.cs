@@ -11,13 +11,11 @@ namespace StasisEditor.Controllers.Actors
         private PointSubController _pointASubController;
         private PointSubController _pointBSubController;
 
-        // Properties
+        public override Vector2 connectionPosition { get { return _pointASubController.position; } }
         public override List<ActorProperties> properties
         {
             get { return new List<ActorProperties>(); }
         }
-
-        // Data
         public override XElement data
         {
             get { throw new NotImplementedException(); }

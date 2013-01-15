@@ -12,13 +12,11 @@ namespace StasisEditor.Controllers.Actors
     {
         private LinkedPointSubController _headLinkedPointController;
 
-        // Properties
+        public override Vector2 connectionPosition { get { return _headLinkedPointController.position; } }
         public override List<ActorProperties> properties
         {
             get { return new List<ActorProperties>(); }
         }
-
-        // Data
         public override XElement data
         {
             get { throw new NotImplementedException(); }

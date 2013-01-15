@@ -13,7 +13,7 @@ namespace StasisEditor.Controllers.Actors
         private BoxSubController _boxController;
         private PointSubController _tropismController;
 
-        // Properties
+        public override Vector2 connectionPosition { get { return _position; } }
         public override List<ActorProperties> properties
         {
             get
@@ -23,8 +23,6 @@ namespace StasisEditor.Controllers.Actors
                 return results;
             }
         }
-
-        // Data
         public override XElement data
         {
             get { throw new NotImplementedException(); }
