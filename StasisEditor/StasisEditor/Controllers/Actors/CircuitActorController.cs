@@ -7,6 +7,8 @@ using StasisCore.Models;
 
 namespace StasisEditor.Controllers.Actors
 {
+    using Keys = System.Windows.Forms.Keys;
+
     public class CircuitActorController : ActorController, IPointSubControllable
     {
         private EditorCircuit _circuit;
@@ -79,6 +81,16 @@ namespace StasisEditor.Controllers.Actors
             }
 
             return results;
+        }
+
+        // globalCheckKeys
+        public override void globalKeyDown(Keys key)
+        {
+            // Delete test
+            if (_positionSubController.selected && key == Keys.Delete)
+                delete();
+
+            base.globalKeyDown(key);
         }
 
         #endregion
