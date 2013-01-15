@@ -16,6 +16,7 @@ namespace StasisEditor.Controllers.Actors
         private EditorCircuit _circuit;
         private PointSubController _positionSubController;
         private List<CircuitConnectionSubController> _inputControllers;
+        private List<CircuitConnectionSubController> _outputControllers;
 
         public override Vector2 connectionPosition { get { return _positionSubController.position; } }
         public override List<ActorProperties> properties
@@ -48,19 +49,24 @@ namespace StasisEditor.Controllers.Actors
         {
             _positionSubController = new PointSubController(position, this);
             _inputControllers = new List<CircuitConnectionSubController>();
+            _outputControllers = new List<CircuitConnectionSubController>();
+
             float offset = 24f / _levelController.getScale();
             for (int i = 0; i < _circuit.inputGates.Count; i++)
             {
                 Gate gate = _circuit.inputGates[i];
                 _inputControllers.Add(new CircuitConnectionSubController(position + new Vector2(-offset, i * offset), this, gate));
             }
+            for (int i = 0; i < _circuit.outputGates.Count; i++)
+            {
+                Gate gate = _circuit.outputGates[i];
+                _outputControllers.Add(new CircuitConnectionSubController(position + new Vector2(offset, i * offset), this, gate));
+            }
         }
 
         // Update connections
         public void updateConnections()
         {
-            Console.WriteLine("updating circuit connections");
-
             // Preserve connections where the gate still exists in the circuit
             List<CircuitConnectionSubController> connectionsToRemove = new List<CircuitConnectionSubController>();
             foreach (CircuitConnectionSubController connection in _inputControllers)
@@ -73,15 +79,33 @@ namespace StasisEditor.Controllers.Actors
                 connection.disconnect();
                 _inputControllers.Remove(connection);
             }
+            connectionsToRemove.Clear();
+            foreach (CircuitConnectionSubController connection in _outputControllers)
+            {
+                if (!_circuit.gates.Contains(connection.gate))
+                    connectionsToRemove.Add(connection);
+            }
+            foreach (CircuitConnectionSubController connection in connectionsToRemove)
+            {
+                connection.disconnect();
+                _outputControllers.Remove(connection);
+            }
 
             // Initialize new connections for new gates
-            List<Gate> existingGates = new List<Gate>(from CircuitConnectionSubController connection in _inputControllers select connection.gate);
             float offset = 24f / _levelController.getScale();
+            List<Gate> existingGates = new List<Gate>(from CircuitConnectionSubController connection in _inputControllers select connection.gate);
             for (int i = 0; i < _circuit.inputGates.Count; i++)
             {
                 Gate gate = _circuit.inputGates[i];
                 if (!existingGates.Contains(gate))
                     _inputControllers.Add(new CircuitConnectionSubController(_positionSubController.position + new Vector2(-offset, i * offset), this, gate));
+            }
+            existingGates = new List<Gate>(from CircuitConnectionSubController connection in _outputControllers select connection.gate);
+            for (int i = 0; i < _circuit.outputGates.Count; i++)
+            {
+                Gate gate = _circuit.outputGates[i];
+                if (!existingGates.Contains(gate))
+                    _outputControllers.Add(new CircuitConnectionSubController(_positionSubController.position + new Vector2(offset, i * offset), this, gate));
             }
         }
 
@@ -101,6 +125,14 @@ namespace StasisEditor.Controllers.Actors
 
             // Test connections
             foreach (CircuitConnectionSubController subController in _inputControllers)
+            {
+                if (!subController.connected && subController.hitTest(worldMouse))
+                {
+                    results.Add(subController);
+                    return results;
+                }
+            }
+            foreach (CircuitConnectionSubController subController in _outputControllers)
             {
                 if (!subController.connected && subController.hitTest(worldMouse))
                 {
@@ -132,6 +164,8 @@ namespace StasisEditor.Controllers.Actors
             _levelController.selectSubController(_positionSubController);
             foreach (PointSubController subController in _inputControllers)
                 _levelController.selectSubController(subController);
+            foreach (PointSubController subController in _outputControllers)
+                _levelController.selectSubController(subController);
         }
 
         // Deselect all sub controllers
@@ -139,6 +173,8 @@ namespace StasisEditor.Controllers.Actors
         {
             _levelController.deselectSubController(_positionSubController);
             foreach (PointSubController subController in _inputControllers)
+                _levelController.deselectSubController(subController);
+            foreach (PointSubController subController in _outputControllers)
                 _levelController.deselectSubController(subController);
         }
 
@@ -149,8 +185,13 @@ namespace StasisEditor.Controllers.Actors
         {
             foreach (PointSubController subController in _inputControllers)
             {
-                _levelController.view.drawLine(_positionSubController.position, subController.position, Color.DarkGray);
-                _levelController.view.drawPoint(subController.position, Color.Gray);
+                _levelController.view.drawLine(_positionSubController.position, subController.position, Color.DarkGreen);
+                _levelController.view.drawPoint(subController.position, Color.Green);
+            }
+            foreach (PointSubController subController in _outputControllers)
+            {
+                _levelController.view.drawLine(_positionSubController.position, subController.position, Color.DarkRed);
+                _levelController.view.drawPoint(subController.position, Color.Red);
             }
             _levelController.view.drawIcon(StasisCore.ActorType.Circuit, _positionSubController.position);
         }
