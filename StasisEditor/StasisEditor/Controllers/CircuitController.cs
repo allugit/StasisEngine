@@ -79,6 +79,7 @@ namespace StasisEditor.Controllers
         public void saveCircuits()
         {
             ResourceController.saveCircuitResources(new List<Circuit>(_circuits));
+            _editorController.levelController.updateCircuitActorConnections();
         }
 
         // Delete circuit gate

@@ -294,6 +294,16 @@ namespace StasisEditor.Controllers
             _editorController.scale += modifier * delta;
         }
 
+        // Update circuit actor connections
+        public void updateCircuitActorConnections()
+        {
+            foreach (ActorController actorController in _actorControllers)
+            {
+                if (actorController.type == ActorType.Circuit)
+                    (actorController as CircuitActorController).updateConnections();
+            }
+        }
+
         // handleMouseMove
         public void handleMouseMove(System.Windows.Forms.MouseEventArgs e)
         {

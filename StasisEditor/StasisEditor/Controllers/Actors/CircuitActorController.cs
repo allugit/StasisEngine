@@ -1,9 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Xml.Linq;
 using Microsoft.Xna.Framework;
 using StasisEditor.Models;
 using StasisCore.Models;
+using StasisCore;
 
 namespace StasisEditor.Controllers.Actors
 {
@@ -13,7 +15,7 @@ namespace StasisEditor.Controllers.Actors
     {
         private EditorCircuit _circuit;
         private PointSubController _positionSubController;
-        private Dictionary<int, CircuitConnectionSubController> _inputControllers;
+        private List<CircuitConnectionSubController> _inputControllers;
 
         public override Vector2 connectionPosition { get { return _positionSubController.position; } }
         public override List<ActorProperties> properties
@@ -30,6 +32,7 @@ namespace StasisEditor.Controllers.Actors
             : base(levelController, levelController.getUnusedActorID())
         {
             _circuit = circuit;
+            _type = ActorType.Circuit;
             initializeSubControllers(levelController.getWorldMouse());
         }
 
@@ -44,15 +47,41 @@ namespace StasisEditor.Controllers.Actors
         private void initializeSubControllers(Vector2 position)
         {
             _positionSubController = new PointSubController(position, this);
-            _inputControllers = new Dictionary<int, CircuitConnectionSubController>();
+            _inputControllers = new List<CircuitConnectionSubController>();
             float offset = 24f / _levelController.getScale();
-            for (int i = 0; i < _circuit.gates.Count; i++)
+            for (int i = 0; i < _circuit.inputGates.Count; i++)
             {
-                Gate gate = _circuit.gates[i];
-                if (gate.type == "input")
-                {
-                    _inputControllers[gate.id] = new CircuitConnectionSubController(position + new Vector2(-offset, i * offset), this, gate);
-                }
+                Gate gate = _circuit.inputGates[i];
+                _inputControllers.Add(new CircuitConnectionSubController(position + new Vector2(-offset, i * offset), this, gate));
+            }
+        }
+
+        // Update connections
+        public void updateConnections()
+        {
+            Console.WriteLine("updating circuit connections");
+
+            // Preserve connections where the gate still exists in the circuit
+            List<CircuitConnectionSubController> connectionsToRemove = new List<CircuitConnectionSubController>();
+            foreach (CircuitConnectionSubController connection in _inputControllers)
+            {
+                if (!_circuit.gates.Contains(connection.gate))
+                    connectionsToRemove.Add(connection);
+            }
+            foreach (CircuitConnectionSubController connection in connectionsToRemove)
+            {
+                connection.disconnect();
+                _inputControllers.Remove(connection);
+            }
+
+            // Initialize new connections for new gates
+            List<Gate> existingGates = new List<Gate>(from CircuitConnectionSubController connection in _inputControllers select connection.gate);
+            float offset = 24f / _levelController.getScale();
+            for (int i = 0; i < _circuit.inputGates.Count; i++)
+            {
+                Gate gate = _circuit.inputGates[i];
+                if (!existingGates.Contains(gate))
+                    _inputControllers.Add(new CircuitConnectionSubController(_positionSubController.position + new Vector2(-offset, i * offset), this, gate));
             }
         }
 
@@ -71,7 +100,7 @@ namespace StasisEditor.Controllers.Actors
             }
 
             // Test connections
-            foreach (CircuitConnectionSubController subController in _inputControllers.Values)
+            foreach (CircuitConnectionSubController subController in _inputControllers)
             {
                 if (!subController.connected && subController.hitTest(worldMouse))
                 {
@@ -101,7 +130,7 @@ namespace StasisEditor.Controllers.Actors
         public override void selectAllSubControllers()
         {
             _levelController.selectSubController(_positionSubController);
-            foreach (PointSubController subController in _inputControllers.Values)
+            foreach (PointSubController subController in _inputControllers)
                 _levelController.selectSubController(subController);
         }
 
@@ -109,7 +138,7 @@ namespace StasisEditor.Controllers.Actors
         public override void deselectAllSubControllers()
         {
             _levelController.deselectSubController(_positionSubController);
-            foreach (PointSubController subController in _inputControllers.Values)
+            foreach (PointSubController subController in _inputControllers)
                 _levelController.deselectSubController(subController);
         }
 
@@ -118,7 +147,7 @@ namespace StasisEditor.Controllers.Actors
         // Draw
         public override void draw()
         {
-            foreach (PointSubController subController in _inputControllers.Values)
+            foreach (PointSubController subController in _inputControllers)
             {
                 _levelController.view.drawLine(_positionSubController.position, subController.position, Color.DarkGray);
                 _levelController.view.drawPoint(subController.position, Color.Gray);

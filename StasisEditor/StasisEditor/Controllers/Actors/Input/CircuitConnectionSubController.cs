@@ -12,6 +12,7 @@ namespace StasisEditor.Controllers.Actors
         private Gate _gate;
 
         public bool connected { get { return _connectedActorController != null; } }
+        public Gate gate { get { return _gate; } }
 
         public CircuitConnectionSubController(Vector2 position, IPointSubControllable actorController, Gate gate)
             : base(position, actorController)
@@ -47,8 +48,9 @@ namespace StasisEditor.Controllers.Actors
         }
 
         // Disconnect from actor controller
-        public void disconnectFromActorController(ActorController actorController)
+        public void disconnect()
         {
+            _connectedActorController.disconnectCircuit(this);
             _connectedActorController = null;
         }
 
