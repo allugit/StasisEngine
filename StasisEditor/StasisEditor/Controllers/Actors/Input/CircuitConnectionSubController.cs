@@ -46,6 +46,12 @@ namespace StasisEditor.Controllers.Actors
             actorController.connectCircuit(this);
         }
 
+        // Disconnect from actor controller
+        public void disconnectFromActorController(ActorController actorController)
+        {
+            _connectedActorController = null;
+        }
+
         // Update position
         public void updatePosition(Vector2 position)
         {

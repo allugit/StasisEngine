@@ -70,6 +70,9 @@ namespace StasisEditor.Controllers.Actors
         {
             deselectAllSubControllers();
             _levelController.removeActorController(this);
+            foreach (CircuitConnectionSubController circuitConnection in _circuitConnections)
+                circuitConnection.disconnectFromActorController(this);
+            _circuitConnections.Clear();
         }
 
         // Connect circuit
