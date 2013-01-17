@@ -182,5 +182,17 @@ namespace StasisEditor.Views
         {
             _controller.levelController.saveLevel();
         }
+
+        // "Level load" menu item clicked
+        private void menuLevelLoad_Click(object sender, EventArgs e)
+        {
+            OpenFileDialog fileDialog = new OpenFileDialog();
+            fileDialog.Multiselect = false;
+            fileDialog.Filter = "Level XML (*.xml) | *.xml";
+            if (fileDialog.ShowDialog() == System.Windows.Forms.DialogResult.OK)
+            {
+                _controller.loadLevel(fileDialog.FileName);
+            }
+        }
     }
 }

@@ -1,7 +1,7 @@
 ﻿using System;
+using System.ComponentModel;
 using System.Collections.Generic;
 using System.Xml.Linq;
-using Microsoft.Xna.Framework;
 
 namespace StasisEditor.Models
 {
@@ -10,6 +10,7 @@ namespace StasisEditor.Models
         private float _viscosity;
 
         public float viscosity { get { return _viscosity; } set { _viscosity = value; } }
+        [Browsable(false)]
         public XAttribute[] data
         {
             get

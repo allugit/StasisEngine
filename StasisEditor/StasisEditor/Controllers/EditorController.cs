@@ -85,17 +85,25 @@ namespace StasisEditor.Controllers
         public void createNewLevel()
         {
             _levelController.createNewLevel();
-
-            // Modify menu items
             _editorView.enableNewLevel(false);
             _editorView.enableCloseLevel(true);
             _editorView.enableLoadLevel(false);
             _editorView.enableSaveLevel(true);
-
-            // Add level settings
             _editorView.addLevelSettings(_levelController.level);
+            _actorToolbar = new ActorToolbar();
+            _actorToolbar.setController(_levelController);
+            _editorView.addActorToolbar(_actorToolbar);
+        }
 
-            // Create actor toolbar
+        // loadLevel
+        public void loadLevel(string filePath)
+        {
+            _levelController.loadLevel(filePath);
+            _editorView.enableNewLevel(false);
+            _editorView.enableCloseLevel(true);
+            _editorView.enableLoadLevel(false);
+            _editorView.enableSaveLevel(true);
+            _editorView.addLevelSettings(_levelController.level);
             _actorToolbar = new ActorToolbar();
             _actorToolbar.setController(_levelController);
             _editorView.addActorToolbar(_actorToolbar);
@@ -105,18 +113,13 @@ namespace StasisEditor.Controllers
         public void closeLevel()
         {
             _levelController.closeLevel();
-
-            // Modify menu
             _editorView.enableNewLevel(true);
             _editorView.enableCloseLevel(false);
             _editorView.enableLoadLevel(true);
             _editorView.enableSaveLevel(false);
-
-            // Remove level settings
             _editorView.removeLevelSettings();
-
-            // Remove actor toolbar
             _editorView.removeActorToolbar(_actorToolbar);
+            _editorView.closeActorProperties();
         }
 
         // exit

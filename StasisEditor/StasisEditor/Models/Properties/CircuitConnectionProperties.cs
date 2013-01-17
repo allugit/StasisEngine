@@ -1,4 +1,5 @@
 ﻿using System;
+using System.ComponentModel;
 using System.Collections.Generic;
 using System.Xml.Linq;
 
@@ -9,6 +10,7 @@ namespace StasisEditor.Models
         private string _message;
 
         public string message { get { return _message; } set { _message = value; } }
+        [Browsable(false)]
         public XAttribute[] data
         {
             get

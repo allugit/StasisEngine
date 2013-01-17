@@ -2,6 +2,8 @@
 using System.Collections.Generic;
 using System.Xml.Linq;
 using Microsoft.Xna.Framework;
+using StasisCore;
+using StasisCore.Resources;
 using StasisEditor.Models;
 
 namespace StasisEditor.Controllers.Actors
@@ -31,6 +33,7 @@ namespace StasisEditor.Controllers.Actors
             get
             {
                 XElement d = base.data;
+                d.SetAttributeValue("position", _position);
                 d.Add(_circleProperties.data);
                 d.Add(_bodyProperties.data);
                 return d;
@@ -41,13 +44,10 @@ namespace StasisEditor.Controllers.Actors
         public CircleActorController(LevelController levelController)
             : base(levelController, levelController.getUnusedActorID())
         {
-            // Defaults
             _position = levelController.getWorldMouse();
             _circleProperties = new CircleProperties(0.5f);
             _bodyProperties = new BodyProperties(CoreBodyType.Static, 1f, 1f, 0f);
-            _type = StasisCore.ActorType.Circle;
-
-            // Initialize controls
+            _type = ActorType.Circle;
             initializeControls();
         }
 
@@ -55,13 +55,10 @@ namespace StasisEditor.Controllers.Actors
         public CircleActorController(LevelController levelController, XElement data)
             : base(levelController, int.Parse(data.Attribute("id").Value))
         {
-            // TODO: Initialize circle properties from xml
-            // _circleProperties = new CircleProperties(data)...
-            _circleProperties = new CircleProperties(0.5f);
-            _bodyProperties = new BodyProperties(CoreBodyType.Static, 1f, 1f, 0f);
-            _type = StasisCore.ActorType.Circle;
-
-            // Initialize controls
+            _position = XmlLoadHelper.getVector2(data.Attribute("position").Value);
+            _circleProperties = new CircleProperties(data);
+            _bodyProperties = new BodyProperties(data);
+            _type = ActorType.Circle;
             initializeControls();
         }
 

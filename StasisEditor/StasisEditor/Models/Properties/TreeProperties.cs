@@ -1,4 +1,5 @@
 ﻿using System;
+using System.ComponentModel;
 using System.Collections.Generic;
 using System.Xml.Linq;
 using Microsoft.Xna.Framework;
@@ -41,6 +42,7 @@ namespace StasisEditor.Models
         public float optimalGrowthWeight { get { return _optimalGrowthWeight; } set { _optimalGrowthWeight = value; } }
         public float tropismWeight { get { return _tropismWeight; } set { _tropismWeight = value; } }
         public Vector2 tropism { get { return _tropism; } set { _tropism = value; } }
+        [Browsable(false)]
         public XAttribute[] data
         {
             get

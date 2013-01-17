@@ -1,4 +1,5 @@
 ﻿using System;
+using System.ComponentModel;
 using System.Collections.Generic;
 using System.Xml.Linq;
 
@@ -9,6 +10,7 @@ namespace StasisEditor.Models
         private float _radius;
 
         public float radius { get { return _radius; } set { _radius = value; } }
+        [Browsable(false)]
         public XAttribute[] data
         {
             get
@@ -17,10 +19,17 @@ namespace StasisEditor.Models
             }
         }
 
+        // Create new
         public CircleProperties(float radius)
             : base()
         {
             _radius = radius;
+        }
+
+        // Load from xml
+        public CircleProperties(XElement data)
+        {
+            _radius = float.Parse(data.Attribute("radius").Value);
         }
 
         // clone

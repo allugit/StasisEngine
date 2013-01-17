@@ -1,4 +1,5 @@
 ﻿using System;
+using System.ComponentModel;
 using System.Collections.Generic;
 using System.Xml.Linq;
 
@@ -13,6 +14,7 @@ namespace StasisEditor.Models
         public bool dropsSeeds { get { return _dropsSeeds; } set { _dropsSeeds = value; } }
         public float fruitFrequency { get { return _fruitFrequency; } set { _fruitFrequency = value; } }
         public string fruitItemTag { get { return _fruitItemTag; } set { _fruitItemTag = value; } }
+        [Browsable(false)]
         public XAttribute[] data
         {
             get

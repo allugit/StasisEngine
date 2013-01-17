@@ -98,6 +98,7 @@
             // 
             this.menuLevelLoad.Index = 1;
             this.menuLevelLoad.Text = "Load";
+            this.menuLevelLoad.Click += new System.EventHandler(this.menuLevelLoad_Click);
             // 
             // menuLevelSave
             // 

@@ -4,6 +4,7 @@ using System.ComponentModel;
 using System.IO;
 using System.Xml.Linq;
 using Microsoft.Xna.Framework;
+using StasisEditor.Controllers;
 using StasisEditor.Controllers.Actors;
 using StasisCore.Resources;
 using StasisCore.Models;
@@ -13,6 +14,7 @@ namespace StasisEditor.Models
 {
     public class EditorLevel : Level
     {
+        private LevelController _levelController;
         private List<ActorController> _actorControllers;
 
         [Browsable(false)]
@@ -36,15 +38,34 @@ namespace StasisEditor.Models
         }
 
         // Create new
-        public EditorLevel(string name) : base(name)
+        public EditorLevel(LevelController levelController, string name) : base(name)
         {
+            _levelController = levelController;
             _actorControllers = new List<ActorController>();
         }
 
-        // Load actors
-        protected override void loadActors(XElement data)
+        // Load from xml
+        public EditorLevel(LevelController levelController, XElement data) : base(data)
         {
-            throw new NotImplementedException();
+            _levelController = levelController;
+            _actorControllers = new List<ActorController>();
+            foreach (XElement actorData in data.Elements("Actor"))
+            {
+                switch (actorData.Attribute("type").Value)
+                {
+                    case "Box":
+                        _actorControllers.Add(new BoxActorController(_levelController, actorData));
+                        break;
+
+                    case "Circle":
+                        _actorControllers.Add(new CircleActorController(_levelController, actorData));
+                        break;
+
+                    case "Terrain":
+                        _actorControllers.Add(new TerrainActorController(_levelController, actorData));
+                        break;
+                }
+            }
         }
 
         // Save

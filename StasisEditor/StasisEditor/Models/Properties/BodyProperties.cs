@@ -1,4 +1,5 @@
 ﻿using System;
+using System.ComponentModel;
 using System.Collections.Generic;
 using System.Xml.Linq;
 
@@ -22,6 +23,7 @@ namespace StasisEditor.Models
         public float density { get { return _density; } set { _density = value; } }
         public float friction { get { return _friction; } set { _friction = value; } }
         public float restitution { get { return _restitution; } set { _restitution = value; } }
+        [Browsable(false)]
         public XAttribute[] data
         {
             get
@@ -36,6 +38,7 @@ namespace StasisEditor.Models
             }
         }
 
+        // Create new
         public BodyProperties(CoreBodyType bodyType, float density, float friction, float restitution)
             : base()
         {
@@ -43,6 +46,15 @@ namespace StasisEditor.Models
             _density = density;
             _friction = friction;
             _restitution = restitution;
+        }
+
+        // Load from xml
+        public BodyProperties(XElement data)
+        {
+            _bodyType = (CoreBodyType)Enum.Parse(typeof(CoreBodyType), data.Attribute("body_type").Value);
+            _density = float.Parse(data.Attribute("density").Value);
+            _friction = float.Parse(data.Attribute("friction").Value);
+            _restitution = float.Parse(data.Attribute("restitution").Value);
         }
 
         // clone

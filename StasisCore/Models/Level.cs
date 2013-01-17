@@ -30,10 +30,6 @@ namespace StasisCore.Models
             _gravity = XmlLoadHelper.getVector2(data.Attribute("gravity").Value);
             _wind = XmlLoadHelper.getVector2(data.Attribute("wind").Value);
             _name = data.Attribute("name").Value;
-            loadActors(data);
         }
-
-        // Load actors
-        abstract protected void loadActors(XElement data);
     }
 }

@@ -3,6 +3,8 @@ using System.Collections.Generic;
 using System.Xml.Linq;
 using Microsoft.Xna.Framework;
 using StasisEditor.Models;
+using StasisCore;
+using StasisCore.Resources;
 
 namespace StasisEditor.Controllers.Actors
 {
@@ -45,7 +47,7 @@ namespace StasisEditor.Controllers.Actors
         {
             // Defaults
             _bodyProperties = new BodyProperties(CoreBodyType.Static, 1f, 1f, 0f);
-            _type = StasisCore.ActorType.Terrain;
+            _type = ActorType.Terrain;
 
             // Initialize controls
             List<Vector2> actorResourcePoints = new List<Vector2>();
@@ -58,10 +60,12 @@ namespace StasisEditor.Controllers.Actors
         public TerrainActorController(LevelController levelController, XElement data)
             : base(levelController, int.Parse(data.Attribute("id").Value))
         {
-            throw new NotImplementedException();
-            // TODO: Initialize points from xml
-            // initializeControls(...);
-            //_bodyProperties = new BodyProperties(CoreBodyType.Static, 1f, 1f, 0f);
+            _bodyProperties = new BodyProperties(data);
+            _type = ActorType.Terrain;
+            List<Vector2> actorResourcePoints = new List<Vector2>();
+            foreach (XElement pointData in data.Elements("Point"))
+                actorResourcePoints.Add(XmlLoadHelper.getVector2(pointData.Value));
+            initializeControls(actorResourcePoints);
         }
 
         // Initialize controls

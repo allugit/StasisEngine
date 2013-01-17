@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Diagnostics;
 using System.Collections.Generic;
+using System.Xml.Linq;
+using System.IO;
 using Microsoft.Xna.Framework;
 using StasisEditor.Controllers.Actors;
 using StasisEditor.Views;
@@ -130,19 +132,29 @@ namespace StasisEditor.Controllers
         // createNewLevel
         public void createNewLevel()
         {
-            _level = new EditorLevel("new_level");
+            _level = new EditorLevel(this, "new_level");
         }
 
-        // closeLevel
-        public void closeLevel()
+        // loadLevel
+        public void loadLevel(string filePath)
         {
-            _level = null;
+            using (FileStream fileStream = new FileStream(filePath, FileMode.Open))
+            {
+                XElement data = XElement.Load(fileStream);
+                _level = new EditorLevel(this, data);
+            }
         }
 
         // saveLevel
         public void saveLevel()
         {
             _level.save();
+        }
+
+        // closeLevel
+        public void closeLevel()
+        {
+            _level = null;
         }
 
         // createActorControllerFromToolbar
