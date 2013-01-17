@@ -1,31 +1,38 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Xml.Linq;
-using StasisCore.Resources;
 using Microsoft.Xna.Framework;
+using StasisEditor.Controllers.Actors;
+using StasisCore.Resources;
+using StasisCore.Models;
+using StasisCore.Controllers;
 
 namespace StasisEditor.Models
 {
-    public class EditorLevel
+    public class EditorLevel : Level
     {
-        private Vector2 _gravity;
-        private Vector2 _wind;
+        private List<ActorController> _actorControllers;
 
-        public Vector2 gravity { get { return _gravity; } set { _gravity = value; } }
-        public Vector2 wind { get { return _wind; } set { _wind = value; } }
+        [Browsable(false)]
+        public List<ActorController> actorControllers { get { return _actorControllers; } }
 
         // Create new
-        public EditorLevel()
+        public EditorLevel(string name) : base(name)
         {
-            _gravity = new Vector2(0, 32f);
-            _wind = new Vector2(0, 0);
+            _actorControllers = new List<ActorController>();
         }
 
-        // Create from xml
-        public EditorLevel(ResourceObject resource)
+        // Load actors
+        protected override void loadActors(XElement data)
         {
-            _gravity = XmlLoadHelper.getVector2(resource.data.Attribute("gravity").Value);
-            _wind = XmlLoadHelper.getVector2(resource.data.Attribute("wind").Value);
+            throw new NotImplementedException();
+        }
+
+        // Save
+        public void save()
+        {
+            Console.WriteLine("save level to: {0}", ResourceController.levelPath + "\\" + _name + ".xml");
         }
     }
 }

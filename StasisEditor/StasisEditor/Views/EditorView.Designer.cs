@@ -104,6 +104,7 @@
             this.menuLevelSave.Enabled = false;
             this.menuLevelSave.Index = 2;
             this.menuLevelSave.Text = "Save";
+            this.menuLevelSave.Click += new System.EventHandler(this.menuLevelSave_Click);
             // 
             // menuItem2
             // 
@@ -182,7 +183,7 @@
             this.materialsTab.Location = new System.Drawing.Point(4, 22);
             this.materialsTab.Margin = new System.Windows.Forms.Padding(0);
             this.materialsTab.Name = "materialsTab";
-            this.materialsTab.Size = new System.Drawing.Size(729, 331);
+            this.materialsTab.Size = new System.Drawing.Size(712, 529);
             this.materialsTab.TabIndex = 1;
             this.materialsTab.Text = "Materials";
             this.materialsTab.UseVisualStyleBackColor = true;
@@ -202,7 +203,7 @@
             this.blueprintsTab.Location = new System.Drawing.Point(4, 22);
             this.blueprintsTab.Margin = new System.Windows.Forms.Padding(0);
             this.blueprintsTab.Name = "blueprintsTab";
-            this.blueprintsTab.Size = new System.Drawing.Size(729, 331);
+            this.blueprintsTab.Size = new System.Drawing.Size(712, 529);
             this.blueprintsTab.TabIndex = 2;
             this.blueprintsTab.Text = "Blueprints";
             this.blueprintsTab.UseVisualStyleBackColor = true;
@@ -223,7 +224,7 @@
             this.circuitsTab.Controls.Add(this.circuitsView1);
             this.circuitsTab.Location = new System.Drawing.Point(4, 22);
             this.circuitsTab.Name = "circuitsTab";
-            this.circuitsTab.Size = new System.Drawing.Size(729, 331);
+            this.circuitsTab.Size = new System.Drawing.Size(712, 529);
             this.circuitsTab.TabIndex = 3;
             this.circuitsTab.Text = "Circuits";
             this.circuitsTab.UseVisualStyleBackColor = true;

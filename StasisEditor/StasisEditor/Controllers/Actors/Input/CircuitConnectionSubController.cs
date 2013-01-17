@@ -31,7 +31,7 @@ namespace StasisEditor.Controllers.Actors
             base.handleMouseDown();
 
             // Hit test actor controllers (excluding circuit actor controllers)
-            foreach (ActorController actorController in _actorController.getLevelController().getActorControllers())
+            foreach (ActorController actorController in _actorController.getLevelController().actorControllers)
             {
                 if (!(actorController is CircuitActorController))
                 {

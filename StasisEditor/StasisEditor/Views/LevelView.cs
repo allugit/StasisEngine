@@ -113,7 +113,7 @@ namespace StasisEditor.Views
                     _controller.ctrl = true;
 
                 // Pass input to all actors' global key handler
-                foreach (ActorController actorController in _controller.getActorControllers())
+                foreach (ActorController actorController in _controller.actorControllers)
                     actorController.globalKeyDown(e.KeyCode);
 
                 // Pass input to selected sub actor controllers
@@ -195,7 +195,7 @@ namespace StasisEditor.Views
         // drawActorControllers
         private void drawActorControllers()
         {
-            List<ActorController> actorControllers = _controller.getActorControllers();
+            List<ActorController> actorControllers = _controller.actorControllers;
             foreach (ActorController actorController in actorControllers)
                 actorController.draw();
         }

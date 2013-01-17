@@ -1,22 +1,39 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Xml.Linq;
 using StasisCore.Resources;
 using Microsoft.Xna.Framework;
 
 namespace StasisCore.Models
 {
-    public class Level
+    abstract public class Level
     {
-        private Vector2 _gravity;
-        private Vector2 _wind;
+        protected Vector2 _gravity;
+        protected Vector2 _wind;
+        protected string _name;
 
         public Vector2 gravity { get { return _gravity; } set { _gravity = value; } }
         public Vector2 wind { get { return _wind; } set { _wind = value; } }
+        public string name { get { return _name; } set { _name = value; } }
 
-        public Level(ResourceObject resource)
+        // Create new
+        public Level(string name)
         {
-            _gravity = XmlLoadHelper.getVector2(resource.data.Attribute("gravity").Value);
-            _wind = XmlLoadHelper.getVector2(resource.data.Attribute("wind").Value);
+            _name = name;
+            _gravity = new Vector2(0, 32f);
+            _wind = new Vector2(0, 0);
         }
+
+        // Level
+        public Level(XElement data)
+        {
+            _gravity = XmlLoadHelper.getVector2(data.Attribute("gravity").Value);
+            _wind = XmlLoadHelper.getVector2(data.Attribute("wind").Value);
+            _name = data.Attribute("name").Value;
+            loadActors(data);
+        }
+
+        // Load actors
+        abstract protected void loadActors(XElement data);
     }
 }

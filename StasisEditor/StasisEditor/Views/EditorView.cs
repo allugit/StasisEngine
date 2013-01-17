@@ -176,5 +176,11 @@ namespace StasisEditor.Views
             levelView1.active = editorTabControl.SelectedIndex == 0;
             circuitsView1.active = editorTabControl.SelectedIndex == 3;
         }
+
+        // "Level save" menu item clicked
+        private void menuLevelSave_Click(object sender, EventArgs e)
+        {
+            _controller.levelController.saveLevel();
+        }
     }
 }

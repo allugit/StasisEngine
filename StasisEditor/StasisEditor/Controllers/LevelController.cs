@@ -21,7 +21,6 @@ namespace StasisEditor.Controllers
         private List<ActorSubController> _subControllerSelectQueue;
         private List<ActorSubController> _subControllerDeselectQueue;
 
-        private List<ActorController> _actorControllers;
         private List<ActorController> _actorControllersAddQueue;
         private List<ActorController> _actorControllersRemoveQueue;
 
@@ -44,6 +43,7 @@ namespace StasisEditor.Controllers
         public Vector2 screenCenter { get { return _screenCenter; } set { _screenCenter = value; } }
         public bool shift { get { return _shift; } set { _shift = value; } }
         public bool ctrl { get { return _ctrl; } set { _ctrl = value; } }
+        public List<ActorController> actorControllers { get { return _level.actorControllers; } }
 
         public LevelController(EditorController editorController, LevelView levelView)
         {
@@ -55,7 +55,6 @@ namespace StasisEditor.Controllers
             _subControllerSelectQueue = new List<ActorSubController>();
             _subControllerDeselectQueue = new List<ActorSubController>();
 
-            _actorControllers = new List<ActorController>();
             _actorControllersAddQueue = new List<ActorController>();
             _actorControllersRemoveQueue = new List<ActorController>();
 
@@ -67,19 +66,13 @@ namespace StasisEditor.Controllers
         public Vector2 getWorldMouse() { return new Vector2(_mouse.X, _mouse.Y) / _editorController.scale - getWorldOffset(); }
         public Vector2 getOldWorldMouse() { return new Vector2(_oldMouse.X, _oldMouse.Y) / _editorController.scale - getWorldOffset(); }
 
-        // getActorControllers
-        public List<ActorController> getActorControllers()
-        {
-            return _actorControllers;
-        }
-
         // Get unused actor id
         public int getUnusedActorID()
         {
             // Method to test if an id is being used
             Func<int, bool> isIdUsed = (id) =>
                 {
-                    foreach (ActorController actorController in _actorControllers)
+                    foreach (ActorController actorController in _level.actorControllers)
                     {
                         if (actorController.id == id)
                         {
@@ -121,7 +114,7 @@ namespace StasisEditor.Controllers
             while (_actorControllersAddQueue.Count > 0)
             {
                 int index = _actorControllersAddQueue.Count - 1;
-                _actorControllers.Add(_actorControllersAddQueue[index]);
+                actorControllers.Add(_actorControllersAddQueue[index]);
                 _actorControllersAddQueue.Remove(_actorControllersAddQueue[index]);
             }
 
@@ -129,7 +122,7 @@ namespace StasisEditor.Controllers
             while (_actorControllersRemoveQueue.Count > 0)
             {
                 int index = _actorControllersRemoveQueue.Count - 1;
-                _actorControllers.Remove(_actorControllersRemoveQueue[index]);
+                actorControllers.Remove(_actorControllersRemoveQueue[index]);
                 _actorControllersRemoveQueue.Remove(_actorControllersRemoveQueue[index]);
             }
         }
@@ -137,13 +130,19 @@ namespace StasisEditor.Controllers
         // createNewLevel
         public void createNewLevel()
         {
-            _level = new EditorLevel();
+            _level = new EditorLevel("new_level");
         }
 
         // closeLevel
         public void closeLevel()
         {
             _level = null;
+        }
+
+        // saveLevel
+        public void saveLevel()
+        {
+            _level.save();
         }
 
         // createActorControllerFromToolbar
@@ -179,7 +178,7 @@ namespace StasisEditor.Controllers
 
                 case "playerSpawnButton":
                     // Remove existing player spawns before adding a new one
-                    foreach (ActorController controller in _actorControllers)
+                    foreach (ActorController controller in actorControllers)
                     {
                         if (controller.type == ActorType.PlayerSpawn)
                             removeActorController(controller);
@@ -297,7 +296,7 @@ namespace StasisEditor.Controllers
         // Update circuit actor connections
         public void updateCircuitActorConnections()
         {
-            foreach (ActorController actorController in _actorControllers)
+            foreach (ActorController actorController in actorControllers)
             {
                 if (actorController.type == ActorType.Circuit)
                     (actorController as CircuitActorController).updateConnections();
@@ -336,7 +335,7 @@ namespace StasisEditor.Controllers
             // Try to select a sub controller
             if (_selectedSubControllers.Count == 0)
             {
-                foreach (ActorController actorController in _actorControllers)
+                foreach (ActorController actorController in actorControllers)
                 {
                     // If actor controller's mouse handler returns true, mouse input has been handled and this loop can be stopped
                     if (actorController.handleMouseDown(e))
