@@ -26,14 +26,9 @@ namespace StasisEditor.Controllers.Actors
         {
             get
             {
-                List<XElement> connectionData = new List<XElement>();
-                foreach (CircuitConnectionSubController connection in _circuitConnections)
-                    connectionData.Add(connection.data);
-
                 XElement d = new XElement("Actor",
                     new XAttribute("type", _type.ToString()),
-                    new XAttribute("id", _id),
-                    connectionData);
+                    new XAttribute("id", _id));
 
                 return d;
             }

@@ -29,6 +29,10 @@ namespace StasisEditor.Controllers.Actors
             {
                 XElement d = base.data;
                 d.SetAttributeValue("position", _positionSubController.position);
+                foreach (CircuitConnectionSubController input in _inputControllers)
+                    d.Add(input.data);
+                foreach (CircuitConnectionSubController output in _outputControllers)
+                    d.Add(output.data);
                 return d;
             }
         }

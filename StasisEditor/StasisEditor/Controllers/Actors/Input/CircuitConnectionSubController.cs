@@ -21,10 +21,12 @@ namespace StasisEditor.Controllers.Actors
         {
             get
             {
-                return new XElement("CircuitConnection",
-                    new XAttribute("circuit_uid", _gate.circuit.uid),
+                XElement d = new XElement("CircuitConnection",
                     new XAttribute("gate_id", _gate.id),
                     new XAttribute("message", _properties.message));
+                if (_connectedActorController != null)
+                    d.SetAttributeValue("actor_id", _connectedActorController.id);
+                return d;
             }
         }
 

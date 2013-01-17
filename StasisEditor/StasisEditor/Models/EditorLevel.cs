@@ -52,7 +52,12 @@ namespace StasisEditor.Models
         {
             string filePath = ResourceController.levelPath + "\\" + _name + ".xml";
             if (File.Exists(filePath))
-                File.Move(filePath, filePath + ".bak");
+            {
+                string backupFilePath = filePath + ".bak";
+                if (File.Exists(backupFilePath))
+                    File.Delete(backupFilePath);
+                File.Move(filePath, backupFilePath);
+            }
 
             XDocument doc = new XDocument();
             doc.Add(data);
