@@ -19,9 +19,25 @@ namespace StasisEditor.Controllers.Actors
         public ActorType type { get { return _type; } }
         public bool shift { get { return _levelController.shift; } }
         public bool ctrl { get { return _levelController.ctrl; } }
+        public LevelController levelController { get { return _levelController; } }
         abstract public List<ActorProperties> properties { get; }
-        abstract public XElement data { get; }
         abstract public Vector2 connectionPosition { get; }
+        virtual public XElement data
+        {
+            get
+            {
+                List<XElement> connectionData = new List<XElement>();
+                foreach (CircuitConnectionSubController connection in _circuitConnections)
+                    connectionData.Add(connection.data);
+
+                XElement d = new XElement("Actor",
+                    new XAttribute("type", _type.ToString()),
+                    new XAttribute("id", _id),
+                    connectionData);
+
+                return d;
+            }
+        }
 
         public ActorController(LevelController levelController, int id)
         {
@@ -36,12 +52,6 @@ namespace StasisEditor.Controllers.Actors
         {
             foreach (CircuitConnectionSubController circuitConnectionSubController in _circuitConnections)
                 circuitConnectionSubController.updatePosition(connectionPosition);
-        }
-
-        // getLevelController
-        public LevelController getLevelController()
-        {
-            return _levelController;
         }
 
         // selectAllSubControllers

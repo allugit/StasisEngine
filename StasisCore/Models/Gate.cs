@@ -12,12 +12,14 @@ namespace StasisCore.Models
         private Vector2 _position;
         private List<Gate> _outputs;
         private List<Gate> _inputs;
+        private Circuit _circuit;
 
         public int id { get { return _id; } }
         public string type { get { return _type; } set { _type = value; } }
         public Vector2 position { get { return _position; } set { _position = value; } }
         public List<Gate> outputs { get { return _outputs; } set { _outputs = value; } }
         public List<Gate> inputs { get { return _inputs; } set { _inputs = value; } }
+        public Circuit circuit { get { return _circuit; } }
         public XElement data
         {
             get
@@ -34,8 +36,9 @@ namespace StasisCore.Models
             }
         }
 
-        public Gate(int id, string type, Vector2 position)
+        public Gate(Circuit circuit, int id, string type, Vector2 position)
         {
+            _circuit = circuit;
             _id = id;
             _type = type;
             _position = position;

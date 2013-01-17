@@ -27,7 +27,7 @@ namespace StasisEditor.Controllers.Actors
         // hitTest
         public override bool hitTest(Vector2 worldMouse)
         {
-            float margin = _marginInPixels / _actorController.getLevelController().getScale();
+            float margin = _marginInPixels / _actorController.levelController.getScale();
             Vector2 relative = _position - worldMouse;
             float length = relative.Length();
 

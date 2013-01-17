@@ -41,6 +41,29 @@ namespace StasisEditor.Models
         public float optimalGrowthWeight { get { return _optimalGrowthWeight; } set { _optimalGrowthWeight = value; } }
         public float tropismWeight { get { return _tropismWeight; } set { _tropismWeight = value; } }
         public Vector2 tropism { get { return _tropism; } set { _tropism = value; } }
+        public XElement data
+        {
+            get
+            {
+                return new XElement("TreeProperties",
+                    new XAttribute("angle", _angle),
+                    new XAttribute("seed", _seed),
+                    new XAttribute("age", _age),
+                    new XAttribute("internodeLength", _internodeLength),
+                    new XAttribute("maxShootLength", _maxShootLength),
+                    new XAttribute("maxBaseWidth", _maxBaseWidth),
+                    new XAttribute("perceptionAngle", _perceptionAngle),
+                    new XAttribute("perceptionRadius", _perceptionRadius),
+                    new XAttribute("occupancyRadius", _occupancyRadius),
+                    new XAttribute("lateralAngle", _lateralAngle),
+                    new XAttribute("fullExposure", _fullExposure),
+                    new XAttribute("penumbraA", _penumbraA),
+                    new XAttribute("penumbraB", _penumbraB),
+                    new XAttribute("optimalGrowthWeight", _optimalGrowthWeight),
+                    new XAttribute("tropismWeight", _tropismWeight),
+                    new XAttribute("tropism", _tropism));
+            }
+        }
 
         public TreeProperties(
             Vector2 tropism,
@@ -99,28 +122,6 @@ namespace StasisEditor.Models
                 float.Parse(element.Attribute("penumbraB").Value),
                 float.Parse(element.Attribute("optimalGrowthWeight").Value),
                 float.Parse(element.Attribute("tropismWeight").Value));
-        }
-
-        // toXML
-        public XElement toXML()
-        {
-            return new XElement("TreeProperties",
-                new XAttribute("angle", _angle),
-                new XAttribute("seed", _seed),
-                new XAttribute("age", _age),
-                new XAttribute("internodeLength", _internodeLength),
-                new XAttribute("maxShootLength", _maxShootLength),
-                new XAttribute("maxBaseWidth", _maxBaseWidth),
-                new XAttribute("perceptionAngle", _perceptionAngle),
-                new XAttribute("perceptionRadius", _perceptionRadius),
-                new XAttribute("occupancyRadius", _occupancyRadius),
-                new XAttribute("lateralAngle", _lateralAngle),
-                new XAttribute("fullExposure", _fullExposure),
-                new XAttribute("penumbraA", _penumbraA),
-                new XAttribute("penumbraB", _penumbraB),
-                new XAttribute("optimalGrowthWeight", _optimalGrowthWeight),
-                new XAttribute("tropismWeight", _tropismWeight),
-                new XAttribute("tropism", _tropism));
         }
 
         // ToString

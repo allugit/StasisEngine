@@ -106,7 +106,7 @@ namespace StasisEditor.Views
             SelectGateType selectGateTypeForm = new SelectGateType();
             if (selectGateTypeForm.ShowDialog() == DialogResult.OK)
             {
-                Gate gate = new Gate(_controller.getUnusedGateID(selectedCircuit), selectGateTypeForm.gateType, _controller.getWorldMouse());
+                Gate gate = new Gate(selectedCircuit, _controller.getUnusedGateID(selectedCircuit), selectGateTypeForm.gateType, _controller.getWorldMouse());
                 selectedCircuit.gates.Add(gate);
                 _selectedGate = gate;
             }

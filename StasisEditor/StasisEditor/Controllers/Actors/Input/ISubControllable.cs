@@ -5,13 +5,11 @@ namespace StasisEditor.Controllers.Actors
 {
     public interface ISubControllable
     {
-        LevelController getLevelController();
-
-        void selectSubController(ActorSubController subController);
-        void deselectSubController(ActorSubController subController);
+        LevelController levelController { get; }
         bool shift { get; }
         bool ctrl { get; }
-
+        void selectSubController(ActorSubController subController);
+        void deselectSubController(ActorSubController subController);
         void delete();
     }
 }

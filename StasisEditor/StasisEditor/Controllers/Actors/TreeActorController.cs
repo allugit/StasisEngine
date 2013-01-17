@@ -25,7 +25,12 @@ namespace StasisEditor.Controllers.Actors
         }
         public override XElement data
         {
-            get { throw new NotImplementedException(); }
+            get
+            {
+                XElement d = base.data;
+                d.Add(_treeProperties.data);
+                return d;
+            }
         }
 
         // Create new

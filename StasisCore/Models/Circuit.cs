@@ -45,7 +45,7 @@ namespace StasisCore.Models
             foreach (XElement gateData in data.Elements("Gate"))
             {
                 int id = int.Parse(gateData.Attribute("id").Value);
-                initialGates[id] = new Gate(id, gateData.Attribute("type").Value, XmlLoadHelper.getVector2(gateData.Attribute("position").Value));
+                initialGates[id] = new Gate(this, id, gateData.Attribute("type").Value, XmlLoadHelper.getVector2(gateData.Attribute("position").Value));
             }
 
             // Associate gates

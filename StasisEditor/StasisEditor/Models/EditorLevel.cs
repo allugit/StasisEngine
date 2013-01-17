@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel;
+using System.IO;
 using System.Xml.Linq;
 using Microsoft.Xna.Framework;
 using StasisEditor.Controllers.Actors;
@@ -16,6 +17,23 @@ namespace StasisEditor.Models
 
         [Browsable(false)]
         public List<ActorController> actorControllers { get { return _actorControllers; } }
+        public XElement data
+        {
+            get
+            {
+                List<XElement> actorControllerData = new List<XElement>();
+                foreach (ActorController actorController in _actorControllers)
+                    actorControllerData.Add(actorController.data);
+
+                XElement d = new XElement("Level",
+                    new XAttribute("name", _name),
+                    new XAttribute("gravity", _gravity),
+                    new XAttribute("wind", _wind),
+                    actorControllerData);
+
+                return d;
+            }
+        }
 
         // Create new
         public EditorLevel(string name) : base(name)
@@ -32,7 +50,13 @@ namespace StasisEditor.Models
         // Save
         public void save()
         {
-            Console.WriteLine("save level to: {0}", ResourceController.levelPath + "\\" + _name + ".xml");
+            string filePath = ResourceController.levelPath + "\\" + _name + ".xml";
+            if (File.Exists(filePath))
+                File.Move(filePath, filePath + ".bak");
+
+            XDocument doc = new XDocument();
+            doc.Element("Level").Add(data);
+            doc.Save(filePath);
         }
     }
 }
