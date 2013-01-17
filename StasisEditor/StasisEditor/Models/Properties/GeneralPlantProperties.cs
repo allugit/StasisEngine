@@ -13,6 +13,18 @@ namespace StasisEditor.Models
         public bool dropsSeeds { get { return _dropsSeeds; } set { _dropsSeeds = value; } }
         public float fruitFrequency { get { return _fruitFrequency; } set { _fruitFrequency = value; } }
         public string fruitItemTag { get { return _fruitItemTag; } set { _fruitItemTag = value; } }
+        public XAttribute[] data
+        {
+            get
+            {
+                return new XAttribute[]
+                {
+                    new XAttribute("drops_seeds", _dropsSeeds),
+                    new XAttribute("fruit_frequency", _fruitFrequency),
+                    new XAttribute("fruit_item_tag", _fruitItemTag)
+                };
+            }
+        }
 
         public GeneralPlantProperties(bool dropsSeeds, float fruitFrequency, string fruitItemTag)
             : base()

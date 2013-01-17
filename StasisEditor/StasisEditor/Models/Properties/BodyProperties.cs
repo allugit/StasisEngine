@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Xml.Linq;
 
 namespace StasisEditor.Models
 {
@@ -21,6 +22,19 @@ namespace StasisEditor.Models
         public float density { get { return _density; } set { _density = value; } }
         public float friction { get { return _friction; } set { _friction = value; } }
         public float restitution { get { return _restitution; } set { _restitution = value; } }
+        public XAttribute[] data
+        {
+            get
+            {
+                return new XAttribute[]
+                {
+                    new XAttribute("density", _density),
+                    new XAttribute("friction", _friction),
+                    new XAttribute("restitution", _restitution),
+                    new XAttribute("body_type", _bodyType.ToString())
+                };
+            }
+        }
 
         public BodyProperties(CoreBodyType bodyType, float density, float friction, float restitution)
             : base()

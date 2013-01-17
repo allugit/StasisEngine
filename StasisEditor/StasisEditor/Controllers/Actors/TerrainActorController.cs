@@ -25,7 +25,18 @@ namespace StasisEditor.Controllers.Actors
         }
         public override XElement data
         {
-            get { throw new NotImplementedException(); }
+            get
+            {
+                XElement d = base.data;
+                d.Add(_bodyProperties.data);
+                LinkedPointSubController current = _headLinkedPointController;
+                while (current != null)
+                {
+                    d.Add(new XElement("Point", current.position));
+                    current = current.next;
+                }
+                return d;
+            }
         }
 
         // Create new

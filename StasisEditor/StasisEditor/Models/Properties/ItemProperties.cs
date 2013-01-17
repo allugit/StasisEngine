@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Xml.Linq;
 
 namespace StasisEditor.Models
 {
@@ -10,6 +11,17 @@ namespace StasisEditor.Models
 
         public string itemUID { get { return _itemUID; } set { _itemUID = value; } }
         public int quantity { get { return _quantity; } set { _quantity = value; } }
+        public XAttribute[] data
+        {
+            get
+            {
+                return new XAttribute[]
+                {
+                    new XAttribute("item_uid", _itemUID),
+                    new XAttribute("quantity", _quantity)
+                };
+            }
+        }
 
         public ItemProperties(string itemUID, int quantity)
             : base()

@@ -41,11 +41,12 @@ namespace StasisEditor.Models
         public float optimalGrowthWeight { get { return _optimalGrowthWeight; } set { _optimalGrowthWeight = value; } }
         public float tropismWeight { get { return _tropismWeight; } set { _tropismWeight = value; } }
         public Vector2 tropism { get { return _tropism; } set { _tropism = value; } }
-        public XElement data
+        public XAttribute[] data
         {
             get
             {
-                return new XElement("TreeProperties",
+                return new XAttribute[]
+                {
                     new XAttribute("angle", _angle),
                     new XAttribute("seed", _seed),
                     new XAttribute("age", _age),
@@ -61,7 +62,8 @@ namespace StasisEditor.Models
                     new XAttribute("penumbraB", _penumbraB),
                     new XAttribute("optimalGrowthWeight", _optimalGrowthWeight),
                     new XAttribute("tropismWeight", _tropismWeight),
-                    new XAttribute("tropism", _tropism));
+                    new XAttribute("tropism", _tropism)
+                };
             }
         }
 

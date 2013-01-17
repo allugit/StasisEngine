@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Xml.Linq;
 
 namespace StasisEditor.Models
 {
@@ -8,6 +9,13 @@ namespace StasisEditor.Models
         private string _message;
 
         public string message { get { return _message; } set { _message = value; } }
+        public XAttribute[] data
+        {
+            get
+            {
+                return new XAttribute[] { new XAttribute("message", _message) };
+            }
+        }
 
         public CircuitConnectionProperties(string message)
             : base()

@@ -11,6 +11,7 @@ namespace StasisEditor.Controllers.Actors
     public class FluidActorController : ActorController, ILinkedPointSubControllable
     {
         private LinkedPointSubController _headLinkedPointController;
+        private FluidProperties _fluidProperties;
 
         public override Vector2 connectionPosition { get { return _headLinkedPointController.position; } }
         public override List<ActorProperties> properties
@@ -19,13 +20,19 @@ namespace StasisEditor.Controllers.Actors
         }
         public override XElement data
         {
-            get { throw new NotImplementedException(); }
+            get
+            {
+                XElement d = base.data;
+                d.Add(_fluidProperties.data);
+                return d;
+            }
         }
 
         // Create new
         public FluidActorController(LevelController levelController)
             : base(levelController, levelController.getUnusedActorID())
         {
+            _fluidProperties = new FluidProperties(0.004f);
             _type = StasisCore.ActorType.Fluid;
 
             // Initialize controls
@@ -40,10 +47,6 @@ namespace StasisEditor.Controllers.Actors
             : base(levelController, int.Parse(data.Attribute("id").Value))
         {
             throw new NotImplementedException();
-
-            //_type = StasisCore.ActorType.Fluid;
-
-            // TODO: Initialize points from xml
         }
 
         // Initialize controls

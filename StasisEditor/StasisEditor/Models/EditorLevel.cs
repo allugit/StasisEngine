@@ -55,7 +55,7 @@ namespace StasisEditor.Models
                 File.Move(filePath, filePath + ".bak");
 
             XDocument doc = new XDocument();
-            doc.Element("Level").Add(data);
+            doc.Add(data);
             doc.Save(filePath);
         }
     }

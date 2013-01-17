@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Xml.Linq;
 using Microsoft.Xna.Framework;
+using StasisCore;
 using StasisEditor.Models;
 
 namespace StasisEditor.Controllers.Actors
@@ -40,7 +41,7 @@ namespace StasisEditor.Controllers.Actors
             // Defaults
             _position = levelController.getWorldMouse();
             _treeProperties = new TreeProperties(new Vector2(0, -1f));
-            _type = StasisCore.ActorType.Tree;
+            _type = ActorType.Tree;
 
             // Initialize controls
             initializeControls();
@@ -50,12 +51,7 @@ namespace StasisEditor.Controllers.Actors
         public TreeActorController(LevelController levelController, XElement data)
             : base(levelController, int.Parse(data.Attribute("id").Value))
         {
-            // TODO: Initialize from xml
-            // _treeProperties = new TreeProperties(data)
-            _treeProperties = new TreeProperties(new Vector2(0, -1f));
-
-            // Initialize controls
-            initializeControls();
+            throw new NotImplementedException();
         }
 
         // Initialize controls

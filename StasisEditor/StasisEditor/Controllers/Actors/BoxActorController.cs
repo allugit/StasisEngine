@@ -28,7 +28,13 @@ namespace StasisEditor.Controllers.Actors
         }
         public override XElement data
         {
-            get { throw new NotImplementedException(); }
+            get
+            {
+                XElement d = base.data;
+                d.Add(_boxProperties.data);
+                d.Add(_bodyProperties.data);
+                return d;
+            }
         }
 
         // Create new
