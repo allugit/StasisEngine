@@ -24,6 +24,12 @@ namespace StasisEditor.Controllers.Actors
             {
                 XElement d = base.data;
                 d.Add(_fluidProperties.data);
+                LinkedPointSubController current = _headLinkedPointController;
+                while (current != null)
+                {
+                    d.Add(new XElement("Point", current.position));
+                    current = current.next;
+                }
                 return d;
             }
         }

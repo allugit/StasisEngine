@@ -34,6 +34,8 @@ namespace StasisEditor.Controllers.Actors
                 XElement d = base.data;
                 d.Add(_boxProperties.data);
                 d.Add(_bodyProperties.data);
+                d.SetAttributeValue("position", _position);
+                d.SetAttributeValue("axis_position", _axisSubController.position);
                 return d;
             }
         }

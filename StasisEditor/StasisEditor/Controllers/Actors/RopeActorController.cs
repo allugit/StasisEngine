@@ -16,6 +16,16 @@ namespace StasisEditor.Controllers.Actors
         {
             get { return new List<ActorProperties>(); }
         }
+        public override XElement data
+        {
+            get
+            {
+                XElement d = base.data;
+                d.SetAttributeValue("point_a", _pointASubController.position);
+                d.SetAttributeValue("point_b", _pointBSubController.position);
+                return d;
+            }
+        }
 
         // Create new
         public RopeActorController(LevelController levelController)

@@ -22,6 +22,7 @@ namespace StasisEditor.Controllers.Actors
             {
                 XElement d = base.data;
                 d.Add(_itemProperties.data);
+                d.SetAttributeValue("position", _positionSubController.position);
                 return d;
             }
         }
