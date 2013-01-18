@@ -3,6 +3,8 @@ using System.Collections.Generic;
 using System.Xml.Linq;
 using Microsoft.Xna.Framework;
 using StasisEditor.Models;
+using StasisCore;
+using StasisCore.Resources;
 
 namespace StasisEditor.Controllers.Actors
 {
@@ -31,9 +33,7 @@ namespace StasisEditor.Controllers.Actors
         public RopeActorController(LevelController levelController)
             : base(levelController, levelController.getUnusedActorID())
         {
-            _type = StasisCore.ActorType.Rope;
-
-            // Initialize controls
+            _type = ActorType.Rope;
             initializeControls(
                 _levelController.getWorldMouse() - new Vector2(1f, 0),
                 _levelController.getWorldMouse() + new Vector2(1f, 0));
@@ -43,10 +43,10 @@ namespace StasisEditor.Controllers.Actors
         public RopeActorController(LevelController levelController, XElement data)
             : base(levelController, int.Parse(data.Attribute("id").Value))
         {
-            // TODO: Load id
-
-            // TODO: Initialize from xml...
-            initializeControls(Vector2.Zero, Vector2.Zero);
+            _type = ActorType.Rope;
+            initializeControls(
+                XmlLoadHelper.getVector2(data.Attribute("point_a").Value),
+                XmlLoadHelper.getVector2(data.Attribute("point_b").Value));
         }
 
         // Initialize controls

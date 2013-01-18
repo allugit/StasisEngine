@@ -69,6 +69,7 @@ namespace StasisEditor.Models
             }
         }
 
+        // Create new
         public TreeProperties(
             Vector2 tropism,
             float angle = 0,
@@ -106,26 +107,25 @@ namespace StasisEditor.Models
             _tropism = tropism;
         }
 
-        // fromXML
-        public static TreeProperties fromXML(XElement element)
+        // Load from xml
+        public TreeProperties(XElement data)
         {
-            return new TreeProperties(
-                XmlLoadHelper.getVector2(element.Attribute("tropism").Value),
-                float.Parse(element.Attribute("angle").Value),
-                int.Parse(element.Attribute("seed").Value),
-                float.Parse(element.Attribute("age").Value),
-                float.Parse(element.Attribute("internodeLength").Value),
-                int.Parse(element.Attribute("maxShootLength").Value),
-                float.Parse(element.Attribute("maxBaseWidth").Value),
-                float.Parse(element.Attribute("perceptionAngle").Value),
-                float.Parse(element.Attribute("perceptionRadius").Value),
-                float.Parse(element.Attribute("occupancyRadius").Value),
-                float.Parse(element.Attribute("lateralAngle").Value),
-                float.Parse(element.Attribute("fullExposure").Value),
-                float.Parse(element.Attribute("penumbraA").Value),
-                float.Parse(element.Attribute("penumbraB").Value),
-                float.Parse(element.Attribute("optimalGrowthWeight").Value),
-                float.Parse(element.Attribute("tropismWeight").Value));
+            _tropism = XmlLoadHelper.getVector2(data.Attribute("tropism").Value);
+            _angle = float.Parse(data.Attribute("angle").Value);
+            _seed = int.Parse(data.Attribute("seed").Value);
+            _age = float.Parse(data.Attribute("age").Value);
+            _internodeLength = float.Parse(data.Attribute("internodeLength").Value);
+            _maxShootLength = int.Parse(data.Attribute("maxShootLength").Value);
+            _maxBaseWidth = float.Parse(data.Attribute("maxBaseWidth").Value);
+            _perceptionAngle = float.Parse(data.Attribute("perceptionAngle").Value);
+            _perceptionRadius = float.Parse(data.Attribute("perceptionRadius").Value);
+            _occupancyRadius = float.Parse(data.Attribute("occupancyRadius").Value);
+            _lateralAngle = float.Parse(data.Attribute("lateralAngle").Value);
+            _fullExposure = float.Parse(data.Attribute("fullExposure").Value);
+            _penumbraA = float.Parse(data.Attribute("penumbraA").Value);
+            _penumbraB = float.Parse(data.Attribute("penumbraB").Value);
+            _optimalGrowthWeight = float.Parse(data.Attribute("optimalGrowthWeight").Value);
+            _tropismWeight = float.Parse(data.Attribute("tropismWeight").Value);
         }
 
         // ToString

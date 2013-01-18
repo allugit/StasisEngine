@@ -3,6 +3,8 @@ using System.Collections.Generic;
 using System.Xml.Linq;
 using Microsoft.Xna.Framework;
 using StasisEditor.Models;
+using StasisCore;
+using StasisCore.Resources;
 
 namespace StasisEditor.Controllers.Actors
 {
@@ -31,23 +33,22 @@ namespace StasisEditor.Controllers.Actors
         public PlayerSpawnActorController(LevelController levelController)
             : base(levelController, levelController.getUnusedActorID())
         {
-            _type = StasisCore.ActorType.PlayerSpawn;
-
-            // Initialize controls
-            initializeControls();
+            _type = ActorType.PlayerSpawn;
+            initializeControls(_levelController.getWorldMouse());
         }
 
         // Load from xml
         public PlayerSpawnActorController(LevelController levelController, XElement data)
             : base(levelController, int.Parse(data.Attribute("id").Value))
         {
-            throw new NotImplementedException();
+            _type = ActorType.PlayerSpawn;
+            initializeControls(XmlLoadHelper.getVector2(data.Attribute("position").Value));
         }
 
         // Initialize controls
-        private void initializeControls()
+        private void initializeControls(Vector2 position)
         {
-            _positionSubController = new PointSubController(_levelController.getWorldMouse(), this, 12f);
+            _positionSubController = new PointSubController(position, this, 12f);
         }
 
         #region Input

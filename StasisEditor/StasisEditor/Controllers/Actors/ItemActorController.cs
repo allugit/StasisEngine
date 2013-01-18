@@ -3,6 +3,8 @@ using System.Collections.Generic;
 using System.Xml.Linq;
 using Microsoft.Xna.Framework;
 using StasisEditor.Models;
+using StasisCore;
+using StasisCore.Resources;
 
 namespace StasisEditor.Controllers.Actors
 {
@@ -32,16 +34,23 @@ namespace StasisEditor.Controllers.Actors
             : base(levelController, levelController.getUnusedActorID())
         {
             _itemProperties = new ItemProperties(itemUID, 1);
-            _positionSubController = new PointSubController(levelController.getWorldMouse(), this);
+            _type = ActorType.Item;
+            initializeControls(levelController.getWorldMouse());
         }
 
         // Load from xml
         public ItemActorController(LevelController levelController, XElement data)
             : base(levelController, int.Parse(data.Attribute("id").Value))
         {
-            throw new NotImplementedException();
-            // TODO: Initialize from xml
-            // ...
+            _itemProperties = new ItemProperties(data);
+            _type = ActorType.Item;
+            initializeControls(XmlLoadHelper.getVector2(data.Attribute("position").Value));
+        }
+
+        // Initialize controls
+        private void initializeControls(Vector2 position)
+        {
+            _positionSubController = new PointSubController(position, this);
         }
 
         #region Input

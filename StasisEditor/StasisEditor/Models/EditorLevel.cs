@@ -61,16 +61,36 @@ namespace StasisEditor.Models
                         _actorControllers.Add(new CircleActorController(_levelController, actorData));
                         break;
 
-                    case "Terrain":
-                        _actorControllers.Add(new TerrainActorController(_levelController, actorData));
+                    case "Circuit":
+                        throw new NotImplementedException();
+                        break;
+
+                    case "Fluid":
+                        _actorControllers.Add(new FluidActorController(_levelController, actorData));
+                        break;
+
+                    case "Item":
+                        _actorControllers.Add(new ItemActorController(_levelController, actorData));
                         break;
 
                     case "MovingPlatform":
                         _actorControllers.Add(new PlatformActorController(_levelController, actorData));
                         break;
 
-                    case "Fluid":
-                        _actorControllers.Add(new FluidActorController(_levelController, actorData));
+                    case "PlayerSpawn":
+                        _actorControllers.Add(new PlayerSpawnActorController(_levelController, actorData));
+                        break;
+
+                    case "Rope":
+                        _actorControllers.Add(new RopeActorController(_levelController, actorData));
+                        break;
+
+                    case "Terrain":
+                        _actorControllers.Add(new TerrainActorController(_levelController, actorData));
+                        break;
+
+                    case "Tree":
+                        _actorControllers.Add(new TreeActorController(_levelController, actorData));
                         break;
                 }
             }

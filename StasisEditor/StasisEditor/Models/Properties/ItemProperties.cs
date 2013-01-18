@@ -25,6 +25,7 @@ namespace StasisEditor.Models
             }
         }
 
+        // Create new
         public ItemProperties(string itemUID, int quantity)
             : base()
         {
@@ -32,6 +33,14 @@ namespace StasisEditor.Models
             _quantity = quantity;
         }
 
+        // Load from xml
+        public ItemProperties(XElement data)
+        {
+            _itemUID = data.Attribute("item_uid").Value;
+            _quantity = int.Parse(data.Attribute("quantity").Value);
+        }
+
+        // Clone
         public override ActorProperties clone()
         {
             return new ItemProperties(_itemUID, _quantity);

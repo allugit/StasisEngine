@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Xml.Linq;
 using Microsoft.Xna.Framework;
 using StasisCore;
+using StasisCore.Resources;
 using StasisEditor.Models;
 
 namespace StasisEditor.Controllers.Actors
@@ -28,7 +29,9 @@ namespace StasisEditor.Controllers.Actors
         {
             get
             {
+                _treeProperties.tropism = _tropismController.position - _position;
                 XElement d = base.data;
+                d.SetAttributeValue("position", _position);
                 d.Add(_treeProperties.data);
                 return d;
             }
@@ -38,26 +41,26 @@ namespace StasisEditor.Controllers.Actors
         public TreeActorController(LevelController levelController)
             : base(levelController, levelController.getUnusedActorID())
         {
-            // Defaults
             _position = levelController.getWorldMouse();
             _treeProperties = new TreeProperties(new Vector2(0, -1f));
             _type = ActorType.Tree;
-
-            // Initialize controls
-            initializeControls();
+            initializeControls(_position + new Vector2(0f, -1f));
         }
 
         // Load from xml
         public TreeActorController(LevelController levelController, XElement data)
             : base(levelController, int.Parse(data.Attribute("id").Value))
         {
-            throw new NotImplementedException();
+            _position = XmlLoadHelper.getVector2(data.Attribute("position").Value);
+            _treeProperties = new TreeProperties(data);
+            _type = ActorType.Tree;
+            initializeControls(_treeProperties.tropism);
         }
 
         // Initialize controls
-        private void initializeControls()
+        private void initializeControls(Vector2 tropism)
         {
-            _tropismController = new PointSubController(_position + new Vector2(0f, -1f), this);
+            _tropismController = new PointSubController(_position + tropism, this);
             _boxController = new BoxSubController(this, BoxSubControllerAlignment.Edge);
         }
 
