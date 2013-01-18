@@ -64,6 +64,14 @@ namespace StasisEditor.Models
                     case "Terrain":
                         _actorControllers.Add(new TerrainActorController(_levelController, actorData));
                         break;
+
+                    case "MovingPlatform":
+                        _actorControllers.Add(new PlatformActorController(_levelController, actorData));
+                        break;
+
+                    case "Fluid":
+                        _actorControllers.Add(new FluidActorController(_levelController, actorData));
+                        break;
                 }
             }
         }

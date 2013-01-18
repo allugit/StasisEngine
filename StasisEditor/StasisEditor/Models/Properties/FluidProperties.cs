@@ -19,10 +19,17 @@ namespace StasisEditor.Models
             }
         }
 
+        // Create new
         public FluidProperties(float viscosity)
             : base()
         {
             _viscosity = viscosity;
+        }
+
+        // Load from xml
+        public FluidProperties(XElement data)
+        {
+            _viscosity = float.Parse(data.Attribute("viscosity").Value);
         }
 
         // clone

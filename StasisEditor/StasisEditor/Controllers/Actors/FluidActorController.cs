@@ -3,6 +3,8 @@ using System.Collections.Generic;
 using System.Xml.Linq;
 using Microsoft.Xna.Framework;
 using StasisEditor.Models;
+using StasisCore.Resources;
+using StasisCore;
 
 namespace StasisEditor.Controllers.Actors
 {
@@ -40,8 +42,6 @@ namespace StasisEditor.Controllers.Actors
         {
             _fluidProperties = new FluidProperties(0.004f);
             _type = StasisCore.ActorType.Fluid;
-
-            // Initialize controls
             List<Vector2> actorResourcePoints = new List<Vector2>();
             actorResourcePoints.Add(_levelController.getWorldMouse() - new Vector2(1f, 0));
             actorResourcePoints.Add(_levelController.getWorldMouse() + new Vector2(1f, 0));
@@ -52,7 +52,12 @@ namespace StasisEditor.Controllers.Actors
         public FluidActorController(LevelController levelController, XElement data)
             : base(levelController, int.Parse(data.Attribute("id").Value))
         {
-            throw new NotImplementedException();
+            _fluidProperties = new FluidProperties(data);
+            _type = ActorType.Terrain;
+            List<Vector2> actorResourcePoints = new List<Vector2>();
+            foreach (XElement pointData in data.Elements("Point"))
+                actorResourcePoints.Add(XmlLoadHelper.getVector2(pointData.Value));
+            initializeControls(actorResourcePoints);
         }
 
         // Initialize controls

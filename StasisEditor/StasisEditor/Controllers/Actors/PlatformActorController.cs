@@ -3,6 +3,8 @@ using System.Collections.Generic;
 using System.Xml.Linq;
 using Microsoft.Xna.Framework;
 using StasisEditor.Models;
+using StasisCore;
+using StasisCore.Resources;
 
 namespace StasisEditor.Controllers.Actors
 {
@@ -44,34 +46,29 @@ namespace StasisEditor.Controllers.Actors
         public PlatformActorController(LevelController levelController)
             : base(levelController, levelController.getUnusedActorID())
         {
-            // Defaults
             _position = levelController.getWorldMouse();
             _boxProperties = new BoxProperties(0.5f, 0.5f, 0);
             _bodyProperties = new BodyProperties(CoreBodyType.Static, 1f, 1f, 0f);
-            _type = StasisCore.ActorType.MovingPlatform;
-
-            // Initialize controls
-            initializeControls();
+            _type = ActorType.MovingPlatform;
+            initializeControls(_position + new Vector2(1f, 0));
         }
 
         // Load from xml
         public PlatformActorController(LevelController levelController, XElement data)
             : base(levelController, int.Parse(data.Attribute("id").Value))
         {
-            // TODO: Initialize from xml
-            // _boxProperties = new BoxProperties(data)...
-            _boxProperties = new BoxProperties(0.5f, 0.5f, 0);
-            _bodyProperties = new BodyProperties(CoreBodyType.Static, 1f, 1f, 0f);
-
-            // Initialize controls
-            initializeControls();
+            _position = XmlLoadHelper.getVector2(data.Attribute("position").Value);
+            _boxProperties = new BoxProperties(data);
+            _bodyProperties = new BodyProperties(data);
+            _type = ActorType.MovingPlatform;
+            initializeControls(XmlLoadHelper.getVector2(data.Attribute("axis_position").Value));
         }
 
         // Initialize controls
-        private void initializeControls()
+        private void initializeControls(Vector2 axisPosition)
         {
             _boxSubController = new BoxSubController(this);
-            _axisSubController = new PointSubController(_position + new Vector2(1f, 0), this);
+            _axisSubController = new PointSubController(axisPosition, this);
         }
 
         #region Box SubController Interface
