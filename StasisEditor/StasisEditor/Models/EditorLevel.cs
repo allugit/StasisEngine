@@ -36,6 +36,8 @@ namespace StasisEditor.Models
                 return d;
             }
         }
+        [Browsable(false)]
+        public LevelController levelController { get { return _levelController; } }
 
         // Create new
         public EditorLevel(LevelController levelController, string name) : base(name)
@@ -49,6 +51,9 @@ namespace StasisEditor.Models
         {
             _levelController = levelController;
             _actorControllers = new List<ActorController>();
+            List<XElement> secondPassData = new List<XElement>();
+
+            // First pass -- load independent actors
             foreach (XElement actorData in data.Elements("Actor"))
             {
                 switch (actorData.Attribute("type").Value)
@@ -62,7 +67,7 @@ namespace StasisEditor.Models
                         break;
 
                     case "Circuit":
-                        throw new NotImplementedException();
+                        secondPassData.Add(actorData);
                         break;
 
                     case "Fluid":
@@ -94,6 +99,29 @@ namespace StasisEditor.Models
                         break;
                 }
             }
+
+            // Second pass -- load dependent actors
+            foreach (XElement actorData in secondPassData)
+            {
+                switch (actorData.Attribute("type").Value)
+                {
+                    case "Circuit":
+                        EditorCircuit circuit = _levelController.editorController.circuitController.getCircuit(actorData.Attribute("circuit_uid").Value);
+                        _actorControllers.Add(new CircuitActorController(this, circuit, actorData));
+                        break;
+                }
+            }
+        }
+
+        // Get actor controller by id
+        public ActorController getActorController(int id)
+        {
+            foreach (ActorController actorController in _actorControllers)
+            {
+                if (actorController.id == id)
+                    return actorController;
+            }
+            return null;
         }
 
         // Save

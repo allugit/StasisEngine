@@ -46,6 +46,7 @@ namespace StasisEditor.Controllers
         public bool shift { get { return _shift; } set { _shift = value; } }
         public bool ctrl { get { return _ctrl; } set { _ctrl = value; } }
         public List<ActorController> actorControllers { get { return _level.actorControllers; } }
+        public EditorController editorController { get { return _editorController; } }
 
         public LevelController(EditorController editorController, LevelView levelView)
         {
@@ -67,6 +68,12 @@ namespace StasisEditor.Controllers
         public Vector2 getWorldOffset() { return _screenCenter + (new Vector2(_levelView.Width, _levelView.Height) / 2) / _editorController.scale; }
         public Vector2 getWorldMouse() { return new Vector2(_mouse.X, _mouse.Y) / _editorController.scale - getWorldOffset(); }
         public Vector2 getOldWorldMouse() { return new Vector2(_oldMouse.X, _oldMouse.Y) / _editorController.scale - getWorldOffset(); }
+
+        // Get actor by id
+        public ActorController getActorController(int id)
+        {
+            return _level.getActorController(id);
+        }
 
         // Get unused actor id
         public int getUnusedActorID()
@@ -228,7 +235,7 @@ namespace StasisEditor.Controllers
                     SelectCircuit selectCircuitForm = new SelectCircuit(_editorController.circuitController);
                     if (selectCircuitForm.ShowDialog() == System.Windows.Forms.DialogResult.OK)
                     {
-                        actorController = new CircuitActorController(this, selectCircuitForm.circuit);
+                        actorController = new CircuitActorController(_level, selectCircuitForm.circuit);
                     }
                     break;
             }

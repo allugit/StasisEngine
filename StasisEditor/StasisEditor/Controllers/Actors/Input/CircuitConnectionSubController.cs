@@ -30,11 +30,21 @@ namespace StasisEditor.Controllers.Actors
             }
         }
 
-        public CircuitConnectionSubController(Vector2 position, IPointSubControllable actorController, Gate gate)
-            : base(position, actorController)
+        // Create new
+        public CircuitConnectionSubController(Vector2 position, IPointSubControllable circuitActorController, Gate gate)
+            : base(position, circuitActorController)
         {
             _gate = gate;
             _properties = new CircuitConnectionProperties("");
+        }
+
+        // Load from xml
+        public CircuitConnectionSubController(ActorController connectedActorController, IPointSubControllable circuitActorController, Gate gate, XElement data)
+            : base(connectedActorController.connectionPosition, circuitActorController)
+        {
+            _gate = gate;
+            _properties = new CircuitConnectionProperties(data);
+            connectToActorController(connectedActorController);
         }
 
         // Handle mouse down

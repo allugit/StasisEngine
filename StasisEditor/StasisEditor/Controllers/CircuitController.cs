@@ -50,6 +50,17 @@ namespace StasisEditor.Controllers
                 _circuits.Add(new EditorCircuit(resource.data));
         }
 
+        // Get circuit
+        public EditorCircuit getCircuit(string uid)
+        {
+            foreach (EditorCircuit circuit in _circuits)
+            {
+                if (circuit.uid == uid)
+                    return circuit;
+            }
+            return null;
+        }
+
         // Get unused gate id
         public int getUnusedGateID(Circuit circuit)
         {

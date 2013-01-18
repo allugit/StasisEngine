@@ -6,6 +6,7 @@ using Microsoft.Xna.Framework;
 using StasisEditor.Models;
 using StasisCore.Models;
 using StasisCore;
+using StasisCore.Resources;
 
 namespace StasisEditor.Controllers.Actors
 {
@@ -13,6 +14,7 @@ namespace StasisEditor.Controllers.Actors
 
     public class CircuitActorController : ActorController, IPointSubControllable
     {
+        private EditorLevel _level;
         private EditorCircuit _circuit;
         private PointSubController _positionSubController;
         private List<CircuitConnectionSubController> _inputControllers;
@@ -29,6 +31,7 @@ namespace StasisEditor.Controllers.Actors
             {
                 XElement d = base.data;
                 d.SetAttributeValue("position", _positionSubController.position);
+                d.SetAttributeValue("circuit_uid", _circuit.uid);
                 foreach (CircuitConnectionSubController input in _inputControllers)
                     d.Add(input.data);
                 foreach (CircuitConnectionSubController output in _outputControllers)
@@ -38,38 +41,70 @@ namespace StasisEditor.Controllers.Actors
         }
 
         // Create new
-        public CircuitActorController(LevelController levelController, EditorCircuit circuit)
-            : base(levelController, levelController.getUnusedActorID())
+        public CircuitActorController(EditorLevel level, EditorCircuit circuit)
+            : base(level.levelController, level.levelController.getUnusedActorID())
         {
+            _level = level;
             _circuit = circuit;
             _type = ActorType.Circuit;
-            initializeSubControllers(levelController.getWorldMouse());
+            initializeControls(levelController.getWorldMouse());
         }
 
         // Load from xml
-        public CircuitActorController(LevelController levelController, EditorCircuit circuit, XElement data)
-            : base(levelController, int.Parse(data.Attribute("id").Value))
+        public CircuitActorController(EditorLevel level, EditorCircuit circuit, XElement data)
+            : base(level.levelController, int.Parse(data.Attribute("id").Value))
         {
-            throw new NotImplementedException();
+            _level = level;
+            _circuit = circuit;
+            _type = ActorType.Circuit;
+            initializeControls(XmlLoadHelper.getVector2(data.Attribute("position").Value), data);
         }
 
         // Initialize sub controllers
-        private void initializeSubControllers(Vector2 position)
+        private void initializeControls(Vector2 position, XElement data = null)
         {
             _positionSubController = new PointSubController(position, this);
             _inputControllers = new List<CircuitConnectionSubController>();
             _outputControllers = new List<CircuitConnectionSubController>();
-
             float offset = 24f / _levelController.getScale();
-            for (int i = 0; i < _circuit.inputGates.Count; i++)
+
+            if (data == null)
             {
-                Gate gate = _circuit.inputGates[i];
-                _inputControllers.Add(new CircuitConnectionSubController(position + new Vector2(-offset, i * offset), this, gate));
+                // Create new input/output controls
+                for (int i = 0; i < _circuit.inputGates.Count; i++)
+                {
+                    Gate gate = _circuit.inputGates[i];
+                    _inputControllers.Add(new CircuitConnectionSubController(position + new Vector2(-offset, i * offset), this, gate));
+                }
+                for (int i = 0; i < _circuit.outputGates.Count; i++)
+                {
+                    Gate gate = _circuit.outputGates[i];
+                    _outputControllers.Add(new CircuitConnectionSubController(position + new Vector2(offset, i * offset), this, gate));
+                }
             }
-            for (int i = 0; i < _circuit.outputGates.Count; i++)
+            else
             {
-                Gate gate = _circuit.outputGates[i];
-                _outputControllers.Add(new CircuitConnectionSubController(position + new Vector2(offset, i * offset), this, gate));
+                // Initialize input/output controls from xml
+                List<XElement> connectionElements = new List<XElement>(data.Elements("CircuitConnection"));
+                foreach (XElement connectionData in connectionElements)
+                {
+                    Gate gate = _circuit.getGate(int.Parse(connectionData.Attribute("gate_id").Value));
+                    ActorController actorController = _level.getActorController(int.Parse(connectionData.Attribute("actor_id").Value));
+                    if (actorController != null)
+                    {
+                        if (gate.type == "input")
+                            _inputControllers.Add(new CircuitConnectionSubController(actorController, this, gate, connectionData));
+                        else if (gate.type == "output")
+                            _outputControllers.Add(new CircuitConnectionSubController(actorController, this, gate, connectionData));
+                    }
+                    else
+                    {
+                        if (gate.type == "input")
+                            _inputControllers.Add(new CircuitConnectionSubController(position + new Vector2(-offset, _circuit.gates.IndexOf(gate) * offset), this, gate));
+                        else if (gate.type == "output")
+                            _inputControllers.Add(new CircuitConnectionSubController(position + new Vector2(offset, _circuit.gates.IndexOf(gate) * offset), this, gate));
+                    }
+                }
             }
         }
 
@@ -243,7 +278,7 @@ namespace StasisEditor.Controllers.Actors
         // Clone
         public override ActorController clone()
         {
-            return new CircuitActorController(_levelController, _circuit);
+            return new CircuitActorController(_level, _circuit);
         }
     }
 }

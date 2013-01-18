@@ -20,6 +20,17 @@ namespace StasisEditor.Models
         {
         }
 
+        // Get gate by id
+        public Gate getGate(int id)
+        {
+            foreach (Gate gate in _gates)
+            {
+                if (gate.id == id)
+                    return gate;
+            }
+            return null;
+        }
+
         public override string ToString()
         {
             return _uid;

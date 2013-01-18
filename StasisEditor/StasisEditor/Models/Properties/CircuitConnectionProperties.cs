@@ -19,10 +19,17 @@ namespace StasisEditor.Models
             }
         }
 
+        // Create new
         public CircuitConnectionProperties(string message)
             : base()
         {
             _message = message;
+        }
+
+        // Load from xml
+        public CircuitConnectionProperties(XElement data)
+        {
+            _message = data.Attribute("message").Value;
         }
 
         // Clone properties
