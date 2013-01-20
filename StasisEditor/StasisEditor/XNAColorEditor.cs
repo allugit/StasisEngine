@@ -29,7 +29,7 @@ namespace StasisEditor
                 ColorDialog selectionControl = new ColorDialog();
                 selectionControl.Color = Color.FromArgb(BitConverter.ToInt32(new byte[] { color.B, color.G, color.R, color.A }, 0));
                 selectionControl.ShowDialog();
-                value = new XNAColor((int)selectionControl.Color.R, (int)selectionControl.Color.G, (int)selectionControl.Color.B);
+                value = new XNAColor((int)selectionControl.Color.R, (int)selectionControl.Color.G, (int)selectionControl.Color.B, (int)color.A);
             }
 
             return value;

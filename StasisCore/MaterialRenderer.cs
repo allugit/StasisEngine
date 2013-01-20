@@ -112,7 +112,7 @@ namespace StasisCore
 
                 case "uniform_scatter":
                     MaterialUniformScatterLayer scatterLayer = layer as MaterialUniformScatterLayer;
-                    current = uniformScatterPass(current, scatterLayer.textureUIDs, scatterLayer.horizontalSpacing, scatterLayer.verticalSpacing, scatterLayer.jitter, scatterLayer.baseColor);
+                    current = uniformScatterPass(current, scatterLayer.textureUIDs, scatterLayer.horizontalSpacing, scatterLayer.verticalSpacing, scatterLayer.jitter, scatterLayer.baseColor, scatterLayer.randomRed, scatterLayer.randomGreen, scatterLayer.randomBlue, scatterLayer.randomAlpha);
                     break;
             }
 
@@ -266,7 +266,7 @@ namespace StasisCore
         }
 
         // Uniform scatter pass
-        public Texture2D uniformScatterPass(Texture2D current, List<string> textureUIDs, float horizontalSpacing, float verticalSpacing, float jitter, Color baseColor)
+        public Texture2D uniformScatterPass(Texture2D current, List<string> textureUIDs, float horizontalSpacing, float verticalSpacing, float jitter, Color baseColor, int randomRed, int randomGreen, int randomBlue, int randomAlpha)
         {
             // Initialize render targets and textures
             RenderTarget2D renderTarget = new RenderTarget2D(_graphicsDevice, current.Width, current.Height);
@@ -299,7 +299,16 @@ namespace StasisCore
                     Vector2 position = new Vector2(i, j) + new Vector2(StasisMathHelper.floatBetween(0, jitter, _random), StasisMathHelper.floatBetween(0, jitter, _random));
                     float angle = StasisMathHelper.floatBetween(-3.14f, 3.14f, _random);
                     Texture2D texture = textures[_random.Next(0, textures.Count)];
-                    _spriteBatch.Draw(texture, position, texture.Bounds, Color.White, angle, new Vector2(texture.Width, texture.Height) / 2, 1f, SpriteEffects.None, 0);
+                    int tintR = randomRed < 0 ? _random.Next(randomRed, 1) : _random.Next(randomRed + 1);
+                    int tintG = randomGreen < 0 ? _random.Next(randomGreen, 1) : _random.Next(randomGreen + 1);
+                    int tintB = randomBlue < 0 ? _random.Next(randomBlue, 1) : _random.Next(randomBlue + 1);
+                    int tintA = randomAlpha < 0 ? _random.Next(randomAlpha, 1) : _random.Next(randomAlpha + 1);
+                    Color actualColor = new Color(
+                        Math.Max(0, (int)baseColor.R + tintR),
+                        Math.Max(0, (int)baseColor.G + tintG),
+                        Math.Max(0, (int)baseColor.B + tintB),
+                        Math.Max(0, (int)baseColor.A + tintA));
+                    _spriteBatch.Draw(texture, position, texture.Bounds, actualColor, angle, new Vector2(texture.Width, texture.Height) / 2, 1f, SpriteEffects.None, 0);
                 }
             }
             _spriteBatch.End();

@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Xml.Linq;
+using Microsoft.Xna.Framework;
 using StasisCore.Models;
 
 namespace StasisEditor.Models
@@ -54,7 +55,7 @@ namespace StasisEditor.Models
                     break;
 
                 case "uniform_scatter":
-                    layer = new EditorMaterialUniformScatterLayer();
+                    layer = new EditorMaterialUniformScatterLayer(Color.White);
                     break;
             }
             return layer;

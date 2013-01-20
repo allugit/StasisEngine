@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Xml.Linq;
+using Microsoft.Xna.Framework;
 
 namespace StasisCore.Models
 {
@@ -81,7 +82,7 @@ namespace StasisCore.Models
                     break;
 
                 case "uniform_scatter":
-                    layer = new MaterialUniformScatterLayer();
+                    layer = new MaterialUniformScatterLayer(Color.White);
                     break;
             }
             return layer;

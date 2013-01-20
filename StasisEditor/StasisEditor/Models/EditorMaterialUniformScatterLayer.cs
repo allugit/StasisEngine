@@ -17,8 +17,8 @@ namespace StasisEditor.Models
         [EditorAttribute(typeof(XNAColorEditor), typeof(UITypeEditor))]
         public override Color baseColor { get { return base.baseColor; } set { base.baseColor = value; } } 
 
-        public EditorMaterialUniformScatterLayer(float horizontalSpacing = 32f, float verticalSpacing = 32f, float jitter = 8f)
-            : base(horizontalSpacing, verticalSpacing, jitter)
+        public EditorMaterialUniformScatterLayer(Color baseColor, float horizontalSpacing = 32f, float verticalSpacing = 32f, float jitter = 8f, int randomRed = 0, int randomGreen = 0, int randomBlue = 0, int randomAlpha = 0)
+            : base(baseColor, horizontalSpacing, verticalSpacing, jitter, randomRed, randomGreen, randomBlue, randomAlpha)
         {
         }
 
