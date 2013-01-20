@@ -112,7 +112,7 @@ namespace StasisCore
 
                 case "uniform_scatter":
                     MaterialUniformScatterLayer scatterLayer = layer as MaterialUniformScatterLayer;
-                    current = uniformScatterPass(current, scatterLayer.textureUIDs, scatterLayer.horizontalSpacing, scatterLayer.verticalSpacing, scatterLayer.jitter);
+                    current = uniformScatterPass(current, scatterLayer.textureUIDs, scatterLayer.horizontalSpacing, scatterLayer.verticalSpacing, scatterLayer.jitter, scatterLayer.baseColor);
                     break;
             }
 
@@ -266,7 +266,7 @@ namespace StasisCore
         }
 
         // Uniform scatter pass
-        public Texture2D uniformScatterPass(Texture2D current, List<string> textureUIDs, float horizontalSpacing, float verticalSpacing, float jitter)
+        public Texture2D uniformScatterPass(Texture2D current, List<string> textureUIDs, float horizontalSpacing, float verticalSpacing, float jitter, Color baseColor)
         {
             // Initialize render targets and textures
             RenderTarget2D renderTarget = new RenderTarget2D(_graphicsDevice, current.Width, current.Height);

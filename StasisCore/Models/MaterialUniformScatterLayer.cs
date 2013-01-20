@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Xml.Linq;
+using Microsoft.Xna.Framework;
 
 namespace StasisCore.Models
 {
@@ -9,10 +10,12 @@ namespace StasisCore.Models
         protected float _horizontalSpacing;
         protected float _verticalSpacing;
         protected float _jitter;
+        protected Color _baseColor;
 
         public float horizontalSpacing { get { return _horizontalSpacing; } set { _horizontalSpacing = value; } }
         public float verticalSpacing { get { return _verticalSpacing; } set { _verticalSpacing = value; } }
         public float jitter { get { return _jitter; } set { _jitter = value; } }
+        virtual public Color baseColor { get { return _baseColor; } set { _baseColor = value; } }
 
         override public XElement data
         {
