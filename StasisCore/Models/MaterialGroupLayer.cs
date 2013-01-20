@@ -6,9 +6,9 @@ namespace StasisCore.Models
 {
     public class MaterialGroupLayer : MaterialLayer
     {
-        private LayerBlendType _blendType;
-        private float _multiplier;
-        private List<MaterialLayer> _layers;
+        protected LayerBlendType _blendType;
+        protected float _multiplier;
+        protected List<MaterialLayer> _layers;
 
         public LayerBlendType blendType { get { return _blendType; } set { _blendType = value; } }
         public float multiplier { get { return _multiplier; } set { _multiplier = value; } }
@@ -42,6 +42,12 @@ namespace StasisCore.Models
         {
             _blendType = (LayerBlendType)Enum.Parse(typeof(LayerBlendType), data.Attribute("blend_type").Value, true);
             _multiplier = float.Parse(data.Attribute("multiplier").Value);
+            loadLayers(data);
+        }
+
+        // Load layers
+        virtual protected void loadLayers(XElement data)
+        {
             _layers = new List<MaterialLayer>();
             foreach (XElement layerXml in data.Elements("Layer"))
                 _layers.Add(MaterialLayer.load(layerXml));

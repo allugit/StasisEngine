@@ -17,6 +17,11 @@ namespace StasisEditor.Models
         {
         }
 
+        protected override void loadRootLayer(XElement data)
+        {
+            _rootLayer = EditorMaterialLayer.load(data.Element("Layer")) as EditorMaterialGroupLayer;
+        }
+
         public override string ToString()
         {
             return _uid;

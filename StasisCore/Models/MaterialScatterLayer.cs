@@ -21,7 +21,7 @@ namespace StasisCore.Models
         private int _randomBlue;
         private int _randomAlpha;
 
-        public List<string> textureUIDs { get { return _textureUIDs; } }
+        virtual public List<string> textureUIDs { get { return _textureUIDs; } }
         public ScatterTextureOrder textureOrder { get { return _textureOrder; } set { _textureOrder = value; } }
         public ScatterStyle scatterStyle { get { return _scatterStyle; } set { _scatterStyle = value; } }
         public Vector2 interestPoint { get { return _interestPoint; } set { _interestPoint = value; } }

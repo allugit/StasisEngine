@@ -10,6 +10,7 @@ using System.Windows.Forms;
 using StasisCore.Resources;
 using StasisCore.Models;
 using StasisEditor.Controllers;
+using StasisEditor.Models;
 
 namespace StasisEditor.Views.Controls
 {
@@ -143,7 +144,7 @@ namespace StasisEditor.Views.Controls
             if (newLayerForm.ShowDialog() == DialogResult.OK)
             {
                 LayerNode node = layersTreeView.SelectedNode as LayerNode;
-                MaterialLayer newLayer = MaterialLayer.create(newLayerForm.getSelectedType());
+                MaterialLayer newLayer = EditorMaterialLayer.create(newLayerForm.getSelectedType());
 
                 if (node.layer.type == "root" || node.layer.type == "group")
                 {

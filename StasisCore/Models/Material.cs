@@ -34,7 +34,14 @@ namespace StasisCore.Models
         public Material(XElement data)
         {
             _uid = data.Attribute("uid").Value;
+            loadRootLayer(data);
+        }
+
+        // Load root layer
+        virtual protected void loadRootLayer(XElement data)
+        {
             _rootLayer = MaterialLayer.load(data.Element("Layer")) as MaterialGroupLayer;
         }
+
     }
 }
