@@ -32,7 +32,7 @@ namespace StasisCore.Models
         public int randomRed { get { return _randomRed; } set { _randomRed = value; } }
         public int randomGreen { get { return _randomGreen; } set { _randomGreen = value; } }
         public int randomBlue { get { return _randomBlue; } set { _randomBlue = value; } }
-        public int ranomdAlpha { get { return _randomAlpha; } set { _randomAlpha = value; } }
+        public int randomAlpha { get { return _randomAlpha; } set { _randomAlpha = value; } }
 
         public override XElement data
         {

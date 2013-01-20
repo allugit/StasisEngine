@@ -111,7 +111,9 @@ namespace StasisCore
                     break;
 
                 case "scatter":
-                    throw new NotImplementedException();
+                    MaterialScatterLayer scatterLayer = layer as MaterialScatterLayer;
+                    current = scatterPass(current, scatterLayer.textureUIDs, scatterLayer.textureOrder, scatterLayer.scatterStyle, scatterLayer.interestPoint, scatterLayer.restrictDistance, scatterLayer.minDistance, scatterLayer.maxDistance, scatterLayer.baseColor, scatterLayer.randomRed, scatterLayer.randomGreen, scatterLayer.randomBlue, scatterLayer.randomAlpha);
+                    break;
             }
 
             return current;
@@ -120,23 +122,6 @@ namespace StasisCore
         // Create canvas
         private Texture2D createCanvas(int width, int height)
         {
-            /*
-            // Find boundaries
-            Vector2 topLeftBoundary = new Vector2(vertices[0].position.X, vertices[0].position.Y);
-            Vector2 bottomRightBoundary = new Vector2(vertices[0].position.X, vertices[0].position.Y);
-            for (int i = 0; i < vertices.Length; i++)
-            {
-                topLeftBoundary.X = Math.Min(vertices[i].position.X, topLeftBoundary.X);
-                topLeftBoundary.Y = Math.Min(vertices[i].position.Y, topLeftBoundary.Y);
-                bottomRightBoundary.X = Math.Max(vertices[i].position.X, bottomRightBoundary.X);
-                bottomRightBoundary.Y = Math.Max(vertices[i].position.Y, bottomRightBoundary.Y);
-            }
-
-            // Calculate width and height
-            int width = (int)((bottomRightBoundary.X - topLeftBoundary.X) * worldScale);
-            int height = (int)((bottomRightBoundary.Y - topLeftBoundary.Y) * worldScale);
-            */
-
             Texture2D canvas = new Texture2D(_graphicsDevice, width, height);
             Color[] data = new Color[width * height];
             for (int i = 0; i < (width * height); i++)
@@ -144,113 +129,6 @@ namespace StasisCore
             canvas.SetData<Color>(data);
             return canvas;
         }
-
-        /*
-        // Render layer
-        private Texture2D renderLayer(Texture2D current, TerrainLayerResource resource)
-        {
-            //Debug.Assert(resource.layers != null);
-
-            // Don't render disabled layers
-            if (!resource.enabled)
-                return current;
-
-            switch (resource.type)
-            {
-                case TerrainLayerType.Base:
-                    PrimitivesProperties primitivesProperties = (resource as TerrainPrimitivesLayerResource).properties as PrimitivesProperties;
-                    Texture2D baseTexture = TextureController.getTexture(primitivesProperties.textureTag);
-                    result = primitivesPass(baseTexture, worldScale, vertices, primitiveCount);
-                    break;
-
-                case TerrainLayerType.Texture:
-                    current = texturePass(current, (resource.properties as TextureProperties));
-                    break;
-                
-                case TerrainLayerType.Noise:
-                    current = noisePass(current, (resource.properties as NoiseProperties));
-                    break;
-            }
-
-            // Recursively render layers
-            foreach (TerrainLayerResource layer in resource.layers)
-                current = renderLayer(current, layer);
-
-            return current;
-        }
-        */
-
-        /*
-        // Primitives pass
-        private Texture2D primitivesPass(Texture2D texture, float worldScale, TexturedVertexFormat[] vertices, int primitiveCount)
-        {
-            // Find boundaries
-            Vector2 topLeftBoundary = new Vector2(vertices[0].position.X, vertices[0].position.Y);
-            Vector2 bottomRightBoundary = new Vector2(vertices[0].position.X, vertices[0].position.Y);
-            for (int i = 0; i < vertices.Length; i++)
-            {
-                topLeftBoundary.X = Math.Min(vertices[i].position.X, topLeftBoundary.X);
-                topLeftBoundary.Y = Math.Min(vertices[i].position.Y, topLeftBoundary.Y);
-                bottomRightBoundary.X = Math.Max(vertices[i].position.X, bottomRightBoundary.X);
-                bottomRightBoundary.Y = Math.Max(vertices[i].position.Y, bottomRightBoundary.Y);
-            }
-
-            // Calculate width and height
-            int width = (int)((bottomRightBoundary.X - topLeftBoundary.X) * worldScale);
-            int height = (int)((bottomRightBoundary.Y - topLeftBoundary.Y) * worldScale);
-
-            RenderTarget2D renderTarget = new RenderTarget2D(_graphicsDevice, width, height);
-            Texture2D baseTexture = new Texture2D(_graphicsDevice, renderTarget.Width, renderTarget.Height);
-            Color[] data = new Color[renderTarget.Width * renderTarget.Height];
-            //Vector2 offset = topLeftBoundary * worldScale;
-
-            Matrix viewMatrix = Matrix.CreateTranslation(new Vector3(topLeftBoundary, 0) * -1);
-            viewMatrix *= Matrix.CreateScale(worldScale, -worldScale, 1);
-            viewMatrix *= Matrix.CreateTranslation(new Vector3(-renderTarget.Width / 2, renderTarget.Height / 2, 0));
-            _primitivesEffect.CurrentTechnique = _primitivesEffect.Techniques["generic"];
-            _primitivesEffect.Parameters["world"].SetValue(Matrix.Identity);
-            _primitivesEffect.Parameters["view"].SetValue(viewMatrix);
-            _primitivesEffect.Parameters["projection"].SetValue(Matrix.CreateOrthographic(renderTarget.Width, renderTarget.Height, 0, 1));
-
-            // Draw polygons
-            _graphicsDevice.SetRenderTarget(renderTarget);
-            _graphicsDevice.Clear(Color.Transparent);
-            if (texture == null)
-            {
-                _primitivesEffect.CurrentTechnique.Passes["primitives"].Apply();
-            }
-            else
-            {
-                _primitivesEffect.CurrentTechnique.Passes["textured_primitives"].Apply();
-                _graphicsDevice.Textures[0] = texture;
-            }
-            _graphicsDevice.DrawUserPrimitives(PrimitiveType.TriangleList, vertices, 0, primitiveCount, TexturedVertexFormat.VertexDeclaration);
-            _graphicsDevice.SetRenderTarget(null);
-
-            // Save base texture
-            renderTarget.GetData<Color>(data);
-            baseTexture.SetData<Color>(data);
-
-            // Cleanup
-            renderTarget.Dispose();
-
-            return baseTexture;
-        }
-        */
-
-        /*
-        // Overloaded texture pass (normal)
-        private Texture2D texturePass(Texture2D current, TextureLayerProperties options)
-        {
-            throw new NotImplementedException();
-            //return texturePass(current, TextureController.getTexture(options.textureTag), options.blendType, options.scale, options.multiplier);
-        }
-        // Overloaded texture pass (group)
-        private Texture2D texturePass(Texture2D canvas, Texture2D groupCanvas, GroupLayerProperties options)
-        {
-            return texturePass(canvas, groupCanvas, options.blendType, 1f, 1f);
-        }
-        */
 
         // Texture pass
         private Texture2D texturePass(Texture2D current, Texture2D texture, LayerBlendType blendType, float scale, float multiplier)
@@ -389,6 +267,43 @@ namespace StasisCore
             output.SetData<Color>(data);
 
             return output;
+        }
+
+        // Scatter pass
+        public Texture2D scatterPass(
+            Texture2D current,
+            List<string> textureUIDs,
+            ScatterTextureOrder textureOrder,
+            ScatterStyle scatterStyle,
+            Vector2 interestPoint,
+            bool restictDistance,
+            float minDistance,
+            float maxDistance,
+            Color baseColor,
+            int randomRed,
+            int randomGreen,
+            int randomBlue,
+            int randomAlpha)
+        {
+            // Initialize render targets and textures
+            RenderTarget2D renderTarget = new RenderTarget2D(_graphicsDevice, current.Width, current.Height);
+            Texture2D baseTexture = new Texture2D(_graphicsDevice, renderTarget.Width, renderTarget.Height);
+            Color[] data = new Color[renderTarget.Width * renderTarget.Height];
+            for (int i = 0; i < (renderTarget.Width * renderTarget.Height); i++)
+                data[i] = Color.Transparent;
+            baseTexture.SetData<Color>(data);
+
+            List<Texture2D> textures = new List<Texture2D>();
+            foreach (string textureUID in textureUIDs)
+            {
+                Texture2D texture = ResourceController.getTexture(textureUID);
+                if (texture == null)
+                    return baseTexture;
+                textures.Add(texture);
+            }
+
+            // TEMPORARY:
+            return baseTexture;
         }
     }
 }
