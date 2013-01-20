@@ -56,8 +56,8 @@ namespace StasisCore.Models
                     layer = new MaterialNoiseLayer(data);
                     break;
 
-                case "scatter":
-                    layer = new MaterialScatterLayer(data);
+                case "uniform_scatter":
+                    layer = new MaterialUniformScatterLayer(data);
                     break;
             }
             return layer;
@@ -80,8 +80,8 @@ namespace StasisCore.Models
                     layer = new MaterialNoiseLayer();
                     break;
 
-                case "scatter":
-                    layer = new MaterialScatterLayer();
+                case "uniform_scatter":
+                    layer = new MaterialUniformScatterLayer();
                     break;
             }
             return layer;

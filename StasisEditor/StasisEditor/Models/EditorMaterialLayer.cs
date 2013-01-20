@@ -29,8 +29,8 @@ namespace StasisEditor.Models
                     layer = new EditorMaterialNoiseLayer(data);
                     break;
 
-                case "scatter":
-                    layer = new EditorMaterialScatterLayer(data);
+                case "uniform_scatter":
+                    layer = new EditorMaterialUniformScatterLayer(data);
                     break;
             }
             return layer;
@@ -53,8 +53,8 @@ namespace StasisEditor.Models
                     layer = new EditorMaterialNoiseLayer();
                     break;
 
-                case "scatter":
-                    layer = new EditorMaterialScatterLayer();
+                case "uniform_scatter":
+                    layer = new EditorMaterialUniformScatterLayer();
                     break;
             }
             return layer;

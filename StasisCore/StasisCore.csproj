@@ -74,6 +74,7 @@
     <Compile Include="Models\MaterialNoiseLayer.cs" />
     <Compile Include="Models\MaterialScatterLayer.cs" />
     <Compile Include="Models\MaterialTextureLayer.cs" />
+    <Compile Include="Models\MaterialUniformScatterLayer.cs" />
     <Compile Include="Resources\Exceptions\DuplicateResourceException.cs" />
     <Compile Include="Resources\Exceptions\InvalidResourceException.cs" />
     <Compile Include="Resources\Exceptions\ResourceNotFoundException.cs" />

@@ -33,18 +33,6 @@
         Worley
     };
 
-    public enum ScatterTextureOrder
-    {
-        Sequential,
-        Random
-    };
-
-    public enum ScatterStyle
-    {
-        Anywhere,
-        AroundInterestPoint
-    };
-
     public enum WorleyFeatureType
     {
         F1,

@@ -110,9 +110,9 @@ namespace StasisCore
                     current = noisePass(current, noiseLayer.noiseType, noiseLayer.position, noiseLayer.scale, noiseLayer.frequency, noiseLayer.gain, noiseLayer.lacunarity, noiseLayer.multiplier, noiseLayer.fbmOffset, noiseLayer.colorLow, noiseLayer.colorHigh, noiseLayer.iterations, noiseLayer.blendType, noiseLayer.invert, noiseLayer.worleyFeature);
                     break;
 
-                case "scatter":
+                case "uniform_scatter":
                     MaterialScatterLayer scatterLayer = layer as MaterialScatterLayer;
-                    current = scatterPass(current, scatterLayer.textureUIDs, scatterLayer.textureOrder, scatterLayer.scatterStyle, scatterLayer.interestPoint, scatterLayer.restrictDistance, scatterLayer.minDistance, scatterLayer.maxDistance, scatterLayer.baseColor, scatterLayer.randomRed, scatterLayer.randomGreen, scatterLayer.randomBlue, scatterLayer.randomAlpha);
+                    //current = uniformScatterPass(current, scatterLayer.textureUIDs, ...);
                     break;
             }
 
@@ -269,21 +269,10 @@ namespace StasisCore
             return output;
         }
 
-        // Scatter pass
-        public Texture2D scatterPass(
+        // Uniform scatter pass
+        public Texture2D uniformScatterPass(
             Texture2D current,
-            List<string> textureUIDs,
-            ScatterTextureOrder textureOrder,
-            ScatterStyle scatterStyle,
-            Vector2 interestPoint,
-            bool restictDistance,
-            float minDistance,
-            float maxDistance,
-            Color baseColor,
-            int randomRed,
-            int randomGreen,
-            int randomBlue,
-            int randomAlpha)
+            List<string> textureUIDs)
         {
             // Initialize render targets and textures
             RenderTarget2D renderTarget = new RenderTarget2D(_graphicsDevice, current.Width, current.Height);
@@ -302,7 +291,7 @@ namespace StasisCore
                 textures.Add(texture);
             }
 
-            // TEMPORARY:
+            // TEMPORARY
             return baseTexture;
         }
     }

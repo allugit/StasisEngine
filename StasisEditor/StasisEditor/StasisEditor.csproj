@@ -107,8 +107,8 @@
     <Compile Include="GraphicsDeviceService.cs" />
     <Compile Include="Models\EditorMaterialLayer.cs" />
     <Compile Include="Models\EditorMaterialNoiseLayer.cs" />
-    <Compile Include="Models\EditorMaterialScatterLayer.cs" />
     <Compile Include="Models\EditorMaterialTextureLayer.cs" />
+    <Compile Include="Models\EditorMaterialUniformScatterLayer.cs" />
     <Compile Include="Models\Properties\ActorProperties.cs" />
     <Compile Include="Models\Properties\BodyProperties.cs" />
     <Compile Include="Models\Properties\BoxProperties.cs" />
