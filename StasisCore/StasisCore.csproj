@@ -82,6 +82,7 @@
     <Compile Include="Resources\XmlLoadHelper.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="MaterialRenderer.cs" />
+    <Compile Include="StasisMathHelper.cs" />
     <Compile Include="TexturedVertexFormat.cs" />
   </ItemGroup>
   <ItemGroup>

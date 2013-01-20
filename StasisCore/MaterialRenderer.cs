@@ -111,8 +111,8 @@ namespace StasisCore
                     break;
 
                 case "uniform_scatter":
-                    MaterialScatterLayer scatterLayer = layer as MaterialScatterLayer;
-                    //current = uniformScatterPass(current, scatterLayer.textureUIDs, ...);
+                    MaterialUniformScatterLayer scatterLayer = layer as MaterialUniformScatterLayer;
+                    current = uniformScatterPass(current, scatterLayer.textureUIDs, scatterLayer.horizontalSpacing, scatterLayer.verticalSpacing, scatterLayer.jitter);
                     break;
             }
 
@@ -135,11 +135,11 @@ namespace StasisCore
         {
             // Initialize render targets and textures
             RenderTarget2D renderTarget = new RenderTarget2D(_graphicsDevice, current.Width, current.Height);
-            Texture2D baseTexture = new Texture2D(_graphicsDevice, renderTarget.Width, renderTarget.Height);
+            Texture2D result = new Texture2D(_graphicsDevice, renderTarget.Width, renderTarget.Height);
             Color[] data = new Color[renderTarget.Width * renderTarget.Height];
             for (int i = 0; i < (renderTarget.Width * renderTarget.Height); i++)
                 data[i] = Color.Transparent;
-            baseTexture.SetData<Color>(data);
+            result.SetData<Color>(data);
 
             // Handle missing texture
             if (texture == null)
@@ -167,28 +167,24 @@ namespace StasisCore
             _textureEffect.Parameters["textureSize"].SetValue(new Vector2(texture.Width, texture.Height));
             _textureEffect.Parameters["scale"].SetValue(scale);
             _textureEffect.Parameters["multiplier"].SetValue(multiplier);
-            
-            // Switch render target
+
+            // Draw
             _graphicsDevice.SetRenderTarget(renderTarget);
             _graphicsDevice.Clear(Color.Transparent);
             _graphicsDevice.Textures[1] = texture;
-
-            // Draw
             _spriteBatch.Begin(SpriteSortMode.Immediate, BlendState.AlphaBlend, null, null, null, _textureEffect);
             _spriteBatch.Draw(current, current.Bounds, Color.White);
             _spriteBatch.End();
-
-            // Switch render target
             _graphicsDevice.SetRenderTarget(null);
 
             // Save base texture
             renderTarget.GetData<Color>(data);
-            baseTexture.SetData<Color>(data);
+            result.SetData<Color>(data);
 
             // Cleanup
             renderTarget.Dispose();
 
-            return baseTexture;
+            return result;
         }
 
         // Noise pass
@@ -270,29 +266,53 @@ namespace StasisCore
         }
 
         // Uniform scatter pass
-        public Texture2D uniformScatterPass(
-            Texture2D current,
-            List<string> textureUIDs)
+        public Texture2D uniformScatterPass(Texture2D current, List<string> textureUIDs, float horizontalSpacing, float verticalSpacing, float jitter)
         {
             // Initialize render targets and textures
             RenderTarget2D renderTarget = new RenderTarget2D(_graphicsDevice, current.Width, current.Height);
-            Texture2D baseTexture = new Texture2D(_graphicsDevice, renderTarget.Width, renderTarget.Height);
+            Texture2D result = new Texture2D(_graphicsDevice, renderTarget.Width, renderTarget.Height);
             Color[] data = new Color[renderTarget.Width * renderTarget.Height];
-            for (int i = 0; i < (renderTarget.Width * renderTarget.Height); i++)
-                data[i] = Color.Transparent;
-            baseTexture.SetData<Color>(data);
 
+            // Load and validate textures
             List<Texture2D> textures = new List<Texture2D>();
             foreach (string textureUID in textureUIDs)
             {
                 Texture2D texture = ResourceController.getTexture(textureUID);
                 if (texture == null)
-                    return baseTexture;
+                    return result;
                 textures.Add(texture);
             }
+            if (textures.Count == 0)
+                return current;
 
-            // TEMPORARY
-            return baseTexture;
+            // Draw
+            _graphicsDevice.SetRenderTarget(renderTarget);
+            _graphicsDevice.Clear(Color.Transparent);
+            _spriteBatch.Begin();
+            _spriteBatch.Draw(current, current.Bounds, Color.White);
+            _spriteBatch.End();
+            _spriteBatch.Begin(SpriteSortMode.Immediate, BlendState.NonPremultiplied);
+            for (float i = 0; i <= current.Width; i += horizontalSpacing)
+            {
+                for (float j = 0; j <= current.Height; j += verticalSpacing)
+                {
+                    Vector2 position = new Vector2(i, j) + new Vector2(StasisMathHelper.floatBetween(0, jitter, _random), StasisMathHelper.floatBetween(0, jitter, _random));
+                    float angle = StasisMathHelper.floatBetween(-3.14f, 3.14f, _random);
+                    Texture2D texture = textures[_random.Next(0, textures.Count)];
+                    _spriteBatch.Draw(texture, position, texture.Bounds, Color.White, angle, new Vector2(texture.Width, texture.Height) / 2, 1f, SpriteEffects.None, 0);
+                }
+            }
+            _spriteBatch.End();
+            _graphicsDevice.SetRenderTarget(null);
+
+            // Save render target into texture
+            renderTarget.GetData<Color>(data);
+            result.SetData<Color>(data);
+
+            // Cleanup
+            renderTarget.Dispose();
+
+            return result;
         }
     }
 }

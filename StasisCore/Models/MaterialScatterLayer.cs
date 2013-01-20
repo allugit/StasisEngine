@@ -8,7 +8,7 @@ namespace StasisCore.Models
 {
     abstract public class MaterialScatterLayer : MaterialLayer
     {
-        private List<string> _textureUIDs;
+        protected List<string> _textureUIDs;
 
         virtual public List<string> textureUIDs { get { return _textureUIDs; } }
 
