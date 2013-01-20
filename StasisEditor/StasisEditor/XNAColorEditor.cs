@@ -5,8 +5,10 @@ using System.Drawing.Design;
 using System.Windows.Forms;
 using System.Windows.Forms.Design;
 
-namespace StasisEditor.Views.Controls
+namespace StasisEditor
 {
+    using XNAColor = Microsoft.Xna.Framework.Color;
+
     public class XNAColorEditor : UITypeEditor
     {
         private IWindowsFormsEditorService service;
@@ -25,9 +27,9 @@ namespace StasisEditor.Views.Controls
             {
                 XNAColor color = (XNAColor)value;
                 ColorDialog selectionControl = new ColorDialog();
-                selectionControl.Color = Color.FromArgb(color.GetARGB());
+                selectionControl.Color = Color.FromArgb(BitConverter.ToInt32(new byte[] { color.B, color.G, color.R, color.A }, 0));
                 selectionControl.ShowDialog();
-                value = new XNAColor(selectionControl.Color.ToArgb());
+                value = new XNAColor((int)selectionControl.Color.R, (int)selectionControl.Color.G, (int)selectionControl.Color.B);
             }
 
             return value;

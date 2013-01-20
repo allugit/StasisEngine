@@ -236,9 +236,7 @@
     <Compile Include="Views\Controls\EditBlueprintSocketsGraphics.cs">
       <SubType>Component</SubType>
     </Compile>
-    <Compile Include="Views\Controls\XNAColor.cs" />
-    <Compile Include="Views\Controls\XNAColorConverter.cs" />
-    <Compile Include="Views\Controls\XNAColorEditor.cs" />
+    <Compile Include="XNAColorEditor.cs" />
     <Compile Include="Views\LevelView.cs">
       <SubType>Component</SubType>
     </Compile>
