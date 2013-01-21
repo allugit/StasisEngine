@@ -60,6 +60,10 @@ namespace StasisCore.Models
                 case "uniform_scatter":
                     layer = new MaterialUniformScatterLayer(data);
                     break;
+
+                case "radial_scatter":
+                    layer = new MaterialRadialScatterLayer(data);
+                    break;
             }
             return layer;
         }
@@ -82,7 +86,11 @@ namespace StasisCore.Models
                     break;
 
                 case "uniform_scatter":
-                    layer = new MaterialUniformScatterLayer(Color.White);
+                    layer = new MaterialUniformScatterLayer();
+                    break;
+
+                case "radial_scatter":
+                    layer = new MaterialRadialScatterLayer();
                     break;
             }
             return layer;

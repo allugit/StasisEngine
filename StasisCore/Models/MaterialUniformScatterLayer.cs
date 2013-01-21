@@ -43,17 +43,17 @@ namespace StasisCore.Models
             }
         }
 
-        public MaterialUniformScatterLayer(Color baseColor, float horizontalSpacing = 32f, float verticalSpacing = 32f, float jitter = 8f, int randomRed = 0, int randomGreen = 0, int randomBlue = 0, int randomAlpha = 0)
+        public MaterialUniformScatterLayer()
             : base("uniform_scatter")
         {
-            _baseColor = baseColor;
-            _horizontalSpacing = horizontalSpacing;
-            _verticalSpacing = verticalSpacing;
-            _jitter = jitter;
-            _randomRed = randomRed;
-            _randomGreen = randomGreen;
-            _randomBlue = randomBlue;
-            _randomAlpha = randomAlpha;
+            _baseColor = Color.White;
+            _horizontalSpacing = 32f;
+            _verticalSpacing = 32f;
+            _jitter = 16f;
+            _randomRed = 0;
+            _randomGreen = 0;
+            _randomBlue = 0;
+            _randomAlpha = 0;
         }
 
         public MaterialUniformScatterLayer(XElement data)

@@ -1,14 +1,15 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel;
-using System.Drawing.Design;
 using System.Xml.Linq;
 using Microsoft.Xna.Framework;
 using StasisCore.Models;
 
 namespace StasisEditor.Models
 {
-    public class EditorMaterialUniformScatterLayer : MaterialUniformScatterLayer
+    using UITypeEditor = System.Drawing.Design.UITypeEditor;
+
+    public class EditorMaterialRadialScatterLayer : MaterialRadialScatterLayer
     {
         [Editor(@"System.Windows.Forms.Design.StringCollectionEditor, System.Design, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a",
             typeof(UITypeEditor))]
@@ -17,12 +18,12 @@ namespace StasisEditor.Models
         [EditorAttribute(typeof(XNAColorEditor), typeof(UITypeEditor))]
         public override Color baseColor { get { return base.baseColor; } set { base.baseColor = value; } } 
 
-        public EditorMaterialUniformScatterLayer()
+        public EditorMaterialRadialScatterLayer()
             : base()
         {
         }
 
-        public EditorMaterialUniformScatterLayer(XElement data)
+        public EditorMaterialRadialScatterLayer(XElement data)
             : base(data)
         {
         }

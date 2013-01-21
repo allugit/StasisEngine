@@ -33,6 +33,10 @@ namespace StasisEditor.Models
                 case "uniform_scatter":
                     layer = new EditorMaterialUniformScatterLayer(data);
                     break;
+
+                case "radial_scatter":
+                    layer = new EditorMaterialRadialScatterLayer(data);
+                    break;
             }
             return layer;
         }
@@ -55,7 +59,11 @@ namespace StasisEditor.Models
                     break;
 
                 case "uniform_scatter":
-                    layer = new EditorMaterialUniformScatterLayer(Color.White);
+                    layer = new EditorMaterialUniformScatterLayer();
+                    break;
+
+                case "radial_scatter":
+                    layer = new EditorMaterialRadialScatterLayer();
                     break;
             }
             return layer;

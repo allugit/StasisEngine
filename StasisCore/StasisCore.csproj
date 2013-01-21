@@ -72,6 +72,7 @@
     <Compile Include="Models\MaterialGroupLayer.cs" />
     <Compile Include="Models\MaterialLayer.cs" />
     <Compile Include="Models\MaterialNoiseLayer.cs" />
+    <Compile Include="Models\MaterialRadialScatterLayer.cs" />
     <Compile Include="Models\MaterialScatterLayer.cs" />
     <Compile Include="Models\MaterialTextureLayer.cs" />
     <Compile Include="Models\MaterialUniformScatterLayer.cs" />

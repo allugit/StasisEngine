@@ -111,8 +111,13 @@ namespace StasisCore
                     break;
 
                 case "uniform_scatter":
-                    MaterialUniformScatterLayer scatterLayer = layer as MaterialUniformScatterLayer;
-                    current = uniformScatterPass(current, scatterLayer.textureUIDs, scatterLayer.horizontalSpacing, scatterLayer.verticalSpacing, scatterLayer.jitter, scatterLayer.baseColor, scatterLayer.randomRed, scatterLayer.randomGreen, scatterLayer.randomBlue, scatterLayer.randomAlpha);
+                    MaterialUniformScatterLayer uniformLayer = layer as MaterialUniformScatterLayer;
+                    current = uniformScatterPass(current, uniformLayer.textureUIDs, uniformLayer.horizontalSpacing, uniformLayer.verticalSpacing, uniformLayer.jitter, uniformLayer.baseColor, uniformLayer.randomRed, uniformLayer.randomGreen, uniformLayer.randomBlue, uniformLayer.randomAlpha);
+                    break;
+
+                case "radial_scatter":
+                    MaterialRadialScatterLayer radialLayer = layer as MaterialRadialScatterLayer;
+                    current = radialScatterPass(current, radialLayer.textureUIDs, radialLayer.a, radialLayer.b, radialLayer.intersections, radialLayer.maxRadius, radialLayer.arms, radialLayer.mirrorArms, radialLayer.jitter, radialLayer.baseColor, radialLayer.randomRed, radialLayer.randomGreen, radialLayer.randomBlue, radialLayer.randomAlpha);
                     break;
             }
 
@@ -309,6 +314,77 @@ namespace StasisCore
                         Math.Max(0, (int)baseColor.B + tintB),
                         Math.Max(0, (int)baseColor.A + tintA));
                     _spriteBatch.Draw(texture, position, texture.Bounds, actualColor, angle, new Vector2(texture.Width, texture.Height) / 2, 1f, SpriteEffects.None, 0);
+                }
+            }
+            _spriteBatch.End();
+            _graphicsDevice.SetRenderTarget(null);
+
+            // Save render target into texture
+            renderTarget.GetData<Color>(data);
+            result.SetData<Color>(data);
+
+            // Cleanup
+            renderTarget.Dispose();
+
+            return result;
+        }
+
+        // Radial scatter pass
+        public Texture2D radialScatterPass(Texture2D current, List<string> textureUIDs, float a, float b, float intersections, float maxRadius, int arms, bool mirrorArms, float jitter, Color baseColor, int randomRed, int randomGreen, int randomBlue, int randomAlpha)
+        {
+            // Initialize render targets and textures
+            RenderTarget2D renderTarget = new RenderTarget2D(_graphicsDevice, current.Width, current.Height);
+            Texture2D result = new Texture2D(_graphicsDevice, renderTarget.Width, renderTarget.Height);
+            Color[] data = new Color[renderTarget.Width * renderTarget.Height];
+
+            // Load and validate textures
+            List<Texture2D> textures = new List<Texture2D>();
+            foreach (string textureUID in textureUIDs)
+            {
+                Texture2D texture = ResourceController.getTexture(textureUID);
+                if (texture == null)
+                    return result;
+                textures.Add(texture);
+            }
+            if (textures.Count == 0)
+                return current;
+
+            // Draw
+            _graphicsDevice.SetRenderTarget(renderTarget);
+            _graphicsDevice.Clear(Color.Transparent);
+            _spriteBatch.Begin();
+            _spriteBatch.Draw(current, current.Bounds, Color.White);
+            _spriteBatch.End();
+            _spriteBatch.Begin(SpriteSortMode.Immediate, BlendState.NonPremultiplied);
+            float thetaIncrement = StasisMathHelper.pi * 2 / intersections;
+            float armRotationIncrement = StasisMathHelper.pi * 2 / (float)arms;
+            Vector2 textureCenter = new Vector2(current.Width, current.Height) / 2;
+            for (int i = 0; i < arms; i++)
+            {
+                float theta = 0;
+                float r = 0;
+                while (r < maxRadius)
+                {
+                    r = a * (float)Math.Pow(StasisMathHelper.phi, b * (2f / StasisMathHelper.pi) * theta);
+                    float newTheta = theta + armRotationIncrement * i;
+                    Vector2 j = new Vector2((float)_random.NextDouble() * jitter, (float)_random.NextDouble() * jitter);
+                    Texture2D texture = textures[_random.Next(textures.Count)];
+                    int tintR = randomRed < 0 ? _random.Next(randomRed, 1) : _random.Next(randomRed + 1);
+                    int tintG = randomGreen < 0 ? _random.Next(randomGreen, 1) : _random.Next(randomGreen + 1);
+                    int tintB = randomBlue < 0 ? _random.Next(randomBlue, 1) : _random.Next(randomBlue + 1);
+                    int tintA = randomAlpha < 0 ? _random.Next(randomAlpha, 1) : _random.Next(randomAlpha + 1);
+                    Color actualColor = new Color(
+                        Math.Max(0, (int)baseColor.R + tintR),
+                        Math.Max(0, (int)baseColor.G + tintG),
+                        Math.Max(0, (int)baseColor.B + tintB),
+                        Math.Max(0, (int)baseColor.A + tintA));
+                    //_points.Add(new Vector2(r * (float)Math.Cos(newTheta), r * (float)Math.Sin(newTheta)) + j);
+                    _spriteBatch.Draw(texture, new Vector2(r * (float)Math.Cos(newTheta), r * (float)Math.Sin(newTheta)) + j + textureCenter, texture.Bounds, actualColor, 0, new Vector2(texture.Width, texture.Height) / 2, 1f, SpriteEffects.None, 0);
+                    if (mirrorArms)
+                    {
+                        _spriteBatch.Draw(texture, new Vector2(r * (float)Math.Cos(-newTheta), r * (float)Math.Sin(-newTheta)) + j + textureCenter, texture.Bounds, actualColor, 0, new Vector2(texture.Width, texture.Height) / 2, 1f, SpriteEffects.None, 0);
+                    }
+                    theta += thetaIncrement;
                 }
             }
             _spriteBatch.End();
