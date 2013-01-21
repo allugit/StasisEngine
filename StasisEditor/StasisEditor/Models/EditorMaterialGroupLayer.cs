@@ -23,5 +23,12 @@ namespace StasisEditor.Models
             foreach (XElement layerXml in data.Elements("Layer"))
                 _layers.Add(EditorMaterialLayer.load(layerXml) as MaterialLayer);
         }
+
+        public override MaterialLayer clone()
+        {
+            EditorMaterialGroupLayer layer = new EditorMaterialGroupLayer(data);
+            layer.type = "group";
+            return layer;
+        }
     }
 }

@@ -10,7 +10,7 @@ namespace StasisCore.Models
         protected string _type;
 
         public bool enabled { get { return _enabled; } set { _enabled = value; } }
-        public string type { get { return _type; } }
+        public string type { get { return _type; } set { _type = value; } }
 
         virtual public XElement data
         {
@@ -36,6 +36,10 @@ namespace StasisCore.Models
             _enabled = bool.Parse(data.Attribute("enabled").Value);
         }
 
+        // Clone
+        abstract public MaterialLayer clone();
+
+        // Load
         public static MaterialLayer load(XElement data)
         {
             MaterialLayer layer = null;
@@ -68,6 +72,7 @@ namespace StasisCore.Models
             return layer;
         }
 
+        // Create
         public static MaterialLayer create(string type)
         {
             MaterialLayer layer = null;

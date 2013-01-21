@@ -19,6 +19,8 @@ namespace StasisEditor.Views.Controls
         private MaterialController _controller;
         private Material _material;
 
+        public MaterialLayer selectedLayer { get { return layersTreeView.SelectedNode == null ? null : (layersTreeView.SelectedNode as LayerNode).layer; } }
+
         public MaterialLayersControl(MaterialController controller, Material material)
         {
             _controller = controller;
@@ -145,36 +147,44 @@ namespace StasisEditor.Views.Controls
             {
                 LayerNode node = layersTreeView.SelectedNode as LayerNode;
                 MaterialLayer newLayer = EditorMaterialLayer.create(newLayerForm.getSelectedType());
-
-                if (node.layer.type == "root" || node.layer.type == "group")
-                {
-                    // Insert into group
-                    _controller.addTerrainLayer(node.layer as MaterialGroupLayer, newLayer, node.Nodes.Count);
-                }
-                else
-                {
-                    // Create new layer
-                    LayerNode parent = node.Parent as LayerNode;
-
-                    // Add new layer to parent
-                    _controller.addTerrainLayer(parent.layer as MaterialGroupLayer, newLayer, node.Index + 1);
-                }
-
-                // Refresh tree
-                populateTreeView(_material.rootLayer);
-
-                // Select layer
-                selectLayer(newLayer);
-
-                // Refocus on tree
-                layersTreeView.Focus();
-
-                // Set changes made
-                _controller.setChangesMade(true);
+                addNewLayer(newLayer);
             }
         }
 
-        // Remove layer
+        // Add layer
+        private void addNewLayer(MaterialLayer newLayer)
+        {
+            Debug.Assert(selectedLayer != null);
+            LayerNode selectedNode = layersTreeView.SelectedNode as LayerNode;
+
+            if (selectedLayer.type == "root" || selectedLayer.type == "group")
+            {
+                // Insert into group
+                _controller.addTerrainLayer(selectedLayer as MaterialGroupLayer, newLayer, selectedNode.Nodes.Count);
+            }
+            else
+            {
+                // Create new layer
+                LayerNode parent = selectedNode.Parent as LayerNode;
+
+                // Add new layer to parent
+                _controller.addTerrainLayer(parent.layer as MaterialGroupLayer, newLayer, selectedNode.Index + 1);
+            }
+
+            // Refresh tree
+            populateTreeView(_material.rootLayer);
+
+            // Select layer
+            selectLayer(newLayer);
+
+            // Refocus on tree
+            layersTreeView.Focus();
+
+            // Set changes made
+            _controller.setChangesMade(true);
+        }
+
+        // Remove layer button clicked
         private void removeLayerButton_Click(object sender, EventArgs e)
         {
             Debug.Assert(layersTreeView.SelectedNode is LayerNode);
@@ -237,6 +247,10 @@ namespace StasisEditor.Views.Controls
             // Add button's status
             addLayerButton.Enabled = true;
 
+            // Copy/paste button's status
+            layerCopyButton.Enabled = true;
+            layerPasteButton.Enabled = _controller.copiedMaterialLayer != null;
+
             // Up/down buttons' status
             if (node.layer.type == "root")
             {
@@ -280,6 +294,22 @@ namespace StasisEditor.Views.Controls
             LayerNode node = e.Node as LayerNode;
             if (node.layer.type == "root")
                 e.Cancel = true;
+        }
+
+        // Copy layer button clicked
+        private void layerCopyButton_Click(object sender, EventArgs e)
+        {
+            Debug.Assert(selectedLayer != null);
+            _controller.copiedMaterialLayer = selectedLayer.clone();
+            layerPasteButton.Enabled = true;
+        }
+
+        // Paste layer button clicked
+        private void layerPasteButton_Click(object sender, EventArgs e)
+        {
+            Debug.Assert(selectedLayer != null);
+            Debug.Assert(_controller.copiedMaterialLayer != null);
+            addNewLayer(_controller.copiedMaterialLayer);
         }
     }
 }

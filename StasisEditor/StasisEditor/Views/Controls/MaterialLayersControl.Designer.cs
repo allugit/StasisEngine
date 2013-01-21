@@ -35,6 +35,8 @@
             this.layerProperties = new System.Windows.Forms.PropertyGrid();
             this.label2 = new System.Windows.Forms.Label();
             this.addLayerButton = new System.Windows.Forms.Button();
+            this.layerCopyButton = new System.Windows.Forms.Button();
+            this.layerPasteButton = new System.Windows.Forms.Button();
             this.layersTreeView = new StasisEditor.Views.Controls.LayersTreeView();
             this.SuspendLayout();
             // 
@@ -51,7 +53,7 @@
             // 
             this.upButton.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
             this.upButton.Enabled = false;
-            this.upButton.Location = new System.Drawing.Point(279, 16);
+            this.upButton.Location = new System.Drawing.Point(343, 16);
             this.upButton.Name = "upButton";
             this.upButton.Size = new System.Drawing.Size(32, 23);
             this.upButton.TabIndex = 2;
@@ -62,7 +64,7 @@
             // 
             this.downButton.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
             this.downButton.Enabled = false;
-            this.downButton.Location = new System.Drawing.Point(279, 45);
+            this.downButton.Location = new System.Drawing.Point(343, 45);
             this.downButton.Name = "downButton";
             this.downButton.Size = new System.Drawing.Size(32, 23);
             this.downButton.TabIndex = 3;
@@ -73,7 +75,7 @@
             // 
             this.removeLayerButton.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
             this.removeLayerButton.Enabled = false;
-            this.removeLayerButton.Location = new System.Drawing.Point(198, 148);
+            this.removeLayerButton.Location = new System.Drawing.Point(262, 148);
             this.removeLayerButton.Name = "removeLayerButton";
             this.removeLayerButton.Size = new System.Drawing.Size(75, 23);
             this.removeLayerButton.TabIndex = 5;
@@ -86,11 +88,14 @@
             this.layerProperties.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom)
                         | System.Windows.Forms.AnchorStyles.Left)
                         | System.Windows.Forms.AnchorStyles.Right)));
+            this.layerProperties.HelpVisible = false;
             this.layerProperties.Location = new System.Drawing.Point(0, 211);
             this.layerProperties.Margin = new System.Windows.Forms.Padding(0);
             this.layerProperties.Name = "layerProperties";
-            this.layerProperties.Size = new System.Drawing.Size(314, 208);
+            this.layerProperties.PropertySort = System.Windows.Forms.PropertySort.NoSort;
+            this.layerProperties.Size = new System.Drawing.Size(378, 208);
             this.layerProperties.TabIndex = 6;
+            this.layerProperties.ToolbarVisible = false;
             this.layerProperties.PropertyValueChanged += new System.Windows.Forms.PropertyValueChangedEventHandler(this.layerProperties_PropertyValueChanged);
             // 
             // label2
@@ -106,13 +111,35 @@
             // 
             this.addLayerButton.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
             this.addLayerButton.Enabled = false;
-            this.addLayerButton.Location = new System.Drawing.Point(122, 148);
+            this.addLayerButton.Location = new System.Drawing.Point(186, 148);
             this.addLayerButton.Name = "addLayerButton";
             this.addLayerButton.Size = new System.Drawing.Size(70, 23);
             this.addLayerButton.TabIndex = 9;
             this.addLayerButton.Text = "Add";
             this.addLayerButton.UseVisualStyleBackColor = true;
             this.addLayerButton.Click += new System.EventHandler(this.addButton_Click);
+            // 
+            // layerCopyButton
+            // 
+            this.layerCopyButton.Enabled = false;
+            this.layerCopyButton.Location = new System.Drawing.Point(0, 148);
+            this.layerCopyButton.Name = "layerCopyButton";
+            this.layerCopyButton.Size = new System.Drawing.Size(75, 23);
+            this.layerCopyButton.TabIndex = 10;
+            this.layerCopyButton.Text = "Copy";
+            this.layerCopyButton.UseVisualStyleBackColor = true;
+            this.layerCopyButton.Click += new System.EventHandler(this.layerCopyButton_Click);
+            // 
+            // layerPasteButton
+            // 
+            this.layerPasteButton.Enabled = false;
+            this.layerPasteButton.Location = new System.Drawing.Point(82, 148);
+            this.layerPasteButton.Name = "layerPasteButton";
+            this.layerPasteButton.Size = new System.Drawing.Size(75, 23);
+            this.layerPasteButton.TabIndex = 11;
+            this.layerPasteButton.Text = "Paste";
+            this.layerPasteButton.UseVisualStyleBackColor = true;
+            this.layerPasteButton.Click += new System.EventHandler(this.layerPasteButton_Click);
             // 
             // layersTreeView
             // 
@@ -123,7 +150,7 @@
             this.layersTreeView.Location = new System.Drawing.Point(0, 16);
             this.layersTreeView.Name = "layersTreeView";
             this.layersTreeView.ShowPlusMinus = false;
-            this.layersTreeView.Size = new System.Drawing.Size(273, 126);
+            this.layersTreeView.Size = new System.Drawing.Size(337, 126);
             this.layersTreeView.TabIndex = 8;
             this.layersTreeView.BeforeCheck += new System.Windows.Forms.TreeViewCancelEventHandler(this.layersTreeView_BeforeCheck);
             this.layersTreeView.AfterCheck += new System.Windows.Forms.TreeViewEventHandler(this.layersTreeView_AfterCheck);
@@ -133,6 +160,8 @@
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
+            this.Controls.Add(this.layerPasteButton);
+            this.Controls.Add(this.layerCopyButton);
             this.Controls.Add(this.addLayerButton);
             this.Controls.Add(this.layersTreeView);
             this.Controls.Add(this.label2);
@@ -144,7 +173,7 @@
             this.Margin = new System.Windows.Forms.Padding(0);
             this.MinimumSize = new System.Drawing.Size(273, 0);
             this.Name = "MaterialLayersControl";
-            this.Size = new System.Drawing.Size(314, 422);
+            this.Size = new System.Drawing.Size(378, 422);
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -160,5 +189,7 @@
         private System.Windows.Forms.Label label2;
         private LayersTreeView layersTreeView;
         private System.Windows.Forms.Button addLayerButton;
+        private System.Windows.Forms.Button layerCopyButton;
+        private System.Windows.Forms.Button layerPasteButton;
     }
 }

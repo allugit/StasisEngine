@@ -27,5 +27,10 @@ namespace StasisEditor.Models
             : base(data)
         {
         }
+
+        public override MaterialLayer clone()
+        {
+            return new EditorMaterialRadialScatterLayer(data);
+        }
     }
 }

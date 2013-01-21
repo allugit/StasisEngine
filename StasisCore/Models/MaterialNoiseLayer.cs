@@ -98,5 +98,11 @@ namespace StasisCore.Models
             _invert = bool.Parse(data.Attribute("invert").Value);
             _worleyFeature = (WorleyFeatureType)Enum.Parse(typeof(WorleyFeatureType), data.Attribute("worley_feature").Value, true);
         }
+
+        // Clone
+        public override MaterialLayer clone()
+        {
+            return new MaterialNoiseLayer(data);
+        }
     }
 }

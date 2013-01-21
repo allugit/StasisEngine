@@ -46,5 +46,11 @@ namespace StasisCore.Models
             _multiplier = float.Parse(data.Attribute("multiplier").Value);
             _blendType = (LayerBlendType)Enum.Parse(typeof(LayerBlendType), data.Attribute("blend_type").Value, true);
         }
+
+        // Clone
+        public override MaterialLayer clone()
+        {
+            return new MaterialTextureLayer(data);
+        }
     }
 }

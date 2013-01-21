@@ -26,8 +26,10 @@ namespace StasisEditor.Controllers
         private MaterialPreview _materialPreview;
         private BindingList<EditorMaterial> _materials;
         private bool _autoUpdatePreview;
+        private MaterialLayer _copiedMaterialLayer;
 
         public BindingList<EditorMaterial> materials { get { return _materials; } }
+        public MaterialLayer copiedMaterialLayer { get { return _copiedMaterialLayer; } set { _copiedMaterialLayer = value; } }
 
         public MaterialController(EditorController editorController, MaterialView materialView)
         {

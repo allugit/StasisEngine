@@ -52,5 +52,13 @@ namespace StasisCore.Models
             foreach (XElement layerXml in data.Elements("Layer"))
                 _layers.Add(MaterialLayer.load(layerXml));
         }
+
+        // Clone
+        public override MaterialLayer clone()
+        {
+            MaterialGroupLayer layer = new MaterialGroupLayer(data);
+            layer.type = "group";
+            return layer;
+        }
     }
 }

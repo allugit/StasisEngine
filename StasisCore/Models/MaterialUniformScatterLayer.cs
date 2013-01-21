@@ -43,6 +43,7 @@ namespace StasisCore.Models
             }
         }
 
+        // Create new
         public MaterialUniformScatterLayer()
             : base("uniform_scatter")
         {
@@ -56,6 +57,7 @@ namespace StasisCore.Models
             _randomAlpha = 0;
         }
 
+        // Load from xml
         public MaterialUniformScatterLayer(XElement data)
             : base(data)
         {
@@ -67,6 +69,12 @@ namespace StasisCore.Models
             _randomGreen = int.Parse(data.Attribute("random_green").Value);
             _randomBlue = int.Parse(data.Attribute("random_blue").Value);
             _randomAlpha = int.Parse(data.Attribute("random_alpha").Value);
+        }
+
+        // Clone
+        public override MaterialLayer clone()
+        {
+            return new MaterialUniformScatterLayer(data);
         }
     }
 }

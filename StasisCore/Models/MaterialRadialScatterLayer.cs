@@ -98,5 +98,11 @@ namespace StasisCore.Models
             _randomBlue = int.Parse(data.Attribute("random_blue").Value);
             _randomAlpha = int.Parse(data.Attribute("random_alpha").Value);
         }
+
+        // Clone
+        public override MaterialLayer clone()
+        {
+            return new MaterialRadialScatterLayer(data);
+        }
     }
 }

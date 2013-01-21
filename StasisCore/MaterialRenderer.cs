@@ -366,7 +366,7 @@ namespace StasisCore
                 while (r < maxRadius)
                 {
                     r = a * (float)Math.Pow(StasisMathHelper.phi, b * (2f / StasisMathHelper.pi) * theta);
-                    float newTheta = theta + armRotationIncrement * i * (flipArms ? -1f : 1f);
+                    float newTheta = (theta + armRotationIncrement * i) * (flipArms ? -1f : 1f);
                     Vector2 j = new Vector2((float)(_random.NextDouble() * 2 - 1) * jitter, (float)(_random.NextDouble() * 2 - 1) * jitter);
                     Texture2D texture = textures[_random.Next(textures.Count)];
                     int tintR = randomRed < 0 ? _random.Next(randomRed, 1) : _random.Next(randomRed + 1);

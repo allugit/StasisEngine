@@ -16,5 +16,10 @@ namespace StasisEditor.Models
             : base(data)
         {
         }
+
+        public override MaterialLayer clone()
+        {
+            return new EditorMaterialNoiseLayer(data);
+        }
     }
 }
