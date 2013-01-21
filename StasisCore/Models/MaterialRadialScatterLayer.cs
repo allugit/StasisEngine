@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Xml.Linq;
 using Microsoft.Xna.Framework;
+using StasisCore.Resources;
 
 namespace StasisCore.Models
 {
@@ -15,6 +16,8 @@ namespace StasisCore.Models
         protected bool _twinArms;
         protected bool _flipArms;
         protected float _jitter;
+        protected float _centerJitter;
+        protected Vector2 _centerOffset;
         protected Color _baseColor;
         protected int _randomRed;
         protected int _randomGreen;
@@ -29,6 +32,8 @@ namespace StasisCore.Models
         public bool twinArms { get { return _twinArms; } set { _twinArms = value; } }
         public bool flipArms { get { return _flipArms; } set { _flipArms = value; } }
         public float jitter { get { return _jitter; } set { _jitter = value; } }
+        public float centerJitter { get { return _centerJitter; } set { _centerJitter = value; } }
+        public Vector2 centerOffset { get { return _centerOffset; } set { _centerOffset = value; } }
         virtual public Color baseColor { get { return _baseColor; } set { _baseColor = value; } }
         public int randomRed { get { return _randomRed; } set { _randomRed = value; } }
         public int randomGreen { get { return _randomGreen; } set { _randomGreen = value; } }
@@ -47,6 +52,13 @@ namespace StasisCore.Models
                 d.SetAttributeValue("twin_arms", _twinArms);
                 d.SetAttributeValue("flip_arms", _flipArms);
                 d.SetAttributeValue("jitter", _jitter);
+                d.SetAttributeValue("center_jitter", _centerJitter);
+                d.SetAttributeValue("center_offset", _centerOffset);
+                d.SetAttributeValue("base_color", _baseColor);
+                d.SetAttributeValue("random_red", _randomRed);
+                d.SetAttributeValue("random_green", _randomGreen);
+                d.SetAttributeValue("random_blue", _randomBlue);
+                d.SetAttributeValue("random_alpha", _randomAlpha);
                 return d;
             }
         }
@@ -61,7 +73,9 @@ namespace StasisCore.Models
             _arms = 9;
             _twinArms = false;
             _flipArms = false;
-            _jitter = 1f;
+            _jitter = 0f;
+            _centerJitter = 0f;
+            _centerOffset = Vector2.Zero;
             _baseColor = Color.White;
         }
 
@@ -76,6 +90,13 @@ namespace StasisCore.Models
             _twinArms = bool.Parse(data.Attribute("twin_arms").Value);
             _flipArms = bool.Parse(data.Attribute("flip_arms").Value);
             _jitter = float.Parse(data.Attribute("jitter").Value);
+            _centerJitter = float.Parse(data.Attribute("center_jitter").Value);
+            _centerOffset = XmlLoadHelper.getVector2(data.Attribute("center_offset").Value);
+            _baseColor = XmlLoadHelper.getColor(data.Attribute("base_color").Value);
+            _randomRed = int.Parse(data.Attribute("random_red").Value);
+            _randomGreen = int.Parse(data.Attribute("random_green").Value);
+            _randomBlue = int.Parse(data.Attribute("random_blue").Value);
+            _randomAlpha = int.Parse(data.Attribute("random_alpha").Value);
         }
     }
 }
