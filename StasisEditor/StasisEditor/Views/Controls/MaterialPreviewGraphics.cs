@@ -41,7 +41,9 @@ namespace StasisEditor.Views.Controls
         private int _vertexCount;
         private Matrix _viewMatrix;
         private Matrix _projectionMatrix;
-        private float _scale;
+        private float _scale = 1f;
+
+        public float scale { get { return _scale; } set { _scale = value; } }
 
         public MaterialPreviewGraphics()
             : base()
@@ -63,10 +65,8 @@ namespace StasisEditor.Views.Controls
             Console.WriteLine("Material preview graphics completely initialized.");
         }
 
-        public void setMaterial(Material material, float scale, List<Vector2> polygonPoints, float growthFactor)
+        public void setMaterial(Material material, List<Vector2> polygonPoints, float growthFactor)
         {
-            _scale = scale;
-
             try
             {
                 if (polygonPoints != null && polygonPoints.Count >= 3)
@@ -115,7 +115,7 @@ namespace StasisEditor.Views.Controls
                             (p3 - topLeft) / (bottomRight - topLeft),
                             Vector3.One);
                     }
-                    _texture = _materialRenderer.renderMaterial(material, polygonPoints, growthFactor, (int)(width * scale), (int)(height * scale));
+                    _texture = _materialRenderer.renderMaterial(material, polygonPoints, growthFactor, (int)width, (int)height);
                 }
                 else
                 {

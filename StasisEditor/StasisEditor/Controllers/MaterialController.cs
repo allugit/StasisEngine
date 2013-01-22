@@ -64,7 +64,7 @@ namespace StasisEditor.Controllers
             _testPolygonPoints.Add(new Vector2(-3.5f, -3));
             _testPolygonPoints.Add(new Vector2(-4.5f, -1.5f));
             for (int i = 0; i < _testPolygonPoints.Count; i++)
-                _testPolygonPoints[i] *= 2;
+                _testPolygonPoints[i] *= 2 * 35;
         }
 
         // setAutoUpdatePreview

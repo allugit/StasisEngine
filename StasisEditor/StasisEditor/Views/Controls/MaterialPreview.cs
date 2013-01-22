@@ -45,7 +45,7 @@ namespace StasisEditor.Views.Controls
             if (useTestPolygon.Checked)
                 _polygonPoints = _controller.testPolygonPoints;
 
-            materialPreviewGraphics.setMaterial(_material, (float)scaleBox.Value, _polygonPoints, (float)growthFactorBox.Value);
+            materialPreviewGraphics.setMaterial(_material, _polygonPoints, (float)growthFactorBox.Value);
         }
 
         private void MaterialPreview_FormClosing(object sender, FormClosingEventArgs e)
@@ -69,6 +69,7 @@ namespace StasisEditor.Views.Controls
         // Scale value changed
         private void scaleBox_ValueChanged(object sender, EventArgs e)
         {
+            materialPreviewGraphics.scale = (float)scaleBox.Value;
             redrawMaterial();
         }
     }
