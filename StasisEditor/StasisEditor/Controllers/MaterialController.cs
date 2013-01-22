@@ -50,19 +50,19 @@ namespace StasisEditor.Controllers
 
             // Initialize preview polygon points
             _testPolygonPoints = new List<Vector2>();
-            _testPolygonPoints.Add(new Vector2(-3.5f, 0));
-            _testPolygonPoints.Add(new Vector2(-1, 1));
-            _testPolygonPoints.Add(new Vector2(0, 3));
-            _testPolygonPoints.Add(new Vector2(2, 2.5f));
-            _testPolygonPoints.Add(new Vector2(3, 0));
-            _testPolygonPoints.Add(new Vector2(4, -1));
-            _testPolygonPoints.Add(new Vector2(3.5f, -3));
-            _testPolygonPoints.Add(new Vector2(1, -3.5f));
-            _testPolygonPoints.Add(new Vector2(0.5f, -3));
-            _testPolygonPoints.Add(new Vector2(-1, -4));
-            _testPolygonPoints.Add(new Vector2(-2.5f, -2.5f));
-            _testPolygonPoints.Add(new Vector2(-3.5f, -3));
-            _testPolygonPoints.Add(new Vector2(-4.5f, -1.5f));
+            _testPolygonPoints.Add(new Vector2(-3.5f, 0) / 4.5f);
+            _testPolygonPoints.Add(new Vector2(-1, 1) / 4.5f);
+            _testPolygonPoints.Add(new Vector2(0, 3) / 4.5f);
+            _testPolygonPoints.Add(new Vector2(2, 2.5f) / 4.5f);
+            _testPolygonPoints.Add(new Vector2(3, 0) / 4.5f);
+            _testPolygonPoints.Add(new Vector2(4, -1) / 4.5f);
+            _testPolygonPoints.Add(new Vector2(3.5f, -3) / 4.5f);
+            _testPolygonPoints.Add(new Vector2(1, -3.5f) / 4.5f);
+            _testPolygonPoints.Add(new Vector2(0.5f, -3) / 4.5f);
+            _testPolygonPoints.Add(new Vector2(-1, -4) / 4.5f);
+            _testPolygonPoints.Add(new Vector2(-2.5f, -2.5f) / 4.5f);
+            _testPolygonPoints.Add(new Vector2(-3.5f, -3) / 4.5f);
+            _testPolygonPoints.Add(new Vector2(-4.5f, -1.5f) / 4.5f);
         }
 
         // setAutoUpdatePreview

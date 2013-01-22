@@ -24,6 +24,8 @@ namespace StasisCore
         private Effect _noiseEffect;
         private Effect _textureEffect;
 
+        public Effect primitivesEffect { get { return _primitivesEffect; } }
+
         public MaterialRenderer(GraphicsDevice graphicsDevice, ContentManager contentManager, SpriteBatch spriteBatch, int randomTextureWidth = 32, int randomTextureHeight = 32, int seed = 1234)
         {
             _graphicsDevice = graphicsDevice;
