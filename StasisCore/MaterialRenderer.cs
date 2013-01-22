@@ -102,22 +102,73 @@ namespace StasisCore
 
                 case "texture":
                     MaterialTextureLayer textureLayer = layer as MaterialTextureLayer;
-                    current = texturePass(current, ResourceController.getTexture(textureLayer.textureUID), textureLayer.blendType, textureLayer.scale, textureLayer.multiplier);
+                    current = texturePass(
+                        current,
+                        ResourceController.getTexture(textureLayer.textureUID),
+                        textureLayer.blendType,
+                        textureLayer.scale,
+                        textureLayer.multiplier);
                     break;
 
                 case "noise":
                     MaterialNoiseLayer noiseLayer = layer as MaterialNoiseLayer;
-                    current = noisePass(current, noiseLayer.noiseType, noiseLayer.position, noiseLayer.scale, noiseLayer.frequency, noiseLayer.gain, noiseLayer.lacunarity, noiseLayer.multiplier, noiseLayer.fbmOffset, noiseLayer.colorLow, noiseLayer.colorHigh, noiseLayer.iterations, noiseLayer.blendType, noiseLayer.invert, noiseLayer.worleyFeature);
+                    current = noisePass(
+                        current,
+                        noiseLayer.noiseType,
+                        noiseLayer.position,
+                        noiseLayer.scale,
+                        noiseLayer.frequency,
+                        noiseLayer.gain,
+                        noiseLayer.lacunarity,
+                        noiseLayer.multiplier,
+                        noiseLayer.fbmOffset,
+                        noiseLayer.colorLow,
+                        noiseLayer.colorHigh,
+                        noiseLayer.iterations,
+                        noiseLayer.blendType,
+                        noiseLayer.invert,
+                        noiseLayer.worleyFeature);
                     break;
 
                 case "uniform_scatter":
                     MaterialUniformScatterLayer uniformLayer = layer as MaterialUniformScatterLayer;
-                    current = uniformScatterPass(current, uniformLayer.textureUIDs, uniformLayer.horizontalSpacing, uniformLayer.verticalSpacing, uniformLayer.jitter, uniformLayer.baseColor, uniformLayer.randomRed, uniformLayer.randomGreen, uniformLayer.randomBlue, uniformLayer.randomAlpha);
+                    current = uniformScatterPass(
+                        current,
+                        uniformLayer.textureUIDs,
+                        uniformLayer.horizontalSpacing,
+                        uniformLayer.verticalSpacing,
+                        uniformLayer.jitter,
+                        uniformLayer.baseColor,
+                        uniformLayer.randomRed,
+                        uniformLayer.randomGreen,
+                        uniformLayer.randomBlue,
+                        uniformLayer.randomAlpha);
                     break;
 
                 case "radial_scatter":
                     MaterialRadialScatterLayer radialLayer = layer as MaterialRadialScatterLayer;
-                    current = radialScatterPass(current, radialLayer.textureUIDs, radialLayer.a, radialLayer.b, radialLayer.intersections, radialLayer.maxRadius, radialLayer.arms, radialLayer.twinArms, radialLayer.flipArms, radialLayer.jitter, radialLayer.centerJitter, radialLayer.centerOffset, radialLayer.baseColor, radialLayer.randomRed, radialLayer.randomGreen, radialLayer.randomBlue, radialLayer.randomAlpha);
+                    current = radialScatterPass(
+                        current,
+                        radialLayer.textureUIDs,
+                        radialLayer.a,
+                        radialLayer.b,
+                        radialLayer.intersections,
+                        radialLayer.maxRadius,
+                        radialLayer.arms,
+                        radialLayer.twinArms,
+                        radialLayer.flipArms,
+                        radialLayer.useAbsoluteTextureAngle,
+                        radialLayer.absoluteTextureAngle,
+                        radialLayer.relativeTextureAngle,
+                        radialLayer.textureAngleJitter,
+                        radialLayer.jitter,
+                        radialLayer.centerJitter,
+                        radialLayer.centerOffset,
+                        radialLayer.baseColor,
+                        radialLayer.randomRed,
+                        radialLayer.randomGreen, 
+                        radialLayer.randomBlue,
+                        radialLayer.randomAlpha);
                     break;
             }
 
@@ -271,7 +322,17 @@ namespace StasisCore
         }
 
         // Uniform scatter pass
-        public Texture2D uniformScatterPass(Texture2D current, List<string> textureUIDs, float horizontalSpacing, float verticalSpacing, float jitter, Color baseColor, int randomRed, int randomGreen, int randomBlue, int randomAlpha)
+        public Texture2D uniformScatterPass(
+            Texture2D current,
+            List<string> textureUIDs,
+            float horizontalSpacing, 
+            float verticalSpacing, 
+            float jitter, 
+            Color baseColor, 
+            int randomRed, 
+            int randomGreen, 
+            int randomBlue, 
+            int randomAlpha)
         {
             // Initialize render targets and textures
             RenderTarget2D renderTarget = new RenderTarget2D(_graphicsDevice, current.Width, current.Height);
@@ -330,7 +391,28 @@ namespace StasisCore
         }
 
         // Radial scatter pass
-        public Texture2D radialScatterPass(Texture2D current, List<string> textureUIDs, float a, float b, float intersections, float maxRadius, int arms, bool twinArms, bool flipArms, float jitter, float centerJitter, Vector2 centerOffset, Color baseColor, int randomRed, int randomGreen, int randomBlue, int randomAlpha)
+        public Texture2D radialScatterPass(
+            Texture2D current,
+            List<string> textureUIDs, 
+            float a, 
+            float b, 
+            float intersections, 
+            float maxRadius, 
+            int arms, 
+            bool twinArms, 
+            bool flipArms,
+            bool useAbsoluteTextureAngle,
+            float absoluteTextureAngle,
+            float relativeTextureAngle,
+            float textureAngleJitter,
+            float jitter, 
+            float centerJitter,
+            Vector2 centerOffset, 
+            Color baseColor, 
+            int randomRed, 
+            int randomGreen, 
+            int randomBlue, 
+            int randomAlpha)
         {
             // Initialize render targets and textures
             RenderTarget2D renderTarget = new RenderTarget2D(_graphicsDevice, current.Width, current.Height);
@@ -366,7 +448,17 @@ namespace StasisCore
                 while (r < maxRadius)
                 {
                     r = a * (float)Math.Pow(StasisMathHelper.phi, b * (2f / StasisMathHelper.pi) * theta);
-                    float newTheta = (theta + armRotationIncrement * i) * (flipArms ? -1f : 1f);
+                    float modifiedTheta = (theta + armRotationIncrement * i) * (flipArms ? -1f : 1f);
+                    float randomAngleValue = textureAngleJitter == 0 ? 0 : StasisMathHelper.floatBetween(-textureAngleJitter, textureAngleJitter, _random);
+                    float textureAngle;
+                    if (useAbsoluteTextureAngle)
+                    {
+                        textureAngle = absoluteTextureAngle + randomAngleValue;
+                    }
+                    else
+                    {
+                        textureAngle = relativeTextureAngle + modifiedTheta + randomAngleValue;
+                    }
                     Vector2 j = new Vector2((float)(_random.NextDouble() * 2 - 1) * jitter, (float)(_random.NextDouble() * 2 - 1) * jitter);
                     Texture2D texture = textures[_random.Next(textures.Count)];
                     int tintR = randomRed < 0 ? _random.Next(randomRed, 1) : _random.Next(randomRed + 1);
@@ -378,11 +470,11 @@ namespace StasisCore
                         Math.Max(0, (int)baseColor.G + tintG),
                         Math.Max(0, (int)baseColor.B + tintB),
                         Math.Max(0, (int)baseColor.A + tintA));
-                    _spriteBatch.Draw(texture, new Vector2(r * (float)Math.Cos(newTheta), r * (float)Math.Sin(newTheta)) + j + center, texture.Bounds, actualColor, newTheta, new Vector2(texture.Width, texture.Height) / 2, 1f, SpriteEffects.None, 0);
+                    _spriteBatch.Draw(texture, new Vector2(r * (float)Math.Cos(modifiedTheta), r * (float)Math.Sin(modifiedTheta)) + j + center, texture.Bounds, actualColor, textureAngle, new Vector2(texture.Width, texture.Height) / 2, 1f, SpriteEffects.None, 0);
                     if (twinArms)
                     {
                         j = new Vector2((float)(_random.NextDouble() * 2 - 1) * jitter, (float)(_random.NextDouble() * 2 - 1) * jitter);
-                        _spriteBatch.Draw(texture, new Vector2(r * (float)Math.Cos(-newTheta), r * (float)Math.Sin(-newTheta)) + j + center, texture.Bounds, actualColor, -newTheta, new Vector2(texture.Width, texture.Height) / 2, 1f, SpriteEffects.None, 0);
+                        _spriteBatch.Draw(texture, new Vector2(r * (float)Math.Cos(-modifiedTheta), r * (float)Math.Sin(-modifiedTheta)) + j + center, texture.Bounds, actualColor, -textureAngle, new Vector2(texture.Width, texture.Height) / 2, 1f, SpriteEffects.None, 0);
                     }
                     theta += thetaIncrement;
                 }

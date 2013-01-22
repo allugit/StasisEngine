@@ -15,6 +15,10 @@ namespace StasisCore.Models
         protected int _arms;
         protected bool _twinArms;
         protected bool _flipArms;
+        protected bool _useAbsoluteTextureAngle;
+        protected float _absoluteTextureAngle;
+        protected float _relativeTextureAngle;
+        protected float _textureAngleJitter;
         protected float _jitter;
         protected float _centerJitter;
         protected Vector2 _centerOffset;
@@ -31,6 +35,10 @@ namespace StasisCore.Models
         public int arms { get { return _arms; } set { _arms = value; } }
         public bool twinArms { get { return _twinArms; } set { _twinArms = value; } }
         public bool flipArms { get { return _flipArms; } set { _flipArms = value; } }
+        public bool useAbsoluteTextureAngle { get { return _useAbsoluteTextureAngle; } set { _useAbsoluteTextureAngle = value; } }
+        public float absoluteTextureAngle { get { return _absoluteTextureAngle; } set { _absoluteTextureAngle = value; } }
+        public float relativeTextureAngle { get { return _relativeTextureAngle; } set { _relativeTextureAngle = value; } }
+        public float textureAngleJitter { get { return _textureAngleJitter; } set { _textureAngleJitter = value; } }
         public float jitter { get { return _jitter; } set { _jitter = value; } }
         public float centerJitter { get { return _centerJitter; } set { _centerJitter = value; } }
         public Vector2 centerOffset { get { return _centerOffset; } set { _centerOffset = value; } }
@@ -51,6 +59,10 @@ namespace StasisCore.Models
                 d.SetAttributeValue("arms", _arms);
                 d.SetAttributeValue("twin_arms", _twinArms);
                 d.SetAttributeValue("flip_arms", _flipArms);
+                d.SetAttributeValue("use_absolute_texture_angle", _useAbsoluteTextureAngle);
+                d.SetAttributeValue("absolute_texture_angle", _absoluteTextureAngle);
+                d.SetAttributeValue("relative_texture_angle", _relativeTextureAngle);
+                d.SetAttributeValue("texture_angle_jitter", _textureAngleJitter);
                 d.SetAttributeValue("jitter", _jitter);
                 d.SetAttributeValue("center_jitter", _centerJitter);
                 d.SetAttributeValue("center_offset", _centerOffset);
@@ -73,6 +85,10 @@ namespace StasisCore.Models
             _arms = 9;
             _twinArms = false;
             _flipArms = false;
+            _useAbsoluteTextureAngle = false;
+            _absoluteTextureAngle = 0f;
+            _relativeTextureAngle = 0f;
+            _textureAngleJitter = 0f;
             _jitter = 0f;
             _centerJitter = 0f;
             _centerOffset = Vector2.Zero;
@@ -89,6 +105,10 @@ namespace StasisCore.Models
             _arms = Loader.loadInt(data.Attribute("arms"), 9);
             _twinArms = Loader.loadBool(data.Attribute("twin_arms"), false);
             _flipArms = Loader.loadBool(data.Attribute("flip_arms"), false);
+            _useAbsoluteTextureAngle = Loader.loadBool(data.Attribute("use_absolute_texture_angle"), false);
+            _absoluteTextureAngle = Loader.loadFloat(data.Attribute("absolute_texture_angle"), 0f);
+            _relativeTextureAngle = Loader.loadFloat(data.Attribute("relative_texture_angle"), 0f);
+            _textureAngleJitter = Loader.loadFloat(data.Attribute("texture_angle_jitter"), 0f);
             _jitter = Loader.loadFloat(data.Attribute("jitter"), 0f);
             _centerJitter = Loader.loadFloat(data.Attribute("center_jitter"), 0f);
             _centerOffset = Loader.loadVector2(data.Attribute("center_offset"), Vector2.Zero);
