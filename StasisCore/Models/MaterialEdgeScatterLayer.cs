@@ -46,7 +46,7 @@ namespace StasisCore.Models
             : base("edge_scatter")
         {
             _direction = Vector2.Zero;
-            _threshold = 0.5f;
+            _threshold = 0;
             _hardCutoff = false;
             _baseColor = Color.White;
         }
@@ -55,7 +55,7 @@ namespace StasisCore.Models
             : base(data)
         {
             _direction = Loader.loadVector2(data.Attribute("direction"), Vector2.Zero);
-            _threshold = Loader.loadFloat(data.Attribute("threshold"), 0.5f);
+            _threshold = Loader.loadFloat(data.Attribute("threshold"), 0f);
             _hardCutoff = Loader.loadBool(data.Attribute("hard_cutoff"), false);
             _baseColor = Loader.loadColor(data.Attribute("base_color"), Color.White);
             _randomRed = Loader.loadInt(data.Attribute("random_red"), 0);

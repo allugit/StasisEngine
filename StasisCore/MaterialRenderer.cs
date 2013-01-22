@@ -567,15 +567,16 @@ namespace StasisCore
                 Vector2 b = transformedPolygonPoints[i == transformedPolygonPoints.Count - 1 ? 0 : i + 1];
                 Vector2 relative = b - a;
                 Vector2 normal = relative;
-                float dot = 0;
+                float perpDot = 0;
                 normal.Normalize();
                 if (hasDirection)
                 {
                     direction.Normalize();
-                    dot = Vector2.Dot(direction, normal);
+                    //dot = Vector2.Dot(direction, normal);
+                    perpDot = direction.X * normal.Y - direction.Y * normal.X;
+
                 }
-                Console.WriteLine("dot, threshold: {0}, {1}", dot, threshold);
-                if (!hasDirection || Math.Abs(dot) < threshold)
+                if (!hasDirection || perpDot > -threshold)
                 {
                     float segmentLength = 5f;
                     float relativeLength = relative.Length();
