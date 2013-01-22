@@ -87,7 +87,7 @@ namespace StasisEditor.Controllers
             {
                 Material material = _materialView.selectedMaterial;
                 if (material != null)
-                    preview(material, _testPolygonPoints);
+                    preview(material, null);
             }
         }
 
