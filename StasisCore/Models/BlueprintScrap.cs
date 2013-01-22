@@ -79,13 +79,13 @@ namespace StasisCore.Models
             _scrapTexture = ResourceController.getTexture(_scrapTextureUID);
             _textureCenter = new Vector2(_scrapTexture.Width, _scrapTexture.Height) / 2;
             _blueprintUID = data.Attribute("blueprint_uid").Value;
-            _currentCraftPosition = XmlLoadHelper.getVector2(data.Attribute("current_craft_position").Value);
-            _currentCraftAngle = float.Parse(data.Attribute("current_craft_angle").Value);
+            _currentCraftPosition = Loader.loadVector2(data.Attribute("current_craft_position"), Vector2.Zero);
+            _currentCraftAngle = Loader.loadFloat(data.Attribute("current_craft_angle"), 0);
             _rotationMatrix = Matrix.Identity;
 
             _points = new List<Vector2>();
             foreach (XElement childData in data.Elements("Point"))
-                _points.Add(XmlLoadHelper.getVector2(childData.Value));
+                _points.Add(Loader.loadVector2(childData.Value, Vector2.Zero));
 
             _connected = new List<BlueprintScrap>();
         }

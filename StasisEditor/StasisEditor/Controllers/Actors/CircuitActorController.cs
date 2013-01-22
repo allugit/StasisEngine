@@ -57,7 +57,7 @@ namespace StasisEditor.Controllers.Actors
             _level = level;
             _circuit = circuit;
             _type = ActorType.Circuit;
-            initializeControls(XmlLoadHelper.getVector2(data.Attribute("position").Value), data);
+            initializeControls(Loader.loadVector2(data.Attribute("position"), Vector2.Zero), data);
         }
 
         // Initialize sub controllers

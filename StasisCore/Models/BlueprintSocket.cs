@@ -42,7 +42,7 @@ namespace StasisCore.Models
         // Create from xml
         public BlueprintSocket(XElement data, BlueprintScrap scrapA, BlueprintScrap scrapB)
         {
-            _relativePoint = XmlLoadHelper.getVector2(data.Attribute("relative_point").Value);
+            _relativePoint = Loader.loadVector2(data.Attribute("relative_point"), Vector2.Zero);
             _scrapA = scrapA;
             _scrapB = scrapB;
         }

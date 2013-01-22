@@ -55,7 +55,7 @@ namespace StasisEditor.Controllers.Actors
         public CircleActorController(LevelController levelController, XElement data)
             : base(levelController, int.Parse(data.Attribute("id").Value))
         {
-            _position = XmlLoadHelper.getVector2(data.Attribute("position").Value);
+            _position = Loader.loadVector2(data.Attribute("position"), Vector2.Zero);
             _circleProperties = new CircleProperties(data);
             _bodyProperties = new BodyProperties(data);
             _type = ActorType.Circle;

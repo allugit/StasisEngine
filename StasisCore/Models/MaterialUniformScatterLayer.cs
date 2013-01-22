@@ -61,14 +61,14 @@ namespace StasisCore.Models
         public MaterialUniformScatterLayer(XElement data)
             : base(data)
         {
-            _horizontalSpacing = float.Parse(data.Attribute("horizontal_spacing").Value);
-            _verticalSpacing = float.Parse(data.Attribute("vertical_spacing").Value);
-            _jitter = float.Parse(data.Attribute("jitter").Value);
-            _baseColor = XmlLoadHelper.getColor(data.Attribute("base_color").Value);
-            _randomRed = int.Parse(data.Attribute("random_red").Value);
-            _randomGreen = int.Parse(data.Attribute("random_green").Value);
-            _randomBlue = int.Parse(data.Attribute("random_blue").Value);
-            _randomAlpha = int.Parse(data.Attribute("random_alpha").Value);
+            _horizontalSpacing = Loader.loadFloat(data.Attribute("horizontal_spacing"), 32f);
+            _verticalSpacing = Loader.loadFloat(data.Attribute("vertical_spacing"), 32f);
+            _jitter = Loader.loadFloat(data.Attribute("jitter"), 0f);
+            _baseColor = Loader.loadColor(data.Attribute("base_color"), Color.White);
+            _randomRed = Loader.loadInt(data.Attribute("random_red"), 0);
+            _randomGreen = Loader.loadInt(data.Attribute("random_green"), 0);
+            _randomBlue = Loader.loadInt(data.Attribute("random_blue"), 0);
+            _randomAlpha = Loader.loadInt(data.Attribute("random_alpha"), 0);
         }
 
         // Clone

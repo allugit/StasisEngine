@@ -64,7 +64,7 @@ namespace StasisEditor.Controllers.Actors
             _type = ActorType.Terrain;
             List<Vector2> actorResourcePoints = new List<Vector2>();
             foreach (XElement pointData in data.Elements("Point"))
-                actorResourcePoints.Add(XmlLoadHelper.getVector2(pointData.Value));
+                actorResourcePoints.Add(Loader.loadVector2(pointData, Vector2.Zero));
             initializeControls(actorResourcePoints);
         }
 

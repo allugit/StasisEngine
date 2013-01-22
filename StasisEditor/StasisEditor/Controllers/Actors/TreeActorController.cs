@@ -51,7 +51,7 @@ namespace StasisEditor.Controllers.Actors
         public TreeActorController(LevelController levelController, XElement data)
             : base(levelController, int.Parse(data.Attribute("id").Value))
         {
-            _position = XmlLoadHelper.getVector2(data.Attribute("position").Value);
+            _position = Loader.loadVector2(data.Attribute("position"), Vector2.Zero);
             _treeProperties = new TreeProperties(data);
             _type = ActorType.Tree;
             initializeControls(_treeProperties.tropism);

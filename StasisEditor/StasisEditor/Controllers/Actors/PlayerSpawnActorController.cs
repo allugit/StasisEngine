@@ -42,7 +42,7 @@ namespace StasisEditor.Controllers.Actors
             : base(levelController, int.Parse(data.Attribute("id").Value))
         {
             _type = ActorType.PlayerSpawn;
-            initializeControls(XmlLoadHelper.getVector2(data.Attribute("position").Value));
+            initializeControls(Loader.loadVector2(data.Attribute("position"), Vector2.Zero));
         }
 
         // Initialize controls

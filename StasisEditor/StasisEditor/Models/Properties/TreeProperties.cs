@@ -3,7 +3,7 @@ using System.ComponentModel;
 using System.Collections.Generic;
 using System.Xml.Linq;
 using Microsoft.Xna.Framework;
-using StasisCore.Resources;
+using StasisCore;
 
 namespace StasisEditor.Models
 {
@@ -110,22 +110,22 @@ namespace StasisEditor.Models
         // Load from xml
         public TreeProperties(XElement data)
         {
-            _tropism = XmlLoadHelper.getVector2(data.Attribute("tropism").Value);
-            _angle = float.Parse(data.Attribute("angle").Value);
-            _seed = int.Parse(data.Attribute("seed").Value);
-            _age = float.Parse(data.Attribute("age").Value);
-            _internodeLength = float.Parse(data.Attribute("internodeLength").Value);
-            _maxShootLength = int.Parse(data.Attribute("maxShootLength").Value);
-            _maxBaseWidth = float.Parse(data.Attribute("maxBaseWidth").Value);
-            _perceptionAngle = float.Parse(data.Attribute("perceptionAngle").Value);
-            _perceptionRadius = float.Parse(data.Attribute("perceptionRadius").Value);
-            _occupancyRadius = float.Parse(data.Attribute("occupancyRadius").Value);
-            _lateralAngle = float.Parse(data.Attribute("lateralAngle").Value);
-            _fullExposure = float.Parse(data.Attribute("fullExposure").Value);
-            _penumbraA = float.Parse(data.Attribute("penumbraA").Value);
-            _penumbraB = float.Parse(data.Attribute("penumbraB").Value);
-            _optimalGrowthWeight = float.Parse(data.Attribute("optimalGrowthWeight").Value);
-            _tropismWeight = float.Parse(data.Attribute("tropismWeight").Value);
+            _tropism = Loader.loadVector2(data.Attribute("tropism"), Vector2.Zero);
+            _angle = Loader.loadFloat(data.Attribute("angle"), 0);
+            _seed = Loader.loadInt(data.Attribute("seed"), 0);
+            _age = Loader.loadFloat(data.Attribute("age"), 0f);
+            _internodeLength = Loader.loadFloat(data.Attribute("internodeLength"), 1f);
+            _maxShootLength = Loader.loadInt(data.Attribute("maxShootLength"), 4);
+            _maxBaseWidth = Loader.loadFloat(data.Attribute("maxBaseWidth"), 1f);
+            _perceptionAngle = Loader.loadFloat(data.Attribute("perceptionAngle"), 0.6f);
+            _perceptionRadius = Loader.loadFloat(data.Attribute("perceptionRadius"), 3f);
+            _occupancyRadius = Loader.loadFloat(data.Attribute("occupancyRadius"), 1f);
+            _lateralAngle = Loader.loadFloat(data.Attribute("lateralAngle"), 0.6f);
+            _fullExposure = Loader.loadFloat(data.Attribute("fullExposure"), 1f);
+            _penumbraA = Loader.loadFloat(data.Attribute("penumbraA"), 1f);
+            _penumbraB = Loader.loadFloat(data.Attribute("penumbraB"), 2f);
+            _optimalGrowthWeight = Loader.loadFloat(data.Attribute("optimalGrowthWeight"), 1f);
+            _tropismWeight = Loader.loadFloat(data.Attribute("tropismWeight"), 1f);
         }
 
         // ToString

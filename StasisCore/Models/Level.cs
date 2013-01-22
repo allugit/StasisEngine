@@ -27,9 +27,9 @@ namespace StasisCore.Models
         // Level
         public Level(XElement data)
         {
-            _gravity = XmlLoadHelper.getVector2(data.Attribute("gravity").Value);
-            _wind = XmlLoadHelper.getVector2(data.Attribute("wind").Value);
-            _name = data.Attribute("name").Value;
+            _gravity = Loader.loadVector2(data.Attribute("gravity"), new Vector2(0, 32));
+            _wind = Loader.loadVector2(data.Attribute("wind"), Vector2.Zero);
+            _name = Loader.loadString(data.Attribute("name"), "new_level");
         }
     }
 }

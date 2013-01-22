@@ -44,7 +44,7 @@ namespace StasisEditor.Controllers.Actors
         {
             _itemProperties = new ItemProperties(data);
             _type = ActorType.Item;
-            initializeControls(XmlLoadHelper.getVector2(data.Attribute("position").Value));
+            initializeControls(Loader.loadVector2(data.Attribute("position"), Vector2.Zero));
         }
 
         // Initialize controls

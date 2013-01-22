@@ -83,20 +83,20 @@ namespace StasisCore.Models
         // Create from xml
         public MaterialNoiseLayer(XElement data) : base(data)
         {
-            _noiseType = (NoiseType)Enum.Parse(typeof(NoiseType), data.Attribute("noise_type").Value, true);
-            _position = XmlLoadHelper.getVector2(data.Attribute("position").Value);
-            _scale = float.Parse(data.Attribute("scale").Value);
-            _frequency = float.Parse(data.Attribute("frequency").Value);
-            _gain = float.Parse(data.Attribute("gain").Value);
-            _lacunarity = float.Parse(data.Attribute("lacunarity").Value);
-            _multiplier = float.Parse(data.Attribute("multiplier").Value);
-            _fbmOffset = XmlLoadHelper.getVector2(data.Attribute("fbm_offset").Value);
-            _colorLow = XmlLoadHelper.getColor(data.Attribute("color_low").Value);
-            _colorHigh = XmlLoadHelper.getColor(data.Attribute("color_high").Value);
-            _iterations = int.Parse(data.Attribute("iterations").Value);
-            _blendType = (LayerBlendType)Enum.Parse(typeof(LayerBlendType), data.Attribute("blend_type").Value, true);
-            _invert = bool.Parse(data.Attribute("invert").Value);
-            _worleyFeature = (WorleyFeatureType)Enum.Parse(typeof(WorleyFeatureType), data.Attribute("worley_feature").Value, true);
+            _noiseType = (NoiseType)Loader.loadEnum(typeof(NoiseType), data.Attribute("noise_type"), (int)NoiseType.Perlin);
+            _position = Loader.loadVector2(data.Attribute("position"), Vector2.Zero);
+            _scale = Loader.loadFloat(data.Attribute("scale"), 1);
+            _frequency = Loader.loadFloat(data.Attribute("frequency"), 1);
+            _gain = Loader.loadFloat(data.Attribute("gain"), 0.5f);
+            _lacunarity = Loader.loadFloat(data.Attribute("lacunarity"), 1.8f);
+            _multiplier = Loader.loadFloat(data.Attribute("multiplier"), multiplier);
+            _fbmOffset = Loader.loadVector2(data.Attribute("fbm_offset"), Vector2.Zero);
+            _colorLow = Loader.loadColor(data.Attribute("color_low"), Color.Black);
+            _colorHigh = Loader.loadColor(data.Attribute("color_high"), Color.White);
+            _iterations = Loader.loadInt(data.Attribute("iterations"), 0);
+            _blendType = (LayerBlendType)Loader.loadEnum(typeof(LayerBlendType), data.Attribute("blend_type"), (int)LayerBlendType.Opaque);
+            _invert = Loader.loadBool(data.Attribute("invert"), false);
+            _worleyFeature = (WorleyFeatureType)Loader.loadEnum(typeof(WorleyFeatureType), data.Attribute("worley_feature"), (int)WorleyFeatureType.F1);
         }
 
         // Clone

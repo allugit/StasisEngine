@@ -45,8 +45,8 @@ namespace StasisEditor.Controllers.Actors
         {
             _type = ActorType.Rope;
             initializeControls(
-                XmlLoadHelper.getVector2(data.Attribute("point_a").Value),
-                XmlLoadHelper.getVector2(data.Attribute("point_b").Value));
+                Loader.loadVector2(data.Attribute("point_a"), Vector2.Zero),
+                Loader.loadVector2(data.Attribute("point_b"), Vector2.Zero));
         }
 
         // Initialize controls

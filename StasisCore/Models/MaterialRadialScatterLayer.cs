@@ -82,21 +82,21 @@ namespace StasisCore.Models
         public MaterialRadialScatterLayer(XElement data)
             : base(data)
         {
-            _a = float.Parse(data.Attribute("a").Value);
-            _b = float.Parse(data.Attribute("b").Value);
-            _intersections = float.Parse(data.Attribute("intersections").Value);
-            _maxRadius = float.Parse(data.Attribute("max_radius").Value);
-            _arms = int.Parse(data.Attribute("arms").Value);
-            _twinArms = bool.Parse(data.Attribute("twin_arms").Value);
-            _flipArms = bool.Parse(data.Attribute("flip_arms").Value);
-            _jitter = float.Parse(data.Attribute("jitter").Value);
-            _centerJitter = float.Parse(data.Attribute("center_jitter").Value);
-            _centerOffset = XmlLoadHelper.getVector2(data.Attribute("center_offset").Value);
-            _baseColor = XmlLoadHelper.getColor(data.Attribute("base_color").Value);
-            _randomRed = int.Parse(data.Attribute("random_red").Value);
-            _randomGreen = int.Parse(data.Attribute("random_green").Value);
-            _randomBlue = int.Parse(data.Attribute("random_blue").Value);
-            _randomAlpha = int.Parse(data.Attribute("random_alpha").Value);
+            _a = Loader.loadFloat(data.Attribute("a"), 1f);
+            _b = Loader.loadFloat(data.Attribute("b"), 1f);
+            _intersections = Loader.loadFloat(data.Attribute("intersections"), 32f);
+            _maxRadius = Loader.loadFloat(data.Attribute("max_radius"), 64f);
+            _arms = Loader.loadInt(data.Attribute("arms"), 9);
+            _twinArms = Loader.loadBool(data.Attribute("twin_arms"), false);
+            _flipArms = Loader.loadBool(data.Attribute("flip_arms"), false);
+            _jitter = Loader.loadFloat(data.Attribute("jitter"), 0f);
+            _centerJitter = Loader.loadFloat(data.Attribute("center_jitter"), 0f);
+            _centerOffset = Loader.loadVector2(data.Attribute("center_offset"), Vector2.Zero);
+            _baseColor = Loader.loadColor(data.Attribute("base_color"), Color.White);
+            _randomRed = Loader.loadInt(data.Attribute("random_red"), 0);
+            _randomGreen = Loader.loadInt(data.Attribute("random_green"), 0);
+            _randomBlue = Loader.loadInt(data.Attribute("random_blue"), 0);
+            _randomAlpha = Loader.loadInt(data.Attribute("random_alpha"), 0);
         }
 
         // Clone

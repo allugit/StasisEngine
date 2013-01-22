@@ -57,11 +57,11 @@ namespace StasisEditor.Controllers.Actors
         public PlatformActorController(LevelController levelController, XElement data)
             : base(levelController, int.Parse(data.Attribute("id").Value))
         {
-            _position = XmlLoadHelper.getVector2(data.Attribute("position").Value);
+            _position = Loader.loadVector2(data.Attribute("position"), Vector2.Zero);
             _boxProperties = new BoxProperties(data);
             _bodyProperties = new BodyProperties(data);
             _type = ActorType.MovingPlatform;
-            initializeControls(XmlLoadHelper.getVector2(data.Attribute("axis_position").Value));
+            initializeControls(Loader.loadVector2(data.Attribute("axis_position"), Vector2.Zero));
         }
 
         // Initialize controls

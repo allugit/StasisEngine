@@ -80,7 +80,7 @@
     <Compile Include="Resources\Exceptions\InvalidResourceException.cs" />
     <Compile Include="Resources\Exceptions\ResourceNotFoundException.cs" />
     <Compile Include="Resources\ResourceObject.cs" />
-    <Compile Include="Resources\XmlLoadHelper.cs" />
+    <Compile Include="Loader.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="MaterialRenderer.cs" />
     <Compile Include="StasisMathHelper.cs" />
