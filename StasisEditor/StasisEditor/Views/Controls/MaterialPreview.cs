@@ -28,6 +28,7 @@ namespace StasisEditor.Views.Controls
         {
             _controller = controller;
             InitializeComponent();
+            ResizeEnd += new EventHandler(MaterialPreview_ResizeEnd);
         }
 
         // updateMaterial
@@ -71,6 +72,13 @@ namespace StasisEditor.Views.Controls
         {
             materialPreviewGraphics.scale = (float)scaleBox.Value;
             redrawMaterial();
+        }
+
+        // Done resizing
+        void MaterialPreview_ResizeEnd(object sender, EventArgs e)
+        {
+            if (!useTestPolygon.Checked)
+                redrawMaterial();
         }
     }
 }

@@ -42,6 +42,7 @@ namespace StasisEditor.Views.Controls
         private Matrix _viewMatrix;
         private Matrix _projectionMatrix;
         private float _scale = 1f;
+        private List<Vector2> _polygonPoints;
 
         public float scale { get { return _scale; } set { _scale = value; } }
 
@@ -62,11 +63,13 @@ namespace StasisEditor.Views.Controls
             {
                 System.Windows.Forms.MessageBox.Show(e.Message);
             }
-            Console.WriteLine("Material preview graphics completely initialized.");
-        }
 
+            ResizeRedraw = true;
+        }
         public void setMaterial(Material material, List<Vector2> polygonPoints, float growthFactor)
         {
+            _polygonPoints = polygonPoints;
+
             try
             {
                 if (polygonPoints != null && polygonPoints.Count >= 3)
@@ -119,7 +122,7 @@ namespace StasisEditor.Views.Controls
                 }
                 else
                 {
-                    _texture = _materialRenderer.renderMaterial(material, null, growthFactor, GraphicsDevice.Viewport.Width, GraphicsDevice.Viewport.Height);
+                    _texture = _materialRenderer.renderMaterial(material, null, growthFactor, Width, Height);
                     _vertices = null;
                 }
 
@@ -133,6 +136,7 @@ namespace StasisEditor.Views.Controls
             }
         }
 
+        // Draw
         protected override void Draw()
         {
             GraphicsDevice.Clear(Color.Black);
