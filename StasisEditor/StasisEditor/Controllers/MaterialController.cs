@@ -74,6 +74,17 @@ namespace StasisEditor.Controllers
             }
         }
 
+        // Check if material exists
+        public bool materialExists(string uid)
+        {
+            foreach (EditorMaterial material in _materials)
+            {
+                if (uid == material.uid)
+                    return true;
+            }
+            return false;
+        }
+
         // saveMaterials
         public void saveMaterials()
         {
@@ -192,6 +203,19 @@ namespace StasisEditor.Controllers
         public void previewClosed()
         {
             _materialPreview = null;
+        }
+
+        // Clone material
+        public void cloneMaterial(EditorMaterial source)
+        {
+            EditorMaterial material = source.clone();
+            string newUID = material.uid + "_copy";
+            while (ResourceController.exists(newUID))
+                newUID = newUID + "_copy";
+            while (materialExists(newUID))
+                newUID = newUID + "_copy";
+            material.uid = newUID;
+            _materials.Add(material);
         }
     }
 }

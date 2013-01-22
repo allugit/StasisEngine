@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Xml.Linq;
 using StasisCore.Models;
+using StasisCore.Controllers;
 
 namespace StasisEditor.Models
 {
@@ -25,6 +26,13 @@ namespace StasisEditor.Models
         public override string ToString()
         {
             return _uid;
+        }
+
+        public EditorMaterial clone()
+        {
+            EditorMaterial material = new EditorMaterial(data);
+            material.rootLayer.type = "root";
+            return material;
         }
     }
 }

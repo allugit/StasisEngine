@@ -42,6 +42,5 @@ namespace StasisCore.Models
         {
             _rootLayer = MaterialLayer.load(data.Element("Layer")) as MaterialGroupLayer;
         }
-
     }
 }

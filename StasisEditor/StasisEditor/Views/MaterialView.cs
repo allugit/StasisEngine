@@ -9,6 +9,7 @@ using StasisCore.Resources;
 using StasisCore.Models;
 using StasisEditor.Controllers;
 using StasisEditor.Views.Controls;
+using StasisEditor.Models;
 
 namespace StasisEditor.Views
 {
@@ -17,7 +18,7 @@ namespace StasisEditor.Views
         private MaterialController _controller;
         private MaterialProperties _materialProperties;
 
-        public Material selectedMaterial { get { return materialsListBox.SelectedItem as Material; } }
+        public EditorMaterial selectedMaterial { get { return materialsListBox.SelectedItem as EditorMaterial; } }
 
         public MaterialView()
         {
@@ -76,8 +77,11 @@ namespace StasisEditor.Views
             // Enabled/disable preview button
             previewButton.Enabled = selectedMaterial != null;
 
-            // Enabled/disbale remove button
+            // Enable/disable remove button
             removeButton.Enabled = selectedMaterial != null;
+
+            // Enable/disable clone button
+            cloneButton.Enabled = selectedMaterial != null;
             
             // Close current properties
             closeProperties();
@@ -143,6 +147,15 @@ namespace StasisEditor.Views
             {
                 MessageBox.Show(exception.Message, "Resource Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
+        }
+
+        // Clone button clicked
+        private void cloneButton_Click(object sender, EventArgs e)
+        {
+            Debug.Assert(selectedMaterial != null);
+
+            _controller.cloneMaterial(selectedMaterial);
+            materialsListBox.RefreshItems();
         }
     }
 }
