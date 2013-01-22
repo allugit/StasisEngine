@@ -11,62 +11,55 @@ namespace StasisEditor.Models
 
         public static MaterialLayer load(XElement data)
         {
-            MaterialLayer layer = null;
             switch (data.Attribute("type").Value)
             {
                 case "root":
-                    layer = new EditorMaterialGroupLayer(data);
-                    break;
+                    return new EditorMaterialGroupLayer(data);
 
                 case "group":
-                    layer = new EditorMaterialGroupLayer(data);
-                    break;
+                    return new EditorMaterialGroupLayer(data);
 
                 case "texture":
-                    layer = new EditorMaterialTextureLayer(data);
-                    break;
+                    return new EditorMaterialTextureLayer(data);
 
                 case "noise":
-                    layer = new EditorMaterialNoiseLayer(data);
-                    break;
+                    return new EditorMaterialNoiseLayer(data);
 
                 case "uniform_scatter":
-                    layer = new EditorMaterialUniformScatterLayer(data);
-                    break;
+                    return new EditorMaterialUniformScatterLayer(data);
 
                 case "radial_scatter":
-                    layer = new EditorMaterialRadialScatterLayer(data);
-                    break;
+                    return new EditorMaterialRadialScatterLayer(data);
+
+                case "edge_scatter":
+                    return new EditorMaterialEdgeScatterLayer(data);
             }
-            return layer;
+            return null;
         }
 
         public static MaterialLayer create(string type)
         {
-            MaterialLayer layer = null;
             switch (type)
             {
                 case "group":
-                    layer = new EditorMaterialGroupLayer();
-                    break;
+                    return new EditorMaterialGroupLayer();
 
                 case "texture":
-                    layer = new EditorMaterialTextureLayer();
-                    break;
+                    return new EditorMaterialTextureLayer();
 
                 case "noise":
-                    layer = new EditorMaterialNoiseLayer();
-                    break;
+                    return new EditorMaterialNoiseLayer();
 
                 case "uniform_scatter":
-                    layer = new EditorMaterialUniformScatterLayer();
-                    break;
+                    return new EditorMaterialUniformScatterLayer();
 
                 case "radial_scatter":
-                    layer = new EditorMaterialRadialScatterLayer();
-                    break;
+                    return new EditorMaterialRadialScatterLayer();
+
+                case "edge_scatter":
+                    return new EditorMaterialEdgeScatterLayer();
             }
-            return layer;
+            return null;
         }
     }
 }

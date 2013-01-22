@@ -15,7 +15,7 @@ namespace StasisEditor.Views.Controls
         {
             InitializeComponent();
 
-            layerTypeListBox.DataSource = new string[] { "group", "texture", "noise", "uniform_scatter", "radial_scatter" };
+            layerTypeListBox.DataSource = new string[] { "group", "texture", "noise", "uniform_scatter", "radial_scatter", "edge_scatter" };
         }
 
         private void InitializeComponent()
@@ -34,7 +34,7 @@ namespace StasisEditor.Views.Controls
             this.layerTypeListBox.FormattingEnabled = true;
             this.layerTypeListBox.Location = new System.Drawing.Point(14, 26);
             this.layerTypeListBox.Name = "layerTypeListBox";
-            this.layerTypeListBox.Size = new System.Drawing.Size(217, 69);
+            this.layerTypeListBox.Size = new System.Drawing.Size(217, 134);
             this.layerTypeListBox.TabIndex = 0;
             // 
             // label1
@@ -49,7 +49,7 @@ namespace StasisEditor.Views.Controls
             // cancelButton
             // 
             this.cancelButton.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
-            this.cancelButton.Location = new System.Drawing.Point(157, 114);
+            this.cancelButton.Location = new System.Drawing.Point(157, 188);
             this.cancelButton.Name = "cancelButton";
             this.cancelButton.Size = new System.Drawing.Size(75, 23);
             this.cancelButton.TabIndex = 2;
@@ -60,7 +60,7 @@ namespace StasisEditor.Views.Controls
             // addChildButton
             // 
             this.addChildButton.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
-            this.addChildButton.Location = new System.Drawing.Point(76, 114);
+            this.addChildButton.Location = new System.Drawing.Point(76, 188);
             this.addChildButton.Name = "addChildButton";
             this.addChildButton.Size = new System.Drawing.Size(75, 23);
             this.addChildButton.TabIndex = 5;
@@ -68,14 +68,14 @@ namespace StasisEditor.Views.Controls
             this.addChildButton.UseVisualStyleBackColor = true;
             this.addChildButton.Click += new System.EventHandler(this.addChildButton_Click);
             // 
-            // NewTerrainLayerForm
+            // SelectMaterialLayerType
             // 
-            this.ClientSize = new System.Drawing.Size(244, 149);
+            this.ClientSize = new System.Drawing.Size(244, 223);
             this.Controls.Add(this.addChildButton);
             this.Controls.Add(this.cancelButton);
             this.Controls.Add(this.label1);
             this.Controls.Add(this.layerTypeListBox);
-            this.Name = "NewTerrainLayerForm";
+            this.Name = "SelectMaterialLayerType";
             this.ShowIcon = false;
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;
             this.ResumeLayout(false);

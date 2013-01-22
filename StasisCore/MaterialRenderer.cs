@@ -64,19 +64,19 @@ namespace StasisCore
         }
 
         // Render material
-        public Texture2D renderMaterial(Material material, float growthFactor, int textureWidth, int textureHeight)
+        public Texture2D renderMaterial(Material material, List<Vector2> polygonPoints, float growthFactor, int textureWidth, int textureHeight)
         {
             // Create canvas
             Texture2D canvas = createCanvas(textureWidth, textureHeight);
 
             // Recursively render layers
-            canvas = recursiveRenderLayers(canvas, growthFactor, material.rootLayer);
+            canvas = recursiveRenderLayers(canvas, polygonPoints, growthFactor, material.rootLayer);
 
             return canvas;
         }
 
         // recursiveRenderLayers
-        private Texture2D recursiveRenderLayers(Texture2D current, float growthFactor, MaterialLayer layer)
+        private Texture2D recursiveRenderLayers(Texture2D current, List<Vector2> polygonPoints, float growthFactor, MaterialLayer layer)
         {
             // Stop rendering at disabled layers
             if (!layer.enabled)
@@ -88,7 +88,7 @@ namespace StasisCore
                     // Render child layers without doing anything else
                     MaterialGroupLayer rootLayer = layer as MaterialGroupLayer;
                     foreach (MaterialLayer childLayer in rootLayer.layers)
-                        current = recursiveRenderLayers(current, growthFactor, childLayer);
+                        current = recursiveRenderLayers(current, polygonPoints, growthFactor, childLayer);
                     break;
 
                 case "group":
@@ -96,7 +96,7 @@ namespace StasisCore
                     MaterialGroupLayer groupLayer = layer as MaterialGroupLayer;
                     Texture2D groupCanvas = createCanvas(current.Width, current.Height);
                     foreach (MaterialLayer childLayer in groupLayer.layers)
-                        groupCanvas = recursiveRenderLayers(groupCanvas, growthFactor, childLayer);
+                        groupCanvas = recursiveRenderLayers(groupCanvas, polygonPoints, growthFactor, childLayer);
                     current = texturePass(current, groupCanvas, groupLayer.blendType, 1f, groupLayer.multiplier);
                     break;
 
@@ -170,6 +170,22 @@ namespace StasisCore
                         radialLayer.randomGreen, 
                         radialLayer.randomBlue,
                         radialLayer.randomAlpha);
+                    break;
+
+                case "edge_scatter":
+                    MaterialEdgeScatterLayer edgeLayer = layer as MaterialEdgeScatterLayer;
+                    current = edgeScatterPass(
+                        current,
+                        polygonPoints,
+                        edgeLayer.textureUIDs,
+                        edgeLayer.direction,
+                        edgeLayer.threshold,
+                        edgeLayer.hardCutoff,
+                        edgeLayer.baseColor,
+                        edgeLayer.randomRed,
+                        edgeLayer.randomGreen,
+                        edgeLayer.randomBlue,
+                        edgeLayer.randomAlpha);
                     break;
             }
 
@@ -497,6 +513,41 @@ namespace StasisCore
             // Cleanup
             renderTarget.Dispose();
 
+            return result;
+        }
+
+        // Edge scatter pass
+        public Texture2D edgeScatterPass(
+            Texture2D current,
+            List<Vector2> polygonPoints,
+            List<string> textureUIDs,
+            Vector2 direction,
+            float threshold,
+            bool hardCutoff,
+            Color baseColor,
+            int randomRed,
+            int randomGreen,
+            int randomBlue,
+            int randomAlpha)
+        {
+            // Initialize render targets and textures
+            RenderTarget2D renderTarget = new RenderTarget2D(_graphicsDevice, current.Width, current.Height);
+            Texture2D result = new Texture2D(_graphicsDevice, renderTarget.Width, renderTarget.Height);
+            Color[] data = new Color[renderTarget.Width * renderTarget.Height];
+
+            // Load and validate textures
+            List<Texture2D> textures = new List<Texture2D>();
+            foreach (string textureUID in textureUIDs)
+            {
+                Texture2D texture = ResourceController.getTexture(textureUID);
+                if (texture == null)
+                    return result;
+                textures.Add(texture);
+            }
+            if (textures.Count == 0)
+                return current;
+
+            // TEMPORARY
             return result;
         }
     }

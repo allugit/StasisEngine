@@ -103,6 +103,7 @@
     <Compile Include="Controllers\EditorController.cs" />
     <Compile Include="Controllers\LevelController.cs" />
     <Compile Include="Controllers\MaterialController.cs" />
+    <Compile Include="Models\EditorMaterialEdgeScatterLayer.cs" />
     <Compile Include="Models\EditorMaterialGroupLayer.cs" />
     <Compile Include="GraphicsDeviceService.cs" />
     <Compile Include="Models\EditorMaterialLayer.cs" />

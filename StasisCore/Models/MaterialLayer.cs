@@ -68,6 +68,10 @@ namespace StasisCore.Models
                 case "radial_scatter":
                     layer = new MaterialRadialScatterLayer(data);
                     break;
+
+                case "edge_scatter":
+                    layer = new MaterialEdgeScatterLayer(data);
+                    break;
             }
             return layer;
         }
@@ -96,6 +100,10 @@ namespace StasisCore.Models
 
                 case "radial_scatter":
                     layer = new MaterialRadialScatterLayer();
+                    break;
+
+                case "edge_scatter":
+                    layer = new MaterialEdgeScatterLayer();
                     break;
             }
             return layer;

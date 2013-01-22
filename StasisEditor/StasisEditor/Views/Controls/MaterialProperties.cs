@@ -18,7 +18,6 @@ namespace StasisEditor.Views.Controls
         private MaterialView _materialView;
 
         public PropertyGrid PropertyGrid { get { return materialPropertyGrid; } }
-        public float growthFactor { get { return (float)growthFactorBox.Value; } }
 
         public MaterialProperties(MaterialView materialView, Material material)
         {

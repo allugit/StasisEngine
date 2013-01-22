@@ -19,14 +19,6 @@ namespace StasisEditor.Views
         private MaterialProperties _materialProperties;
 
         public EditorMaterial selectedMaterial { get { return materialsListBox.SelectedItem as EditorMaterial; } }
-        public float growthFactor
-        {
-            get
-            {
-                Debug.Assert(_materialProperties != null);
-                return _materialProperties.growthFactor;
-            }
-        }
 
         public MaterialView()
         {
@@ -110,7 +102,7 @@ namespace StasisEditor.Views
         private void previewButton_Click(object sender, EventArgs e)
         {
             Debug.Assert(_materialProperties != null);
-            _controller.preview(selectedMaterial, _materialProperties.growthFactor);
+            _controller.preview(selectedMaterial, null);
         }
 
         // Auto update changed

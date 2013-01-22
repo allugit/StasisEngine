@@ -37,11 +37,11 @@ namespace StasisEditor.Views.Controls
             Console.WriteLine("Material preview graphics completely initialized.");
         }
 
-        public void setMaterial(Material material, float growthFactor)
+        public void setMaterial(Material material, List<Vector2> polygonPoints, float growthFactor)
         {
             try
             {
-                _texture = _materialRenderer.renderMaterial(material, growthFactor, 512, 512);
+                _texture = _materialRenderer.renderMaterial(material, polygonPoints, growthFactor, 512, 512);
                 Invalidate();
             }
             catch (ResourceNotFoundException e)
