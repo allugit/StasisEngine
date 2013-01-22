@@ -32,6 +32,7 @@ namespace StasisEditor.Controllers
         public BindingList<EditorMaterial> materials { get { return _materials; } }
         public MaterialLayer copiedMaterialLayer { get { return _copiedMaterialLayer; } set { _copiedMaterialLayer = value; } }
         public List<Vector2> testPolygonPoints { get { return _testPolygonPoints; } }
+        public EditorController editorController { get { return _editorController; } }
 
         public MaterialController(EditorController editorController, MaterialView materialView)
         {
@@ -64,7 +65,7 @@ namespace StasisEditor.Controllers
             _testPolygonPoints.Add(new Vector2(-3.5f, -3));
             _testPolygonPoints.Add(new Vector2(-4.5f, -1.5f));
             for (int i = 0; i < _testPolygonPoints.Count; i++)
-                _testPolygonPoints[i] *= 2 * 35;
+                _testPolygonPoints[i] *= 2;
         }
 
         // setAutoUpdatePreview

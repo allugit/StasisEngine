@@ -46,7 +46,29 @@ namespace StasisEditor.Views.Controls
             if (useTestPolygon.Checked)
                 _polygonPoints = _controller.testPolygonPoints;
 
-            materialPreviewGraphics.setMaterial(_material, _polygonPoints, (float)growthFactorBox.Value);
+            List<Vector2> transformedPolygonPoints = null;
+            if (_polygonPoints != null)
+            {
+                // Transform points to screen space
+                transformedPolygonPoints = new List<Vector2>();
+                float scale = EditorController.ORIGINAL_SCALE;
+                Vector2 topLeft = _polygonPoints[0] * scale;
+                Vector2 bottomRight = _polygonPoints[0] * scale;
+                for (int i = 0; i < _polygonPoints.Count; i++)
+                {
+                    transformedPolygonPoints.Add(_polygonPoints[i] * scale);
+                    topLeft = Vector2.Min(topLeft, transformedPolygonPoints[i]);
+                    bottomRight = Vector2.Max(bottomRight, transformedPolygonPoints[i]);
+                }
+                float width = bottomRight.X - topLeft.X;
+                float height = bottomRight.Y - topLeft.Y;
+                for (int i = 0; i < transformedPolygonPoints.Count; i++)
+                {
+                    transformedPolygonPoints[i] += -topLeft;
+                }
+            }
+
+            materialPreviewGraphics.setMaterial(_material, transformedPolygonPoints, (float)growthFactorBox.Value);
         }
 
         private void MaterialPreview_FormClosing(object sender, FormClosingEventArgs e)

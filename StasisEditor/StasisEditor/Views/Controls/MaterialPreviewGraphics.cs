@@ -153,8 +153,7 @@ namespace StasisEditor.Views.Controls
             // Draw texture on a polygon
             if (_texture != null && _vertices != null)
             {
-                //_viewMatrix = Matrix.CreateScale(32f) * Matrix.CreateTranslation(new Vector3(GraphicsDevice.Viewport.Width, GraphicsDevice.Viewport.Height, 0) / 2);
-                _viewMatrix = Matrix.CreateScale(new Vector3(_scale, -_scale, 1f));
+                _viewMatrix = Matrix.CreateTranslation(new Vector3(-_texture.Width, -_texture.Height, 0) / 2) * Matrix.CreateScale(new Vector3(_scale, -_scale, 1f));
                 _projectionMatrix = Matrix.CreateOrthographic(GraphicsDevice.Viewport.Width, GraphicsDevice.Viewport.Height, 0, 1);
 
                 GraphicsDevice.Textures[0] = _texture;

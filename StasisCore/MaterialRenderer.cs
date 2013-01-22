@@ -521,7 +521,7 @@ namespace StasisCore
         // Edge scatter pass
         public Texture2D edgeScatterPass(
             Texture2D current,
-            List<Vector2> polygonPoints,
+            List<Vector2> transformedPolygonPoints,
             List<string> textureUIDs,
             Vector2 direction,
             float threshold,
@@ -549,7 +549,57 @@ namespace StasisCore
             if (textures.Count == 0)
                 return current;
 
-            // TEMPORARY
+            // Validate polygon points
+            if (transformedPolygonPoints == null || transformedPolygonPoints.Count < 3)
+                return current;
+
+            // Draw
+            _graphicsDevice.SetRenderTarget(renderTarget);
+            _graphicsDevice.Clear(Color.Transparent);
+            _spriteBatch.Begin();
+            _spriteBatch.Draw(current, current.Bounds, Color.White);
+            _spriteBatch.End();
+            _spriteBatch.Begin(SpriteSortMode.Immediate, BlendState.NonPremultiplied);
+            bool hasDirection = direction.X != 0 || direction.Y != 0;
+            for (int i = 0; i < transformedPolygonPoints.Count; i++)
+            {
+                Vector2 a = transformedPolygonPoints[i];
+                Vector2 b = transformedPolygonPoints[i == transformedPolygonPoints.Count - 1 ? 0 : i + 1];
+                Vector2 relative = b - a;
+                Vector2 normal = relative;
+                float dot = 0;
+                normal.Normalize();
+                if (hasDirection)
+                {
+                    direction.Normalize();
+                    dot = Vector2.Dot(direction, normal);
+                }
+                Console.WriteLine("dot, threshold: {0}, {1}", dot, threshold);
+                if (!hasDirection || Math.Abs(dot) < threshold)
+                {
+                    float segmentLength = 5f;
+                    float relativeLength = relative.Length();
+                    float angle = (float)Math.Atan2(relative.Y, relative.X);
+                    float currentPosition = 0f;
+                    while (currentPosition < relativeLength)
+                    {
+                        Vector2 position = a + normal * currentPosition;
+                        Texture2D texture = textures[_random.Next(textures.Count)];
+                        _spriteBatch.Draw(texture, position, texture.Bounds, Color.White, 0, new Vector2(texture.Width, texture.Height) / 2, 1f, SpriteEffects.None, 0);
+                        currentPosition += segmentLength;
+                    }
+                }
+            }
+            _spriteBatch.End();
+            _graphicsDevice.SetRenderTarget(null);
+
+            // Save render target into texture
+            renderTarget.GetData<Color>(data);
+            result.SetData<Color>(data);
+
+            // Cleanup
+            renderTarget.Dispose();
+
             return result;
         }
     }

@@ -14,6 +14,7 @@ namespace StasisEditor.Controllers
 {
     public class EditorController : Controller
     {
+        public const float ORIGINAL_SCALE = 35f;
         private MaterialController _materialController;
         private LevelController _levelController;
         private BlueprintController _blueprintController;
@@ -23,7 +24,7 @@ namespace StasisEditor.Controllers
         private EditorView _editorView;
         private ActorToolbar _actorToolbar;
 
-        private float _scale = 35f;
+        private float _scale = ORIGINAL_SCALE;
 
         public EditorView view { get { return _editorView; } }
         public MaterialController materialController { get { return _materialController; } }
