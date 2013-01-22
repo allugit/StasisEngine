@@ -433,9 +433,7 @@ namespace StasisCore
             if (textures.Count == 0)
                 return current;
 
-            // Modify parameters based on growth factor
-            a *= growthFactor;
-            b *= growthFactor;
+            // Modify parameters based on growth factor (r is modified later)
             maxRadius *= growthFactor;
             jitter *= growthFactor;
             centerJitter *= growthFactor;
@@ -450,14 +448,14 @@ namespace StasisCore
             _spriteBatch.Begin(SpriteSortMode.Immediate, BlendState.NonPremultiplied);
             float thetaIncrement = StasisMathHelper.pi * 2 / intersections;
             float armRotationIncrement = StasisMathHelper.pi * 2 / (float)arms;
-            Vector2 center = centerOffset + new Vector2(current.Width, current.Height) / 2 + new Vector2((float)(_random.NextDouble() * 2 - 1) * centerJitter, (float)(_random.NextDouble() * 2 - 1) * centerJitter);
+            Vector2 center = centerOffset + new Vector2(current.Width, current.Height) / 2 + new Vector2((float)(_random.NextDouble() * 2 - 1), (float)(_random.NextDouble() * 2 - 1)) * centerJitter;
             for (int i = 0; i < arms; i++)
             {
                 float theta = 0;
                 float r = 0;
                 while (r < maxRadius)
                 {
-                    r = a * (float)Math.Pow(StasisMathHelper.phi, b * (2f / StasisMathHelper.pi) * theta);
+                    r = a * (float)Math.Pow(StasisMathHelper.phi, b * (2f / StasisMathHelper.pi) * theta) * growthFactor;
                     float modifiedTheta = (theta + armRotationIncrement * i) * (flipArms ? -1f : 1f);
                     float randomAngleValue = textureAngleJitter == 0 ? 0 : StasisMathHelper.floatBetween(-textureAngleJitter, textureAngleJitter, _random);
                     float textureAngle;
