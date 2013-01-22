@@ -41,6 +41,7 @@ namespace StasisEditor.Views.Controls
         private int _vertexCount;
         private Matrix _viewMatrix;
         private Matrix _projectionMatrix;
+        private float _scale;
 
         public MaterialPreviewGraphics()
             : base()
@@ -62,12 +63,12 @@ namespace StasisEditor.Views.Controls
             Console.WriteLine("Material preview graphics completely initialized.");
         }
 
-        public void setMaterial(Material material, List<Vector2> polygonPoints, float growthFactor)
+        public void setMaterial(Material material, float scale, List<Vector2> polygonPoints, float growthFactor)
         {
+            _scale = scale;
+
             try
             {
-                _texture = _materialRenderer.renderMaterial(material, polygonPoints, growthFactor, 512, 512);
-
                 if (polygonPoints != null && polygonPoints.Count >= 3)
                 {
                     _vertices = new CustomVertexFormat[5000];
@@ -92,6 +93,8 @@ namespace StasisEditor.Views.Controls
                             bottomRight.Y = Math.Max(point.Yf, bottomRight.Y);
                         }
                     }
+                    float width = bottomRight.X - topLeft.X;
+                    float height = bottomRight.Y - topLeft.Y;
 
                     foreach (DelaunayTriangle triangle in polygon.Triangles)
                     {
@@ -112,9 +115,11 @@ namespace StasisEditor.Views.Controls
                             (p3 - topLeft) / (bottomRight - topLeft),
                             Vector3.One);
                     }
+                    _texture = _materialRenderer.renderMaterial(material, polygonPoints, growthFactor, (int)(width * scale), (int)(height * scale));
                 }
                 else
                 {
+                    _texture = _materialRenderer.renderMaterial(material, null, growthFactor, GraphicsDevice.Viewport.Width, GraphicsDevice.Viewport.Height);
                     _vertices = null;
                 }
 
@@ -145,7 +150,7 @@ namespace StasisEditor.Views.Controls
             if (_texture != null && _vertices != null)
             {
                 //_viewMatrix = Matrix.CreateScale(32f) * Matrix.CreateTranslation(new Vector3(GraphicsDevice.Viewport.Width, GraphicsDevice.Viewport.Height, 0) / 2);
-                _viewMatrix = Matrix.CreateScale(new Vector3(256f, -256f, 1f));
+                _viewMatrix = Matrix.CreateScale(new Vector3(_scale, -_scale, 1f));
                 _projectionMatrix = Matrix.CreateOrthographic(GraphicsDevice.Viewport.Width, GraphicsDevice.Viewport.Height, 0, 1);
 
                 GraphicsDevice.Textures[0] = _texture;

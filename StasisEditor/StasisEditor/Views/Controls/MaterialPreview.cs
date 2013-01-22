@@ -16,10 +16,13 @@ using StasisCore.Resources;
 
 namespace StasisEditor.Views.Controls
 {
+    using Vector2 = Microsoft.Xna.Framework.Vector2;
+
     public partial class MaterialPreview : Form
     {
         private MaterialController _controller;
         private Material _material;
+        private List<Vector2> _polygonPoints;
 
         public MaterialPreview(MaterialController controller)
         {
@@ -28,11 +31,21 @@ namespace StasisEditor.Views.Controls
         }
 
         // updateMaterial
-        public void updateMaterial(Material material, List<Microsoft.Xna.Framework.Vector2> polygonPoints)
+        public void updateMaterial(Material material, List<Vector2> polygonPoints)
         {
             _material = material;
-            materialPreviewGraphics.setMaterial(material, polygonPoints, (float)growthFactorBox.Value);
+            _polygonPoints = polygonPoints;
+            redrawMaterial();
             Text = "Previewing " + material.uid;
+        }
+
+        // Redraw material
+        private void redrawMaterial()
+        {
+            if (useTestPolygon.Checked)
+                _polygonPoints = _controller.testPolygonPoints;
+
+            materialPreviewGraphics.setMaterial(_material, (float)scaleBox.Value, _polygonPoints, (float)growthFactorBox.Value);
         }
 
         private void MaterialPreview_FormClosing(object sender, FormClosingEventArgs e)
@@ -43,13 +56,20 @@ namespace StasisEditor.Views.Controls
         // Growth factor changed
         private void growthFactorBox_ValueChanged(object sender, EventArgs e)
         {
-            materialPreviewGraphics.setMaterial(_material, usePolygonPoints.Checked ? _controller.testPolygonPoints : null, (float)growthFactorBox.Value);
+            redrawMaterial();
         }
 
         // Use polygon points value changed
         private void usePolygonPoints_CheckedChanged(object sender, EventArgs e)
         {
-            materialPreviewGraphics.setMaterial(_material, usePolygonPoints.Checked ? _controller.testPolygonPoints : null, (float)growthFactorBox.Value);
+            _polygonPoints = null;
+            redrawMaterial();
+        }
+
+        // Scale value changed
+        private void scaleBox_ValueChanged(object sender, EventArgs e)
+        {
+            redrawMaterial();
         }
     }
 }
