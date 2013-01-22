@@ -82,10 +82,10 @@
             this.growthFactorBox.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
             this.growthFactorBox.DecimalPlaces = 4;
             this.growthFactorBox.Increment = new decimal(new int[] {
-            25,
+            5,
             0,
             0,
-            196608});
+            131072});
             this.growthFactorBox.Location = new System.Drawing.Point(122, 120);
             this.growthFactorBox.Maximum = new decimal(new int[] {
             1,
