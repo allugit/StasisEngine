@@ -64,19 +64,19 @@ namespace StasisCore
         }
 
         // Render material
-        public Texture2D renderMaterial(Material material, int textureWidth, int textureHeight)
+        public Texture2D renderMaterial(Material material, float growthFactor, int textureWidth, int textureHeight)
         {
             // Create canvas
             Texture2D canvas = createCanvas(textureWidth, textureHeight);
 
             // Recursively render layers
-            canvas = recursiveRenderLayers(canvas, material.rootLayer);
+            canvas = recursiveRenderLayers(canvas, growthFactor, material.rootLayer);
 
             return canvas;
         }
 
         // recursiveRenderLayers
-        private Texture2D recursiveRenderLayers(Texture2D current, MaterialLayer layer)
+        private Texture2D recursiveRenderLayers(Texture2D current, float growthFactor, MaterialLayer layer)
         {
             // Stop rendering at disabled layers
             if (!layer.enabled)
@@ -88,7 +88,7 @@ namespace StasisCore
                     // Render child layers without doing anything else
                     MaterialGroupLayer rootLayer = layer as MaterialGroupLayer;
                     foreach (MaterialLayer childLayer in rootLayer.layers)
-                        current = recursiveRenderLayers(current, childLayer);
+                        current = recursiveRenderLayers(current, growthFactor, childLayer);
                     break;
 
                 case "group":
@@ -96,7 +96,7 @@ namespace StasisCore
                     MaterialGroupLayer groupLayer = layer as MaterialGroupLayer;
                     Texture2D groupCanvas = createCanvas(current.Width, current.Height);
                     foreach (MaterialLayer childLayer in groupLayer.layers)
-                        groupCanvas = recursiveRenderLayers(groupCanvas, childLayer);
+                        groupCanvas = recursiveRenderLayers(groupCanvas, growthFactor, childLayer);
                     current = texturePass(current, groupCanvas, groupLayer.blendType, 1f, groupLayer.multiplier);
                     break;
 
@@ -149,6 +149,7 @@ namespace StasisCore
                     MaterialRadialScatterLayer radialLayer = layer as MaterialRadialScatterLayer;
                     current = radialScatterPass(
                         current,
+                        growthFactor,
                         radialLayer.textureUIDs,
                         radialLayer.a,
                         radialLayer.b,
@@ -393,6 +394,7 @@ namespace StasisCore
         // Radial scatter pass
         public Texture2D radialScatterPass(
             Texture2D current,
+            float growthFactor,
             List<string> textureUIDs, 
             float a, 
             float b, 
@@ -430,6 +432,14 @@ namespace StasisCore
             }
             if (textures.Count == 0)
                 return current;
+
+            // Modify parameters based on growth factor
+            a *= growthFactor;
+            b *= growthFactor;
+            maxRadius *= growthFactor;
+            jitter *= growthFactor;
+            centerJitter *= growthFactor;
+            centerOffset *= growthFactor;
 
             // Draw
             _graphicsDevice.SetRenderTarget(renderTarget);

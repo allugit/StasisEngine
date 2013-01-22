@@ -70,7 +70,7 @@ namespace StasisEditor.Controllers
             {
                 Material material = _materialView.selectedMaterial;
                 if (material != null)
-                    preview(material);
+                    preview(material, _materialView.growthFactor);
             }
         }
 
@@ -179,23 +179,18 @@ namespace StasisEditor.Controllers
         }
 
         // preview
-        public void preview(Material material)
+        public void preview(Material material, float growthFactor)
         {
             // Render material
             if (_materialPreview == null)
             {
-                // Open material preview
                 _materialPreview = new MaterialPreview(this, material);
                 _materialPreview.Show();
-                Console.WriteLine("material preview created and shown.");
-                _materialPreview.updateMaterial(material);
+                _materialPreview.updateMaterial(material, growthFactor);
             }
             else
             {
-                // Put preview window on top
-                //_materialPreview.Focus();
-                _materialPreview.updateMaterial(material);
-                //_materialView.Focus();
+                _materialPreview.updateMaterial(material, growthFactor);
             }
         }
 

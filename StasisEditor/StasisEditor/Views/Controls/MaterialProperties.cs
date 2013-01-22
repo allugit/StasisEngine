@@ -16,7 +16,9 @@ namespace StasisEditor.Views.Controls
     {
         private MaterialController _controller;
         private MaterialView _materialView;
-        public PropertyGrid PropertyGrid { get { return this.materialPropertyGrid; } }
+
+        public PropertyGrid PropertyGrid { get { return materialPropertyGrid; } }
+        public float growthFactor { get { return (float)growthFactorBox.Value; } }
 
         public MaterialProperties(MaterialView materialView, Material material)
         {
@@ -39,6 +41,12 @@ namespace StasisEditor.Views.Controls
             _materialView.refreshMaterialList();
 
             // Set changes to true
+            _controller.setChangesMade(true);
+        }
+
+        // Growth factor changed
+        private void growthFactorBox_ValueChanged(object sender, EventArgs e)
+        {
             _controller.setChangesMade(true);
         }
     }

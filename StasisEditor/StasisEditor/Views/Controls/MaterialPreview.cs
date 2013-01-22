@@ -23,15 +23,13 @@ namespace StasisEditor.Views.Controls
         public MaterialPreview(MaterialController controller, Material material)
         {
             _controller = controller;
-
-            // Initialize components
             InitializeComponent();
         }
 
         // updateMaterial
-        public void updateMaterial(Material material)
+        public void updateMaterial(Material material, float growthFactor)
         {
-            materialPreviewGraphics.setMaterial(material);
+            materialPreviewGraphics.setMaterial(material, growthFactor);
             Text = "Previewing " + material.uid;
         }
 
