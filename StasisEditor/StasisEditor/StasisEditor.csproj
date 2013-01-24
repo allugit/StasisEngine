@@ -208,12 +208,6 @@
     <Compile Include="Views\Controls\MaterialPreviewGraphics.cs">
       <SubType>Component</SubType>
     </Compile>
-    <Compile Include="Views\Controls\MaterialProperties.cs">
-      <SubType>UserControl</SubType>
-    </Compile>
-    <Compile Include="Views\Controls\MaterialProperties.Designer.cs">
-      <DependentUpon>MaterialProperties.cs</DependentUpon>
-    </Compile>
     <Compile Include="Views\Controls\PlantSelectBox.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -247,12 +241,6 @@
     </Compile>
     <Compile Include="Views\Controls\RefreshingListBox.cs">
       <SubType>Component</SubType>
-    </Compile>
-    <Compile Include="Views\Controls\MaterialLayersControl.cs">
-      <SubType>UserControl</SubType>
-    </Compile>
-    <Compile Include="Views\Controls\MaterialLayersControl.Designer.cs">
-      <DependentUpon>MaterialLayersControl.cs</DependentUpon>
     </Compile>
     <Compile Include="Views\Controls\SelectMaterialLayerType.cs">
       <SubType>Form</SubType>
@@ -365,9 +353,6 @@
     <EmbeddedResource Include="Views\Controls\MaterialPreview.resx">
       <DependentUpon>MaterialPreview.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="Views\Controls\MaterialProperties.resx">
-      <DependentUpon>MaterialProperties.cs</DependentUpon>
-    </EmbeddedResource>
     <EmbeddedResource Include="Views\Controls\PlantSelectBox.resx">
       <DependentUpon>PlantSelectBox.cs</DependentUpon>
     </EmbeddedResource>
@@ -379,9 +364,6 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Views\Controls\ViewBlueprintAssociateScraps.resx">
       <DependentUpon>ViewBlueprintAssociateScraps.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Views\Controls\MaterialLayersControl.resx">
-      <DependentUpon>MaterialLayersControl.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Views\Controls\SelectMaterialLayerType.resx">
       <DependentUpon>SelectMaterialLayerType.cs</DependentUpon>
