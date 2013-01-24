@@ -583,7 +583,7 @@ namespace StasisCore
                         if (useAbsoluteAngle)
                             angle = absoluteAngle + StasisMathHelper.floatBetween(-angleJitter, angleJitter, _random);
                         else
-                            angle = (float)Math.Atan2(relative.Y, relative.X) + StasisMathHelper.floatBetween(-angleJitter, angleJitter, _random);
+                            angle = (float)Math.Atan2(relative.Y, relative.X) + relativeAngle + StasisMathHelper.floatBetween(-angleJitter, angleJitter, _random);
                         Vector2 j = new Vector2((float)_random.NextDouble() * 2 - 1, (float)_random.NextDouble() * 2 - 1) * jitter;
                         Vector2 position = pointA + normal * currentPosition + j;
                         Texture2D texture = textures[_random.Next(textures.Count)];
