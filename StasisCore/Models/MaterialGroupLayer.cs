@@ -12,7 +12,7 @@ namespace StasisCore.Models
 
         public LayerBlendType blendType { get { return _blendType; } set { _blendType = value; } }
         public float multiplier { get { return _multiplier; } set { _multiplier = value; } }
-        public List<MaterialLayer> layers { get { return _layers; } }
+        virtual public List<MaterialLayer> layers { get { return _layers; } }
 
         public override XElement data
         {

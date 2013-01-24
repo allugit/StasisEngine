@@ -11,9 +11,9 @@ namespace StasisCore.Models
         protected MaterialGroupLayer _rootLayer;
 
         public string uid { get { return _uid; } set { _uid = value; } }
-        public MaterialGroupLayer rootLayer { get { return _rootLayer; } }
+        virtual public MaterialGroupLayer rootLayer { get { return _rootLayer; } }
 
-        public XElement data
+        virtual public XElement data
         {
             get
             {

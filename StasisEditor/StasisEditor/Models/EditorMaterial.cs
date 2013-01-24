@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Xml.Linq;
 using StasisCore.Models;
 using StasisCore.Controllers;
@@ -8,6 +9,12 @@ namespace StasisEditor.Models
 {
     public class EditorMaterial : Material
     {
+        [Browsable(false)]
+        public override XElement data { get { return base.data; } }
+
+        [Browsable(false)]
+        public override MaterialGroupLayer rootLayer { get { return base.rootLayer; } }
+
         public EditorMaterial(string uid)
             : base(uid)
         {

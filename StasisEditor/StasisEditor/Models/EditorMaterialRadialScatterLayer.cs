@@ -16,7 +16,16 @@ namespace StasisEditor.Models
         public override List<string> textureUIDs { get { return base.textureUIDs; } }
 
         [EditorAttribute(typeof(XNAColorEditor), typeof(UITypeEditor))]
-        public override Color baseColor { get { return base.baseColor; } set { base.baseColor = value; } } 
+        public override Color baseColor { get { return base.baseColor; } set { base.baseColor = value; } }
+
+        [Browsable(false)]
+        public override string type { get { return base.type; } set { base.type = value; } }
+
+        [Browsable(false)]
+        public override bool enabled { get { return base.enabled; } set { base.enabled = value; } }
+
+        [Browsable(false)]
+        public override XElement data { get { return base.data; } }
 
         public EditorMaterialRadialScatterLayer()
             : base()

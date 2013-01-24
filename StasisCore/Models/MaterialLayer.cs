@@ -9,8 +9,8 @@ namespace StasisCore.Models
         protected bool _enabled;
         protected string _type;
 
-        public bool enabled { get { return _enabled; } set { _enabled = value; } }
-        public string type { get { return _type; } set { _type = value; } }
+        virtual public bool enabled { get { return _enabled; } set { _enabled = value; } }
+        virtual public string type { get { return _type; } set { _type = value; } }
 
         virtual public XElement data
         {
