@@ -309,7 +309,7 @@ namespace StasisEditor.Views.Controls
         {
             Debug.Assert(selectedLayer != null);
             Debug.Assert(_controller.copiedMaterialLayer != null);
-            addNewLayer(_controller.copiedMaterialLayer);
+            addNewLayer(_controller.copiedMaterialLayer.clone());
         }
     }
 }

@@ -3,6 +3,7 @@ using System.IO;
 using System.Collections.Generic;
 using System.Xml;
 using System.Xml.Linq;
+using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using StasisCore.Resources;
 using StasisCore.Models;
@@ -270,6 +271,48 @@ namespace StasisCore.Controllers
                 // Load texture
                 using (FileStream fs = new FileStream(textureFiles[0], FileMode.Open))
                     texture = Texture2D.FromStream(_graphicsDevice, fs);
+
+                // Premultiply alpha
+                RenderTarget2D result = new RenderTarget2D(_graphicsDevice, texture.Width, texture.Height);
+                _graphicsDevice.SetRenderTarget(result);
+                _graphicsDevice.Clear(Color.Black);
+
+                // Multiply each color by the source alpha, and write in just the color values into the final texture
+                BlendState blendColor = new BlendState();
+                blendColor.ColorWriteChannels = ColorWriteChannels.Red | ColorWriteChannels.Green | ColorWriteChannels.Blue;
+
+                blendColor.AlphaDestinationBlend = Blend.Zero;
+                blendColor.ColorDestinationBlend = Blend.Zero;
+
+                blendColor.AlphaSourceBlend = Blend.SourceAlpha;
+                blendColor.ColorSourceBlend = Blend.SourceAlpha;
+
+                SpriteBatch spriteBatch = new SpriteBatch(_graphicsDevice);
+                spriteBatch.Begin(SpriteSortMode.Immediate, blendColor);
+                spriteBatch.Draw(texture, texture.Bounds, Color.White);
+                spriteBatch.End();
+
+                // Now copy over the alpha values from the PNG source texture to the final one, without multiplying them
+                BlendState blendAlpha = new BlendState();
+                blendAlpha.ColorWriteChannels = ColorWriteChannels.Alpha;
+
+                blendAlpha.AlphaDestinationBlend = Blend.Zero;
+                blendAlpha.ColorDestinationBlend = Blend.Zero;
+
+                blendAlpha.AlphaSourceBlend = Blend.One;
+                blendAlpha.ColorSourceBlend = Blend.One;
+
+                spriteBatch.Begin(SpriteSortMode.Immediate, blendAlpha);
+                spriteBatch.Draw(texture, texture.Bounds, Color.White);
+                spriteBatch.End();
+
+                //Save texture and release the GPU back to drawing to the screen
+                _graphicsDevice.SetRenderTarget(null);
+                _graphicsDevice.Textures[0] = null;
+                Color[] data = new Color[result.Width * result.Height];
+                result.GetData<Color>(data);
+                texture.SetData<Color>(data);
+                result.Dispose();
 
                 // Add it to cache
                 _cachedTextures[textureUID] = texture;

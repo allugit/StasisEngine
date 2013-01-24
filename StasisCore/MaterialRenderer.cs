@@ -379,10 +379,8 @@ namespace StasisCore
             // Draw
             _graphicsDevice.SetRenderTarget(renderTarget);
             _graphicsDevice.Clear(Color.Transparent);
-            _spriteBatch.Begin();
+            _spriteBatch.Begin(SpriteSortMode.Immediate, BlendState.AlphaBlend);
             _spriteBatch.Draw(current, current.Bounds, Color.White);
-            _spriteBatch.End();
-            _spriteBatch.Begin(SpriteSortMode.Immediate, BlendState.NonPremultiplied);
             for (float i = 0; i <= current.Width; i += horizontalSpacing)
             {
                 for (float j = 0; j <= current.Height; j += verticalSpacing)
@@ -458,10 +456,8 @@ namespace StasisCore
             // Draw
             _graphicsDevice.SetRenderTarget(renderTarget);
             _graphicsDevice.Clear(Color.Transparent);
-            _spriteBatch.Begin();
+            _spriteBatch.Begin(SpriteSortMode.Immediate, BlendState.AlphaBlend);
             _spriteBatch.Draw(current, current.Bounds, Color.White);
-            _spriteBatch.End();
-            _spriteBatch.Begin(SpriteSortMode.Immediate, BlendState.NonPremultiplied);
             float thetaIncrement = StasisMathHelper.pi * 2 / intersections;
             float armRotationIncrement = StasisMathHelper.pi * 2 / (float)arms;
             Vector2 center = centerOffset + new Vector2(current.Width, current.Height) / 2 + new Vector2((float)(_random.NextDouble() * 2 - 1), (float)(_random.NextDouble() * 2 - 1)) * centerJitter;
@@ -555,10 +551,8 @@ namespace StasisCore
             // Draw
             _graphicsDevice.SetRenderTarget(renderTarget);
             _graphicsDevice.Clear(Color.Transparent);
-            _spriteBatch.Begin();
+            _spriteBatch.Begin(SpriteSortMode.Immediate, BlendState.AlphaBlend);
             _spriteBatch.Draw(current, current.Bounds, Color.White);
-            _spriteBatch.End();
-            _spriteBatch.Begin(SpriteSortMode.Immediate, BlendState.NonPremultiplied);
             bool hasDirection = direction.X != 0 || direction.Y != 0;
             for (int i = 0; i < transformedPolygonPoints.Count; i++)
             {
