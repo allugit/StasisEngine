@@ -68,7 +68,10 @@ namespace StasisEditor.Views
             populateTreeView(selectedMaterial.rootLayer);
 
             if (selectedMaterial != null)
+            {
                 layersTreeView.SelectedNode = layersTreeView.Nodes[0];
+                materialPropertyGrid.SelectedObject = selectedMaterial;
+            }
         }
 
         // Material property changed
