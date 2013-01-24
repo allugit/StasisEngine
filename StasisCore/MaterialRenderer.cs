@@ -183,6 +183,12 @@ namespace StasisCore
                         edgeLayer.direction,
                         edgeLayer.threshold,
                         edgeLayer.hardCutoff,
+                        edgeLayer.spacing,
+                        edgeLayer.useAbsoluteAngle,
+                        edgeLayer.absoluteAngle,
+                        edgeLayer.relativeAngle,
+                        edgeLayer.angleJitter,
+                        edgeLayer.jitter,
                         edgeLayer.baseColor,
                         edgeLayer.randomRed,
                         edgeLayer.randomGreen,
@@ -384,15 +390,7 @@ namespace StasisCore
                     Vector2 position = new Vector2(i, j) + new Vector2(StasisMathHelper.floatBetween(0, jitter, _random), StasisMathHelper.floatBetween(0, jitter, _random));
                     float angle = StasisMathHelper.floatBetween(-3.14f, 3.14f, _random);
                     Texture2D texture = textures[_random.Next(0, textures.Count)];
-                    int tintR = randomRed < 0 ? _random.Next(randomRed, 1) : _random.Next(randomRed + 1);
-                    int tintG = randomGreen < 0 ? _random.Next(randomGreen, 1) : _random.Next(randomGreen + 1);
-                    int tintB = randomBlue < 0 ? _random.Next(randomBlue, 1) : _random.Next(randomBlue + 1);
-                    int tintA = randomAlpha < 0 ? _random.Next(randomAlpha, 1) : _random.Next(randomAlpha + 1);
-                    Color actualColor = new Color(
-                        Math.Max(0, (int)baseColor.R + tintR),
-                        Math.Max(0, (int)baseColor.G + tintG),
-                        Math.Max(0, (int)baseColor.B + tintB),
-                        Math.Max(0, (int)baseColor.A + tintA));
+                    Color actualColor = getRandomColor(baseColor, randomRed, randomGreen, randomBlue, randomAlpha);
                     _spriteBatch.Draw(texture, position, texture.Bounds, actualColor, angle, new Vector2(texture.Width, texture.Height) / 2, 1f, SpriteEffects.None, 0);
                 }
             }
@@ -487,15 +485,7 @@ namespace StasisCore
                     }
                     Vector2 j = new Vector2((float)(_random.NextDouble() * 2 - 1) * jitter, (float)(_random.NextDouble() * 2 - 1) * jitter);
                     Texture2D texture = textures[_random.Next(textures.Count)];
-                    int tintR = randomRed < 0 ? _random.Next(randomRed, 1) : _random.Next(randomRed + 1);
-                    int tintG = randomGreen < 0 ? _random.Next(randomGreen, 1) : _random.Next(randomGreen + 1);
-                    int tintB = randomBlue < 0 ? _random.Next(randomBlue, 1) : _random.Next(randomBlue + 1);
-                    int tintA = randomAlpha < 0 ? _random.Next(randomAlpha, 1) : _random.Next(randomAlpha + 1);
-                    Color actualColor = new Color(
-                        Math.Max(0, (int)baseColor.R + tintR),
-                        Math.Max(0, (int)baseColor.G + tintG),
-                        Math.Max(0, (int)baseColor.B + tintB),
-                        Math.Max(0, (int)baseColor.A + tintA));
+                    Color actualColor = getRandomColor(baseColor, randomRed, randomGreen, randomBlue, randomAlpha);
                     _spriteBatch.Draw(texture, new Vector2(r * (float)Math.Cos(modifiedTheta), r * (float)Math.Sin(modifiedTheta)) + j + center, texture.Bounds, actualColor, textureAngle, new Vector2(texture.Width, texture.Height) / 2, 1f, SpriteEffects.None, 0);
                     if (twinArms)
                     {
@@ -526,6 +516,12 @@ namespace StasisCore
             Vector2 direction,
             float threshold,
             bool hardCutoff,
+            float spacing,
+            bool useAbsoluteAngle,
+            float absoluteAngle,
+            float relativeAngle,
+            float angleJitter,
+            float jitter,
             Color baseColor,
             int randomRed,
             int randomGreen,
@@ -553,6 +549,9 @@ namespace StasisCore
             if (transformedPolygonPoints == null || transformedPolygonPoints.Count < 3)
                 return current;
 
+            // Validate parameters
+            spacing = Math.Max(0.1f, spacing);
+
             // Draw
             _graphicsDevice.SetRenderTarget(renderTarget);
             _graphicsDevice.Clear(Color.Transparent);
@@ -563,31 +562,34 @@ namespace StasisCore
             bool hasDirection = direction.X != 0 || direction.Y != 0;
             for (int i = 0; i < transformedPolygonPoints.Count; i++)
             {
-                Vector2 a = transformedPolygonPoints[i];
-                Vector2 b = transformedPolygonPoints[i == transformedPolygonPoints.Count - 1 ? 0 : i + 1];
-                Vector2 relative = b - a;
+                Vector2 pointA = transformedPolygonPoints[i];
+                Vector2 pointB = transformedPolygonPoints[i == transformedPolygonPoints.Count - 1 ? 0 : i + 1];
+                Vector2 relative = pointB - pointA;
                 Vector2 normal = relative;
                 float perpDot = 0;
                 normal.Normalize();
                 if (hasDirection)
                 {
                     direction.Normalize();
-                    //dot = Vector2.Dot(direction, normal);
                     perpDot = direction.X * normal.Y - direction.Y * normal.X;
-
                 }
                 if (!hasDirection || perpDot > -threshold)
                 {
-                    float segmentLength = 5f;
                     float relativeLength = relative.Length();
-                    float angle = (float)Math.Atan2(relative.Y, relative.X);
                     float currentPosition = 0f;
                     while (currentPosition < relativeLength)
                     {
-                        Vector2 position = a + normal * currentPosition;
+                        float angle = 0;
+                        if (useAbsoluteAngle)
+                            angle = absoluteAngle + StasisMathHelper.floatBetween(-angleJitter, angleJitter, _random);
+                        else
+                            angle = (float)Math.Atan2(relative.Y, relative.X) + StasisMathHelper.floatBetween(-angleJitter, angleJitter, _random);
+                        Vector2 j = new Vector2((float)_random.NextDouble() * 2 - 1, (float)_random.NextDouble() * 2 - 1) * jitter;
+                        Vector2 position = pointA + normal * currentPosition + j;
                         Texture2D texture = textures[_random.Next(textures.Count)];
-                        _spriteBatch.Draw(texture, position, texture.Bounds, Color.White, 0, new Vector2(texture.Width, texture.Height) / 2, 1f, SpriteEffects.None, 0);
-                        currentPosition += segmentLength;
+                        Color actualColor = getRandomColor(baseColor, randomRed, randomGreen, randomBlue, randomAlpha);
+                        _spriteBatch.Draw(texture, position, texture.Bounds, actualColor, angle, new Vector2(texture.Width, texture.Height) / 2, 1f, SpriteEffects.None, 0);
+                        currentPosition += spacing;
                     }
                 }
             }
@@ -602,6 +604,20 @@ namespace StasisCore
             renderTarget.Dispose();
 
             return result;
+        }
+
+        // Random color helper
+        private Color getRandomColor(Color baseColor, int randomRed, int randomGreen, int randomBlue, int randomAlpha)
+        {
+            int tintR = randomRed < 0 ? _random.Next(randomRed, 1) : _random.Next(randomRed + 1);
+            int tintG = randomGreen < 0 ? _random.Next(randomGreen, 1) : _random.Next(randomGreen + 1);
+            int tintB = randomBlue < 0 ? _random.Next(randomBlue, 1) : _random.Next(randomBlue + 1);
+            int tintA = randomAlpha < 0 ? _random.Next(randomAlpha, 1) : _random.Next(randomAlpha + 1);
+            return new Color(
+                Math.Max(0, (int)baseColor.R + tintR),
+                Math.Max(0, (int)baseColor.G + tintG),
+                Math.Max(0, (int)baseColor.B + tintB),
+                Math.Max(0, (int)baseColor.A + tintA));
         }
     }
 }

@@ -9,8 +9,10 @@ namespace StasisCore
 
         public static float floatBetween(float low, float high, Random random)
         {
-            float range = high - low;
-            return (float)random.NextDouble() * range + low;
+            float newLow = Math.Min(low, high);
+            float newHigh = Math.Max(low, high);
+            float range = newHigh - newLow;
+            return (float)random.NextDouble() * range + newLow;
         }
     }
 }
