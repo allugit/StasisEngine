@@ -37,6 +37,7 @@ namespace StasisEditor.Views
             this.cloneButton = new System.Windows.Forms.Button();
             this.materialPropertyGrid = new System.Windows.Forms.PropertyGrid();
             this.splitContainer1 = new System.Windows.Forms.SplitContainer();
+            this.materialsListBox = new StasisEditor.Views.Controls.RefreshingListBox();
             this.splitContainer2 = new System.Windows.Forms.SplitContainer();
             this.splitContainer3 = new System.Windows.Forms.SplitContainer();
             this.downButton = new System.Windows.Forms.Button();
@@ -44,10 +45,9 @@ namespace StasisEditor.Views
             this.upButton = new System.Windows.Forms.Button();
             this.addLayerButton = new System.Windows.Forms.Button();
             this.layerPasteButton = new System.Windows.Forms.Button();
+            this.layersTreeView = new StasisEditor.Views.Controls.LayersTreeView();
             this.layerCopyButton = new System.Windows.Forms.Button();
             this.layerProperties = new System.Windows.Forms.PropertyGrid();
-            this.materialsListBox = new StasisEditor.Views.Controls.RefreshingListBox();
-            this.layersTreeView = new StasisEditor.Views.Controls.LayersTreeView();
             ((System.ComponentModel.ISupportInitialize)(this.splitContainer1)).BeginInit();
             this.splitContainer1.Panel1.SuspendLayout();
             this.splitContainer1.Panel2.SuspendLayout();
@@ -162,6 +162,17 @@ namespace StasisEditor.Views
             this.splitContainer1.SplitterDistance = 242;
             this.splitContainer1.TabIndex = 16;
             // 
+            // materialsListBox
+            // 
+            this.materialsListBox.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.materialsListBox.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.materialsListBox.FormattingEnabled = true;
+            this.materialsListBox.Location = new System.Drawing.Point(0, 0);
+            this.materialsListBox.Name = "materialsListBox";
+            this.materialsListBox.Size = new System.Drawing.Size(212, 242);
+            this.materialsListBox.TabIndex = 4;
+            this.materialsListBox.SelectedIndexChanged += new System.EventHandler(this.materialsListBox_SelectedIndexChanged);
+            // 
             // splitContainer2
             // 
             this.splitContainer2.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom)
@@ -264,6 +275,22 @@ namespace StasisEditor.Views
             this.layerPasteButton.UseVisualStyleBackColor = true;
             this.layerPasteButton.Click += new System.EventHandler(this.layerPasteButton_Click);
             // 
+            // layersTreeView
+            // 
+            this.layersTreeView.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom)
+                        | System.Windows.Forms.AnchorStyles.Left)
+                        | System.Windows.Forms.AnchorStyles.Right)));
+            this.layersTreeView.CheckBoxes = true;
+            this.layersTreeView.HideSelection = false;
+            this.layersTreeView.Location = new System.Drawing.Point(3, 3);
+            this.layersTreeView.Name = "layersTreeView";
+            this.layersTreeView.ShowPlusMinus = false;
+            this.layersTreeView.Size = new System.Drawing.Size(416, 202);
+            this.layersTreeView.TabIndex = 8;
+            this.layersTreeView.BeforeCheck += new System.Windows.Forms.TreeViewCancelEventHandler(this.layersTreeView_BeforeCheck);
+            this.layersTreeView.AfterCheck += new System.Windows.Forms.TreeViewEventHandler(this.layersTreeView_AfterCheck);
+            this.layersTreeView.AfterSelect += new System.Windows.Forms.TreeViewEventHandler(this.layersTreeView_AfterSelect);
+            // 
             // layerCopyButton
             // 
             this.layerCopyButton.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
@@ -288,32 +315,6 @@ namespace StasisEditor.Views
             this.layerProperties.TabIndex = 6;
             this.layerProperties.ToolbarVisible = false;
             this.layerProperties.PropertyValueChanged += new System.Windows.Forms.PropertyValueChangedEventHandler(this.layerProperties_PropertyValueChanged);
-            // 
-            // materialsListBox
-            // 
-            this.materialsListBox.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-            this.materialsListBox.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.materialsListBox.FormattingEnabled = true;
-            this.materialsListBox.Location = new System.Drawing.Point(0, 0);
-            this.materialsListBox.Name = "materialsListBox";
-            this.materialsListBox.Size = new System.Drawing.Size(212, 242);
-            this.materialsListBox.TabIndex = 4;
-            this.materialsListBox.SelectedIndexChanged += new System.EventHandler(this.materialsListBox_SelectedIndexChanged);
-            // 
-            // layersTreeView
-            // 
-            this.layersTreeView.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom)
-                        | System.Windows.Forms.AnchorStyles.Left)
-                        | System.Windows.Forms.AnchorStyles.Right)));
-            this.layersTreeView.CheckBoxes = true;
-            this.layersTreeView.HideSelection = false;
-            this.layersTreeView.Location = new System.Drawing.Point(3, 3);
-            this.layersTreeView.Name = "layersTreeView";
-            this.layersTreeView.ShowPlusMinus = false;
-            this.layersTreeView.Size = new System.Drawing.Size(416, 202);
-            this.layersTreeView.TabIndex = 8;
-            this.layersTreeView.AfterCheck += new System.Windows.Forms.TreeViewEventHandler(this.layersTreeView_AfterCheck);
-            this.layersTreeView.AfterSelect += new System.Windows.Forms.TreeViewEventHandler(this.layersTreeView_AfterSelect);
             // 
             // MaterialView
             // 
