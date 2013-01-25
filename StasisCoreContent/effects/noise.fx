@@ -14,7 +14,6 @@ float noiseLacunarity;
 float multiplier;
 float4 noiseLowColor;
 float4 noiseHighColor;
-float2 fbmOffset;
 bool fbmPerlinBasis;
 bool fbmCellBasis;
 bool fbmInvCellBasis;
@@ -65,7 +64,7 @@ float getPerlin(float2 texCoords)
 	float baseValue = (base.r + base.g + base.b) / 3;
 	
 	// Calculate noise
-	float2 coords = scaleTexCoords(texCoords) + baseValue * fbmOffset;
+	float2 coords = scaleTexCoords(texCoords);
 	float value = fbmPerlin(coords, fbmIterations, noiseFrequency, noiseGain, noiseLacunarity);
 	return invert ? 1 - value : value;
 }
@@ -78,7 +77,7 @@ float getWorley(float2 texCoords, int feature)
 	float baseValue = (base.r + base.g + base.b) / 3;
 	
 	// Calculate noise
-	float2 coords = scaleTexCoords(texCoords) + baseValue * fbmOffset;
+	float2 coords = scaleTexCoords(texCoords);
 	float value = fbmWorley(coords, feature, fbmIterations, noiseFrequency, noiseGain, noiseLacunarity);
 	return invert ? 1 - value : value;
 }

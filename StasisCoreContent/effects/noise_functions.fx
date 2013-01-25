@@ -1,3 +1,5 @@
+float2 fbmOffset;
+
 ////////////////////////////////////////////////////
 // Perlin noise
 ////////////////////////////////////////////////////
@@ -131,7 +133,7 @@ float fbmPerlin(float2 p, int count, float frequency, float gain, float lacunari
 
 	for (int i = 0; i < count; i++)
 	{
-		total += perlin(p * frequency) * amplitude;
+		total += perlin(p * frequency + total * fbmOffset) * amplitude;
 		frequency *= lacunarity;
 		amplitude *= gain;
 	}
@@ -145,7 +147,7 @@ float fbmWorley(float2 p, int feature, int count, float frequency, float gain, f
 
 	for (int i = 0; i < count; i++)
 	{
-		total += worley(p * frequency, feature) * amplitude;
+		total += worley(p * frequency + total * fbmOffset, feature) * amplitude;
 		frequency *= lacunarity;
 		amplitude *= gain;
 	}
