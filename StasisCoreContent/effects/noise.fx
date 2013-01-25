@@ -30,7 +30,8 @@ float4x4 matrixTransform;
 // scaleTexCoords
 float2 scaleTexCoords(float2 texCoords)
 {
-	return (offset / renderSize) - (texCoords * aspectRatio) / noiseScale;
+	float2 fixedRatio = renderSize / float2(512, 512);
+	return (offset / renderSize) - (texCoords / noiseScale) * fixedRatio;
 }
 
 // blend
