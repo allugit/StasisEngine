@@ -50,7 +50,7 @@ float perlin(float2 p)
 	float nx1 = n01 * (1 - weight(u)) + n11 * weight(u);
 	float nxy = nx0 * (1 - weight(v)) + nx1 * weight(v);
 	
-	return nxy + 1;
+	return nxy;
 }
 
 ///////////////////////////////////////////
@@ -66,8 +66,8 @@ int worleyFeatureF2 = 1;
 int worleyFeatureF2mF1 = 2;
 float4 getWorleyCell(int x, int y, float jitter)
 {
-	float u = (x + y * 9) / noiseSize.x;
-	float v = (x * 3) / noiseSize.y;
+	float u = (x + y * 6) / noiseSize.x;
+	float v = (x * 1.5) / noiseSize.y;
 	return tex2D(worleySampler, float2(u, v)) * jitter;
 }
 float worley(float2 p, int feature = 0, float jitter = 2.0)
@@ -86,9 +86,9 @@ float worley(float2 p, int feature = 0, float jitter = 2.0)
 
 	float2 cell;
 
-	for (int y = -2; y <= 2; y++)
+	for (int y = -2; y < 2; y++)
 	{
-		for (int x = -2; x <= 2; x++)
+		for (int x = -2; x < 2; x++)
 		{
 			cell = getWorleyCell(xi + x, yi + y, jitter).rg;
 			cell.x += (float(x) - xf);
@@ -115,8 +115,10 @@ float worley(float2 p, int feature = 0, float jitter = 2.0)
 	else if (feature == worleyFeatureF2mF1)
 		value = sqrt(distance2) - sqrt(distance1);
 
+	return value;
+
 	// This algorithm inverts worley by default
-	return 1 - value;
+	//return 1 - value;
 }
 
 ///////////////////////////////////////////
@@ -134,7 +136,7 @@ float fbmPerlin(float2 p, int count, float frequency, float gain, float lacunari
 		amplitude *= gain;
 	}
 
-	return total;
+	return total + 0.5;
 }
 float fbmWorley(float2 p, int feature, int count, float frequency, float gain, float lacunarity)
 {
