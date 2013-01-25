@@ -86,7 +86,7 @@ namespace StasisEditor.Views
         // Key up
         void Parent_KeyUp(object sender, KeyEventArgs e)
         {
-            if (_mouseOverView && _keysEnabled)
+            if (_controller.level != null && _mouseOverView && _keysEnabled)
             {
                 if (e.KeyCode == Keys.Shift || e.KeyCode == Keys.ShiftKey || e.KeyCode == Keys.LShiftKey || e.KeyCode == Keys.RShiftKey)
                     _controller.shift = false;
@@ -105,7 +105,7 @@ namespace StasisEditor.Views
         // Key down
         void Parent_KeyDown(object sender, KeyEventArgs e)
         {
-            if (_mouseOverView && _keysEnabled)
+            if (_controller.level != null && _mouseOverView && _keysEnabled)
             {
                 if (e.KeyCode == Keys.Shift || e.KeyCode == Keys.ShiftKey || e.KeyCode == Keys.LShiftKey || e.KeyCode == Keys.RShiftKey)
                     _controller.shift = true;

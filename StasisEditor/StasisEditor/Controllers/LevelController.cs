@@ -347,18 +347,21 @@ namespace StasisEditor.Controllers
         // handleMouseDown
         public void handleMouseDown(System.Windows.Forms.MouseEventArgs e)
         {
-            // Handle mouse down for selected sub controllers
-            foreach (ActorSubController subController in _selectedSubControllers)
-                subController.handleMouseDown();
-
-            // Try to select a sub controller
-            if (_selectedSubControllers.Count == 0)
+            if (_level != null)
             {
-                foreach (ActorController actorController in actorControllers)
+                // Handle mouse down for selected sub controllers
+                foreach (ActorSubController subController in _selectedSubControllers)
+                    subController.handleMouseDown();
+
+                // Try to select a sub controller
+                if (_selectedSubControllers.Count == 0)
                 {
-                    // If actor controller's mouse handler returns true, mouse input has been handled and this loop can be stopped
-                    if (actorController.handleMouseDown(e))
-                        return;
+                    foreach (ActorController actorController in actorControllers)
+                    {
+                        // If actor controller's mouse handler returns true, mouse input has been handled and this loop can be stopped
+                        if (actorController.handleMouseDown(e))
+                            return;
+                    }
                 }
             }
         }
