@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Xml.Linq;
+using Microsoft.Xna.Framework;
 
 namespace StasisCore.Models
 {
@@ -8,10 +9,12 @@ namespace StasisCore.Models
     {
         protected LayerBlendType _blendType;
         protected float _multiplier;
+        protected Color _baseColor;
         protected List<MaterialLayer> _layers;
 
         public LayerBlendType blendType { get { return _blendType; } set { _blendType = value; } }
         public float multiplier { get { return _multiplier; } set { _multiplier = value; } }
+        virtual public Color baseColor { get { return _baseColor; } set { _baseColor = value; } }
         virtual public List<MaterialLayer> layers { get { return _layers; } }
 
         public override XElement data
@@ -21,6 +24,7 @@ namespace StasisCore.Models
                 XElement d = base.data;
                 d.SetAttributeValue("blend_type", _blendType.ToString().ToLower());
                 d.SetAttributeValue("multiplier", _multiplier);
+                d.SetAttributeValue("base_color", _baseColor);
                 foreach (MaterialLayer layer in _layers)
                     d.Add(layer.data);
                 return d;
@@ -33,6 +37,7 @@ namespace StasisCore.Models
         {
             _blendType = LayerBlendType.Opaque;
             _multiplier = 1f;
+            _baseColor = Color.White;
             _layers = new List<MaterialLayer>();
         }
 
@@ -40,8 +45,9 @@ namespace StasisCore.Models
         public MaterialGroupLayer(XElement data)
             : base(data)
         {
-            _blendType = (LayerBlendType)Enum.Parse(typeof(LayerBlendType), data.Attribute("blend_type").Value, true);
-            _multiplier = float.Parse(data.Attribute("multiplier").Value);
+            _blendType = (LayerBlendType)Loader.loadEnum(typeof(LayerBlendType), data.Attribute("blend_type"), (int)LayerBlendType.Opaque);
+            _multiplier = Loader.loadFloat(data.Attribute("multiplier"), 1f);
+            _baseColor = Loader.loadColor(data.Attribute("base_color"), Color.White);
             loadLayers(data);
         }
 

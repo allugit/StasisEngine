@@ -17,36 +17,36 @@ float2 resizeTexCoords(float2 texCoords)
 }
 
 // Opaque
-float4 PSOpaque(float2 texCoords : TEXCOORD0) : COLOR0
+float4 PSOpaque(float2 texCoords : TEXCOORD0, float4 baseColor : COLOR0) : COLOR0
 {
 	float4 base = tex2D(baseSampler, texCoords);
 	float4 tex = tex2D(textureSampler, resizeTexCoords(texCoords) / scale);
 	tex.rgb *= multiplier;
 	tex.rgb = lerp(base.rgb, tex.rgb, tex.a);
 	tex.a = max(base.a, tex.a);
-	return tex;
+	return tex * baseColor;
 }
 
 // Overlay
-float4 PSOverlay(float2 texCoords : TEXCOORD0) : COLOR0
+float4 PSOverlay(float2 texCoords : TEXCOORD0, float4 baseColor : COLOR0) : COLOR0
 {
 	float4 base = tex2D(baseSampler, texCoords);
 	float4 tex = tex2D(textureSampler, resizeTexCoords(texCoords) / scale);
 	
 	base.rgb =  lerp(base.rgb, base.rgb * tex.rgb, tex.a) * multiplier;
 	
-	return base;
+	return base * baseColor;
 }
 
 // Additive
-float4 PSAdditive(float2 texCoords : TEXCOORD0) : COLOR0
+float4 PSAdditive(float2 texCoords : TEXCOORD0, float4 baseColor : COLOR0) : COLOR0
 {
 	float4 base = tex2D(baseSampler, texCoords);
 	float4 tex = tex2D(textureSampler, resizeTexCoords(texCoords) / scale);
 	
 	base.rgb += tex.rgb * multiplier;
 	
-	return base;
+	return base * baseColor;
 }
 
 technique opaque

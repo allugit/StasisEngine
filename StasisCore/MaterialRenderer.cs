@@ -99,7 +99,7 @@ namespace StasisCore
                     Texture2D groupCanvas = createCanvas(current.Width, current.Height);
                     foreach (MaterialLayer childLayer in groupLayer.layers)
                         groupCanvas = recursiveRenderLayers(groupCanvas, polygonPoints, growthFactor, childLayer);
-                    current = texturePass(current, groupCanvas, groupLayer.blendType, 1f, groupLayer.multiplier);
+                    current = texturePass(current, groupCanvas, groupLayer.blendType, 1f, groupLayer.multiplier, groupLayer.baseColor);
                     break;
 
                 case "texture":
@@ -109,7 +109,8 @@ namespace StasisCore
                         ResourceController.getTexture(textureLayer.textureUID),
                         textureLayer.blendType,
                         textureLayer.scale,
-                        textureLayer.multiplier);
+                        textureLayer.multiplier,
+                        textureLayer.baseColor);
                     break;
 
                 case "noise":
@@ -212,7 +213,7 @@ namespace StasisCore
         }
 
         // Texture pass
-        private Texture2D texturePass(Texture2D current, Texture2D texture, LayerBlendType blendType, float scale, float multiplier)
+        private Texture2D texturePass(Texture2D current, Texture2D texture, LayerBlendType blendType, float scale, float multiplier, Color baseColor)
         {
             // Initialize render targets and textures
             RenderTarget2D renderTarget = new RenderTarget2D(_graphicsDevice, current.Width, current.Height);
@@ -254,7 +255,7 @@ namespace StasisCore
             _graphicsDevice.Clear(Color.Transparent);
             _graphicsDevice.Textures[1] = texture;
             _spriteBatch.Begin(SpriteSortMode.Immediate, BlendState.AlphaBlend, null, null, null, _textureEffect);
-            _spriteBatch.Draw(current, current.Bounds, Color.White);
+            _spriteBatch.Draw(current, current.Bounds, baseColor);
             _spriteBatch.End();
             _graphicsDevice.SetRenderTarget(null);
 
