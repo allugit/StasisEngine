@@ -8,6 +8,8 @@ using StasisCore.Resources;
 
 namespace StasisEditor.Controllers.Actors
 {
+    using Keys = System.Windows.Forms.Keys;
+
     public class ItemActorController : ActorController, IPointSubControllable
     {
         private ItemProperties _itemProperties;
@@ -65,6 +67,15 @@ namespace StasisEditor.Controllers.Actors
                 results.Add(_positionSubController);
 
             return results;
+        }
+
+        public override void globalKeyDown(Keys key)
+        {
+            // Delete test
+            if (_positionSubController.selected && key == Keys.Delete)
+                delete();
+
+            base.globalKeyDown(key);
         }
 
         #endregion
