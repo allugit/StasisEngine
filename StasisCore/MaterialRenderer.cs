@@ -91,6 +91,7 @@ namespace StasisCore
                     MaterialGroupLayer rootLayer = layer as MaterialGroupLayer;
                     foreach (MaterialLayer childLayer in rootLayer.layers)
                         current = recursiveRenderLayers(current, polygonPoints, growthFactor, childLayer);
+                    current = texturePass(current, current, LayerBlendType.Opaque, 1f, rootLayer.multiplier, rootLayer.baseColor);
                     break;
 
                 case "group":
