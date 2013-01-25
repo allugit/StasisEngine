@@ -12,6 +12,7 @@ namespace StasisEditor.Controllers.Actors
     {
         protected int _id;
         protected ActorType _type;
+        protected CommonActorProperties _commonProperties;
         protected LevelController _levelController;
         protected List<CircuitConnectionSubController> _circuitConnections;
 
@@ -28,7 +29,8 @@ namespace StasisEditor.Controllers.Actors
             {
                 XElement d = new XElement("Actor",
                     new XAttribute("type", _type.ToString()),
-                    new XAttribute("id", _id));
+                    new XAttribute("id", _id),
+                    _commonProperties.data);
 
                 return d;
             }
@@ -38,6 +40,7 @@ namespace StasisEditor.Controllers.Actors
         {
             _levelController = levelController;
             _id = id;
+            _commonProperties = new CommonActorProperties();
             _circuitConnections = new List<CircuitConnectionSubController>();
             Application.Idle += new EventHandler(Application_Idle);
         }

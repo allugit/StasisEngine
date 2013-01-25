@@ -24,6 +24,7 @@ namespace StasisEditor.Controllers.Actors
             get
             {
                 List<ActorProperties> results = new List<ActorProperties>();
+                results.Add(_commonProperties);
                 results.Add(_boxProperties);
                 results.Add(_bodyProperties);
                 return results;
@@ -61,6 +62,7 @@ namespace StasisEditor.Controllers.Actors
             _boxProperties = new BoxProperties(data);
             _bodyProperties = new BodyProperties(data);
             _type = ActorType.MovingPlatform;
+            _commonProperties = new CommonActorProperties(data);
             initializeControls(Loader.loadVector2(data.Attribute("axis_position"), Vector2.Zero));
         }
 

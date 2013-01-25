@@ -22,7 +22,9 @@ namespace StasisEditor.Views.Controls
             groupBox.Text = properties.ToString();
 
             // Calculate height
-            if (properties is TreeProperties)
+            if (properties is CommonActorProperties)
+                Height = 90;
+            else if (properties is TreeProperties)
                 Height = 330;
             else if (properties is BoxProperties)
                 Height = 130;

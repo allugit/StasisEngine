@@ -23,7 +23,7 @@ namespace StasisEditor.Controllers.Actors
         public override Vector2 connectionPosition { get { return _positionSubController.position; } }
         public override List<ActorProperties> properties
         {
-            get { return new List<ActorProperties>(); }
+            get { return new List<ActorProperties>(new [] { _commonProperties }); }
         }
         public override XElement data
         {
@@ -57,6 +57,7 @@ namespace StasisEditor.Controllers.Actors
             _level = level;
             _circuit = circuit;
             _type = ActorType.Circuit;
+            _commonProperties = new CommonActorProperties(data);
             initializeControls(Loader.loadVector2(data.Attribute("position"), Vector2.Zero), data);
         }
 

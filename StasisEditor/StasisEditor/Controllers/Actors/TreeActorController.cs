@@ -54,6 +54,7 @@ namespace StasisEditor.Controllers.Actors
             _position = Loader.loadVector2(data.Attribute("position"), Vector2.Zero);
             _treeProperties = new TreeProperties(data);
             _type = ActorType.Tree;
+            _commonProperties = new CommonActorProperties(data);
             initializeControls(_treeProperties.tropism);
         }
 

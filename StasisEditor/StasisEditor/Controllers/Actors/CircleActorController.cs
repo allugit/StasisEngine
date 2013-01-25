@@ -23,6 +23,7 @@ namespace StasisEditor.Controllers.Actors
             get
             {
                 List<ActorProperties> results = new List<ActorProperties>();
+                results.Add(_commonProperties);
                 results.Add(_circleProperties);
                 results.Add(_bodyProperties);
                 return results;
@@ -56,6 +57,7 @@ namespace StasisEditor.Controllers.Actors
             : base(levelController, int.Parse(data.Attribute("id").Value))
         {
             _position = Loader.loadVector2(data.Attribute("position"), Vector2.Zero);
+            _commonProperties = new CommonActorProperties(data);
             _circleProperties = new CircleProperties(data);
             _bodyProperties = new BodyProperties(data);
             _type = ActorType.Circle;

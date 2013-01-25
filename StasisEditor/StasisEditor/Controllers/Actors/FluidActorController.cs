@@ -18,7 +18,7 @@ namespace StasisEditor.Controllers.Actors
         public override Vector2 connectionPosition { get { return _headLinkedPointController.position; } }
         public override List<ActorProperties> properties
         {
-            get { return new List<ActorProperties>(); }
+            get { return new List<ActorProperties>(new [] { _commonProperties }); }
         }
         public override XElement data
         {
@@ -57,6 +57,7 @@ namespace StasisEditor.Controllers.Actors
             List<Vector2> actorResourcePoints = new List<Vector2>();
             foreach (XElement pointData in data.Elements("Point"))
                 actorResourcePoints.Add(Loader.loadVector2(pointData, Vector2.Zero));
+            _commonProperties = new CommonActorProperties(data);
             initializeControls(actorResourcePoints);
         }
 

@@ -16,7 +16,7 @@ namespace StasisEditor.Controllers.Actors
         public override Vector2 connectionPosition { get { return _pointASubController.position; } }
         public override List<ActorProperties> properties
         {
-            get { return new List<ActorProperties>(); }
+            get { return new List<ActorProperties>(new [] { _commonProperties }); }
         }
         public override XElement data
         {
@@ -44,6 +44,7 @@ namespace StasisEditor.Controllers.Actors
             : base(levelController, int.Parse(data.Attribute("id").Value))
         {
             _type = ActorType.Rope;
+            _commonProperties = new CommonActorProperties(data);
             initializeControls(
                 Loader.loadVector2(data.Attribute("point_a"), Vector2.Zero),
                 Loader.loadVector2(data.Attribute("point_b"), Vector2.Zero));

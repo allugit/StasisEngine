@@ -21,6 +21,7 @@ namespace StasisEditor.Controllers.Actors
             get
             {
                 List<ActorProperties> results = new List<ActorProperties>();
+                results.Add(_commonProperties);
                 results.Add(_bodyProperties);
                 return results;
             }
@@ -62,6 +63,7 @@ namespace StasisEditor.Controllers.Actors
         {
             _bodyProperties = new BodyProperties(data);
             _type = ActorType.Terrain;
+            _commonProperties = new CommonActorProperties(data);
             List<Vector2> actorResourcePoints = new List<Vector2>();
             foreach (XElement pointData in data.Elements("Point"))
                 actorResourcePoints.Add(Loader.loadVector2(pointData, Vector2.Zero));
