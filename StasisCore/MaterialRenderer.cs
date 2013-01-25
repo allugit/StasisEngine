@@ -334,6 +334,9 @@ namespace StasisCore
             _noiseEffect.Parameters["blendType"].SetValue((int)blendType);
             _noiseEffect.Parameters["invert"].SetValue(invert);
             _noiseEffect.Parameters["worleyFeature"].SetValue((int)worleyFeature);
+            _spriteBatch.Begin();
+            _spriteBatch.Draw(current, current.Bounds, Color.White);
+            _spriteBatch.End();
             _spriteBatch.Begin(SpriteSortMode.Immediate, null, null, null, null, _noiseEffect);
             _spriteBatch.Draw(current, renderTarget.Bounds, Color.White);
             _spriteBatch.End();

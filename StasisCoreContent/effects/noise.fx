@@ -36,21 +36,15 @@ float2 scaleTexCoords(float2 texCoords)
 // blend
 float4 blend(float noiseValue, float2 texCoords)
 {
-	float4 base;
+	float4 base = lerp(noiseLowColor, noiseHighColor, noiseValue);
 	
-	if (blendType == opaqueBlend)
+	if (blendType == overlayBlend)
 	{
-		base = float4(noiseValue, noiseValue, noiseValue, 1);
-	}
-	else if (blendType == overlayBlend)
-	{
-		base = tex2D(baseSampler, texCoords);
-		base.rgb *= noiseValue;
+		base *= tex2D(baseSampler, texCoords);
 	}
 	else if (blendType == additiveBlend)
 	{
-		base = tex2D(baseSampler, texCoords);
-		base.rgb += noiseValue;
+		base += tex2D(baseSampler, texCoords);
 	}
 
 	return base;
