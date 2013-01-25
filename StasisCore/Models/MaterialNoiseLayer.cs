@@ -30,8 +30,8 @@ namespace StasisCore.Models
         public float lacunarity { get { return _lacunarity; } set { _lacunarity = value; } }
         public float multiplier { get { return _multiplier; } set { _multiplier = value; } }
         public Vector2 fbmOffset { get { return _fbmOffset; } set { _fbmOffset = value; } }
-        public Color colorLow { get { return _colorLow; } set { _colorLow = value; } }
-        public Color colorHigh { get { return _colorHigh; } set { _colorHigh = value; } }
+        virtual public Color colorLow { get { return _colorLow; } set { _colorLow = value; } }
+        virtual public Color colorHigh { get { return _colorHigh; } set { _colorHigh = value; } }
         public int iterations { get { return _iterations; } set { _iterations = value; } }
         public LayerBlendType blendType { get { return _blendType; } set { _blendType = value; } }
         public bool invert { get { return _invert; } set { _invert = value; } }

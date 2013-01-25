@@ -2,12 +2,21 @@
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Xml.Linq;
+using Microsoft.Xna.Framework;
 using StasisCore.Models;
 
 namespace StasisEditor.Models
 {
+    using UITypeEditor = System.Drawing.Design.UITypeEditor;
+
     public class EditorMaterialNoiseLayer : MaterialNoiseLayer
     {
+        [EditorAttribute(typeof(XNAColorEditor), typeof(UITypeEditor))]
+        public override Color colorLow { get { return base.colorLow; } set { base.colorLow = value; } }
+
+        [EditorAttribute(typeof(XNAColorEditor), typeof(UITypeEditor))]
+        public override Color colorHigh { get { return base.colorHigh; } set { base.colorHigh = value; } }
+
         [Browsable(false)]
         public override string type { get { return base.type; } set { base.type = value; } }
 
