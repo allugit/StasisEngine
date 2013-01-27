@@ -138,7 +138,7 @@ namespace StasisEditor.Views
 
             if (_draw && _controller.level != null)
             {
-                _spriteBatch.Begin();
+                _spriteBatch.Begin(SpriteSortMode.BackToFront, BlendState.AlphaBlend);
 
                 // Draw grid
                 drawGrid();
@@ -167,11 +167,11 @@ namespace StasisEditor.Views
 
             // Vertical grid lines
             for (float x = 0; x < destRect.Width; x += scale)
-                _spriteBatch.Draw(_pixel, new Microsoft.Xna.Framework.Rectangle((int)(x + gridOffset.X), 0, 1, screenHeight), color);
+                _spriteBatch.Draw(_pixel, new Vector2(x + gridOffset.X, 0), new Microsoft.Xna.Framework.Rectangle(0, 0, 1, screenHeight), color, 0, Vector2.Zero, 1f, SpriteEffects.None, 1f);
 
             // Horizontal grid lines
             for (float y = 0; y < destRect.Height; y += scale)
-                _spriteBatch.Draw(_pixel, new Microsoft.Xna.Framework.Rectangle(0, (int)(y + gridOffset.Y), screenWidth, 1), color);
+                _spriteBatch.Draw(_pixel, new Vector2(0, y + gridOffset.Y), new Microsoft.Xna.Framework.Rectangle(0, 0, screenWidth, 1), color, 0, Vector2.Zero, 1f, SpriteEffects.None, 1f);
         }
 
         // drawMousePosition
@@ -201,39 +201,39 @@ namespace StasisEditor.Views
         }
 
         // drawBox
-        public void drawBox(Vector2 position, float halfWidth, float halfHeight, float angle, Color color)
+        public void drawBox(Vector2 position, float halfWidth, float halfHeight, float angle, Color color, float layerDepth)
         {
             float scale = _controller.getScale();
             Rectangle rectangle = new Rectangle(0, 0, (int)(halfWidth * 2 * scale), (int)(halfHeight * 2 * scale));
-            _spriteBatch.Draw(_pixel, (position + _controller.getWorldOffset()) * scale, rectangle, color, angle, new Vector2(halfWidth, halfHeight) * scale, 1, SpriteEffects.None, 0);
+            _spriteBatch.Draw(_pixel, (position + _controller.getWorldOffset()) * scale, rectangle, color, angle, new Vector2(halfWidth, halfHeight) * scale, 1, SpriteEffects.None, layerDepth);
         }
 
         // drawLine
-        public void drawLine(Vector2 pointA, Vector2 pointB, Color color)
+        public void drawLine(Vector2 pointA, Vector2 pointB, Color color, float layerDepth)
         {
             float scale = _controller.getScale();
             Vector2 relative = pointB - pointA;
             float length = relative.Length();
             float angle = (float)Math.Atan2(relative.Y, relative.X);
             Rectangle rect = new Rectangle(0, 0, (int)(length * scale), 2);
-            _spriteBatch.Draw(_pixel, (pointA + _controller.getWorldOffset()) * scale, rect, color, angle, new Vector2(0, 1), 1f, SpriteEffects.None, 0);
+            _spriteBatch.Draw(_pixel, (pointA + _controller.getWorldOffset()) * scale, rect, color, angle, new Vector2(0, 1), 1f, SpriteEffects.None, layerDepth);
         }
 
         // drawPoint
-        public void drawPoint(Vector2 position, Color color)
+        public void drawPoint(Vector2 position, Color color, float layerDepth)
         {
-            drawCircle(position, 4f / _controller.getScale(), color);
+            drawCircle(position, 4f / _controller.getScale(), color, layerDepth);
         }
 
         // drawCircle
-        public void drawCircle(Vector2 position, float radius, Color color)
+        public void drawCircle(Vector2 position, float radius, Color color, float layerDepth)
         {
             float circleScale = radius / (((float)_circle.Width / 2) / _controller.getScale());
-            _spriteBatch.Draw(_circle, (position + _controller.getWorldOffset()) * _controller.getScale(), _circle.Bounds, color, 0, new Vector2(_circle.Width, _circle.Height) / 2, circleScale, SpriteEffects.None, 0);
+            _spriteBatch.Draw(_circle, (position + _controller.getWorldOffset()) * _controller.getScale(), _circle.Bounds, color, 0, new Vector2(_circle.Width, _circle.Height) / 2, circleScale, SpriteEffects.None, layerDepth);
         }
 
         // drawIcon
-        public void drawIcon(ActorType actorType, Vector2 position)
+        public void drawIcon(ActorType actorType, Vector2 position, float layerDepth)
         {
             Texture2D texture = _pixel;
 
@@ -254,7 +254,7 @@ namespace StasisEditor.Views
 
             Rectangle rect = texture == _pixel ? new Rectangle(0, 0, 24, 24) : texture.Bounds;
 
-            _spriteBatch.Draw(texture, (position + _controller.getWorldOffset()) * _controller.getScale(), rect, Color.White, 0, new Vector2(rect.Width, rect.Height) / 2, 1f, SpriteEffects.None, 0);
+            _spriteBatch.Draw(texture, (position + _controller.getWorldOffset()) * _controller.getScale(), rect, Color.White, 0, new Vector2(rect.Width, rect.Height) / 2, 1f, SpriteEffects.None, layerDepth);
         }
     }
 }

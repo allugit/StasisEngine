@@ -46,6 +46,7 @@ namespace StasisEditor.Controllers.Actors
             : base(levelController, levelController.getUnusedActorID())
         {
             _position = levelController.getWorldMouse();
+            _commonProperties.depth = 0.1f;
             _boxProperties = new BoxProperties(0.5f, 0.5f, 0);
             _bodyProperties = new BodyProperties(CoreBodyType.Dynamic, 1f, 1f, 0f);
             _type = ActorType.Box;
@@ -166,7 +167,7 @@ namespace StasisEditor.Controllers.Actors
         // draw
         public override void draw()
         {
-            _levelController.view.drawBox(_position, _boxProperties.halfWidth, _boxProperties.halfHeight, _boxProperties.angle, Color.LightBlue);
+            _levelController.view.drawBox(_position, _boxProperties.halfWidth, _boxProperties.halfHeight, _boxProperties.angle, Color.LightBlue, _commonProperties.depth);
         }
 
         // clone

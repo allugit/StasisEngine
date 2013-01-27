@@ -265,15 +265,15 @@ namespace StasisEditor.Controllers.Actors
         {
             foreach (PointSubController subController in _inputControllers)
             {
-                _levelController.view.drawLine(_positionSubController.position, subController.position, Color.DarkGreen);
-                _levelController.view.drawPoint(subController.position, Color.Green);
+                _levelController.view.drawLine(_positionSubController.position, subController.position, Color.DarkGreen, _commonProperties.depth);
+                _levelController.view.drawPoint(subController.position, Color.Green, _commonProperties.depth);
             }
             foreach (PointSubController subController in _outputControllers)
             {
-                _levelController.view.drawLine(_positionSubController.position, subController.position, Color.DarkRed);
-                _levelController.view.drawPoint(subController.position, Color.Red);
+                _levelController.view.drawLine(_positionSubController.position, subController.position, Color.DarkRed, _commonProperties.depth);
+                _levelController.view.drawPoint(subController.position, Color.Red, _commonProperties.depth);
             }
-            _levelController.view.drawIcon(StasisCore.ActorType.Circuit, _positionSubController.position);
+            _levelController.view.drawIcon(StasisCore.ActorType.Circuit, _positionSubController.position, _commonProperties.depth);
         }
 
         // Clone

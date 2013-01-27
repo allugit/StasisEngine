@@ -95,7 +95,7 @@ namespace StasisEditor.Controllers.Actors
         // draw
         public override void draw()
         {
-            _levelController.view.drawIcon(StasisCore.ActorType.PlayerSpawn, _positionSubController.position);
+            _levelController.view.drawIcon(StasisCore.ActorType.PlayerSpawn, _positionSubController.position, _commonProperties.depth);
         }
 
         // clone

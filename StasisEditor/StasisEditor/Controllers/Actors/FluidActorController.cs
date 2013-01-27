@@ -41,6 +41,7 @@ namespace StasisEditor.Controllers.Actors
             : base(levelController, levelController.getUnusedActorID())
         {
             _fluidProperties = new FluidProperties(0.004f);
+            _commonProperties.depth = 0.1f;
             _type = StasisCore.ActorType.Fluid;
             List<Vector2> actorResourcePoints = new List<Vector2>();
             actorResourcePoints.Add(_levelController.getWorldMouse() - new Vector2(1f, 0));
@@ -220,7 +221,7 @@ namespace StasisEditor.Controllers.Actors
             LinkedPointSubController current = _headLinkedPointController;
             while (current.next != null)
             {
-                _levelController.view.drawLine(current.position, current.next.position, Color.Blue);
+                _levelController.view.drawLine(current.position, current.next.position, Color.Blue, _commonProperties.depth);
                 current = current.next;
             }
 
@@ -228,7 +229,7 @@ namespace StasisEditor.Controllers.Actors
             current = _headLinkedPointController;
             while (current != null)
             {
-                _levelController.view.drawPoint(current.position, Color.LightBlue);
+                _levelController.view.drawPoint(current.position, Color.LightBlue, _commonProperties.depth);
                 current = current.next;
             }
         }

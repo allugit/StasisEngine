@@ -43,6 +43,7 @@ namespace StasisEditor.Controllers.Actors
         {
             _position = levelController.getWorldMouse();
             _treeProperties = new TreeProperties(new Vector2(0, -1f));
+            _commonProperties.depth = 0.1f;
             _type = ActorType.Tree;
             initializeControls(_position + new Vector2(0f, -1f));
         }
@@ -160,14 +161,14 @@ namespace StasisEditor.Controllers.Actors
         public override void draw()
         {
             // Draw base circle
-            _levelController.view.drawPoint(_position, Color.DarkGray);
+            _levelController.view.drawPoint(_position, Color.DarkGray, _commonProperties.depth);
 
             // Draw box
-            _levelController.view.drawBox(_position + _boxController.alignmentOffset, _treeProperties.maxBaseWidth, _treeProperties.internodeLength, _treeProperties.angle, Color.Green);
+            _levelController.view.drawBox(_position + _boxController.alignmentOffset, _treeProperties.maxBaseWidth, _treeProperties.internodeLength, _treeProperties.angle, Color.Green, _commonProperties.depth);
 
             // Draw tropism control
-            _levelController.view.drawLine(_position, _tropismController.position, Color.Gray);
-            _levelController.view.drawPoint(_tropismController.position, Color.Yellow);
+            _levelController.view.drawLine(_position, _tropismController.position, Color.Gray, _commonProperties.depth);
+            _levelController.view.drawPoint(_tropismController.position, Color.Yellow, _commonProperties.depth);
         }
 
         // clone

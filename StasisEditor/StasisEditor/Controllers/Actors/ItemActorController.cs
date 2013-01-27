@@ -43,6 +43,7 @@ namespace StasisEditor.Controllers.Actors
             : base(levelController, levelController.getUnusedActorID())
         {
             _itemProperties = new ItemProperties(itemUID, 1);
+            _commonProperties.depth = 0.1f;
             _type = ActorType.Item;
             initializeControls(levelController.getWorldMouse());
         }
@@ -107,7 +108,7 @@ namespace StasisEditor.Controllers.Actors
         // Draw
         public override void draw()
         {
-            _levelController.view.drawIcon(StasisCore.ActorType.Item, _positionSubController.position);
+            _levelController.view.drawIcon(StasisCore.ActorType.Item, _positionSubController.position, _commonProperties.depth);
         }
 
         // Clone

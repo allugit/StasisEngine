@@ -46,6 +46,7 @@ namespace StasisEditor.Controllers.Actors
             : base(levelController, levelController.getUnusedActorID())
         {
             _position = levelController.getWorldMouse();
+            _commonProperties.depth = 0.1f;
             _circleProperties = new CircleProperties(0.5f);
             _bodyProperties = new BodyProperties(CoreBodyType.Static, 1f, 1f, 0f);
             _type = ActorType.Circle;
@@ -139,7 +140,7 @@ namespace StasisEditor.Controllers.Actors
         public override void draw()
         {
             // Draw circle
-            _levelController.view.drawCircle(_position, _circleProperties.radius, Color.LightBlue);
+            _levelController.view.drawCircle(_position, _circleProperties.radius, Color.LightBlue, _commonProperties.depth);
         }
 
         // clone

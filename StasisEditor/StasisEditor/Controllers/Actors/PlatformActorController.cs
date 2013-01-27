@@ -48,6 +48,7 @@ namespace StasisEditor.Controllers.Actors
             : base(levelController, levelController.getUnusedActorID())
         {
             _position = levelController.getWorldMouse();
+            _commonProperties.depth = 0.1f;
             _boxProperties = new BoxProperties(0.5f, 0.5f, 0);
             _bodyProperties = new BodyProperties(CoreBodyType.Static, 1f, 1f, 0f);
             _type = ActorType.MovingPlatform;
@@ -181,11 +182,11 @@ namespace StasisEditor.Controllers.Actors
         public override void draw()
         {
             // Draw box
-            _levelController.view.drawBox(_position, _boxProperties.halfWidth, _boxProperties.halfHeight, _boxProperties.angle, Color.Blue);
+            _levelController.view.drawBox(_position, _boxProperties.halfWidth, _boxProperties.halfHeight, _boxProperties.angle, Color.Blue, _commonProperties.depth);
 
             // Draw axis sub controller
-            _levelController.view.drawLine(_position, _axisSubController.position, Color.Gray);
-            _levelController.view.drawPoint(_axisSubController.position, Color.White);
+            _levelController.view.drawLine(_position, _axisSubController.position, Color.Gray, _commonProperties.depth);
+            _levelController.view.drawPoint(_axisSubController.position, Color.White, _commonProperties.depth);
         }
 
         // clone

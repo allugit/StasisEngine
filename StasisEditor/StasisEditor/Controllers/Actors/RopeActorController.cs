@@ -34,6 +34,7 @@ namespace StasisEditor.Controllers.Actors
             : base(levelController, levelController.getUnusedActorID())
         {
             _type = ActorType.Rope;
+            _commonProperties.depth = 0.1f;
             initializeControls(
                 _levelController.getWorldMouse() - new Vector2(1f, 0),
                 _levelController.getWorldMouse() + new Vector2(1f, 0));
@@ -107,11 +108,11 @@ namespace StasisEditor.Controllers.Actors
         public override void draw()
         {
             // Draw line
-            _levelController.view.drawLine(_pointASubController.position, _pointBSubController.position, Color.Tan);
+            _levelController.view.drawLine(_pointASubController.position, _pointBSubController.position, Color.Tan, _commonProperties.depth);
 
             // Draw points
-            _levelController.view.drawPoint(_pointASubController.position, Color.Yellow);
-            _levelController.view.drawPoint(_pointBSubController.position, Color.DarkGoldenrod);
+            _levelController.view.drawPoint(_pointASubController.position, Color.Yellow, _commonProperties.depth);
+            _levelController.view.drawPoint(_pointBSubController.position, Color.DarkGoldenrod, _commonProperties.depth);
         }
 
         // clone
