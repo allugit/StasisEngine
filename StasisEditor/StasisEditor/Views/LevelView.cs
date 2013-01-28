@@ -23,7 +23,6 @@ namespace StasisEditor.Views
         private Texture2D _circle;
         private bool _draw = true;
         private bool _keysEnabled = true;
-        private bool _mouseOverView;
 
         public bool active
         {
@@ -74,19 +73,19 @@ namespace StasisEditor.Views
         // Mouse leave
         void LevelView_MouseLeave(object sender, EventArgs e)
         {
-            _mouseOverView = false;
+            _controller.mouseOverView = false;
         }
 
         // Mouse enter
         void LevelView_MouseEnter(object sender, EventArgs e)
         {
-            _mouseOverView = true;
+            _controller.mouseOverView = true;
         }
 
         // Key up
         void Parent_KeyUp(object sender, KeyEventArgs e)
         {
-            if (_controller.level != null && _mouseOverView && _keysEnabled)
+            if (_controller.level != null && _controller.mouseOverView && _keysEnabled)
                 _controller.handleKeyUp(e);
         }
 
@@ -100,7 +99,7 @@ namespace StasisEditor.Views
         // Key down
         void Parent_KeyDown(object sender, KeyEventArgs e)
         {
-            if (_controller.level != null && _mouseOverView && _keysEnabled)
+            if (_controller.level != null && _controller.mouseOverView && _keysEnabled)
                 _controller.handleKeyDown(e);
         }
 

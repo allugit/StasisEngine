@@ -22,33 +22,18 @@ namespace StasisEditor.Controllers
         private System.Drawing.Point _mouse;
         private System.Drawing.Point _oldMouse;
         private Vector2 _screenCenter;
-        private bool _shift;
-        private bool _ctrl;
         private EditorActor _selectedActor;
         private bool[] _pressedKeys;
+        private bool _mouseOverView;
 
-        public System.Drawing.Point mouse
-        {
-            get { return _mouse; }
-            set { _oldMouse = _mouse; _mouse = value; } 
-        }
+        public System.Drawing.Point mouse { get { return _mouse; } set { _oldMouse = _mouse; _mouse = value; } }
         public EditorLevel level { get { return _level; } set { _level = value; } }
         public LevelView view { get { return _levelView; } }
         public Vector2 screenCenter { get { return _screenCenter; } set { _screenCenter = value; } }
-        public bool shift
-        {
-            get
-            {
-                return _pressedKeys[(int)Keys.Shift] || _pressedKeys[(int)Keys.ShiftKey] || _pressedKeys[(int)Keys.LShiftKey] || _pressedKeys[(int)Keys.RShiftKey];
-            }
-        }
-        public bool ctrl
-        {
-            get
-            {
-                return _pressedKeys[(int)Keys.Control] || _pressedKeys[(int)Keys.ControlKey] || _pressedKeys[(int)Keys.LControlKey] || _pressedKeys[(int)Keys.RControlKey];
-            }
-        }
+        public bool shift { get { return _pressedKeys[(int)Keys.Shift] || _pressedKeys[(int)Keys.ShiftKey] || _pressedKeys[(int)Keys.LShiftKey] || _pressedKeys[(int)Keys.RShiftKey]; } }
+        public bool ctrl { get { return _pressedKeys[(int)Keys.Control] || _pressedKeys[(int)Keys.ControlKey] || _pressedKeys[(int)Keys.LControlKey] || _pressedKeys[(int)Keys.RControlKey]; } }
+        public bool mouseOverView { get { return _mouseOverView; } set { _mouseOverView = value; } }
+
         public EditorActor selectedActor { get { return _selectedActor; } }
         public EditorController editorController { get { return _editorController; } }
 
