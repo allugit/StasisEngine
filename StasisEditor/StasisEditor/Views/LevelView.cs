@@ -6,7 +6,7 @@ using Microsoft.Xna.Framework.Content;
 using Microsoft.Xna.Framework.Graphics;
 using StasisCore;
 using StasisEditor.Controllers;
-using StasisEditor.Controllers.Actors;
+using StasisEditor.Models;
 using StasisEditor.Views.Controls;
 
 namespace StasisEditor.Views
@@ -107,21 +107,6 @@ namespace StasisEditor.Views
         {
             if (_controller.level != null && _mouseOverView && _keysEnabled)
             {
-                if (e.KeyCode == Keys.Shift || e.KeyCode == Keys.ShiftKey || e.KeyCode == Keys.LShiftKey || e.KeyCode == Keys.RShiftKey)
-                    _controller.shift = true;
-                else if (e.KeyCode == Keys.Control || e.KeyCode == Keys.ControlKey || e.KeyCode == Keys.LControlKey || e.KeyCode == Keys.RControlKey)
-                    _controller.ctrl = true;
-
-                // Pass input to all actors' global key handler
-                foreach (ActorController actorController in _controller.actorControllers)
-                    actorController.globalKeyDown(e.KeyCode);
-
-                // Pass input to selected sub actor controllers
-                foreach (ActorSubController subController in _controller.selectedSubControllers)
-                    subController.keyDown(e.KeyCode);
-
-                // Refresh actor properties
-                _controller.refreshActorProperties();
             }
         }
 
@@ -147,7 +132,9 @@ namespace StasisEditor.Views
                 drawMousePosition();
 
                 // Draw actor controllers
-                drawActorControllers();
+                List<EditorActor> actors = _controller.level.actors;
+                foreach (EditorActor actor in actors)
+                    actor.draw();
 
                 _spriteBatch.End();
             }
@@ -190,14 +177,6 @@ namespace StasisEditor.Views
                 Microsoft.Xna.Framework.Graphics.SpriteEffects.None,
                 0);
 
-        }
-
-        // drawActorControllers
-        private void drawActorControllers()
-        {
-            List<ActorController> actorControllers = _controller.actorControllers;
-            foreach (ActorController actorController in actorControllers)
-                actorController.draw();
         }
 
         // drawBox

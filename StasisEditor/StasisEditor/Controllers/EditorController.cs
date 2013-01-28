@@ -65,9 +65,9 @@ namespace StasisEditor.Controllers
         }
 
         // openActorProperties
-        public void openActorProperties(List<ActorProperties> properties)
+        public void openActorProperties(EditorActor actor)
         {
-            _editorView.openActorProperties(properties);
+            _editorView.openActorProperties(actor);
         }
 
         // closeActorProperties

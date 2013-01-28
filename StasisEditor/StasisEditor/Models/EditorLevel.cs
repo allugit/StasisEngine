@@ -5,7 +5,6 @@ using System.IO;
 using System.Xml.Linq;
 using Microsoft.Xna.Framework;
 using StasisEditor.Controllers;
-using StasisEditor.Controllers.Actors;
 using StasisCore.Resources;
 using StasisCore.Models;
 using StasisCore.Controllers;
@@ -15,17 +14,17 @@ namespace StasisEditor.Models
     public class EditorLevel : Level
     {
         private LevelController _levelController;
-        private List<ActorController> _actorControllers;
+        private List<EditorActor> _actors;
 
         [Browsable(false)]
-        public List<ActorController> actorControllers { get { return _actorControllers; } }
+        public List<EditorActor> actors { get { return _actors; } }
         public XElement data
         {
             get
             {
                 List<XElement> actorControllerData = new List<XElement>();
-                foreach (ActorController actorController in _actorControllers)
-                    actorControllerData.Add(actorController.data);
+                foreach (EditorActor actor in _actors)
+                    actorControllerData.Add(actor.data);
 
                 XElement d = new XElement("Level",
                     new XAttribute("name", _name),
@@ -43,14 +42,13 @@ namespace StasisEditor.Models
         public EditorLevel(LevelController levelController, string name) : base(name)
         {
             _levelController = levelController;
-            _actorControllers = new List<ActorController>();
+            _actors = new List<EditorActor>();
         }
 
         // Load from xml
         public EditorLevel(LevelController levelController, XElement data) : base(data)
         {
             _levelController = levelController;
-            _actorControllers = new List<ActorController>();
             List<XElement> secondPassData = new List<XElement>();
 
             // First pass -- load independent actors
@@ -59,11 +57,9 @@ namespace StasisEditor.Models
                 switch (actorData.Attribute("type").Value)
                 {
                     case "Box":
-                        _actorControllers.Add(new BoxActorController(_levelController, actorData));
                         break;
 
                     case "Circle":
-                        _actorControllers.Add(new CircleActorController(_levelController, actorData));
                         break;
 
                     case "Circuit":
@@ -71,31 +67,24 @@ namespace StasisEditor.Models
                         break;
 
                     case "Fluid":
-                        _actorControllers.Add(new FluidActorController(_levelController, actorData));
                         break;
 
                     case "Item":
-                        _actorControllers.Add(new ItemActorController(_levelController, actorData));
                         break;
 
                     case "MovingPlatform":
-                        _actorControllers.Add(new PlatformActorController(_levelController, actorData));
                         break;
 
                     case "PlayerSpawn":
-                        _actorControllers.Add(new PlayerSpawnActorController(_levelController, actorData));
                         break;
 
                     case "Rope":
-                        _actorControllers.Add(new RopeActorController(_levelController, actorData));
                         break;
 
                     case "Terrain":
-                        _actorControllers.Add(new TerrainActorController(_levelController, actorData));
                         break;
 
                     case "Tree":
-                        _actorControllers.Add(new TreeActorController(_levelController, actorData));
                         break;
                 }
             }
@@ -107,21 +96,32 @@ namespace StasisEditor.Models
                 {
                     case "Circuit":
                         EditorCircuit circuit = _levelController.editorController.circuitController.getCircuit(actorData.Attribute("circuit_uid").Value);
-                        _actorControllers.Add(new CircuitActorController(this, circuit, actorData));
                         break;
                 }
             }
         }
 
-        // Get actor controller by id
-        public ActorController getActorController(int id)
+        // Get actor by id
+        public EditorActor getActor(int id)
         {
-            foreach (ActorController actorController in _actorControllers)
+            foreach (EditorActor actor in _actors)
             {
-                if (actorController.id == id)
-                    return actorController;
+                if (actor.id == id)
+                    return actor;
             }
             return null;
+        }
+
+        // Add an actor
+        public void addActor(EditorActor actor)
+        {
+            _actors.Add(actor);
+        }
+
+        // Remove an actor
+        public void removeActor(EditorActor actor)
+        {
+            _actors.Remove(actor);
         }
 
         // Save

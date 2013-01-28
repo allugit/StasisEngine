@@ -78,34 +78,13 @@
     <Reference Include="System.Net" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Controllers\Actors\ActorController.cs" />
-    <Compile Include="Controllers\Actors\CircuitActorController.cs" />
-    <Compile Include="Controllers\Actors\FluidActorController.cs" />
-    <Compile Include="Controllers\Actors\Input\CircuitConnectionSubController.cs" />
-    <Compile Include="Controllers\Actors\Input\ICircleSubControllable.cs" />
-    <Compile Include="Controllers\Actors\Input\ILinkedPointSubControllable.cs" />
-    <Compile Include="Controllers\Actors\Input\ActorSubController.cs" />
-    <Compile Include="Controllers\Actors\BoxActorController.cs" />
-    <Compile Include="Controllers\Actors\Input\BoxSubController.cs" />
-    <Compile Include="Controllers\Actors\Input\IBoxSubControllable.cs" />
-    <Compile Include="Controllers\Actors\Input\CircleSubController.cs" />
-    <Compile Include="Controllers\Actors\Input\LinkedPointSubController.cs" />
-    <Compile Include="Controllers\Actors\Input\PointSubController.cs" />
-    <Compile Include="Controllers\Actors\Input\IPointSubControllable.cs" />
-    <Compile Include="Controllers\Actors\Input\ISubControllable.cs" />
-    <Compile Include="Controllers\Actors\ItemActorController.cs" />
-    <Compile Include="Controllers\Actors\PlatformActorController.cs" />
-    <Compile Include="Controllers\Actors\PlayerSpawnActorController.cs" />
-    <Compile Include="Controllers\Actors\RopeActorController.cs" />
-    <Compile Include="Controllers\Actors\TerrainActorController.cs" />
-    <Compile Include="Controllers\Actors\CircleActorController.cs" />
-    <Compile Include="Controllers\Actors\TreeActorController.cs" />
     <Compile Include="Controllers\BlueprintController.cs" />
     <Compile Include="Controllers\CircuitController.cs" />
     <Compile Include="Controllers\Controller.cs" />
     <Compile Include="Controllers\EditorController.cs" />
     <Compile Include="Controllers\LevelController.cs" />
     <Compile Include="Controllers\MaterialController.cs" />
+    <Compile Include="Models\EditorActor.cs" />
     <Compile Include="Models\EditorMaterialEdgeScatterLayer.cs" />
     <Compile Include="Models\EditorMaterialGroupLayer.cs" />
     <Compile Include="GraphicsDeviceService.cs" />
@@ -114,16 +93,6 @@
     <Compile Include="Models\EditorMaterialRadialScatterLayer.cs" />
     <Compile Include="Models\EditorMaterialTextureLayer.cs" />
     <Compile Include="Models\EditorMaterialUniformScatterLayer.cs" />
-    <Compile Include="Models\Properties\ActorProperties.cs" />
-    <Compile Include="Models\Properties\BodyProperties.cs" />
-    <Compile Include="Models\Properties\BoxProperties.cs" />
-    <Compile Include="Models\Properties\CircleProperties.cs" />
-    <Compile Include="Models\Properties\CircuitConnectionProperties.cs" />
-    <Compile Include="Models\Properties\CommonActorProperties.cs" />
-    <Compile Include="Models\Properties\FluidProperties.cs" />
-    <Compile Include="Models\Properties\ItemProperties.cs" />
-    <Compile Include="Models\Properties\GeneralPlantProperties.cs" />
-    <Compile Include="Models\Properties\TreeProperties.cs" />
     <Compile Include="Models\EditorBlueprint.cs" />
     <Compile Include="Models\EditorBlueprintScrap.cs" />
     <Compile Include="Models\EditorCircuit.cs" />
@@ -141,12 +110,6 @@
     </Compile>
     <Compile Include="Views\CircuitsView.Designer.cs">
       <DependentUpon>CircuitsView.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Views\Controls\ActorPropertiesView.cs">
-      <SubType>UserControl</SubType>
-    </Compile>
-    <Compile Include="Views\Controls\ActorPropertiesView.Designer.cs">
-      <DependentUpon>ActorPropertiesView.cs</DependentUpon>
     </Compile>
     <Compile Include="Views\Controls\ActorToolbar.cs">
       <SubType>UserControl</SubType>
@@ -329,9 +292,6 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Views\CircuitsView.resx">
       <DependentUpon>CircuitsView.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Views\Controls\ActorPropertiesView.resx">
-      <DependentUpon>ActorPropertiesView.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Views\Controls\ActorToolbar.resx">
       <DependentUpon>ActorToolbar.cs</DependentUpon>

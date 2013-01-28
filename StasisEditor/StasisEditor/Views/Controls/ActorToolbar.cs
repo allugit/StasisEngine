@@ -7,7 +7,6 @@ using System.Linq;
 using System.Text;
 using System.Windows.Forms;
 using StasisEditor.Controllers;
-using StasisEditor.Controllers.Actors;
 using StasisCore.Resources;
 
 namespace StasisEditor.Views.Controls
@@ -32,7 +31,7 @@ namespace StasisEditor.Views.Controls
         // Toolbar item clicked
         private void anchorToolStrip_ItemClicked(object sender, ToolStripItemClickedEventArgs e)
         {
-            _levelController.createActorControllerFromToolbar(e.ClickedItem.Name);
+            _levelController.createActorFromToolbar(e.ClickedItem.Name);
         }
     }
 }

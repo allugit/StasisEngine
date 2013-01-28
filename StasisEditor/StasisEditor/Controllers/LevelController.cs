@@ -4,7 +4,6 @@ using System.Collections.Generic;
 using System.Xml.Linq;
 using System.IO;
 using Microsoft.Xna.Framework;
-using StasisEditor.Controllers.Actors;
 using StasisEditor.Views;
 using StasisEditor.Views.Controls;
 using StasisEditor.Models;
@@ -18,21 +17,13 @@ namespace StasisEditor.Controllers
 
         private EditorController _editorController;
         private LevelView _levelView;
-
-        private List<ActorSubController> _selectedSubControllers;
-        private List<ActorSubController> _subControllerSelectQueue;
-        private List<ActorSubController> _subControllerDeselectQueue;
-
-        private List<ActorController> _actorControllersAddQueue;
-        private List<ActorController> _actorControllersRemoveQueue;
-
         private EditorLevel _level;
-
         private System.Drawing.Point _mouse;
         private System.Drawing.Point _oldMouse;
         private Vector2 _screenCenter;
         private bool _shift;
         private bool _ctrl;
+        private EditorActor _selectedActor;
 
         public System.Drawing.Point mouse
         {
@@ -41,11 +32,10 @@ namespace StasisEditor.Controllers
         }
         public EditorLevel level { get { return _level; } set { _level = value; } }
         public LevelView view { get { return _levelView; } }
-        public List<ActorSubController> selectedSubControllers { get { return _selectedSubControllers; } }
         public Vector2 screenCenter { get { return _screenCenter; } set { _screenCenter = value; } }
         public bool shift { get { return _shift; } set { _shift = value; } }
         public bool ctrl { get { return _ctrl; } set { _ctrl = value; } }
-        public List<ActorController> actorControllers { get { return _level.actorControllers; } }
+        public EditorActor selectedActor { get { return _selectedActor; } }
         public EditorController editorController { get { return _editorController; } }
 
         public LevelController(EditorController editorController, LevelView levelView)
@@ -53,15 +43,6 @@ namespace StasisEditor.Controllers
             _editorController = editorController;
             _levelView = levelView;
             _levelView.setController(this);
-
-            _selectedSubControllers = new List<ActorSubController>();
-            _subControllerSelectQueue = new List<ActorSubController>();
-            _subControllerDeselectQueue = new List<ActorSubController>();
-
-            _actorControllersAddQueue = new List<ActorController>();
-            _actorControllersRemoveQueue = new List<ActorController>();
-
-            System.Windows.Forms.Application.Idle += delegate { processActorControllerQueue(); };
         }
 
         public float getScale() { return _editorController.scale; }
@@ -70,9 +51,9 @@ namespace StasisEditor.Controllers
         public Vector2 getOldWorldMouse() { return new Vector2(_oldMouse.X, _oldMouse.Y) / _editorController.scale - getWorldOffset(); }
 
         // Get actor by id
-        public ActorController getActorController(int id)
+        public EditorActor getActor(int id)
         {
-            return _level.getActorController(id);
+            return _level.getActor(id);
         }
 
         // Get unused actor id
@@ -81,9 +62,9 @@ namespace StasisEditor.Controllers
             // Method to test if an id is being used
             Func<int, bool> isIdUsed = (id) =>
                 {
-                    foreach (ActorController actorController in _level.actorControllers)
+                    foreach (EditorActor actor in _level.actors)
                     {
-                        if (actorController.id == id)
+                        if (actor.id == id)
                         {
                             id++;
                             return true;
@@ -98,42 +79,6 @@ namespace StasisEditor.Controllers
                 current++;
 
             return current;
-        }
-
-        // Process actor controller queues
-        public void processActorControllerQueue()
-        {
-            // Selection queue
-            while (_subControllerSelectQueue.Count > 0)
-            {
-                int index = _subControllerSelectQueue.Count - 1;
-                _selectedSubControllers.Add(_subControllerSelectQueue[index]);
-                _subControllerSelectQueue.Remove(_subControllerSelectQueue[index]);
-            }
-
-            // Deselection queue
-            while (_subControllerDeselectQueue.Count > 0)
-            {
-                int index = _subControllerDeselectQueue.Count - 1;
-                _selectedSubControllers.Remove(_subControllerDeselectQueue[index]);
-                _subControllerDeselectQueue.Remove(_subControllerDeselectQueue[index]);
-            }
-
-            // Actor controller add queue
-            while (_actorControllersAddQueue.Count > 0)
-            {
-                int index = _actorControllersAddQueue.Count - 1;
-                actorControllers.Add(_actorControllersAddQueue[index]);
-                _actorControllersAddQueue.Remove(_actorControllersAddQueue[index]);
-            }
-
-            // Actor controlle remove queue
-            while (_actorControllersRemoveQueue.Count > 0)
-            {
-                int index = _actorControllersRemoveQueue.Count - 1;
-                actorControllers.Remove(_actorControllersRemoveQueue[index]);
-                _actorControllersRemoveQueue.Remove(_actorControllersRemoveQueue[index]);
-            }
         }
 
         // createNewLevel
@@ -164,45 +109,39 @@ namespace StasisEditor.Controllers
             _level = null;
         }
 
-        // createActorControllerFromToolbar
-        public void createActorControllerFromToolbar(string buttonName)
+        // Create actor from toolbar
+        public void createActorFromToolbar(string buttonName)
         {
             // Create actor controller based on button name
-            ActorController actorController = null;
+            EditorActor actor = null;
             switch (buttonName)
             {
                 case "boxButton":
-                    actorController = new BoxActorController(this);
                     break;
 
                 case "circleButton":
-                    actorController = new CircleActorController(this);
                     break;
 
                 case "movingPlatformButton":
-                    actorController = new PlatformActorController(this);
                     break;
 
                 case "terrainButton":
-                    actorController = new TerrainActorController(this);
                     break;
 
                 case "ropeButton":
-                    actorController = new RopeActorController(this);
                     break;
 
                 case "fluidButton":
-                    actorController = new FluidActorController(this);
                     break;
 
                 case "playerSpawnButton":
                     // Remove existing player spawns before adding a new one
-                    foreach (ActorController controller in actorControllers)
+                    foreach (EditorActor existingActor in _level.actors)
                     {
-                        if (controller.type == ActorType.PlayerSpawn)
-                            removeActorController(controller);
+                        if (existingActor.type == ActorType.PlayerSpawn)
+                            _level.removeActor(existingActor);
                     }
-                    actorController = new PlayerSpawnActorController(this);
+                    //actor = new PlayerSpawnActorController(this);
                     break;
 
                 case "plantsButton":
@@ -217,7 +156,6 @@ namespace StasisEditor.Controllers
                         switch (selectedPlantType)
                         {
                             case PlantType.Tree:
-                                actorController = new TreeActorController(this);
                                 break;
                         }
                     }
@@ -227,7 +165,6 @@ namespace StasisEditor.Controllers
                     SelectItem selectItemForm = new SelectItem(_editorController);
                     if (selectItemForm.ShowDialog() == System.Windows.Forms.DialogResult.OK)
                     {
-                        actorController = new ItemActorController(this, selectItemForm.uid);
                     }
                     break;
 
@@ -235,68 +172,40 @@ namespace StasisEditor.Controllers
                     SelectCircuit selectCircuitForm = new SelectCircuit(_editorController.circuitController);
                     if (selectCircuitForm.ShowDialog() == System.Windows.Forms.DialogResult.OK)
                     {
-                        actorController = new CircuitActorController(_level, selectCircuitForm.circuit);
                     }
                     break;
             }
 
-            if (actorController != null)
+            if (actor != null)
             {
-                // Show level
+                // Show level tab
                 _editorController.view.selectLevelTab();
 
                 // Add actor controller to list
-                addActorController(actorController);
+                _level.addActor(actor);
 
                 // Select all sub controllers
-                actorController.selectAllSubControllers();
+                selectActor(actor);
             }
         }
 
-        // clearSubControllers
-        public void clearSubControllers()
-        {
-            _selectedSubControllers.Clear();
-        }
-
-        // selectSubController
-        public void selectSubController(ActorSubController subController)
-        {
-            // actual selection is handled in update() in the 'XNA Methods' region
-            _subControllerSelectQueue.Add(subController);
-            subController.selected = true;
-        }
-
-        // deselectSubController
-        public void deselectSubController(ActorSubController subController)
-        {
-            // actual deselection is handled in update() in the 'XNA Methods' region
-            _subControllerDeselectQueue.Add(subController);
-            subController.selected = false;
-        }
-
-        // addActorController
-        public void addActorController(ActorController actorController)
-        {
-            _actorControllersAddQueue.Add(actorController);
-        }
-
-        // removeActorController
-        public void removeActorController(ActorController actorController)
-        {
-            _actorControllersRemoveQueue.Add(actorController);
-        }
-
         // openActorProperties
-        public void openActorProperties(List<ActorProperties> properties)
+        public void openActorProperties(EditorActor actor)
         {
-            _editorController.openActorProperties(properties);
+            _editorController.openActorProperties(actor);
         }
 
         // closeActorProperties
         public void closeActorProperties()
         {
             _editorController.closeActorProperties();
+        }
+
+        // Select actor
+        public void selectActor(EditorActor actor)
+        {
+            Debug.Assert(_selectedActor == null);
+            _selectedActor = actor;
         }
 
         // refreshActorProperties
@@ -315,10 +224,11 @@ namespace StasisEditor.Controllers
         // Update circuit actor connections
         public void updateCircuitActorConnections()
         {
-            foreach (ActorController actorController in actorControllers)
+            foreach (EditorActor actor in _level.actors)
             {
-                if (actorController.type == ActorType.Circuit)
-                    (actorController as CircuitActorController).updateConnections();
+                if (actor.type == ActorType.Circuit)
+                    throw new NotImplementedException();
+                    //(actor as CircuitActorController).updateConnections();
             }
         }
 
@@ -336,11 +246,7 @@ namespace StasisEditor.Controllers
             }
             else
             {
-                // Move selected sub controllers
-                foreach (ActorSubController subController in _selectedSubControllers)
-                {
-                    subController.handleMouseMove(worldDelta);
-                }
+                // Move selected actor
             }
         }
 
@@ -349,20 +255,6 @@ namespace StasisEditor.Controllers
         {
             if (_level != null)
             {
-                // Handle mouse down for selected sub controllers
-                foreach (ActorSubController subController in _selectedSubControllers)
-                    subController.handleMouseDown();
-
-                // Try to select a sub controller
-                if (_selectedSubControllers.Count == 0)
-                {
-                    foreach (ActorController actorController in actorControllers)
-                    {
-                        // If actor controller's mouse handler returns true, mouse input has been handled and this loop can be stopped
-                        if (actorController.handleMouseDown(e))
-                            return;
-                    }
-                }
             }
         }
     }
