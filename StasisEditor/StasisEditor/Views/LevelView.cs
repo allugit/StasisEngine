@@ -87,12 +87,7 @@ namespace StasisEditor.Views
         void Parent_KeyUp(object sender, KeyEventArgs e)
         {
             if (_controller.level != null && _mouseOverView && _keysEnabled)
-            {
-                if (e.KeyCode == Keys.Shift || e.KeyCode == Keys.ShiftKey || e.KeyCode == Keys.LShiftKey || e.KeyCode == Keys.RShiftKey)
-                    _controller.shift = false;
-                else if (e.KeyCode == Keys.Control || e.KeyCode == Keys.ControlKey || e.KeyCode == Keys.LControlKey || e.KeyCode == Keys.RControlKey)
-                    _controller.ctrl = false;
-            }
+                _controller.handleKeyUp(e);
         }
 
         // Mouse down
@@ -106,8 +101,7 @@ namespace StasisEditor.Views
         void Parent_KeyDown(object sender, KeyEventArgs e)
         {
             if (_controller.level != null && _mouseOverView && _keysEnabled)
-            {
-            }
+                _controller.handleKeyDown(e);
         }
 
         // Mouse move

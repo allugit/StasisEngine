@@ -2,6 +2,7 @@
 using System.Diagnostics;
 using System.Collections.Generic;
 using System.Xml.Linq;
+using System.Windows.Forms;
 using System.IO;
 using Microsoft.Xna.Framework;
 using StasisEditor.Views;
@@ -24,6 +25,7 @@ namespace StasisEditor.Controllers
         private bool _shift;
         private bool _ctrl;
         private EditorActor _selectedActor;
+        private bool[] _pressedKeys;
 
         public System.Drawing.Point mouse
         {
@@ -33,8 +35,20 @@ namespace StasisEditor.Controllers
         public EditorLevel level { get { return _level; } set { _level = value; } }
         public LevelView view { get { return _levelView; } }
         public Vector2 screenCenter { get { return _screenCenter; } set { _screenCenter = value; } }
-        public bool shift { get { return _shift; } set { _shift = value; } }
-        public bool ctrl { get { return _ctrl; } set { _ctrl = value; } }
+        public bool shift
+        {
+            get
+            {
+                return _pressedKeys[(int)Keys.Shift] || _pressedKeys[(int)Keys.ShiftKey] || _pressedKeys[(int)Keys.LShiftKey] || _pressedKeys[(int)Keys.RShiftKey];
+            }
+        }
+        public bool ctrl
+        {
+            get
+            {
+                return _pressedKeys[(int)Keys.Control] || _pressedKeys[(int)Keys.ControlKey] || _pressedKeys[(int)Keys.LControlKey] || _pressedKeys[(int)Keys.RControlKey];
+            }
+        }
         public EditorActor selectedActor { get { return _selectedActor; } }
         public EditorController editorController { get { return _editorController; } }
 
@@ -43,6 +57,7 @@ namespace StasisEditor.Controllers
             _editorController = editorController;
             _levelView = levelView;
             _levelView.setController(this);
+            _pressedKeys = new bool[262144 + 1];
         }
 
         public float getScale() { return _editorController.scale; }
@@ -95,6 +110,18 @@ namespace StasisEditor.Controllers
                 XElement data = XElement.Load(fileStream);
                 _level = new EditorLevel(this, data);
             }
+        }
+
+        // Handle key up
+        public void handleKeyUp(KeyEventArgs e)
+        {
+            _pressedKeys[(int)e.KeyCode] = false;
+        }
+
+        // Handle key down
+        public void handleKeyDown(KeyEventArgs e)
+        {
+            _pressedKeys[(int)e.KeyCode] = true;
         }
 
         // saveLevel
