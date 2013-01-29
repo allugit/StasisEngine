@@ -55,7 +55,8 @@ namespace StasisEditor.Models
 
             if (selected)
             {
-                _position += worldDelta;
+                if (!_level.controller.ctrl)
+                    _position += worldDelta;
 
                 if (_level.controller.isKeyHeld(Keys.A) || _level.controller.isKeyHeld(Keys.W))
                     _radius = Math.Max(1f, _radius + radiusIncrement);

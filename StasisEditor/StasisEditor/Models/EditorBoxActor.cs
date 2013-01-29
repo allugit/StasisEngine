@@ -71,7 +71,8 @@ namespace StasisEditor.Models
 
             if (selected)
             {
-                _position += deltaWorldMouse;
+                if (!_level.controller.ctrl)
+                    _position += deltaWorldMouse;
 
                 if (_level.controller.isKeyHeld(Keys.Q))
                     rotate(_level.controller.worldMouse, -angleIncrement);
