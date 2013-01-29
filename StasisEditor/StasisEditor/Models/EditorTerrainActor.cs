@@ -11,16 +11,20 @@ namespace StasisEditor.Models
 
     public class EditorTerrainActor : EditorActor
     {
-        private List<Vector2> _points;
-        private List<int> _selectedIndices;
+        private PointListNode _headPoint;
+        private List<PointListNode> _selectedPoints;
 
         public override XElement data
         {
             get
             {
                 XElement d = base.data;
-                foreach (Vector2 point in _points)
-                    d.Add(new XElement("Point", point));
+                PointListNode current = _headPoint;
+                while (current != null)
+                {
+                    d.Add(new XElement("Point", current.position));
+                    current = current.next;
+                }
                 return d;
             }
         }
@@ -28,31 +32,32 @@ namespace StasisEditor.Models
         public EditorTerrainActor(EditorLevel level)
             : base(level, ActorType.Terrain, level.controller.getUnusedActorID())
         {
-            _selectedIndices = new List<int>();
-            _points = new List<Vector2>();
+            _selectedPoints = new List<PointListNode>();
             _layerDepth = 0.1f;
 
             Vector2 worldMouse = level.controller.worldMouse;
-            _points.Add(worldMouse + new Vector2(0f, -0.5f));
-            _points.Add(worldMouse + new Vector2(-0.5f, 0.5f));
-            _points.Add(worldMouse + new Vector2(0.5f, 0.5f));
-            _selectedIndices.Add(0);
-            _selectedIndices.Add(1);
-            _selectedIndices.Add(2);
+            _headPoint = new PointListNode(worldMouse + new Vector2(0f, -0.5f));
+            _selectedPoints.Add(_headPoint);
+            _selectedPoints.Add(_headPoint.tail.insertAfter(worldMouse + new Vector2(-0.5f, 0.5f)));
+            _selectedPoints.Add(_headPoint.tail.insertAfter(worldMouse + new Vector2(0.5f, 0.5f)));
+
         }
 
         public EditorTerrainActor(EditorLevel level, XElement data)
             : base(level, data)
         {
-            _points = new List<Vector2>();
             foreach (XElement pointData in data.Elements("Point"))
-                _points.Add(Loader.loadVector2(pointData, Vector2.Zero));
+            {
+                if (_headPoint == null)
+                    _headPoint = new PointListNode(Loader.loadVector2(pointData, Vector2.Zero));
+                else
+                    _headPoint.tail.insertAfter(Loader.loadVector2(pointData, Vector2.Zero));
+            }
         }
 
         public override void deselect()
         {
-            _selectedIndices.Clear();
-
+            _selectedPoints.Clear();
             base.deselect();
         }
 
@@ -61,28 +66,30 @@ namespace StasisEditor.Models
             Vector2 worldMouse = _level.controller.worldMouse;
 
             // Test points
-            for (int i = 0; i < _points.Count; i++)
+            PointListNode current = _headPoint;
+            while (current != null)
             {
-                if (_level.controller.hitTestPoint(worldMouse, _points[i]))
+                if (_level.controller.hitTestPoint(worldMouse, current.position))
                 {
-                    _selectedIndices.Add(i);
+                    _selectedPoints.Add(current);
                     return true;
                 }
+                current = current.next;
             }
 
             // Test line segments
-            for (int i = 0; i < _points.Count; i++)
+            current = _headPoint;
+            while (current != null)
             {
-                int a = i;
-                int b = i == _points.Count - 1 ? 0 : i + 1;
-                Vector2 pointA = _points[a];
-                Vector2 pointB = _points[b];
-                if (_level.controller.hitTestLine(worldMouse, pointA, pointB))
+                PointListNode next = current.next ?? _headPoint;
+                if (_level.controller.hitTestLine(worldMouse, current.position, next.position))
                 {
-                    _selectedIndices.Add(a);
-                    _selectedIndices.Add(b);
+                    _selectedPoints.Add(current);
+                    _selectedPoints.Add(next);
                     return true;
                 }
+
+                current = current.next;
             }
 
             return false;
@@ -95,8 +102,8 @@ namespace StasisEditor.Models
 
             if (selected)
             {
-                foreach (int i in _selectedIndices)
-                    _points[i] += worldDelta;
+                foreach (PointListNode node in _selectedPoints)
+                    node.position += worldDelta;
 
                 if (_level.controller.isKeyPressed(Keys.Escape))
                     deselect();
@@ -107,18 +114,22 @@ namespace StasisEditor.Models
 
         public override void draw()
         {
-            Color lineColor = _points.Count > 2 ? Color.Orange : Color.Red;
+            int count = _headPoint.listCount;
+            Color lineColor = count > 2 ? Color.Orange : Color.Red;
 
-            for (int i = 0; i < _points.Count - 1; i++)
+            PointListNode current = _headPoint;
+            while (current != null)
             {
-                Vector2 pointA = _points[i];
-                Vector2 pointB = _points[i + 1];
-                _level.controller.view.drawLine(pointA, pointB, lineColor, _layerDepth);
+                if (current.next != null)
+                    _level.controller.view.drawLine(current.position, current.next.position, lineColor, _layerDepth);
+                _level.controller.view.drawPoint(current.position, Color.Yellow, _layerDepth);
+                current = current.next;
             }
-            _level.controller.view.drawLine(_points[_points.Count - 1], _points[0], Color.Purple, _layerDepth);
 
-            foreach (Vector2 point in _points)
-                _level.controller.view.drawPoint(point, Color.Yellow, _layerDepth);
+            if (count > 2)
+            {
+                _level.controller.view.drawLine(_headPoint.position, _headPoint.tail.position, Color.Purple, _layerDepth);
+            }
         }
     }
 }
