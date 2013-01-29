@@ -141,7 +141,7 @@ namespace StasisEditor.Views
             int screenWidth = Width;
             int screenHeight = Height;
             Vector2 worldOffset = _controller.worldOffset;
-            float scale = _controller.getScale();
+            float scale = _controller.scale;
             Microsoft.Xna.Framework.Rectangle destRect = new Microsoft.Xna.Framework.Rectangle(0, 0, (int)(screenWidth + scale), (int)(screenHeight + scale));
             Vector2 gridOffset = new Vector2((worldOffset.X * scale) % scale, (worldOffset.Y * scale) % scale);
             Microsoft.Xna.Framework.Color color = new Microsoft.Xna.Framework.Color(new Vector3(0.2f, 0.2f, 0.2f));
@@ -158,7 +158,7 @@ namespace StasisEditor.Views
         // drawMousePosition
         private void drawMousePosition()
         {
-            float scale = _controller.getScale();
+            float scale = _controller.scale;
             Vector2 worldOffset = _controller.worldOffset;
             Vector2 worldMouse = _controller.worldMouse;
 
@@ -176,7 +176,7 @@ namespace StasisEditor.Views
         // drawBox
         public void drawBox(Vector2 position, float halfWidth, float halfHeight, float angle, Color color, float layerDepth)
         {
-            float scale = _controller.getScale();
+            float scale = _controller.scale;
             Rectangle rectangle = new Rectangle(0, 0, (int)(halfWidth * 2 * scale), (int)(halfHeight * 2 * scale));
             _spriteBatch.Draw(_pixel, (position + _controller.worldOffset) * scale, rectangle, color, angle, new Vector2(halfWidth, halfHeight) * scale, 1, SpriteEffects.None, layerDepth);
         }
@@ -184,7 +184,7 @@ namespace StasisEditor.Views
         // drawLine
         public void drawLine(Vector2 pointA, Vector2 pointB, Color color, float layerDepth)
         {
-            float scale = _controller.getScale();
+            float scale = _controller.scale;
             Vector2 relative = pointB - pointA;
             float length = relative.Length();
             float angle = (float)Math.Atan2(relative.Y, relative.X);
@@ -195,14 +195,14 @@ namespace StasisEditor.Views
         // drawPoint
         public void drawPoint(Vector2 position, Color color, float layerDepth)
         {
-            drawCircle(position, 4f / _controller.getScale(), color, layerDepth);
+            drawCircle(position, 4f / _controller.scale, color, layerDepth);
         }
 
         // drawCircle
         public void drawCircle(Vector2 position, float radius, Color color, float layerDepth)
         {
-            float circleScale = radius / (((float)_circle.Width / 2) / _controller.getScale());
-            _spriteBatch.Draw(_circle, (position + _controller.worldOffset) * _controller.getScale(), _circle.Bounds, color, 0, new Vector2(_circle.Width, _circle.Height) / 2, circleScale, SpriteEffects.None, layerDepth);
+            float circleScale = radius / (((float)_circle.Width / 2) / _controller.scale);
+            _spriteBatch.Draw(_circle, (position + _controller.worldOffset) * _controller.scale, _circle.Bounds, color, 0, new Vector2(_circle.Width, _circle.Height) / 2, circleScale, SpriteEffects.None, layerDepth);
         }
 
         // drawIcon
@@ -227,7 +227,7 @@ namespace StasisEditor.Views
 
             Rectangle rect = texture == _pixel ? new Rectangle(0, 0, 24, 24) : texture.Bounds;
 
-            _spriteBatch.Draw(texture, (position + _controller.worldOffset) * _controller.getScale(), rect, Color.White, 0, new Vector2(rect.Width, rect.Height) / 2, 1f, SpriteEffects.None, layerDepth);
+            _spriteBatch.Draw(texture, (position + _controller.worldOffset) * _controller.scale, rect, Color.White, 0, new Vector2(rect.Width, rect.Height) / 2, 1f, SpriteEffects.None, layerDepth);
         }
     }
 }

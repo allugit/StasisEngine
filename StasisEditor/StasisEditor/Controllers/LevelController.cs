@@ -24,16 +24,21 @@ namespace StasisEditor.Controllers
         private System.Drawing.Point _oldMouse;
         private Vector2 _screenCenter;
         private EditorActor _selectedActor;
-        private bool[] _pressedKeys;
+        private bool[] _keys;
+        private bool[] _oldKeys;
         private bool _mouseOverView;
 
         public System.Drawing.Point mouse { get { return _mouse; } set { _oldMouse = _mouse; _mouse = value; } }
         public EditorLevel level { get { return _level; } set { _level = value; } }
         public LevelView view { get { return _levelView; } }
         public Vector2 screenCenter { get { return _screenCenter; } set { _screenCenter = value; } }
-        public bool shift { get { return _pressedKeys[(int)Keys.Shift] || _pressedKeys[(int)Keys.ShiftKey] || _pressedKeys[(int)Keys.LShiftKey] || _pressedKeys[(int)Keys.RShiftKey]; } }
-        public bool ctrl { get { return _pressedKeys[(int)Keys.Control] || _pressedKeys[(int)Keys.ControlKey] || _pressedKeys[(int)Keys.LControlKey] || _pressedKeys[(int)Keys.RControlKey]; } }
+        public bool shift { get { return _keys[(int)Keys.Shift] || _keys[(int)Keys.ShiftKey] || _keys[(int)Keys.LShiftKey] || _keys[(int)Keys.RShiftKey]; } }
+        public bool ctrl { get { return _keys[(int)Keys.Control] || _keys[(int)Keys.ControlKey] || _keys[(int)Keys.LControlKey] || _keys[(int)Keys.RControlKey]; } }
         public bool mouseOverView { get { return _mouseOverView; } set { _mouseOverView = value; } }
+        public Vector2 worldOffset { get { return _screenCenter + (new Vector2(_levelView.Width, _levelView.Height) / 2) / _editorController.scale; } }
+        public Vector2 worldMouse { get { return new Vector2(_mouse.X, _mouse.Y) / _editorController.scale - worldOffset; } }
+        public Vector2 oldWorldMouse { get { return new Vector2(_oldMouse.X, _oldMouse.Y) / _editorController.scale - worldOffset; } }
+        public float scale { get { return _editorController.scale; } }
 
         public EditorActor selectedActor { get { return _selectedActor; } }
         public EditorController editorController { get { return _editorController; } }
@@ -43,15 +48,23 @@ namespace StasisEditor.Controllers
             _editorController = editorController;
             _levelView = levelView;
             _levelView.setController(this);
-            _pressedKeys = new bool[262144 + 1];
+            _keys = new bool[262144 + 1];
+            _oldKeys = new bool[262144 + 1];
             Application.Idle += new EventHandler(update);
             Application.Idle += new EventHandler(draw);
         }
 
-        public float getScale() { return _editorController.scale; }
-        public Vector2 worldOffset { get { return _screenCenter + (new Vector2(_levelView.Width, _levelView.Height) / 2) / _editorController.scale; } }
-        public Vector2 worldMouse { get { return new Vector2(_mouse.X, _mouse.Y) / _editorController.scale - worldOffset; } }
-        public Vector2 oldWorldMouse { get { return new Vector2(_oldMouse.X, _oldMouse.Y) / _editorController.scale - worldOffset; } }
+        // Is key pressed
+        public bool isKeyPressed(Keys key)
+        {
+            return _keys[(int)key] && !_oldKeys[(int)key];
+        }
+
+        // Is key held
+        public bool isKeyHeld(Keys key)
+        {
+            return _keys[(int)key];
+        }
 
         // Get actor by id
         public EditorActor getActor(int id)
@@ -103,13 +116,17 @@ namespace StasisEditor.Controllers
         // Handle key up
         public void handleKeyUp(KeyEventArgs e)
         {
-            _pressedKeys[(int)e.KeyCode] = false;
+            int k = (int)e.KeyCode;
+            _oldKeys[k] = _keys[k];
+            _keys[k] = false;
         }
 
         // Handle key down
         public void handleKeyDown(KeyEventArgs e)
         {
-            _pressedKeys[(int)e.KeyCode] = true;
+            int k = (int)e.KeyCode;
+            _oldKeys[k] = _keys[k];
+            _keys[k] = true;
         }
 
         // saveLevel
@@ -224,6 +241,12 @@ namespace StasisEditor.Controllers
             _selectedActor = actor;
         }
 
+        // Deselect actor
+        public void deselectActor()
+        {
+            _selectedActor = null;
+        }
+
         // refreshActorProperties
         public void refreshActorProperties()
         {
@@ -258,7 +281,55 @@ namespace StasisEditor.Controllers
         {
             if (_level != null)
             {
+                if (e.Button == MouseButtons.Left)
+                {
+                    if (_selectedActor == null)
+                    {
+                        // Try to select an actor
+                        foreach (EditorActor actor in _level.actors)
+                        {
+                            if (actor.hitTest())
+                            {
+                                actor.handleMouseDown();
+                                break;
+                            }
+                        }
+                    }
+                    else
+                    {
+                        // Let selected actor handle mouse down
+                        _selectedActor.handleMouseDown();
+                    }
+                }
             }
+        }
+
+        // Box hit test
+        public bool hitTestBox(Vector2 testPoint, Vector2 boxPosition, float halfWidth, float halfHeight, float angle)
+        {
+            // Get the mouse position relative to the box's center
+            Vector2 relativePosition = boxPosition - worldMouse;
+
+            // Rotate the relative mouse position by the negative angle of the box
+            Vector2 transformedRelativePosition = Vector2.Transform(relativePosition, Matrix.CreateRotationZ(-angle));
+
+            // Get the local, cartiasian-aligned bounding-box
+            Vector2 topLeft = -(new Vector2(halfWidth, halfHeight));
+            Vector2 bottomRight = -topLeft;
+
+            // Check if the relative mouse point is inside the bounding box
+            Vector2 d1, d2;
+            d1 = transformedRelativePosition - topLeft;
+            d2 = bottomRight - transformedRelativePosition;
+
+            // One of these components will be less than zero if the alignedRelative position is outside of the bounds
+            if (d1.X < 0 || d1.Y < 0)
+                return false;
+
+            if (d2.X < 0 || d2.Y < 0)
+                return false;
+
+            return true;
         }
 
         // Update
