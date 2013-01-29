@@ -2,13 +2,12 @@
 using System.Collections.Generic;
 using System.Xml.Linq;
 using Microsoft.Xna.Framework;
+using Microsoft.Xna.Framework.Input;
 using StasisCore;
 using StasisEditor.Controllers;
 
 namespace StasisEditor.Models
 {
-    using Keys = System.Windows.Forms.Keys;
-
     public class EditorTerrainActor : EditorActor
     {
         private PointListNode _headPoint;
@@ -112,6 +111,35 @@ namespace StasisEditor.Models
                     deselect();
                 else if (_level.controller.isKeyPressed(Keys.Delete))
                     delete();
+            }
+            else
+            {
+                if (_level.controller.isKeyPressed(Keys.OemPlus))
+                {
+                    if (hitTest())
+                    {
+                        if (_selectedPoints.Count == 1)
+                        {
+                            // Hit test succeeded on a single point, so add a new node after it
+                            _selectedPoints[0].insertAfter(worldMouse);
+                        }
+                        else if ((_selectedPoints[0] == _headPoint && _selectedPoints[1] == _headPoint.tail) ||
+                            (_selectedPoints[0] == _headPoint.tail && _selectedPoints[1] == _headPoint))
+                        {
+                            // Hit test succeeded on the line between head and tail, so add a point after the tail
+                            _headPoint.tail.insertAfter(worldMouse);
+                        }
+                        else
+                        {
+                            // Hit test succeeded on a normal line segment, so add a point after the node closest to the head
+                            if (_selectedPoints[1] == _selectedPoints[0].next)
+                                _selectedPoints[0].insertAfter(worldMouse);
+                            else
+                                _selectedPoints[1].insertAfter(worldMouse);
+                        }
+                        _selectedPoints.Clear();
+                    }
+                }
             }
         }
 

@@ -58,8 +58,6 @@ namespace StasisEditor.Views
             // Input
             MouseMove += new MouseEventHandler(LevelView_MouseMove);
             MouseDown += new MouseEventHandler(LevelView_MouseDown);
-            FindForm().KeyDown += new KeyEventHandler(Parent_KeyDown);
-            FindForm().KeyUp += new KeyEventHandler(Parent_KeyUp);
             MouseEnter += new EventHandler(LevelView_MouseEnter);
             MouseLeave += new EventHandler(LevelView_MouseLeave);
             MouseWheel += new MouseEventHandler(LevelView_MouseWheel);
@@ -83,25 +81,11 @@ namespace StasisEditor.Views
             _controller.mouseOverView = true;
         }
 
-        // Key up
-        void Parent_KeyUp(object sender, KeyEventArgs e)
-        {
-            if (_controller.level != null && _controller.mouseOverView && _keysEnabled)
-                _controller.handleKeyUp(e);
-        }
-
         // Mouse down
         void LevelView_MouseDown(object sender, MouseEventArgs e)
         {
             Focus();
             _controller.handleMouseDown(e);
-        }
-
-        // Key down
-        void Parent_KeyDown(object sender, KeyEventArgs e)
-        {
-            if (_controller.level != null && _controller.mouseOverView && _keysEnabled)
-                _controller.handleKeyDown(e);
         }
 
         // Mouse move

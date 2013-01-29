@@ -2,13 +2,12 @@
 using System.Collections.Generic;
 using System.Xml.Linq;
 using Microsoft.Xna.Framework;
+using Microsoft.Xna.Framework.Input;
 using StasisCore;
 using StasisEditor.Controllers;
 
 namespace StasisEditor.Models
 {
-    using Keys = System.Windows.Forms.Keys;
-
     public class EditorBoxActor : EditorActor
     {
         private Vector2 _position;

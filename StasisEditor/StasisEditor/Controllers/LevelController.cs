@@ -13,6 +13,9 @@ using StasisCore;
 
 namespace StasisEditor.Controllers
 {
+    using KeyboardState = Microsoft.Xna.Framework.Input.KeyboardState;
+    using Keys = Microsoft.Xna.Framework.Input.Keys;
+
     public class LevelController : Controller
     {
         public const float MIN_ACTOR_SIZE = 0.1f;
@@ -24,16 +27,16 @@ namespace StasisEditor.Controllers
         private System.Drawing.Point _oldMouse;
         private Vector2 _screenCenter;
         private EditorActor _selectedActor;
-        private bool[] _keys;
-        private bool[] _oldKeys;
+        private KeyboardState _keyState;
+        private KeyboardState _oldKeyState;
         private bool _mouseOverView;
 
         public System.Drawing.Point mouse { get { return _mouse; } set { _oldMouse = _mouse; _mouse = value; } }
         public EditorLevel level { get { return _level; } set { _level = value; } }
         public LevelView view { get { return _levelView; } }
         public Vector2 screenCenter { get { return _screenCenter; } set { _screenCenter = value; } }
-        public bool shift { get { return _keys[(int)Keys.Shift] || _keys[(int)Keys.ShiftKey] || _keys[(int)Keys.LShiftKey] || _keys[(int)Keys.RShiftKey]; } }
-        public bool ctrl { get { return _keys[(int)Keys.Control] || _keys[(int)Keys.ControlKey] || _keys[(int)Keys.LControlKey] || _keys[(int)Keys.RControlKey]; } }
+        public bool shift { get { return _keyState.IsKeyDown(Keys.LeftShift) || _keyState.IsKeyDown(Keys.RightShift); } }
+        public bool ctrl { get { return _keyState.IsKeyDown(Keys.LeftControl) || _keyState.IsKeyDown(Keys.RightControl); } }
         public bool mouseOverView { get { return _mouseOverView; } set { _mouseOverView = value; } }
         public Vector2 worldOffset { get { return _screenCenter + (new Vector2(_levelView.Width, _levelView.Height) / 2) / _editorController.scale; } }
         public Vector2 worldMouse { get { return new Vector2(_mouse.X, _mouse.Y) / _editorController.scale - worldOffset; } }
@@ -48,8 +51,6 @@ namespace StasisEditor.Controllers
             _editorController = editorController;
             _levelView = levelView;
             _levelView.setController(this);
-            _keys = new bool[262144 + 1];
-            _oldKeys = new bool[262144 + 1];
             Application.Idle += new EventHandler(update);
             Application.Idle += new EventHandler(draw);
         }
@@ -57,13 +58,13 @@ namespace StasisEditor.Controllers
         // Is key pressed
         public bool isKeyPressed(Keys key)
         {
-            return _keys[(int)key] && !_oldKeys[(int)key];
+            return _keyState.IsKeyDown(key) && _oldKeyState.IsKeyUp(key);
         }
 
-        // Is key held
+        // Is key being held
         public bool isKeyHeld(Keys key)
         {
-            return _keys[(int)key];
+            return _keyState.IsKeyDown(key);
         }
 
         // Get actor by id
@@ -111,22 +112,6 @@ namespace StasisEditor.Controllers
                 XElement data = XElement.Load(fileStream);
                 _level = new EditorLevel(this, data);
             }
-        }
-
-        // Handle key up
-        public void handleKeyUp(KeyEventArgs e)
-        {
-            int k = (int)e.KeyCode;
-            _oldKeys[k] = _keys[k];
-            _keys[k] = false;
-        }
-
-        // Handle key down
-        public void handleKeyDown(KeyEventArgs e)
-        {
-            int k = (int)e.KeyCode;
-            _oldKeys[k] = _keys[k];
-            _keys[k] = true;
         }
 
         // saveLevel
@@ -342,6 +327,8 @@ namespace StasisEditor.Controllers
         // Update
         private void update(object sender, EventArgs e)
         {
+            _keyState = Microsoft.Xna.Framework.Input.Keyboard.GetState();
+
             if (_level != null)
             {
                 if (_mouseOverView)
@@ -361,6 +348,8 @@ namespace StasisEditor.Controllers
                     _oldMouse = _mouse;
                 }
             }
+
+            _oldKeyState = _keyState;
         }
 
         // Draw
