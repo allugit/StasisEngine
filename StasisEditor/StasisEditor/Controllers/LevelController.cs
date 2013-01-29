@@ -5,6 +5,7 @@ using System.Xml.Linq;
 using System.Windows.Forms;
 using System.IO;
 using Microsoft.Xna.Framework;
+using Microsoft.Xna.Framework.Graphics;
 using StasisEditor.Views;
 using StasisEditor.Views.Controls;
 using StasisEditor.Models;
@@ -44,12 +45,13 @@ namespace StasisEditor.Controllers
             _levelView.setController(this);
             _pressedKeys = new bool[262144 + 1];
             Application.Idle += new EventHandler(update);
+            Application.Idle += new EventHandler(draw);
         }
 
         public float getScale() { return _editorController.scale; }
-        public Vector2 getWorldOffset() { return _screenCenter + (new Vector2(_levelView.Width, _levelView.Height) / 2) / _editorController.scale; }
-        public Vector2 getWorldMouse() { return new Vector2(_mouse.X, _mouse.Y) / _editorController.scale - getWorldOffset(); }
-        public Vector2 getOldWorldMouse() { return new Vector2(_oldMouse.X, _oldMouse.Y) / _editorController.scale - getWorldOffset(); }
+        public Vector2 worldOffset { get { return _screenCenter + (new Vector2(_levelView.Width, _levelView.Height) / 2) / _editorController.scale; } }
+        public Vector2 worldMouse { get { return new Vector2(_mouse.X, _mouse.Y) / _editorController.scale - worldOffset; } }
+        public Vector2 oldWorldMouse { get { return new Vector2(_oldMouse.X, _oldMouse.Y) / _editorController.scale - worldOffset; } }
 
         // Get actor by id
         public EditorActor getActor(int id)
@@ -130,6 +132,7 @@ namespace StasisEditor.Controllers
             switch (buttonName)
             {
                 case "boxButton":
+                    actor = new EditorBoxActor(_level);
                     break;
 
                 case "circleButton":
@@ -248,19 +251,6 @@ namespace StasisEditor.Controllers
         // Handle mouse move
         public void handleMouseMove(System.Windows.Forms.MouseEventArgs e)
         {
-            // Update mouse position
-            mouse = e.Location;
-            Vector2 worldDelta = getWorldMouse() - getOldWorldMouse();
-
-            if (ctrl)
-            {
-                // Move screen
-                _screenCenter += worldDelta;
-            }
-            else
-            {
-                // Move selected actor
-            }
         }
 
         // Handle mouse down
@@ -274,6 +264,37 @@ namespace StasisEditor.Controllers
         // Update
         private void update(object sender, EventArgs e)
         {
+            if (_level != null)
+            {
+                if (_mouseOverView)
+                {
+                    _mouse = _levelView.PointToClient(Cursor.Position);
+                }
+
+                if (ctrl)
+                {
+                    _screenCenter += worldMouse - oldWorldMouse;
+                }
+
+                _level.update();
+
+                if (_mouseOverView)
+                {
+                    _oldMouse = _mouse;
+                }
+            }
+        }
+
+        // Draw
+        void draw(object sender, EventArgs e)
+        {
+            if (_level != null)
+            {
+                _levelView.spriteBatch.Begin(SpriteSortMode.BackToFront, BlendState.AlphaBlend);
+                _level.draw();
+                _levelView.spriteBatch.End();
+                _levelView.Invalidate();
+            }
         }
     }
 }

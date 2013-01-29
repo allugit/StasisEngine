@@ -13,7 +13,7 @@ namespace StasisEditor.Models
 {
     public class EditorLevel : Level
     {
-        private LevelController _levelController;
+        private LevelController _controller;
         private List<EditorActor> _actors;
 
         [Browsable(false)]
@@ -36,19 +36,19 @@ namespace StasisEditor.Models
             }
         }
         [Browsable(false)]
-        public LevelController levelController { get { return _levelController; } }
+        public LevelController controller { get { return _controller; } }
 
         // Create new
         public EditorLevel(LevelController levelController, string name) : base(name)
         {
-            _levelController = levelController;
+            _controller = levelController;
             _actors = new List<EditorActor>();
         }
 
         // Load from xml
         public EditorLevel(LevelController levelController, XElement data) : base(data)
         {
-            _levelController = levelController;
+            _controller = levelController;
             List<XElement> secondPassData = new List<XElement>();
 
             // First pass -- load independent actors
@@ -95,7 +95,7 @@ namespace StasisEditor.Models
                 switch (actorData.Attribute("type").Value)
                 {
                     case "Circuit":
-                        EditorCircuit circuit = _levelController.editorController.circuitController.getCircuit(actorData.Attribute("circuit_uid").Value);
+                        EditorCircuit circuit = _controller.editorController.circuitController.getCircuit(actorData.Attribute("circuit_uid").Value);
                         break;
                 }
             }
@@ -139,6 +139,24 @@ namespace StasisEditor.Models
             XDocument doc = new XDocument();
             doc.Add(data);
             doc.Save(filePath);
+        }
+
+        // Update
+        public void update()
+        {
+            foreach (EditorActor actor in _actors)
+            {
+                actor.update();
+            }
+        }
+
+        // Draw
+        public void draw()
+        {
+            foreach (EditorActor actor in _actors)
+            {
+                actor.draw();
+            }
         }
     }
 }

@@ -9,7 +9,7 @@ namespace StasisEditor.Models
 {
     abstract public class EditorActor
     {
-        protected LevelController _levelController;
+        protected EditorLevel _level;
 
         protected ActorType _type;
         protected int _id;
@@ -28,21 +28,26 @@ namespace StasisEditor.Models
                     new XAttribute("layer_depth", _layerDepth));
             }
         }
+        public bool selected { get { return _level.controller.selectedActor == this; } }
 
-        public EditorActor(LevelController levelController, ActorType type, int id)
+        public EditorActor(EditorLevel level, ActorType type, int id)
         {
-            _levelController = levelController;
+            _level = level;
             _type = type;
             _id = id;
         }
 
-        public EditorActor(LevelController levelController, XElement data)
+        public EditorActor(EditorLevel level, XElement data)
         {
-            _levelController = levelController;
+            _level = level;
 
             _type = (ActorType)Loader.loadEnum(typeof(ActorType), data.Attribute("type"), (int)ActorType.Box);
             _id = int.Parse(data.Attribute("id").Value);
             _layerDepth = Loader.loadFloat(data.Attribute("layer_depth"), 0f);
+        }
+
+        virtual public void update()
+        {
         }
 
         abstract public void draw();
