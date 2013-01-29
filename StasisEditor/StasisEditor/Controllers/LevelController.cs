@@ -43,6 +43,7 @@ namespace StasisEditor.Controllers
             _levelView = levelView;
             _levelView.setController(this);
             _pressedKeys = new bool[262144 + 1];
+            Application.Idle += new EventHandler(update);
         }
 
         public float getScale() { return _editorController.scale; }
@@ -226,7 +227,7 @@ namespace StasisEditor.Controllers
             _editorController.refreshActorProperties();
         }
 
-        // zoom
+        // Zoom
         public void zoom(int delta)
         {
             float modifier = 0.01f;
@@ -244,7 +245,7 @@ namespace StasisEditor.Controllers
             }
         }
 
-        // handleMouseMove
+        // Handle mouse move
         public void handleMouseMove(System.Windows.Forms.MouseEventArgs e)
         {
             // Update mouse position
@@ -262,12 +263,17 @@ namespace StasisEditor.Controllers
             }
         }
 
-        // handleMouseDown
+        // Handle mouse down
         public void handleMouseDown(System.Windows.Forms.MouseEventArgs e)
         {
             if (_level != null)
             {
             }
+        }
+
+        // Update
+        private void update(object sender, EventArgs e)
+        {
         }
     }
 }
