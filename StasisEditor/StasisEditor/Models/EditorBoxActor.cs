@@ -79,6 +79,14 @@ namespace StasisEditor.Models
                     _halfHeight = Math.Max(1f, _halfHeight + sizeIncrement);
                 if (_level.controller.isKeyHeld(Keys.S))
                     _halfHeight = Math.Max(1f, _halfHeight - sizeIncrement);
+
+                if (_level.controller.isKeyPressed(Keys.Escape))
+                    _level.controller.deselectActor();
+                else if (_level.controller.isKeyPressed(Keys.Delete))
+                {
+                    _level.controller.deselectActor();
+                    delete();
+                }
             }
             else
             {

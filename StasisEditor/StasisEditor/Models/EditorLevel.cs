@@ -15,6 +15,8 @@ namespace StasisEditor.Models
     {
         private LevelController _controller;
         private List<EditorActor> _actors;
+        private List<EditorActor> _actorsToAdd;
+        private List<EditorActor> _actorsToRemove;
 
         [Browsable(false)]
         public List<EditorActor> actors { get { return _actors; } }
@@ -43,6 +45,8 @@ namespace StasisEditor.Models
         {
             _controller = levelController;
             _actors = new List<EditorActor>();
+            _actorsToAdd = new List<EditorActor>();
+            _actorsToRemove = new List<EditorActor>();
         }
 
         // Load from xml
@@ -115,13 +119,13 @@ namespace StasisEditor.Models
         // Add an actor
         public void addActor(EditorActor actor)
         {
-            _actors.Add(actor);
+            _actorsToAdd.Add(actor);
         }
 
         // Remove an actor
         public void removeActor(EditorActor actor)
         {
-            _actors.Remove(actor);
+            _actorsToRemove.Add(actor);
         }
 
         // Save
@@ -144,10 +148,16 @@ namespace StasisEditor.Models
         // Update
         public void update()
         {
+            foreach (EditorActor actor in _actorsToAdd)
+                _actors.Add(actor);
+            _actorsToAdd.Clear();
+
+            foreach (EditorActor actor in _actorsToRemove)
+                _actors.Remove(actor);
+            _actorsToRemove.Clear();
+
             foreach (EditorActor actor in _actors)
-            {
                 actor.update();
-            }
         }
 
         // Draw
