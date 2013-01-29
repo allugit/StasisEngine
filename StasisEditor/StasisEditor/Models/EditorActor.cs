@@ -46,25 +46,31 @@ namespace StasisEditor.Models
             _layerDepth = Loader.loadFloat(data.Attribute("layer_depth"), 0f);
         }
 
-        virtual public void rotate(Vector2 anchorPoint, float increment)
+        virtual public void select()
         {
+            System.Diagnostics.Debug.Assert(_level.controller.selectedActor == null);
+            _level.controller.selectedActor = this;
+        }
+
+        virtual public void deselect()
+        {
+            _level.controller.selectedActor = null;
         }
 
         virtual public void delete()
         {
+            if (selected)
+                deselect();
+
             _level.removeActor(this);
         }
 
         virtual public void handleMouseDown()
         {
             if (selected)
-            {
-                _level.controller.deselectActor();
-            }
+                deselect();
             else
-            {
-                _level.controller.selectActor(this);
-            }
+                select();
         }
 
         abstract public bool hitTest();

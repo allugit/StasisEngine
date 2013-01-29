@@ -100,6 +100,7 @@
     <Compile Include="Models\EditorCircuit.cs" />
     <Compile Include="Models\EditorLevel.cs" />
     <Compile Include="Models\EditorMaterial.cs" />
+    <Compile Include="Models\EditorTerrainActor.cs" />
     <Compile Include="ServiceContainer.cs" />
     <Compile Include="Views\BlueprintView.cs">
       <SubType>UserControl</SubType>

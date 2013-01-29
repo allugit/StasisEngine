@@ -40,7 +40,7 @@ namespace StasisEditor.Controllers
         public Vector2 oldWorldMouse { get { return new Vector2(_oldMouse.X, _oldMouse.Y) / _editorController.scale - worldOffset; } }
         public float scale { get { return _editorController.scale; } }
 
-        public EditorActor selectedActor { get { return _selectedActor; } }
+        public EditorActor selectedActor { get { return _selectedActor; } set { _selectedActor = value; } }
         public EditorController editorController { get { return _editorController; } }
 
         public LevelController(EditorController editorController, LevelView levelView)
@@ -160,6 +160,7 @@ namespace StasisEditor.Controllers
                     break;
 
                 case "terrainButton":
+                    actor = new EditorTerrainActor(_level);
                     break;
 
                 case "ropeButton":
@@ -212,14 +213,9 @@ namespace StasisEditor.Controllers
 
             if (actor != null)
             {
-                // Show level tab
                 _editorController.view.selectLevelTab();
-
-                // Add actor controller to list
                 _level.addActor(actor);
-
-                // Select all sub controllers
-                selectActor(actor);
+                selectedActor = actor;
             }
         }
 
@@ -233,19 +229,6 @@ namespace StasisEditor.Controllers
         public void closeActorProperties()
         {
             _editorController.closeActorProperties();
-        }
-
-        // Select actor
-        public void selectActor(EditorActor actor)
-        {
-            Debug.Assert(_selectedActor == null);
-            _selectedActor = actor;
-        }
-
-        // Deselect actor
-        public void deselectActor()
-        {
-            _selectedActor = null;
         }
 
         // refreshActorProperties
@@ -333,10 +316,27 @@ namespace StasisEditor.Controllers
             return true;
         }
 
+        // Line hit test
+        public bool hitTestLine(Vector2 testPoint, Vector2 pointA, Vector2 pointB)
+        {
+            Vector2 difference = pointB - pointA;
+            Vector2 midPoint = (pointA + pointB) / 2;
+            float halfWidth = difference.Length() / 2f;
+            float halfHeight = 6f / scale;
+            float angle = (float)Math.Atan2(difference.Y, difference.X);
+            return hitTestBox(testPoint, midPoint, halfWidth, halfHeight, angle);
+        }
+
         // Circle hit test
         public bool hitTestCircle(Vector2 testPoint, Vector2 circlePosition, float radius)
         {
             return (testPoint - circlePosition).Length() <= radius;
+        }
+
+        // Point hit test
+        public bool hitTestPoint(Vector2 testPoint, Vector2 pointPosition, float marginInPixels = 6f)
+        {
+            return hitTestCircle(testPoint, pointPosition, marginInPixels / scale);
         }
 
         // Update

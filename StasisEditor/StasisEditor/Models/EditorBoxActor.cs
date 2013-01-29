@@ -56,7 +56,7 @@ namespace StasisEditor.Models
             return _level.controller.hitTestBox(_level.controller.worldMouse, _position, _halfWidth, _halfHeight, _angle);
         }
 
-        public override void rotate(Vector2 anchorPoint, float increment)
+        public void rotate(Vector2 anchorPoint, float increment)
         {
             Vector2 relativePosition = _position - anchorPoint;
             _position = anchorPoint + Vector2.Transform(relativePosition, Matrix.CreateRotationZ(increment));
@@ -89,15 +89,9 @@ namespace StasisEditor.Models
                     _halfHeight = Math.Max(1f, _halfHeight - sizeIncrement);
 
                 if (_level.controller.isKeyPressed(Keys.Escape))
-                    _level.controller.deselectActor();
+                    deselect();
                 else if (_level.controller.isKeyPressed(Keys.Delete))
-                {
-                    _level.controller.deselectActor();
                     delete();
-                }
-            }
-            else
-            {
             }
         }
 

@@ -61,17 +61,11 @@ namespace StasisEditor.Models
                     _radius = Math.Max(1f, _radius + radiusIncrement);
                 if (_level.controller.isKeyHeld(Keys.D) || _level.controller.isKeyHeld(Keys.S))
                     _radius = Math.Max(1f, _radius - radiusIncrement);
-                
+
                 if (_level.controller.isKeyPressed(Keys.Escape))
-                    _level.controller.deselectActor();
+                    deselect();
                 else if (_level.controller.isKeyPressed(Keys.Delete))
-                {
-                    _level.controller.deselectActor();
                     delete();
-                }
-            }
-            else
-            {
             }
         }
 
