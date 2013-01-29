@@ -20,27 +20,35 @@ namespace StasisEditor.Models
         public float halfWidth { get { return _halfWidth; } set { _halfWidth = value; } }
         public float halfHeight { get { return _halfHeight; } set { _halfHeight = value; } }
         public float angle { get { return _angle; } set { _angle = value; } }
+        public override XElement data
+        {
+            get
+            {
+                XElement d = base.data;
+                d.SetAttributeValue("position", _position);
+                d.SetAttributeValue("half_width", _halfWidth);
+                d.SetAttributeValue("half_height", _halfHeight);
+                d.SetAttributeValue("angle", _angle);
+                return d;
+            }
+        }
 
         public EditorBoxActor(EditorLevel level)
             : base(level, ActorType.Box, level.controller.getUnusedActorID())
         {
             _position = level.controller.worldMouse;
-            initialize();
+            _halfWidth = 1f;
+            _halfHeight = 1f;
+            _angle = 0f;
         }
 
         public EditorBoxActor(EditorLevel level, XElement data)
             : base(level, data)
         {
             _position = Loader.loadVector2(data.Attribute("position"), Vector2.Zero);
-            initialize();
-        }
-
-        private void initialize()
-        {
-            _type = ActorType.Box;
-            _layerDepth = 0.1f;
-            _halfWidth = 1f;
-            _halfHeight = 1f;
+            _halfWidth = Loader.loadFloat(data.Attribute("half_width"), 1f);
+            _halfHeight = Loader.loadFloat(data.Attribute("half_height"), 1f);
+            _angle = Loader.loadFloat(data.Attribute("angle"), 0f);
         }
 
         public override bool hitTest()

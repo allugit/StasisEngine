@@ -153,6 +153,7 @@ namespace StasisEditor.Controllers
                     break;
 
                 case "circleButton":
+                    actor = new EditorCircleActor(_level);
                     break;
 
                 case "movingPlatformButton":
@@ -330,6 +331,12 @@ namespace StasisEditor.Controllers
                 return false;
 
             return true;
+        }
+
+        // Circle hit test
+        public bool hitTestCircle(Vector2 testPoint, Vector2 circlePosition, float radius)
+        {
+            return (testPoint - circlePosition).Length() <= radius;
         }
 
         // Update

@@ -86,6 +86,7 @@
     <Compile Include="Controllers\MaterialController.cs" />
     <Compile Include="Models\EditorActor.cs" />
     <Compile Include="Models\EditorBoxActor.cs" />
+    <Compile Include="Models\EditorCircleActor.cs" />
     <Compile Include="Models\EditorMaterialEdgeScatterLayer.cs" />
     <Compile Include="Models\EditorMaterialGroupLayer.cs" />
     <Compile Include="GraphicsDeviceService.cs" />
