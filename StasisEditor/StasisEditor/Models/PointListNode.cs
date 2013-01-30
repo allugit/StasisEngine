@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using Microsoft.Xna.Framework;
 
 namespace StasisEditor.Models
@@ -60,6 +61,34 @@ namespace StasisEditor.Models
                     current = current.next;
                 }
                 return i;
+            }
+        }
+        public List<Vector2> points
+        {
+            get
+            {
+                List<Vector2> results = new List<Vector2>();
+                PointListNode current = head;
+                while (current != null)
+                {
+                    results.Add(current.position);
+                    current = current.next;
+                }
+                return results;
+            }
+        }
+        public List<PointListNode> allNodes
+        {
+            get
+            {
+                List<PointListNode> all = new List<PointListNode>();
+                PointListNode current = head;
+                while (current != null)
+                {
+                    all.Add(current);
+                    current = current.next;
+                }
+                return all;
             }
         }
 

@@ -131,6 +131,14 @@ namespace StasisEditor.Models
                 current = current.next;
             }
 
+            // Test polygon
+            if (_level.controller.hitTestPolygon(worldMouse, _headPoint.points))
+            {
+                _selectedPoints.Clear();
+                _selectedPoints = _headPoint.allNodes;
+                return true;
+            }
+
             return false;
         }
 

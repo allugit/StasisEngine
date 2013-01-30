@@ -328,6 +328,20 @@ namespace StasisEditor.Controllers
             return hitTestCircle(testPoint, pointPosition, marginInPixels / scale);
         }
 
+        // Polygon hit test -- http://www.ecse.rpi.edu/Homepages/wrf/Research/Short_Notes/pnpoly.html
+        public bool hitTestPolygon(Vector2 point, List<Vector2> points)
+        {
+            bool hit = false;
+            for (int i = 0, j = points.Count - 1; i < points.Count; j = i++)
+            {
+                if (((points[i].Y > point.Y) != (points[j].Y > point.Y)) &&
+                    (point.X < (points[j].X - points[i].X) * (point.Y - points[i].Y) / (points[j].Y - points[i].Y) + points[i].X))
+                    hit = !hit;
+            }
+
+            return hit;
+        }
+
         // Update
         private void update(object sender, EventArgs e)
         {
