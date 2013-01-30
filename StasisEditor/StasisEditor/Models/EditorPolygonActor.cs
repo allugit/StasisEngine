@@ -264,25 +264,5 @@ namespace StasisEditor.Models
                 }
             }
         }
-
-        public override void draw()
-        {
-            int count = _headPoint.listCount;
-            Color lineColor = count > 2 ? Color.Orange : Color.Red;
-
-            PointListNode current = _headPoint;
-            while (current != null)
-            {
-                if (current.next != null)
-                    _level.controller.view.drawLine(current.position, current.next.position, lineColor, _layerDepth);
-                _level.controller.view.drawPoint(current.position, Color.Yellow, _layerDepth);
-                current = current.next;
-            }
-
-            if (count > 2)
-            {
-                _level.controller.view.drawLine(_headPoint.position, _headPoint.tail.position, Color.Purple, _layerDepth);
-            }
-        }
     }
 }

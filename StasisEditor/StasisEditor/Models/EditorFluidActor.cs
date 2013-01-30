@@ -6,14 +6,14 @@ using StasisCore;
 
 namespace StasisEditor.Models
 {
-    public class EditorTerrainActor : EditorPolygonActor
+    public class EditorFluidActor : EditorPolygonActor
     {
-        public EditorTerrainActor(EditorLevel level)
-            : base(level, ActorType.Terrain)
+        public EditorFluidActor(EditorLevel level)
+            : base(level, ActorType.Fluid)
         {
         }
 
-        public EditorTerrainActor(EditorLevel level, XElement data)
+        public EditorFluidActor(EditorLevel level, XElement data)
             : base(level, data)
         {
         }
@@ -21,14 +21,14 @@ namespace StasisEditor.Models
         public override void draw()
         {
             int count = _headPoint.listCount;
-            Color lineColor = count > 2 ? Color.Orange : Color.Red;
+            Color lineColor = count > 2 ? Color.Blue : Color.Red;
 
             PointListNode current = _headPoint;
             while (current != null)
             {
                 if (current.next != null)
                     _level.controller.view.drawLine(current.position, current.next.position, lineColor, _layerDepth);
-                _level.controller.view.drawPoint(current.position, Color.Yellow, _layerDepth);
+                _level.controller.view.drawPoint(current.position, Color.LightBlue, _layerDepth);
                 current = current.next;
             }
 

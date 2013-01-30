@@ -153,6 +153,7 @@ namespace StasisEditor.Controllers
                     break;
 
                 case "fluidButton":
+                    actor = new EditorFluidActor(_level);
                     break;
 
                 case "playerSpawnButton":
