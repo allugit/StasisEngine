@@ -149,6 +149,7 @@ namespace StasisEditor.Controllers
                     break;
 
                 case "ropeButton":
+                    actor = new EditorRopeActor(_level);
                     break;
 
                 case "fluidButton":
