@@ -2,12 +2,15 @@
 using System.Collections.Generic;
 using System.Xml.Linq;
 using Microsoft.Xna.Framework;
+using Microsoft.Xna.Framework.Graphics;
 using StasisCore;
 
 namespace StasisEditor.Models
 {
     public class EditorFluidActor : EditorPolygonActor
     {
+        protected override Color polygonFill { get { return Color.Blue * 0.3f; } }
+
         public EditorFluidActor(EditorLevel level)
             : base(level, ActorType.Fluid)
         {
@@ -20,9 +23,12 @@ namespace StasisEditor.Models
 
         public override void draw()
         {
+            if (_polygonTexture != null)
+                _level.controller.view.spriteBatch.Draw(_polygonTexture, (_polygonPosition + _level.controller.worldOffset) * _level.controller.scale, _polygonTexture.Bounds, polygonFill, 0f, Vector2.Zero, 1f, SpriteEffects.None, _layerDepth + 0.0001f);
+
+            // Draw points and lines
             int count = _headPoint.listCount;
             Color lineColor = count > 2 ? Color.Blue : Color.Red;
-
             PointListNode current = _headPoint;
             while (current != null)
             {
@@ -31,7 +37,6 @@ namespace StasisEditor.Models
                 _level.controller.view.drawPoint(current.position, Color.LightBlue, _layerDepth);
                 current = current.next;
             }
-
             if (count > 2)
             {
                 _level.controller.view.drawLine(_headPoint.position, _headPoint.tail.position, Color.Purple, _layerDepth);

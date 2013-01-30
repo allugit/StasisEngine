@@ -25,9 +25,7 @@ namespace StasisEditor.Models
         public override void draw()
         {
             if (_polygonTexture != null)
-            {
                 _level.controller.view.spriteBatch.Draw(_polygonTexture, (_polygonPosition + _level.controller.worldOffset) * _level.controller.scale , _polygonTexture.Bounds, polygonFill, 0f, Vector2.Zero, 1f, SpriteEffects.None, _layerDepth + 0.0001f);
-            }
 
             // Draw lines and points
             int count = _headPoint.listCount;
