@@ -163,7 +163,7 @@ namespace StasisEditor.Controllers
                         if (existingActor.type == ActorType.PlayerSpawn)
                             _level.removeActor(existingActor);
                     }
-                    //actor = new PlayerSpawnActorController(this);
+                    actor = new EditorPlayerSpawnActor(_level);
                     break;
 
                 case "plantsButton":

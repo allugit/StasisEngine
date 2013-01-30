@@ -101,6 +101,7 @@
     <Compile Include="Models\EditorCircuit.cs" />
     <Compile Include="Models\EditorLevel.cs" />
     <Compile Include="Models\EditorMaterial.cs" />
+    <Compile Include="Models\EditorPlayerSpawnActor.cs" />
     <Compile Include="Models\EditorPolygonActor.cs" />
     <Compile Include="Models\EditorRopeActor.cs" />
     <Compile Include="Models\EditorTerrainActor.cs" />

@@ -211,7 +211,6 @@ namespace StasisEditor.Models
                             }
                         }
                     }
-                    //deselect();
                 }
 
                 // Deselect/delete
@@ -220,7 +219,7 @@ namespace StasisEditor.Models
                 else if (_level.controller.isKeyPressed(Keys.Delete))
                     delete();
             }
-            else
+            else if (_level.controller.selectedActor == null)
             {
                 // Insert a point
                 if (_level.controller.isKeyPressed(Keys.OemPlus))
