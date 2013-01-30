@@ -9,6 +9,8 @@ namespace StasisEditor.Models
 {
     public class EditorTreeActor : EditorActor
     {
+        private bool _selectedTropism;
+
         private float _angle;
         private int _seed;
         private float _age;
@@ -90,6 +92,7 @@ namespace StasisEditor.Models
             _tropismWeight = 1f;
             _tropism = Vector2.Zero;
             _position = level.controller.worldMouse;
+            _layerDepth = 0.1f;
         }
 
         public EditorTreeActor(EditorLevel level, XElement data)
@@ -118,8 +121,31 @@ namespace StasisEditor.Models
             _angle += increment;
         }
 
+        public override void deselect()
+        {
+            _selectedTropism = false;
+            base.deselect();
+        }
+
         public override bool hitTest()
         {
+            Vector2 worldMouse = _level.controller.worldMouse;
+
+            // Hit test tropism point
+            if (_level.controller.hitTestPoint(worldMouse, _position + _tropism))
+            {
+                _selectedTropism = true;
+                return true;
+            }
+
+            // Hit test box
+            Vector2 relative = new Vector2(0, -_internodeHalfLength / 2f);
+            Matrix offset = Matrix.CreateTranslation(new Vector3(relative, 0)) * Matrix.CreateRotationZ(_angle);
+            if (_level.controller.hitTestBox(worldMouse, _position + Vector2.Transform(relative, offset), _maxBaseHalfWidth, _internodeHalfLength, _angle))
+            {
+                return true;
+            }
+
             return false;
         }
 
@@ -132,7 +158,12 @@ namespace StasisEditor.Models
             if (selected)
             {
                 if (!_level.controller.ctrl)
-                    _position += worldDelta;
+                {
+                    if (_selectedTropism)
+                        _tropism += worldDelta;
+                    else
+                        _position += worldDelta;
+                }
 
                 if (_level.controller.isKeyHeld(Keys.Q))
                     rotate(_level.controller.worldMouse, -angleIncrement);
@@ -161,6 +192,9 @@ namespace StasisEditor.Models
             Vector2 relative = new Vector2(0, -_internodeHalfLength / 2f);
             Matrix offset = Matrix.CreateTranslation(new Vector3(relative, 0)) * Matrix.CreateRotationZ(_angle);
             _level.controller.view.drawBox(_position + Vector2.Transform(relative, offset), _maxBaseHalfWidth, _internodeHalfLength, _angle, Color.Teal, _layerDepth);
+
+            _level.controller.view.drawLine(_position, _position + _tropism, Color.DarkGray, _layerDepth - 0.0001f);
+            _level.controller.view.drawPoint(_position + _tropism, Color.Gray, _layerDepth - 0.0001f);
         }
     }
 }
