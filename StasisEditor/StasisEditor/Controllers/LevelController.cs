@@ -178,6 +178,7 @@ namespace StasisEditor.Controllers
                         switch (selectedPlantType)
                         {
                             case PlantType.Tree:
+                                actor = new EditorTreeActor(_level);
                                 break;
                         }
                     }

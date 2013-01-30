@@ -106,6 +106,7 @@
     <Compile Include="Models\EditorPolygonActor.cs" />
     <Compile Include="Models\EditorRopeActor.cs" />
     <Compile Include="Models\EditorTerrainActor.cs" />
+    <Compile Include="Models\EditorTreeActor.cs" />
     <Compile Include="Models\PointListNode.cs" />
     <Compile Include="ServiceContainer.cs" />
     <Compile Include="Views\BlueprintView.cs">
