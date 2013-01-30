@@ -10,6 +10,8 @@ namespace StasisEditor.Models
 {
     public class EditorTerrainActor : EditorPolygonActor
     {
+        protected override Color polygonFill { get { return Color.Orange * 0.3f; } }
+
         public EditorTerrainActor(EditorLevel level)
             : base(level, ActorType.Terrain)
         {
@@ -22,10 +24,11 @@ namespace StasisEditor.Models
 
         public override void draw()
         {
-            // Draw primitive
-            if (_primitiveCount > 0)
-                _level.controller.view.drawPolygon(_vertices, _primitiveCount);
-            
+            if (_polygonTexture != null)
+            {
+                _level.controller.view.spriteBatch.Draw(_polygonTexture, (_polygonPosition + _level.controller.worldOffset) * _level.controller.scale , _polygonTexture.Bounds, polygonFill, 0f, Vector2.Zero, 1f, SpriteEffects.None, _layerDepth + 0.0001f);
+            }
+
             // Draw lines and points
             int count = _headPoint.listCount;
             Color lineColor = count > 2 ? Color.Orange : Color.Red;

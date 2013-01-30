@@ -17,7 +17,11 @@ namespace StasisEditor.Models
         protected List<PointListNode> _selectedPoints;
         protected CustomVertexFormat[] _vertices = new CustomVertexFormat[5000];
         protected int _primitiveCount;
+        protected Texture2D _polygonTexture;
+        protected Vector2 _polygonPosition;
+        protected Color _polygonFill = Color.White;
 
+        virtual protected Color polygonFill { get { return _polygonFill; } }
         public override XElement data
         {
             get
@@ -70,8 +74,10 @@ namespace StasisEditor.Models
         {
             List<PolygonPoint> points = new List<PolygonPoint>();
             PointListNode current = _headPoint;
+            _polygonPosition = current.position;
             while (current != null)
             {
+                _polygonPosition = Vector2.Min(current.position, _polygonPosition);
                 points.Add(new PolygonPoint(current.position.X, current.position.Y));
                 current = current.next;
             }
@@ -90,6 +96,8 @@ namespace StasisEditor.Models
                         new Vector3(1f, 1f, 1f));
                 }
             }
+
+            _polygonTexture = _level.controller.view.renderPolygon(_vertices, _primitiveCount);
         }
 
         public override bool hitTest()

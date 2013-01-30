@@ -113,13 +113,17 @@ namespace StasisEditor.Views
 
             if (_draw && _controller.level != null)
             {
-                _spriteBatch.Begin(SpriteSortMode.BackToFront, BlendState.AlphaBlend);
+                _spriteBatch.Begin();
 
                 // Draw grid
                 drawGrid();
 
                 // Draw mouse position
                 drawMousePosition();
+
+                _spriteBatch.End();
+
+                _spriteBatch.Begin(SpriteSortMode.BackToFront, BlendState.AlphaBlend);
 
                 // Draw actor controllers
                 List<EditorActor> actors = _controller.level.actors;
@@ -226,12 +230,27 @@ namespace StasisEditor.Views
             _spriteBatch.Draw(texture, (position + _controller.worldOffset) * _controller.scale, rect, Color.White, 0, new Vector2(rect.Width, rect.Height) / 2, 1f, SpriteEffects.None, layerDepth);
         }
 
-        // Draw polygon
-        public void drawPolygon(CustomVertexFormat[] _vertices, int primitiveCount)
+        // Render polygon
+        public Texture2D renderPolygon(CustomVertexFormat[] _vertices, int primitiveCount)
         {
-            Matrix viewMatrix = Matrix.CreateTranslation(new Vector3(_controller.worldOffset, 0)) *
-                Matrix.CreateScale(new Vector3(_controller.scale, -_controller.scale, 1f)) *
-                Matrix.CreateTranslation(new Vector3(-GraphicsDevice.Viewport.Width, GraphicsDevice.Viewport.Height, 0) / 2f);
+            Vector2 topLeft = new Vector2(_vertices[0].position.X, _vertices[0].position.Y);
+            Vector2 bottomRight = topLeft;
+            for (int i = 0; i < primitiveCount * 3; i++)
+            {
+                Vector2 vertex = new Vector2(_vertices[i].position.X, _vertices[i].position.Y);
+                topLeft = Vector2.Min(topLeft, vertex);
+                bottomRight = Vector2.Max(bottomRight, vertex);
+            }
+            int width = (int)Math.Ceiling((bottomRight.X - topLeft.X) * EditorController.ORIGINAL_SCALE);
+            int height = (int)Math.Ceiling((bottomRight.Y - topLeft.Y) * EditorController.ORIGINAL_SCALE);
+
+            RenderTarget2D renderTarget = new RenderTarget2D(GraphicsDevice, width, height);
+
+            GraphicsDevice.SetRenderTarget(renderTarget);
+            GraphicsDevice.Clear(Color.Transparent);
+            Matrix viewMatrix = Matrix.CreateTranslation(new Vector3(-topLeft, 0)) *
+                Matrix.CreateScale(new Vector3(EditorController.ORIGINAL_SCALE, -EditorController.ORIGINAL_SCALE, 1f)) *
+                Matrix.CreateTranslation(new Vector3(-width, height, 0) / 2f);
             Matrix projectionMatrix = Matrix.CreateOrthographic(GraphicsDevice.Viewport.Width, GraphicsDevice.Viewport.Height, 0, 1);
 
             _primitivesEffect.Parameters["world"].SetValue(Matrix.Identity);
@@ -239,6 +258,13 @@ namespace StasisEditor.Views
             _primitivesEffect.Parameters["projection"].SetValue(projectionMatrix);
             _primitivesEffect.CurrentTechnique.Passes["primitives"].Apply();
             GraphicsDevice.DrawUserPrimitives(PrimitiveType.TriangleList, _vertices, 0, primitiveCount, CustomVertexFormat.VertexDeclaration);
+            GraphicsDevice.SetRenderTarget(null);
+
+            Texture2D texture = new Texture2D(GraphicsDevice, width, height);
+            Color[] data = new Color[width * height];
+            renderTarget.GetData<Color>(data);
+            texture.SetData<Color>(data);
+            return texture;
         }
     }
 }
