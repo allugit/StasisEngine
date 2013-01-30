@@ -61,7 +61,6 @@ namespace StasisEditor.Views
             //Application.Idle += delegate { Invalidate(); };
 
             // Input
-            MouseMove += new MouseEventHandler(LevelView_MouseMove);
             MouseDown += new MouseEventHandler(LevelView_MouseDown);
             MouseEnter += new EventHandler(LevelView_MouseEnter);
             MouseLeave += new EventHandler(LevelView_MouseLeave);
@@ -98,12 +97,6 @@ namespace StasisEditor.Views
         {
             Focus();
             _controller.handleMouseDown(e);
-        }
-
-        // Mouse move
-        void LevelView_MouseMove(object sender, MouseEventArgs e)
-        {
-            _controller.handleMouseMove(e);
         }
 
         // Draw

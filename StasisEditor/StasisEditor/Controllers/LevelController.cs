@@ -230,7 +230,7 @@ namespace StasisEditor.Controllers
         public void zoom(int delta)
         {
             float modifier = 0.01f;
-            _editorController.scale += modifier * delta;
+            _editorController.scale = Math.Max(_editorController.scale + modifier * delta, 1f);
         }
 
         // Update circuit actor connections
@@ -242,11 +242,6 @@ namespace StasisEditor.Controllers
                     throw new NotImplementedException();
                     //(actor as CircuitActorController).updateConnections();
             }
-        }
-
-        // Handle mouse move
-        public void handleMouseMove(System.Windows.Forms.MouseEventArgs e)
-        {
         }
 
         // Handle mouse down
