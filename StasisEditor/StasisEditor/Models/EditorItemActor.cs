@@ -1,0 +1,54 @@
+﻿using System;
+using System.Collections.Generic;
+using System.Xml.Linq;
+using Microsoft.Xna.Framework;
+using StasisCore;
+
+namespace StasisEditor.Models
+{
+    public class EditorItemActor : EditorActor
+    {
+        private Vector2 _position;
+        private string _itemUID;
+        private int _quantity;
+
+        public string itemUID { get { return _itemUID; } set { _itemUID = value; } }
+        public int quantity { get { return _quantity; } set { _quantity = value; } }
+
+        public EditorItemActor(EditorLevel level, string itemUID)
+            : base(level, ActorType.Item, level.controller.getUnusedActorID())
+        {
+            _itemUID = itemUID;
+            _quantity = 1;
+            _position = level.controller.worldMouse;
+        }
+
+        public EditorItemActor(EditorLevel level, XElement data)
+            : base(level, data)
+        {
+            _position = Loader.loadVector2(data.Attribute("position"), Vector2.Zero);
+            _itemUID = data.Attribute("item_uid").Value;
+            _quantity = Loader.loadInt(data.Attribute("quantity"), 1);
+        }
+
+        public override bool hitTest()
+        {
+            return _level.controller.hitTestPoint(_level.controller.worldMouse, _position);
+        }
+
+        public override void update()
+        {
+            Vector2 worldDelta = _level.controller.worldMouse - _level.controller.oldWorldMouse;
+
+            if (selected)
+            {
+                _position += worldDelta;
+            }
+        }
+
+        public override void draw()
+        {
+            _level.controller.view.drawIcon(_type, _position, _layerDepth);
+        }
+    }
+}
