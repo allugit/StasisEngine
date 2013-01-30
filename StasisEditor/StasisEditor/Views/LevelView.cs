@@ -15,12 +15,14 @@ namespace StasisEditor.Views
     {
         private LevelController _controller;
         private ContentManager _contentManager;
+        private ContentManager _coreContentManager;
         private Texture2D _playerSpawnIcon;
         private Texture2D _itemIcon;
         private Texture2D _circuitIcon;
         private SpriteBatch _spriteBatch;
         private Texture2D _pixel;
         private Texture2D _circle;
+        private Effect _primitivesEffect;
         private bool _draw = true;
         private bool _keysEnabled = true;
 
@@ -52,6 +54,9 @@ namespace StasisEditor.Views
             _itemIcon = _contentManager.Load<Texture2D>("actor_controller_icons\\item");
             _circuitIcon = _contentManager.Load<Texture2D>("actor_controller_icons\\circuit");
 
+            _coreContentManager = new ContentManager(Services, "StasisCoreContent");
+            _primitivesEffect = _coreContentManager.Load<Effect>("effects\\primitives");
+
             // Draw loop
             //Application.Idle += delegate { Invalidate(); };
 
@@ -61,6 +66,13 @@ namespace StasisEditor.Views
             MouseEnter += new EventHandler(LevelView_MouseEnter);
             MouseLeave += new EventHandler(LevelView_MouseLeave);
             MouseWheel += new MouseEventHandler(LevelView_MouseWheel);
+        }
+
+        // Destructor
+        ~LevelView()
+        {
+            _contentManager.Unload();
+            _coreContentManager.Unload();
         }
 
         // Mouse wheel
@@ -212,6 +224,21 @@ namespace StasisEditor.Views
             Rectangle rect = texture == _pixel ? new Rectangle(0, 0, 24, 24) : texture.Bounds;
 
             _spriteBatch.Draw(texture, (position + _controller.worldOffset) * _controller.scale, rect, Color.White, 0, new Vector2(rect.Width, rect.Height) / 2, 1f, SpriteEffects.None, layerDepth);
+        }
+
+        // Draw polygon
+        public void drawPolygon(CustomVertexFormat[] _vertices, int primitiveCount)
+        {
+            Matrix viewMatrix = Matrix.CreateTranslation(new Vector3(_controller.worldOffset, 0)) *
+                Matrix.CreateScale(new Vector3(_controller.scale, -_controller.scale, 1f)) *
+                Matrix.CreateTranslation(new Vector3(-GraphicsDevice.Viewport.Width, GraphicsDevice.Viewport.Height, 0) / 2f);
+            Matrix projectionMatrix = Matrix.CreateOrthographic(GraphicsDevice.Viewport.Width, GraphicsDevice.Viewport.Height, 0, 1);
+
+            _primitivesEffect.Parameters["world"].SetValue(Matrix.Identity);
+            _primitivesEffect.Parameters["view"].SetValue(viewMatrix);
+            _primitivesEffect.Parameters["projection"].SetValue(projectionMatrix);
+            _primitivesEffect.CurrentTechnique.Passes["primitives"].Apply();
+            GraphicsDevice.DrawUserPrimitives(PrimitiveType.TriangleList, _vertices, 0, primitiveCount, CustomVertexFormat.VertexDeclaration);
         }
     }
 }

@@ -2,7 +2,9 @@
 using System.Collections.Generic;
 using System.Xml.Linq;
 using Microsoft.Xna.Framework;
+using Microsoft.Xna.Framework.Graphics;
 using StasisCore;
+using StasisEditor.Controllers;
 
 namespace StasisEditor.Models
 {
@@ -20,9 +22,13 @@ namespace StasisEditor.Models
 
         public override void draw()
         {
+            // Draw primitive
+            if (_primitiveCount > 0)
+                _level.controller.view.drawPolygon(_vertices, _primitiveCount);
+            
+            // Draw lines and points
             int count = _headPoint.listCount;
             Color lineColor = count > 2 ? Color.Orange : Color.Red;
-
             PointListNode current = _headPoint;
             while (current != null)
             {
@@ -31,7 +37,6 @@ namespace StasisEditor.Models
                 _level.controller.view.drawPoint(current.position, Color.Yellow, _layerDepth);
                 current = current.next;
             }
-
             if (count > 2)
             {
                 _level.controller.view.drawLine(_headPoint.position, _headPoint.tail.position, Color.Purple, _layerDepth);

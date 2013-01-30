@@ -1,8 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Xml.Linq;
+using System.Diagnostics;
 using Microsoft.Xna.Framework;
+using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
+using Poly2Tri;
 using StasisCore;
 using StasisEditor.Controllers;
 
@@ -12,6 +15,8 @@ namespace StasisEditor.Models
     {
         protected PointListNode _headPoint;
         protected List<PointListNode> _selectedPoints;
+        protected CustomVertexFormat[] _vertices = new CustomVertexFormat[5000];
+        protected int _primitiveCount;
 
         public override XElement data
         {
@@ -39,7 +44,7 @@ namespace StasisEditor.Models
             _selectedPoints.Add(_headPoint);
             _selectedPoints.Add(_headPoint.tail.insertAfter(worldMouse + new Vector2(-0.5f, 0.5f)));
             _selectedPoints.Add(_headPoint.tail.insertAfter(worldMouse + new Vector2(0.5f, 0.5f)));
-
+            triangulate();
         }
 
         public EditorPolygonActor(EditorLevel level, XElement data)
@@ -52,12 +57,39 @@ namespace StasisEditor.Models
                 else
                     _headPoint.tail.insertAfter(Loader.loadVector2(pointData, Vector2.Zero));
             }
+            triangulate();
         }
 
         public override void deselect()
         {
             _selectedPoints.Clear();
             base.deselect();
+        }
+
+        private void triangulate()
+        {
+            List<PolygonPoint> points = new List<PolygonPoint>();
+            PointListNode current = _headPoint;
+            while (current != null)
+            {
+                points.Add(new PolygonPoint(current.position.X, current.position.Y));
+                current = current.next;
+            }
+            Polygon polygon = new Polygon(points);
+            P2T.Triangulate(polygon);
+            _primitiveCount = polygon.Triangles.Count;
+
+            int index = 0;
+            foreach (DelaunayTriangle triangle in polygon.Triangles)
+            {
+                for (int i = 0; i < 3; i++)
+                {
+                    _vertices[index++] = new CustomVertexFormat(
+                        new Vector3(triangle.Points[i].Xf, triangle.Points[i].Yf, 0),
+                        Vector2.Zero,
+                        new Vector3(1f, 1f, 1f));
+                }
+            }
         }
 
         public override bool hitTest()
@@ -116,6 +148,7 @@ namespace StasisEditor.Models
                 }
                 else
                 {
+                    triangulate();
                     deselect();
                 }
             }
