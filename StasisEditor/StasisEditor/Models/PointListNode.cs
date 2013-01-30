@@ -46,6 +46,22 @@ namespace StasisEditor.Models
                 return i;
             }
         }
+        public int index
+        {
+            get
+            {
+                PointListNode current = head;
+                int i = 0;
+                while (current != null)
+                {
+                    i++;
+                    if (current == this)
+                        return i;
+                    current = current.next;
+                }
+                return i;
+            }
+        }
 
         public PointListNode(Vector2 position)
         {
@@ -53,9 +69,9 @@ namespace StasisEditor.Models
         }
 
         // Insert new node (n) before this node (c)
-        //  a--b   c
-        //      \ /
-        //       n
+        //  a--b   c           c--b--a
+        //      \ /           /
+        //       n           n
         public PointListNode insertBefore(Vector2 position)
         {
             PointListNode n = new PointListNode(position);
@@ -90,6 +106,18 @@ namespace StasisEditor.Models
             _next = n;
 
             return n;
+        }
+
+        // Remove node from list
+        public void remove()
+        {
+            if (_previous != null)
+                _previous.next = _next;
+            if (_next != null)
+                _next.previous = _previous;
+
+            _previous = null;
+            _next = null;
         }
     }
 }

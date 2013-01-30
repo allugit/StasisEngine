@@ -107,6 +107,83 @@ namespace StasisEditor.Models
                         node.position += worldDelta;
                 }
 
+                // Insert a point
+                if (_level.controller.isKeyPressed(Keys.OemPlus))
+                {
+                    if (_selectedPoints.Count == 1)
+                    {
+                        PointListNode newNode = null;
+                        if (_selectedPoints[0] == _headPoint)
+                        {
+                            newNode = _headPoint.insertBefore(worldMouse);
+                            _headPoint = newNode;
+                        }
+                        else if (_selectedPoints[0] == _headPoint.tail)
+                        {
+                            newNode = _headPoint.tail.insertAfter(worldMouse);
+                        }
+                        else
+                        {
+                            newNode = _selectedPoints[0].insertAfter(worldMouse);
+                        }
+
+                        _selectedPoints.Clear();
+                        _selectedPoints.Add(newNode);
+                    }
+                    else if (_selectedPoints.Count == 2)
+                    {
+                        PointListNode firstNode = _selectedPoints[0].index < _selectedPoints[1].index ? _selectedPoints[0] : _selectedPoints[1];
+                        PointListNode newNode = firstNode.insertAfter(worldMouse);
+                        _selectedPoints.Clear();
+                        _selectedPoints.Add(newNode);
+                    }
+                }
+
+                // Remove a point
+                if (_level.controller.isKeyPressed(Keys.OemMinus))
+                {
+                    if (_headPoint.listCount > 3)
+                    {
+                        if (_selectedPoints.Count == 1)
+                        {
+                            PointListNode selectionReplacement = null;
+                            if (_selectedPoints[0] == _headPoint)
+                            {
+                                selectionReplacement = _headPoint.next;
+                                _headPoint = selectionReplacement;
+                            }
+                            else if (_selectedPoints[0] == _headPoint.tail)
+                            {
+                                selectionReplacement = _headPoint.tail.previous;
+                            }
+                            else
+                            {
+                                selectionReplacement = _selectedPoints[0].next ?? _selectedPoints[0].previous;
+                            }
+                            _selectedPoints[0].remove();
+                            _selectedPoints.Clear();
+                            selectionReplacement.position = worldMouse;
+                            _selectedPoints.Add(selectionReplacement);
+                        }
+                        else if (_selectedPoints.Count == 2)
+                        {
+                            if (_headPoint.listCount > 4)
+                            {
+                                if (_selectedPoints[0] == _headPoint)
+                                    _headPoint = _selectedPoints[0].next;
+                                else if (_selectedPoints[1] == _headPoint)
+                                    _headPoint = _selectedPoints[1].next;
+
+                                _selectedPoints[0].remove();
+                                _selectedPoints[1].remove();
+                                deselect();
+                            }
+                        }
+                    }
+                    //deselect();
+                }
+
+                // Deselect/delete
                 if (_level.controller.isKeyPressed(Keys.Escape))
                     deselect();
                 else if (_level.controller.isKeyPressed(Keys.Delete))
@@ -114,6 +191,7 @@ namespace StasisEditor.Models
             }
             else
             {
+                // Insert a point
                 if (_level.controller.isKeyPressed(Keys.OemPlus))
                 {
                     if (hitTest())
@@ -132,10 +210,23 @@ namespace StasisEditor.Models
                         else
                         {
                             // Hit test succeeded on a normal line segment, so add a point after the node closest to the head
-                            if (_selectedPoints[1] == _selectedPoints[0].next)
-                                _selectedPoints[0].insertAfter(worldMouse);
-                            else
-                                _selectedPoints[1].insertAfter(worldMouse);
+                            PointListNode firstNode = _selectedPoints[0].index < _selectedPoints[1].index ? _selectedPoints[0] : _selectedPoints[1];
+                            firstNode.insertAfter(worldMouse);
+                        }
+                        _selectedPoints.Clear();
+                    }
+                }
+
+                // Remove a point
+                if (_level.controller.isKeyPressed(Keys.OemMinus))
+                {
+                    if (_headPoint.listCount > 3 && hitTest())
+                    {
+                        if (_selectedPoints.Count == 1)
+                        {
+                            if (_selectedPoints[0] == _headPoint)
+                                _headPoint = _headPoint.next;
+                            _selectedPoints[0].remove();
                         }
                         _selectedPoints.Clear();
                     }
