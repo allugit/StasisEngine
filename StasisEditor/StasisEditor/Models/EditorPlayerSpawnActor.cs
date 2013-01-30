@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Xml.Linq;
 using Microsoft.Xna.Framework;
+using Microsoft.Xna.Framework.Input;
 using StasisCore;
 
 namespace StasisEditor.Models
@@ -49,6 +50,11 @@ namespace StasisEditor.Models
             if (selected)
             {
                 _position += worldDelta;
+
+                if (_level.controller.isKeyPressed(Keys.Escape))
+                    deselect();
+                else if (_level.controller.isKeyPressed(Keys.Delete))
+                    delete();
             }
         }
 
