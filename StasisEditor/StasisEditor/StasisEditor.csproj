@@ -84,6 +84,7 @@
     <Compile Include="Controllers\EditorController.cs" />
     <Compile Include="Controllers\LevelController.cs" />
     <Compile Include="Controllers\MaterialController.cs" />
+    <Compile Include="Models\CircuitConnection.cs" />
     <Compile Include="Models\EditorActor.cs" />
     <Compile Include="Models\EditorBoxActor.cs" />
     <Compile Include="Models\EditorCircleActor.cs" />

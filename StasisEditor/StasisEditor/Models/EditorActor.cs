@@ -18,6 +18,7 @@ namespace StasisEditor.Models
         public ActorType type { get { return _type; } set { _type = value; } }
         public int id { get { return _id; } set { _id = value; } }
         public float layerDepth { get { return _layerDepth; } set { _layerDepth = value; } }
+        virtual public Vector2 circuitWorldAnchor { get { return Vector2.Zero; } }
         virtual public XElement data
         {
             get

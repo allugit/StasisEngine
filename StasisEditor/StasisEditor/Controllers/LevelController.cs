@@ -206,7 +206,7 @@ namespace StasisEditor.Controllers
             {
                 _editorController.view.selectLevelTab();
                 _level.addActor(actor);
-                selectedActor = actor;
+                actor.select();
             }
         }
 
