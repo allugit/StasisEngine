@@ -41,6 +41,7 @@ namespace StasisEditor.Controllers
         public Vector2 worldOffset { get { return _screenCenter + (new Vector2(_levelView.Width, _levelView.Height) / 2) / _editorController.scale; } }
         public Vector2 worldMouse { get { return new Vector2(_mouse.X, _mouse.Y) / _editorController.scale - worldOffset; } }
         public Vector2 oldWorldMouse { get { return new Vector2(_oldMouse.X, _oldMouse.Y) / _editorController.scale - worldOffset; } }
+        public Vector2 worldDeltaMouse { get { return new Vector2(_mouse.X - _oldMouse.X, _mouse.Y - _oldMouse.Y) / _editorController.scale; } }
         public float scale { get { return _editorController.scale; } }
 
         public EditorActor selectedActor { get { return _selectedActor; } set { _selectedActor = value; } }
@@ -196,6 +197,7 @@ namespace StasisEditor.Controllers
                     SelectCircuit selectCircuitForm = new SelectCircuit(_editorController.circuitController);
                     if (selectCircuitForm.ShowDialog() == System.Windows.Forms.DialogResult.OK)
                     {
+                        actor = new EditorCircuitActor(_level, selectCircuitForm.circuitUID);
                     }
                     break;
             }

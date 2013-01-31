@@ -13,7 +13,7 @@ namespace StasisEditor.Views.Controls
 {
     public partial class SelectCircuit : Form
     {
-        public EditorCircuit circuit { get { return circuitUIDs.SelectedItem as EditorCircuit; } }
+        public string circuitUID { get { return (circuitUIDs.SelectedItem as EditorCircuit).uid; } }
 
         public SelectCircuit(CircuitController controller)
         {

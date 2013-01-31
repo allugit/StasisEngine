@@ -87,6 +87,7 @@
     <Compile Include="Models\EditorActor.cs" />
     <Compile Include="Models\EditorBoxActor.cs" />
     <Compile Include="Models\EditorCircleActor.cs" />
+    <Compile Include="Models\EditorCircuitActor.cs" />
     <Compile Include="Models\EditorFluidActor.cs" />
     <Compile Include="Models\EditorItemActor.cs" />
     <Compile Include="Models\EditorMaterialEdgeScatterLayer.cs" />
