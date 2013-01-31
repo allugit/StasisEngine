@@ -15,6 +15,7 @@ namespace StasisEditor.Models
 
         public Vector2 position { get { return _position; } set { _position = value; } }
         public float radius { get { return _radius; } set { _radius = value; } }
+        public override Vector2 circuitWorldAnchor { get { return _position; } }
         public override XElement data
         {
             get
@@ -41,9 +42,9 @@ namespace StasisEditor.Models
             _radius = Loader.loadFloat(data.Attribute("radius"), 1f);
         }
 
-        public override bool hitTest()
+        public override bool hitTest(Vector2 testPoint)
         {
-            return _level.controller.hitTestCircle(_level.controller.worldMouse, _position, _radius);
+            return _level.controller.hitTestCircle(testPoint, _position, _radius);
         }
 
         public override void update()

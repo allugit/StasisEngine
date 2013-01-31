@@ -46,6 +46,7 @@ namespace StasisEditor.Models
         public float tropismWeight { get { return _tropismWeight; } set { _tropismWeight = value; } }
         public Vector2 tropism { get { return _tropism; } set { _tropism = value; } }
         public Vector2 position { get { return _position; } set { _position = value; } }
+        public override Vector2 circuitWorldAnchor { get { return _position; } }
         public override XElement data
         {
             get
@@ -127,12 +128,10 @@ namespace StasisEditor.Models
             base.deselect();
         }
 
-        public override bool hitTest()
+        public override bool hitTest(Vector2 testPoint)
         {
-            Vector2 worldMouse = _level.controller.worldMouse;
-
             // Hit test tropism point
-            if (_level.controller.hitTestPoint(worldMouse, _position + _tropism))
+            if (_level.controller.hitTestPoint(testPoint, _position + _tropism))
             {
                 _selectedTropism = true;
                 return true;
@@ -141,7 +140,7 @@ namespace StasisEditor.Models
             // Hit test box
             Vector2 relative = new Vector2(0, -_internodeHalfLength / 2f);
             Matrix offset = Matrix.CreateTranslation(new Vector3(relative, 0)) * Matrix.CreateRotationZ(_angle);
-            if (_level.controller.hitTestBox(worldMouse, _position + Vector2.Transform(relative, offset), _maxBaseHalfWidth, _internodeHalfLength, _angle))
+            if (_level.controller.hitTestBox(testPoint, _position + Vector2.Transform(relative, offset), _maxBaseHalfWidth, _internodeHalfLength, _angle))
             {
                 return true;
             }

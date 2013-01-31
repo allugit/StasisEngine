@@ -34,10 +34,9 @@ namespace StasisEditor.Models
             _position = Loader.loadVector2(data.Attribute("position"), Vector2.Zero);
         }
 
-        public override bool hitTest()
+        public override bool hitTest(Vector2 testPoint)
         {
-            Vector2 worldMouse = _level.controller.worldMouse;
-            if (_level.controller.hitTestPoint(worldMouse, _position, 12f))
+            if (_level.controller.hitTestPoint(testPoint, _position, 12f))
                 return true;
 
             return false;

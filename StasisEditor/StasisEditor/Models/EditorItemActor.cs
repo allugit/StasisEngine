@@ -15,6 +15,7 @@ namespace StasisEditor.Models
 
         public string itemUID { get { return _itemUID; } set { _itemUID = value; } }
         public int quantity { get { return _quantity; } set { _quantity = value; } }
+        public override Vector2 circuitWorldAnchor { get { return _position; } }
 
         public EditorItemActor(EditorLevel level, string itemUID)
             : base(level, ActorType.Item, level.controller.getUnusedActorID())
@@ -32,9 +33,9 @@ namespace StasisEditor.Models
             _quantity = Loader.loadInt(data.Attribute("quantity"), 1);
         }
 
-        public override bool hitTest()
+        public override bool hitTest(Vector2 testPoint)
         {
-            return _level.controller.hitTestPoint(_level.controller.worldMouse, _position, 12f);
+            return _level.controller.hitTestPoint(testPoint, _position, 12f);
         }
 
         public override void update()

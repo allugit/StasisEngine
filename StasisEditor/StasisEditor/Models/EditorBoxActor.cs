@@ -19,6 +19,7 @@ namespace StasisEditor.Models
         public float halfWidth { get { return _halfWidth; } set { _halfWidth = value; } }
         public float halfHeight { get { return _halfHeight; } set { _halfHeight = value; } }
         public float angle { get { return _angle; } set { _angle = value; } }
+        public override Vector2 circuitWorldAnchor { get { return _position; } }
         public override XElement data
         {
             get
@@ -50,9 +51,9 @@ namespace StasisEditor.Models
             _angle = Loader.loadFloat(data.Attribute("angle"), 0f);
         }
 
-        public override bool hitTest()
+        public override bool hitTest(Vector2 testPoint)
         {
-            return _level.controller.hitTestBox(_level.controller.worldMouse, _position, _halfWidth, _halfHeight, _angle);
+            return _level.controller.hitTestBox(testPoint, _position, _halfWidth, _halfHeight, _angle);
         }
 
         public void rotate(Vector2 anchorPoint, float increment)

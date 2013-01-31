@@ -115,12 +115,42 @@ namespace StasisEditor.Models
             base.deselect();
         }
 
-        public override bool hitTest()
+        public override void handleMouseDown()
         {
-            Vector2 worldMouse = _level.controller.worldMouse;
+            if (selected)
+            {
+                if (_moveActor)
+                {
+                    deselect();
+                }
+                else if (_selectedGateControls.Count == 1)
+                {
+                    // Perform an actor hit test and form a connection if successful
+                    foreach (EditorActor actor in _level.actors)
+                    {
+                        if (actor.type != ActorType.Circuit)
+                        {
+                            if (actor.hitTest(_selectedGateControls[0].position))
+                            {
+                                _connections.Add(new CircuitConnection(this, actor, _selectedGateControls[0].gate));
+                                _gateControls.Remove(_selectedGateControls[0]);
+                                deselect();
+                                break;
+                            }
+                        }
+                    }
+                }
+            }
+            else
+            {
+                select();
+            }
+        }
 
+        public override bool hitTest(Vector2 testPoint)
+        {
             // Hit test icon
-            if (_level.controller.hitTestPoint(worldMouse, _position, 12f))
+            if (_level.controller.hitTestPoint(testPoint, _position, 12f))
             {
                 _moveActor = true;
                 selectAllGateControls();
@@ -130,7 +160,7 @@ namespace StasisEditor.Models
             // Hit test gate controls
             foreach (GateControl control in _gateControls)
             {
-                if (_level.controller.hitTestPoint(worldMouse, control.position))
+                if (_level.controller.hitTestPoint(testPoint, control.position))
                 {
                     _moveActor = false;
                     _selectedGateControls.Add(control);
@@ -168,6 +198,15 @@ namespace StasisEditor.Models
                 Color dotColor = gateControl.gate.type == "input" ? Color.Green : Color.Red;
                 _level.controller.view.drawLine(_position, gateControl.position, lineColor, _layerDepth - 0.0001f);
                 _level.controller.view.drawPoint(gateControl.position, dotColor, _layerDepth - 0.0001f);
+            }
+
+            // Connections
+            foreach (CircuitConnection connection in _connections)
+            {
+                Color lineColor = (connection.gate.type == "input" ? Color.DarkGreen : Color.DarkRed) * 0.5f;
+                Color dotColor = (connection.gate.type == "input" ? Color.Green : Color.Red) * 0.5f;
+                _level.controller.view.drawLine(_position, connection.actor.circuitWorldAnchor, lineColor, _layerDepth - 0.0001f);
+                _level.controller.view.drawPoint(connection.actor.circuitWorldAnchor, dotColor, _layerDepth - 0.0001f);
             }
         }
     }

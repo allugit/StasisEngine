@@ -74,7 +74,7 @@ namespace StasisEditor.Models
                 select();
         }
 
-        abstract public bool hitTest();
+        abstract public bool hitTest(Vector2 testPoint);
 
         virtual public void update()
         {

@@ -22,6 +22,7 @@ namespace StasisEditor.Models
         protected Color _polygonFill = Color.White;
 
         virtual protected Color polygonFill { get { return _polygonFill; } }
+        public override Vector2 circuitWorldAnchor { get { return _headPoint.position; } }
         public override XElement data
         {
             get
@@ -100,15 +101,13 @@ namespace StasisEditor.Models
             _polygonTexture = _level.controller.view.renderPolygon(_vertices, _primitiveCount);
         }
 
-        public override bool hitTest()
+        public override bool hitTest(Vector2 testPoint)
         {
-            Vector2 worldMouse = _level.controller.worldMouse;
-
             // Test points
             PointListNode current = _headPoint;
             while (current != null)
             {
-                if (_level.controller.hitTestPoint(worldMouse, current.position))
+                if (_level.controller.hitTestPoint(testPoint, current.position))
                 {
                     _selectedPoints.Add(current);
                     return true;
@@ -121,7 +120,7 @@ namespace StasisEditor.Models
             while (current != null)
             {
                 PointListNode next = current.next ?? _headPoint;
-                if (_level.controller.hitTestLine(worldMouse, current.position, next.position))
+                if (_level.controller.hitTestLine(testPoint, current.position, next.position))
                 {
                     _selectedPoints.Add(current);
                     _selectedPoints.Add(next);
@@ -132,7 +131,7 @@ namespace StasisEditor.Models
             }
 
             // Test polygon
-            if (_level.controller.hitTestPolygon(worldMouse, _headPoint.points))
+            if (_level.controller.hitTestPolygon(testPoint, _headPoint.points))
             {
                 _selectedPoints.Clear();
                 _selectedPoints = _headPoint.allNodes;
@@ -273,7 +272,7 @@ namespace StasisEditor.Models
                 // Insert a point
                 if (_level.controller.isKeyPressed(Keys.OemPlus))
                 {
-                    if (hitTest())
+                    if (hitTest(worldMouse))
                     {
                         if (_selectedPoints.Count == 1)
                         {
@@ -299,7 +298,7 @@ namespace StasisEditor.Models
                 // Remove a point
                 if (_level.controller.isKeyPressed(Keys.OemMinus))
                 {
-                    if (_headPoint.listCount > 3 && hitTest())
+                    if (_headPoint.listCount > 3 && hitTest(worldMouse))
                     {
                         if (_selectedPoints.Count == 1)
                         {

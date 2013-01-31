@@ -249,6 +249,7 @@ namespace StasisEditor.Controllers
         // Handle mouse down
         public void handleMouseDown(System.Windows.Forms.MouseEventArgs e)
         {
+            Vector2 worldMouse = this.worldMouse;
             if (_level != null)
             {
                 if (e.Button == MouseButtons.Left)
@@ -258,7 +259,7 @@ namespace StasisEditor.Controllers
                         // Try to select an actor
                         foreach (EditorActor actor in _level.actors)
                         {
-                            if (actor.hitTest())
+                            if (actor.hitTest(worldMouse))
                             {
                                 actor.handleMouseDown();
                                 break;

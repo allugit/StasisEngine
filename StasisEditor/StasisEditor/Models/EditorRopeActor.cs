@@ -23,6 +23,7 @@ namespace StasisEditor.Models
         private SelectedPoints _selectedPoints;
 
         public bool doubleAnchor;
+        public override Vector2 circuitWorldAnchor { get { return (_pointA + _pointB) / 2; } }
         public override XElement data
         {
             get
@@ -57,24 +58,22 @@ namespace StasisEditor.Models
             base.deselect();
         }
 
-        public override bool hitTest()
+        public override bool hitTest(Vector2 testPoint)
         {
-            Vector2 worldMouse = _level.controller.worldMouse;
-
             // Hit test points
-            if (_level.controller.hitTestPoint(worldMouse, _pointA))
+            if (_level.controller.hitTestPoint(testPoint, _pointA))
             {
                 _selectedPoints = SelectedPoints.A;
                 return true;
             }
-            else if (_level.controller.hitTestPoint(worldMouse, _pointB))
+            else if (_level.controller.hitTestPoint(testPoint, _pointB))
             {
                 _selectedPoints = SelectedPoints.B;
                 return true;
             }
 
             // Hit test line
-            if (_level.controller.hitTestLine(worldMouse, _pointA, _pointB))
+            if (_level.controller.hitTestLine(testPoint, _pointA, _pointB))
             {
                 _selectedPoints = SelectedPoints.AB;
                 return true;
