@@ -30,6 +30,8 @@ namespace StasisEditor.Models
             {
                 XElement d = base.data;
                 d.SetAttributeValue("double_anchor", _doubleAnchor);
+                d.SetAttributeValue("point_a", _pointA);
+                d.SetAttributeValue("point_b", _pointB);
                 return d;
             }
         }
@@ -47,6 +49,7 @@ namespace StasisEditor.Models
         public EditorRopeActor(EditorLevel level, XElement data)
             : base(level, data)
         {
+            _doubleAnchor = Loader.loadBool(data.Attribute("double_anchor"), false);
             _pointA = Loader.loadVector2(data.Attribute("point_a"), Vector2.Zero);
             _pointB = Loader.loadVector2(data.Attribute("point_b"), Vector2.Zero);
             _selectedPoints = SelectedPoints.None;

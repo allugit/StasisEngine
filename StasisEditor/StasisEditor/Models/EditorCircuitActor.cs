@@ -63,7 +63,7 @@ namespace StasisEditor.Models
             _connections = new List<CircuitConnection>();
             foreach (XElement connectionData in data.Elements("CircuitConnection"))
             {
-                EditorActor actor = level.controller.getActor(int.Parse(connectionData.Attribute("actor_id").Value));
+                EditorActor actor = level.getActor(int.Parse(connectionData.Attribute("actor_id").Value));
                 Gate gate = _circuit.getGate(int.Parse(connectionData.Attribute("gate_id").Value));
                 _connections.Add(new CircuitConnection(this, actor, gate));
             }

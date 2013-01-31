@@ -55,6 +55,7 @@ namespace StasisEditor.Models
         public EditorPolygonActor(EditorLevel level, XElement data)
             : base(level, data)
         {
+            _selectedPoints = new List<PointListNode>();
             foreach (XElement pointData in data.Elements("Point"))
             {
                 if (_headPoint == null)
@@ -98,6 +99,8 @@ namespace StasisEditor.Models
                 }
             }
 
+            if (_polygonTexture != null)
+                _polygonTexture.Dispose();
             _polygonTexture = _level.controller.view.renderPolygon(_vertices, _primitiveCount);
         }
 

@@ -16,6 +16,17 @@ namespace StasisEditor.Models
         public string itemUID { get { return _itemUID; } set { _itemUID = value; } }
         public int quantity { get { return _quantity; } set { _quantity = value; } }
         public override Vector2 circuitWorldAnchor { get { return _position; } }
+        public override XElement data
+        {
+            get
+            {
+                XElement d = base.data;
+                d.SetAttributeValue("position", _position);
+                d.SetAttributeValue("item_uid", _itemUID);
+                d.SetAttributeValue("quantity", _quantity);
+                return d;
+            }
+        }
 
         public EditorItemActor(EditorLevel level, string itemUID)
             : base(level, ActorType.Item, level.controller.getUnusedActorID())

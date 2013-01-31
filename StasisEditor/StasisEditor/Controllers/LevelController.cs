@@ -125,6 +125,7 @@ namespace StasisEditor.Controllers
         public void closeLevel()
         {
             _level = null;
+            _levelView.Invalidate();
         }
 
         // Create actor from toolbar

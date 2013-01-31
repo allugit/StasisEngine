@@ -53,6 +53,9 @@ namespace StasisEditor.Models
         public EditorLevel(LevelController levelController, XElement data) : base(data)
         {
             _controller = levelController;
+            _actors = new List<EditorActor>();
+            _actorsToAdd = new List<EditorActor>();
+            _actorsToRemove = new List<EditorActor>();
             List<XElement> secondPassData = new List<XElement>();
 
             // First pass -- load independent actors
@@ -61,9 +64,11 @@ namespace StasisEditor.Models
                 switch (actorData.Attribute("type").Value)
                 {
                     case "Box":
+                        actors.Add(new EditorBoxActor(this, actorData));
                         break;
 
                     case "Circle":
+                        actors.Add(new EditorCircleActor(this, actorData));
                         break;
 
                     case "Circuit":
@@ -71,24 +76,30 @@ namespace StasisEditor.Models
                         break;
 
                     case "Fluid":
+                        actors.Add(new EditorFluidActor(this, actorData));
                         break;
 
                     case "Item":
+                        actors.Add(new EditorItemActor(this, actorData));
                         break;
 
                     case "MovingPlatform":
                         break;
 
                     case "PlayerSpawn":
+                        actors.Add(new EditorPlayerSpawnActor(this, actorData));
                         break;
 
                     case "Rope":
+                        actors.Add(new EditorRopeActor(this, actorData));
                         break;
 
                     case "Terrain":
+                        actors.Add(new EditorTerrainActor(this, actorData));
                         break;
 
                     case "Tree":
+                        actors.Add(new EditorTreeActor(this, actorData));
                         break;
                 }
             }
@@ -100,6 +111,7 @@ namespace StasisEditor.Models
                 {
                     case "Circuit":
                         EditorCircuit circuit = _controller.editorController.circuitController.getCircuit(actorData.Attribute("circuit_uid").Value);
+                        actors.Add(new EditorCircuitActor(this, actorData));
                         break;
                 }
             }
