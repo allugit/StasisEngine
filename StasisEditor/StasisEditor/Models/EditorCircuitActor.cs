@@ -53,6 +53,7 @@ namespace StasisEditor.Models
             _connections = new List<CircuitConnection>();
             _layerDepth = 0.1f;
             initializeGateControls();
+            selectAllGateControls();
         }
 
         public EditorCircuitActor(EditorLevel level, XElement data) 
@@ -98,8 +99,6 @@ namespace StasisEditor.Models
                     }
                 }
             }
-
-            selectAllGateControls();
         }
 
         private void selectAllGateControls()
@@ -119,11 +118,7 @@ namespace StasisEditor.Models
         {
             if (selected)
             {
-                if (_moveActor)
-                {
-                    deselect();
-                }
-                else if (_selectedGateControls.Count == 1)
+                if (_selectedGateControls.Count == 1)
                 {
                     // Perform an actor hit test and form a connection if successful
                     foreach (EditorActor actor in _level.actors)
@@ -134,12 +129,12 @@ namespace StasisEditor.Models
                             {
                                 _connections.Add(new CircuitConnection(this, actor, _selectedGateControls[0].gate));
                                 _gateControls.Remove(_selectedGateControls[0]);
-                                deselect();
                                 break;
                             }
                         }
                     }
                 }
+                deselect();
             }
             else
             {
