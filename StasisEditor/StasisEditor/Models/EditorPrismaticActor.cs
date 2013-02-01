@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Xml.Linq;
 using Microsoft.Xna.Framework;
+using Microsoft.Xna.Framework.Input;
 using StasisCore;
 
 namespace StasisEditor.Models
@@ -12,9 +13,13 @@ namespace StasisEditor.Models
         private Vector2 _actorControl;
         private bool _selectedActorControl;
         private bool _moveActor;
+        private float _angle;
 
         private Vector2 _position;
+        private float _lowerLimit;
+        private float _upperLimit;
 
+        public override Vector2 circuitConnectionPosition { get { return _position; } }
         public override XElement data
         {
             get
@@ -22,6 +27,9 @@ namespace StasisEditor.Models
                 XElement d = base.data;
                 d.SetAttributeValue("position", _position);
                 d.SetAttributeValue("actor_id", _actor == null ? -1 : _actor.id);
+                d.SetAttributeValue("axis", new Vector2((float)Math.Cos(_angle), (float)Math.Sin(_angle)));
+                d.SetAttributeValue("lower_limit", _lowerLimit);
+                d.SetAttributeValue("upper_limit", _upperLimit);
                 return d;
             }
         }
@@ -30,6 +38,9 @@ namespace StasisEditor.Models
             : base(level, ActorType.Prismatic, level.controller.getUnusedActorID())
         {
             _position = level.controller.worldMouse;
+            _angle = 0f;
+            _lowerLimit = 1f;
+            _upperLimit = 1f;
             initializeControls();
             _selectedActorControl = true;
             _moveActor = true;
@@ -40,6 +51,10 @@ namespace StasisEditor.Models
         {
             _position = Loader.loadVector2(data.Attribute("position"), Vector2.Zero);
             _actor = data.Attribute("actor_id").Value == "-1" ? null : level.getActor(int.Parse(data.Attribute("actor_id").Value));
+            Vector2 axis = Loader.loadVector2(data.Attribute("axis"), new Vector2(1, 0));
+            _angle = (float)Math.Atan2(axis.Y, axis.X);
+            _lowerLimit = Loader.loadFloat(data.Attribute("lower_limit"), 1f);
+            _upperLimit = Loader.loadFloat(data.Attribute("upper_limit"), 1f);
             initializeControls();
         }
 
@@ -104,6 +119,8 @@ namespace StasisEditor.Models
         public override void update()
         {
             Vector2 worldDelta = _level.controller.worldDeltaMouse;
+            float angleIncrement = _level.controller.shift ? 0.0001f : 0.0005f;
+            float limitIncrement = _level.controller.shift ? 0.0001f : 0.0005f;
 
             if (selected)
             {
@@ -114,6 +131,20 @@ namespace StasisEditor.Models
                     if (_selectedActorControl)
                         _actorControl += worldDelta;
                 }
+
+                if (_level.controller.isKeyHeld(Keys.Q))
+                    _angle -= angleIncrement;
+                if (_level.controller.isKeyHeld(Keys.E))
+                    _angle += angleIncrement;
+                if (_level.controller.isKeyHeld(Keys.W))
+                    _upperLimit += limitIncrement;
+                if (_level.controller.isKeyHeld(Keys.S))
+                    _upperLimit -= limitIncrement;
+                if (_level.controller.isKeyHeld(Keys.A))
+                    _lowerLimit += limitIncrement;
+                if (_level.controller.isKeyHeld(Keys.D))
+                    _lowerLimit -= limitIncrement;
+
             }
         }
 
@@ -121,6 +152,13 @@ namespace StasisEditor.Models
         {
             // Icon
             _level.controller.view.drawIcon(_type, _position, _layerDepth);
+
+            // Limits and axis
+            Vector2 axis = new Vector2((float)Math.Cos(_angle), (float)Math.Sin(_angle));
+            _level.controller.view.drawLine(_position, _position + axis, Color.DarkGray, _layerDepth);
+            _level.controller.view.drawLine(_position, _position - axis, Color.DarkGray, _layerDepth);
+            _level.controller.view.drawLine(_position, _position + axis * _upperLimit, Color.DarkGray, _layerDepth + 0.0001f);
+            _level.controller.view.drawLine(_position, _position - axis * _lowerLimit, Color.DarkGray, _layerDepth + 0.0001f);
 
             // Connections and controls
             if (_actor == null)
