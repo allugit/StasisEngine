@@ -76,12 +76,12 @@ namespace StasisEditor.Models
                     {
                         if (actor.type == ActorType.Box || actor.type == ActorType.Circle || actor.type == ActorType.Terrain)
                         {
-                            if (_selectedA && actor.hitTest(_controlA))
+                            if (_selectedA && actor.hitTest(_controlA) && actor != _actorB)
                             {
                                 _actorA = actor;
                                 break;
                             }
-                            else if (_selectedB && actor.hitTest(_controlB))
+                            else if (_selectedB && actor.hitTest(_controlB) && actor != _actorA)
                             {
                                 _actorB = actor;
                                 break;
