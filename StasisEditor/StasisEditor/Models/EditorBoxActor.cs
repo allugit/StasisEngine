@@ -19,7 +19,8 @@ namespace StasisEditor.Models
         public float halfWidth { get { return _halfWidth; } set { _halfWidth = value; } }
         public float halfHeight { get { return _halfHeight; } set { _halfHeight = value; } }
         public float angle { get { return _angle; } set { _angle = value; } }
-        public override Vector2 circuitWorldAnchor { get { return _position; } }
+        public override Vector2 circuitConnectionPosition { get { return _position; } }
+        public override Vector2 revoluteConnectionPosition { get { return _position; } }
         public override XElement data
         {
             get
@@ -40,6 +41,7 @@ namespace StasisEditor.Models
             _halfWidth = 1f;
             _halfHeight = 1f;
             _angle = 0f;
+            _layerDepth = 0.1f;
         }
 
         public EditorBoxActor(EditorLevel level, XElement data)

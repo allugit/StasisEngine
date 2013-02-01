@@ -23,7 +23,7 @@ namespace StasisEditor.Models
         private SelectedPoints _selectedPoints;
 
         public bool doubleAnchor;
-        public override Vector2 circuitWorldAnchor { get { return (_pointA + _pointB) / 2; } }
+        public override Vector2 circuitConnectionPosition { get { return (_pointA + _pointB) / 2; } }
         public override XElement data
         {
             get

@@ -46,7 +46,7 @@ namespace StasisEditor.Models
         public float tropismWeight { get { return _tropismWeight; } set { _tropismWeight = value; } }
         public Vector2 tropism { get { return _tropism; } set { _tropism = value; } }
         public Vector2 position { get { return _position; } set { _position = value; } }
-        public override Vector2 circuitWorldAnchor { get { return _position; } }
+        public override Vector2 circuitConnectionPosition { get { return _position; } }
         public override XElement data
         {
             get

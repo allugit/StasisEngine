@@ -22,7 +22,8 @@ namespace StasisEditor.Models
         protected Color _polygonFill = Color.White;
 
         virtual protected Color polygonFill { get { return _polygonFill; } }
-        public override Vector2 circuitWorldAnchor { get { return _headPoint.position; } }
+        public override Vector2 circuitConnectionPosition { get { return _headPoint.position; } }
+        public override Vector2 revoluteConnectionPosition { get { return _headPoint.position; } }
         public override XElement data
         {
             get

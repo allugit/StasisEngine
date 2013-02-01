@@ -205,8 +205,8 @@ namespace StasisEditor.Models
             {
                 Color lineColor = (connection.gate.type == "input" ? Color.DarkGreen : Color.DarkRed) * 0.5f;
                 Color dotColor = (connection.gate.type == "input" ? Color.Green : Color.Red) * 0.5f;
-                _level.controller.view.drawLine(_position, connection.actor.circuitWorldAnchor, lineColor, _layerDepth - 0.0001f);
-                _level.controller.view.drawPoint(connection.actor.circuitWorldAnchor, dotColor, _layerDepth - 0.0001f);
+                _level.controller.view.drawLine(_position, connection.actor.circuitConnectionPosition, lineColor, _layerDepth - 0.0001f);
+                _level.controller.view.drawPoint(connection.actor.circuitConnectionPosition, dotColor, _layerDepth - 0.0001f);
             }
         }
     }

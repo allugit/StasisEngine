@@ -15,7 +15,8 @@ namespace StasisEditor.Models
 
         public Vector2 position { get { return _position; } set { _position = value; } }
         public float radius { get { return _radius; } set { _radius = value; } }
-        public override Vector2 circuitWorldAnchor { get { return _position; } }
+        public override Vector2 circuitConnectionPosition { get { return _position; } }
+        public override Vector2 revoluteConnectionPosition { get { return _position; } }
         public override XElement data
         {
             get

@@ -83,9 +83,6 @@ namespace StasisEditor.Models
                         actors.Add(new EditorItemActor(this, actorData));
                         break;
 
-                    case "MovingPlatform":
-                        break;
-
                     case "PlayerSpawn":
                         actors.Add(new EditorPlayerSpawnActor(this, actorData));
                         break;
@@ -101,6 +98,10 @@ namespace StasisEditor.Models
                     case "Tree":
                         actors.Add(new EditorTreeActor(this, actorData));
                         break;
+
+                    case "Revolute":
+                        secondPassData.Add(actorData);
+                        break;
                 }
             }
 
@@ -112,6 +113,10 @@ namespace StasisEditor.Models
                     case "Circuit":
                         EditorCircuit circuit = _controller.editorController.circuitController.getCircuit(actorData.Attribute("circuit_uid").Value);
                         actors.Add(new EditorCircuitActor(this, actorData));
+                        break;
+
+                    case "Revolute":
+                        actors.Add(new EditorRevoluteActor(this, actorData));
                         break;
                 }
             }
