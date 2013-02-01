@@ -44,7 +44,7 @@
     </Compile>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="actor_controller_icons\player_spawn.png">
+    <Compile Include="actor_icons\player_spawn.png">
       <Name>player_spawn</Name>
       <Importer>TextureImporter</Importer>
       <Processor>TextureProcessor</Processor>
@@ -80,15 +80,22 @@
     </Compile>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="actor_controller_icons\item.png">
+    <Compile Include="actor_icons\item.png">
       <Name>item</Name>
       <Importer>TextureImporter</Importer>
       <Processor>TextureProcessor</Processor>
     </Compile>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="actor_controller_icons\circuit.png">
+    <Compile Include="actor_icons\circuit.png">
       <Name>circuit</Name>
+      <Importer>TextureImporter</Importer>
+      <Processor>TextureProcessor</Processor>
+    </Compile>
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="actor_icons\revolute.png">
+      <Name>revolute</Name>
       <Importer>TextureImporter</Importer>
       <Processor>TextureProcessor</Processor>
     </Compile>

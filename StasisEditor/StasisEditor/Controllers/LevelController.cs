@@ -201,6 +201,10 @@ namespace StasisEditor.Controllers
                         actor = new EditorCircuitActor(_level, selectCircuitForm.circuitUID);
                     }
                     break;
+
+                case "revoluteButton":
+                    actor = new EditorRevoluteActor(_level);
+                    break;
             }
 
             if (actor != null)

@@ -19,6 +19,7 @@ namespace StasisEditor.Views
         private Texture2D _playerSpawnIcon;
         private Texture2D _itemIcon;
         private Texture2D _circuitIcon;
+        private Texture2D _revoluteIcon;
         private SpriteBatch _spriteBatch;
         private Texture2D _pixel;
         private Texture2D _circle;
@@ -50,9 +51,10 @@ namespace StasisEditor.Views
             _pixel = new Texture2D(GraphicsDevice, 1, 1);
             _pixel.SetData<Color>(new[] { Color.White });
             _circle = _contentManager.Load<Texture2D>("circle");
-            _playerSpawnIcon = _contentManager.Load<Texture2D>("actor_controller_icons\\player_spawn");
-            _itemIcon = _contentManager.Load<Texture2D>("actor_controller_icons\\item");
-            _circuitIcon = _contentManager.Load<Texture2D>("actor_controller_icons\\circuit");
+            _playerSpawnIcon = _contentManager.Load<Texture2D>("actor_icons\\player_spawn");
+            _itemIcon = _contentManager.Load<Texture2D>("actor_icons\\item");
+            _circuitIcon = _contentManager.Load<Texture2D>("actor_icons\\circuit");
+            _revoluteIcon = _contentManager.Load<Texture2D>("actor_icons\\revolute");
 
             _coreContentManager = new ContentManager(Services, "StasisCoreContent");
             _primitivesEffect = _coreContentManager.Load<Effect>("effects\\primitives");
@@ -215,6 +217,10 @@ namespace StasisEditor.Views
 
                 case ActorType.Circuit:
                     texture = _circuitIcon;
+                    break;
+
+                case ActorType.Revolute:
+                    texture = _revoluteIcon;
                     break;
             }
 

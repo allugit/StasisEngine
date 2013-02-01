@@ -106,6 +106,7 @@
     <Compile Include="Models\EditorMaterial.cs" />
     <Compile Include="Models\EditorPlayerSpawnActor.cs" />
     <Compile Include="Models\EditorPolygonActor.cs" />
+    <Compile Include="Models\EditorRevoluteActor.cs" />
     <Compile Include="Models\EditorRopeActor.cs" />
     <Compile Include="Models\EditorTerrainActor.cs" />
     <Compile Include="Models\EditorTreeActor.cs" />
@@ -242,6 +243,7 @@
       <XnaPlatformSpecific>true</XnaPlatformSpecific>
     </Content>
     <Content Include="Resources\circuits.png" />
+    <None Include="Resources\revolute.png" />
     <None Include="Resources\object_spawner.png" />
     <None Include="Resources\timer.png" />
     <None Include="Resources\terrain.png" />

@@ -12,7 +12,8 @@
         PlayerSpawn,
         Tree,
         Item,
-        Circuit
+        Circuit,
+        Revolute
     };
 
     public enum PlantType

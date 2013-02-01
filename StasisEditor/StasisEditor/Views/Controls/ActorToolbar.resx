@@ -117,10 +117,10 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
-  <metadata name="anchorToolStrip.TrayLocation" type="System.Drawing.Point, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
-    <value>17, 17</value>
-  </metadata>
   <assembly alias="System.Drawing" name="System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a" />
+  <data name="anchorToolStrip.TrayLocation" type="System.Drawing.Point, System.Drawing">
+    <value>17, 17</value>
+  </data>
   <data name="boxButton.Image" type="System.Drawing.Bitmap, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
     <value>
         iVBORw0KGgoAAAANSUhEUgAAABYAAAAWCAYAAADEtGw7AAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8
@@ -217,22 +217,6 @@
         pmtiTa0AAAAASUVORK5CYII=
 </value>
   </data>
-  <data name="circuitsButton.Image" type="System.Drawing.Bitmap, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
-    <value>
-        iVBORw0KGgoAAAANSUhEUgAAABYAAAAWCAYAAADEtGw7AAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8
-        YQUAAAAJcEhZcwAADsMAAA7DAcdvqGQAAAIrSURBVEhLpZU5riJBEESxP0dh/5xgxsJD7PsOAsQiQAgJ
-        CeuPhbBwwRkMHI7BxXLq5VCtBmZhaSnU3dWZUVGR2VUez+VqNpvfDL4ajcbO4OeT2JFbr9e/Wz69t1qt
-        3Ww2k9VqpVgulzKfz2U6ncp4PJbBYCD9fl+63a60220x8QpD5sCOIUxJUTqZTOR0Oslms1Gi4XDoEHU6
-        HYcMIpMoRtkVarWavvONGFXOElC4Xq+vkgi2qFarYlGpVASUy+UrMOYi//IgfbFYqEo+QPY/olKpJKBY
-        LDrgnTxUqx0UCS97vZ4q+Pz8FK/Xq3cS3erchPl8XkKhkMZy592qNi4clHg0GgleRqNRicVist1uxdj/
-        EIglJxwOqzBW7RBTcarK7AQej0clPZ/P/wQxxJJD7h0xaqkmy3crfoTYKsaOO2J6kyXgaSQS0dkfVfzx
-        8SHBYFCy2awW9MoKbGAA0lcVQ35HjA202bses2J4nOJBTA9S2VcVBwIBtdIhhp2mpgfdvfmMx36/X1Kp
-        lENsbD3wSysxFaWy7yguFAqq2CGmcBC/4zHd8VdiKvvqn4cdt8R7qziTyQhFYHYCE4mEepdMJq/AeDwe
-        F5/Pp7HciaF4lz7e67aJx3QFM+ZyOWECkE6nHTDBLSCzY+TZP8/w/fCwKV82Z+0Mux0yyS3omj+BOBfp
-        742ei/3TfTq4N/nbZ/debZ/dJ4hzNNnDj1lYgpkAzw/PwOTtyXUfpr8AtL3f9aFxrwYAAAAASUVORK5C
-        YII=
-</value>
-  </data>
   <data name="fluidButton.Image" type="System.Drawing.Bitmap, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
     <value>
         iVBORw0KGgoAAAANSUhEUgAAABYAAAAWCAYAAADEtGw7AAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8
@@ -314,6 +298,22 @@
         Kf8sHjfGWPsy/Q3R516gg6njaAAAAABJRU5ErkJggg==
 </value>
   </data>
+  <data name="circuitsButton.Image" type="System.Drawing.Bitmap, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
+    <value>
+        iVBORw0KGgoAAAANSUhEUgAAABYAAAAWCAYAAADEtGw7AAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8
+        YQUAAAAJcEhZcwAADsMAAA7DAcdvqGQAAAIrSURBVEhLpZU5riJBEESxP0dh/5xgxsJD7PsOAsQiQAgJ
+        CeuPhbBwwRkMHI7BxXLq5VCtBmZhaSnU3dWZUVGR2VUez+VqNpvfDL4ajcbO4OeT2JFbr9e/Wz69t1qt
+        3Ww2k9VqpVgulzKfz2U6ncp4PJbBYCD9fl+63a60220x8QpD5sCOIUxJUTqZTOR0Oslms1Gi4XDoEHU6
+        HYcMIpMoRtkVarWavvONGFXOElC4Xq+vkgi2qFarYlGpVASUy+UrMOYi//IgfbFYqEo+QPY/olKpJKBY
+        LDrgnTxUqx0UCS97vZ4q+Pz8FK/Xq3cS3erchPl8XkKhkMZy592qNi4clHg0GgleRqNRicVist1uxdj/
+        EIglJxwOqzBW7RBTcarK7AQej0clPZ/P/wQxxJJD7h0xaqkmy3crfoTYKsaOO2J6kyXgaSQS0dkfVfzx
+        8SHBYFCy2awW9MoKbGAA0lcVQ35HjA202bses2J4nOJBTA9S2VcVBwIBtdIhhp2mpgfdvfmMx36/X1Kp
+        lENsbD3wSysxFaWy7yguFAqq2CGmcBC/4zHd8VdiKvvqn4cdt8R7qziTyQhFYHYCE4mEepdMJq/AeDwe
+        F5/Pp7HciaF4lz7e67aJx3QFM+ZyOWECkE6nHTDBLSCzY+TZP8/w/fCwKV82Z+0Mux0yyS3omj+BOBfp
+        742ei/3TfTq4N/nbZ/debZ/dJ4hzNNnDj1lYgpkAzw/PwOTtyXUfpr8AtL3f9aFxrwYAAAAASUVORK5C
+        YII=
+</value>
+  </data>
   <data name="goalButton.Image" type="System.Drawing.Bitmap, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
     <value>
         iVBORw0KGgoAAAANSUhEUgAAABYAAAAWCAYAAADEtGw7AAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8
@@ -333,5 +333,9 @@
         FR+Lcmlx9v4823bu6mXbkDo8DXedKG0Ej1sU66e7O7iL/NNrd9G31+4O4m1NdvNDOSmYCfCcTvnvMOO2
         GOtupr8BWjbnkM+VtIoAAAAASUVORK5CYII=
 </value>
+  </data>
+  <assembly alias="System.Windows.Forms" name="System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089" />
+  <data name="revoluteButton.Image" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\..\Resources\revolute.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
 </root>
