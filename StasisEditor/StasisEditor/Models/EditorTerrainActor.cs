@@ -11,6 +11,8 @@ namespace StasisEditor.Models
     public class EditorTerrainActor : EditorPolygonActor
     {
         protected override Color polygonFill { get { return Color.Orange * 0.3f; } }
+        public override Vector2 prismaticConnectionPosition { get { return _headPoint.position; } }
+        public override Vector2 revoluteConnectionPosition { get { return _headPoint.position; } }
 
         public EditorTerrainActor(EditorLevel level)
             : base(level, ActorType.Terrain)

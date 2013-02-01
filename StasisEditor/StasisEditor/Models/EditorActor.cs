@@ -20,6 +20,7 @@ namespace StasisEditor.Models
         public float layerDepth { get { return _layerDepth; } set { _layerDepth = value; } }
         virtual public Vector2 circuitConnectionPosition { get { return Vector2.Zero; } }
         virtual public Vector2 revoluteConnectionPosition { get { return Vector2.Zero; } }
+        virtual public Vector2 prismaticConnectionPosition { get { return Vector2.Zero; } }
         virtual public XElement data
         {
             get

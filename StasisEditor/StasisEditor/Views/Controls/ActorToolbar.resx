@@ -177,26 +177,6 @@
         2cRDuAAAAABJRU5ErkJggg==
 </value>
   </data>
-  <data name="movingPlatformButton.Image" type="System.Drawing.Bitmap, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
-    <value>
-        iVBORw0KGgoAAAANSUhEUgAAABYAAAAWCAYAAADEtGw7AAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8
-        YQUAAAAJcEhZcwAADsMAAA7DAcdvqGQAAANCSURBVEhLlZU9SJtRFIaDiy4O4iaC6BKDzY/RJuJPaoTE
-        H9SoiSZR409UNERFg7VYnOwkuhU6RCgVSgc7dWyhpVs7dmvHDqVLOxTaoYu+Pe/B+/ElUjCBQ76fe5/7
-        3vecez6H4/qXzWbDEkfLy8tFiWcVRpFzl5aWBgxP/1dWVoqFQgGHh4caBwcH2Nvbw+7uLra3t5HP55HL
-        5bC+vo7V1VXIeA2BWWGeUZhCqXRnZwcXFxc4OTlR0ObmpgVaW1uzYATJRIiyklhcXNR7vuMYVc4tUOHx
-        8XHJJA42sbCwABOZTAYTExOIxWKYn5+3gs9t8CMHpe/v76tKviCsHMRJdkhDQwM6OzsxOztrxdzcnM6j
-        arWDSaKXGxsbJVDCTBgoJ0ciEdTW1iKVSiGdTlvBRYxqceFcwVtbW6CXRm05kGBCObm+vh7d3d0W0CzA
-        dxzHXVtgZpxZ5VbKt02ggfb29qKurs5SSygjmUzqQjfAVMtsGqgUCyoJgrnADTBrk1sgmOoIffju562C
-        Y2dmZhTMuSVW0AY+4Ir0qlLw9PS02nEDTBuYOONlpeBEIqGq6TM5VvIIZuKoli9vBX77Aw9ef9exIyMj
-        GB4e1kNDS8TS5zx55yxq+kswX1SSOI7t6OiAz+dDIBDA0NAQpqamXlpg+ku19IrbYoyOjqK6ulr/uV1G
-        PB5XZdFoVE+f230HLMNQqA9er1fu3bx/o2CTOKolkMlgNDc3o7W11QISKmp028FgEG6PR8YlkMvnpGnl
-        JfkZdAW7OOdTCZhqCaQyKqLasbExVUkgg2rD4TBcLhdSyRTYZ57Kbov9/bgvJzgRT6ClpeUPwWdGsR1M
-        z7gtO5RgLtTT0wOPx63t9FRy86WqCujrwwexMiul6/f7r7RtMnmsCuOxscL4arzlIuPj4+qpz9eOrMx7
-        LA3sq4AvnS687w9JAaQRuBu4crApXzdn6+SZsrN3L14zB1yUHc7r9UlfjukH4VQWezIwoB4PDg7C6XT+
-        1a8I+6f962Bv8uXXLEtaQtX+dj8i0QgmJyfV+9C9ENra2i5ramrOrG8flcsCj649Z6X8N0T9C6mMV5KH
-        j1I535qamn5Lwn41NjZ+FmBBIvwPbY2uFqkA68UAAAAASUVORK5CYII=
-</value>
-  </data>
   <data name="ropeButton.Image" type="System.Drawing.Bitmap, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
     <value>
         iVBORw0KGgoAAAANSUhEUgAAABYAAAAWCAYAAADEtGw7AAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8
@@ -314,6 +294,25 @@
         YII=
 </value>
   </data>
+  <data name="revoluteButton.Image" type="System.Drawing.Bitmap, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
+    <value>
+        iVBORw0KGgoAAAANSUhEUgAAABYAAAAWCAYAAADEtGw7AAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8
+        YQUAAAAJcEhZcwAADsMAAA7DAcdvqGQAAAMHSURBVEhLlZXBShtRFIazi1CwuyYq3RQSNCAhxLgQJNYQ
+        MBpFTaLRaDRqMBKVGCRgcaUUKoIPoJtKV3VR6Kq7vkf3XfYdTuc75gwzUaEN/Mxk5t7vnvOfM/cGAt3f
+        zs7Oe0cXtVrt1tHn/9Qtc7e3t6eNp9fd3d3bdrst5+fnqrOzMzk9PZWTkxM5Pj6WZrMpBwcHsr+/L3t7
+        e+KMVzkwV/aMwBRKpK1WSx4eHuT6+lpBh4eHLqher7swQM5EcSLzaWtrS//zjjEaOSkQ4dXVlW8Sg03V
+        alVMm5ubgjY2NnzimQd+ESD0TqejUfIC2HOg0dFR6evrk8HBQUkmk7K0tCTr6+uuKpWKziNqtYMi4WWj
+        0fBBLTKLDmjr2y8pf/oq44WG9L8ZkqmpKVlbW1OxiEXtuHCv4KOjI8FLizaTyQjypuuUQz78/OOqePlF
+        hmIpSafTLpjxZO2CqThVJZVYLCbvxjOqkZERIUUUiUTkdeitJPJVqdx81wWAE/n8/LzCn4CJlmoatPPj
+        tyDgw8PDro8LCwuSSqUkHI27cGxJJBJSLpefgunNbDarIICWssHNSyajsbExjZxxeB4Oh/U5mfmswPTg
+        q37JNj9Krn3jE894VygUZHV1VZXP59UWwBQ0GAzq8ydgbFhcXNS0GcRgJjE5Go3K7OysC11ZWXkRTGfQ
+        AG7xAFM4XgwMDGh6gEmXtIkGICqVStrHvVbw3AeGTlNjBy8oBAUBTPUpFPC5uTkV0N7ixeNxXdDAjs/3
+        fNIKplVoGVqHFqKVDE502PJSu+VyOSkWizq/u288gqkkYCpLupOTk9r8Bvd+GHZvH8jExIQsLy9rcV8E
+        4yUpsTpwIscWPKegvZ80UPYM9Bz4ziL2ghlIN+BfKBTSbkHcsyHNzMwokG7iSjB43O3jO9028ZiuIBWD
+        W+RMQCzUK7PAetw+aYd3GWBT7m7O2hk0OSvbruW92pfXe/XuE92D4PGIYv/0ng7eTb733rtX2733BHGP
+        Jjv8iJwUnAXwnE75Zznz7pjrPUz/AmPpttUEVU+oAAAAAElFTkSuQmCC
+</value>
+  </data>
   <data name="goalButton.Image" type="System.Drawing.Bitmap, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
     <value>
         iVBORw0KGgoAAAANSUhEUgAAABYAAAAWCAYAAADEtGw7AAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8
@@ -335,7 +334,7 @@
 </value>
   </data>
   <assembly alias="System.Windows.Forms" name="System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089" />
-  <data name="revoluteButton.Image" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\..\Resources\revolute.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  <data name="prismaticButton.Image" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\..\Resources\prismatic.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
 </root>

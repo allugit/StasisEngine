@@ -102,6 +102,10 @@ namespace StasisEditor.Models
                     case "Revolute":
                         secondPassData.Add(actorData);
                         break;
+
+                    case "Prismatic":
+                        secondPassData.Add(actorData);
+                        break;
                 }
             }
 
@@ -116,6 +120,10 @@ namespace StasisEditor.Models
 
                     case "Revolute":
                         actors.Add(new EditorRevoluteActor(this, actorData));
+                        break;
+
+                    case "Prismatic":
+                        actors.Add(new EditorPrismaticActor(this, actorData));
                         break;
                 }
             }

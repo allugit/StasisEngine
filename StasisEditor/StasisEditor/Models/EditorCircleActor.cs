@@ -17,6 +17,7 @@ namespace StasisEditor.Models
         public float radius { get { return _radius; } set { _radius = value; } }
         public override Vector2 circuitConnectionPosition { get { return _position; } }
         public override Vector2 revoluteConnectionPosition { get { return _position; } }
+        public override Vector2 prismaticConnectionPosition { get { return _position; } }
         public override XElement data
         {
             get

@@ -4,8 +4,6 @@
     {
         Box,
         Circle,
-        MovingPlatform,
-        PressurePlate,
         Terrain,
         Rope,
         Fluid,
@@ -13,7 +11,8 @@
         Tree,
         Item,
         Circuit,
-        Revolute
+        Revolute,
+        Prismatic
     };
 
     public enum PlantType

@@ -23,7 +23,6 @@ namespace StasisEditor.Models
 
         virtual protected Color polygonFill { get { return _polygonFill; } }
         public override Vector2 circuitConnectionPosition { get { return _headPoint.position; } }
-        public override Vector2 revoluteConnectionPosition { get { return _headPoint.position; } }
         public override XElement data
         {
             get

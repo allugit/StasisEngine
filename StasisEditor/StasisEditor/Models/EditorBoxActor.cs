@@ -21,6 +21,7 @@ namespace StasisEditor.Models
         public float angle { get { return _angle; } set { _angle = value; } }
         public override Vector2 circuitConnectionPosition { get { return _position; } }
         public override Vector2 revoluteConnectionPosition { get { return _position; } }
+        public override Vector2 prismaticConnectionPosition { get { return _position; } }
         public override XElement data
         {
             get

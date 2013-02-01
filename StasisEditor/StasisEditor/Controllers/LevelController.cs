@@ -205,6 +205,10 @@ namespace StasisEditor.Controllers
                 case "revoluteButton":
                     actor = new EditorRevoluteActor(_level);
                     break;
+
+                case "prismaticButton":
+                    actor = new EditorPrismaticActor(_level);
+                    break;
             }
 
             if (actor != null)

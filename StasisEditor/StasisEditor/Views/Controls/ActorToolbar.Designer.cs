@@ -33,15 +33,15 @@
             this.boxButton = new System.Windows.Forms.ToolStripButton();
             this.circleButton = new System.Windows.Forms.ToolStripButton();
             this.terrainButton = new System.Windows.Forms.ToolStripButton();
-            this.movingPlatformButton = new System.Windows.Forms.ToolStripButton();
             this.ropeButton = new System.Windows.Forms.ToolStripButton();
-            this.circuitsButton = new System.Windows.Forms.ToolStripButton();
             this.fluidButton = new System.Windows.Forms.ToolStripButton();
             this.itemsButton = new System.Windows.Forms.ToolStripButton();
             this.plantsButton = new System.Windows.Forms.ToolStripButton();
             this.playerSpawnButton = new System.Windows.Forms.ToolStripButton();
-            this.goalButton = new System.Windows.Forms.ToolStripButton();
+            this.circuitsButton = new System.Windows.Forms.ToolStripButton();
             this.revoluteButton = new System.Windows.Forms.ToolStripButton();
+            this.goalButton = new System.Windows.Forms.ToolStripButton();
+            this.prismaticButton = new System.Windows.Forms.ToolStripButton();
             this.anchorToolStrip.SuspendLayout();
             this.SuspendLayout();
             // 
@@ -58,7 +58,6 @@
             this.boxButton,
             this.circleButton,
             this.terrainButton,
-            this.movingPlatformButton,
             this.ropeButton,
             this.fluidButton,
             this.itemsButton,
@@ -66,6 +65,7 @@
             this.playerSpawnButton,
             this.circuitsButton,
             this.revoluteButton,
+            this.prismaticButton,
             this.goalButton});
             this.anchorToolStrip.LayoutStyle = System.Windows.Forms.ToolStripLayoutStyle.Flow;
             this.anchorToolStrip.Location = new System.Drawing.Point(0, 0);
@@ -105,16 +105,6 @@
             this.terrainButton.Size = new System.Drawing.Size(26, 26);
             this.terrainButton.Text = "Terrain";
             // 
-            // movingPlatformButton
-            // 
-            this.movingPlatformButton.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
-            this.movingPlatformButton.Image = ((System.Drawing.Image)(resources.GetObject("movingPlatformButton.Image")));
-            this.movingPlatformButton.ImageTransparentColor = System.Drawing.Color.Magenta;
-            this.movingPlatformButton.Margin = new System.Windows.Forms.Padding(0);
-            this.movingPlatformButton.Name = "movingPlatformButton";
-            this.movingPlatformButton.Size = new System.Drawing.Size(26, 26);
-            this.movingPlatformButton.Text = "Moving Platform (Signal Receiver)";
-            // 
             // ropeButton
             // 
             this.ropeButton.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
@@ -124,16 +114,6 @@
             this.ropeButton.Name = "ropeButton";
             this.ropeButton.Size = new System.Drawing.Size(26, 26);
             this.ropeButton.Text = "Rope";
-            // 
-            // circuitsButton
-            // 
-            this.circuitsButton.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
-            this.circuitsButton.Image = ((System.Drawing.Image)(resources.GetObject("circuitsButton.Image")));
-            this.circuitsButton.ImageTransparentColor = System.Drawing.Color.Magenta;
-            this.circuitsButton.Margin = new System.Windows.Forms.Padding(0);
-            this.circuitsButton.Name = "circuitsButton";
-            this.circuitsButton.Size = new System.Drawing.Size(26, 26);
-            this.circuitsButton.Text = "Circuits";
             // 
             // fluidButton
             // 
@@ -175,6 +155,26 @@
             this.playerSpawnButton.Size = new System.Drawing.Size(26, 26);
             this.playerSpawnButton.Text = "Player Spawn";
             // 
+            // circuitsButton
+            // 
+            this.circuitsButton.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
+            this.circuitsButton.Image = ((System.Drawing.Image)(resources.GetObject("circuitsButton.Image")));
+            this.circuitsButton.ImageTransparentColor = System.Drawing.Color.Magenta;
+            this.circuitsButton.Margin = new System.Windows.Forms.Padding(0);
+            this.circuitsButton.Name = "circuitsButton";
+            this.circuitsButton.Size = new System.Drawing.Size(26, 26);
+            this.circuitsButton.Text = "Circuits";
+            // 
+            // revoluteButton
+            // 
+            this.revoluteButton.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
+            this.revoluteButton.Image = ((System.Drawing.Image)(resources.GetObject("revoluteButton.Image")));
+            this.revoluteButton.ImageTransparentColor = System.Drawing.Color.Magenta;
+            this.revoluteButton.Margin = new System.Windows.Forms.Padding(0);
+            this.revoluteButton.Name = "revoluteButton";
+            this.revoluteButton.Size = new System.Drawing.Size(26, 26);
+            this.revoluteButton.Text = "Revolute";
+            // 
             // goalButton
             // 
             this.goalButton.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
@@ -186,15 +186,15 @@
             this.goalButton.Size = new System.Drawing.Size(26, 26);
             this.goalButton.Text = "Goal";
             // 
-            // revoluteButton
+            // prismaticButton
             // 
-            this.revoluteButton.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
-            this.revoluteButton.Image = ((System.Drawing.Image)(resources.GetObject("revoluteButton.Image")));
-            this.revoluteButton.ImageTransparentColor = System.Drawing.Color.Magenta;
-            this.revoluteButton.Margin = new System.Windows.Forms.Padding(0);
-            this.revoluteButton.Name = "revoluteButton";
-            this.revoluteButton.Size = new System.Drawing.Size(26, 26);
-            this.revoluteButton.Text = "Revolute";
+            this.prismaticButton.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
+            this.prismaticButton.Image = ((System.Drawing.Image)(resources.GetObject("prismaticButton.Image")));
+            this.prismaticButton.ImageTransparentColor = System.Drawing.Color.Magenta;
+            this.prismaticButton.Margin = new System.Windows.Forms.Padding(0);
+            this.prismaticButton.Name = "prismaticButton";
+            this.prismaticButton.Size = new System.Drawing.Size(26, 26);
+            this.prismaticButton.Text = "Prismatic";
             // 
             // ActorToolbar
             // 
@@ -215,7 +215,6 @@
         private System.Windows.Forms.ToolStripButton boxButton;
         private System.Windows.Forms.ToolStripButton circleButton;
         private System.Windows.Forms.ToolStripButton terrainButton;
-        private System.Windows.Forms.ToolStripButton movingPlatformButton;
         private System.Windows.Forms.ToolStripButton ropeButton;
         private System.Windows.Forms.ToolStripButton fluidButton;
         private System.Windows.Forms.ToolStripButton playerSpawnButton;
@@ -224,5 +223,6 @@
         private System.Windows.Forms.ToolStripButton plantsButton;
         private System.Windows.Forms.ToolStripButton circuitsButton;
         private System.Windows.Forms.ToolStripButton revoluteButton;
+        private System.Windows.Forms.ToolStripButton prismaticButton;
     }
 }
