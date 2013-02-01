@@ -111,7 +111,6 @@ namespace StasisEditor.Models
                 switch (actorData.Attribute("type").Value)
                 {
                     case "Circuit":
-                        EditorCircuit circuit = _controller.editorController.circuitController.getCircuit(actorData.Attribute("circuit_uid").Value);
                         actors.Add(new EditorCircuitActor(this, actorData));
                         break;
 
