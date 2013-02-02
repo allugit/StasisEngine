@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Xml.Linq;
 using Microsoft.Xna.Framework;
+using Microsoft.Xna.Framework.Input;
 using StasisCore;
 using StasisCore.Models;
 
@@ -114,6 +115,13 @@ namespace StasisEditor.Models
             base.deselect();
         }
 
+        public override void delete()
+        {
+            _connections.Clear();
+            _gateControls.Clear();
+            base.delete();
+        }
+
         public override void handleMouseDown()
         {
             if (selected)
@@ -170,6 +178,19 @@ namespace StasisEditor.Models
         {
             Vector2 worldDelta = _level.controller.worldDeltaMouse;
 
+            // Update connections -- Handle deleted actors, etc...
+            List<CircuitConnection> connectionsToRemove = new List<CircuitConnection>();
+            foreach (CircuitConnection connection in _connections)
+            {
+                if (!_level.actors.Contains(connection.actor))
+                    connectionsToRemove.Add(connection);
+            }
+            foreach (CircuitConnection connection in connectionsToRemove)
+            {
+                _connections.Remove(connection);
+                _gateControls.Add(new GateControl(connection.gate, connection.actor.circuitConnectionPosition));
+            }
+
             if (selected)
             {
                 if (!_level.controller.ctrl)
@@ -179,6 +200,11 @@ namespace StasisEditor.Models
                     foreach (GateControl gateControl in _selectedGateControls)
                         gateControl.position += worldDelta;
                 }
+
+                if (_level.controller.isKeyPressed(Keys.Escape))
+                    deselect();
+                else if (_level.controller.isKeyPressed(Keys.Delete))
+                    delete();
             }
         }
 
