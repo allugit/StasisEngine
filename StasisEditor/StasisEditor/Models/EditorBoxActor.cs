@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Xml.Linq;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Input;
@@ -15,13 +16,16 @@ namespace StasisEditor.Models
         private float _halfHeight;
         private float _angle;
 
-        public Vector2 position { get { return _position; } set { _position = value; } }
         public float halfWidth { get { return _halfWidth; } set { _halfWidth = value; } }
         public float halfHeight { get { return _halfHeight; } set { _halfHeight = value; } }
         public float angle { get { return _angle; } set { _angle = value; } }
+        [Browsable(false)]
         public override Vector2 circuitConnectionPosition { get { return _position; } }
+        [Browsable(false)]
         public override Vector2 revoluteConnectionPosition { get { return _position; } }
+        [Browsable(false)]
         public override Vector2 prismaticConnectionPosition { get { return _position; } }
+        [Browsable(false)]
         public override XElement data
         {
             get

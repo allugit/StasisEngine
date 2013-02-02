@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Xml.Linq;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Input;
@@ -13,11 +14,14 @@ namespace StasisEditor.Models
         private Vector2 _position;
         private float _radius;
 
-        public Vector2 position { get { return _position; } set { _position = value; } }
         public float radius { get { return _radius; } set { _radius = value; } }
+        [Browsable(false)]
         public override Vector2 circuitConnectionPosition { get { return _position; } }
+        [Browsable(false)]
         public override Vector2 revoluteConnectionPosition { get { return _position; } }
+        [Browsable(false)]
         public override Vector2 prismaticConnectionPosition { get { return _position; } }
+        [Browsable(false)]
         public override XElement data
         {
             get

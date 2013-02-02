@@ -20,6 +20,7 @@ namespace StasisEditor.Models
 
         [Browsable(false)]
         public List<EditorActor> actors { get { return _actors; } }
+        [Browsable(false)]
         public XElement data
         {
             get

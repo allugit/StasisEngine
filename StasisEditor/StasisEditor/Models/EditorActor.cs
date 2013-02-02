@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Xml.Linq;
 using Microsoft.Xna.Framework;
 using StasisEditor.Controllers;
@@ -15,12 +16,18 @@ namespace StasisEditor.Models
         protected int _id;
         protected float _layerDepth;
 
+        [Browsable(false)]
         public ActorType type { get { return _type; } set { _type = value; } }
+        [Browsable(false)]
         public int id { get { return _id; } set { _id = value; } }
         public float layerDepth { get { return _layerDepth; } set { _layerDepth = value; } }
+        [Browsable(false)]
         virtual public Vector2 circuitConnectionPosition { get { return Vector2.Zero; } }
+        [Browsable(false)]
         virtual public Vector2 revoluteConnectionPosition { get { return Vector2.Zero; } }
+        [Browsable(false)]
         virtual public Vector2 prismaticConnectionPosition { get { return Vector2.Zero; } }
+        [Browsable(false)]
         virtual public XElement data
         {
             get

@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Xml.Linq;
 using System.Diagnostics;
 using Microsoft.Xna.Framework;
@@ -21,8 +22,11 @@ namespace StasisEditor.Models
         protected Vector2 _polygonPosition;
         protected Color _polygonFill = Color.White;
 
+        [Browsable(false)]
         virtual protected Color polygonFill { get { return _polygonFill; } }
+        [Browsable(false)]
         public override Vector2 circuitConnectionPosition { get { return _headPoint.position; } }
+        [Browsable(false)]
         public override XElement data
         {
             get

@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Xml.Linq;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Input;
@@ -19,7 +20,9 @@ namespace StasisEditor.Models
 
         private Vector2 _position;
 
+        [Browsable(false)]
         public override Vector2 circuitConnectionPosition { get { return _position; } }
+        [Browsable(false)]
         public override XElement data
         {
             get

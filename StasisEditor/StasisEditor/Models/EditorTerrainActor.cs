@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Xml.Linq;
+using System.ComponentModel;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using StasisCore;
@@ -10,8 +11,11 @@ namespace StasisEditor.Models
 {
     public class EditorTerrainActor : EditorPolygonActor
     {
+        [Browsable(false)]
         protected override Color polygonFill { get { return Color.Orange * 0.3f; } }
+        [Browsable(false)]
         public override Vector2 prismaticConnectionPosition { get { return _headPoint.position; } }
+        [Browsable(false)]
         public override Vector2 revoluteConnectionPosition { get { return _headPoint.position; } }
 
         public EditorTerrainActor(EditorLevel level)

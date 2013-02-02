@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Xml.Linq;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
@@ -10,6 +11,7 @@ namespace StasisEditor.Models
 {
     public class EditorFluidActor : EditorPolygonActor
     {
+        [Browsable(false)]
         protected override Color polygonFill { get { return Color.Blue * 0.3f; } }
 
         public EditorFluidActor(EditorLevel level)

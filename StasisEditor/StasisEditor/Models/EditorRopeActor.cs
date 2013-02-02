@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Xml.Linq;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Input;
@@ -23,7 +24,9 @@ namespace StasisEditor.Models
         private SelectedPoints _selectedPoints;
 
         public bool doubleAnchor;
+        [Browsable(false)]
         public override Vector2 circuitConnectionPosition { get { return (_pointA + _pointB) / 2; } }
+        [Browsable(false)]
         public override XElement data
         {
             get

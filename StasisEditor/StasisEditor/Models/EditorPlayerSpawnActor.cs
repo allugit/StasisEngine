@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Xml.Linq;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Input;
@@ -11,7 +12,7 @@ namespace StasisEditor.Models
     {
         private Vector2 _position;
 
-        public Vector2 position { get { return _position; } set { _position = value; } }
+        [Browsable(false)]
         public override XElement data
         {
             get

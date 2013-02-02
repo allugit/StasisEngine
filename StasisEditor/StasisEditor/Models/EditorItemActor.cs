@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Xml.Linq;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Input;
@@ -15,7 +16,9 @@ namespace StasisEditor.Models
 
         public string itemUID { get { return _itemUID; } set { _itemUID = value; } }
         public int quantity { get { return _quantity; } set { _quantity = value; } }
+        [Browsable(false)]
         public override Vector2 circuitConnectionPosition { get { return _position; } }
+        [Browsable(false)]
         public override XElement data
         {
             get
