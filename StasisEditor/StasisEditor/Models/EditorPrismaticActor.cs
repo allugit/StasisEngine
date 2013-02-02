@@ -122,6 +122,13 @@ namespace StasisEditor.Models
             float angleIncrement = _level.controller.shift ? 0.0001f : 0.0005f;
             float limitIncrement = _level.controller.shift ? 0.0001f : 0.0005f;
 
+            // Update connections
+            if (_actor != null && !_level.actors.Contains(_actor))
+            {
+                _actorControl = _actor.prismaticConnectionPosition;
+                _actor = null;
+            }
+
             if (selected)
             {
                 if (!_level.controller.ctrl)
@@ -139,12 +146,16 @@ namespace StasisEditor.Models
                 if (_level.controller.isKeyHeld(Keys.W))
                     _upperLimit += limitIncrement;
                 if (_level.controller.isKeyHeld(Keys.S))
-                    _upperLimit -= limitIncrement;
+                    _upperLimit = Math.Max(_upperLimit - limitIncrement, 0f);
                 if (_level.controller.isKeyHeld(Keys.A))
                     _lowerLimit += limitIncrement;
                 if (_level.controller.isKeyHeld(Keys.D))
-                    _lowerLimit -= limitIncrement;
+                    _lowerLimit = Math.Max(_lowerLimit - limitIncrement, 0f);
 
+                if (_level.controller.isKeyPressed(Keys.Escape))
+                    deselect();
+                else if (_level.controller.isKeyPressed(Keys.Delete))
+                    delete();
             }
         }
 
@@ -155,20 +166,20 @@ namespace StasisEditor.Models
 
             // Limits and axis
             Vector2 axis = new Vector2((float)Math.Cos(_angle), (float)Math.Sin(_angle));
-            _level.controller.view.drawLine(_position, _position + axis, Color.DarkGray, _layerDepth);
-            _level.controller.view.drawLine(_position, _position - axis, Color.DarkGray, _layerDepth);
-            _level.controller.view.drawLine(_position, _position + axis * _upperLimit, Color.DarkGray, _layerDepth + 0.0001f);
-            _level.controller.view.drawLine(_position, _position - axis * _lowerLimit, Color.DarkGray, _layerDepth + 0.0001f);
+            _level.controller.view.drawLine(_position, _position + axis, Color.Purple, _layerDepth + 0.0001f);
+            _level.controller.view.drawLine(_position, _position - axis, Color.Purple, _layerDepth + 0.0001f);
+            _level.controller.view.drawLine(_position, _position + axis * _upperLimit, Color.DarkGray, _layerDepth);
+            _level.controller.view.drawLine(_position, _position - axis * _lowerLimit, Color.DarkGray, _layerDepth);
 
             // Connections and controls
             if (_actor == null)
             {
-                _level.controller.view.drawLine(_position, _actorControl, Color.Purple, _layerDepth);
-                _level.controller.view.drawPoint(_actorControl, Color.Purple, _layerDepth);
+                _level.controller.view.drawLine(_position, _actorControl, Color.DarkGreen, _layerDepth);
+                _level.controller.view.drawPoint(_actorControl, Color.Green, _layerDepth);
             }
             else
             {
-                _level.controller.view.drawLine(_position, _actor.prismaticConnectionPosition, Color.Purple * 0.5f, _layerDepth);
+                _level.controller.view.drawLine(_position, _actor.prismaticConnectionPosition, Color.DarkGreen * 0.5f, _layerDepth);
             }
         }
     }
