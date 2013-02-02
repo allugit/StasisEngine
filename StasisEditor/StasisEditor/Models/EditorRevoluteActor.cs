@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Xml.Linq;
 using Microsoft.Xna.Framework;
+using Microsoft.Xna.Framework.Input;
 using StasisCore;
 
 namespace StasisEditor.Models
@@ -136,6 +137,18 @@ namespace StasisEditor.Models
         public override void update()
         {
             Vector2 worldDelta = _level.controller.worldDeltaMouse;
+
+            if (_actorA != null && !_level.actors.Contains(_actorA))
+            {
+                _controlA = _actorA.revoluteConnectionPosition;
+                _actorA = null;
+            }
+            if (_actorB != null && !_level.actors.Contains(_actorB))
+            {
+                _controlB = _actorB.revoluteConnectionPosition;
+                _actorB = null;
+            }
+
             if (selected)
             {
                 if (!_level.controller.ctrl)
@@ -147,6 +160,11 @@ namespace StasisEditor.Models
                     if (_selectedB)
                         _controlB += worldDelta;
                 }
+
+                if (_level.controller.isKeyPressed(Keys.Escape))
+                    deselect();
+                else if (_level.controller.isKeyPressed(Keys.Delete))
+                    delete();
             }
         }
 
