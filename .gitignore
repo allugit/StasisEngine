@@ -12,3 +12,9 @@ StasisGame/StasisGame/obj
 StasisGame/StasisGameContent/bin
 StasisGame/StasisGameContent/obj
 temp
+StasisCore/StasisCore.csproj.Debug.cachefile
+StasisCore/StasisCore.csproj.Release.cachefile
+StasisEditor/StasisEditor/StasisEditor.csproj.Debug.cachefile
+StasisEditor/StasisEditor/StasisEditor.csproj.Release.cachefile
+StasisGame/StasisGame/StasisGame.csproj.Debug.cachefile
+StasisGame/StasisGame/StasisGame.csproj.Release.cachefile
