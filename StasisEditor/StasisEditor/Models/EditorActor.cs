@@ -38,6 +38,7 @@ namespace StasisEditor.Models
                     new XAttribute("layer_depth", _layerDepth));
             }
         }
+        [Browsable(false)]
         public bool selected { get { return _level.controller.selectedActor == this; } }
 
         public EditorActor(EditorLevel level, ActorType type, int id)

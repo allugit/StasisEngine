@@ -281,8 +281,6 @@ namespace StasisEditor.Controllers
                     // Let selected actor handle mouse down
                     if (e.Button == MouseButtons.Left)
                         _selectedActor.handleLeftMouseDown();
-                    else if (e.Button == MouseButtons.Right)
-                        _selectedActor.handleRightMouseDown();
                 }
             }
         }

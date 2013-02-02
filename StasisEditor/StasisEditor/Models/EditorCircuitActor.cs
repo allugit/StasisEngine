@@ -29,7 +29,7 @@ namespace StasisEditor.Models
         private EditorCircuit _circuit;
         private List<CircuitConnection> _connections;
         private List<GateControl> _gateControls;
-        private List<GateControl> _selectedGateControls;
+        private List<GateControl> _markedGateControls;
         private bool _moveActor = true;
 
         private Vector2 _position;
@@ -76,7 +76,7 @@ namespace StasisEditor.Models
 
         private void initializeGateControls()
         {
-            _selectedGateControls = new List<GateControl>();
+            _markedGateControls = new List<GateControl>();
             _gateControls = new List<GateControl>();
 
             foreach (Gate gate in _circuit.gates)
@@ -107,14 +107,7 @@ namespace StasisEditor.Models
         private void selectAllGateControls()
         {
             foreach (GateControl gateControl in _gateControls)
-                _selectedGateControls.Add(gateControl);
-        }
-
-        public override void deselect()
-        {
-            _moveActor = true;
-            _selectedGateControls.Clear();
-            base.deselect();
+                _markedGateControls.Add(gateControl);
         }
 
         public override void delete()
@@ -128,17 +121,17 @@ namespace StasisEditor.Models
         {
             if (selected)
             {
-                if (_selectedGateControls.Count == 1)
+                if (_markedGateControls.Count == 1)
                 {
                     // Perform an actor hit test and form a connection if successful
                     foreach (EditorActor actor in _level.actors)
                     {
                         if (actor.type != ActorType.Circuit)
                         {
-                            if (actor.hitTest(_selectedGateControls[0].position))
+                            if (actor.hitTest(_markedGateControls[0].position))
                             {
-                                _connections.Add(new CircuitConnection(this, actor, _selectedGateControls[0].gate));
-                                _gateControls.Remove(_selectedGateControls[0]);
+                                _connections.Add(new CircuitConnection(this, actor, _markedGateControls[0].gate));
+                                _gateControls.Remove(_markedGateControls[0]);
                                 break;
                             }
                         }
@@ -154,12 +147,13 @@ namespace StasisEditor.Models
 
         public override void handleRightMouseDown()
         {
-            _selectedGateControls.Clear();
             base.handleRightMouseDown();
         }
 
         public override bool hitTest(Vector2 testPoint)
         {
+            _markedGateControls.Clear();
+
             // Hit test icon
             if (_level.controller.hitTestPoint(testPoint, _position, 12f))
             {
@@ -174,7 +168,7 @@ namespace StasisEditor.Models
                 if (_level.controller.hitTestPoint(testPoint, control.position))
                 {
                     _moveActor = false;
-                    _selectedGateControls.Add(control);
+                    _markedGateControls.Add(control);
                     return true;
                 }
             }
@@ -205,7 +199,7 @@ namespace StasisEditor.Models
                 {
                     if (_moveActor)
                         _position += worldDelta;
-                    foreach (GateControl gateControl in _selectedGateControls)
+                    foreach (GateControl gateControl in _markedGateControls)
                         gateControl.position += worldDelta;
                 }
 
