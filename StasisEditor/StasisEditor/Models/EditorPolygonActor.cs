@@ -144,7 +144,7 @@ namespace StasisEditor.Models
             return false;
         }
 
-        public override void handleMouseDown()
+        public override void handleLeftMouseDown()
         {
             if (selected)
             {

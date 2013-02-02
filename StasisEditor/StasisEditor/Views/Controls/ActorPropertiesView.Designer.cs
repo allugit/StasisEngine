@@ -1,6 +1,6 @@
 ﻿namespace StasisEditor.Views.Controls
 {
-    partial class LevelSettings
+    partial class ActorPropertiesView
     {
         /// <summary> 
         /// Required designer variable.
@@ -28,42 +28,38 @@
         /// </summary>
         private void InitializeComponent()
         {
-            this.levelPropertiesGrid = new System.Windows.Forms.PropertyGrid();
+            this.actorPropertyGrid = new System.Windows.Forms.PropertyGrid();
             this.groupBox1 = new System.Windows.Forms.GroupBox();
             this.groupBox1.SuspendLayout();
             this.SuspendLayout();
             // 
-            // levelPropertiesGrid
+            // actorPropertyGrid
             // 
-            this.levelPropertiesGrid.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.levelPropertiesGrid.HelpVisible = false;
-            this.levelPropertiesGrid.Location = new System.Drawing.Point(6, 20);
-            this.levelPropertiesGrid.Margin = new System.Windows.Forms.Padding(0);
-            this.levelPropertiesGrid.Name = "levelPropertiesGrid";
-            this.levelPropertiesGrid.Size = new System.Drawing.Size(213, 95);
-            this.levelPropertiesGrid.TabIndex = 1;
-            this.levelPropertiesGrid.ToolbarVisible = false;
+            this.actorPropertyGrid.HelpVisible = false;
+            this.actorPropertyGrid.Location = new System.Drawing.Point(6, 20);
+            this.actorPropertyGrid.Name = "actorPropertyGrid";
+            this.actorPropertyGrid.Size = new System.Drawing.Size(238, 259);
+            this.actorPropertyGrid.TabIndex = 0;
+            this.actorPropertyGrid.ToolbarVisible = false;
             // 
             // groupBox1
             // 
-            this.groupBox1.Controls.Add(this.levelPropertiesGrid);
-            this.groupBox1.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.groupBox1.Location = new System.Drawing.Point(4, 4);
+            this.groupBox1.Controls.Add(this.actorPropertyGrid);
+            this.groupBox1.Location = new System.Drawing.Point(3, 3);
             this.groupBox1.Name = "groupBox1";
-            this.groupBox1.Padding = new System.Windows.Forms.Padding(6, 7, 7, 7);
-            this.groupBox1.Size = new System.Drawing.Size(226, 122);
-            this.groupBox1.TabIndex = 2;
+            this.groupBox1.Padding = new System.Windows.Forms.Padding(3, 4, 4, 4);
+            this.groupBox1.Size = new System.Drawing.Size(251, 286);
+            this.groupBox1.TabIndex = 1;
             this.groupBox1.TabStop = false;
-            this.groupBox1.Text = "Level Settings";
+            this.groupBox1.Text = "Actor Properties";
             // 
-            // LevelSettings
+            // ActorPropertiesView
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.Controls.Add(this.groupBox1);
-            this.Name = "LevelSettings";
-            this.Padding = new System.Windows.Forms.Padding(4);
-            this.Size = new System.Drawing.Size(234, 130);
+            this.Name = "ActorPropertiesView";
+            this.Size = new System.Drawing.Size(257, 292);
             this.groupBox1.ResumeLayout(false);
             this.ResumeLayout(false);
 
@@ -71,7 +67,7 @@
 
         #endregion
 
-        private System.Windows.Forms.PropertyGrid levelPropertiesGrid;
+        private System.Windows.Forms.PropertyGrid actorPropertyGrid;
         private System.Windows.Forms.GroupBox groupBox1;
     }
 }

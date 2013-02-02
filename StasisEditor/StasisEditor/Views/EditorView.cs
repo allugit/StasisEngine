@@ -20,6 +20,7 @@ namespace StasisEditor.Views
         private EditorController _controller;
         private LevelView _levelView;
         private LevelSettings _levelSettings;
+        private List<ActorPropertiesView> _actorPropertiesViews;
 
         public CircuitsView circuitsView { get { return circuitsView1; } }
         public MaterialView materialView { get { return materialView1; } }
@@ -31,6 +32,7 @@ namespace StasisEditor.Views
         {
             InitializeComponent();
             KeyPreview = true;
+            _actorPropertiesViews = new List<ActorPropertiesView>();
         }
 
         // setController
@@ -122,6 +124,11 @@ namespace StasisEditor.Views
         // openActorProperties
         public void openActorProperties(EditorActor actor)
         {
+            ActorPropertiesView actorProperties = new ActorPropertiesView(actor);
+            actorProperties.Dock = DockStyle.Top;
+            _actorPropertiesViews.Add(actorProperties);
+            mainSplit.Panel1.Controls.Add(actorProperties);
+            actorProperties.BringToFront();
             /*
             foreach (ActorProperties p in properties)
             {
@@ -136,6 +143,10 @@ namespace StasisEditor.Views
         // closeActorProperties
         public void closeActorProperties()
         {
+            foreach (ActorPropertiesView view in _actorPropertiesViews)
+                mainSplit.Panel1.Controls.Remove(view);
+            _actorPropertiesViews.Clear();
+
             /*
             foreach (ActorPropertiesView view in actorPropertiesViews)
                 mainSplit.Panel1.Controls.Remove(view);

@@ -261,25 +261,28 @@ namespace StasisEditor.Controllers
             Vector2 worldMouse = this.worldMouse;
             if (_level != null)
             {
-                if (e.Button == MouseButtons.Left)
+                if (_selectedActor == null)
                 {
-                    if (_selectedActor == null)
+                    // Try to select an actor
+                    foreach (EditorActor actor in _level.actors)
                     {
-                        // Try to select an actor
-                        foreach (EditorActor actor in _level.actors)
+                        if (actor.hitTest(worldMouse))
                         {
-                            if (actor.hitTest(worldMouse))
-                            {
-                                actor.handleMouseDown();
-                                break;
-                            }
+                            if (e.Button == MouseButtons.Left)
+                                actor.handleLeftMouseDown();
+                            else if (e.Button == MouseButtons.Right)
+                                actor.handleRightMouseDown();
+                            break;
                         }
                     }
-                    else
-                    {
-                        // Let selected actor handle mouse down
-                        _selectedActor.handleMouseDown();
-                    }
+                }
+                else
+                {
+                    // Let selected actor handle mouse down
+                    if (e.Button == MouseButtons.Left)
+                        _selectedActor.handleLeftMouseDown();
+                    else if (e.Button == MouseButtons.Right)
+                        _selectedActor.handleRightMouseDown();
                 }
             }
         }

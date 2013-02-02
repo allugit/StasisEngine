@@ -67,7 +67,7 @@ namespace StasisEditor.Models
             base.deselect();
         }
 
-        public override void handleMouseDown()
+        public override void handleLeftMouseDown()
         {
             if (selected)
             {

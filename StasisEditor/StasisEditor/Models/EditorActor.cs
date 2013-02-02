@@ -68,12 +68,18 @@ namespace StasisEditor.Models
             _level.removeActor(this);
         }
 
-        virtual public void handleMouseDown()
+        virtual public void handleLeftMouseDown()
         {
             if (selected)
                 deselect();
             else
                 select();
+        }
+
+        virtual public void handleRightMouseDown()
+        {
+            _level.controller.closeActorProperties();
+            _level.controller.openActorProperties(this);
         }
 
         abstract public bool hitTest(Vector2 testPoint);
