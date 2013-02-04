@@ -9,12 +9,14 @@ using StasisEditor.Controllers;
 
 namespace StasisEditor.Models
 {
-    public class EditorCircleActor : EditorActor
+    public class EditorCircleActor : EditorActor, IActorComponent
     {
         private Vector2 _position;
         private float _radius;
 
         public float radius { get { return _radius; } set { _radius = value; } }
+        [Browsable(false)]
+        public ActorComponentType componentType { get { return ActorComponentType.Circle; } }
         [Browsable(false)]
         public override Vector2 circuitConnectionPosition { get { return _position; } }
         [Browsable(false)]
@@ -48,9 +50,35 @@ namespace StasisEditor.Models
             _radius = Loader.loadFloat(data.Attribute("radius"), 1f);
         }
 
-        public override bool hitTest(Vector2 testPoint)
+        public override void handleSelectedClick(System.Windows.Forms.MouseButtons button)
         {
-            return _level.controller.hitTestCircle(testPoint, _position, _radius);
+            deselect();
+        }
+
+        public override bool handleUnselectedClick(System.Windows.Forms.MouseButtons button)
+        {
+            return hitTest(_level.controller.worldMouse, (results) =>
+            {
+                if (results.Count == 1 && results[0].componentType == ActorComponentType.Circle)
+                {
+                    select();
+                    return true;
+                }
+                return false;
+            });
+        }
+
+        public override bool hitTest(Vector2 testPoint, HitTestCallback callback)
+        {
+            List<IActorComponent> results = new List<IActorComponent>();
+
+            if (_level.controller.hitTestCircle(testPoint, _position, _radius))
+            {
+                results.Add(this);
+                return callback(results);
+            }
+
+            return false;
         }
 
         public override void update()
