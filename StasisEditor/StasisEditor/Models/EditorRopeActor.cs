@@ -8,24 +8,18 @@ using StasisCore;
 
 namespace StasisEditor.Models
 {
-    public class EditorRopeActor : EditorActor
+    public class EditorRopeActor : EditorActor, IActorComponent
     {
-        private enum SelectedPoints
-        {
-            None,
-            A,
-            B,
-            AB
-        };
-
         private bool _doubleAnchor;
-        private Vector2 _pointA;
-        private Vector2 _pointB;
-        private SelectedPoints _selectedPoints;
+        private PointListNode _nodeA;
+        private PointListNode _nodeB;
+        private List<PointListNode> _selectedPoints;
 
         public bool doubleAnchor;
         [Browsable(false)]
-        public override Vector2 circuitConnectionPosition { get { return (_pointA + _pointB) / 2; } }
+        public ActorComponentType componentType { get { return ActorComponentType.Line; } }
+        [Browsable(false)]
+        public override Vector2 circuitConnectionPosition { get { return (_nodeA.position + _nodeB.position) / 2; } }
         [Browsable(false)]
         public override XElement data
         {
@@ -33,8 +27,8 @@ namespace StasisEditor.Models
             {
                 XElement d = base.data;
                 d.SetAttributeValue("double_anchor", _doubleAnchor);
-                d.SetAttributeValue("point_a", _pointA);
-                d.SetAttributeValue("point_b", _pointB);
+                d.SetAttributeValue("point_a", _nodeA.position);
+                d.SetAttributeValue("point_b", _nodeB.position);
                 return d;
             }
         }
@@ -43,9 +37,11 @@ namespace StasisEditor.Models
             : base(level, ActorType.Rope, level.controller.getUnusedActorID())
         {
             Vector2 worldMouse = _level.controller.worldMouse;
-            _pointA = worldMouse + new Vector2(0f, -0.5f);
-            _pointB = worldMouse + new Vector2(0f, 0.5f);
-            _selectedPoints = SelectedPoints.AB;
+            _nodeA = new PointListNode(worldMouse + new Vector2(0f, -0.5f));
+            _nodeB = new PointListNode(worldMouse + new Vector2(0f, 0.5f));
+            _selectedPoints = new List<PointListNode>();
+            _selectedPoints.Add(_nodeA);
+            _selectedPoints.Add(_nodeB);
             _layerDepth = 0.1f;
         }
 
@@ -53,36 +49,68 @@ namespace StasisEditor.Models
             : base(level, data)
         {
             _doubleAnchor = Loader.loadBool(data.Attribute("double_anchor"), false);
-            _pointA = Loader.loadVector2(data.Attribute("point_a"), Vector2.Zero);
-            _pointB = Loader.loadVector2(data.Attribute("point_b"), Vector2.Zero);
-            _selectedPoints = SelectedPoints.None;
+            _nodeA = new PointListNode(Loader.loadVector2(data.Attribute("point_a"), Vector2.Zero));
+            _nodeB = new PointListNode(Loader.loadVector2(data.Attribute("point_b"), Vector2.Zero));
+            _selectedPoints = new List<PointListNode>();
         }
 
-        public override void deselect()
+        protected override void deselect()
         {
-            _selectedPoints = SelectedPoints.None;
+            _selectedPoints.Clear();
             base.deselect();
         }
 
-        public override bool hitTest(Vector2 testPoint)
+        public override void handleSelectedClick(System.Windows.Forms.MouseButtons button)
         {
+            deselect();
+        }
+
+        public override bool handleUnselectedClick(System.Windows.Forms.MouseButtons button)
+        {
+            return hitTest(_level.controller.worldMouse, (results) =>
+                {
+                    if (results.Count == 1 && results[0].componentType == ActorComponentType.Line)
+                    {
+                        _selectedPoints.Add(_nodeA);
+                        _selectedPoints.Add(_nodeB);
+                        select();
+                        return true;
+                    }
+                    else if (results.Count > 0)
+                    {
+                        foreach (IActorComponent component in results)
+                        {
+                            if (component.componentType == ActorComponentType.Point)
+                                _selectedPoints.Add(component as PointListNode);
+                        }
+                        select();
+                        return true;
+                    }
+                    return false;
+                });
+        }
+
+        public override bool hitTest(Vector2 testPoint, HitTestCallback callback)
+        {
+            List<IActorComponent> results = new List<IActorComponent>();
+
             // Hit test points
-            if (_level.controller.hitTestPoint(testPoint, _pointA))
+            if (_level.controller.hitTestPoint(testPoint, _nodeA.position))
             {
-                _selectedPoints = SelectedPoints.A;
-                return true;
+                results.Add(_nodeA);
+                return callback(results);
             }
-            else if (_level.controller.hitTestPoint(testPoint, _pointB))
+            else if (_level.controller.hitTestPoint(testPoint, _nodeB.position))
             {
-                _selectedPoints = SelectedPoints.B;
-                return true;
+                results.Add(_nodeB);
+                return callback(results);
             }
 
             // Hit test line
-            if (_level.controller.hitTestLine(testPoint, _pointA, _pointB))
+            if (_level.controller.hitTestLine(testPoint, _nodeA.position, _nodeB.position))
             {
-                _selectedPoints = SelectedPoints.AB;
-                return true;
+                results.Add(this);
+                return callback(results);
             }
 
             return false;
@@ -94,15 +122,8 @@ namespace StasisEditor.Models
 
             if (selected)
             {
-                if (_selectedPoints == SelectedPoints.A)
-                    _pointA += worldDelta;
-                else if (_selectedPoints == SelectedPoints.B)
-                    _pointB += worldDelta;
-                else if (_selectedPoints == SelectedPoints.AB)
-                {
-                    _pointA += worldDelta;
-                    _pointB += worldDelta;
-                }
+                foreach (PointListNode node in _selectedPoints)
+                    node.position += worldDelta;
 
                 if (_level.controller.isKeyPressed(Keys.Escape))
                     deselect();
@@ -113,9 +134,9 @@ namespace StasisEditor.Models
 
         public override void draw()
         {
-            _level.controller.view.drawLine(_pointA, _pointB, Color.Tan, _layerDepth);
-            _level.controller.view.drawPoint(_pointA, Color.Yellow, _layerDepth);
-            _level.controller.view.drawPoint(_pointB, Color.Orange, _layerDepth);
+            _level.controller.view.drawLine(_nodeA.position, _nodeB.position, Color.Tan, _layerDepth);
+            _level.controller.view.drawPoint(_nodeA.position, Color.Yellow, _layerDepth);
+            _level.controller.view.drawPoint(_nodeB.position, Color.Orange, _layerDepth);
         }
     }
 }
