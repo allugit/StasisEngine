@@ -11,6 +11,7 @@ namespace StasisEditor.Models
     abstract public class EditorActor
     {
         protected EditorLevel _level;
+        public delegate bool HitTestCallback(List<IActorComponent> results);
 
         protected ActorType _type;
         protected int _id;
@@ -57,18 +58,17 @@ namespace StasisEditor.Models
             _layerDepth = Loader.loadFloat(data.Attribute("layer_depth"), 0f);
         }
 
-        virtual public void select()
+        virtual protected void select() 
         {
-            System.Diagnostics.Debug.Assert(_level.controller.selectedActor == null);
             _level.controller.selectedActor = this;
         }
 
-        virtual public void deselect()
+        virtual protected void deselect()
         {
             _level.controller.selectedActor = null;
         }
 
-        virtual public void delete()
+        virtual protected void delete()
         {
             if (selected)
                 deselect();
@@ -76,25 +76,13 @@ namespace StasisEditor.Models
             _level.removeActor(this);
         }
 
-        virtual public void handleLeftMouseDown()
-        {
-            if (selected)
-                deselect();
-            else
-                select();
-        }
+        abstract public void handleSelectedClick(System.Windows.Forms.MouseButtons button);
 
-        virtual public void handleRightMouseDown()
-        {
-            _level.controller.closeActorProperties();
-            _level.controller.openActorProperties(this);
-        }
+        abstract public bool handleUnselectedClick(System.Windows.Forms.MouseButtons button);
 
-        abstract public bool hitTest(Vector2 testPoint);
+        abstract public bool hitTest(Vector2 testPoint, HitTestCallback callback);
 
-        virtual public void update()
-        {
-        }
+        virtual public void update() { }
 
         abstract public void draw();
     }
