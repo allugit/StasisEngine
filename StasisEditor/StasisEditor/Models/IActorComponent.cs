@@ -8,7 +8,7 @@ namespace StasisEditor.Models
         Point,
         Box,
         Circle,
-        LineSegment
+        Polygon
     };
 
     public interface IActorComponent
