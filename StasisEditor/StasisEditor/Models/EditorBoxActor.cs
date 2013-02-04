@@ -9,7 +9,7 @@ using StasisEditor.Controllers;
 
 namespace StasisEditor.Models
 {
-    public class EditorBoxActor : EditorActor
+    public class EditorBoxActor : EditorActor, IActorComponent
     {
         private Vector2 _position;
         private float _halfWidth;
@@ -19,6 +19,8 @@ namespace StasisEditor.Models
         public float halfWidth { get { return _halfWidth; } set { _halfWidth = value; } }
         public float halfHeight { get { return _halfHeight; } set { _halfHeight = value; } }
         public float angle { get { return _angle; } set { _angle = value; } }
+        [Browsable(false)]
+        public ActorComponentType componentType { get { return ActorComponentType.Box; } }
         [Browsable(false)]
         public override Vector2 circuitConnectionPosition { get { return _position; } }
         [Browsable(false)]
@@ -58,16 +60,54 @@ namespace StasisEditor.Models
             _angle = Loader.loadFloat(data.Attribute("angle"), 0f);
         }
 
-        public override bool hitTest(Vector2 testPoint)
-        {
-            return _level.controller.hitTestBox(testPoint, _position, _halfWidth, _halfHeight, _angle);
-        }
-
         public void rotate(Vector2 anchorPoint, float increment)
         {
             Vector2 relativePosition = _position - anchorPoint;
             _position = anchorPoint + Vector2.Transform(relativePosition, Matrix.CreateRotationZ(increment));
             _angle += increment;
+        }
+
+        public override void handleSelectedClick(System.Windows.Forms.MouseButtons button)
+        {
+            deselect();
+        }
+
+        public override bool handleUnselectedClick(System.Windows.Forms.MouseButtons button)
+        {
+            if (button == System.Windows.Forms.MouseButtons.Left)
+            {
+                return hitTest(_level.controller.worldMouse, (results) =>
+                {
+                    if (results.Count == 1 && results[0].componentType == ActorComponentType.Box)
+                    {
+                        _level.controller.selectedActor = this;
+                        return true;
+                    }
+                    return false;
+                });
+            }
+            else if (button == System.Windows.Forms.MouseButtons.Right)
+            {
+                return hitTest(_level.controller.worldMouse, (results) =>
+                    {
+                        if (results.Count == 1)
+                        {
+                            //_level.controller.openActorProperties(results[0]);
+                            return true;
+                        }
+                        return false;
+                    });
+            }
+            return false;
+        }
+
+        public override bool hitTest(Vector2 testPoint, HitTestCallback callback)
+        {
+            List<IActorComponent> results = new List<IActorComponent>();
+            if (_level.controller.hitTestBox(testPoint, _position, _halfWidth, _halfHeight, _angle))
+                results.Add(this);
+
+            return callback(results);
         }
 
         public override void update()
