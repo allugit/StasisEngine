@@ -12,7 +12,7 @@ using StasisEditor.Controllers;
 
 namespace StasisEditor.Models
 {
-    abstract public class EditorPolygonActor : EditorActor
+    abstract public class EditorPolygonActor : EditorActor, IActorComponent
     {
         protected PointListNode _headPoint;
         protected List<PointListNode> _selectedPoints;
@@ -22,6 +22,8 @@ namespace StasisEditor.Models
         protected Vector2 _polygonPosition;
         protected Color _polygonFill = Color.White;
 
+        [Browsable(false)]
+        public ActorComponentType componentType { get { return ActorComponentType.Polygon; } }
         [Browsable(false)]
         virtual protected Color polygonFill { get { return _polygonFill; } }
         [Browsable(false)]
@@ -70,7 +72,7 @@ namespace StasisEditor.Models
             triangulate();
         }
 
-        public override void deselect()
+        protected override void deselect()
         {
             _selectedPoints.Clear();
             base.deselect();
@@ -108,15 +110,86 @@ namespace StasisEditor.Models
             _polygonTexture = _level.controller.view.renderPolygon(_vertices, _primitiveCount);
         }
 
-        public override bool hitTest(Vector2 testPoint)
+        public override void handleSelectedClick(System.Windows.Forms.MouseButtons button)
         {
+            // Continue drawing polygon if shift is held
+            if (_level.controller.shift && _selectedPoints.Count == 1)
+            {
+                if (_selectedPoints[0] == _headPoint)
+                {
+                    _headPoint = _headPoint.insertBefore(_level.controller.worldMouse);
+                    _selectedPoints.Clear();
+                    _selectedPoints.Add(_headPoint);
+                }
+                else if (_selectedPoints[0] == _headPoint.tail)
+                {
+                    _headPoint.tail.insertAfter(_level.controller.worldMouse);
+                    _selectedPoints.Clear();
+                    _selectedPoints.Add(_headPoint.tail);
+                }
+            }
+            else
+            {
+                triangulate();
+                deselect();
+            }
+        }
+
+        public override bool handleUnselectedClick(System.Windows.Forms.MouseButtons button)
+        {
+            Vector2 worldMouse = _level.controller.worldMouse;
+            if (button == System.Windows.Forms.MouseButtons.Left)
+            {
+                return hitTest(worldMouse, (results) =>
+                    {
+                        // Handle point results
+                        if (results.Count == 1 && results[0].componentType == ActorComponentType.Point)
+                        {
+                            _selectedPoints.Add(results[0] as PointListNode);
+                            select();
+                            return true;
+                        }
+
+                        // Handle line results
+                        if (results.Count == 2 && results[0].componentType == ActorComponentType.Point &&
+                            results[0].componentType == ActorComponentType.Point)
+                        {
+                            _selectedPoints.Add(results[0] as PointListNode);
+                            _selectedPoints.Add(results[1] as PointListNode);
+                            select();
+                            return true;
+                        }
+
+                        // Handle polygon results
+                        if (results.Count == 1 && results[0].componentType == ActorComponentType.Polygon)
+                        {
+                            _selectedPoints = _headPoint.allNodes;
+                            select();
+                            return true;
+                        }
+
+                        return false;
+                    });
+            }
+            else if (button == System.Windows.Forms.MouseButtons.Right)
+            {
+            }
+
+            return false;
+        }
+
+        public override bool hitTest(Vector2 testPoint, HitTestCallback callback)
+        {
+            List<IActorComponent> results = new List<IActorComponent>();
+
             // Test points
             PointListNode current = _headPoint;
             while (current != null)
             {
                 if (_level.controller.hitTestPoint(testPoint, current.position))
                 {
-                    _selectedPoints.Add(current);
+                    results.Add(current);
+                    callback(results);
                     return true;
                 }
                 current = current.next;
@@ -129,9 +202,9 @@ namespace StasisEditor.Models
                 PointListNode next = current.next ?? _headPoint;
                 if (_level.controller.hitTestLine(testPoint, current.position, next.position))
                 {
-                    _selectedPoints.Add(current);
-                    _selectedPoints.Add(next);
-                    return true;
+                    results.Add(current);
+                    results.Add(next);
+                    return callback(results);
                 }
 
                 current = current.next;
@@ -140,44 +213,11 @@ namespace StasisEditor.Models
             // Test polygon
             if (_level.controller.hitTestPolygon(testPoint, _headPoint.points))
             {
-                _selectedPoints.Clear();
-                _selectedPoints = _headPoint.allNodes;
-                return true;
+                results.Add(this);
+                return callback(results);
             }
 
             return false;
-        }
-
-        public override void handleLeftMouseDown()
-        {
-            if (selected)
-            {
-                // Continue drawing polygon if shift is held
-                if (_level.controller.shift && _selectedPoints.Count == 1)
-                {
-                    if (_selectedPoints[0] == _headPoint)
-                    {
-                        _headPoint = _headPoint.insertBefore(_level.controller.worldMouse);
-                        _selectedPoints.Clear();
-                        _selectedPoints.Add(_headPoint);
-                    }
-                    else if (_selectedPoints[0] == _headPoint.tail)
-                    {
-                        _headPoint.tail.insertAfter(_level.controller.worldMouse);
-                        _selectedPoints.Clear();
-                        _selectedPoints.Add(_headPoint.tail);
-                    }
-                }
-                else
-                {
-                    triangulate();
-                    deselect();
-                }
-            }
-            else
-            {
-                select();
-            }
         }
 
         public override void update()
@@ -279,41 +319,51 @@ namespace StasisEditor.Models
                 // Insert a point
                 if (_level.controller.isKeyPressed(Keys.OemPlus))
                 {
-                    if (hitTest(worldMouse))
-                    {
-                        if (_selectedPoints.Count == 1)
+                    hitTest(worldMouse, (results) =>
                         {
-                            // Hit test succeeded on a single point, so add a new node after it
-                            _selectedPoints[0].insertAfter(worldMouse);
-                        }
-                        else if ((_selectedPoints[0] == _headPoint && _selectedPoints[1] == _headPoint.tail) ||
-                            (_selectedPoints[0] == _headPoint.tail && _selectedPoints[1] == _headPoint))
-                        {
-                            // Hit test succeeded on the line between head and tail, so add a point after the tail
-                            _headPoint.tail.insertAfter(worldMouse);
-                        }
-                        else
-                        {
-                            // Hit test succeeded on a normal line segment, so add a point after the node closest to the head
-                            PointListNode firstNode = _selectedPoints[0].index < _selectedPoints[1].index ? _selectedPoints[0] : _selectedPoints[1];
-                            firstNode.insertAfter(worldMouse);
-                        }
-                        _selectedPoints.Clear();
-                    }
+                            // Handle insertion on a single point
+                            if (results.Count == 1 && results[0].componentType == ActorComponentType.Point)
+                            {
+                                (results[0] as PointListNode).insertAfter(worldMouse);
+                                return true;
+                            }
+
+                            // Handle insertion on line between head and tail
+                            if (results.Count == 2 && 
+                                ((results[0] == _headPoint && results[1] == _headPoint.tail) ||
+                                (results[0] == _headPoint.tail && results[1] == _headPoint)))
+                            {
+                                _headPoint.tail.insertAfter(worldMouse);
+                                return true;
+                            }
+
+                            // Handle insertion on a normal line segment
+                            if (results.Count == 2 && results[0].componentType == ActorComponentType.Point && results[0].componentType == ActorComponentType.Point)
+                            {
+                                PointListNode firstNode = ((results[0] as PointListNode).index < (results[1] as PointListNode).index ? results[0] : results[1]) as PointListNode;
+                                firstNode.insertAfter(worldMouse);
+                            }
+
+                            return false;
+                        });
                 }
 
                 // Remove a point
                 if (_level.controller.isKeyPressed(Keys.OemMinus))
                 {
-                    if (_headPoint.listCount > 3 && hitTest(worldMouse))
+                    if (_headPoint.listCount > 3)
                     {
-                        if (_selectedPoints.Count == 1)
-                        {
-                            if (_selectedPoints[0] == _headPoint)
-                                _headPoint = _headPoint.next;
-                            _selectedPoints[0].remove();
-                        }
-                        _selectedPoints.Clear();
+                        hitTest(worldMouse, (results) =>
+                            {
+                                if (results.Count == 1 && results[0].componentType == ActorComponentType.Point)
+                                {
+                                    if (results[0] == _headPoint)
+                                        _headPoint = _headPoint.next;
+                                    (results[0] as PointListNode).remove();
+                                    return true;
+                                }
+                                return false;
+                            });
                     }
                 }
             }
