@@ -4,12 +4,13 @@ using Microsoft.Xna.Framework;
 
 namespace StasisEditor.Models
 {
-    public class PointListNode
+    public class PointListNode : IActorComponent
     {
         private PointListNode _next;
         private PointListNode _previous;
         private Vector2 _position;
 
+        public ActorComponentType componentType { get { return ActorComponentType.Point; } }
         public PointListNode next { get { return _next; } set { _next = value; } }
         public PointListNode previous { get { return _previous; } set { _previous = value; } }
         public Vector2 position { get { return _position; } set { _position = value; } }
