@@ -8,7 +8,7 @@ using StasisCore;
 
 namespace StasisEditor.Models
 {
-    public class EditorItemActor : EditorActor
+    public class EditorItemActor : EditorActor, IActorComponent
     {
         private Vector2 _position;
         private string _itemUID;
@@ -16,6 +16,8 @@ namespace StasisEditor.Models
 
         public string itemUID { get { return _itemUID; } set { _itemUID = value; } }
         public int quantity { get { return _quantity; } set { _quantity = value; } }
+        [Browsable(false)]
+        public ActorComponentType componentType { get { return ActorComponentType.Point; } }
         [Browsable(false)]
         public override Vector2 circuitConnectionPosition { get { return _position; } }
         [Browsable(false)]
@@ -47,9 +49,35 @@ namespace StasisEditor.Models
             _quantity = Loader.loadInt(data.Attribute("quantity"), 1);
         }
 
-        public override bool hitTest(Vector2 testPoint)
+        public override void handleSelectedClick(System.Windows.Forms.MouseButtons button)
         {
-            return _level.controller.hitTestPoint(testPoint, _position, 12f);
+            deselect();
+        }
+
+        public override bool handleUnselectedClick(System.Windows.Forms.MouseButtons button)
+        {
+            return hitTest(_level.controller.worldMouse, (results) =>
+                {
+                    if (results.Count == 1 && results[0].componentType == ActorComponentType.Point)
+                    {
+                        select();
+                        return true;
+                    }
+                    return false;
+                });
+        }
+
+        public override bool hitTest(Vector2 testPoint, HitTestCallback callback)
+        {
+            List<IActorComponent> results = new List<IActorComponent>();
+
+            if (_level.controller.hitTestPoint(testPoint, _position, 12f))
+            {
+                results.Add(this);
+                return callback(results);
+            }
+
+            return false;
         }
 
         public override void update()
