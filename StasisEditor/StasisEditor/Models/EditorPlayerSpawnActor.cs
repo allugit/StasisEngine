@@ -8,10 +8,12 @@ using StasisCore;
 
 namespace StasisEditor.Models
 {
-    public class EditorPlayerSpawnActor : EditorActor
+    public class EditorPlayerSpawnActor : EditorActor, IActorComponent
     {
         private Vector2 _position;
 
+        [Browsable(false)]
+        public ActorComponentType componentType { get { return ActorComponentType.Point; } }
         [Browsable(false)]
         public override XElement data
         {
@@ -35,10 +37,33 @@ namespace StasisEditor.Models
             _position = Loader.loadVector2(data.Attribute("position"), Vector2.Zero);
         }
 
-        public override bool hitTest(Vector2 testPoint)
+        public override void handleSelectedClick(System.Windows.Forms.MouseButtons button)
         {
+            deselect();
+        }
+
+        public override bool handleUnselectedClick(System.Windows.Forms.MouseButtons button)
+        {
+            return hitTest(_level.controller.worldMouse, (results) =>
+                {
+                    if (results.Count == 1 && results[0].componentType == ActorComponentType.Point)
+                    {
+                        select();
+                        return true;
+                    }
+                    return false;
+                });
+        }
+
+        public override bool hitTest(Vector2 testPoint, HitTestCallback callback)
+        {
+            List<IActorComponent> results = new List<IActorComponent>();
+
             if (_level.controller.hitTestPoint(testPoint, _position, 12f))
-                return true;
+            {
+                results.Add(this);
+                return callback(results);
+            }
 
             return false;
         }
