@@ -65,27 +65,43 @@ namespace StasisEditor.Models
 
         public override bool handleUnselectedClick(System.Windows.Forms.MouseButtons button)
         {
-            return hitTest(_level.controller.worldMouse, (results) =>
-                {
-                    if (results.Count == 1 && results[0] == this)
+            if (button == System.Windows.Forms.MouseButtons.Left)
+            {
+                return hitTest(_level.controller.worldMouse, (results) =>
                     {
-                        _selectedPoints.Add(_nodeA);
-                        _selectedPoints.Add(_nodeB);
-                        select();
-                        return true;
-                    }
-                    else if (results.Count > 0)
-                    {
-                        foreach (IActorComponent component in results)
+                        if (results.Count == 1 && results[0] == this)
                         {
-                            if (component is PointListNode)
-                                _selectedPoints.Add(component as PointListNode);
+                            _selectedPoints.Add(_nodeA);
+                            _selectedPoints.Add(_nodeB);
+                            select();
+                            return true;
                         }
-                        select();
+                        else if (results.Count > 0)
+                        {
+                            foreach (IActorComponent component in results)
+                            {
+                                if (component is PointListNode)
+                                    _selectedPoints.Add(component as PointListNode);
+                            }
+                            select();
+                            return true;
+                        }
+                        return false;
+                    });
+            }
+            else if (button == System.Windows.Forms.MouseButtons.Right)
+            {
+                return hitTest(_level.controller.worldMouse, (results) =>
+                {
+                    if (results.Count == 1)
+                    {
+                        _level.controller.openActorProperties(results[0]);
                         return true;
                     }
                     return false;
                 });
+            }
+            return false;
         }
 
         public override bool hitTest(Vector2 testPoint, HitTestCallback callback)

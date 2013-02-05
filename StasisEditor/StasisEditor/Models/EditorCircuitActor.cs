@@ -153,24 +153,40 @@ namespace StasisEditor.Models
 
         public override bool handleUnselectedClick(System.Windows.Forms.MouseButtons button)
         {
-            return hitTest(_level.controller.worldMouse, (results) =>
+            if (button == System.Windows.Forms.MouseButtons.Left)
+            {
+                return hitTest(_level.controller.worldMouse, (results) =>
+                    {
+                        if (results.Count == 1 && results[0] is GateControl)
+                        {
+                            _selectedGateControls.Add(results[0] as GateControl);
+                            _moveActor = false;
+                            select();
+                            return true;
+                        }
+                        else if (results.Count == 1 && results[0] == this)
+                        {
+                            selectAllGateControls();
+                            _moveActor = true;
+                            select();
+                            return true;
+                        }
+                        return false;
+                    });
+            }
+            else if (button == System.Windows.Forms.MouseButtons.Right)
+            {
+                return hitTest(_level.controller.worldMouse, (results) =>
                 {
-                    if (results.Count == 1 && results[0] is GateControl)
+                    if (results.Count == 1)
                     {
-                        _selectedGateControls.Add(results[0] as GateControl);
-                        _moveActor = false;
-                        select();
-                        return true;
-                    }
-                    else if (results.Count == 1 && results[0] == this)
-                    {
-                        selectAllGateControls();
-                        _moveActor = true;
-                        select();
+                        _level.controller.openActorProperties(results[0]);
                         return true;
                     }
                     return false;
                 });
+            }
+            return false;
         }
 
         public override bool hitTest(Vector2 testPoint, HitTestCallback callback)

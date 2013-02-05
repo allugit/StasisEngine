@@ -114,33 +114,49 @@ namespace StasisEditor.Models
 
         public override bool handleUnselectedClick(System.Windows.Forms.MouseButtons button)
         {
-            return hitTest(_level.controller.worldMouse, (results) =>
+            if (button == System.Windows.Forms.MouseButtons.Left)
+            {
+                return hitTest(_level.controller.worldMouse, (results) =>
+                    {
+                        if (results.Count == 1)
+                        {
+                            if (results[0] == _controlA)
+                            {
+                                _moveActor = false;
+                                _selectedA = true;
+                                select();
+                                return true;
+                            }
+                            else if (results[0] == _controlB)
+                            {
+                                _moveActor = false;
+                                _selectedB = true;
+                                select();
+                                return true;
+                            }
+                            else if (results[0] == this)
+                            {
+                                _moveActor = true;
+                                select();
+                                return true;
+                            }
+                        }
+                        return false;
+                    });
+            }
+            else if (button == System.Windows.Forms.MouseButtons.Right)
+            {
+                return hitTest(_level.controller.worldMouse, (results) =>
                 {
                     if (results.Count == 1)
                     {
-                        if (results[0] == _controlA)
-                        {
-                            _moveActor = false;
-                            _selectedA = true;
-                            select();
-                            return true;
-                        }
-                        else if (results[0] == _controlB)
-                        {
-                            _moveActor = false;
-                            _selectedB = true;
-                            select();
-                            return true;
-                        }
-                        else if (results[0] == this)
-                        {
-                            _moveActor = true;
-                            select();
-                            return true;
-                        }
+                        _level.controller.openActorProperties(results[0]);
+                        return true;
                     }
                     return false;
                 });
+            }
+            return false;
         }
 
         public override bool hitTest(Vector2 testPoint, HitTestCallback callback)

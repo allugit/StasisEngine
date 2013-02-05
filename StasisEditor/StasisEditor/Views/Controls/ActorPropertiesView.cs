@@ -12,10 +12,11 @@ namespace StasisEditor.Views.Controls
 {
     public partial class ActorPropertiesView : UserControl
     {
-        public ActorPropertiesView(EditorActor actor)
+        public ActorPropertiesView(IActorComponent component)
         {
             InitializeComponent();
-            actorPropertyGrid.SelectedObject = actor;
+            actorPropertyGrid.SelectedObject = component;
+            Dock = DockStyle.Top;
         }
     }
 }

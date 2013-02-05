@@ -90,7 +90,7 @@ namespace StasisEditor.Models
                     {
                         if (results.Count == 1)
                         {
-                            //_level.controller.openActorProperties(results[0]);
+                            _level.controller.openActorProperties(results[0]);
                             return true;
                         }
                         return false;

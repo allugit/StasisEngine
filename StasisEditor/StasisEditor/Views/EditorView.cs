@@ -122,9 +122,12 @@ namespace StasisEditor.Views
         }
 
         // openActorProperties
-        public void openActorProperties(EditorActor actor)
+        public void openActorProperties(IActorComponent component, bool closeOpenedProperties = true)
         {
-            ActorPropertiesView actorProperties = new ActorPropertiesView(actor);
+            if (closeOpenedProperties)
+                closeActorProperties();
+
+            ActorPropertiesView actorProperties = new ActorPropertiesView(component);
             actorProperties.Dock = DockStyle.Top;
             _actorPropertiesViews.Add(actorProperties);
             mainSplit.Panel1.Controls.Add(actorProperties);

@@ -171,6 +171,15 @@ namespace StasisEditor.Models
             }
             else if (button == System.Windows.Forms.MouseButtons.Right)
             {
+                return hitTest(_level.controller.worldMouse, (results) =>
+                {
+                    if (results.Count == 1)
+                    {
+                        _level.controller.openActorProperties(results[0]);
+                        return true;
+                    }
+                    return false;
+                });
             }
 
             return false;
