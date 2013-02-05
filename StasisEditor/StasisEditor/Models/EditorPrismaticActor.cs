@@ -8,10 +8,10 @@ using StasisCore;
 
 namespace StasisEditor.Models
 {
-    public class EditorPrismaticActor : EditorActor
+    public class EditorPrismaticActor : EditorActor, IActorComponent
     {
         private EditorActor _actor;
-        private Vector2 _actorControl;
+        private PointListNode _connectionPoint;
         private bool _selectedActorControl;
         private bool _moveActor;
         private float _angle;
@@ -20,6 +20,8 @@ namespace StasisEditor.Models
         private float _lowerLimit;
         private float _upperLimit;
 
+        [Browsable(false)]
+        public ActorComponentType componentType { get { return ActorComponentType.Point; } }
         [Browsable(false)]
         public override Vector2 circuitConnectionPosition { get { return _position; } }
         [Browsable(false)]
@@ -63,16 +65,75 @@ namespace StasisEditor.Models
 
         private void initializeControls()
         {
-            _actorControl = _position + new Vector2(-24f, 0f) / _level.controller.scale;
+            _connectionPoint = new PointListNode(_position + new Vector2(-24f, 0f) / _level.controller.scale);
         }
 
-        public override void deselect()
+        protected override void deselect()
         {
             _selectedActorControl = false;
             _moveActor = true;
             base.deselect();
         }
 
+        public override void handleSelectedClick(System.Windows.Forms.MouseButtons button)
+        {
+            if (_selectedActorControl && !_moveActor)
+            {
+                foreach (EditorActor actor in _level.actors)
+                {
+                    if (actor.type == ActorType.Box || actor.type == ActorType.Circle || actor.type == ActorType.Terrain)
+                    {
+                        actor.hitTest(_connectionPoint.position, (results) =>
+                            {
+                                _actor = actor;
+                                return true;
+                            });
+                    }
+                }
+            }
+            deselect();
+
+            /*
+             * if (_selectedActorControl && !_moveActor)
+                {
+                    foreach (EditorActor actor in _level.actors)
+                    {
+                        if (actor.type == ActorType.Box || actor.type == ActorType.Circle || actor.type == ActorType.Terrain)
+                        {
+                            if (actor.hitTest(_actorControl))
+                            {
+                                _actor = actor;
+                            }
+                        }
+                    }
+                }
+                deselect();
+            */
+        }
+
+        public override bool handleUnselectedClick(System.Windows.Forms.MouseButtons button)
+        {
+            return hitTest(_level.controller.worldMouse, (results) =>
+                {
+                    if (results.Count > 0 && results[0] == this)
+                    {
+                        _moveActor = true;
+                        _selectedActorControl = false;
+                        select();
+                        return true;
+                    }
+                    else if (results.Count > 0 && results[0] == _connectionPoint)
+                    {
+                        _moveActor = false;
+                        _selectedActorControl = true;
+                        select();
+                        return true;
+                    }
+                    return false;
+                });
+        }
+
+        /*
         public override void handleLeftMouseDown()
         {
             if (selected)
@@ -96,10 +157,29 @@ namespace StasisEditor.Models
             {
                 select();
             }
-        }
+        }*/
 
-        public override bool hitTest(Vector2 testPoint)
+        public override bool hitTest(Vector2 testPoint, HitTestCallback callback)
         {
+            List<IActorComponent> results = new List<IActorComponent>();
+
+            // Hit test icon
+            if (_level.controller.hitTestPoint(testPoint, _position))
+            {
+                results.Add(this);
+                return callback(results);
+            }
+
+            // Hit test connection control
+            if (_level.controller.hitTestPoint(testPoint, _connectionPoint.position))
+            {
+                results.Add(_connectionPoint);
+                return callback(results);
+            }
+
+            return false;
+
+            /*
             // Hit test icon
             if (_level.controller.hitTestPoint(testPoint, _position))
             {
@@ -117,6 +197,7 @@ namespace StasisEditor.Models
             }
 
             return false;
+            */
         }
 
         public override void update()
@@ -128,7 +209,7 @@ namespace StasisEditor.Models
             // Update connections
             if (_actor != null && !_level.actors.Contains(_actor))
             {
-                _actorControl = _actor.prismaticConnectionPosition;
+                _connectionPoint.position = _actor.prismaticConnectionPosition;
                 _actor = null;
             }
 
@@ -139,7 +220,7 @@ namespace StasisEditor.Models
                     if (_moveActor)
                         _position += worldDelta;
                     if (_selectedActorControl)
-                        _actorControl += worldDelta;
+                        _connectionPoint.position += worldDelta;
                 }
 
                 if (_level.controller.isKeyHeld(Keys.Q))
@@ -177,8 +258,8 @@ namespace StasisEditor.Models
             // Connections and controls
             if (_actor == null)
             {
-                _level.controller.view.drawLine(_position, _actorControl, Color.DarkGreen, _layerDepth);
-                _level.controller.view.drawPoint(_actorControl, Color.Green, _layerDepth);
+                _level.controller.view.drawLine(_position, _connectionPoint.position, Color.DarkGreen, _layerDepth);
+                _level.controller.view.drawPoint(_connectionPoint.position, Color.Green, _layerDepth);
             }
             else
             {
