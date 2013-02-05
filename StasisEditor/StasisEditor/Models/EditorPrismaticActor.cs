@@ -126,7 +126,7 @@ namespace StasisEditor.Models
             {
                 return hitTest(_level.controller.worldMouse, (results) =>
                 {
-                    if (results.Count == 1)
+                    if (results.Count == 1 && results[0] == this)
                     {
                         _level.controller.openActorProperties(results[0]);
                         return true;
