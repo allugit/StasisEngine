@@ -8,12 +8,12 @@ using StasisCore;
 
 namespace StasisEditor.Models
 {
-    public class EditorRevoluteActor : EditorActor
+    public class EditorRevoluteActor : EditorActor, IActorComponent
     {
         private EditorActor _actorA;
         private EditorActor _actorB;
-        private Vector2 _controlA;
-        private Vector2 _controlB;
+        private PointListNode _controlA;
+        private PointListNode _controlB;
         private bool _selectedA;
         private bool _selectedB;
         private bool _moveActor;
@@ -56,20 +56,94 @@ namespace StasisEditor.Models
 
         private void initializeControls()
         {
-            if (_actorA == null)
-                _controlA = _position + new Vector2(-24f, 0f) / _level.controller.scale;
-            if (_actorB == null)
-                _controlB = _position + new Vector2(24f, 0f) / _level.controller.scale;
+            _controlA = new PointListNode(_position + new Vector2(-24f, 0f) / _level.controller.scale);
+            _controlB = new PointListNode(_position + new Vector2(24f, 0f) / _level.controller.scale);
         }
 
-        public override void deselect()
+        protected override void deselect()
         {
             _selectedA = false;
             _selectedB = false;
-            _moveActor = true;
+            _moveActor = false;
             base.deselect();
         }
 
+        public override void handleSelectedClick(System.Windows.Forms.MouseButtons button)
+        {
+            if (_selectedA || _selectedB)
+            {
+                // Attempt to form a connection with another actor
+                foreach (EditorActor actor in _level.actors)
+                {
+                    // Only connect with certain actor types
+                    if (actor.type == ActorType.Box || actor.type == ActorType.Circle || actor.type == ActorType.Terrain)
+                    {
+                        if (_selectedA && actor != _actorB)
+                        {
+                            // Form a connection (actorA)
+                            actor.hitTest(_controlA.position, (results) =>
+                                {
+                                    if (results.Count > 0 && results[0] is EditorActor)
+                                    {
+                                        _actorA = actor;
+                                        return true;
+                                    }
+                                    return false;
+                                });
+                            break;
+                        }
+                        else if (_selectedB && actor != _actorA)
+                        {
+                            // Form a connection (actorB)
+                            actor.hitTest(_controlB.position, (results) =>
+                                {
+                                    if (results.Count > 0 && results[0] is EditorActor)
+                                    {
+                                        _actorB = actor;
+                                        return true;
+                                    }
+                                    return false;
+                                });
+                            break;
+                        }
+                    }
+                }
+            }
+            deselect();
+        }
+
+        public override bool handleUnselectedClick(System.Windows.Forms.MouseButtons button)
+        {
+            return hitTest(_level.controller.worldMouse, (results) =>
+                {
+                    if (results.Count == 1)
+                    {
+                        if (results[0] == _controlA)
+                        {
+                            _moveActor = false;
+                            _selectedA = true;
+                            select();
+                            return true;
+                        }
+                        else if (results[0] == _controlB)
+                        {
+                            _moveActor = false;
+                            _selectedB = true;
+                            select();
+                            return true;
+                        }
+                        else if (results[0] == this)
+                        {
+                            _moveActor = true;
+                            select();
+                            return true;
+                        }
+                    }
+                    return false;
+                });
+        }
+
+        /*
         public override void handleLeftMouseDown()
         {
             if (selected)
@@ -99,12 +173,34 @@ namespace StasisEditor.Models
             {
                 select();
             }
-        }
+        }*/
 
-        public override bool hitTest(Vector2 testPoint)
+        public override bool hitTest(Vector2 testPoint, HitTestCallback callback)
         {
-            Vector2 worldMouse = _level.controller.worldMouse;
+            List<IActorComponent> results = new List<IActorComponent>();
 
+            // Hit test controls
+            if (_level.controller.hitTestPoint(testPoint, _controlA.position))
+            {
+                results.Add(_controlA);
+                return callback(results);
+            }
+            if (_level.controller.hitTestPoint(testPoint, _controlB.position))
+            {
+                results.Add(_controlB);
+                return callback(results);
+            }
+
+            // Hit test icon
+            if (_level.controller.hitTestPoint(testPoint, _position, 12f))
+            {
+                results.Add(this);
+                return callback(results);
+            }
+
+            return false;
+
+            /*
             // Hit test controls
             if (_actorA == null)
             {
@@ -135,6 +231,7 @@ namespace StasisEditor.Models
             }
 
             return false;
+            */
         }
 
         public override void update()
@@ -143,12 +240,12 @@ namespace StasisEditor.Models
 
             if (_actorA != null && !_level.actors.Contains(_actorA))
             {
-                _controlA = _actorA.revoluteConnectionPosition;
+                _controlA.position = _actorA.revoluteConnectionPosition;
                 _actorA = null;
             }
             if (_actorB != null && !_level.actors.Contains(_actorB))
             {
-                _controlB = _actorB.revoluteConnectionPosition;
+                _controlB.position = _actorB.revoluteConnectionPosition;
                 _actorB = null;
             }
 
@@ -159,9 +256,9 @@ namespace StasisEditor.Models
                     if (_moveActor)
                         _position += worldDelta;
                     if (_selectedA)
-                        _controlA += worldDelta;
+                        _controlA.position += worldDelta;
                     if (_selectedB)
-                        _controlB += worldDelta;
+                        _controlB.position += worldDelta;
                 }
 
                 if (_level.controller.isKeyPressed(Keys.Escape))
@@ -180,8 +277,8 @@ namespace StasisEditor.Models
             // Connections and connections
             if (_actorA == null)
             {
-                _level.controller.view.drawLine(_position, _controlA, Color.Gray, _layerDepth);
-                _level.controller.view.drawPoint(_controlA, Color.White, _layerDepth);
+                _level.controller.view.drawLine(_position, _controlA.position, Color.Gray, _layerDepth);
+                _level.controller.view.drawPoint(_controlA.position, Color.White, _layerDepth);
             }
             else
             {
@@ -189,8 +286,8 @@ namespace StasisEditor.Models
             }
             if (_actorB == null)
             {
-                _level.controller.view.drawLine(_position, _controlB, Color.DarkGray, _layerDepth);
-                _level.controller.view.drawPoint(_controlB, Color.Gray, _layerDepth);
+                _level.controller.view.drawLine(_position, _controlB.position, Color.DarkGray, _layerDepth);
+                _level.controller.view.drawPoint(_controlB.position, Color.Gray, _layerDepth);
             }
             else
             {
