@@ -8,10 +8,8 @@ using StasisCore;
 
 namespace StasisEditor.Models
 {
-    public class EditorTreeActor : EditorActor
+    public class EditorTreeActor : EditorActor, IActorComponent
     {
-        private bool _selectedTropism;
-
         private float _angle;
         private int _seed;
         private float _age;
@@ -46,7 +44,6 @@ namespace StasisEditor.Models
         public float optimalGrowthWeight { get { return _optimalGrowthWeight; } set { _optimalGrowthWeight = value; } }
         public float tropismWeight { get { return _tropismWeight; } set { _tropismWeight = value; } }
         public Vector2 tropism { get { return _tropism; } set { _tropism = value; } }
-        public Vector2 position { get { return _position; } set { _position = value; } }
         [Browsable(false)]
         public override Vector2 circuitConnectionPosition { get { return _position; } }
         [Browsable(false)]
@@ -125,27 +122,35 @@ namespace StasisEditor.Models
             _angle += increment;
         }
 
-        public override void deselect()
+        public override void handleSelectedClick(System.Windows.Forms.MouseButtons button)
         {
-            _selectedTropism = false;
-            base.deselect();
+            deselect();
         }
 
-        public override bool hitTest(Vector2 testPoint)
+        public override bool handleUnselectedClick(System.Windows.Forms.MouseButtons button)
         {
-            // Hit test tropism point
-            if (_level.controller.hitTestPoint(testPoint, _position + _tropism))
-            {
-                _selectedTropism = true;
-                return true;
-            }
+            return hitTest(_level.controller.worldMouse, (results) =>
+                {
+                    if (results.Count == 1 && results[0] == this)
+                    {
+                        select();
+                        return true;
+                    }
+                    return false;
+                });
+        }
+
+        public override bool hitTest(Vector2 testPoint, HitTestCallback callback)
+        {
+            List<IActorComponent> results = new List<IActorComponent>();
 
             // Hit test box
             Vector2 relative = new Vector2(0, -_internodeHalfLength / 2f);
             Matrix offset = Matrix.CreateTranslation(new Vector3(relative, 0)) * Matrix.CreateRotationZ(_angle);
             if (_level.controller.hitTestBox(testPoint, _position + Vector2.Transform(relative, offset), _maxBaseHalfWidth, _internodeHalfLength, _angle))
             {
-                return true;
+                results.Add(this);
+                return callback(results);
             }
 
             return false;
@@ -161,10 +166,7 @@ namespace StasisEditor.Models
             {
                 if (!_level.controller.ctrl)
                 {
-                    if (_selectedTropism)
-                        _tropism += worldDelta;
-                    else
-                        _position += worldDelta;
+                    _position += worldDelta;
                 }
 
                 if (_level.controller.isKeyHeld(Keys.Q))
