@@ -64,7 +64,7 @@
   <ItemGroup>
     <Compile Include="Controllers\ResourceController.cs" />
     <Compile Include="CustomVertexFormat.cs" />
-    <Compile Include="Enumerations.cs" />
+    <Compile Include="Settings.cs" />
     <Compile Include="Models\Blueprint.cs" />
     <Compile Include="Models\BlueprintScrap.cs" />
     <Compile Include="Models\BlueprintSocket.cs" />

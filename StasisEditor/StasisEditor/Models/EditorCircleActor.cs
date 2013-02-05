@@ -13,8 +13,14 @@ namespace StasisEditor.Models
     {
         private Vector2 _position;
         private float _radius;
+        private float _density;
+        private float _friction;
+        private float _restitution;
 
         public float radius { get { return _radius; } set { _radius = value; } }
+        public float density { get { return _density; } set { _density = value; } }
+        public float friction { get { return _friction; } set { _friction = value; } }
+        public float restitution { get { return _restitution; } set { _restitution = value; } }
         [Browsable(false)]
         public override Vector2 circuitConnectionPosition { get { return _position; } }
         [Browsable(false)]
@@ -29,6 +35,9 @@ namespace StasisEditor.Models
                 XElement d = base.data;
                 d.SetAttributeValue("position", _position);
                 d.SetAttributeValue("radius", _radius);
+                d.SetAttributeValue("density", _density);
+                d.SetAttributeValue("friction", _friction);
+                d.SetAttributeValue("restitution", _restitution);
                 return d;
             }
         }
@@ -38,6 +47,9 @@ namespace StasisEditor.Models
         {
             _position = level.controller.worldMouse;
             _radius = 1f;
+            _density = 0.5f;
+            _friction = 1f;
+            _restitution = 0f;
             _layerDepth = 0.1f;
         }
 
@@ -46,6 +58,9 @@ namespace StasisEditor.Models
         {
             _position = Loader.loadVector2(data.Attribute("position"), Vector2.Zero);
             _radius = Loader.loadFloat(data.Attribute("radius"), 1f);
+            _density = Loader.loadFloat(data.Attribute("density"), 0.5f);
+            _friction = Loader.loadFloat(data.Attribute("friction"), 1f);
+            _restitution = Loader.loadFloat(data.Attribute("restitution"), 0f);
         }
 
         public override void handleSelectedClick(System.Windows.Forms.MouseButtons button)

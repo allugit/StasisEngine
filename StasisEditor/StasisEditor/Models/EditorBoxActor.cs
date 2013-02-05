@@ -15,10 +15,16 @@ namespace StasisEditor.Models
         private float _halfWidth;
         private float _halfHeight;
         private float _angle;
+        private float _density;
+        private float _friction;
+        private float _restitution;
 
         public float halfWidth { get { return _halfWidth; } set { _halfWidth = value; } }
         public float halfHeight { get { return _halfHeight; } set { _halfHeight = value; } }
         public float angle { get { return _angle; } set { _angle = value; } }
+        public float density { get { return _density; } set { _density = value; } }
+        public float friction { get { return _friction; } set { _friction = value; } }
+        public float restitution { get { return _restitution; } set { _restitution = value; } }
         [Browsable(false)]
         public override Vector2 circuitConnectionPosition { get { return _position; } }
         [Browsable(false)]
@@ -35,6 +41,9 @@ namespace StasisEditor.Models
                 d.SetAttributeValue("half_width", _halfWidth);
                 d.SetAttributeValue("half_height", _halfHeight);
                 d.SetAttributeValue("angle", _angle);
+                d.SetAttributeValue("density", _density);
+                d.SetAttributeValue("friction", _friction);
+                d.SetAttributeValue("restitution", _restitution);
                 return d;
             }
         }
@@ -46,6 +55,9 @@ namespace StasisEditor.Models
             _halfWidth = 1f;
             _halfHeight = 1f;
             _angle = 0f;
+            _density = 0.5f;
+            _friction = 1f;
+            _restitution = 0f;
             _layerDepth = 0.1f;
         }
 
@@ -56,6 +68,9 @@ namespace StasisEditor.Models
             _halfWidth = Loader.loadFloat(data.Attribute("half_width"), 1f);
             _halfHeight = Loader.loadFloat(data.Attribute("half_height"), 1f);
             _angle = Loader.loadFloat(data.Attribute("angle"), 0f);
+            _density = Loader.loadFloat(data.Attribute("density"), 0.5f);
+            _friction = Loader.loadFloat(data.Attribute("friction"), 1f);
+            _restitution = Loader.loadFloat(data.Attribute("restitution"), 0f);
         }
 
         public void rotate(Vector2 anchorPoint, float increment)

@@ -11,21 +11,45 @@ namespace StasisEditor.Models
 {
     public class EditorTerrainActor : EditorPolygonActor
     {
+        private float _density;
+        private float _friction;
+        private float _restitution;
+
+        public float density { get { return _density; } set { _density = value; } }
+        public float friction { get { return _friction; } set { _friction = value; } }
+        public float restitution { get { return _restitution; } set { _restitution = value; } }
         [Browsable(false)]
         protected override Color polygonFill { get { return Color.Orange * 0.3f; } }
         [Browsable(false)]
         public override Vector2 prismaticConnectionPosition { get { return _headPoint.position; } }
         [Browsable(false)]
         public override Vector2 revoluteConnectionPosition { get { return _headPoint.position; } }
+        public override XElement data
+        {
+            get
+            {
+                XElement d = base.data;
+                d.SetAttributeValue("density", _density);
+                d.SetAttributeValue("friction", _friction);
+                d.SetAttributeValue("restitution", _restitution);
+                return d;
+            }
+        }
 
         public EditorTerrainActor(EditorLevel level)
             : base(level, ActorType.Terrain)
         {
+            _density = 0.5f;
+            _friction = 1f;
+            _restitution = 0f;
         }
 
         public EditorTerrainActor(EditorLevel level, XElement data)
             : base(level, data)
         {
+            _density = Loader.loadFloat(data.Attribute("density"), 0.5f);
+            _friction = Loader.loadFloat(data.Attribute("friction"), 1f);
+            _restitution = Loader.loadFloat(data.Attribute("restitution"), 0f);
         }
 
         public override void draw()

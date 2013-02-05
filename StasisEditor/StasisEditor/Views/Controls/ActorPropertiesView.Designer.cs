@@ -39,6 +39,7 @@
             this.actorPropertyGrid.HelpVisible = false;
             this.actorPropertyGrid.Location = new System.Drawing.Point(6, 20);
             this.actorPropertyGrid.Name = "actorPropertyGrid";
+            this.actorPropertyGrid.PropertySort = System.Windows.Forms.PropertySort.Categorized;
             this.actorPropertyGrid.Size = new System.Drawing.Size(236, 257);
             this.actorPropertyGrid.TabIndex = 0;
             this.actorPropertyGrid.ToolbarVisible = false;
