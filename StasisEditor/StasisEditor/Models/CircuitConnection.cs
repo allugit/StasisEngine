@@ -5,7 +5,7 @@ using StasisCore.Models;
 
 namespace StasisEditor.Models
 {
-    public class CircuitConnection
+    public class CircuitConnection : IActorComponent
     {
         private EditorCircuitActor _circuitActor;
         private EditorActor _actor;

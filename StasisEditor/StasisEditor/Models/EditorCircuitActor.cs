@@ -9,7 +9,7 @@ using StasisCore.Models;
 
 namespace StasisEditor.Models
 {
-    public class GateControl
+    public class GateControl : IActorComponent
     {
         private Gate _gate;
         private Vector2 _position;
@@ -24,12 +24,12 @@ namespace StasisEditor.Models
         }
     }
 
-    public class EditorCircuitActor : EditorActor
+    public class EditorCircuitActor : EditorActor, IActorComponent
     {
         private EditorCircuit _circuit;
         private List<CircuitConnection> _connections;
         private List<GateControl> _gateControls;
-        private List<GateControl> _markedGateControls;
+        private List<GateControl> _selectedGateControls;
         private bool _moveActor = true;
 
         private Vector2 _position;
@@ -76,7 +76,7 @@ namespace StasisEditor.Models
 
         private void initializeGateControls()
         {
-            _markedGateControls = new List<GateControl>();
+            _selectedGateControls = new List<GateControl>();
             _gateControls = new List<GateControl>();
 
             foreach (Gate gate in _circuit.gates)
@@ -107,70 +107,91 @@ namespace StasisEditor.Models
         private void selectAllGateControls()
         {
             foreach (GateControl gateControl in _gateControls)
-                _markedGateControls.Add(gateControl);
+                _selectedGateControls.Add(gateControl);
         }
 
-        public override void delete()
+        protected override void deselect()
+        {
+            _selectedGateControls.Clear();
+            base.deselect();
+        }
+
+        protected override void delete()
         {
             _connections.Clear();
             _gateControls.Clear();
             base.delete();
         }
 
-        public override void handleLeftMouseDown()
+        public override void handleSelectedClick(System.Windows.Forms.MouseButtons button)
         {
-            if (selected)
+            if (_selectedGateControls.Count == 1)
             {
-                if (_markedGateControls.Count == 1)
+                // Perform an actor hit test and form a connection if successful
+                foreach (EditorActor actor in _level.actors)
                 {
-                    // Perform an actor hit test and form a connection if successful
-                    foreach (EditorActor actor in _level.actors)
+                    if (actor.type != ActorType.Circuit)
                     {
-                        if (actor.type != ActorType.Circuit)
-                        {
-                            if (actor.hitTest(_markedGateControls[0].position))
+                        bool connectionFormed = actor.hitTest(_selectedGateControls[0].position, (results) =>
                             {
-                                _connections.Add(new CircuitConnection(this, actor, _markedGateControls[0].gate));
-                                _gateControls.Remove(_markedGateControls[0]);
-                                break;
-                            }
-                        }
+                                if (results.Count > 0)
+                                {
+                                    _connections.Add(new CircuitConnection(this, actor, _selectedGateControls[0].gate));
+                                    _gateControls.Remove(_selectedGateControls[0]);
+                                    return true;
+                                }
+                                return false;
+                            });
+
+                        if (connectionFormed)
+                            break;
                     }
                 }
-                deselect();
             }
-            else
-            {
-                select();
-            }
+            deselect();
         }
 
-        public override void handleRightMouseDown()
+        public override bool handleUnselectedClick(System.Windows.Forms.MouseButtons button)
         {
-            base.handleRightMouseDown();
+            return hitTest(_level.controller.worldMouse, (results) =>
+                {
+                    if (results.Count == 1 && results[0] is GateControl)
+                    {
+                        _selectedGateControls.Add(results[0] as GateControl);
+                        _moveActor = false;
+                        select();
+                        return true;
+                    }
+                    else if (results.Count == 1 && results[0] == this)
+                    {
+                        selectAllGateControls();
+                        _moveActor = true;
+                        select();
+                        return true;
+                    }
+                    return false;
+                });
         }
 
-        public override bool hitTest(Vector2 testPoint)
+        public override bool hitTest(Vector2 testPoint, HitTestCallback callback)
         {
-            _markedGateControls.Clear();
-
-            // Hit test icon
-            if (_level.controller.hitTestPoint(testPoint, _position, 12f))
-            {
-                _moveActor = true;
-                selectAllGateControls();
-                return true;
-            }
+            List<IActorComponent> results = new List<IActorComponent>();
 
             // Hit test gate controls
             foreach (GateControl control in _gateControls)
             {
                 if (_level.controller.hitTestPoint(testPoint, control.position))
                 {
-                    _moveActor = false;
-                    _markedGateControls.Add(control);
-                    return true;
+                    results.Add(control);
+                    return callback(results);
                 }
+            }
+
+            // Hit test icon
+            if (_level.controller.hitTestPoint(testPoint, _position, 12f))
+            {
+                results.Add(this);
+                return callback(results);
             }
 
             return false;
@@ -199,7 +220,7 @@ namespace StasisEditor.Models
                 {
                     if (_moveActor)
                         _position += worldDelta;
-                    foreach (GateControl gateControl in _markedGateControls)
+                    foreach (GateControl gateControl in _selectedGateControls)
                         gateControl.position += worldDelta;
                 }
 
