@@ -81,7 +81,7 @@ namespace StasisEditor.Models
                         if (_selectedA && actor != _actorB)
                         {
                             // Form a connection (actorA)
-                            actor.hitTest(_controlA.position, (results) =>
+                            if (actor.hitTest(_controlA.position, (results) =>
                                 {
                                     if (results.Count > 0 && results[0] is EditorActor)
                                     {
@@ -89,13 +89,15 @@ namespace StasisEditor.Models
                                         return true;
                                     }
                                     return false;
-                                });
-                            break;
+                                }))
+                            {
+                                break;
+                            }
                         }
                         else if (_selectedB && actor != _actorA)
                         {
                             // Form a connection (actorB)
-                            actor.hitTest(_controlB.position, (results) =>
+                            if (actor.hitTest(_controlB.position, (results) =>
                                 {
                                     if (results.Count > 0 && results[0] is EditorActor)
                                     {
@@ -103,8 +105,10 @@ namespace StasisEditor.Models
                                         return true;
                                     }
                                     return false;
-                                });
-                            break;
+                                }))
+                            {
+                                break;
+                            }
                         }
                     }
                 }

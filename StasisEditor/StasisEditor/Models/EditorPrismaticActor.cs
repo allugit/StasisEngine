@@ -83,8 +83,12 @@ namespace StasisEditor.Models
                     {
                         actor.hitTest(_connectionPoint.position, (results) =>
                             {
-                                _actor = actor;
-                                return true;
+                                if (results.Count > 0)
+                                {
+                                    _actor = actor;
+                                    return true;
+                                }
+                                return false;
                             });
                     }
                 }
