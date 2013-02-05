@@ -20,8 +20,6 @@ namespace StasisEditor.Models
         public float halfHeight { get { return _halfHeight; } set { _halfHeight = value; } }
         public float angle { get { return _angle; } set { _angle = value; } }
         [Browsable(false)]
-        public ActorComponentType componentType { get { return ActorComponentType.Box; } }
-        [Browsable(false)]
         public override Vector2 circuitConnectionPosition { get { return _position; } }
         [Browsable(false)]
         public override Vector2 revoluteConnectionPosition { get { return _position; } }
@@ -78,7 +76,7 @@ namespace StasisEditor.Models
             {
                 return hitTest(_level.controller.worldMouse, (results) =>
                 {
-                    if (results.Count == 1 && results[0].componentType == ActorComponentType.Box)
+                    if (results.Count == 1 && results[0] == this)
                     {
                         _level.controller.selectedActor = this;
                         return true;

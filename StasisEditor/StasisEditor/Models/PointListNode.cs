@@ -10,7 +10,6 @@ namespace StasisEditor.Models
         private PointListNode _previous;
         private Vector2 _position;
 
-        public ActorComponentType componentType { get { return ActorComponentType.Point; } }
         public PointListNode next { get { return _next; } set { _next = value; } }
         public PointListNode previous { get { return _previous; } set { _previous = value; } }
         public Vector2 position { get { return _position; } set { _position = value; } }

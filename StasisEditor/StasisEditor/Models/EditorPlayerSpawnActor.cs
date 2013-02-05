@@ -13,8 +13,6 @@ namespace StasisEditor.Models
         private Vector2 _position;
 
         [Browsable(false)]
-        public ActorComponentType componentType { get { return ActorComponentType.Point; } }
-        [Browsable(false)]
         public override XElement data
         {
             get
@@ -46,7 +44,7 @@ namespace StasisEditor.Models
         {
             return hitTest(_level.controller.worldMouse, (results) =>
                 {
-                    if (results.Count == 1 && results[0].componentType == ActorComponentType.Point)
+                    if (results.Count == 1 && results[0] == this)
                     {
                         select();
                         return true;

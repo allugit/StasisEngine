@@ -23,8 +23,6 @@ namespace StasisEditor.Models
         protected Color _polygonFill = Color.White;
 
         [Browsable(false)]
-        public ActorComponentType componentType { get { return ActorComponentType.Polygon; } }
-        [Browsable(false)]
         virtual protected Color polygonFill { get { return _polygonFill; } }
         [Browsable(false)]
         public override Vector2 circuitConnectionPosition { get { return _headPoint.position; } }
@@ -143,7 +141,7 @@ namespace StasisEditor.Models
                 return hitTest(worldMouse, (results) =>
                     {
                         // Handle point results
-                        if (results.Count == 1 && results[0].componentType == ActorComponentType.Point)
+                        if (results.Count == 1 && results[0] is PointListNode)
                         {
                             _selectedPoints.Add(results[0] as PointListNode);
                             select();
@@ -151,8 +149,8 @@ namespace StasisEditor.Models
                         }
 
                         // Handle line results
-                        if (results.Count == 2 && results[0].componentType == ActorComponentType.Point &&
-                            results[0].componentType == ActorComponentType.Point)
+                        if (results.Count == 2 && results[0] is PointListNode &&
+                            results[0] is PointListNode)
                         {
                             _selectedPoints.Add(results[0] as PointListNode);
                             _selectedPoints.Add(results[1] as PointListNode);
@@ -161,7 +159,7 @@ namespace StasisEditor.Models
                         }
 
                         // Handle polygon results
-                        if (results.Count == 1 && results[0].componentType == ActorComponentType.Polygon)
+                        if (results.Count == 1 && results[0] == this)
                         {
                             _selectedPoints = _headPoint.allNodes;
                             select();
@@ -322,7 +320,7 @@ namespace StasisEditor.Models
                     hitTest(worldMouse, (results) =>
                         {
                             // Handle insertion on a single point
-                            if (results.Count == 1 && results[0].componentType == ActorComponentType.Point)
+                            if (results.Count == 1 && results[0] is PointListNode)
                             {
                                 (results[0] as PointListNode).insertAfter(worldMouse);
                                 return true;
@@ -338,7 +336,7 @@ namespace StasisEditor.Models
                             }
 
                             // Handle insertion on a normal line segment
-                            if (results.Count == 2 && results[0].componentType == ActorComponentType.Point && results[0].componentType == ActorComponentType.Point)
+                            if (results.Count == 2 && results[0] is PointListNode && results[0] is PointListNode)
                             {
                                 PointListNode firstNode = ((results[0] as PointListNode).index < (results[1] as PointListNode).index ? results[0] : results[1]) as PointListNode;
                                 firstNode.insertAfter(worldMouse);
@@ -355,7 +353,7 @@ namespace StasisEditor.Models
                     {
                         hitTest(worldMouse, (results) =>
                             {
-                                if (results.Count == 1 && results[0].componentType == ActorComponentType.Point)
+                                if (results.Count == 1 && results[0] is PointListNode)
                                 {
                                     if (results[0] == _headPoint)
                                         _headPoint = _headPoint.next;

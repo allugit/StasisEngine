@@ -21,8 +21,6 @@ namespace StasisEditor.Models
         private float _upperLimit;
 
         [Browsable(false)]
-        public ActorComponentType componentType { get { return ActorComponentType.Point; } }
-        [Browsable(false)]
         public override Vector2 circuitConnectionPosition { get { return _position; } }
         [Browsable(false)]
         public override XElement data

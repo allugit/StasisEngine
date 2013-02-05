@@ -17,8 +17,6 @@ namespace StasisEditor.Models
 
         public bool doubleAnchor;
         [Browsable(false)]
-        public ActorComponentType componentType { get { return ActorComponentType.Line; } }
-        [Browsable(false)]
         public override Vector2 circuitConnectionPosition { get { return (_nodeA.position + _nodeB.position) / 2; } }
         [Browsable(false)]
         public override XElement data
@@ -69,7 +67,7 @@ namespace StasisEditor.Models
         {
             return hitTest(_level.controller.worldMouse, (results) =>
                 {
-                    if (results.Count == 1 && results[0].componentType == ActorComponentType.Line)
+                    if (results.Count == 1 && results[0] == this)
                     {
                         _selectedPoints.Add(_nodeA);
                         _selectedPoints.Add(_nodeB);
@@ -80,7 +78,7 @@ namespace StasisEditor.Models
                     {
                         foreach (IActorComponent component in results)
                         {
-                            if (component.componentType == ActorComponentType.Point)
+                            if (component is PointListNode)
                                 _selectedPoints.Add(component as PointListNode);
                         }
                         select();

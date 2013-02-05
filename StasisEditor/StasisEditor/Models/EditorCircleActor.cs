@@ -16,8 +16,6 @@ namespace StasisEditor.Models
 
         public float radius { get { return _radius; } set { _radius = value; } }
         [Browsable(false)]
-        public ActorComponentType componentType { get { return ActorComponentType.Circle; } }
-        [Browsable(false)]
         public override Vector2 circuitConnectionPosition { get { return _position; } }
         [Browsable(false)]
         public override Vector2 revoluteConnectionPosition { get { return _position; } }
@@ -59,7 +57,7 @@ namespace StasisEditor.Models
         {
             return hitTest(_level.controller.worldMouse, (results) =>
             {
-                if (results.Count == 1 && results[0].componentType == ActorComponentType.Circle)
+                if (results.Count == 1 && results[0] == this)
                 {
                     select();
                     return true;

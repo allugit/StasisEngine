@@ -17,8 +17,6 @@ namespace StasisEditor.Models
         public string itemUID { get { return _itemUID; } set { _itemUID = value; } }
         public int quantity { get { return _quantity; } set { _quantity = value; } }
         [Browsable(false)]
-        public ActorComponentType componentType { get { return ActorComponentType.Point; } }
-        [Browsable(false)]
         public override Vector2 circuitConnectionPosition { get { return _position; } }
         [Browsable(false)]
         public override XElement data
@@ -58,7 +56,7 @@ namespace StasisEditor.Models
         {
             return hitTest(_level.controller.worldMouse, (results) =>
                 {
-                    if (results.Count == 1 && results[0].componentType == ActorComponentType.Point)
+                    if (results.Count == 1 && results[0] == this)
                     {
                         select();
                         return true;
