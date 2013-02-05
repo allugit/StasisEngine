@@ -157,19 +157,22 @@ namespace StasisEditor.Models
             {
                 return hitTest(_level.controller.worldMouse, (results) =>
                     {
-                        if (results.Count == 1 && results[0] is GateControl)
+                        if (results.Count > 0)
                         {
-                            _selectedGateControls.Add(results[0] as GateControl);
-                            _moveActor = false;
-                            select();
-                            return true;
-                        }
-                        else if (results.Count == 1 && results[0] == this)
-                        {
-                            selectAllGateControls();
-                            _moveActor = true;
-                            select();
-                            return true;
+                            if (results[0] is GateControl)
+                            {
+                                _selectedGateControls.Add(results[0] as GateControl);
+                                _moveActor = false;
+                                select();
+                                return true;
+                            }
+                            else if (results[0] == this)
+                            {
+                                selectAllGateControls();
+                                _moveActor = true;
+                                select();
+                                return true;
+                            }
                         }
                         return false;
                     });
@@ -178,7 +181,7 @@ namespace StasisEditor.Models
             {
                 return hitTest(_level.controller.worldMouse, (results) =>
                 {
-                    if (results.Count == 1)
+                    if (results.Count > 0)
                     {
                         _level.controller.openActorProperties(results[0]);
                         return true;
@@ -208,6 +211,16 @@ namespace StasisEditor.Models
             {
                 results.Add(this);
                 return callback(results);
+            }
+
+            // Hit test connection
+            foreach (CircuitConnection connection in _connections)
+            {
+                if (_level.controller.hitTestLine(testPoint, _position, connection.actor.circuitConnectionPosition))
+                {
+                    results.Add(connection);
+                    return callback(results);
+                }
             }
 
             return false;

@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Xml.Linq;
 using StasisCore.Models;
 
@@ -11,8 +12,11 @@ namespace StasisEditor.Models
         private EditorActor _actor;
         private Gate _gate;
 
+        [Browsable(false)]
         public EditorActor actor { get { return _actor; } }
+        [Browsable(false)]
         public Gate gate { get { return _gate; } }
+        [Browsable(false)]
         public XElement data
         {
             get
