@@ -81,7 +81,7 @@ namespace StasisEditor.Models
                 {
                     if (actor.type == ActorType.Box || actor.type == ActorType.Circle || actor.type == ActorType.Terrain)
                     {
-                        actor.hitTest(_connectionPoint.position, (results) =>
+                        if (actor.hitTest(_connectionPoint.position, (results) =>
                             {
                                 if (results.Count > 0)
                                 {
@@ -89,7 +89,10 @@ namespace StasisEditor.Models
                                     return true;
                                 }
                                 return false;
-                            });
+                            }))
+                        {
+                            break;
+                        }
                     }
                 }
             }
