@@ -143,9 +143,6 @@ namespace StasisEditor.Controllers
                     actor = new EditorCircleActor(_level);
                     break;
 
-                case "movingPlatformButton":
-                    break;
-
                 case "terrainButton":
                     actor = new EditorTerrainActor(_level);
                     break;
@@ -215,7 +212,7 @@ namespace StasisEditor.Controllers
             {
                 _editorController.view.selectLevelTab();
                 _level.addActor(actor);
-                actor.select();
+                _selectedActor = actor;
             }
         }
 
@@ -266,21 +263,13 @@ namespace StasisEditor.Controllers
                     // Try to select an actor
                     foreach (EditorActor actor in _level.actors)
                     {
-                        if (actor.hitTest(worldMouse))
-                        {
-                            if (e.Button == MouseButtons.Left)
-                                actor.handleLeftMouseDown();
-                            else if (e.Button == MouseButtons.Right)
-                                actor.handleRightMouseDown();
+                        if (actor.handleUnselectedClick(e.Button))
                             break;
-                        }
                     }
                 }
                 else
                 {
-                    // Let selected actor handle mouse down
-                    if (e.Button == MouseButtons.Left)
-                        _selectedActor.handleLeftMouseDown();
+                    _selectedActor.handleSelectedClick(e.Button);
                 }
             }
         }
