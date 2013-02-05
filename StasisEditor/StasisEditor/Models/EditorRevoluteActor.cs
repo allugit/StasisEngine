@@ -143,38 +143,6 @@ namespace StasisEditor.Models
                 });
         }
 
-        /*
-        public override void handleLeftMouseDown()
-        {
-            if (selected)
-            {
-                if (_selectedA || _selectedB)
-                {
-                    foreach (EditorActor actor in _level.actors)
-                    {
-                        if (actor.type == ActorType.Box || actor.type == ActorType.Circle || actor.type == ActorType.Terrain)
-                        {
-                            if (_selectedA && actor.hitTest(_controlA) && actor != _actorB)
-                            {
-                                _actorA = actor;
-                                break;
-                            }
-                            else if (_selectedB && actor.hitTest(_controlB) && actor != _actorA)
-                            {
-                                _actorB = actor;
-                                break;
-                            }
-                        }
-                    }
-                }
-                deselect();
-            }
-            else
-            {
-                select();
-            }
-        }*/
-
         public override bool hitTest(Vector2 testPoint, HitTestCallback callback)
         {
             List<IActorComponent> results = new List<IActorComponent>();
@@ -199,39 +167,6 @@ namespace StasisEditor.Models
             }
 
             return false;
-
-            /*
-            // Hit test controls
-            if (_actorA == null)
-            {
-                if (_level.controller.hitTestPoint(worldMouse, _controlA))
-                {
-                    _moveActor = false;
-                    _selectedA = true;
-                    return true;
-                }
-            }
-            if (_actorB == null)
-            {
-                if (_level.controller.hitTestPoint(worldMouse, _controlB))
-                {
-                    _moveActor = false;
-                    _selectedB = true;
-                    return true;
-                }
-            }
-
-            // Hit test icon
-            if (_level.controller.hitTestPoint(worldMouse, _position, 12f))
-            {
-                _moveActor = true;
-                _selectedA = true;
-                _selectedB = true;
-                return true;
-            }
-
-            return false;
-            */
         }
 
         public override void update()
