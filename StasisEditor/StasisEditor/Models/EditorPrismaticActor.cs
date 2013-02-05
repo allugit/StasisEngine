@@ -90,23 +90,6 @@ namespace StasisEditor.Models
                 }
             }
             deselect();
-
-            /*
-             * if (_selectedActorControl && !_moveActor)
-                {
-                    foreach (EditorActor actor in _level.actors)
-                    {
-                        if (actor.type == ActorType.Box || actor.type == ActorType.Circle || actor.type == ActorType.Terrain)
-                        {
-                            if (actor.hitTest(_actorControl))
-                            {
-                                _actor = actor;
-                            }
-                        }
-                    }
-                }
-                deselect();
-            */
         }
 
         public override bool handleUnselectedClick(System.Windows.Forms.MouseButtons button)
@@ -131,32 +114,6 @@ namespace StasisEditor.Models
                 });
         }
 
-        /*
-        public override void handleLeftMouseDown()
-        {
-            if (selected)
-            {
-                if (_selectedActorControl && !_moveActor)
-                {
-                    foreach (EditorActor actor in _level.actors)
-                    {
-                        if (actor.type == ActorType.Box || actor.type == ActorType.Circle || actor.type == ActorType.Terrain)
-                        {
-                            if (actor.hitTest(_actorControl))
-                            {
-                                _actor = actor;
-                            }
-                        }
-                    }
-                }
-                deselect();
-            }
-            else
-            {
-                select();
-            }
-        }*/
-
         public override bool hitTest(Vector2 testPoint, HitTestCallback callback)
         {
             List<IActorComponent> results = new List<IActorComponent>();
@@ -176,26 +133,6 @@ namespace StasisEditor.Models
             }
 
             return false;
-
-            /*
-            // Hit test icon
-            if (_level.controller.hitTestPoint(testPoint, _position))
-            {
-                _selectedActorControl = true;
-                _moveActor = true;
-                return true;
-            }
-
-            // Hit test control
-            if (_level.controller.hitTestPoint(testPoint, _actorControl))
-            {
-                _selectedActorControl = true;
-                _moveActor = false;
-                return true;
-            }
-
-            return false;
-            */
         }
 
         public override void update()
