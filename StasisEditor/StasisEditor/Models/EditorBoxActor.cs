@@ -18,6 +18,7 @@ namespace StasisEditor.Models
         private float _density;
         private float _friction;
         private float _restitution;
+        private string _materialUID;
 
         public float halfWidth { get { return _halfWidth; } set { _halfWidth = value; } }
         public float halfHeight { get { return _halfHeight; } set { _halfHeight = value; } }
@@ -25,6 +26,7 @@ namespace StasisEditor.Models
         public float density { get { return _density; } set { _density = value; } }
         public float friction { get { return _friction; } set { _friction = value; } }
         public float restitution { get { return _restitution; } set { _restitution = value; } }
+        public string materialUID { get { return _materialUID; } set { _materialUID = value; } }
         [Browsable(false)]
         public override Vector2 circuitConnectionPosition { get { return _position; } }
         [Browsable(false)]
@@ -44,6 +46,7 @@ namespace StasisEditor.Models
                 d.SetAttributeValue("density", _density);
                 d.SetAttributeValue("friction", _friction);
                 d.SetAttributeValue("restitution", _restitution);
+                d.SetAttributeValue("material_uid", _materialUID);
                 return d;
             }
         }
@@ -59,6 +62,7 @@ namespace StasisEditor.Models
             _friction = 1f;
             _restitution = 0f;
             _layerDepth = 0.1f;
+            _materialUID = "default";
         }
 
         public EditorBoxActor(EditorLevel level, XElement data)
@@ -71,6 +75,7 @@ namespace StasisEditor.Models
             _density = Loader.loadFloat(data.Attribute("density"), 0.5f);
             _friction = Loader.loadFloat(data.Attribute("friction"), 1f);
             _restitution = Loader.loadFloat(data.Attribute("restitution"), 0f);
+            _materialUID = Loader.loadString(data.Attribute("material_uid"), "default");
         }
 
         public void rotate(Vector2 anchorPoint, float increment)

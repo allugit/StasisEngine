@@ -27,6 +27,8 @@ namespace StasisEditor.Models
         private float _tropismWeight;
         private Vector2 _tropism;
         private Vector2 _position;
+        private string _leafMaterialUID;
+        private string _barkMaterialUID;
 
         public float angle { get { return _angle; } set { _angle = value; } }
         public int seed { get { return _seed; } set { _seed = value; } }
@@ -44,6 +46,8 @@ namespace StasisEditor.Models
         public float optimalGrowthWeight { get { return _optimalGrowthWeight; } set { _optimalGrowthWeight = value; } }
         public float tropismWeight { get { return _tropismWeight; } set { _tropismWeight = value; } }
         public Vector2 tropism { get { return _tropism; } set { _tropism = value; } }
+        public string leafMaterialUID { get { return _leafMaterialUID; } set { _leafMaterialUID = value; } }
+        public string barkMaterialUID { get { return _barkMaterialUID; } set { _barkMaterialUID = value; } }
         [Browsable(false)]
         public override Vector2 circuitConnectionPosition { get { return _position; } }
         [Browsable(false)]
@@ -69,6 +73,8 @@ namespace StasisEditor.Models
                 d.SetAttributeValue("tropism_weight", _tropismWeight);
                 d.SetAttributeValue("tropism", _tropism);
                 d.SetAttributeValue("position", _position);
+                d.SetAttributeValue("leaf_material_uid", _leafMaterialUID);
+                d.SetAttributeValue("bark_material_uid", _barkMaterialUID);
                 return d;
             }
         }
@@ -94,6 +100,8 @@ namespace StasisEditor.Models
             _tropism = Vector2.Zero;
             _position = level.controller.worldMouse;
             _layerDepth = 0.1f;
+            _leafMaterialUID = "default";
+            _barkMaterialUID = "default";
         }
 
         public EditorTreeActor(EditorLevel level, XElement data)
@@ -115,6 +123,8 @@ namespace StasisEditor.Models
             _tropismWeight = Loader.loadFloat(data.Attribute("tropism_weight"), 1f);
             _tropism = Loader.loadVector2(data.Attribute("tropism"), Vector2.Zero);
             _position = Loader.loadVector2(data.Attribute("position"), Vector2.Zero);
+            _leafMaterialUID = Loader.loadString(data.Attribute("leaf_material_uid"), "default");
+            _barkMaterialUID = Loader.loadString(data.Attribute("bark_material_uid"), "default");
         }
 
         public void rotate(Vector2 anchorPoint, float increment)
