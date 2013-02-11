@@ -88,6 +88,13 @@ namespace StasisGame
 
         protected override void Update(GameTime gameTime)
         {
+            switch (_gameState)
+            {
+                case GameState.Level:
+                    _level.update(gameTime);
+                    break;
+            }
+
             base.Update(gameTime);
         }
 

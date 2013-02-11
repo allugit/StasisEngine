@@ -18,6 +18,7 @@ namespace StasisGame
             _systemManager = new SystemManager();
             _entityManager = new EntityManager();
 
+            // Load xml
             XElement data = null;
             using (FileStream stream = new FileStream(filePath, FileMode.Open))
             {
@@ -25,14 +26,56 @@ namespace StasisGame
                 data = doc.Element("Level");
             }
 
+            // Create entities
             foreach (XElement actorData in data.Elements("Actor"))
             {
                 switch (actorData.Attribute("type").Value)
                 {
                     case "Box":
+                        _entityManager.templates.createBox(actorData);
+                        break;
+
+                    case "Circle":
+                        _entityManager.templates.createCircle(actorData);
+                        break;
+
+                    case "Circuit":
+                        break;
+
+                    case "Fluid":
+                        break;
+
+                    case "Item":
+                        _entityManager.templates.createItem(actorData);
+                        break;
+
+                    case "PlayerSpawn":
+                        break;
+
+                    case "Rope":
+                        _entityManager.templates.createRope(actorData);
+                        break;
+
+                    case "Terrain":
+                        _entityManager.templates.createTerrain(actorData);
+                        break;
+
+                    case "Tree":
+                        _entityManager.templates.createTree(actorData);
+                        break;
+
+                    case "Revolute":
+                        break;
+
+                    case "Prismatic":
                         break;
                 }
             }
+        }
+
+        public void update(GameTime gameTime)
+        {
+            _systemManager.process();
         }
     }
 }
