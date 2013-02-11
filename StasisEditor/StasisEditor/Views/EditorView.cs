@@ -121,6 +121,12 @@ namespace StasisEditor.Views
             menuLevelLoad.Enabled = enabled;
         }
 
+        // enablePreviewLevel
+        public void enablePreviewLevel(bool enabled)
+        {
+            menuLevelPreview.Enabled = enabled;
+        }
+
         // openActorProperties
         public void openActorProperties(IActorComponent component, bool closeOpenedProperties = true)
         {
@@ -211,6 +217,17 @@ namespace StasisEditor.Views
             {
                 _controller.loadLevel(fileDialog.FileName);
             }
+        }
+
+        // "Level preview" menu item clicked
+        private void menuItem1_Click(object sender, EventArgs e)
+        {
+            if (MessageBox.Show("Save level before previewing?", "Save Level", MessageBoxButtons.YesNo) == System.Windows.Forms.DialogResult.OK)
+            {
+                _controller.levelController.saveLevel();
+            }
+
+            _controller.runGame();
         }
     }
 }

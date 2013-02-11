@@ -14,6 +14,7 @@ namespace StasisEditor.Controllers
 {
     public class EditorController : Controller
     {
+        public const string GAME_PATH = @"E:\_C#\StasisEngine\StasisGame\StasisGame\bin\x86\Debug\StasisGame.exe";
         public const float ORIGINAL_SCALE = 35f;
         private MaterialController _materialController;
         private LevelController _levelController;
@@ -90,6 +91,7 @@ namespace StasisEditor.Controllers
             _editorView.enableCloseLevel(true);
             _editorView.enableLoadLevel(false);
             _editorView.enableSaveLevel(true);
+            _editorView.enablePreviewLevel(true);
             _editorView.addLevelSettings(_levelController.level);
             _actorToolbar = new ActorToolbar();
             _actorToolbar.setController(_levelController);
@@ -104,6 +106,7 @@ namespace StasisEditor.Controllers
             _editorView.enableCloseLevel(true);
             _editorView.enableLoadLevel(false);
             _editorView.enableSaveLevel(true);
+            _editorView.enablePreviewLevel(true);
             _editorView.addLevelSettings(_levelController.level);
             _actorToolbar = new ActorToolbar();
             _actorToolbar.setController(_levelController);
@@ -118,9 +121,18 @@ namespace StasisEditor.Controllers
             _editorView.enableCloseLevel(false);
             _editorView.enableLoadLevel(true);
             _editorView.enableSaveLevel(false);
+            _editorView.enablePreviewLevel(false);
             _editorView.removeLevelSettings();
             _editorView.removeActorToolbar(_actorToolbar);
             _editorView.closeActorProperties();
+        }
+
+        // runGame
+        public void runGame()
+        {
+            string levelFileName = _levelController.level.name + ".xml";
+            string levelPath = ResourceController.levelPath + "\\" + levelFileName;
+            System.Diagnostics.Process.Start(EditorController.GAME_PATH, String.Format("-l {0}", levelPath));
         }
 
         // exit

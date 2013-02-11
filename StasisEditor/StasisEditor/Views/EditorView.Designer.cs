@@ -48,6 +48,7 @@
             this.blueprintView1 = new StasisEditor.Views.BlueprintView();
             this.circuitsTab = new System.Windows.Forms.TabPage();
             this.circuitsView1 = new StasisEditor.Views.CircuitsView();
+            this.menuLevelPreview = new System.Windows.Forms.MenuItem();
             ((System.ComponentModel.ISupportInitialize)(this.mainSplit)).BeginInit();
             this.mainSplit.Panel2.SuspendLayout();
             this.mainSplit.SuspendLayout();
@@ -84,6 +85,7 @@
             this.menuLevelNew,
             this.menuLevelLoad,
             this.menuLevelSave,
+            this.menuLevelPreview,
             this.menuItem2,
             this.menuLevelClose});
             this.menuLevel.Text = "Level";
@@ -109,13 +111,13 @@
             // 
             // menuItem2
             // 
-            this.menuItem2.Index = 3;
+            this.menuItem2.Index = 4;
             this.menuItem2.Text = "-";
             // 
             // menuLevelClose
             // 
             this.menuLevelClose.Enabled = false;
-            this.menuLevelClose.Index = 4;
+            this.menuLevelClose.Index = 5;
             this.menuLevelClose.Text = "Close";
             this.menuLevelClose.Click += new System.EventHandler(this.menuLevelClose_Click);
             // 
@@ -240,6 +242,13 @@
             this.circuitsView1.Size = new System.Drawing.Size(729, 352);
             this.circuitsView1.TabIndex = 0;
             // 
+            // menuLevelPreview
+            // 
+            this.menuLevelPreview.Enabled = false;
+            this.menuLevelPreview.Index = 3;
+            this.menuLevelPreview.Text = "Preview";
+            this.menuLevelPreview.Click += new System.EventHandler(this.menuItem1_Click);
+            // 
             // EditorView
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -283,6 +292,7 @@
         private BlueprintView blueprintView1;
         private System.Windows.Forms.TabPage circuitsTab;
         private CircuitsView circuitsView1;
+        private System.Windows.Forms.MenuItem menuLevelPreview;
 
     }
 }
