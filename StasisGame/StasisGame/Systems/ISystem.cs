@@ -8,7 +8,8 @@ namespace StasisGame.Systems
     public enum SystemType
     {
         Render,
-        Input
+        Input,
+        Physics
     };
 
     public interface ISystem

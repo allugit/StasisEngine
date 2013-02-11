@@ -16,7 +16,7 @@ namespace StasisGame
         public Level(string filePath)
         {
             _systemManager = new SystemManager();
-            _entityManager = new EntityManager();
+            _entityManager = new EntityManager(_systemManager);
 
             // Load xml
             XElement data = null;
@@ -25,6 +25,9 @@ namespace StasisGame
                 XDocument doc = XDocument.Load(stream);
                 data = doc.Element("Level");
             }
+
+            // Create physics system
+            _systemManager.add(new PhysicsSystem(_systemManager, _entityManager, data));
 
             // Create entities
             foreach (XElement actorData in data.Elements("Actor"))

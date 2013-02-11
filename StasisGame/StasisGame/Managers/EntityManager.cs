@@ -6,6 +6,7 @@ namespace StasisGame.Managers
 {
     public class EntityManager
     {
+        private SystemManager _systemManager;
         private Dictionary<int, List<IComponent>> _entities;
         private TemplateManager _templates;
 
@@ -22,8 +23,9 @@ namespace StasisGame.Managers
             }
         }
 
-        public EntityManager()
+        public EntityManager(SystemManager systemManager)
         {
+            _systemManager = systemManager;
             _entities = new Dictionary<int, List<IComponent>>();
             _templates = new TemplateManager(this);
         }
