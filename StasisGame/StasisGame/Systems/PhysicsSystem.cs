@@ -25,5 +25,9 @@ namespace StasisGame.Systems
             // Create world
             _world = new World(Loader.loadVector2(data.Attribute("gravity"), new Vector2(0, 32)), true);
         }
+
+        public void update()
+        {
+        }
     }
 }

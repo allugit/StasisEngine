@@ -60,6 +60,9 @@
     <XnaCompressContent>true</XnaCompressContent>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="Box2D.XNA">
+      <HintPath>..\..\..\Box2D.XNA\bin\x86\Release\Box2D.XNA.dll</HintPath>
+    </Reference>
     <Reference Include="Microsoft.Xna.Framework, Version=4.0.0.0, Culture=neutral, PublicKeyToken=842cf8be1de50553, processorArchitecture=x86" />
     <Reference Include="Microsoft.Xna.Framework.Game, Version=4.0.0.0, Culture=neutral, PublicKeyToken=842cf8be1de50553, processorArchitecture=x86" />
     <Reference Include="Microsoft.Xna.Framework.Graphics, Version=4.0.0.0, Culture=neutral, PublicKeyToken=842cf8be1de50553, processorArchitecture=x86" />
@@ -73,6 +76,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Components\IComponent.cs" />
+    <Compile Include="Components\PhysicsComponent.cs" />
     <Compile Include="Level.cs" />
     <Compile Include="Managers\EntityManager.cs" />
     <Compile Include="Managers\SystemManager.cs" />
@@ -81,6 +85,7 @@
     <Compile Include="Program.cs" />
     <Compile Include="LoderGame.cs" />
     <Compile Include="Systems\ISystem.cs" />
+    <Compile Include="Systems\PhysicsSystem.cs" />
     <Compile Include="Systems\SystemNode.cs" />
   </ItemGroup>
   <ItemGroup>
@@ -94,6 +99,10 @@
       <Project>{84F6D086-1D47-489A-B334-E2058D1A752B}</Project>
       <Name>StasisCoreContent</Name>
       <XnaReferenceType>Content</XnaReferenceType>
+    </ProjectReference>
+    <ProjectReference Include="..\..\StasisCore\StasisCore.csproj">
+      <Project>{FF9881A5-29E0-4B52-8E75-42715D66842B}</Project>
+      <Name>StasisCore</Name>
     </ProjectReference>
     <ProjectReference Include="..\StasisGameContent\StasisGameContent.contentproj">
       <Name>StasisGameContent</Name>

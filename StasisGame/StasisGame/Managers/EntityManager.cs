@@ -27,7 +27,7 @@ namespace StasisGame.Managers
         {
             _systemManager = systemManager;
             _entities = new Dictionary<int, List<IComponent>>();
-            _templates = new TemplateManager(this);
+            _templates = new TemplateManager(_systemManager, this);
         }
 
         public int createEntity()
