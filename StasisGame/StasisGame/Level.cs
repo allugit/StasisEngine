@@ -10,11 +10,14 @@ namespace StasisGame
 {
     public class Level
     {
-        private List<SystemManager> _systemManager;
-        private List<EntityManager> _entityManager;
+        private SystemManager _systemManager;
+        private EntityManager _entityManager;
 
         public Level(string filePath)
         {
+            _systemManager = new SystemManager();
+            _entityManager = new EntityManager();
+
             XElement data = null;
             using (FileStream stream = new FileStream(filePath, FileMode.Open))
             {

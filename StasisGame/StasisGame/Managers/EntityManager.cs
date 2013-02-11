@@ -7,6 +7,9 @@ namespace StasisGame.Managers
     public class EntityManager
     {
         private Dictionary<int, List<IComponent>> _entities;
+        private TemplateManager _templates;
+
+        public TemplateManager templates { get { return _templates; } }
 
         public int newId
         {
@@ -22,6 +25,7 @@ namespace StasisGame.Managers
         public EntityManager()
         {
             _entities = new Dictionary<int, List<IComponent>>();
+            _templates = new TemplateManager(this);
         }
 
         public int createEntity()
@@ -72,5 +76,4 @@ namespace StasisGame.Managers
             }
             return results;
         }
-    }
 }
