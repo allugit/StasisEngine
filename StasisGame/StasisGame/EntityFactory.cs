@@ -1,18 +1,21 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Xml.Linq;
+using Microsoft.Xna.Framework;
+using Microsoft.Xna.Framework.Graphics;
 using Box2D.XNA;
 using StasisGame.Systems;
 using StasisGame.Components;
+using StasisGame.Managers;
 
-namespace StasisGame.Managers
+namespace StasisGame
 {
-    public class TemplateManager
+    public class EntityFactory
     {
         private SystemManager _systemManager;
         private EntityManager _entityManager;
 
-        public TemplateManager(SystemManager systemManager, EntityManager entityManager)
+        public EntityFactory(SystemManager systemManager, EntityManager entityManager)
         {
             _systemManager = systemManager;
             _entityManager = entityManager;
@@ -23,6 +26,7 @@ namespace StasisGame.Managers
             World world = (_systemManager.getSystem(SystemType.Physics) as PhysicsSystem).world;
             int entityId = _entityManager.createEntity();
             _entityManager.addComponent(entityId, new PhysicsComponent(world, data));
+            _entityManager.addComponent(entityId, new BodyRenderComponent(
         }
 
         public void createCircle(XElement data)

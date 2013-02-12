@@ -72,6 +72,18 @@ namespace StasisCore.Controllers
             return false;
         }
 
+        // Returns a resource that matches a uid
+        public static XElement getResource(string uid)
+        {
+            foreach (Dictionary<string, ResourceObject> dictionary in _resources)
+            {
+                if (dictionary.ContainsKey(uid))
+                    return dictionary[uid].data;
+            }
+
+            return null;
+        }
+
         // Checks to see if a resource exists
         public static bool exists(string uid)
         {

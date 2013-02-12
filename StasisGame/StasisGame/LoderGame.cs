@@ -7,6 +7,7 @@ using Microsoft.Xna.Framework.GamerServices;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 using Microsoft.Xna.Framework.Media;
+using StasisCore.Controllers;
 
 namespace StasisGame
 {
@@ -30,6 +31,8 @@ namespace StasisGame
         private GameState _gameState;
         private Level _level;
 
+        public SpriteBatch spriteBatch { get { return _spriteBatch; } }
+
         public LoderGame(string[] args)
         {
             _args = args;
@@ -48,6 +51,12 @@ namespace StasisGame
 
         protected override void LoadContent()
         {
+            ResourceController.loadCharacters();
+            ResourceController.loadCircuits();
+            ResourceController.loadDialogue();
+            ResourceController.loadItems();
+            ResourceController.loadMaterials();
+
             _spriteBatch = new SpriteBatch(GraphicsDevice);
             _arial = Content.Load<SpriteFont>("arial");
         }

@@ -4,7 +4,8 @@ namespace StasisGame.Components
 {
     public enum ComponentType
     {
-        Physics
+        Physics,
+        BodyRender
     };
 
     public interface IComponent

@@ -12,6 +12,7 @@ namespace StasisGame.Systems
         private SystemManager _systemManager;
         private EntityManager _entityManager;
         private World _world;
+        private float _dt = 1f / 60f;
 
         public World world;
         public int defaultPriority { get { return 10; } }
@@ -28,6 +29,7 @@ namespace StasisGame.Systems
 
         public void update()
         {
+            _world.Step(_dt, 12, 8);
         }
     }
 }

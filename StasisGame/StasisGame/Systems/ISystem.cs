@@ -9,7 +9,8 @@ namespace StasisGame.Systems
     {
         Render,
         Input,
-        Physics
+        Physics,
+        Material
     };
 
     public interface ISystem
