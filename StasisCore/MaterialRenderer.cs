@@ -560,13 +560,16 @@ namespace StasisCore
                 return current;
 
             // Validate parameters
-            spacing = Math.Max(0.1f, spacing);
+            spacing = Math.Max(0.05f, spacing);
 
-            // Scale points
-            //for (int i = 0; i < polygonPoints.Count; i++)
-            //{
-            //    polygonPoints[i] *= Settings.BASE_SCALE;
-            //}
+            // Calculate half-texture offset
+            Vector2 topLeft = polygonPoints[0];
+            Vector2 bottomRight = polygonPoints[0];
+            for (int i = 0; i < polygonPoints.Count; i++)
+            {
+                topLeft = Vector2.Min(polygonPoints[i], topLeft);
+                bottomRight = Vector2.Max(polygonPoints[i], bottomRight);
+            }
 
             // Draw
             _graphicsDevice.SetRenderTarget(renderTarget);
@@ -602,7 +605,7 @@ namespace StasisCore
                         Vector2 position = pointA + normal * currentPosition + j;
                         Texture2D texture = textures[_random.Next(textures.Count)];
                         Color actualColor = getRandomColor(baseColor, randomRed, randomGreen, randomBlue, randomAlpha);
-                        _spriteBatch.Draw(texture, position, texture.Bounds, actualColor, angle, new Vector2(texture.Width, texture.Height) / 2, 1f, SpriteEffects.None, 0);
+                        _spriteBatch.Draw(texture, (position - topLeft) * Settings.BASE_SCALE, texture.Bounds, actualColor, angle, new Vector2(texture.Width, texture.Height) / 2, 1f, SpriteEffects.None, 0);
                         currentPosition += spacing;
                     }
                 }
