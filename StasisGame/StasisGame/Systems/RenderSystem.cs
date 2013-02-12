@@ -18,7 +18,7 @@ namespace StasisGame.Systems
         private ContentManager _contentManager;
 
         public int defaultPriority { get { return 90; } }
-        public SystemType systemType { get { return SystemType.Material; } }
+        public SystemType systemType { get { return SystemType.Render; } }
         public MaterialRenderer materialRenderer { get { return _materialRenderer; } }
 
         public RenderSystem(LoderGame game, SystemManager systemManager, EntityManager entityManager)

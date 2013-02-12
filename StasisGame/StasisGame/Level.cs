@@ -10,11 +10,13 @@ namespace StasisGame
 {
     public class Level
     {
+        private LoderGame _game;
         private SystemManager _systemManager;
         private EntityManager _entityManager;
 
-        public Level(string filePath)
+        public Level(LoderGame game, string filePath)
         {
+            _game = game;
             _systemManager = new SystemManager();
             _entityManager = new EntityManager(_systemManager);
 
@@ -26,8 +28,9 @@ namespace StasisGame
                 data = doc.Element("Level");
             }
 
-            // Create physics system
+            // Create systems
             _systemManager.add(new PhysicsSystem(_systemManager, _entityManager, data));
+            _systemManager.add(new RenderSystem(_game, _systemManager, _entityManager));
 
             // Create entities
             foreach (XElement actorData in data.Elements("Actor"))

@@ -51,6 +51,7 @@ namespace StasisGame
 
         protected override void LoadContent()
         {
+            ResourceController.initialize(GraphicsDevice);
             ResourceController.loadCharacters();
             ResourceController.loadCircuits();
             ResourceController.loadDialogue();
@@ -92,7 +93,7 @@ namespace StasisGame
 
             // Load level
             _gameState = GameState.Level;
-            _level = new Level(filePath);
+            _level = new Level(this, filePath);
         }
 
         protected override void Update(GameTime gameTime)
