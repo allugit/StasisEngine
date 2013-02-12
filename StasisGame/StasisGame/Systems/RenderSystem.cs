@@ -17,6 +17,7 @@ namespace StasisGame.Systems
         private MaterialRenderer _materialRenderer;
         private ContentManager _contentManager;
 
+        public int defaultPriority { get { return 90; } }
         public SystemType systemType { get { return SystemType.Material; } }
         public MaterialRenderer materialRenderer { get { return _materialRenderer; } }
 
@@ -32,6 +33,10 @@ namespace StasisGame.Systems
         ~RenderSystem()
         {
             _contentManager.Unload();
+        }
+
+        public void update()
+        {
         }
     }
 }

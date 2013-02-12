@@ -1,5 +1,10 @@
 ﻿namespace StasisCore
 {
+    public class Settings
+    {
+        public const float BASE_SCALE = 35f;
+    }
+
     public enum ActorType
     {
         Box,

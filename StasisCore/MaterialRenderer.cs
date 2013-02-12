@@ -66,10 +66,19 @@ namespace StasisCore
         }
 
         // Render material
-        public Texture2D renderMaterial(Material material, List<Vector2> polygonPoints, float growthFactor, int textureWidth, int textureHeight)
+        public Texture2D renderMaterial(Material material, List<Vector2> polygonPoints, float growthFactor)
         {
+            // Calculate width and height
+            Vector2 topLeft = polygonPoints[0];
+            Vector2 bottomRight = polygonPoints[0];
+            foreach (Vector2 polygonPoint in polygonPoints)
+            {
+                topLeft = Vector2.Min(topLeft, polygonPoint);
+                bottomRight = Vector2.Max(bottomRight, polygonPoint);
+            }
+
             // Create canvas
-            Texture2D canvas = createCanvas(textureWidth, textureHeight);
+            Texture2D canvas = createCanvas((int)((bottomRight.X - topLeft.X) * Settings.BASE_SCALE), (int)((bottomRight.Y - topLeft.Y) * Settings.BASE_SCALE));
 
             // Recursively render layers
             canvas = recursiveRenderLayers(canvas, polygonPoints, growthFactor, material.rootLayer);
@@ -512,7 +521,7 @@ namespace StasisCore
         // Edge scatter pass
         public Texture2D edgeScatterPass(
             Texture2D current,
-            List<Vector2> transformedPolygonPoints,
+            List<Vector2> polygonPoints,
             List<string> textureUIDs,
             Vector2 direction,
             float threshold,
@@ -547,11 +556,17 @@ namespace StasisCore
                 return current;
 
             // Validate polygon points
-            if (transformedPolygonPoints == null || transformedPolygonPoints.Count < 3)
+            if (polygonPoints == null || polygonPoints.Count < 3)
                 return current;
 
             // Validate parameters
             spacing = Math.Max(0.1f, spacing);
+
+            // Scale points
+            //for (int i = 0; i < polygonPoints.Count; i++)
+            //{
+            //    polygonPoints[i] *= Settings.BASE_SCALE;
+            //}
 
             // Draw
             _graphicsDevice.SetRenderTarget(renderTarget);
@@ -559,10 +574,10 @@ namespace StasisCore
             _spriteBatch.Begin(SpriteSortMode.Immediate, BlendState.AlphaBlend);
             _spriteBatch.Draw(current, current.Bounds, Color.White);
             bool hasDirection = direction.X != 0 || direction.Y != 0;
-            for (int i = 0; i < transformedPolygonPoints.Count; i++)
+            for (int i = 0; i < polygonPoints.Count; i++)
             {
-                Vector2 pointA = transformedPolygonPoints[i];
-                Vector2 pointB = transformedPolygonPoints[i == transformedPolygonPoints.Count - 1 ? 0 : i + 1];
+                Vector2 pointA = polygonPoints[i];
+                Vector2 pointB = polygonPoints[i == polygonPoints.Count - 1 ? 0 : i + 1];
                 Vector2 relative = pointB - pointA;
                 Vector2 normal = relative;
                 float perpDot = 0;

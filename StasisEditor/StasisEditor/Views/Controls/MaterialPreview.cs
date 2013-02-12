@@ -46,6 +46,7 @@ namespace StasisEditor.Views.Controls
             if (useTestPolygon.Checked)
                 _polygonPoints = _controller.testPolygonPoints;
 
+            /*
             List<Vector2> transformedPolygonPoints = null;
             if (_polygonPoints != null)
             {
@@ -66,9 +67,9 @@ namespace StasisEditor.Views.Controls
                 {
                     transformedPolygonPoints[i] += -topLeft;
                 }
-            }
+            }*/
 
-            materialPreviewGraphics.setMaterial(_material, transformedPolygonPoints, (float)growthFactorBox.Value);
+            materialPreviewGraphics.setMaterial(_material, _polygonPoints, (float)growthFactorBox.Value);
         }
 
         private void MaterialPreview_FormClosing(object sender, FormClosingEventArgs e)

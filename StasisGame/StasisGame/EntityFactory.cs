@@ -23,7 +23,7 @@ namespace StasisGame
             _systemManager = systemManager;
             _entityManager = entityManager;
         }
-
+        /*
         private BodyRenderComponent createBodyRenderComponent(XElement data, PhysicsComponent physicsComponent)
         {
             RenderSystem renderSystem = (RenderSystem)_systemManager.getSystem(SystemType.Render);
@@ -31,7 +31,7 @@ namespace StasisGame
             Texture texture = renderSystem.materialRenderer.renderMaterial(material, polygonPoints, 1f);
 
             BodyRenderComponent renderComponent = new BodyRenderComponent(texture, vertices, worldMatrix, primitiveCount, layerDepth);
-        }
+        }*/
 
         public void createBox(XElement data)
         {
@@ -39,7 +39,7 @@ namespace StasisGame
             int entityId = _entityManager.createEntity();
             PhysicsComponent physicsComponent = new PhysicsComponent(world, data);
             _entityManager.addComponent(entityId, physicsComponent);
-            _entityManager.addComponent(entityId, createBodyRenderComponent(data, physicsComponent));
+            //_entityManager.addComponent(entityId, createBodyRenderComponent(data, physicsComponent));
         }
 
         public void createCircle(XElement data)
