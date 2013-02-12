@@ -16,6 +16,11 @@ namespace StasisGame.Components
         private float _layerDepth;
 
         public ComponentType componentType { get { return ComponentType.BodyRender; } }
+        public Texture2D texture { get { return _texture; } }
+        public CustomVertexFormat[] vertices { get { return _vertices; } }
+        public Matrix worldMatrix { get { return _worldMatrix; } }
+        public int primitiveCount { get { return _primitiveCount; } }
+        public float layerDepth { get { return _layerDepth; } }
 
         public BodyRenderComponent(Texture2D texture, CustomVertexFormat[] vertices, Matrix worldMatrix, int primitiveCount, float layerDepth)
         {

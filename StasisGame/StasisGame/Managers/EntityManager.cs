@@ -62,6 +62,22 @@ namespace StasisGame.Managers
             return null;
         }
 
+        public List<T> getComponents<T>(ComponentType componentType) where T : IComponent
+        {
+            List<T> results = new List<T>();
+            foreach (List<IComponent> components in _entities.Values)
+            {
+                for (int i = 0; i < components.Count; i++)
+                {
+                    if (components[i].componentType == componentType)
+                    {
+                        results.Add((T)components[i]);
+                    }
+                }
+            }
+            return results;
+        }
+
         public List<int> getEntitiesPosessing(ComponentType componentType)
         {
             List<int> results = new List<int>();

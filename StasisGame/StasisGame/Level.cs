@@ -13,6 +13,7 @@ namespace StasisGame
         private LoderGame _game;
         private SystemManager _systemManager;
         private EntityManager _entityManager;
+        private RenderSystem _renderSystem;
 
         public Level(LoderGame game, string filePath)
         {
@@ -30,7 +31,8 @@ namespace StasisGame
 
             // Create systems
             _systemManager.add(new PhysicsSystem(_systemManager, _entityManager, data));
-            _systemManager.add(new RenderSystem(_game, _systemManager, _entityManager));
+            _renderSystem = new RenderSystem(_game, _systemManager, _entityManager);
+            _systemManager.add(_renderSystem);
 
             // Create entities
             foreach (XElement actorData in data.Elements("Actor"))
@@ -82,6 +84,11 @@ namespace StasisGame
         public void update(GameTime gameTime)
         {
             _systemManager.process();
+        }
+
+        public void draw(GameTime gameTime)
+        {
+            _renderSystem.draw();
         }
     }
 }
