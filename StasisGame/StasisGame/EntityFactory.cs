@@ -71,6 +71,13 @@ namespace StasisGame
                     break;
 
                 case "Terrain":
+                    Vector2 center = Vector2.Zero;
+                    foreach (XElement pointData in data.Elements("Point"))
+                        polygonPoints.Add(Loader.loadVector2(pointData, Vector2.Zero));
+                    foreach (Vector2 point in polygonPoints)
+                        center += point / polygonPoints.Count;
+                    for (int i = 0; i < polygonPoints.Count; i++)
+                        polygonPoints[i] -= center;
                     break;
             }
             texture = renderSystem.materialRenderer.renderMaterial(material, polygonPoints, 1f);
@@ -156,6 +163,11 @@ namespace StasisGame
 
         public void createTerrain(XElement data)
         {
+            World world = (_systemManager.getSystem(SystemType.Physics) as PhysicsSystem).world;
+            int entityId = _entityManager.createEntity();
+            _entityManager.addComponent(entityId, new PhysicsComponent(world, data));
+            _entityManager.addComponent(entityId, createBodyRenderComponent(data));
+            Console.WriteLine("Terrain created");
         }
 
         public void createTree(XElement data)
