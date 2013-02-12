@@ -55,16 +55,22 @@ namespace StasisGame.Systems
         {
             _viewMatrix = Matrix.CreateScale(new Vector3(_scale, -_scale, 1f));
             _projectionMatrix = Matrix.CreateOrthographic(_graphicsDevice.Viewport.Width, _graphicsDevice.Viewport.Height, 0, 1);
+            List<int> renderableEntities = _entityManager.getEntitiesPosessing(ComponentType.BodyRender);
 
-            List<BodyRenderComponent> bodyRenderComponents = _entityManager.getComponents<BodyRenderComponent>(ComponentType.BodyRender);
-            for (int i = 0; i < bodyRenderComponents.Count; i++)
+            for (int i = 0; i < renderableEntities.Count; i++)
             {
-                _graphicsDevice.Textures[0] = bodyRenderComponents[i].texture;
-                _primitivesEffect.Parameters["world"].SetValue(Matrix.Identity);
+                int entityId = renderableEntities[i];
+                BodyRenderComponent bodyRenderComponent = (BodyRenderComponent)_entityManager.getComponent(entityId, ComponentType.BodyRender);
+                PhysicsComponent physicsComponent = (PhysicsComponent)_entityManager.getComponent(entityId, ComponentType.Physics);
+
+                bodyRenderComponent.worldMatrix = Matrix.CreateRotationZ(physicsComponent.body.GetAngle()) * Matrix.CreateTranslation(new Vector3(physicsComponent.body.GetPosition(), 0));
+
+                _graphicsDevice.Textures[0] = bodyRenderComponent.texture;
+                _primitivesEffect.Parameters["world"].SetValue(bodyRenderComponent.worldMatrix);
                 _primitivesEffect.Parameters["view"].SetValue(_viewMatrix);
                 _primitivesEffect.Parameters["projection"].SetValue(_projectionMatrix);
                 _primitivesEffect.CurrentTechnique.Passes["textured_primitives"].Apply();
-                _graphicsDevice.DrawUserPrimitives(PrimitiveType.TriangleList, bodyRenderComponents[i].vertices, 0, bodyRenderComponents[i].primitiveCount, CustomVertexFormat.VertexDeclaration);
+                _graphicsDevice.DrawUserPrimitives(PrimitiveType.TriangleList, bodyRenderComponent.vertices, 0, bodyRenderComponent.primitiveCount, CustomVertexFormat.VertexDeclaration);
             }
         }
     }

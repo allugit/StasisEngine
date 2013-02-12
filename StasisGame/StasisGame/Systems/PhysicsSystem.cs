@@ -1,9 +1,11 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Xml.Linq;
 using Microsoft.Xna.Framework;
 using Box2D.XNA;
 using StasisCore;
 using StasisGame.Managers;
+using StasisGame.Components;
 
 namespace StasisGame.Systems
 {
