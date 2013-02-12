@@ -53,9 +53,12 @@ namespace StasisGame.Systems
 
         public void draw()
         {
+            List<int> renderableEntities = _entityManager.getEntitiesPosessing(ComponentType.BodyRender);
+
             _viewMatrix = Matrix.CreateScale(new Vector3(_scale, -_scale, 1f));
             _projectionMatrix = Matrix.CreateOrthographic(_graphicsDevice.Viewport.Width, _graphicsDevice.Viewport.Height, 0, 1);
-            List<int> renderableEntities = _entityManager.getEntitiesPosessing(ComponentType.BodyRender);
+            _primitivesEffect.Parameters["view"].SetValue(_viewMatrix);
+            _primitivesEffect.Parameters["projection"].SetValue(_projectionMatrix);
 
             for (int i = 0; i < renderableEntities.Count; i++)
             {
@@ -67,8 +70,6 @@ namespace StasisGame.Systems
 
                 _graphicsDevice.Textures[0] = bodyRenderComponent.texture;
                 _primitivesEffect.Parameters["world"].SetValue(bodyRenderComponent.worldMatrix);
-                _primitivesEffect.Parameters["view"].SetValue(_viewMatrix);
-                _primitivesEffect.Parameters["projection"].SetValue(_projectionMatrix);
                 _primitivesEffect.CurrentTechnique.Passes["textured_primitives"].Apply();
                 _graphicsDevice.DrawUserPrimitives(PrimitiveType.TriangleList, bodyRenderComponent.vertices, 0, bodyRenderComponent.primitiveCount, CustomVertexFormat.VertexDeclaration);
             }

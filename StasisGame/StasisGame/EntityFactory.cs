@@ -40,17 +40,24 @@ namespace StasisGame
             Vector2 topLeft;
             Vector2 bottomRight;
             float layerDepth = Loader.loadFloat(data.Attribute("layer_depth"), 0.1f);
+            bool fixVerticeRotation = false;
+            float angle = Loader.loadFloat(data.Attribute("angle"), 0f);
 
             switch (data.Attribute("type").Value)
             {
                 case "Box":
-                    Matrix transform = Matrix.CreateRotationZ(Loader.loadFloat(data.Attribute("angle"), 0f));
+                    Matrix transform = Matrix.CreateRotationZ(angle);
                     float halfWidth = Loader.loadFloat(data.Attribute("half_width"), 1f);
                     float halfHeight = Loader.loadFloat(data.Attribute("half_height"), 1f);
-                    polygonPoints.Add(Vector2.Transform(new Vector2(-halfWidth, -halfHeight), transform));
-                    polygonPoints.Add(Vector2.Transform(new Vector2(-halfWidth, halfHeight), transform));
-                    polygonPoints.Add(Vector2.Transform(new Vector2(halfWidth, halfHeight), transform));
-                    polygonPoints.Add(Vector2.Transform(new Vector2(halfWidth, -halfHeight), transform));
+                    Vector2 p1 = new Vector2(-halfWidth, -halfHeight);
+                    Vector2 p2 = new Vector2(-halfWidth, halfHeight);
+                    Vector2 p3 = new Vector2(halfWidth, halfHeight);
+                    Vector2 p4 = new Vector2(halfWidth, -halfHeight);
+                    polygonPoints.Add(Vector2.Transform(p1, transform));
+                    polygonPoints.Add(Vector2.Transform(p2, transform));
+                    polygonPoints.Add(Vector2.Transform(p3, transform));
+                    polygonPoints.Add(Vector2.Transform(p4, transform));
+                    fixVerticeRotation = true;
                     break;
 
                 case "Circle":
@@ -92,18 +99,29 @@ namespace StasisGame
                 Vector2 p1 = new Vector2(triangle.Points[0].Xf, triangle.Points[0].Yf);
                 Vector2 p2 = new Vector2(triangle.Points[1].Xf, triangle.Points[1].Yf);
                 Vector2 p3 = new Vector2(triangle.Points[2].Xf, triangle.Points[2].Yf);
+                Vector2 uv1 = p1;
+                Vector2 uv2 = p2;
+                Vector2 uv3 = p3;
+
+                // Fix rotation of vertices if necessary
+                if (fixVerticeRotation)
+                {
+                    p1 = Vector2.Transform(p1, Matrix.CreateRotationZ(-angle));
+                    p2 = Vector2.Transform(p2, Matrix.CreateRotationZ(-angle));
+                    p3 = Vector2.Transform(p3, Matrix.CreateRotationZ(-angle));
+                }
 
                 vertices[vertexCount++] = new CustomVertexFormat(
                     new Vector3(p1, 0),
-                    (p1 - topLeft) / (bottomRight - topLeft),
+                    (uv1 - topLeft) / (bottomRight - topLeft),
                     Vector3.One);
                 vertices[vertexCount++] = new CustomVertexFormat(
                     new Vector3(p2, 0),
-                    (p2 - topLeft) / (bottomRight - topLeft),
+                    (uv2 - topLeft) / (bottomRight - topLeft),
                     Vector3.One);
                 vertices[vertexCount++] = new CustomVertexFormat(
                     new Vector3(p3, 0),
-                    (p3 - topLeft) / (bottomRight - topLeft),
+                    (uv3 - topLeft) / (bottomRight - topLeft),
                     Vector3.One);
             }
 

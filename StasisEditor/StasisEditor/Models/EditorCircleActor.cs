@@ -4,6 +4,7 @@ using System.ComponentModel;
 using System.Xml.Linq;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Input;
+using Box2D.XNA;
 using StasisCore;
 using StasisEditor.Controllers;
 
@@ -12,12 +13,14 @@ namespace StasisEditor.Models
     public class EditorCircleActor : EditorActor, IActorComponent
     {
         private Vector2 _position;
+        private BodyType _bodyType;
         private float _radius;
         private float _density;
         private float _friction;
         private float _restitution;
         private string _materialUID;
 
+        public BodyType bodyType { get { return _bodyType; } set { _bodyType = value; } }
         public float radius { get { return _radius; } set { _radius = value; } }
         public float density { get { return _density; } set { _density = value; } }
         public float friction { get { return _friction; } set { _friction = value; } }
@@ -35,6 +38,7 @@ namespace StasisEditor.Models
             get
             {
                 XElement d = base.data;
+                d.SetAttributeValue("body_type", _bodyType);
                 d.SetAttributeValue("position", _position);
                 d.SetAttributeValue("radius", _radius);
                 d.SetAttributeValue("density", _density);
@@ -48,6 +52,7 @@ namespace StasisEditor.Models
         public EditorCircleActor(EditorLevel level)
             : base(level, ActorType.Circle, level.controller.getUnusedActorID())
         {
+            _bodyType = BodyType.Static;
             _position = level.controller.worldMouse;
             _radius = 1f;
             _density = 0.5f;
@@ -60,6 +65,7 @@ namespace StasisEditor.Models
         public EditorCircleActor(EditorLevel level, XElement data)
             : base(level, data)
         {
+            _bodyType = (BodyType)Loader.loadEnum(typeof(BodyType), data.Attribute("body_type"), (int)BodyType.Static);
             _position = Loader.loadVector2(data.Attribute("position"), Vector2.Zero);
             _radius = Loader.loadFloat(data.Attribute("radius"), 1f);
             _density = Loader.loadFloat(data.Attribute("density"), 0.5f);
