@@ -54,6 +54,13 @@ namespace StasisGame
                     break;
 
                 case "Circle":
+                    float segments = 64f;
+                    float increment = StasisMathHelper.pi2 / segments;
+                    float radius = Loader.loadFloat(data.Attribute("radius"), 1f);
+                    for (float t = StasisMathHelper.pi; t > -StasisMathHelper.pi; t -= increment)
+                    {
+                        polygonPoints.Add(new Vector2((float)Math.Cos(t), (float)Math.Sin(t)) * radius);
+                    }
                     break;
 
                 case "Terrain":
@@ -107,14 +114,18 @@ namespace StasisGame
         {
             World world = (_systemManager.getSystem(SystemType.Physics) as PhysicsSystem).world;
             int entityId = _entityManager.createEntity();
-            PhysicsComponent physicsComponent = new PhysicsComponent(world, data);
-            _entityManager.addComponent(entityId, physicsComponent);
+            _entityManager.addComponent(entityId, new PhysicsComponent(world, data));
             _entityManager.addComponent(entityId, createBodyRenderComponent(data));
             Console.WriteLine("Box created");
         }
 
         public void createCircle(XElement data)
         {
+            World world = (_systemManager.getSystem(SystemType.Physics) as PhysicsSystem).world;
+            int entityId = _entityManager.createEntity();
+            _entityManager.addComponent(entityId, new PhysicsComponent(world, data));
+            _entityManager.addComponent(entityId, createBodyRenderComponent(data));
+            Console.WriteLine("Circle created");
         }
 
         public void createItem(XElement data)
