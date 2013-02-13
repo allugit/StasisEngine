@@ -8,9 +8,9 @@ namespace StasisGame.Managers
     {
         private SystemManager _systemManager;
         private Dictionary<int, List<IComponent>> _entities;
-        private EntityFactory _templates;
+        private EntityFactory _factory;
 
-        public EntityFactory templates { get { return _templates; } }
+        public EntityFactory factory { get { return _factory; } }
 
         public int newId
         {
@@ -27,7 +27,7 @@ namespace StasisGame.Managers
         {
             _systemManager = systemManager;
             _entities = new Dictionary<int, List<IComponent>>();
-            _templates = new EntityFactory(_systemManager, this);
+            _factory = new EntityFactory(_systemManager, this);
         }
 
         public int createEntity()

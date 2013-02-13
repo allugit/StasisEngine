@@ -25,10 +25,15 @@ namespace StasisGame.Systems
         private Effect _primitivesEffect;
         private Matrix _viewMatrix;
         private Matrix _projectionMatrix;
+        private Vector2 _screenCenter;
 
         public int defaultPriority { get { return 90; } }
         public SystemType systemType { get { return SystemType.Render; } }
         public MaterialRenderer materialRenderer { get { return _materialRenderer; } }
+        public Vector2 screenCenter { get { return _screenCenter; } }
+        public float scale { get { return _scale; } }
+        public int screenWidth { get { return _graphicsDevice.Viewport.Width; } }
+        public int screenHeight { get { return _graphicsDevice.Viewport.Height; } }
 
         public RenderSystem(LoderGame game, SystemManager systemManager, EntityManager entityManager)
         {

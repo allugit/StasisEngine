@@ -182,6 +182,11 @@ namespace StasisGame
             Console.WriteLine("Circle created");
         }
 
+        public void createFluid(XElement data)
+        {
+
+        }
+
         public void createItem(XElement data)
         {
         }

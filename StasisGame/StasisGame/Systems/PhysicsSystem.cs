@@ -17,7 +17,7 @@ namespace StasisGame.Systems
         private float _dt = 1f / 60f;
 
         public World world { get { return _world; } }
-        public int defaultPriority { get { return 10; } }
+        public int defaultPriority { get { return 20; } }
         public SystemType systemType { get { return SystemType.Physics; } }
 
         public PhysicsSystem(SystemManager systemManager, EntityManager entityManager, XElement data)

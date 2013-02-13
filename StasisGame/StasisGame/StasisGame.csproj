@@ -79,6 +79,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Components\IComponent.cs" />
+    <Compile Include="Components\Particle.cs" />
     <Compile Include="Components\PhysicsComponent.cs" />
     <Compile Include="Components\BodyRenderComponent.cs" />
     <Compile Include="Components\RopeNode.cs" />
@@ -91,6 +92,7 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="LoderGame.cs" />
+    <Compile Include="Systems\FluidSystem.cs" />
     <Compile Include="Systems\ISystem.cs" />
     <Compile Include="Systems\RenderSystem.cs" />
     <Compile Include="Systems\PhysicsSystem.cs" />

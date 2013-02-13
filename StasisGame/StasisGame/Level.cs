@@ -42,11 +42,11 @@ namespace StasisGame
                 switch (actorData.Attribute("type").Value)
                 {
                     case "Box":
-                        _entityManager.templates.createBox(actorData);
+                        _entityManager.factory.createBox(actorData);
                         break;
 
                     case "Circle":
-                        _entityManager.templates.createCircle(actorData);
+                        _entityManager.factory.createCircle(actorData);
                         break;
 
                     case "Circuit":
@@ -54,11 +54,13 @@ namespace StasisGame
                         break;
 
                     case "Fluid":
+                        if (_systemManager.getSystem(SystemType.Fluid) == null)
+                            _systemManager.add(new FluidSystem(_systemManager, _entityManager));
                         secondPassData.Add(actorData);
                         break;
 
                     case "Item":
-                        _entityManager.templates.createItem(actorData);
+                        _entityManager.factory.createItem(actorData);
                         break;
 
                     case "PlayerSpawn":
@@ -69,11 +71,11 @@ namespace StasisGame
                         break;
 
                     case "Terrain":
-                        _entityManager.templates.createTerrain(actorData);
+                        _entityManager.factory.createTerrain(actorData);
                         break;
 
                     case "Tree":
-                        _entityManager.templates.createTree(actorData);
+                        _entityManager.factory.createTree(actorData);
                         break;
 
                     case "Revolute":
@@ -95,10 +97,11 @@ namespace StasisGame
                         break;
 
                     case "Fluid":
+                        _entityManager.factory.createFluid(actorData);
                         break;
 
                     case "Rope":
-                        _entityManager.templates.createRope(actorData);
+                        _entityManager.factory.createRope(actorData);
                         break;
 
                     case "Revolute":
