@@ -195,7 +195,6 @@ namespace StasisGame
             int entityId = _entityManager.createEntity();
             Body body = null;
             BodyDef bodyDef = new BodyDef();
-            List<FixtureDef> fixtureDefs = new List<FixtureDef>();
             FixtureDef circleFixtureDef = new FixtureDef();
             CircleShape circleShape = new CircleShape();
 
@@ -206,7 +205,6 @@ namespace StasisGame
             circleFixtureDef.restitution = Loader.loadFloat(data.Attribute("restitution"), 1f);
             circleShape._radius = Loader.loadFloat(data.Attribute("radius"), 1f);
             circleFixtureDef.shape = circleShape;
-            fixtureDefs.Add(circleFixtureDef);
 
             body = world.CreateBody(bodyDef);
             body.CreateFixture(circleFixtureDef);
@@ -225,8 +223,32 @@ namespace StasisGame
             fluidSystem.createFluidBody(polygonPoints);
         }
 
-        public void createItem(XElement data)
+        public void createWorldItem(XElement data)
         {
+            World world = (_systemManager.getSystem(SystemType.Physics) as PhysicsSystem).world;
+            int entityId = _entityManager.createEntity();
+            Body body = null;
+            BodyDef bodyDef = new BodyDef();
+            PolygonShape shape = new PolygonShape();
+            FixtureDef fixtureDef = new FixtureDef();
+            XElement itemData = ResourceController.getResource(data.Attribute("item_uid").Value);
+            Texture2D worldTexture = ResourceController.getTexture(Loader.loadString(itemData.Attribute("world_texture_uid"), "default_item"));
+
+            bodyDef.type = (BodyType)Loader.loadEnum(typeof(BodyType), data.Attribute("body_type"), (int)BodyType.Dynamic);
+            bodyDef.position = Loader.loadVector2(data.Attribute("position"), Vector2.Zero);
+            bodyDef.angle = Loader.loadFloat(data.Attribute("angle"), 0f);
+            fixtureDef.density = Loader.loadFloat(data.Attribute("density"), 1f);
+            fixtureDef.friction = Loader.loadFloat(data.Attribute("friction"), 1f);
+            fixtureDef.restitution = Loader.loadFloat(data.Attribute("restitution"), 0f);
+            shape.SetAsBox(Loader.loadFloat(data.Attribute("half_width"), 0.25f), Loader.loadFloat(data.Attribute("half_height"), 0.25f));
+            fixtureDef.shape = shape;
+
+            body = world.CreateBody(bodyDef);
+            body.CreateFixture(fixtureDef);
+
+            _entityManager.addComponent(entityId, new PhysicsComponent(body));
+            _entityManager.addComponent(entityId, new ItemComponent(Loader.loadInt(data.Attribute("quantity"), 1)));
+            _entityManager.addComponent(entityId, new WorldItemRenderComponent(worldTexture));
         }
 
         // Process of creating a rope

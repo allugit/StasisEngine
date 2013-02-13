@@ -7,7 +7,9 @@ namespace StasisGame.Components
         Physics,
         BodyRender,
         RopePhysics,
-        RopeRender
+        RopeRender,
+        WorldItemRender,
+        Item
     };
 
     public interface IComponent

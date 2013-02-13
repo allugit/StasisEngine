@@ -60,7 +60,7 @@ namespace StasisGame
                         break;
 
                     case "Item":
-                        _entityManager.factory.createItem(actorData);
+                        _entityManager.factory.createWorldItem(actorData);
                         break;
 
                     case "PlayerSpawn":

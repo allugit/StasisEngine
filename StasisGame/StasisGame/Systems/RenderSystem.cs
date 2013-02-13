@@ -66,6 +66,7 @@ namespace StasisGame.Systems
             FluidSystem fluidSystem = (FluidSystem)_systemManager.getSystem(SystemType.Fluid);
             List<int> bodyRenderEntities = _entityManager.getEntitiesPosessing(ComponentType.BodyRender);
             List<int> ropeRenderEntities = _entityManager.getEntitiesPosessing(ComponentType.RopeRender);
+            List<int> worldItemRenderEntities = _entityManager.getEntitiesPosessing(ComponentType.WorldItemRender);
 
             _viewMatrix = Matrix.CreateScale(new Vector3(_scale, -_scale, 1f));
             _projectionMatrix = Matrix.CreateOrthographic(_graphicsDevice.Viewport.Width, _graphicsDevice.Viewport.Height, 0, 1);
@@ -93,7 +94,7 @@ namespace StasisGame.Systems
                 RopeNode current = ropePhysicsComponent.head;
                 while (current != null)
                 {
-                    _spriteBatch.Draw(_pixel, current.body.GetPosition() * Settings.BASE_SCALE + new Vector2(_graphicsDevice.Viewport.Width, _graphicsDevice.Viewport.Height) / 2, new Rectangle(0, 0, 16, 4), Color.Red, current.body.GetAngle(), new Vector2(8, 2), 1f, SpriteEffects.None, 0);
+                    _spriteBatch.Draw(_pixel, current.body.GetPosition() * _scale + new Vector2(_graphicsDevice.Viewport.Width, _graphicsDevice.Viewport.Height) / 2, new Rectangle(0, 0, 16, 4), Color.Red, current.body.GetAngle(), new Vector2(8, 2), 1f, SpriteEffects.None, 0);
                     current = current.next;
                 }
             }
@@ -105,6 +106,14 @@ namespace StasisGame.Systems
                     Particle particle = fluidSystem.liquid[fluidSystem.activeParticles[i]];
                     _spriteBatch.Draw(_pixel, particle.position * Settings.BASE_SCALE + new Vector2(_graphicsDevice.Viewport.Width, _graphicsDevice.Viewport.Height) / 2, new Rectangle(0, 0, 4, 4), Color.Blue, 0, new Vector2(2, 2), 1f, SpriteEffects.None, 0);
                 }
+            }
+
+            for (int i = 0; i < worldItemRenderEntities.Count; i++)
+            {
+                PhysicsComponent physicsComponent = (PhysicsComponent)_entityManager.getComponent(worldItemRenderEntities[i], ComponentType.Physics);
+                WorldItemRenderComponent renderComponent = (WorldItemRenderComponent)_entityManager.getComponent(worldItemRenderEntities[i], ComponentType.WorldItemRender);
+
+                _spriteBatch.Draw(renderComponent.worldTexture, physicsComponent.body.GetPosition() * _scale + new Vector2(_graphicsDevice.Viewport.Width, _graphicsDevice.Viewport.Height) / 2, renderComponent.worldTexture.Bounds, Color.White, physicsComponent.body.GetAngle(), new Vector2(renderComponent.worldTexture.Width, renderComponent.worldTexture.Height) / 2f, 1f, SpriteEffects.None, 0);
             }
         }
     }

@@ -79,6 +79,8 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Components\IComponent.cs" />
+    <Compile Include="Components\ItemComponent.cs" />
+    <Compile Include="Components\WorldItemRenderComponent.cs" />
     <Compile Include="Components\Particle.cs" />
     <Compile Include="Components\PhysicsComponent.cs" />
     <Compile Include="Components\BodyRenderComponent.cs" />
