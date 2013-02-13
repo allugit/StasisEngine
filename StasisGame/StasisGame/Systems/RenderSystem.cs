@@ -87,7 +87,7 @@ namespace StasisGame.Systems
                 RopeNode current = ropePhysicsComponent.head;
                 while (current != null)
                 {
-                    _spriteBatch.Draw(_pixel, current.body.GetPosition() * Settings.BASE_SCALE + new Vector2(_graphicsDevice.Viewport.Width, _graphicsDevice.Viewport.Height) / 2, new Rectangle(0, 0, 4, 4), Color.Red, 0, new Vector2(2, 2), 1f, SpriteEffects.None, 0);
+                    _spriteBatch.Draw(_pixel, current.body.GetPosition() * Settings.BASE_SCALE + new Vector2(_graphicsDevice.Viewport.Width, _graphicsDevice.Viewport.Height) / 2, new Rectangle(0, 0, 16, 4), Color.Red, current.body.GetAngle(), new Vector2(8, 2), 1f, SpriteEffects.None, 0);
                     current = current.next;
                 }
             }

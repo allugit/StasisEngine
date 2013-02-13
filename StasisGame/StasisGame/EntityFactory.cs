@@ -259,6 +259,7 @@ namespace StasisGame
                 FixtureDef fixtureDef = new FixtureDef();
                 Body body;
                 RopeNode ropeNode;
+                RevoluteJointDef jointDef = new RevoluteJointDef();
 
                 bodyDef.angle = angle;
                 bodyDef.position = finalPointA + ropeNormal * (segmentHalfLength + i * segmentLength);
@@ -273,6 +274,15 @@ namespace StasisGame
 
                 body = world.CreateBody(bodyDef);
                 body.CreateFixture(fixtureDef);
+
+                if (lastNode != null)
+                {
+                    jointDef.bodyA = lastNode.body;
+                    jointDef.bodyB = body;
+                    jointDef.localAnchorA = new Vector2(-segmentHalfLength, 0);
+                    jointDef.localAnchorB = new Vector2(segmentHalfLength, 0);
+                    world.CreateJoint(jointDef);
+                }
 
                 ropeNode = new RopeNode(body);
                 if (head == null)
