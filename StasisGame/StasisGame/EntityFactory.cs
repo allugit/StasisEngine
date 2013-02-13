@@ -82,25 +82,41 @@ namespace StasisGame
             }
             texture = renderSystem.materialRenderer.renderMaterial(material, polygonPoints, 1f);
 
+            topLeft = polygonPoints[0];
+            bottomRight = polygonPoints[0];
             foreach (Vector2 point in polygonPoints)
+            {
                 P2TPoints.Add(new PolygonPoint(point.X, point.Y));
+                topLeft = Vector2.Min(topLeft, point);
+                bottomRight = Vector2.Max(bottomRight, point);
+            }
             polygon = new Polygon(P2TPoints);
+            if (Loader.loadBool(data.Attribute("destructible"), false))
+            {
+                float chunkSpacingX = Math.Max(0.05f, Loader.loadFloat(data.Attribute("chunk_spacing_x"), 1f));
+                float chunkSpacingY = Math.Max(0.05f, Loader.loadFloat(data.Attribute("chunk_spacing_y"), 1f));
+                int seed = Loader.loadInt(data.Attribute("destructible_seed"), 12345);
+                Random random = new Random(seed);
+
+                for (float i = topLeft.X; i < bottomRight.X; i += chunkSpacingX)
+                {
+                    for (float j = topLeft.Y; j < bottomRight.Y; j += chunkSpacingY)
+                    {
+                        float jitterX = (float)(random.NextDouble() * 2 - 1) * chunkSpacingX * 0.25f;
+                        float jitterY = (float)(random.NextDouble() * 2 - 1) * chunkSpacingY * 0.25f;
+                        Vector2 point = new Vector2(i, j) + new Vector2(jitterX, jitterY);
+                        if (polygon.IsPointInside(new TriangulationPoint(point.X, point.Y)))
+                        {
+                            polygon.AddSteinerPoint(new TriangulationPoint(point.X, point.Y));
+                        }
+                    }
+                }
+            }
             P2T.Triangulate(polygon);
+
             primitiveCount = polygon.Triangles.Count;
             vertices = new CustomVertexFormat[primitiveCount * 3];
             vertexCount = 0;
-            topLeft = polygonPoints[0];
-            bottomRight = polygonPoints[0];
-            foreach (DelaunayTriangle triangle in polygon.Triangles)
-            {
-                foreach (TriangulationPoint point in triangle.Points)
-                {
-                    topLeft.X = Math.Min(point.Xf, topLeft.X);
-                    topLeft.Y = Math.Min(point.Yf, topLeft.Y);
-                    bottomRight.X = Math.Max(point.Xf, bottomRight.X);
-                    bottomRight.Y = Math.Max(point.Yf, bottomRight.Y);
-                }
-            }
             foreach (DelaunayTriangle triangle in polygon.Triangles)
             {
                 Vector2 p1 = new Vector2(triangle.Points[0].Xf, triangle.Points[0].Yf);
@@ -110,7 +126,7 @@ namespace StasisGame
                 Vector2 uv2 = p2;
                 Vector2 uv3 = p3;
 
-                // Fix rotation of vertices if necessary
+                // Fix rotation of vertices if necessary (boxes need this)
                 if (fixVerticeRotation)
                 {
                     p1 = Vector2.Transform(p1, Matrix.CreateRotationZ(-angle));
@@ -131,6 +147,7 @@ namespace StasisGame
                     (uv3 - topLeft) / (bottomRight - topLeft),
                     Vector3.One);
             }
+            Console.WriteLine("vertex count: {0}", vertexCount);
 
             return new BodyRenderComponent(texture, vertices, Matrix.Identity, primitiveCount, layerDepth);
         }

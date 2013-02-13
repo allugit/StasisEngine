@@ -14,6 +14,10 @@ namespace StasisEditor.Models
     {
         private Vector2 _position;
         private BodyType _bodyType;
+        private bool _destructible;
+        private float _chunkSpacingX;
+        private float _chunkSpacingY;
+        private int _destructibleSeed;
         private float _halfWidth;
         private float _halfHeight;
         private float _angle;
@@ -23,6 +27,10 @@ namespace StasisEditor.Models
         private string _materialUID;
 
         public BodyType bodyType { get { return _bodyType; } set { _bodyType = value; } }
+        public bool destructible { get { return _destructible; } set { _destructible = value; } }
+        public float chunkSpacingX { get { return _chunkSpacingX; } set { _chunkSpacingX = value; } }
+        public float chunkSpacingY { get { return _chunkSpacingY; } set { _chunkSpacingY = value; } }
+        public int destructibleSeed { get { return _destructibleSeed; } set { _destructibleSeed = value; } }
         public float halfWidth { get { return _halfWidth; } set { _halfWidth = value; } }
         public float halfHeight { get { return _halfHeight; } set { _halfHeight = value; } }
         public float angle { get { return _angle; } set { _angle = value; } }
@@ -43,6 +51,10 @@ namespace StasisEditor.Models
             {
                 XElement d = base.data;
                 d.SetAttributeValue("body_type", _bodyType);
+                d.SetAttributeValue("destructible", _destructible);
+                d.SetAttributeValue("chunk_spacing_x", _chunkSpacingX);
+                d.SetAttributeValue("chunk_spacing_y", _chunkSpacingY);
+                d.SetAttributeValue("destructible_seed", _destructibleSeed);
                 d.SetAttributeValue("position", _position);
                 d.SetAttributeValue("half_width", _halfWidth);
                 d.SetAttributeValue("half_height", _halfHeight);
@@ -59,6 +71,10 @@ namespace StasisEditor.Models
             : base(level, ActorType.Box, level.controller.getUnusedActorID())
         {
             _bodyType = BodyType.Static;
+            _destructible = false;
+            _chunkSpacingX = 1f;
+            _chunkSpacingY = 1f;
+            _destructibleSeed = 12345;
             _position = level.controller.worldMouse;
             _halfWidth = 1f;
             _halfHeight = 1f;
@@ -74,6 +90,10 @@ namespace StasisEditor.Models
             : base(level, data)
         {
             _bodyType = (BodyType)Loader.loadEnum(typeof(BodyType), data.Attribute("body_type"), (int)BodyType.Static);
+            _destructible = Loader.loadBool(data.Attribute("destructible"), false);
+            _chunkSpacingX = Loader.loadFloat(data.Attribute("chunk_spacing_x"), 1f);
+            _chunkSpacingY = Loader.loadFloat(data.Attribute("chunk_spacing_y"), 1f);
+            _destructibleSeed = Loader.loadInt(data.Attribute("destructible_seed"), 12345);
             _position = Loader.loadVector2(data.Attribute("position"), Vector2.Zero);
             _halfWidth = Loader.loadFloat(data.Attribute("half_width"), 1f);
             _halfHeight = Loader.loadFloat(data.Attribute("half_height"), 1f);
