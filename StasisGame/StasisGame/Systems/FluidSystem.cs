@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Threading.Tasks;
 using Microsoft.Xna.Framework;
 using Box2D.XNA;
+using Poly2Tri;
 using StasisGame.Managers;
 using StasisGame.Components;
 
@@ -17,7 +18,7 @@ namespace StasisGame.Systems
         public Dictionary<int, Dictionary<int, List<int>>> fluidGrid;
         public const int MAX_PARTICLES = 10000;
         public const int MAX_NEIGHBORS = 75;
-        public static Particle[] liquid;
+        public Particle[] liquid;
         public int[] activeParticles;
         public int numActiveParticles = 0;
         private int initializedParticleCount = 0;
@@ -54,8 +55,10 @@ namespace StasisGame.Systems
         {
             _systemManager = systemManager;
             _entityManager = entityManager;
+
             _physicsSystem = (PhysicsSystem)_systemManager.getSystem(SystemType.Physics);
             _renderSystem = (RenderSystem)_systemManager.getSystem(SystemType.Render);
+            fluidGrid = new Dictionary<int, Dictionary<int, List<int>>>();
             liquid = new Particle[MAX_PARTICLES];
             activeParticles = new int[MAX_PARTICLES];
             simPositions = new Vector2[MAX_PARTICLES];
@@ -69,6 +72,36 @@ namespace StasisGame.Systems
 
         public int getFluidGridX(float x) { return (int)Math.Floor(x / CELL_SPACING); }
         public int getFluidGridY(float y) { return (int)Math.Floor(y / CELL_SPACING); }
+
+        // createFluidBody
+        public void createFluidBody(List<Vector2> polygonPoints)
+        {
+            List<PolygonPoint> P2TPoints = new List<PolygonPoint>();
+            Polygon polygon;
+            Vector2 topLeft = polygonPoints[0];
+            Vector2 bottomRight = polygonPoints[0];
+            float spacing = RADIUS / 3.7f;
+            Random random = new Random();
+
+            foreach (Vector2 point in polygonPoints)
+            {
+                topLeft = Vector2.Min(topLeft, point);
+                bottomRight = Vector2.Max(bottomRight, point);
+                P2TPoints.Add(new PolygonPoint(point.X, point.Y));
+            }
+            polygon = new Polygon(P2TPoints);
+
+            for (float i = topLeft.X; i < bottomRight.X; i += spacing)
+            {
+                for (float j = topLeft.Y; j < bottomRight.Y; j += spacing)
+                {
+                    Vector2 jitter = new Vector2(-1 + (float)random.NextDouble() * 2, -1 + (float)random.NextDouble() * 2) * (spacing * 0.2f);
+                    Vector2 point = new Vector2(i, j) + jitter;
+                    if (polygon.IsPointInside(new PolygonPoint(point.X, point.Y)))
+                        createParticle(point);
+                }
+            }
+        }
 
         // createParticle
         public void createParticle(Vector2 position)

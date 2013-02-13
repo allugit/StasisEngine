@@ -184,7 +184,12 @@ namespace StasisGame
 
         public void createFluid(XElement data)
         {
+            FluidSystem fluidSystem = (FluidSystem)_systemManager.getSystem(SystemType.Fluid);
+            List<Vector2> polygonPoints = new List<Vector2>();
 
+            foreach (XElement pointData in data.Elements("Point"))
+                polygonPoints.Add(Loader.loadVector2(pointData, Vector2.Zero));
+            fluidSystem.createFluidBody(polygonPoints);
         }
 
         public void createItem(XElement data)

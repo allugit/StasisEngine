@@ -63,6 +63,7 @@ namespace StasisGame.Systems
 
         public void draw()
         {
+            FluidSystem fluidSystem = (FluidSystem)_systemManager.getSystem(SystemType.Fluid);
             List<int> bodyRenderEntities = _entityManager.getEntitiesPosessing(ComponentType.BodyRender);
             List<int> ropeRenderEntities = _entityManager.getEntitiesPosessing(ComponentType.RopeRender);
 
@@ -94,6 +95,15 @@ namespace StasisGame.Systems
                 {
                     _spriteBatch.Draw(_pixel, current.body.GetPosition() * Settings.BASE_SCALE + new Vector2(_graphicsDevice.Viewport.Width, _graphicsDevice.Viewport.Height) / 2, new Rectangle(0, 0, 16, 4), Color.Red, current.body.GetAngle(), new Vector2(8, 2), 1f, SpriteEffects.None, 0);
                     current = current.next;
+                }
+            }
+
+            if (fluidSystem != null)
+            {
+                for (int i = 0; i < fluidSystem.numActiveParticles; i++)
+                {
+                    Particle particle = fluidSystem.liquid[fluidSystem.activeParticles[i]];
+                    _spriteBatch.Draw(_pixel, particle.position * Settings.BASE_SCALE + new Vector2(_graphicsDevice.Viewport.Width, _graphicsDevice.Viewport.Height) / 2, new Rectangle(0, 0, 4, 4), Color.Blue, 0, new Vector2(2, 2), 1f, SpriteEffects.None, 0);
                 }
             }
         }
