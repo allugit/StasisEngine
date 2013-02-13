@@ -214,6 +214,8 @@ namespace StasisGame
             int ropeNodeLimit;
             RopeNode head = null;
             RopeNode lastNode = null;
+            RevoluteJointDef anchorADef = new RevoluteJointDef();
+            RevoluteJointDef anchorBDef = new RevoluteJointDef();
             
             world.RayCast((fixture, point, normal, fraction) =>
                 {
@@ -290,6 +292,24 @@ namespace StasisGame
                 if (!(lastNode == null))
                     lastNode.insert(ropeNode);
                 lastNode = ropeNode;
+            }
+
+            if (baResult.success)
+            {
+                anchorADef.bodyA = baResult.fixture.GetBody();
+                anchorADef.bodyB = head.body;
+                anchorADef.localAnchorA = baResult.fixture.GetBody().GetLocalPoint(baResult.worldPoint);
+                anchorADef.localAnchorB = new Vector2(segmentHalfLength, 0);
+                world.CreateJoint(anchorADef);
+            }
+
+            if (doubleAnchor && abResult.success)
+            {
+                anchorBDef.bodyA = lastNode.body;
+                anchorBDef.bodyB = abResult.fixture.GetBody();
+                anchorBDef.localAnchorA = new Vector2(-segmentHalfLength, 0);
+                anchorBDef.localAnchorB = abResult.fixture.GetBody().GetLocalPoint(abResult.worldPoint);
+                world.CreateJoint(anchorBDef);
             }
 
             entityId = _entityManager.createEntity();
