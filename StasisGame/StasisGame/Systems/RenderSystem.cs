@@ -20,6 +20,8 @@ namespace StasisGame.Systems
         private ContentManager _contentManager;
         private ContentManager _coreContentManager;
         private GraphicsDevice _graphicsDevice;
+        private SpriteBatch _spriteBatch;
+        private Texture2D _pixel;
         private Effect _primitivesEffect;
         private Matrix _viewMatrix;
         private Matrix _projectionMatrix;
@@ -34,11 +36,14 @@ namespace StasisGame.Systems
             _systemManager = systemManager;
             _entityManager = entityManager;
             _graphicsDevice = game.GraphicsDevice;
+            _spriteBatch = game.spriteBatch;
 
             _contentManager = new ContentManager(game.Services, "Content");
             _coreContentManager = new ContentManager(game.Services, "StasisCoreContent");
             _materialRenderer = new MaterialRenderer(game.GraphicsDevice, _contentManager, game.spriteBatch);
             _primitivesEffect = _coreContentManager.Load<Effect>("effects\\primitives");
+            _pixel = new Texture2D(_graphicsDevice, 1, 1);
+            _pixel.SetData<Color>(new [] { Color.White });
         }
 
         ~RenderSystem()
@@ -53,16 +58,17 @@ namespace StasisGame.Systems
 
         public void draw()
         {
-            List<int> renderableEntities = _entityManager.getEntitiesPosessing(ComponentType.BodyRender);
+            List<int> bodyRenderEntities = _entityManager.getEntitiesPosessing(ComponentType.BodyRender);
+            List<int> ropeRenderEntities = _entityManager.getEntitiesPosessing(ComponentType.RopeRender);
 
             _viewMatrix = Matrix.CreateScale(new Vector3(_scale, -_scale, 1f));
             _projectionMatrix = Matrix.CreateOrthographic(_graphicsDevice.Viewport.Width, _graphicsDevice.Viewport.Height, 0, 1);
             _primitivesEffect.Parameters["view"].SetValue(_viewMatrix);
             _primitivesEffect.Parameters["projection"].SetValue(_projectionMatrix);
 
-            for (int i = 0; i < renderableEntities.Count; i++)
+            for (int i = 0; i < bodyRenderEntities.Count; i++)
             {
-                int entityId = renderableEntities[i];
+                int entityId = bodyRenderEntities[i];
                 BodyRenderComponent bodyRenderComponent = (BodyRenderComponent)_entityManager.getComponent(entityId, ComponentType.BodyRender);
                 PhysicsComponent physicsComponent = (PhysicsComponent)_entityManager.getComponent(entityId, ComponentType.Physics);
 
@@ -72,6 +78,18 @@ namespace StasisGame.Systems
                 _primitivesEffect.Parameters["world"].SetValue(bodyRenderComponent.worldMatrix);
                 _primitivesEffect.CurrentTechnique.Passes["textured_primitives"].Apply();
                 _graphicsDevice.DrawUserPrimitives(PrimitiveType.TriangleList, bodyRenderComponent.vertices, 0, bodyRenderComponent.primitiveCount, CustomVertexFormat.VertexDeclaration);
+            }
+
+            for (int i = 0; i < ropeRenderEntities.Count; i++)
+            {
+                int entityId = ropeRenderEntities[i];
+                RopePhysicsComponent ropePhysicsComponent = (RopePhysicsComponent)_entityManager.getComponent(entityId, ComponentType.RopePhysics);
+                RopeNode current = ropePhysicsComponent.head;
+                while (current != null)
+                {
+                    _spriteBatch.Draw(_pixel, current.body.GetPosition() * Settings.BASE_SCALE + new Vector2(_graphicsDevice.Viewport.Width, _graphicsDevice.Viewport.Height) / 2, new Rectangle(0, 0, 4, 4), Color.Red, 0, new Vector2(2, 2), 1f, SpriteEffects.None, 0);
+                    current = current.next;
+                }
             }
         }
     }

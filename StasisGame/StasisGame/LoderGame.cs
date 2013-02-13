@@ -114,10 +114,11 @@ namespace StasisGame
 
             _spriteBatch.Begin();
             _spriteBatch.DrawString(_arial, _argsDebug, new Vector2(16, 16), Color.White);
-            _spriteBatch.End();
 
             if (_level != null)
                 _level.draw(gameTime);
+
+            _spriteBatch.End();
 
             base.Draw(gameTime);
         }

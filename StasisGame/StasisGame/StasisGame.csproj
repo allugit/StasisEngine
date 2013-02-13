@@ -81,6 +81,9 @@
     <Compile Include="Components\IComponent.cs" />
     <Compile Include="Components\PhysicsComponent.cs" />
     <Compile Include="Components\BodyRenderComponent.cs" />
+    <Compile Include="Components\RopeNode.cs" />
+    <Compile Include="Components\RopePhysicsComponent.cs" />
+    <Compile Include="Components\RopeRenderComponent.cs" />
     <Compile Include="Level.cs" />
     <Compile Include="Managers\EntityManager.cs" />
     <Compile Include="Managers\SystemManager.cs" />

@@ -10,13 +10,25 @@ using StasisCore.Controllers;
 using StasisGame.Systems;
 using StasisGame.Components;
 using StasisGame.Managers;
-using Box2D.XNA;
 using Poly2Tri;
 
 namespace StasisGame
 {
     public class EntityFactory
     {
+        public struct RopeRaycastResult
+        {
+            public Fixture fixture;
+            public Vector2 worldPoint;
+            public bool success;
+            public RopeRaycastResult(Fixture fixture, Vector2 worldPoint, bool success)
+            {
+                this.fixture = fixture;
+                this.worldPoint = worldPoint;
+                this.success = success;
+            }
+        };
+
         private SystemManager _systemManager;
         private EntityManager _entityManager;
 
@@ -174,8 +186,106 @@ namespace StasisGame
         {
         }
 
+        // Process of creating a rope
+        // 1) Raycast pointA to pointB
+        // 2) Raycast pointB to pointA
+        // 3) Ensure at least one raycast was successful
+        // 4) Ensure raycast to pointB was a success if doubleAnchor is true
+        // 5) Ensure total length between point A and B is longer than 1 rope segment
+        // 6) Create rope
+        // 7) Create entity with rope component
         public void createRope(XElement data)
         {
+            World world = (_systemManager.getSystem(SystemType.Physics) as PhysicsSystem).world;
+            int entityId;
+            float segmentLength = 0.5f;
+            float segmentHalfLength = segmentLength * 0.5f;
+            bool doubleAnchor = Loader.loadBool(data.Attribute("double_anchor"), false);
+            Vector2 initialPointA = Loader.loadVector2(data.Attribute("point_a"), Vector2.Zero);
+            Vector2 initialPointB = Loader.loadVector2(data.Attribute("point_b"), Vector2.Zero);
+            RopeRaycastResult abResult = new RopeRaycastResult();
+            RopeRaycastResult baResult = new RopeRaycastResult();
+            Vector2 finalPointA = Vector2.Zero;
+            Vector2 finalPointB = Vector2.Zero;
+            Vector2 finalRelativeLine = Vector2.Zero;
+            Vector2 ropeNormal = Vector2.Zero;
+            float finalLength;
+            float angle;
+            int ropeNodeLimit;
+            RopeNode head = null;
+            RopeNode lastNode = null;
+            
+            world.RayCast((fixture, point, normal, fraction) =>
+                {
+                    abResult.fixture = fixture;
+                    abResult.worldPoint = point;
+                    abResult.success = true;
+                    return fraction;
+                },
+                initialPointA,
+                initialPointB);
+
+            world.RayCast((fixture, point, normal, fraction) =>
+                {
+                    baResult.fixture = fixture;
+                    baResult.worldPoint = point;
+                    baResult.success = true;
+                    return fraction;
+                },
+                abResult.success ? abResult.worldPoint : initialPointB,
+                initialPointA);
+
+            if (!(abResult.success || baResult.success))
+                return;
+
+            finalPointA = baResult.success ? baResult.worldPoint : initialPointA;
+            finalPointB = abResult.success ? abResult.worldPoint : initialPointB;
+            finalRelativeLine = finalPointB - finalPointA;
+            finalLength = finalRelativeLine.Length();
+
+            if (doubleAnchor && !abResult.success)
+                return;
+            else if (finalLength < segmentLength)
+                return;
+
+            angle = (float)Math.Atan2(finalRelativeLine.Y, finalRelativeLine.X);
+            ropeNormal = finalRelativeLine;
+            ropeNormal.Normalize();
+            ropeNodeLimit = (int)Math.Ceiling(finalLength / segmentLength);
+            for (int i = 0; i < ropeNodeLimit; i++)
+            {
+                BodyDef bodyDef = new BodyDef();
+                PolygonShape shape = new PolygonShape();
+                FixtureDef fixtureDef = new FixtureDef();
+                Body body;
+                RopeNode ropeNode;
+
+                bodyDef.angle = angle;
+                bodyDef.position = finalPointA + ropeNormal * (segmentHalfLength + i * segmentLength);
+                bodyDef.type = BodyType.Dynamic;
+
+                shape.SetAsBox(segmentHalfLength, 0.1f);
+
+                fixtureDef.density = 0.5f;
+                fixtureDef.friction = 0.5f;
+                fixtureDef.restitution = 0f;
+                fixtureDef.shape = shape;
+
+                body = world.CreateBody(bodyDef);
+                body.CreateFixture(fixtureDef);
+
+                ropeNode = new RopeNode(body);
+                if (head == null)
+                    head = ropeNode;
+                if (!(lastNode == null))
+                    lastNode.insert(ropeNode);
+                lastNode = ropeNode;
+            }
+
+            entityId = _entityManager.createEntity();
+            _entityManager.addComponent(entityId, new RopePhysicsComponent(head));
+            _entityManager.addComponent(entityId, new RopeRenderComponent());
+            Console.WriteLine("Rope created");
         }
 
         public void createTerrain(XElement data)
