@@ -21,8 +21,10 @@ namespace StasisGame
             _systemManager = new SystemManager();
             _entityManager = new EntityManager(_systemManager);
 
-            // Load xml
             XElement data = null;
+            List<XElement> secondPassData = new List<XElement>();
+
+            // Load xml
             using (FileStream stream = new FileStream(filePath, FileMode.Open))
             {
                 XDocument doc = XDocument.Load(stream);
@@ -48,9 +50,11 @@ namespace StasisGame
                         break;
 
                     case "Circuit":
+                        secondPassData.Add(actorData);
                         break;
 
                     case "Fluid":
+                        secondPassData.Add(actorData);
                         break;
 
                     case "Item":
@@ -61,7 +65,7 @@ namespace StasisGame
                         break;
 
                     case "Rope":
-                        _entityManager.templates.createRope(actorData);
+                        secondPassData.Add(actorData);
                         break;
 
                     case "Terrain":
@@ -70,6 +74,31 @@ namespace StasisGame
 
                     case "Tree":
                         _entityManager.templates.createTree(actorData);
+                        break;
+
+                    case "Revolute":
+                        secondPassData.Add(actorData);
+                        break;
+
+                    case "Prismatic":
+                        secondPassData.Add(actorData);
+                        break;
+                }
+            }
+
+            // Second pass
+            foreach (XElement actorData in secondPassData)
+            {
+                switch (actorData.Attribute("type").Value)
+                {
+                    case "Circuit":
+                        break;
+
+                    case "Fluid":
+                        break;
+
+                    case "Rope":
+                        _entityManager.templates.createRope(actorData);
                         break;
 
                     case "Revolute":
