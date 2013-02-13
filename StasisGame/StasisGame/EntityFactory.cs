@@ -168,18 +168,51 @@ namespace StasisGame
         {
             World world = (_systemManager.getSystem(SystemType.Physics) as PhysicsSystem).world;
             int entityId = _entityManager.createEntity();
-            _entityManager.addComponent(entityId, new PhysicsComponent(world, data));
+            Body body = null;
+            BodyDef bodyDef = new BodyDef();
+            PolygonShape boxShape = new PolygonShape();
+            FixtureDef boxFixtureDef = new FixtureDef();
+
+            bodyDef.type = (BodyType)Loader.loadEnum(typeof(BodyType), data.Attribute("body_type"), (int)BodyType.Static);
+            bodyDef.position = Loader.loadVector2(data.Attribute("position"), Vector2.Zero);
+            bodyDef.angle = Loader.loadFloat(data.Attribute("angle"), 0f);
+            boxFixtureDef.density = Loader.loadFloat(data.Attribute("density"), 1f);
+            boxFixtureDef.friction = Loader.loadFloat(data.Attribute("friction"), 1f);
+            boxFixtureDef.restitution = Loader.loadFloat(data.Attribute("restitution"), 1f);
+            boxShape.SetAsBox(Loader.loadFloat(data.Attribute("half_width"), 1f), Loader.loadFloat(data.Attribute("half_height"), 1f));
+            boxFixtureDef.shape = boxShape;
+
+            body = world.CreateBody(bodyDef);
+            body.CreateFixture(boxFixtureDef);
+
+            _entityManager.addComponent(entityId, new PhysicsComponent(body));
             _entityManager.addComponent(entityId, createBodyRenderComponent(data));
-            Console.WriteLine("Box created");
         }
 
         public void createCircle(XElement data)
         {
             World world = (_systemManager.getSystem(SystemType.Physics) as PhysicsSystem).world;
             int entityId = _entityManager.createEntity();
-            _entityManager.addComponent(entityId, new PhysicsComponent(world, data));
+            Body body = null;
+            BodyDef bodyDef = new BodyDef();
+            List<FixtureDef> fixtureDefs = new List<FixtureDef>();
+            FixtureDef circleFixtureDef = new FixtureDef();
+            CircleShape circleShape = new CircleShape();
+
+            bodyDef.type = (BodyType)Loader.loadEnum(typeof(BodyType), data.Attribute("body_type"), (int)BodyType.Static);
+            bodyDef.position = Loader.loadVector2(data.Attribute("position"), Vector2.Zero);
+            circleFixtureDef.density = Loader.loadFloat(data.Attribute("density"), 1f);
+            circleFixtureDef.friction = Loader.loadFloat(data.Attribute("friction"), 1f);
+            circleFixtureDef.restitution = Loader.loadFloat(data.Attribute("restitution"), 1f);
+            circleShape._radius = Loader.loadFloat(data.Attribute("radius"), 1f);
+            circleFixtureDef.shape = circleShape;
+            fixtureDefs.Add(circleFixtureDef);
+
+            body = world.CreateBody(bodyDef);
+            body.CreateFixture(circleFixtureDef);
+
+            _entityManager.addComponent(entityId, new PhysicsComponent(body));
             _entityManager.addComponent(entityId, createBodyRenderComponent(data));
-            Console.WriteLine("Circle created");
         }
 
         public void createFluid(XElement data)
@@ -325,16 +358,61 @@ namespace StasisGame
             entityId = _entityManager.createEntity();
             _entityManager.addComponent(entityId, new RopePhysicsComponent(head));
             _entityManager.addComponent(entityId, new RopeRenderComponent());
-            Console.WriteLine("Rope created");
         }
 
         public void createTerrain(XElement data)
         {
             World world = (_systemManager.getSystem(SystemType.Physics) as PhysicsSystem).world;
             int entityId = _entityManager.createEntity();
-            _entityManager.addComponent(entityId, new PhysicsComponent(world, data));
+            BodyDef bodyDef = new BodyDef();
+            List<FixtureDef> fixtureDefs = new List<FixtureDef>();
+            List<Vector2> points = new List<Vector2>();
+            List<PolygonPoint> P2TPoints = new List<PolygonPoint>();
+            Polygon polygon;
+            Vector2 center = Vector2.Zero;
+            Body body = null;
+
+            bodyDef.type = (BodyType)Loader.loadEnum(typeof(BodyType), data.Attribute("body_type"), (int)BodyType.Static);
+
+            foreach (XElement pointData in data.Elements("Point"))
+                points.Add(Loader.loadVector2(pointData, Vector2.Zero));
+
+            foreach (Vector2 point in points)
+                center += point / points.Count;
+
+            foreach (Vector2 point in points)
+                P2TPoints.Add(new PolygonPoint(point.X - center.X, point.Y - center.Y));
+
+            polygon = new Polygon(P2TPoints);
+            P2T.Triangulate(polygon);
+
+            foreach (DelaunayTriangle triangle in polygon.Triangles)
+            {
+                FixtureDef fixtureDef = new FixtureDef();
+                PolygonShape shape = new PolygonShape();
+                Vector2[] vertices = new Vector2[3];
+                TriangulationPoint trianglePoint;
+
+                vertices[0] = new Vector2(triangle.Points[0].Xf, triangle.Points[0].Yf);
+                trianglePoint = triangle.PointCCWFrom(triangle.Points[0]);
+                vertices[1] = new Vector2(trianglePoint.Xf, trianglePoint.Yf);
+                trianglePoint = triangle.PointCCWFrom(trianglePoint);
+                vertices[2] = new Vector2(trianglePoint.Xf, trianglePoint.Yf);
+                shape.Set(vertices, 3);
+                fixtureDef.density = Loader.loadFloat(data.Attribute("density"), 1f);
+                fixtureDef.friction = Loader.loadFloat(data.Attribute("friction"), 1f);
+                fixtureDef.restitution = Loader.loadFloat(data.Attribute("restitution"), 1f);
+                fixtureDef.shape = shape;
+                fixtureDefs.Add(fixtureDef);
+            }
+
+            bodyDef.position = center;
+            body = world.CreateBody(bodyDef);
+            foreach (FixtureDef fixtureDef in fixtureDefs)
+                body.CreateFixture(fixtureDef);
+
+            _entityManager.addComponent(entityId, new PhysicsComponent(body));
             _entityManager.addComponent(entityId, createBodyRenderComponent(data));
-            Console.WriteLine("Terrain created");
         }
 
         public void createTree(XElement data)
