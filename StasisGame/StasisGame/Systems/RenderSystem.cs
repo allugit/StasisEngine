@@ -67,6 +67,7 @@ namespace StasisGame.Systems
             List<int> bodyRenderEntities = _entityManager.getEntitiesPosessing(ComponentType.BodyRender);
             List<int> ropeRenderEntities = _entityManager.getEntitiesPosessing(ComponentType.RopeRender);
             List<int> worldItemRenderEntities = _entityManager.getEntitiesPosessing(ComponentType.WorldItemRender);
+            List<int> characterRenderEntities = _entityManager.getEntitiesPosessing(ComponentType.CharacterRender);
 
             _viewMatrix = Matrix.CreateScale(new Vector3(_scale, -_scale, 1f));
             _projectionMatrix = Matrix.CreateOrthographic(_graphicsDevice.Viewport.Width, _graphicsDevice.Viewport.Height, 0, 1);
@@ -114,6 +115,13 @@ namespace StasisGame.Systems
                 WorldItemRenderComponent renderComponent = (WorldItemRenderComponent)_entityManager.getComponent(worldItemRenderEntities[i], ComponentType.WorldItemRender);
 
                 _spriteBatch.Draw(renderComponent.worldTexture, physicsComponent.body.GetPosition() * _scale + new Vector2(_graphicsDevice.Viewport.Width, _graphicsDevice.Viewport.Height) / 2, renderComponent.worldTexture.Bounds, Color.White, physicsComponent.body.GetAngle(), new Vector2(renderComponent.worldTexture.Width, renderComponent.worldTexture.Height) / 2f, 1f, SpriteEffects.None, 0);
+            }
+
+            for (int i = 0; i < characterRenderEntities.Count; i++)
+            {
+                PhysicsComponent physicsComponent = (PhysicsComponent)_entityManager.getComponent(characterRenderEntities[i], ComponentType.Physics);
+
+                _spriteBatch.Draw(_pixel, physicsComponent.body.GetPosition() * _scale + new Vector2(_graphicsDevice.Viewport.Width, _graphicsDevice.Viewport.Height) / 2, new Rectangle(0, 0, 12, 24), Color.White, 0, new Vector2(6, 12), 1f, SpriteEffects.None, 0);
             }
         }
     }

@@ -10,7 +10,8 @@ namespace StasisGame.Systems
         Render,
         Input,
         Physics,
-        Fluid
+        Fluid,
+        Player
     };
 
     public interface ISystem

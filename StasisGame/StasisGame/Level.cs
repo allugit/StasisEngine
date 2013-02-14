@@ -32,6 +32,7 @@ namespace StasisGame
             }
 
             // Create systems
+            _systemManager.add(new InputSystem(_systemManager, _entityManager));
             _systemManager.add(new PhysicsSystem(_systemManager, _entityManager, data));
             _renderSystem = new RenderSystem(_game, _systemManager, _entityManager);
             _systemManager.add(_renderSystem);
@@ -64,6 +65,8 @@ namespace StasisGame
                         break;
 
                     case "PlayerSpawn":
+                        _systemManager.add(new PlayerSystem(_systemManager, _entityManager));
+                        _entityManager.factory.createPlayer(actorData);
                         break;
 
                     case "Rope":

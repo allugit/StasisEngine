@@ -78,7 +78,9 @@
     <Reference Include="System.Net" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Components\CharacterRenderComponent.cs" />
     <Compile Include="Components\IComponent.cs" />
+    <Compile Include="Components\InputComponent.cs" />
     <Compile Include="Components\ItemComponent.cs" />
     <Compile Include="Components\WorldItemRenderComponent.cs" />
     <Compile Include="Components\Particle.cs" />
@@ -95,7 +97,9 @@
     <Compile Include="Program.cs" />
     <Compile Include="LoderGame.cs" />
     <Compile Include="Systems\FluidSystem.cs" />
+    <Compile Include="Systems\InputSystem.cs" />
     <Compile Include="Systems\ISystem.cs" />
+    <Compile Include="Systems\PlayerSystem.cs" />
     <Compile Include="Systems\RenderSystem.cs" />
     <Compile Include="Systems\PhysicsSystem.cs" />
     <Compile Include="Systems\SystemNode.cs" />

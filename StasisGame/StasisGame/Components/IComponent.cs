@@ -9,7 +9,9 @@ namespace StasisGame.Components
         RopePhysics,
         RopeRender,
         WorldItemRender,
-        Item
+        Item,
+        Input,
+        CharacterRender
     };
 
     public interface IComponent

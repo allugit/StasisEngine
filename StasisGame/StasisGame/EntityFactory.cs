@@ -423,7 +423,7 @@ namespace StasisGame
                 shape.Set(vertices, 3);
                 fixtureDef.density = Loader.loadFloat(data.Attribute("density"), 1f);
                 fixtureDef.friction = Loader.loadFloat(data.Attribute("friction"), 1f);
-                fixtureDef.restitution = Loader.loadFloat(data.Attribute("restitution"), 1f);
+                fixtureDef.restitution = Loader.loadFloat(data.Attribute("restitution"), 0f);
                 fixtureDef.shape = shape;
                 fixtureDefs.Add(fixtureDef);
             }
@@ -439,6 +439,44 @@ namespace StasisGame
 
         public void createTree(XElement data)
         {
+        }
+
+        public void createPlayer(XElement data)
+        {
+            World world = (_systemManager.getSystem(SystemType.Physics) as PhysicsSystem).world;
+            int entityId = _entityManager.createEntity();
+            Vector2 position = Loader.loadVector2(data.Attribute("position"), Vector2.Zero);
+            Body body;
+            BodyDef bodyDef = new BodyDef();
+            PolygonShape bodyShape = new PolygonShape();
+            FixtureDef bodyFixtureDef = new FixtureDef();
+            CircleShape feetShape = new CircleShape();
+            FixtureDef feetFixtureDef = new FixtureDef();
+
+            bodyDef.bullet = true;
+            bodyDef.fixedRotation = true;
+            bodyDef.position = position;
+            bodyDef.type = BodyType.Dynamic;
+            bodyShape.SetAsBox(0.2f, 0.3f);
+            bodyFixtureDef.density = 1f;
+            bodyFixtureDef.friction = 0f;
+            bodyFixtureDef.restitution = 0f;
+            bodyFixtureDef.shape = bodyShape;
+
+            feetShape._radius = 0.25f;
+            feetShape._p = new Vector2(0, 0.3f);
+            feetFixtureDef.density = 0.1f;
+            feetFixtureDef.friction = 0.5f;
+            feetFixtureDef.shape = feetShape;
+
+            body = world.CreateBody(bodyDef);
+            body.CreateFixture(bodyFixtureDef);
+            body.CreateFixture(feetFixtureDef);
+
+            _entityManager.addComponent(entityId, new PhysicsComponent(body));
+            _entityManager.addComponent(entityId, new InputComponent());
+            _entityManager.addComponent(entityId, new CharacterRenderComponent());
+            (_systemManager.getSystem(SystemType.Player) as PlayerSystem).playerId = entityId;
         }
     }
 }
