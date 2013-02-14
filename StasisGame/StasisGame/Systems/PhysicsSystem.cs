@@ -9,7 +9,7 @@ using StasisGame.Components;
 
 namespace StasisGame.Systems
 {
-    public class PhysicsSystem : ISystem
+    public class PhysicsSystem : ISystem, IContactListener
     {
         private SystemManager _systemManager;
         private EntityManager _entityManager;
@@ -32,6 +32,22 @@ namespace StasisGame.Systems
         public void update()
         {
             _world.Step(_dt, 12, 8);
+        }
+
+        public void PreSolve(Contact contact, ref Manifold manifold)
+        {
+        }
+
+        public void PostSolve(Contact contact, ref ContactImpulse impulse)
+        {
+        }
+
+        public void BeginContact(Contact contact)
+        {
+        }
+
+        public void EndContact(Contact contact)
+        {
         }
     }
 }
