@@ -27,6 +27,7 @@ namespace StasisGame.Systems
 
             // Create world
             _world = new World(Loader.loadVector2(data.Attribute("gravity"), new Vector2(0, 32)), true);
+            _world.ContactListener = this;
         }
 
         public void update()
@@ -40,6 +41,18 @@ namespace StasisGame.Systems
 
         public void PostSolve(Contact contact, ref ContactImpulse impulse)
         {
+            List<int> characterEntities = _entityManager.getEntitiesPosessing(ComponentType.CharacterMovement);
+            int entityAId = (int)contact.GetFixtureA().GetBody().GetUserData();
+            int entityBId = (int)contact.GetFixtureB().GetBody().GetUserData();
+            WorldManifold worldManifold;
+            CharacterMovementComponent characterMovementComponent = null;
+
+            characterMovementComponent = (_entityManager.getComponent(entityAId, ComponentType.CharacterMovement) ?? _entityManager.getComponent(entityBId, ComponentType.CharacterMovement)) as CharacterMovementComponent;
+            if (characterMovementComponent != null)
+            {
+			    contact.GetWorldManifold(out worldManifold);
+                characterMovementComponent.movementNormals.Add(worldManifold._normal);
+            }
         }
 
         public void BeginContact(Contact contact)

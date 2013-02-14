@@ -11,7 +11,9 @@ namespace StasisGame.Components
         WorldItemRender,
         Item,
         Input,
-        CharacterRender
+        CharacterRender,
+        Player,
+        CharacterMovement
     };
 
     public interface IComponent

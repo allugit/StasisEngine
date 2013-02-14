@@ -65,6 +65,10 @@ namespace StasisGame
                         break;
 
                     case "PlayerSpawn":
+                        if (_systemManager.getSystem(SystemType.CharacterMovement) == null)
+                        {
+                            _systemManager.add(new CharacterMovementSystem(_systemManager, _entityManager));
+                        }
                         _systemManager.add(new PlayerSystem(_systemManager, _entityManager));
                         _entityManager.factory.createPlayer(actorData);
                         break;

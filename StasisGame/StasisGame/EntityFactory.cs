@@ -176,6 +176,7 @@ namespace StasisGame
             bodyDef.type = (BodyType)Loader.loadEnum(typeof(BodyType), data.Attribute("body_type"), (int)BodyType.Static);
             bodyDef.position = Loader.loadVector2(data.Attribute("position"), Vector2.Zero);
             bodyDef.angle = Loader.loadFloat(data.Attribute("angle"), 0f);
+            bodyDef.userData = entityId;
             boxFixtureDef.density = Loader.loadFloat(data.Attribute("density"), 1f);
             boxFixtureDef.friction = Loader.loadFloat(data.Attribute("friction"), 1f);
             boxFixtureDef.restitution = Loader.loadFloat(data.Attribute("restitution"), 1f);
@@ -200,6 +201,7 @@ namespace StasisGame
 
             bodyDef.type = (BodyType)Loader.loadEnum(typeof(BodyType), data.Attribute("body_type"), (int)BodyType.Static);
             bodyDef.position = Loader.loadVector2(data.Attribute("position"), Vector2.Zero);
+            bodyDef.userData = entityId;
             circleFixtureDef.density = Loader.loadFloat(data.Attribute("density"), 1f);
             circleFixtureDef.friction = Loader.loadFloat(data.Attribute("friction"), 1f);
             circleFixtureDef.restitution = Loader.loadFloat(data.Attribute("restitution"), 1f);
@@ -237,6 +239,7 @@ namespace StasisGame
             bodyDef.type = (BodyType)Loader.loadEnum(typeof(BodyType), data.Attribute("body_type"), (int)BodyType.Dynamic);
             bodyDef.position = Loader.loadVector2(data.Attribute("position"), Vector2.Zero);
             bodyDef.angle = Loader.loadFloat(data.Attribute("angle"), 0f);
+            bodyDef.userData = entityId;
             fixtureDef.density = Loader.loadFloat(data.Attribute("density"), 1f);
             fixtureDef.friction = Loader.loadFloat(data.Attribute("friction"), 1f);
             fixtureDef.restitution = Loader.loadFloat(data.Attribute("restitution"), 0f);
@@ -380,6 +383,13 @@ namespace StasisGame
             entityId = _entityManager.createEntity();
             _entityManager.addComponent(entityId, new RopePhysicsComponent(head));
             _entityManager.addComponent(entityId, new RopeRenderComponent());
+
+            RopeNode current = head;
+            while (current != null)
+            {
+                current.body.SetUserData(entityId);
+                current = current.next;
+            }
         }
 
         public void createTerrain(XElement data)
@@ -395,6 +405,7 @@ namespace StasisGame
             Body body = null;
 
             bodyDef.type = (BodyType)Loader.loadEnum(typeof(BodyType), data.Attribute("body_type"), (int)BodyType.Static);
+            bodyDef.userData = entityId;
 
             foreach (XElement pointData in data.Elements("Point"))
                 points.Add(Loader.loadVector2(pointData, Vector2.Zero));
@@ -457,6 +468,7 @@ namespace StasisGame
             bodyDef.fixedRotation = true;
             bodyDef.position = position;
             bodyDef.type = BodyType.Dynamic;
+            bodyDef.userData = entityId;
             bodyShape.SetAsBox(0.2f, 0.3f);
             bodyFixtureDef.density = 1f;
             bodyFixtureDef.friction = 0f;
@@ -475,6 +487,7 @@ namespace StasisGame
 
             _entityManager.addComponent(entityId, new PhysicsComponent(body));
             _entityManager.addComponent(entityId, new InputComponent());
+            _entityManager.addComponent(entityId, new CharacterMovementComponent());
             _entityManager.addComponent(entityId, new CharacterRenderComponent());
             (_systemManager.getSystem(SystemType.Player) as PlayerSystem).playerId = entityId;
         }

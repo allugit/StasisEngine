@@ -5,6 +5,7 @@ namespace StasisCore
     public class StasisMathHelper
     {
         public static float phi = (1f + (float)Math.Sqrt(5)) / 2;
+        public static float halfPi = (float)(Math.PI / 2);
         public static float pi = (float)Math.PI;
         public static float pi2 = (float)(Math.PI * 2);
 
