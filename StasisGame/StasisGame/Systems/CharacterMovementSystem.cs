@@ -36,7 +36,7 @@ namespace StasisGame.Systems
                 Body body = physicsComponent.body;
                 Vector2 averageNormal = Vector2.Zero;
                 float modifier = 1;
-                bool applyForce = true;
+                bool applyForce = characterMovementComponent.walkLeft || characterMovementComponent.walkRight;
                 Vector2 characterVelocity = physicsComponent.body.GetLinearVelocity();
                 float characterSpeed = characterVelocity.Length();
                 float characterHorizontalSpeed = Math.Abs(characterVelocity.X);
@@ -54,7 +54,7 @@ namespace StasisGame.Systems
                     //    modifier = 2;
 
                     // Apply movement force
-                    if (applyForce && (characterMovementComponent.walkLeft || characterMovementComponent.walkRight))
+                    if (applyForce)
                     {
                         Vector2 movement = new Vector2((float)Math.Cos(characterMovementComponent.movementAngle), (float)Math.Sin(characterMovementComponent.movementAngle));
                         movement *= characterMovementComponent.walkLeft ? -1 : 1;
@@ -76,24 +76,24 @@ namespace StasisGame.Systems
                 }
                 else
                 {
+                    float airWalkForce = (characterMovementComponent.walkLeft ? -WALK_FORCE : WALK_FORCE) / 4;
 
-                    /*
-                    // Left
-                    if (Main.newKey.IsKeyDown(Keys.A) || Main.newKey.IsKeyDown(Keys.Left))
+                    // Check speed limit
+                    if (Math.Abs(body.GetLinearVelocity().X) > MAX_WALK_SPEED / 2)
                     {
-                        if (grabbing)
-                            swing(-WALK_FORCE);
-                        else
-                            airWalk(-WALK_FORCE);
+                        if (body.GetLinearVelocity().X < -MAX_WALK_SPEED / 2 && airWalkForce < 0)
+                            applyForce = false;
+                        else if (body.GetLinearVelocity().X > MAX_WALK_SPEED / 2 && airWalkForce > 0)
+                            applyForce = false;
                     }
-                    // Right
-                    if (Main.newKey.IsKeyDown(Keys.D) || Main.newKey.IsKeyDown(Keys.Right))
+
+                    // Apply movement force
+                    if (applyForce)
                     {
-                        if (grabbing)
-                            swing(WALK_FORCE);
-                        else
-                            airWalk(WALK_FORCE);
-                    }*/
+                        Vector2 movement = new Vector2((float)Math.Cos(characterMovementComponent.movementAngle), (float)Math.Sin(characterMovementComponent.movementAngle));
+                        movement *= airWalkForce;
+                        body.ApplyForce(movement, body.GetPosition());
+                    }
                 }
 
                 // Jump
