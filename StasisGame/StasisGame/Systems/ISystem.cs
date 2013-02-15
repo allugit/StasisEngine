@@ -12,7 +12,8 @@ namespace StasisGame.Systems
         Physics,
         Fluid,
         Player,
-        CharacterMovement
+        CharacterMovement,
+        Camera
     };
 
     public interface ISystem

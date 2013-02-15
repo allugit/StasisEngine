@@ -13,7 +13,8 @@ namespace StasisGame.Components
         Input,
         CharacterRender,
         Player,
-        CharacterMovement
+        CharacterMovement,
+        BodyFocusPoint
     };
 
     public interface IComponent
