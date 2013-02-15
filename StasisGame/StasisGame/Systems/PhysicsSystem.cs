@@ -51,7 +51,7 @@ namespace StasisGame.Systems
             if (characterMovementComponent != null)
             {
 			    contact.GetWorldManifold(out worldManifold);
-                characterMovementComponent.movementNormals.Add(worldManifold._normal);
+                characterMovementComponent.collisionNormals.Add(worldManifold._normal);
             }
         }
 

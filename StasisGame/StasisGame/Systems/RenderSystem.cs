@@ -68,6 +68,7 @@ namespace StasisGame.Systems
             List<int> ropeRenderEntities = _entityManager.getEntitiesPosessing(ComponentType.RopeRender);
             List<int> worldItemRenderEntities = _entityManager.getEntitiesPosessing(ComponentType.WorldItemRender);
             List<int> characterRenderEntities = _entityManager.getEntitiesPosessing(ComponentType.CharacterRender);
+            List<int> characterMovementEntities = _entityManager.getEntitiesPosessing(ComponentType.CharacterMovement);
 
             _viewMatrix = Matrix.CreateScale(new Vector3(_scale, -_scale, 1f));
             _projectionMatrix = Matrix.CreateOrthographic(_graphicsDevice.Viewport.Width, _graphicsDevice.Viewport.Height, 0, 1);
@@ -122,6 +123,17 @@ namespace StasisGame.Systems
                 PhysicsComponent physicsComponent = (PhysicsComponent)_entityManager.getComponent(characterRenderEntities[i], ComponentType.Physics);
 
                 _spriteBatch.Draw(_pixel, physicsComponent.body.GetPosition() * _scale + new Vector2(_graphicsDevice.Viewport.Width, _graphicsDevice.Viewport.Height) / 2, new Rectangle(0, 0, 12, 24), Color.White, 0, new Vector2(6, 12), 1f, SpriteEffects.None, 0);
+            }
+
+            for (int i = 0; i < characterMovementEntities.Count; i++)
+            {
+                PhysicsComponent physicsComponent = (PhysicsComponent)_entityManager.getComponent(characterMovementEntities[i], ComponentType.Physics);
+                CharacterMovementComponent characterMovementComponent = (CharacterMovementComponent)_entityManager.getComponent(characterMovementEntities[i], ComponentType.CharacterMovement);
+                Vector2 movementNormal = characterMovementComponent.movementNormal;
+                Rectangle source = new Rectangle(0, 0, (int)(movementNormal.Length() * _scale), 2);
+                float angle = characterMovementComponent.movementAngle;
+
+                _spriteBatch.Draw(_pixel, physicsComponent.body.GetPosition() * _scale + new Vector2(_graphicsDevice.Viewport.Width, _graphicsDevice.Viewport.Height) / 2, source, Color.Yellow, angle, new Vector2(0, 1), 1f, SpriteEffects.None, 0);
             }
         }
     }
