@@ -93,6 +93,7 @@
     <Compile Include="Components\RopePhysicsComponent.cs" />
     <Compile Include="Components\RopeRenderComponent.cs" />
     <Compile Include="Level.cs" />
+    <Compile Include="MainMenu.cs" />
     <Compile Include="Managers\EntityManager.cs" />
     <Compile Include="Managers\SystemManager.cs" />
     <Compile Include="EntityFactory.cs" />

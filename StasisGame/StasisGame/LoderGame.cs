@@ -30,6 +30,7 @@ namespace StasisGame
         private SpriteFont _arial;
         private GameState _gameState;
         private Level _level;
+        private MainMenu _mainMenu;
 
         public SpriteBatch spriteBatch { get { return _spriteBatch; } }
 
@@ -39,6 +40,7 @@ namespace StasisGame
             _graphics = new GraphicsDeviceManager(this);
             Content.RootDirectory = "Content";
             IsMouseVisible = true;
+            Window.Title = "Loder's Fall";
             _gameState = GameState.Intro;
         }
 
@@ -100,6 +102,15 @@ namespace StasisGame
         {
             switch (_gameState)
             {
+                case GameState.Intro:
+                    _gameState = GameState.MainMenu;
+                    _mainMenu = new MainMenu(this);
+                    break;
+
+                case GameState.MainMenu:
+                    _mainMenu.update(gameTime);
+                    break;
+
                 case GameState.Level:
                     _level.update(gameTime);
                     break;
@@ -115,8 +126,16 @@ namespace StasisGame
             _spriteBatch.Begin();
             _spriteBatch.DrawString(_arial, _argsDebug, new Vector2(16, 16), Color.White);
 
-            if (_level != null)
-                _level.draw(gameTime);
+            switch (_gameState)
+            {
+                case GameState.MainMenu:
+                    _mainMenu.draw(gameTime);
+                    break;
+
+                case GameState.Level:
+                    _level.draw(gameTime);
+                    break;
+            }
 
             _spriteBatch.End();
 
