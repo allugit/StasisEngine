@@ -1,5 +1,7 @@
 using System;
+using System.IO;
 using System.Collections.Generic;
+using System.Xml.Linq;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Audio;
 using Microsoft.Xna.Framework.Content;
@@ -8,6 +10,7 @@ using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 using Microsoft.Xna.Framework.Media;
 using StasisCore.Controllers;
+using StasisCore;
 
 namespace StasisGame
 {
@@ -46,9 +49,46 @@ namespace StasisGame
 
         protected override void Initialize()
         {
+            loadGameSettings();
+
             base.Initialize();
 
             handleArgs();
+        }
+
+        private void loadGameSettings()
+        {
+            string appDataDirectory = Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData);
+            string gameConfigDirectory = appDataDirectory + "\\LoderGame";
+            string gameConfigFile = gameConfigDirectory + "\\settings.xml";
+            XDocument settingsDocument = null;
+            XElement gameSettings = null;
+            int screenWidth;
+            int screenHeight;
+            bool fullscreen;
+
+            if (!Directory.Exists(gameConfigDirectory))
+                Directory.CreateDirectory(gameConfigDirectory);
+            if (File.Exists(gameConfigFile))
+            {
+                settingsDocument = XDocument.Load(gameConfigFile);
+                gameSettings = settingsDocument.Element("Settings");
+            }
+            else
+            {
+                settingsDocument = new XDocument(new XElement("Settings"));
+                settingsDocument.Save(gameConfigFile);
+                gameSettings = settingsDocument.Element("Settings");
+            }
+
+            screenWidth = Loader.loadInt(gameSettings.Element("ScreenWidth"), 1280);
+            screenHeight = Loader.loadInt(gameSettings.Element("ScreenHeight"), 768);
+            fullscreen = Loader.loadBool(gameSettings.Element("Fullscreen"), false);
+
+            _graphics.PreferredBackBufferWidth = screenWidth;
+            _graphics.PreferredBackBufferHeight = screenHeight;
+            _graphics.IsFullScreen = fullscreen;
+            _graphics.ApplyChanges();
         }
 
         protected override void LoadContent()
