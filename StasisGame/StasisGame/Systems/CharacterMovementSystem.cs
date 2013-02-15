@@ -11,8 +11,8 @@ namespace StasisGame.Systems
     public class CharacterMovementSystem : ISystem
     {
         public const float MAX_WALK_SPEED = 7;
-        public const float WALK_FORCE = 14;
-        public const float JUMP_FORCE = 12;
+        public const float WALK_FORCE = 12;
+        public const float JUMP_FORCE = 10.5f;
         private SystemManager _systemManager;
         private EntityManager _entityManager;
 
@@ -61,8 +61,6 @@ namespace StasisGame.Systems
                         movement *= WALK_FORCE * modifier;
                         body.ApplyForce(movement, body.GetPosition());
                     }
-                    //else if (applyForce && dir == Direction.RIGHT && allowRightMovement)
-                    //    body.ApplyForce(new Vector2(getGroundAngleX() * WALK_FORCE * modifier, getGroundAngleY() * WALK_FORCE * modifier), body.GetPosition());
 
                     // Fake friction when not moving
                     if ((body.GetLinearVelocity().X > 0 && characterMovementComponent.walkLeft) ||
@@ -71,7 +69,7 @@ namespace StasisGame.Systems
                     {
                         // All conditions necessary for damping have been met
                         if (Math.Abs(body.GetLinearVelocity().Y) < 1 || Math.Abs(body.GetLinearVelocity().Length()) < 10)
-                            body.ApplyForce(new Vector2(-body.GetLinearVelocity().X * 10, 0), body.GetPosition());
+                            body.ApplyForce(new Vector2(-body.GetLinearVelocity().X * 10, -body.GetLinearVelocity().Y * 5), body.GetPosition());
                     }
                 }
                 else
@@ -97,8 +95,15 @@ namespace StasisGame.Systems
                 }
 
                 // Jump
-                //if (Main.newKey.IsKeyDown(Keys.Space))
-                //    attemptJump();
+                if (characterMovementComponent.jump && ! characterMovementComponent.alreadyJumped)
+                {
+                    if (characterMovementComponent.onSurface)
+                    {
+                        characterMovementComponent.alreadyJumped = true;
+                        //body.ApplyLinearImpulse(new Vector2(0, -JUMP_FORCE), body.GetPosition());
+                        body.SetLinearVelocity(new Vector2(body.GetLinearVelocity().X, -JUMP_FORCE));
+                    }
+                }
 
                 characterMovementComponent.collisionNormals.Clear();
             }

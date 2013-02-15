@@ -14,6 +14,9 @@ namespace StasisGame.Components
         private bool _walkLeft;
         private bool _walkRight;
         private Fixture _feetFixture;
+        private bool _jump;
+        private bool _alreadyJumped;
+        private bool _allowJumpResetOnCollision;
 
         public ComponentType componentType { get { return ComponentType.CharacterMovement; } }
         public float movementAngle { get { return _movementAngle; } }
@@ -23,6 +26,9 @@ namespace StasisGame.Components
         public bool walkRight { get { return _walkRight; } set { _walkRight = value; } }
         public bool onSurface { get { return _collisionNormals.Count > 0; } }
         public Fixture feetFixture { get { return _feetFixture; } }
+        public bool jump { get { return _jump; } set { _jump = value; } }
+        public bool alreadyJumped { get { return _alreadyJumped; } set { _alreadyJumped = value; } }
+        public bool allowJumpResetOnCollision { get { return _allowJumpResetOnCollision; } set { _allowJumpResetOnCollision = value; } }
 
         public CharacterMovementComponent(Fixture feetFixture)
         {

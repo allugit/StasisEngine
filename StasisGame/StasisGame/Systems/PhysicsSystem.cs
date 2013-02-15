@@ -32,6 +32,17 @@ namespace StasisGame.Systems
 
         public void update()
         {
+            List<CharacterMovementComponent> movementComponents = _entityManager.getComponents<CharacterMovementComponent>(ComponentType.CharacterMovement);
+
+            for (int i = 0; i < movementComponents.Count; i++)
+            {
+                CharacterMovementComponent movementComponent = movementComponents[i];
+                if (!movementComponent.onSurface)
+                {
+                    movementComponent.allowJumpResetOnCollision = true;
+                }
+            }
+
             _world.Step(_dt, 12, 8);
         }
 
@@ -54,6 +65,8 @@ namespace StasisGame.Systems
                 {
                     contact.GetWorldManifold(out worldManifold);
                     characterMovementComponent.collisionNormals.Add(worldManifold._normal);
+                    if (characterMovementComponent.allowJumpResetOnCollision)
+                        characterMovementComponent.alreadyJumped = false;
                 }
             }
         }

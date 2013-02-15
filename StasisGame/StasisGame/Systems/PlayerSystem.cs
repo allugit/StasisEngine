@@ -30,6 +30,7 @@ namespace StasisGame.Systems
 
             characterMovementComponent.walkLeft = inputComponent.newKeyState.IsKeyDown(Keys.A) || inputComponent.newKeyState.IsKeyDown(Keys.Left);
             characterMovementComponent.walkRight = inputComponent.newKeyState.IsKeyDown(Keys.D) || inputComponent.newKeyState.IsKeyDown(Keys.Right);
+            characterMovementComponent.jump = inputComponent.newKeyState.IsKeyDown(Keys.Space);
         }
     }
 }
