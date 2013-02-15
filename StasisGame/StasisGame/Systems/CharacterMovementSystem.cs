@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Input;
+using Box2D.XNA;
 using StasisGame.Managers;
 using StasisGame.Components;
 
@@ -32,42 +33,72 @@ namespace StasisGame.Systems
             {
                 PhysicsComponent physicsComponent = (PhysicsComponent)_entityManager.getComponent(characterEntities[i], ComponentType.Physics);
                 CharacterMovementComponent characterMovementComponent = (CharacterMovementComponent)_entityManager.getComponent(characterEntities[i], ComponentType.CharacterMovement);
+                Body body = physicsComponent.body;
                 Vector2 averageNormal = Vector2.Zero;
-                float walkForce = 0;
                 float modifier = 1;
-                bool movingOppositeFromWalkDirection = false;
+                bool applyForce = true;
                 Vector2 characterVelocity = physicsComponent.body.GetLinearVelocity();
                 float characterSpeed = characterVelocity.Length();
                 float characterHorizontalSpeed = Math.Abs(characterVelocity.X);
 
-                if (characterHorizontalSpeed > 0.1f)
-                {
-                    movingOppositeFromWalkDirection =
-                        (characterMovementComponent.walkLeft && characterVelocity.X > 0) ||
-                        (characterMovementComponent.walkRight && characterVelocity.X < 0);
-                }
-
                 characterMovementComponent.calculateMovementAngle();
 
-                if (characterMovementComponent.walkLeft)
-                    walkForce = -WALK_FORCE;
-                else if (characterMovementComponent.walkRight)
-                    walkForce = WALK_FORCE;
+                if (characterMovementComponent.onSurface)
+                {
+                    // Check speed limit
+                    if (Math.Abs(body.GetLinearVelocity().Length()) > MAX_WALK_SPEED)
+                        applyForce = false;
 
-                if ((characterMovementComponent.walkLeft || characterMovementComponent.walkRight) && characterHorizontalSpeed < MAX_WALK_SPEED)
-                {
-                    Vector2 force = new Vector2((float)Math.Cos(characterMovementComponent.movementAngle), (float)Math.Sin(characterMovementComponent.movementAngle)) * walkForce * modifier;
-                    physicsComponent.body.ApplyForce(force, physicsComponent.body.GetPosition());
-                }
-                else if (!(characterMovementComponent.walkLeft || characterMovementComponent.walkRight) || movingOppositeFromWalkDirection)
-                {
-                    if (characterMovementComponent.onSurface)
+                    // Pull harder if grabbing
+                    //if (grabbing)
+                    //    modifier = 2;
+
+                    // Apply movement force
+                    if (applyForce && (characterMovementComponent.walkLeft || characterMovementComponent.walkRight))
                     {
-                        //Vector2 antiForce = new Vector2(-physicsComponent.body.GetLinearVelocity().X * 10, 0);
-                        Vector2 antiForce = -characterVelocity * 10;
-                        physicsComponent.body.ApplyForce(antiForce, physicsComponent.body.GetPosition());
+                        Vector2 movement = new Vector2((float)Math.Cos(characterMovementComponent.movementAngle), (float)Math.Sin(characterMovementComponent.movementAngle));
+                        movement *= characterMovementComponent.walkLeft ? -1 : 1;
+                        movement *= WALK_FORCE * modifier;
+                        body.ApplyForce(movement, body.GetPosition());
+                    }
+                    //else if (applyForce && dir == Direction.RIGHT && allowRightMovement)
+                    //    body.ApplyForce(new Vector2(getGroundAngleX() * WALK_FORCE * modifier, getGroundAngleY() * WALK_FORCE * modifier), body.GetPosition());
+
+                    // Fake friction when not moving
+                    if ((body.GetLinearVelocity().X > 0 && characterMovementComponent.walkLeft) ||
+                        (body.GetLinearVelocity().X < 0 && characterMovementComponent.walkRight) ||
+                        (!characterMovementComponent.walkLeft && !characterMovementComponent.walkRight))
+                    {
+                        // All conditions necessary for damping have been met
+                        if (Math.Abs(body.GetLinearVelocity().Y) < 1 || Math.Abs(body.GetLinearVelocity().Length()) < 10)
+                            body.ApplyForce(new Vector2(-body.GetLinearVelocity().X * 10, 0), body.GetPosition());
                     }
                 }
+                else
+                {
+
+                    /*
+                    // Left
+                    if (Main.newKey.IsKeyDown(Keys.A) || Main.newKey.IsKeyDown(Keys.Left))
+                    {
+                        if (grabbing)
+                            swing(-WALK_FORCE);
+                        else
+                            airWalk(-WALK_FORCE);
+                    }
+                    // Right
+                    if (Main.newKey.IsKeyDown(Keys.D) || Main.newKey.IsKeyDown(Keys.Right))
+                    {
+                        if (grabbing)
+                            swing(WALK_FORCE);
+                        else
+                            airWalk(WALK_FORCE);
+                    }*/
+                }
+
+                // Jump
+                //if (Main.newKey.IsKeyDown(Keys.Space))
+                //    attemptJump();
 
                 characterMovementComponent.collisionNormals.Clear();
             }
