@@ -10,7 +10,7 @@ namespace StasisGame.Systems
     public class CharacterMovementSystem : ISystem
     {
         public const float MAX_WALK_SPEED = 7;
-        public const float WALK_FORCE = 20;
+        public const float WALK_FORCE = 14;
         public const float JUMP_FORCE = 12;
         private SystemManager _systemManager;
         private EntityManager _entityManager;

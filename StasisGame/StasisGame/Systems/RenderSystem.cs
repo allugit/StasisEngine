@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Content;
+using Box2D.XNA;
 using StasisCore;
 using StasisCore.Models;
 using StasisGame.Managers;
@@ -10,6 +11,8 @@ using StasisGame.Components;
 
 namespace StasisGame.Systems
 {
+    using Settings = StasisCore.Settings;
+
     public class RenderSystem : ISystem
     {
         private LoderGame _game;
@@ -121,8 +124,13 @@ namespace StasisGame.Systems
             for (int i = 0; i < characterRenderEntities.Count; i++)
             {
                 PhysicsComponent physicsComponent = (PhysicsComponent)_entityManager.getComponent(characterRenderEntities[i], ComponentType.Physics);
+                PolygonShape bodyShape = physicsComponent.body.GetFixtureList().GetNext().GetShape() as PolygonShape;
+                float shapeWidth = bodyShape._vertices[2].X - bodyShape._vertices[0].X;
+                float shapeHeight = bodyShape._vertices[3].Y - bodyShape._vertices[0].Y;
+                Rectangle source = new Rectangle(0, 0, (int)(shapeWidth * _scale), (int)(shapeHeight * _scale));
+                Vector2 origin = new Vector2(source.Width / 2f, source.Height / 2f);
 
-                _spriteBatch.Draw(_pixel, physicsComponent.body.GetPosition() * _scale + new Vector2(_graphicsDevice.Viewport.Width, _graphicsDevice.Viewport.Height) / 2, new Rectangle(0, 0, 12, 24), Color.White, 0, new Vector2(6, 12), 1f, SpriteEffects.None, 0);
+                _spriteBatch.Draw(_pixel, physicsComponent.body.GetPosition() * _scale + new Vector2(_graphicsDevice.Viewport.Width, _graphicsDevice.Viewport.Height) / 2, source, Color.White, 0, origin, 1f, SpriteEffects.None, 0);
             }
 
             for (int i = 0; i < characterMovementEntities.Count; i++)

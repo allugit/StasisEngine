@@ -50,8 +50,11 @@ namespace StasisGame.Systems
             characterMovementComponent = (_entityManager.getComponent(entityAId, ComponentType.CharacterMovement) ?? _entityManager.getComponent(entityBId, ComponentType.CharacterMovement)) as CharacterMovementComponent;
             if (characterMovementComponent != null)
             {
-			    contact.GetWorldManifold(out worldManifold);
-                characterMovementComponent.collisionNormals.Add(worldManifold._normal);
+                if (contact.GetFixtureA() == characterMovementComponent.feetFixture || contact.GetFixtureB() == characterMovementComponent.feetFixture)
+                {
+                    contact.GetWorldManifold(out worldManifold);
+                    characterMovementComponent.collisionNormals.Add(worldManifold._normal);
+                }
             }
         }
 

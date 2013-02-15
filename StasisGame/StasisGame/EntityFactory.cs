@@ -463,31 +463,32 @@ namespace StasisGame
             FixtureDef bodyFixtureDef = new FixtureDef();
             CircleShape feetShape = new CircleShape();
             FixtureDef feetFixtureDef = new FixtureDef();
+            Fixture feetFixture;
 
             bodyDef.bullet = true;
             bodyDef.fixedRotation = true;
             bodyDef.position = position;
             bodyDef.type = BodyType.Dynamic;
             bodyDef.userData = entityId;
-            bodyShape.SetAsBox(0.2f, 0.3f);
+            bodyShape.SetAsBox(0.15f, 0.25f);
             bodyFixtureDef.density = 1f;
             bodyFixtureDef.friction = 0f;
             bodyFixtureDef.restitution = 0f;
             bodyFixtureDef.shape = bodyShape;
 
-            feetShape._radius = 0.25f;
-            feetShape._p = new Vector2(0, 0.3f);
+            feetShape._radius = 0.15f;
+            feetShape._p = new Vector2(0, 0.25f);
             feetFixtureDef.density = 0.1f;
             feetFixtureDef.friction = 0.5f;
             feetFixtureDef.shape = feetShape;
 
             body = world.CreateBody(bodyDef);
             body.CreateFixture(bodyFixtureDef);
-            body.CreateFixture(feetFixtureDef);
+            feetFixture = body.CreateFixture(feetFixtureDef);
 
             _entityManager.addComponent(entityId, new PhysicsComponent(body));
             _entityManager.addComponent(entityId, new InputComponent());
-            _entityManager.addComponent(entityId, new CharacterMovementComponent());
+            _entityManager.addComponent(entityId, new CharacterMovementComponent(feetFixture));
             _entityManager.addComponent(entityId, new CharacterRenderComponent());
             (_systemManager.getSystem(SystemType.Player) as PlayerSystem).playerId = entityId;
         }
