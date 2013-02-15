@@ -36,7 +36,9 @@ namespace StasisGame.Systems
                 Body body = physicsComponent.body;
                 Vector2 averageNormal = Vector2.Zero;
                 float modifier = 1;
-                bool applyForce = characterMovementComponent.walkLeft || characterMovementComponent.walkRight;
+                bool applyForce =
+                    (characterMovementComponent.walkLeft && characterMovementComponent.allowLeftMovement) ||
+                    (characterMovementComponent.walkRight && characterMovementComponent.allowRightMovement);
                 Vector2 characterVelocity = physicsComponent.body.GetLinearVelocity();
                 float characterSpeed = characterVelocity.Length();
                 float characterHorizontalSpeed = Math.Abs(characterVelocity.X);
@@ -95,7 +97,8 @@ namespace StasisGame.Systems
                 }
 
                 // Jump
-                if (characterMovementComponent.jump && ! characterMovementComponent.alreadyJumped)
+                if (characterMovementComponent.jump && ! characterMovementComponent.alreadyJumped && 
+                    (characterMovementComponent.allowLeftMovement || characterMovementComponent.allowRightMovement))
                 {
                     if (characterMovementComponent.onSurface)
                     {
