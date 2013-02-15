@@ -85,6 +85,7 @@
     <Compile Include="Components\InputComponent.cs" />
     <Compile Include="Components\ItemComponent.cs" />
     <Compile Include="Components\PlayerComponent.cs" />
+    <Compile Include="Components\TreeComponent.cs" />
     <Compile Include="Components\WorldItemRenderComponent.cs" />
     <Compile Include="Components\Particle.cs" />
     <Compile Include="Components\PhysicsComponent.cs" />
@@ -92,11 +93,16 @@
     <Compile Include="Components\RopeNode.cs" />
     <Compile Include="Components\RopePhysicsComponent.cs" />
     <Compile Include="Components\RopeRenderComponent.cs" />
+    <Compile Include="DistanceMetamerConstraint.cs" />
     <Compile Include="Level.cs" />
     <Compile Include="MainMenu.cs" />
     <Compile Include="Managers\EntityManager.cs" />
     <Compile Include="Managers\SystemManager.cs" />
     <Compile Include="EntityFactory.cs" />
+    <Compile Include="MarkerCell.cs" />
+    <Compile Include="Metamer.cs" />
+    <Compile Include="MetamerConstraint.cs" />
+    <Compile Include="MetamerMarker.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="LoderGame.cs" />
@@ -109,6 +115,9 @@
     <Compile Include="Systems\RenderSystem.cs" />
     <Compile Include="Systems\PhysicsSystem.cs" />
     <Compile Include="Systems\SystemNode.cs" />
+    <Compile Include="Systems\TreeSystem.cs" />
+    <Compile Include="Tree.cs" />
+    <Compile Include="TrunkMetamerConstraint.cs" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="Game.ico" />

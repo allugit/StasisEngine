@@ -13,7 +13,8 @@ namespace StasisGame.Systems
         Fluid,
         Player,
         CharacterMovement,
-        Camera
+        Camera,
+        Tree
     };
 
     public interface ISystem

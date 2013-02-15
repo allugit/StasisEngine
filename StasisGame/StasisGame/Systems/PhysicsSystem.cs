@@ -15,19 +15,33 @@ namespace StasisGame.Systems
         private EntityManager _entityManager;
         private World _world;
         private float _dt = 1f / 60f;
+        private Body _groundBody;
 
-        public World world { get { return _world; } }
         public int defaultPriority { get { return 20; } }
         public SystemType systemType { get { return SystemType.Physics; } }
+        public World world { get { return _world; } }
+        public Body groundBody { get { return _groundBody; } }
 
         public PhysicsSystem(SystemManager systemManager, EntityManager entityManager, XElement data)
         {
             _systemManager = systemManager;
             _entityManager = entityManager;
 
+            BodyDef groundBodyDef = new BodyDef();
+            CircleShape circleShape = new CircleShape();
+            FixtureDef fixtureDef = new FixtureDef();
+
             // Create world
             _world = new World(Loader.loadVector2(data.Attribute("gravity"), new Vector2(0, 32)), true);
             _world.ContactListener = this;
+
+            // Create ground body
+            groundBodyDef.type = BodyType.Static;
+            circleShape._radius = 0.1f;
+            fixtureDef.isSensor = true;
+            fixtureDef.shape = circleShape;
+            _groundBody = world.CreateBody(groundBodyDef);
+            _groundBody.CreateFixture(fixtureDef);
         }
 
         public void update()
