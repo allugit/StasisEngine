@@ -40,6 +40,13 @@ namespace StasisGame.Systems
 
         public void update()
         {
+            List<int> treeEntities = _entityManager.getEntitiesPosessing(ComponentType.Tree);
+
+            for (int i = 0; i < treeEntities.Count; i++)
+            {
+                TreeComponent treeComponent = (TreeComponent)_entityManager.getComponent(treeEntities[i], ComponentType.Tree);
+                treeComponent.tree.update();
+            }
         }
 
         // prepareCollisions

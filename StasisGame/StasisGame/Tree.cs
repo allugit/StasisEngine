@@ -304,7 +304,7 @@ namespace StasisGame
         }
 
         // update
-        public void update(GameTime gameTime)
+        public void update()
         {
             // Flag as active
             _active = AABB.TestOverlap(ref _treeSystem.treeAABB, ref _aabb);
@@ -326,7 +326,7 @@ namespace StasisGame
                 //primitiveCount = 0;
 
                 // Update metamers
-                _rootMetamer.update(gameTime);
+                _rootMetamer.update();
             }
         }
 

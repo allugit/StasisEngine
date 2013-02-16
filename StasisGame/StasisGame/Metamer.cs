@@ -1273,16 +1273,16 @@ namespace StasisGame
         }
 
         // update
-        public void update(GameTime gameTime)
+        public void update()
         {
             // Construct render vertices
             //constructRenderVertices();
 
             // Logic before this point acts acropetally (towards apex)
             if (mainMetamer != null)
-                mainMetamer.update(gameTime);
+                mainMetamer.update();
             if (lateralMetamer != null)
-                lateralMetamer.update(gameTime);
+                lateralMetamer.update();
             // Logic after this point acts basipetally (towards base)
 
             if (!isRoot)
