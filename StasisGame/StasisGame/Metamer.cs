@@ -688,7 +688,8 @@ namespace StasisGame
 
             // Find texture shadow value
             float shadowValue = 1f;
-            shadowValue = Math.Max(budQuality, 0.5f);
+            shadowValue = Math.Max(Math.Min(budQuality * ratio * 2, 1f), 0.5f);
+            textureColor = new Color(new Vector3(shadowValue, shadowValue, shadowValue));
             //textureColor = new Color(shadowValue * ((float)tree.material.colors[1].R / 255f), shadowValue * ((float)tree.material.colors[1].G / 255f), shadowValue * ((float)tree.material.colors[1].B / 255f));
 
             return maxCount;
