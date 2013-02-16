@@ -677,11 +677,13 @@ namespace StasisGame
             inverseMassSq = inverseMass * inverseMass;
 
             // Assign texture
-            //Console.WriteLine("fix this");
-            //leafTexture = (tree.material as TreeMaterial).getTexture(textureWeight((float)count / (float)tree.longestPath));
-            //Console.WriteLine("(textureWeight((float)count / (float)tree.longestPath)): {0}", (textureWeight((float)count / (float)tree.longestPath)));
-            int textureIndex = (int)(textureWeight((float)count / (float)tree.longestPath) * tree.leafTextures.Count - 1);
-            //Console.WriteLine("{0}/{1}", textureIndex, tree.leafTextures.Count);
+            float ratio = (float)count / (float)tree.longestPath;
+            //float weightedRatio = textureWeight(ratio);
+            int textureIndex = (int)Math.Ceiling(ratio * tree.leafTextures.Count - 1);
+            //Console.WriteLine("ratio: {0}", ratio);
+            //Console.WriteLine("weightedRatio: {0}", weightedRatio);
+            //Console.WriteLine("index: {0}", textureIndex);
+            //Console.WriteLine("");
             leafTexture = tree.leafTextures[textureIndex];
 
             // Find texture shadow value

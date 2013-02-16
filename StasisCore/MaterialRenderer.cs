@@ -462,6 +462,8 @@ namespace StasisCore
                 return current;
 
             // Modify parameters based on growth factor (r is modified later)
+            intersections *= growthFactor * growthFactor * growthFactor;
+            arms = (int)Math.Ceiling(arms * growthFactor * growthFactor);
             maxRadius *= growthFactor;
             jitter *= growthFactor;
             centerJitter *= growthFactor;
@@ -482,25 +484,28 @@ namespace StasisCore
                 while (r < maxRadius)
                 {
                     r = a * (float)Math.Pow(StasisMathHelper.phi, b * (2f / StasisMathHelper.pi) * theta) * growthFactor;
-                    float modifiedTheta = (theta + armRotationIncrement * i) * (flipArms ? -1f : 1f);
-                    float randomAngleValue = textureAngleJitter == 0 ? 0 : StasisMathHelper.floatBetween(-textureAngleJitter, textureAngleJitter, _random);
-                    float textureAngle;
-                    if (useAbsoluteTextureAngle)
+                    if (r < maxRadius)
                     {
-                        textureAngle = absoluteTextureAngle + randomAngleValue;
-                    }
-                    else
-                    {
-                        textureAngle = relativeTextureAngle + modifiedTheta + randomAngleValue;
-                    }
-                    Vector2 j = new Vector2((float)(_random.NextDouble() * 2 - 1) * jitter, (float)(_random.NextDouble() * 2 - 1) * jitter);
-                    Texture2D texture = textures[_random.Next(textures.Count)];
-                    Color actualColor = getRandomColor(baseColor, randomRed, randomGreen, randomBlue, randomAlpha);
-                    _spriteBatch.Draw(texture, new Vector2(r * (float)Math.Cos(modifiedTheta), r * (float)Math.Sin(modifiedTheta)) + j + center, texture.Bounds, actualColor, textureAngle, new Vector2(texture.Width, texture.Height) / 2, 1f, SpriteEffects.None, 0);
-                    if (twinArms)
-                    {
-                        j = new Vector2((float)(_random.NextDouble() * 2 - 1) * jitter, (float)(_random.NextDouble() * 2 - 1) * jitter);
-                        _spriteBatch.Draw(texture, new Vector2(r * (float)Math.Cos(-modifiedTheta), r * (float)Math.Sin(-modifiedTheta)) + j + center, texture.Bounds, actualColor, -textureAngle, new Vector2(texture.Width, texture.Height) / 2, 1f, SpriteEffects.None, 0);
+                        float modifiedTheta = (theta + armRotationIncrement * i) * (flipArms ? -1f : 1f);
+                        float randomAngleValue = textureAngleJitter == 0 ? 0 : StasisMathHelper.floatBetween(-textureAngleJitter, textureAngleJitter, _random);
+                        float textureAngle;
+                        if (useAbsoluteTextureAngle)
+                        {
+                            textureAngle = absoluteTextureAngle + randomAngleValue;
+                        }
+                        else
+                        {
+                            textureAngle = relativeTextureAngle + modifiedTheta + randomAngleValue;
+                        }
+                        Vector2 j = new Vector2((float)(_random.NextDouble() * 2 - 1) * jitter, (float)(_random.NextDouble() * 2 - 1) * jitter);
+                        Texture2D texture = textures[_random.Next(textures.Count)];
+                        Color actualColor = getRandomColor(baseColor, randomRed, randomGreen, randomBlue, randomAlpha);
+                        _spriteBatch.Draw(texture, new Vector2(r * (float)Math.Cos(modifiedTheta), r * (float)Math.Sin(modifiedTheta)) + j + center, texture.Bounds, actualColor, textureAngle, new Vector2(texture.Width, texture.Height) / 2, 1f, SpriteEffects.None, 0);
+                        if (twinArms)
+                        {
+                            j = new Vector2((float)(_random.NextDouble() * 2 - 1) * jitter, (float)(_random.NextDouble() * 2 - 1) * jitter);
+                            _spriteBatch.Draw(texture, new Vector2(r * (float)Math.Cos(-modifiedTheta), r * (float)Math.Sin(-modifiedTheta)) + j + center, texture.Bounds, actualColor, -textureAngle, new Vector2(texture.Width, texture.Height) / 2, 1f, SpriteEffects.None, 0);
+                        }
                     }
                     theta += thetaIncrement;
                 }
