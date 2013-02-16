@@ -109,12 +109,13 @@ namespace StasisGame
             _angle = Loader.loadFloat(data.Attribute("angle"), 0f);
             _seed = Loader.loadInt(data.Attribute("seed"), 12345);
             _age = Loader.loadFloat(data.Attribute("age"), 0f);
-            _internodeHalfLength = Loader.loadFloat(data.Attribute("internode_length"), 0.5f);
+            _internodeHalfLength = Loader.loadFloat(data.Attribute("internode_half_length"), 0.5f);
             _internodeLength = _internodeHalfLength * 2f;
             _maxShootLength = Loader.loadInt(data.Attribute("max_shoot_length"), 4);
-            _maxBaseHalfWidth = Loader.loadFloat(data.Attribute("max_base_width"), 0.25f);
+            _maxBaseHalfWidth = Loader.loadFloat(data.Attribute("max_base_half_width"), 0.25f);
             _perceptionAngle = Loader.loadFloat(data.Attribute("perception_angle"), 0.6f);
             _perceptionRadius = Loader.loadFloat(data.Attribute("perception_radius"), 4f);
+            _occupancyRadius = Loader.loadFloat(data.Attribute("occupancy_radius"), 1f);
             _lateralAngle = Loader.loadFloat(data.Attribute("lateral_angle"), 0.6f);
             _fullExposure = Loader.loadFloat(data.Attribute("full_exposure"), 1f);
             _penumbraA = Loader.loadFloat(data.Attribute("penumbra_a"), 1f);
