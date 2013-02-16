@@ -171,9 +171,9 @@ namespace StasisEditor.Models
             List<IActorComponent> results = new List<IActorComponent>();
 
             // Hit test box
-            Vector2 relative = new Vector2(0, -_internodeHalfLength / 2f);
+            Vector2 relative = new Vector2(_internodeHalfLength / 2f, 0);
             Matrix offset = Matrix.CreateTranslation(new Vector3(relative, 0)) * Matrix.CreateRotationZ(_angle);
-            if (_level.controller.hitTestBox(testPoint, _position + Vector2.Transform(relative, offset), _maxBaseHalfWidth, _internodeHalfLength, _angle))
+            if (_level.controller.hitTestBox(testPoint, _position + Vector2.Transform(relative, offset), _internodeHalfLength, _maxBaseHalfWidth, _angle))
             {
                 results.Add(this);
                 return callback(results);
@@ -220,9 +220,9 @@ namespace StasisEditor.Models
         public override void draw()
         {
             // Base
-            Vector2 relative = new Vector2(0, -_internodeHalfLength / 2f);
+            Vector2 relative = new Vector2(_internodeHalfLength / 2f, 0);
             Matrix offset = Matrix.CreateTranslation(new Vector3(relative, 0)) * Matrix.CreateRotationZ(_angle);
-            _level.controller.view.drawBox(_position + Vector2.Transform(relative, offset), _maxBaseHalfWidth, _internodeHalfLength, _angle, Color.Teal, _layerDepth);
+            _level.controller.view.drawBox(_position + Vector2.Transform(relative, offset), _internodeHalfLength, _maxBaseHalfWidth, _angle, Color.Teal, _layerDepth);
 
             // Tropism
             _level.controller.view.drawLine(_position, _position + _tropism, Color.DarkGray, _layerDepth - 0.0001f);
