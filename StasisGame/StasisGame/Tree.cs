@@ -35,6 +35,7 @@ namespace StasisGame
         private float _optimalGrowthWeight;
         private float _tropismWeight;
         private Vector2 _tropism;
+        private float _minLeafRatio;
         private float _maxBaseHalfWidth;
         private float _minBaseHalfWidth = 0.04f;
         private Vector2 _gravity = new Vector2(0, 0.005f);
@@ -87,6 +88,7 @@ namespace StasisGame
         public Texture2D barkTexture { get { return _barkTexture; } }
         public List<Texture2D> leafTextures { get { return _leafTextures; } }
         public Metamer rootMetamer { get { return _rootMetamer; } }
+        public float minLeafRatio { get { return _minLeafRatio; } }
 
         /*
         // Debug
@@ -129,6 +131,7 @@ namespace StasisGame
             _optimalGrowthWeight = Loader.loadFloat(data.Attribute("optimal_growth_weight"), 1f);
             _tropismWeight = Loader.loadFloat(data.Attribute("tropism_weight"), 1f);
             _tropism = Loader.loadVector2(data.Attribute("tropism"), Vector2.Zero);
+            _minLeafRatio = Loader.loadFloat(data.Attribute("min_leaf_ratio"), 0f);
             _position = Loader.loadVector2(data.Attribute("position"), Vector2.Zero);
             //_leafMaterialUID = Loader.loadString(data.Attribute("leaf_material_uid"), "default");
             //_barkMaterialUID = Loader.loadString(data.Attribute("bark_material_uid"), "default");

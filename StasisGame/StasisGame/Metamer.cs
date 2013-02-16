@@ -678,13 +678,11 @@ namespace StasisGame
 
             // Assign texture
             float ratio = (float)count / (float)tree.longestPath;
-            //float weightedRatio = textureWeight(ratio);
-            int textureIndex = (int)Math.Ceiling(ratio * tree.leafTextures.Count - 1);
-            //Console.WriteLine("ratio: {0}", ratio);
-            //Console.WriteLine("weightedRatio: {0}", weightedRatio);
-            //Console.WriteLine("index: {0}", textureIndex);
-            //Console.WriteLine("");
-            leafTexture = tree.leafTextures[textureIndex];
+            if (ratio >= tree.minLeafRatio)
+            {
+                int textureIndex = (int)Math.Ceiling(ratio * tree.leafTextures.Count - 1);
+                leafTexture = tree.leafTextures[textureIndex];
+            }
 
             // Find texture shadow value
             float shadowValue = 1f;
