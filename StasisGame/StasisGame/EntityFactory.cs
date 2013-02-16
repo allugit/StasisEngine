@@ -450,8 +450,21 @@ namespace StasisGame
 
         public void createTree(XElement data)
         {
+            RenderSystem renderSystem = _systemManager.getSystem(SystemType.Render) as RenderSystem;
             int entityId = _entityManager.createEntity();
-            Tree tree = new Tree(_systemManager.getSystem(SystemType.Tree) as TreeSystem, data);
+            Material barkMaterial = new Material(ResourceController.getResource(data.Attribute("bark_material_uid").Value));
+            List<Vector2> barkPoints = new List<Vector2>();
+            Texture2D barkTexture;
+            Tree tree;
+            float maxBaseHalfWidth = Loader.loadFloat(data.Attribute("max_base_half_width"), 0.5f);
+            float internodeHalfLength = Loader.loadFloat(data.Attribute("internode_half_length"), 0.5f);
+
+            barkPoints.Add(new Vector2(-maxBaseHalfWidth, -internodeHalfLength));
+            barkPoints.Add(new Vector2(-maxBaseHalfWidth, internodeHalfLength));
+            barkPoints.Add(new Vector2(maxBaseHalfWidth, internodeHalfLength));
+            barkPoints.Add(new Vector2(maxBaseHalfWidth, -internodeHalfLength));
+            barkTexture = renderSystem.materialRenderer.renderMaterial(barkMaterial, barkPoints, 1f);
+            tree = new Tree(_systemManager.getSystem(SystemType.Tree) as TreeSystem, barkTexture, data);
 
             // Handle initial iterations
             while ((int)tree.age > tree.iterations)

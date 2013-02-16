@@ -154,7 +154,8 @@ namespace StasisGame.Systems
             {
                 TreeComponent treeComponent = _entityManager.getComponent(treeEntities[i], ComponentType.Tree) as TreeComponent;
 
-                _primitivesEffect.CurrentTechnique.Passes["primitives"].Apply();
+                _graphicsDevice.Textures[0] = treeComponent.tree.barkTexture;
+                _primitivesEffect.CurrentTechnique.Passes["textured_primitives"].Apply();
                 _graphicsDevice.DrawUserPrimitives(PrimitiveType.TriangleList, treeComponent.tree.vertices, 0, treeComponent.tree.primitiveCount, CustomVertexFormat.VertexDeclaration);
             }
         }

@@ -646,7 +646,7 @@ namespace StasisGame
             float apexRatio = (float)count / (float)maxCount;
             //width = Math.Max(widthWeight(tree.maxBaseWidth * apexRatio), tree.minBaseWidth);
             width = Math.Max(tree.maxBaseHalfWidth * 2 * widthWeight(apexRatio), tree.minBaseHalfWidth);
-            textureWidth = (width / tree.maxBaseHalfWidth * 2);
+            textureWidth = (width / tree.maxBaseHalfWidth);
 
             /*
             // Determine body status

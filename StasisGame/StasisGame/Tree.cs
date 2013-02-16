@@ -52,7 +52,7 @@ namespace StasisGame
         private int _longestPath;
         private CustomVertexFormat[] _vertices;
         private int _primitiveCount;
-        //private Texture2D barkTexture;
+        private Texture2D _barkTexture;
         //private Vector3 barkColor;
 
         public TreeSystem treeSystem { get { return _treeSystem; } }
@@ -83,6 +83,7 @@ namespace StasisGame
         public CustomVertexFormat[] vertices { get { return _vertices; } }
         public int numVertices { get { return _numVertices; } set { _numVertices = value; } }
         public int primitiveCount { get { return _primitiveCount; } set { _primitiveCount = value; } }
+        public Texture2D barkTexture { get { return _barkTexture; } }
 
         /*
         // Debug
@@ -103,9 +104,10 @@ namespace StasisGame
         */
 
         // Constructor
-        public Tree(TreeSystem treeSystem, XElement data)
+        public Tree(TreeSystem treeSystem, Texture2D barkTexture, XElement data)
         {
             _treeSystem = treeSystem;
+            _barkTexture = barkTexture;
             _angle = Loader.loadFloat(data.Attribute("angle"), 0f);
             _seed = Loader.loadInt(data.Attribute("seed"), 12345);
             _age = Loader.loadFloat(data.Attribute("age"), 0f);
