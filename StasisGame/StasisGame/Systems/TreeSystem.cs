@@ -14,6 +14,7 @@ namespace StasisGame.Systems
         private SystemManager _systemManager;
         private EntityManager _entityManager;
         private PhysicsSystem _physicsSystem;
+        private RenderSystem _renderSystem;
         private Vector2 _gravity = new Vector2(0, 0.005f);
         private Vector2 _brokenGravity = new Vector2(0, 0.02f);
         private Dictionary<int, Dictionary<int, MarkerCell>> _markerGrid;
@@ -31,6 +32,7 @@ namespace StasisGame.Systems
             _systemManager = systemManager;
             _entityManager = entityManager;
             _physicsSystem = _systemManager.getSystem(SystemType.Physics) as PhysicsSystem;
+            _renderSystem = _systemManager.getSystem(SystemType.Render) as RenderSystem;
             _markerGrid = new Dictionary<int, Dictionary<int, MarkerCell>>();
             _metamerGrid = new Dictionary<int, Dictionary<int, List<Metamer>>>();
         }
@@ -41,6 +43,17 @@ namespace StasisGame.Systems
         public void update()
         {
             List<int> treeEntities = _entityManager.getEntitiesPosessing(ComponentType.Tree);
+
+            // Update plantAABB
+            Vector2 screenCenter = _renderSystem.screenCenter;
+            float halfWidth = ((float)_renderSystem.screenWidth / _renderSystem.scale) / 2f;
+            float halfHeight = ((float)_renderSystem.screenHeight / _renderSystem.scale) / 2f;
+            treeAABB.lowerBound.X = -screenCenter.X - halfWidth;
+            treeAABB.upperBound.X = -screenCenter.X + halfWidth;
+            treeAABB.lowerBound.Y = -screenCenter.Y - halfHeight;
+            treeAABB.upperBound.Y = -screenCenter.Y + halfHeight;
+
+            prepareCollisions();
 
             for (int i = 0; i < treeEntities.Count; i++)
             {

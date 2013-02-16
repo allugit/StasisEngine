@@ -50,6 +50,8 @@ namespace StasisGame
         private Vector2 _aabbMargin = new Vector2(64f, 64f) / Settings.BASE_SCALE;
         private bool _active;
         private int _longestPath;
+        private CustomVertexFormat[] _vertices;
+        private int _primitiveCount;
         //private Texture2D barkTexture;
         //private Vector3 barkColor;
 
@@ -78,6 +80,9 @@ namespace StasisGame
         public Vector2 brokenGravity { get { return _brokenGravity; } }
         public Vector2 gravity { get { return _gravity; } }
         public float internodeLengthSq { get { return _internodeLengthSq; } }
+        public CustomVertexFormat[] vertices { get { return _vertices; } }
+        public int numVertices { get { return _numVertices; } set { _numVertices = value; } }
+        public int primitiveCount { get { return _primitiveCount; } set { _primitiveCount = value; } }
 
         /*
         // Debug
@@ -141,6 +146,7 @@ namespace StasisGame
             this.tropism = tropism;
             */
 
+            _vertices = new CustomVertexFormat[MAX_VERTICES];
             _random = new Random(_seed);
             _internodeLengthSq = _internodeLength * _internodeLength;
             _aabb = new AABB();
@@ -322,8 +328,8 @@ namespace StasisGame
                 _rootMetamer.resolveCollisions();
 
                 // Reset vertices
-                //numVertices = 0;
-                //primitiveCount = 0;
+                numVertices = 0;
+                primitiveCount = 0;
 
                 // Update metamers
                 _rootMetamer.update();
