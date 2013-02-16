@@ -683,6 +683,10 @@ namespace StasisGame
                 int textureIndex = (int)Math.Ceiling(ratio * tree.leafTextures.Count - 1);
                 leafTexture = tree.leafTextures[textureIndex];
             }
+            else
+            {
+                leafTexture = null;
+            }
 
             // Find texture shadow value
             float shadowValue = 1f;

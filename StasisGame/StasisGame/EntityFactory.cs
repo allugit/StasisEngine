@@ -471,10 +471,10 @@ namespace StasisGame
             barkTexture = renderSystem.materialRenderer.renderMaterial(barkMaterial, barkPoints, 1f);
 
             // Leaf textures
-            maxLeafPoints.Add(new Vector2(-512f, -512f) / renderSystem.scale);
-            maxLeafPoints.Add(new Vector2(-512f, 512f) / renderSystem.scale);
-            maxLeafPoints.Add(new Vector2(512f, 512f) / renderSystem.scale);
-            maxLeafPoints.Add(new Vector2(512f, -512f) / renderSystem.scale);
+            maxLeafPoints.Add(new Vector2(-256f, -256f) / renderSystem.scale);
+            maxLeafPoints.Add(new Vector2(-256f, 256f) / renderSystem.scale);
+            maxLeafPoints.Add(new Vector2(256f, 256f) / renderSystem.scale);
+            maxLeafPoints.Add(new Vector2(256f, -256f) / renderSystem.scale);
             for (float r = leafRange; r < 1f; r += leafRange)
             {
                 leafTextures.Add(renderSystem.materialRenderer.renderMaterial(leafMaterial, maxLeafPoints, r));
