@@ -465,7 +465,7 @@ namespace StasisCore
             intersections *= growthFactor * growthFactor * growthFactor;
             arms = (int)Math.Ceiling(arms * growthFactor * growthFactor);
             maxRadius *= growthFactor;
-            jitter *= growthFactor;
+            //jitter *= growthFactor;
             centerJitter *= growthFactor;
             centerOffset *= growthFactor;
 
