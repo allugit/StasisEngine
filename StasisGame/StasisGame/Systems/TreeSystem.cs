@@ -31,6 +31,8 @@ namespace StasisGame.Systems
             _systemManager = systemManager;
             _entityManager = entityManager;
             _physicsSystem = _systemManager.getSystem(SystemType.Physics) as PhysicsSystem;
+            _markerGrid = new Dictionary<int, Dictionary<int, MarkerCell>>();
+            _metamerGrid = new Dictionary<int, Dictionary<int, List<Metamer>>>();
         }
 
         public int getPlantGridX(float x) { return (int)Math.Floor(x / PLANT_CELL_SIZE); }

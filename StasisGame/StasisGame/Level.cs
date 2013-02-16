@@ -83,6 +83,10 @@ namespace StasisGame
                         break;
 
                     case "Tree":
+                        if (_systemManager.getSystem(SystemType.Tree) == null)
+                        {
+                            _systemManager.add(new TreeSystem(_systemManager, _entityManager));
+                        }
                         _entityManager.factory.createTree(actorData);
                         break;
 

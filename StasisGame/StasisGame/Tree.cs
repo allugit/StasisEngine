@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Xml.Linq;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Box2D.XNA;
@@ -15,42 +16,70 @@ namespace StasisGame
         public const int NUM_CONSTRAINT_ITERATIONS = 2;
         public const int SHADOW_DEPTH = 4;
         public const int MAX_VERTICES = 8000;
-        public TreeSystem treeSystem;
-        public Vector2 position;
-        public float angle;
-        public int seed;
-        public float age;
-        public float internodeLength;
-        public float internodeLengthSq;
-        public int maxShootLength;
-        public float perceptionAngle;
-        public float perceptionRadius;
-        public float occupancyRadius;
-        public float lateralAngle;
-        public float fullExposure;
-        public float penumbraA;
-        public float penumbraB;
-        public float optimalGrowthWeight;
-        public float tropismWeight;
-        public Vector2 tropism;
-        public float maxBaseWidth;
-        public float minBaseWidth = 0.04f;
-        public Vector2 gravity = new Vector2(0, 0.005f);
-        public Vector2 brokenGravity = new Vector2(0, 0.02f);
+        private TreeSystem _treeSystem;
+        private Vector2 _position;
+        private float _angle;
+        private int _seed;
+        private float _age;
+        private float _internodeHalfLength;
+        private float _internodeLength;
+        private float _internodeLengthSq;
+        private int _maxShootLength;
+        private float _perceptionAngle;
+        private float _perceptionRadius;
+        private float _occupancyRadius;
+        private float _lateralAngle;
+        private float _fullExposure;
+        private float _penumbraA;
+        private float _penumbraB;
+        private float _optimalGrowthWeight;
+        private float _tropismWeight;
+        private Vector2 _tropism;
+        private float _maxBaseHalfWidth;
+        private float _minBaseHalfWidth = 0.04f;
+        private Vector2 _gravity = new Vector2(0, 0.005f);
+        private Vector2 _brokenGravity = new Vector2(0, 0.02f);
         //public Vector2 gravity = new Vector2(0, 0);
-        public Vector2 anchorNormal;
-        public Vector2 rootPosition;
-        public int numVertices;
-        public Random random;
-        public Metamer rootMetamer;
-        public int iterations;
-        public AABB aabb;
-        private Vector2 aabbMargin = new Vector2(64f, 64f) / Settings.BASE_SCALE;
-        public bool active;
-        public int longestPath;
-        private Texture2D barkTexture;
-        public Vector3 barkColor;
+        private Vector2 _anchorNormal;
+        private Vector2 _rootPosition;
+        private int _numVertices;
+        private Random _random;
+        private Metamer _rootMetamer;
+        private int _iterations;
+        private AABB _aabb;
+        private Vector2 _aabbMargin = new Vector2(64f, 64f) / Settings.BASE_SCALE;
+        private bool _active;
+        private int _longestPath;
+        //private Texture2D barkTexture;
+        //private Vector3 barkColor;
 
+        public TreeSystem treeSystem { get { return _treeSystem; } }
+        public float age { get { return _age; } }
+        public float perceptionRadius { get { return _perceptionRadius; } }
+        public float perceptionAngle { get { return _perceptionAngle; } }
+        public Vector2 position { get { return _position; } }
+        public float internodeLength { get { return _internodeLength; } }
+        public int iterations { get { return _iterations; } }
+        public Vector2 rootPosition { get { return _rootPosition; } }
+        public Vector2 anchorNormal { get { return _anchorNormal; } }
+        public float occupancyRadius { get { return _occupancyRadius; } }
+        public Random random { get { return _random; } }
+        public float lateralAngle { get { return _lateralAngle; } }
+        public float penumbraA { get { return _penumbraA; } }
+        public float penumbraB { get { return _penumbraB; } }
+        public float fullExposure { get { return _fullExposure; } }
+        public int maxShootLength { get { return _maxShootLength; } }
+        public float optimalGrowthWeight { get { return _optimalGrowthWeight; } }
+        public Vector2 tropism { get { return _tropism; } }
+        public float tropismWeight { get { return _tropismWeight; } }
+        public int longestPath { get { return _longestPath; } set { _longestPath = value; } }
+        public float maxBaseHalfWidth { get { return _maxBaseHalfWidth; } }
+        public float minBaseHalfWidth { get { return _minBaseHalfWidth; } }
+        public Vector2 brokenGravity { get { return _brokenGravity; } }
+        public Vector2 gravity { get { return _gravity; } }
+        public float internodeLengthSq { get { return _internodeLengthSq; } }
+
+        /*
         // Debug
         public List<Vector2> pointsInTerminalBudPerceptionCone;
         public List<Vector2> pointsInLateralBudPerceptionCone;
@@ -66,28 +95,33 @@ namespace StasisGame
         public static bool drawBranchingPoints = true;
         public static bool drawMetamers = true;
         public static bool drawTrunkBodies = true;
+        */
 
         // Constructor
-        public Tree(
-            TreeSystem treeSystem,
-            Vector2 position,
-            float angle,
-            int seed,
-            float age,
-            float internodeLength,
-            int maxShootLength,
-            float maxBaseWidth,
-            float perceptionAngle,
-            float perceptionRadius,
-            float occupancyRadius,
-            float lateralAngle,
-            float fullExposure,
-            float penumbraA,
-            float penumbraB,
-            float optimalGrowthWeight,
-            float tropismWeight,
-            Vector2 tropism)
+        public Tree(TreeSystem treeSystem, XElement data)
         {
+            _treeSystem = treeSystem;
+            _angle = Loader.loadFloat(data.Attribute("angle"), 0f);
+            _seed = Loader.loadInt(data.Attribute("seed"), 12345);
+            _age = Loader.loadFloat(data.Attribute("age"), 0f);
+            _internodeHalfLength = Loader.loadFloat(data.Attribute("internode_length"), 0.5f);
+            _internodeLength = _internodeHalfLength * 2f;
+            _maxShootLength = Loader.loadInt(data.Attribute("max_shoot_length"), 4);
+            _maxBaseHalfWidth = Loader.loadFloat(data.Attribute("max_base_width"), 0.25f);
+            _perceptionAngle = Loader.loadFloat(data.Attribute("perception_angle"), 0.6f);
+            _perceptionRadius = Loader.loadFloat(data.Attribute("perception_radius"), 4f);
+            _lateralAngle = Loader.loadFloat(data.Attribute("lateral_angle"), 0.6f);
+            _fullExposure = Loader.loadFloat(data.Attribute("full_exposure"), 1f);
+            _penumbraA = Loader.loadFloat(data.Attribute("penumbra_a"), 1f);
+            _penumbraB = Loader.loadFloat(data.Attribute("penumbra_b"), 2f);
+            _optimalGrowthWeight = Loader.loadFloat(data.Attribute("optimal_growth_weight"), 1f);
+            _tropismWeight = Loader.loadFloat(data.Attribute("tropism_weight"), 1f);
+            _tropism = Loader.loadVector2(data.Attribute("tropism"), Vector2.Zero);
+            _position = Loader.loadVector2(data.Attribute("position"), Vector2.Zero);
+            //_leafMaterialUID = Loader.loadString(data.Attribute("leaf_material_uid"), "default");
+            //_barkMaterialUID = Loader.loadString(data.Attribute("bark_material_uid"), "default");
+
+            /*
             this.treeSystem = treeSystem;
             this.angle = angle;
             this.seed = seed;
@@ -105,34 +139,35 @@ namespace StasisGame
             this.optimalGrowthWeight = optimalGrowthWeight;
             this.tropismWeight = tropismWeight;
             this.tropism = tropism;
+            */
 
-            random = new Random(seed);
-            internodeLengthSq = internodeLength * internodeLength;
-            aabb = new AABB();
-            aabb.lowerBound = position;
-            aabb.upperBound = position;
+            _random = new Random(_seed);
+            _internodeLengthSq = _internodeLength * _internodeLength;
+            _aabb = new AABB();
+            _aabb.lowerBound = _position;
+            _aabb.upperBound = _position;
 
             // Calculate root position
-            float rootAngle = angle + (StasisMathHelper.pi);
-            rootPosition = position + new Vector2((float)Math.Cos(rootAngle), (float)Math.Sin(rootAngle)) * 5f;
+            float rootAngle = _angle + (StasisMathHelper.pi);
+            _rootPosition = _position + new Vector2((float)Math.Cos(rootAngle), (float)Math.Sin(rootAngle)) * 5f;
 
             // Calculate anchor normals
-            float anchorAngle = angle - (StasisMathHelper.pi * 0.5f);
-            anchorNormal = new Vector2((float)Math.Cos(anchorAngle), (float)Math.Sin(anchorAngle));
+            float anchorAngle = _angle - (StasisMathHelper.pi * 0.5f);
+            _anchorNormal = new Vector2((float)Math.Cos(anchorAngle), (float)Math.Sin(anchorAngle));
 
             // Initialize vertices
             //vertices = new CustomVertexFormat[MAX_VERTICES];
 
             // Fix tropism vector
-            this.tropism -= position;
+            //this.tropism -= position;
 
             // Debug -- perception points
-            pointsInTerminalBudPerceptionCone = new List<Vector2>();
-            pointsInLateralBudPerceptionCone = new List<Vector2>();
+            //pointsInTerminalBudPerceptionCone = new List<Vector2>();
+            //pointsInLateralBudPerceptionCone = new List<Vector2>();
 
             // Create first metamer
-            rootMetamer = new Metamer(this, null, BudType.TERMINAL, BudState.DORMANT, BudState.DEAD, angle);
-            rootMetamer.isTail = true;
+            _rootMetamer = new Metamer(this, null, BudType.TERMINAL, BudState.DORMANT, BudState.DEAD, _angle);
+            _rootMetamer.isTail = true;
         }
 
         /*
@@ -201,22 +236,22 @@ namespace StasisGame
         // expandAABB
         public void expandAABB(Vector2 point)
         {
-            aabb.lowerBound = Vector2.Min(point - aabbMargin, aabb.lowerBound);
-            aabb.upperBound = Vector2.Max(point + aabbMargin, aabb.upperBound);
+            _aabb.lowerBound = Vector2.Min(point - _aabbMargin, _aabb.lowerBound);
+            _aabb.upperBound = Vector2.Max(point + _aabbMargin, _aabb.upperBound);
         }
 
         // iterate
         public void iterate(int count = 1)
         {
             // Debug -- clear list of perception points to draw
-            if (drawPerceptionPoints)
-            {
-                pointsInTerminalBudPerceptionCone.Clear();
-                pointsInLateralBudPerceptionCone.Clear();
-            }
+            //if (drawPerceptionPoints)
+            //{
+            //    pointsInTerminalBudPerceptionCone.Clear();
+            //    pointsInLateralBudPerceptionCone.Clear();
+            //}
 
             // Clear marker competition and shadow values
-            foreach (Dictionary<int, MarkerCell> gridRow in treeSystem.markerGrid.Values)
+            foreach (Dictionary<int, MarkerCell> gridRow in _treeSystem.markerGrid.Values)
             {
                 foreach (MarkerCell gridCell in gridRow.Values)
                 {
@@ -228,42 +263,42 @@ namespace StasisGame
             for (int i = 0; i < count; i++)
             {
                 // Calculate local environment of buds
-                rootMetamer.calculateLocalEnvironment();
+                _rootMetamer.calculateLocalEnvironment();
 
                 // Determine bud fate
-                rootMetamer.determineBudFate();
+                _rootMetamer.determineBudFate();
 
                 // Append new shoots
-                rootMetamer.appendNewShoots();
+                _rootMetamer.appendNewShoots();
 
                 // Update branch width
-                rootMetamer.calculateResources(1);
+                _rootMetamer.calculateResources(1);
 
                 // Create constraints
-                rootMetamer.createConstraints();
+                _rootMetamer.createConstraints();
 
-                iterations++;
+                _iterations++;
             }
 
             // Force aabb update
-            rootMetamer.updateAABB();
+            _rootMetamer.updateAABB();
         }
 
         // step
         public void step()
         {
-            rootMetamer.accumulateForces();
-            rootMetamer.integrate();
+            _rootMetamer.accumulateForces();
+            _rootMetamer.integrate();
             for (int n = 0; n < NUM_CONSTRAINT_ITERATIONS; n++)
             {
                 // Satisfy constraints
-                rootMetamer.satisfyConstraints();
+                _rootMetamer.satisfyConstraints();
 
-                if (!rootMetamer.isBroken)
+                if (!_rootMetamer.isBroken)
                 {
                     // Pin root metamer
-                    rootMetamer.position = position;
-                    rootMetamer.oldPosition = position;
+                    _rootMetamer.position = _position;
+                    _rootMetamer.oldPosition = _position;
                 }
             }
         }
@@ -271,43 +306,27 @@ namespace StasisGame
         // update
         public void update(GameTime gameTime)
         {
-            // Handle initial iterations
-            if ((int)age > iterations)
-            {
-                // Iterate
-                iterate();
-
-                // Relax if on last iteration
-                if ((int)age == iterations)
-                {
-                    for (int r = 0; r < 300; r++)
-                        step();
-                }
-
-                return;
-            }
-
             // Flag as active
-            active = AABB.TestOverlap(ref treeSystem.treeAABB, ref aabb);
+            _active = AABB.TestOverlap(ref _treeSystem.treeAABB, ref _aabb);
 
-            if (active)
+            if (_active)
             {
                 // Verlet integration
-                if (iterations > 0)
+                if (_iterations > 0)
                     step();
 
                 // Prepare collisions
                 //prepareCollisions();
 
                 // Resolve collisions
-                rootMetamer.resolveCollisions();
+                _rootMetamer.resolveCollisions();
 
                 // Reset vertices
                 //numVertices = 0;
                 //primitiveCount = 0;
 
                 // Update metamers
-                rootMetamer.update(gameTime);
+                _rootMetamer.update(gameTime);
             }
         }
 

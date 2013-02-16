@@ -483,6 +483,7 @@ namespace StasisGame
                 }
             }
 
+            /*
             // Debug draw associated marker points
             if (Tree.drawPerceptionPoints)
             {
@@ -494,6 +495,7 @@ namespace StasisGame
                         tree.pointsInLateralBudPerceptionCone.Add(associatedMarkers[i].point);
                 }
             }
+            */
         }
 
         // appendNewShoots
@@ -639,8 +641,8 @@ namespace StasisGame
 
             float apexRatio = (float)count / (float)maxCount;
             //width = Math.Max(widthWeight(tree.maxBaseWidth * apexRatio), tree.minBaseWidth);
-            width = Math.Max(tree.maxBaseWidth * widthWeight(apexRatio), tree.minBaseWidth);
-            textureWidth = (width / tree.maxBaseWidth);
+            width = Math.Max(tree.maxBaseHalfWidth * widthWeight(apexRatio), tree.minBaseHalfWidth);
+            textureWidth = (width / tree.maxBaseHalfWidth);
 
             /*
             // Determine body status

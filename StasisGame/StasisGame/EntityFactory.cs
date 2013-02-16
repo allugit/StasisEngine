@@ -450,6 +450,24 @@ namespace StasisGame
 
         public void createTree(XElement data)
         {
+            int entityId = _entityManager.createEntity();
+            Tree tree = new Tree(_systemManager.getSystem(SystemType.Tree) as TreeSystem, data);
+
+            // Handle initial iterations
+            while ((int)tree.age > tree.iterations)
+            {
+                // Iterate
+                tree.iterate();
+
+                // Relax if on last iteration
+                if ((int)tree.age == tree.iterations)
+                {
+                    for (int r = 0; r < 300; r++)
+                        tree.step();
+                }
+            }
+
+            _entityManager.addComponent(entityId, new TreeComponent(tree));
         }
 
         public void createPlayer(XElement data)
