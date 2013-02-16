@@ -74,6 +74,7 @@ namespace StasisGame.Systems
             List<int> worldItemRenderEntities = _entityManager.getEntitiesPosessing(ComponentType.WorldItemRender);
             List<int> characterRenderEntities = _entityManager.getEntitiesPosessing(ComponentType.CharacterRender);
             List<int> characterMovementEntities = _entityManager.getEntitiesPosessing(ComponentType.CharacterMovement);
+            List<int> treeEntities = _entityManager.getEntitiesPosessing(ComponentType.Tree);
             Vector2 screenCenter = _cameraSystem.screenCenter;
             Vector2 halfScreen = new Vector2(_graphicsDevice.Viewport.Width, _graphicsDevice.Viewport.Height) / 2;
 
@@ -146,6 +147,15 @@ namespace StasisGame.Systems
                 float angle = characterMovementComponent.movementAngle;
 
                 _spriteBatch.Draw(_pixel, (physicsComponent.body.GetPosition() - screenCenter) * _scale + halfScreen, source, Color.Yellow, angle, new Vector2(0, 1), 1f, SpriteEffects.None, 0);
+            }
+
+            _primitivesEffect.Parameters["world"].SetValue(Matrix.Identity);
+            for (int i = 0; i < treeEntities.Count; i++)
+            {
+                TreeComponent treeComponent = _entityManager.getComponent(treeEntities[i], ComponentType.Tree) as TreeComponent;
+
+                _primitivesEffect.CurrentTechnique.Passes["primitives"].Apply();
+                _graphicsDevice.DrawUserPrimitives(PrimitiveType.TriangleList, treeComponent.tree.vertices, 0, treeComponent.tree.primitiveCount, CustomVertexFormat.VertexDeclaration);
             }
         }
     }
