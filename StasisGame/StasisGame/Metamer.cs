@@ -677,10 +677,13 @@ namespace StasisGame
             inverseMassSq = inverseMass * inverseMass;
 
             // Assign texture
+            //float ratio = (float)(Math.Max(count - tree.leafBaseOffset, 0) / (float)Math.Max(tree.longestPath - tree.leafBaseOffset, 1));
             float ratio = (float)count / (float)tree.longestPath;
-            if (ratio >= tree.minLeafRatio)
+            ratio = Math.Max(ratio - tree.leafRatioOffset, 0) / Math.Max(1f - tree.leafRatioOffset, 0.001f);
+            Debug.Assert(ratio >= 0 && ratio <= 1);
+            if (ratio >= tree.minLeafRatioCutoff)
             {
-                int textureIndex = (int)Math.Ceiling(ratio * tree.leafTextures.Count - 1);
+                int textureIndex = (int)(ratio * (tree.leafTextures.Count - 1));
                 leafTexture = tree.leafTextures[textureIndex];
             }
             else
