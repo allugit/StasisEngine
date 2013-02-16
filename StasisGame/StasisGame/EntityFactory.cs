@@ -453,18 +453,35 @@ namespace StasisGame
             RenderSystem renderSystem = _systemManager.getSystem(SystemType.Render) as RenderSystem;
             int entityId = _entityManager.createEntity();
             Material barkMaterial = new Material(ResourceController.getResource(data.Attribute("bark_material_uid").Value));
+            Material leafMaterial = new Material(ResourceController.getResource(data.Attribute("leaf_material_uid").Value));
             List<Vector2> barkPoints = new List<Vector2>();
+            List<Vector2> maxLeafPoints = new List<Vector2>();
             Texture2D barkTexture;
+            List<Texture2D> leafTextures = new List<Texture2D>();
             Tree tree;
             float maxBaseHalfWidth = Loader.loadFloat(data.Attribute("max_base_half_width"), 0.5f);
             float internodeHalfLength = Loader.loadFloat(data.Attribute("internode_half_length"), 0.5f);
+            float leafRange = 1f / 4f;  // 1f / numSizes
 
+            // Bark texture
             barkPoints.Add(new Vector2(-maxBaseHalfWidth, -internodeHalfLength));
             barkPoints.Add(new Vector2(-maxBaseHalfWidth, internodeHalfLength));
             barkPoints.Add(new Vector2(maxBaseHalfWidth, internodeHalfLength));
             barkPoints.Add(new Vector2(maxBaseHalfWidth, -internodeHalfLength));
             barkTexture = renderSystem.materialRenderer.renderMaterial(barkMaterial, barkPoints, 1f);
-            tree = new Tree(_systemManager.getSystem(SystemType.Tree) as TreeSystem, barkTexture, data);
+
+            // Leaf textures
+            maxLeafPoints.Add(new Vector2(-512f, -512f) / renderSystem.scale);
+            maxLeafPoints.Add(new Vector2(-512f, 512f) / renderSystem.scale);
+            maxLeafPoints.Add(new Vector2(512f, 512f) / renderSystem.scale);
+            maxLeafPoints.Add(new Vector2(512f, -512f) / renderSystem.scale);
+            for (float r = leafRange; r < 1f; r += leafRange)
+            {
+                leafTextures.Add(renderSystem.materialRenderer.renderMaterial(leafMaterial, maxLeafPoints, r));
+            }
+            leafTextures.Add(renderSystem.materialRenderer.renderMaterial(leafMaterial, maxLeafPoints, 1f));
+
+            tree = new Tree(_systemManager.getSystem(SystemType.Tree) as TreeSystem, barkTexture, leafTextures, data);
 
             // Handle initial iterations
             while ((int)tree.age > tree.iterations)

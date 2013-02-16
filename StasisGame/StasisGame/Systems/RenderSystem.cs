@@ -37,6 +37,7 @@ namespace StasisGame.Systems
         public int screenWidth { get { return _graphicsDevice.Viewport.Width; } }
         public int screenHeight { get { return _graphicsDevice.Viewport.Height; } }
         public Vector2 screenCenter { get { return _cameraSystem.screenCenter; } }
+        public SpriteBatch spriteBatch { get { return _spriteBatch; } }
 
         public RenderSystem(LoderGame game, SystemManager systemManager, EntityManager entityManager)
         {
@@ -157,6 +158,7 @@ namespace StasisGame.Systems
                 _graphicsDevice.Textures[0] = treeComponent.tree.barkTexture;
                 _primitivesEffect.CurrentTechnique.Passes["textured_primitives"].Apply();
                 _graphicsDevice.DrawUserPrimitives(PrimitiveType.TriangleList, treeComponent.tree.vertices, 0, treeComponent.tree.primitiveCount, CustomVertexFormat.VertexDeclaration);
+                treeComponent.tree.rootMetamer.draw(this);
             }
         }
     }

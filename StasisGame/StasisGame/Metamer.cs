@@ -679,6 +679,10 @@ namespace StasisGame
             // Assign texture
             //Console.WriteLine("fix this");
             //leafTexture = (tree.material as TreeMaterial).getTexture(textureWeight((float)count / (float)tree.longestPath));
+            //Console.WriteLine("(textureWeight((float)count / (float)tree.longestPath)): {0}", (textureWeight((float)count / (float)tree.longestPath)));
+            int textureIndex = (int)(textureWeight((float)count / (float)tree.longestPath) * tree.leafTextures.Count - 1);
+            //Console.WriteLine("{0}/{1}", textureIndex, tree.leafTextures.Count);
+            leafTexture = tree.leafTextures[textureIndex];
 
             // Find texture shadow value
             float shadowValue = 1f;
@@ -1492,19 +1496,19 @@ namespace StasisGame
             //renderer.drawLine(position + offset, position + offset + debugCurrentReactionForce, Color.Orange);
             //offset = new Vector2(0.55f, 0f);
             //renderer.drawLine(position + offset, position + offset + debugTargetReactionForce, Color.Yellow);
-        }
+        }*/
 
         // draw
-        public override void draw(GameTime gameTime)
+        public void draw(RenderSystem renderSystem)
         {
             //Console.WriteLine("fix this");
             if (leafTexture != null)
-                Main.spriteBatch.Draw(leafTexture, (position + Main.getWorldOffset()) * BaseEnvironment.scale, leafTexture.Bounds, textureColor, currentTextureAngle, new Vector2(leafTexture.Width, leafTexture.Height) / 2, 1, SpriteEffects.None, 0);
+                renderSystem.spriteBatch.Draw(leafTexture, (position - renderSystem.screenCenter) * renderSystem.scale + new Vector2(renderSystem.screenWidth, renderSystem.screenHeight) / 2f, leafTexture.Bounds, textureColor, currentTextureAngle, new Vector2(leafTexture.Width, leafTexture.Height) / 2, 1, SpriteEffects.None, 0);
 
             if (mainMetamer != null)
-                mainMetamer.draw(gameTime);
+                mainMetamer.draw(renderSystem);
             if (lateralMetamer != null)
-                lateralMetamer.draw(gameTime);
-        }*/
+                lateralMetamer.draw(renderSystem);
+        }
     }
 }
