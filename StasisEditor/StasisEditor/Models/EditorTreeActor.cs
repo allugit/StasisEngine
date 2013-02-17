@@ -156,7 +156,16 @@ namespace StasisEditor.Models
                     {
                         if (results.Count == 1 && results[0] == this)
                         {
-                            select();
+                            if (_level.controller.shift)
+                            {
+                                EditorTreeActor clone = new EditorTreeActor(_level, data);
+                                _level.addActor(clone);
+                                clone.select();
+                            }
+                            else
+                            {
+                                select();
+                            }
                             return true;
                         }
                         return false;
