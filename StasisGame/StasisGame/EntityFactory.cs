@@ -541,7 +541,7 @@ namespace StasisGame
             _entityManager.addComponent(entityId, new InputComponent());
             _entityManager.addComponent(entityId, new CharacterMovementComponent(feetFixture));
             _entityManager.addComponent(entityId, new CharacterRenderComponent());
-            _entityManager.addComponent(entityId, new BodyFocusPointComponent(body, new Vector2(0, -2f), FocusType.Multiple));
+            _entityManager.addComponent(entityId, new BodyFocusPointComponent(body, new Vector2(0, -8f), FocusType.Multiple));
             _entityManager.addComponent(entityId, new IgnoreTreeCollisionComponent());
             (_systemManager.getSystem(SystemType.Player) as PlayerSystem).playerId = entityId;
         }
