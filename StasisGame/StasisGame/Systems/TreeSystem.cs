@@ -72,6 +72,9 @@ namespace StasisGame.Systems
             _physicsSystem.world.QueryAABB((FixtureProxy fixtureProxy) =>
             {
                 // Skip certain collisions
+                int entityId = (int)fixtureProxy.fixture.GetBody().GetUserData();
+                if (_entityManager.getComponent(entityId, ComponentType.IgnoreTreeCollision) != null)
+                    return true;
                 /*
                 UserData data = fixtureProxy.fixture.GetBody().GetUserData() as UserData;
                 if (data.actorType == ActorType.LIMB || data.actorType == ActorType.WALL_GROUP ||

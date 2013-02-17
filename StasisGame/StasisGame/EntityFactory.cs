@@ -252,6 +252,7 @@ namespace StasisGame
             _entityManager.addComponent(entityId, new PhysicsComponent(body));
             _entityManager.addComponent(entityId, new ItemComponent(Loader.loadInt(data.Attribute("quantity"), 1)));
             _entityManager.addComponent(entityId, new WorldItemRenderComponent(worldTexture));
+            _entityManager.addComponent(entityId, new IgnoreTreeCollisionComponent());
         }
 
         // Process of creating a rope
@@ -383,6 +384,7 @@ namespace StasisGame
             entityId = _entityManager.createEntity();
             _entityManager.addComponent(entityId, new RopePhysicsComponent(head));
             _entityManager.addComponent(entityId, new RopeRenderComponent());
+            _entityManager.addComponent(entityId, new IgnoreTreeCollisionComponent());
 
             RopeNode current = head;
             while (current != null)
@@ -446,6 +448,7 @@ namespace StasisGame
 
             _entityManager.addComponent(entityId, new PhysicsComponent(body));
             _entityManager.addComponent(entityId, createBodyRenderComponent(data));
+            _entityManager.addComponent(entityId, new IgnoreTreeCollisionComponent());
         }
 
         public void createTree(XElement data)
@@ -539,6 +542,7 @@ namespace StasisGame
             _entityManager.addComponent(entityId, new CharacterMovementComponent(feetFixture));
             _entityManager.addComponent(entityId, new CharacterRenderComponent());
             _entityManager.addComponent(entityId, new BodyFocusPointComponent(body, new Vector2(0, -2f), FocusType.Multiple));
+            _entityManager.addComponent(entityId, new IgnoreTreeCollisionComponent());
             (_systemManager.getSystem(SystemType.Player) as PlayerSystem).playerId = entityId;
         }
     }

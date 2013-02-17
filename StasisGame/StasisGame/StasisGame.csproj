@@ -82,6 +82,7 @@
     <Compile Include="Components\CharacterMovementComponent.cs" />
     <Compile Include="Components\CharacterRenderComponent.cs" />
     <Compile Include="Components\IComponent.cs" />
+    <Compile Include="Components\IgnoreTreeCollisionComponent.cs" />
     <Compile Include="Components\InputComponent.cs" />
     <Compile Include="Components\ItemComponent.cs" />
     <Compile Include="Components\PlayerComponent.cs" />

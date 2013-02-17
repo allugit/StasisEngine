@@ -37,6 +37,7 @@ namespace StasisGame.Systems
 
             // Create ground body
             groundBodyDef.type = BodyType.Static;
+            groundBodyDef.userData = _entityManager.createEntity();
             circleShape._radius = 0.1f;
             fixtureDef.isSensor = true;
             fixtureDef.shape = circleShape;
