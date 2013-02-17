@@ -91,6 +91,7 @@ namespace StasisGame
         public Metamer rootMetamer { get { return _rootMetamer; } }
         public float minLeafRatioCutoff { get { return _minLeafRatioCutoff; } }
         public float leafRatioOffset { get { return _leafRatioOffset; } }
+        public bool active { get { return _active; } }
 
         /*
         // Debug
