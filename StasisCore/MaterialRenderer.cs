@@ -164,6 +164,7 @@ namespace StasisCore
                         current,
                         growthFactor,
                         radialLayer.textureUIDs,
+                        radialLayer.scaleWithGrowthFactor,
                         radialLayer.a,
                         radialLayer.b,
                         radialLayer.intersections,
@@ -423,8 +424,9 @@ namespace StasisCore
         public Texture2D radialScatterPass(
             Texture2D current,
             float growthFactor,
-            List<string> textureUIDs, 
-            float a, 
+            List<string> textureUIDs,
+            bool scaleWithGrowthFactor,
+            float a,
             float b, 
             float intersections, 
             float maxRadius, 
@@ -500,11 +502,12 @@ namespace StasisCore
                         Vector2 j = new Vector2((float)(_random.NextDouble() * 2 - 1) * jitter, (float)(_random.NextDouble() * 2 - 1) * jitter);
                         Texture2D texture = textures[_random.Next(textures.Count)];
                         Color actualColor = getRandomColor(baseColor, randomRed, randomGreen, randomBlue, randomAlpha);
-                        _spriteBatch.Draw(texture, new Vector2(r * (float)Math.Cos(modifiedTheta), r * (float)Math.Sin(modifiedTheta)) + j + center, texture.Bounds, actualColor, textureAngle, new Vector2(texture.Width, texture.Height) / 2, 1f, SpriteEffects.None, 0);
+                        float textureScale = scaleWithGrowthFactor ? growthFactor : 1f;
+                        _spriteBatch.Draw(texture, new Vector2(r * (float)Math.Cos(modifiedTheta), r * (float)Math.Sin(modifiedTheta)) + j + center, texture.Bounds, actualColor, textureAngle, new Vector2(texture.Width, texture.Height) / 2, textureScale, SpriteEffects.None, 0);
                         if (twinArms)
                         {
                             j = new Vector2((float)(_random.NextDouble() * 2 - 1) * jitter, (float)(_random.NextDouble() * 2 - 1) * jitter);
-                            _spriteBatch.Draw(texture, new Vector2(r * (float)Math.Cos(-modifiedTheta), r * (float)Math.Sin(-modifiedTheta)) + j + center, texture.Bounds, actualColor, -textureAngle, new Vector2(texture.Width, texture.Height) / 2, 1f, SpriteEffects.None, 0);
+                            _spriteBatch.Draw(texture, new Vector2(r * (float)Math.Cos(-modifiedTheta), r * (float)Math.Sin(-modifiedTheta)) + j + center, texture.Bounds, actualColor, -textureAngle, new Vector2(texture.Width, texture.Height) / 2, textureScale, SpriteEffects.None, 0);
                         }
                     }
                     theta += thetaIncrement;

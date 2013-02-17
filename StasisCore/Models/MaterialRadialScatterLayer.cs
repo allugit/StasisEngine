@@ -8,6 +8,7 @@ namespace StasisCore.Models
 {
     public class MaterialRadialScatterLayer : MaterialScatterLayer
     {
+        protected bool _scaleWithGrowthFactor;
         protected float _a;
         protected float _b;
         protected float _intersections;
@@ -28,6 +29,7 @@ namespace StasisCore.Models
         protected int _randomBlue;
         protected int _randomAlpha;
 
+        public bool scaleWithGrowthFactor { get { return _scaleWithGrowthFactor; } set { _scaleWithGrowthFactor = value; } }
         public float a { get { return _a; } set { _a = value; } }
         public float b { get { return _b; } set { _b = value; } }
         public float intersections { get { return _intersections; } set { _intersections = value; } }
