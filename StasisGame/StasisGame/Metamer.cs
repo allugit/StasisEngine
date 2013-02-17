@@ -1511,7 +1511,7 @@ namespace StasisGame
         {
             //Console.WriteLine("fix this");
             if (leafTexture != null)
-                renderSystem.spriteBatch.Draw(leafTexture, (position - renderSystem.screenCenter) * renderSystem.scale + new Vector2(renderSystem.screenWidth, renderSystem.screenHeight) / 2f, leafTexture.Bounds, textureColor, currentTextureAngle, new Vector2(leafTexture.Width, leafTexture.Height) / 2, 1, SpriteEffects.None, 0);
+                renderSystem.spriteBatch.Draw(leafTexture, (position - renderSystem.screenCenter) * renderSystem.scale + renderSystem.halfScreen, leafTexture.Bounds, textureColor, currentTextureAngle, new Vector2(leafTexture.Width, leafTexture.Height) / 2, 1, SpriteEffects.None, 0);
 
             if (mainMetamer != null)
                 mainMetamer.draw(renderSystem);

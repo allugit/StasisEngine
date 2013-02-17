@@ -44,14 +44,14 @@ namespace StasisGame.Systems
         {
             List<int> treeEntities = _entityManager.getEntitiesPosessing(ComponentType.Tree);
 
-            // Update plantAABB
+            // Update treeAABB
             Vector2 screenCenter = _renderSystem.screenCenter;
             float halfWidth = ((float)_renderSystem.screenWidth / _renderSystem.scale) / 2f;
             float halfHeight = ((float)_renderSystem.screenHeight / _renderSystem.scale) / 2f;
-            treeAABB.lowerBound.X = -screenCenter.X - halfWidth;
-            treeAABB.upperBound.X = -screenCenter.X + halfWidth;
-            treeAABB.lowerBound.Y = -screenCenter.Y - halfHeight;
-            treeAABB.upperBound.Y = -screenCenter.Y + halfHeight;
+            treeAABB.lowerBound.X = screenCenter.X - halfWidth;
+            treeAABB.upperBound.X = screenCenter.X + halfWidth;
+            treeAABB.lowerBound.Y = screenCenter.Y - halfHeight;
+            treeAABB.upperBound.Y = screenCenter.Y + halfHeight;
 
             prepareCollisions();
 

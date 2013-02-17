@@ -29,6 +29,7 @@ namespace StasisGame.Systems
         private Effect _primitivesEffect;
         private Matrix _viewMatrix;
         private Matrix _projectionMatrix;
+        private Vector2 _halfScreen;
 
         public int defaultPriority { get { return 90; } }
         public SystemType systemType { get { return SystemType.Render; } }
@@ -36,6 +37,7 @@ namespace StasisGame.Systems
         public float scale { get { return _scale; } }
         public int screenWidth { get { return _graphicsDevice.Viewport.Width; } }
         public int screenHeight { get { return _graphicsDevice.Viewport.Height; } }
+        public Vector2 halfScreen { get { return _halfScreen; } }
         public Vector2 screenCenter { get { return _cameraSystem.screenCenter; } }
         public SpriteBatch spriteBatch { get { return _spriteBatch; } }
 
@@ -77,8 +79,8 @@ namespace StasisGame.Systems
             List<int> characterMovementEntities = _entityManager.getEntitiesPosessing(ComponentType.CharacterMovement);
             List<int> treeEntities = _entityManager.getEntitiesPosessing(ComponentType.Tree);
             Vector2 screenCenter = _cameraSystem.screenCenter;
-            Vector2 halfScreen = new Vector2(_graphicsDevice.Viewport.Width, _graphicsDevice.Viewport.Height) / 2;
 
+            _halfScreen = new Vector2(_graphicsDevice.Viewport.Width, _graphicsDevice.Viewport.Height) / 2;
             _viewMatrix = Matrix.CreateTranslation(new Vector3(-screenCenter, 0)) * Matrix.CreateScale(new Vector3(_scale, -_scale, 1f));
             _projectionMatrix = Matrix.CreateOrthographic(_graphicsDevice.Viewport.Width, _graphicsDevice.Viewport.Height, 0, 1);
             _primitivesEffect.Parameters["view"].SetValue(_viewMatrix);
@@ -105,7 +107,7 @@ namespace StasisGame.Systems
                 RopeNode current = ropePhysicsComponent.head;
                 while (current != null)
                 {
-                    _spriteBatch.Draw(_pixel, (current.body.GetPosition() - screenCenter) * _scale + halfScreen, new Rectangle(0, 0, 16, 4), Color.Red, current.body.GetAngle(), new Vector2(8, 2), 1f, SpriteEffects.None, 0);
+                    _spriteBatch.Draw(_pixel, (current.body.GetPosition() - screenCenter) * _scale + _halfScreen, new Rectangle(0, 0, 16, 4), Color.Red, current.body.GetAngle(), new Vector2(8, 2), 1f, SpriteEffects.None, 0);
                     current = current.next;
                 }
             }
@@ -115,7 +117,7 @@ namespace StasisGame.Systems
                 for (int i = 0; i < fluidSystem.numActiveParticles; i++)
                 {
                     Particle particle = fluidSystem.liquid[fluidSystem.activeParticles[i]];
-                    _spriteBatch.Draw(_pixel, (particle.position - screenCenter) * _scale + halfScreen, new Rectangle(0, 0, 4, 4), Color.Blue, 0, new Vector2(2, 2), 1f, SpriteEffects.None, 0);
+                    _spriteBatch.Draw(_pixel, (particle.position - screenCenter) * _scale + _halfScreen, new Rectangle(0, 0, 4, 4), Color.Blue, 0, new Vector2(2, 2), 1f, SpriteEffects.None, 0);
                 }
             }
 
@@ -124,7 +126,7 @@ namespace StasisGame.Systems
                 PhysicsComponent physicsComponent = (PhysicsComponent)_entityManager.getComponent(worldItemRenderEntities[i], ComponentType.Physics);
                 WorldItemRenderComponent renderComponent = (WorldItemRenderComponent)_entityManager.getComponent(worldItemRenderEntities[i], ComponentType.WorldItemRender);
 
-                _spriteBatch.Draw(renderComponent.worldTexture, (physicsComponent.body.GetPosition() - screenCenter) * _scale + new Vector2(_graphicsDevice.Viewport.Width, _graphicsDevice.Viewport.Height) / 2, renderComponent.worldTexture.Bounds, Color.White, physicsComponent.body.GetAngle(), new Vector2(renderComponent.worldTexture.Width, renderComponent.worldTexture.Height) / 2f, 1f, SpriteEffects.None, 0);
+                _spriteBatch.Draw(renderComponent.worldTexture, (physicsComponent.body.GetPosition() - screenCenter) * _scale + _halfScreen, renderComponent.worldTexture.Bounds, Color.White, physicsComponent.body.GetAngle(), new Vector2(renderComponent.worldTexture.Width, renderComponent.worldTexture.Height) / 2f, 1f, SpriteEffects.None, 0);
             }
 
             for (int i = 0; i < characterRenderEntities.Count; i++)
@@ -136,7 +138,7 @@ namespace StasisGame.Systems
                 Rectangle source = new Rectangle(0, 0, (int)(shapeWidth * _scale), (int)(shapeHeight * _scale));
                 Vector2 origin = new Vector2(source.Width / 2f, source.Height / 2f);
 
-                _spriteBatch.Draw(_pixel, (physicsComponent.body.GetPosition() - screenCenter) * _scale + halfScreen, source, Color.White, 0, origin, 1f, SpriteEffects.None, 0);
+                _spriteBatch.Draw(_pixel, (physicsComponent.body.GetPosition() - screenCenter) * _scale + _halfScreen, source, Color.White, 0, origin, 1f, SpriteEffects.None, 0);
             }
 
             for (int i = 0; i < characterMovementEntities.Count; i++)
@@ -147,7 +149,7 @@ namespace StasisGame.Systems
                 Rectangle source = new Rectangle(0, 0, (int)(movementNormal.Length() * _scale), 2);
                 float angle = characterMovementComponent.movementAngle;
 
-                _spriteBatch.Draw(_pixel, (physicsComponent.body.GetPosition() - screenCenter) * _scale + halfScreen, source, Color.Yellow, angle, new Vector2(0, 1), 1f, SpriteEffects.None, 0);
+                _spriteBatch.Draw(_pixel, (physicsComponent.body.GetPosition() - screenCenter) * _scale + _halfScreen, source, Color.Yellow, angle, new Vector2(0, 1), 1f, SpriteEffects.None, 0);
             }
 
             _primitivesEffect.Parameters["world"].SetValue(Matrix.Identity);
