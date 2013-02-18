@@ -76,7 +76,7 @@ namespace StasisEditor.Models
             base.deselect();
         }
 
-        private void triangulate()
+        public void triangulate()
         {
             List<PolygonPoint> points = new List<PolygonPoint>();
             PointListNode current = _headPoint;

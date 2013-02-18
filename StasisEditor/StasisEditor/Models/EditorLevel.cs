@@ -19,6 +19,7 @@ namespace StasisEditor.Models
         //private List<EditorActor> _actors;
         private List<EditorActor> _actorsToAdd;
         private List<EditorActor> _actorsToRemove;
+        private bool _firstDraw = true;
 
         //[Browsable(false)]
         //public List<EditorActor> actors { get { return _actors; } }
@@ -324,8 +325,19 @@ namespace StasisEditor.Models
         // Draw
         public void draw()
         {
-            //foreach (EditorActor actor in _actors)
-            //    actor.draw();
+            // Fix polygon texture (is black for some reason when first drawn, despite all vertices' colors being set correctly)
+            if (_firstDraw)
+            {
+                _firstDraw = false;
+                List<EditorPolygonActor> polygonActors = getActors<EditorPolygonActor>(ActorType.Terrain);
+                polygonActors.AddRange(getActors<EditorPolygonActor>(ActorType.Fluid));
+
+                foreach (EditorPolygonActor polygonActor in polygonActors)
+                {
+                    polygonActor.triangulate();
+                }
+            }
+
             foreach (List<EditorActor> actors in _sortedActors.Values)
             {
                 foreach (EditorActor actor in actors)
