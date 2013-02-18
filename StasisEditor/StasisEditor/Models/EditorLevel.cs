@@ -138,7 +138,7 @@ namespace StasisEditor.Models
                 {
                     case "Circuit":
                         //actors.Add(new EditorCircuitActor(this, actorData));
-                        addActor(new EditorCircleActor(this, actorData), true);
+                        addActor(new EditorCircuitActor(this, actorData), true);
                         break;
 
                     case "Revolute":

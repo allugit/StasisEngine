@@ -146,7 +146,10 @@ namespace StasisEditor.Models
                                 });
 
                             if (connectionFormed)
-                                break;
+                            {
+                                deselect();
+                                return;
+                            }
                         }
                     }
                 }
