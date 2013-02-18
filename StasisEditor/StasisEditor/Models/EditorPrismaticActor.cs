@@ -22,6 +22,11 @@ namespace StasisEditor.Models
         private Vector2 _position;
         private float _lowerLimit;
         private float _upperLimit;
+        private bool _isButton;
+        private float _buttonForceDifference;
+        private bool _disableOnUpperLimitReached;
+        private bool _disableOnLowerLimitReached;
+        private float _motorSpeed;
 
         [Browsable(false)]
         public override Vector2 circuitConnectionPosition { get { return _position; } }
@@ -37,11 +42,21 @@ namespace StasisEditor.Models
                 d.SetAttributeValue("axis", new Vector2((float)Math.Cos(_angle), (float)Math.Sin(_angle)));
                 d.SetAttributeValue("lower_limit", _lowerLimit);
                 d.SetAttributeValue("upper_limit", _upperLimit);
+                d.SetAttributeValue("is_button", _isButton);
+                d.SetAttributeValue("button_force_difference", _buttonForceDifference);
+                d.SetAttributeValue("disable_on_lower_limit_reached", _disableOnLowerLimitReached);
+                d.SetAttributeValue("disable_on_upper_limit_reached", _disableOnUpperLimitReached);
+                d.SetAttributeValue("motor_speed", _motorSpeed);
                 return d;
             }
         }
-        private float lowerLimit { get { return _lowerLimit; } set { _lowerLimit = Math.Min(value, 0f); } }
-        private float upperLimit { get { return _upperLimit; } set { _upperLimit = Math.Max(value, 0f); } }
+        public float lowerLimit { get { return _lowerLimit; } set { _lowerLimit = Math.Min(value, 0f); } }
+        public float upperLimit { get { return _upperLimit; } set { _upperLimit = Math.Max(value, 0f); } }
+        public bool isButton { get { return _isButton; } set { _isButton = value; } }
+        public float buttonForceDifference { get { return _buttonForceDifference; } set { _buttonForceDifference = value; } }
+        public bool disableOnUpperLimitReached { get { return _disableOnUpperLimitReached; } set { _disableOnUpperLimitReached = value; } }
+        public bool disableOnLowerLimitReacher { get { return _disableOnLowerLimitReached; } set { _disableOnLowerLimitReached = value; } }
+        public float motorSpeed { get { return _motorSpeed; } set { _motorSpeed = value; } }
 
         public EditorPrismaticActor(EditorLevel level)
             : base(level, ActorType.Prismatic, level.controller.getUnusedActorID())
@@ -50,6 +65,11 @@ namespace StasisEditor.Models
             _angle = 0f;
             _lowerLimit = 0f;
             _upperLimit = 0f;
+            _isButton = false;
+            _buttonForceDifference = 1f;
+            _disableOnLowerLimitReached = false;
+            _disableOnUpperLimitReached = false;
+            _motorSpeed = 0f;
             initializeControls();
             _selectedConnectionA = true;
             _selectedConnectionB = true;
@@ -68,6 +88,11 @@ namespace StasisEditor.Models
             _angle = (float)Math.Atan2(axis.Y, axis.X);
             lowerLimit = Loader.loadFloat(data.Attribute("lower_limit"), 0f);
             upperLimit = Loader.loadFloat(data.Attribute("upper_limit"), 0f);
+            _isButton = Loader.loadBool(data.Attribute("is_button"), false);
+            _buttonForceDifference = Loader.loadFloat(data.Attribute("button_force_difference"), 0f);
+            _disableOnLowerLimitReached = Loader.loadBool(data.Attribute("disable_on_lower_limit_reached"), false);
+            _disableOnUpperLimitReached = Loader.loadBool(data.Attribute("disable_on_upper_limit_reached"), false);
+            _motorSpeed = Loader.loadFloat(data.Attribute("motor_speed"), 0f);
             initializeControls();
         }
 

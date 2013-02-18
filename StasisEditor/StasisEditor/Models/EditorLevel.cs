@@ -23,6 +23,7 @@ namespace StasisEditor.Models
 
         //[Browsable(false)]
         //public List<EditorActor> actors { get { return _actors; } }
+        [Browsable(false)]
         public SortedDictionary<float, List<EditorActor>> sortedActors { get { return _sortedActors; } }
         [Browsable(false)]
         public XElement data
