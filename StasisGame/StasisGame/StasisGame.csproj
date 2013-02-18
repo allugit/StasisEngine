@@ -88,6 +88,7 @@
     <Compile Include="Components\InputComponent.cs" />
     <Compile Include="Components\ItemComponent.cs" />
     <Compile Include="Components\PlayerComponent.cs" />
+    <Compile Include="Components\PrismaticJointComponent.cs" />
     <Compile Include="Components\RevoluteComponent.cs" />
     <Compile Include="Components\TreeComponent.cs" />
     <Compile Include="Components\WorldItemRenderComponent.cs" />

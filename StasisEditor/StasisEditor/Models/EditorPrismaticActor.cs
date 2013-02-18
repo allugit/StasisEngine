@@ -190,9 +190,9 @@ namespace StasisEditor.Models
                 if (_level.controller.isKeyHeld(Keys.S))
                     _upperLimit = Math.Max(_upperLimit - limitIncrement, 0f);
                 if (_level.controller.isKeyHeld(Keys.A))
-                    _lowerLimit += limitIncrement;
+                    _lowerLimit -= limitIncrement;
                 if (_level.controller.isKeyHeld(Keys.D))
-                    _lowerLimit = Math.Max(_lowerLimit - limitIncrement, 0f);
+                    _lowerLimit = Math.Min(_lowerLimit + limitIncrement, 0f);
 
                 if (_level.controller.isKeyPressed(Keys.Escape))
                     deselect();
@@ -210,7 +210,7 @@ namespace StasisEditor.Models
             Vector2 axis = new Vector2((float)Math.Cos(_angle), (float)Math.Sin(_angle));
             _level.controller.view.drawLine(_position, _position + axis, Color.Purple, _layerDepth + 0.0001f);
             _level.controller.view.drawLine(_position, _position - axis, Color.Purple, _layerDepth + 0.0001f);
-            _level.controller.view.drawLine(_position, _position + axis * _upperLimit, Color.DarkGray, _layerDepth);
+            _level.controller.view.drawLine(_position, _position - axis * _upperLimit, Color.DarkGray, _layerDepth);
             _level.controller.view.drawLine(_position, _position - axis * _lowerLimit, Color.DarkGray, _layerDepth);
 
             // Connections and controls

@@ -19,7 +19,8 @@ namespace StasisGame.Components
         IgnoreTreeCollision,
         GroundBody,
         EditorId,
-        Revolute
+        Revolute,
+        Prismatic
     };
 
     public interface IComponent

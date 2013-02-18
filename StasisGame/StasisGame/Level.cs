@@ -121,6 +121,7 @@ namespace StasisGame
                         break;
 
                     case "Prismatic":
+                        _entityManager.factory.createPrismaticJoint(actorData);
                         break;
                 }
             }

@@ -38,6 +38,22 @@ namespace StasisGame
             _entityManager = entityManager;
         }
 
+        private Body matchBodyToEditorId(int editorId)
+        {
+            List<int> editorIdEntities = _entityManager.getEntitiesPosessing(ComponentType.EditorId);
+
+            if (editorId == -1)
+                return _entityManager.getComponents<GroundBodyComponent>(ComponentType.GroundBody)[0].body;
+
+            for (int i = 0; i < editorIdEntities.Count; i++)
+            {
+                EditorIdComponent editorIdComponent = _entityManager.getComponent(editorIdEntities[i], ComponentType.EditorId) as EditorIdComponent;
+                if (editorIdComponent.id == editorId)
+                    return (_entityManager.getComponent(editorIdEntities[i], ComponentType.Physics) as PhysicsComponent).body;
+            }
+            return null;
+        }
+
         private BodyRenderComponent createBodyRenderComponent(XElement data)
         {
             RenderSystem renderSystem = (RenderSystem)_systemManager.getSystem(SystemType.Render);
@@ -555,30 +571,20 @@ namespace StasisGame
         public void createRevoluteJoint(XElement data)
         {
             World world = (_systemManager.getSystem(SystemType.Physics) as PhysicsSystem).world;
-            int entityId = _entityManager.createEntity();
+            int entityId;
             GroundBodyComponent groundBodyComponent = _entityManager.getComponents<GroundBodyComponent>(ComponentType.GroundBody)[0];
             int editorIdA = int.Parse(data.Attribute("actor_a").Value);
             int editorIdB = int.Parse(data.Attribute("actor_b").Value);
             Vector2 jointWorldPosition = Loader.loadVector2(data.Attribute("position"), Vector2.Zero);
-            List<int> editorIdEntities = _entityManager.getEntitiesPosessing(ComponentType.EditorId);
             RevoluteJointDef jointDef = new RevoluteJointDef();
             Body bodyA = null;
             Body bodyB = null;
 
-            for (int i = 0; i < editorIdEntities.Count; i++)
-            {
-                EditorIdComponent editorIdComponent = _entityManager.getComponent(editorIdEntities[i], ComponentType.EditorId) as EditorIdComponent;
-                if (editorIdComponent.id == editorIdA)
-                    bodyA = (_entityManager.getComponent(editorIdEntities[i], ComponentType.Physics) as PhysicsComponent).body;
-                else if (editorIdComponent.id == editorIdB)
-                    bodyB = (_entityManager.getComponent(editorIdEntities[i], ComponentType.Physics) as PhysicsComponent).body;
-            }
-
             if (editorIdA == -1 && editorIdB == -1)
                 return;
 
-            bodyA = editorIdA == -1 ? groundBodyComponent.body : bodyA;
-            bodyB = editorIdB == -1 ? groundBodyComponent.body : bodyB;
+            bodyA = matchBodyToEditorId(editorIdA);
+            bodyB = matchBodyToEditorId(editorIdB);
 
             jointDef.bodyA = bodyA;
             jointDef.bodyB = bodyB;
@@ -586,7 +592,35 @@ namespace StasisGame
             jointDef.localAnchorA = bodyA.GetLocalPoint(jointWorldPosition);
             jointDef.localAnchorB = bodyB.GetLocalPoint(jointWorldPosition);
 
+            entityId = _entityManager.createEntity();
             _entityManager.addComponent(entityId, new RevoluteComponent((RevoluteJoint)world.CreateJoint(jointDef)));
+        }
+
+        public void createPrismaticJoint(XElement data)
+        {
+            World world = (_systemManager.getSystem(SystemType.Physics) as PhysicsSystem).world;
+            int entityId;
+            GroundBodyComponent groundBodyComponent = _entityManager.getComponents<GroundBodyComponent>(ComponentType.GroundBody)[0];
+            PrismaticJointDef jointDef = new PrismaticJointDef();
+            int editorId = int.Parse(data.Attribute("actor_id").Value);
+            Vector2 jointWorldPosition = Loader.loadVector2(data.Attribute("position"), Vector2.Zero);
+            Vector2 axis = Loader.loadVector2(data.Attribute("axis"), new Vector2(1, 0));
+            float upperLimit = Loader.loadFloat(data.Attribute("upper_limit"), 0f);
+            float lowerLimit = Loader.loadFloat(data.Attribute("lower_limit"), 0f);
+            Body bodyA = null;
+
+            if (editorId == -1)
+                return;
+
+            bodyA = matchBodyToEditorId(editorId);
+            jointDef.Initialize(bodyA, groundBodyComponent.body, bodyA.GetWorldCenter(), axis);
+            jointDef.lowerTranslation = lowerLimit;
+            jointDef.upperTranslation = upperLimit;
+            jointDef.enableLimit = lowerLimit != 0 || upperLimit != 0;
+            jointDef.enableMotor = false;
+
+            entityId = _entityManager.createEntity();
+            _entityManager.addComponent(entityId, new PrismaticJointComponent((PrismaticJoint)world.CreateJoint(jointDef)));
         }
     }
 }
