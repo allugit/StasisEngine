@@ -85,5 +85,7 @@ namespace StasisEditor.Models
         virtual public void update() { }
 
         abstract public void draw();
+
+        virtual public EditorActor clone() { return null; }
     }
 }

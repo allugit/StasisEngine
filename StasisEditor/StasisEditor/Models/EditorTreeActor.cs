@@ -158,9 +158,8 @@ namespace StasisEditor.Models
                         {
                             if (_level.controller.shift)
                             {
-                                EditorTreeActor clone = new EditorTreeActor(_level, data);
-                                _level.addActor(clone);
-                                clone.select();
+                                EditorTreeActor copy = (EditorTreeActor)clone();
+                                copy.select();
                             }
                             else
                             {
@@ -200,6 +199,15 @@ namespace StasisEditor.Models
             }
 
             return false;
+        }
+
+        public override EditorActor clone()
+        {
+            XElement data = this.data;
+            data.SetAttributeValue("id", _level.controller.getUnusedActorID());
+            EditorTreeActor copy = new EditorTreeActor(_level, data);
+            _level.addActor(copy);
+            return copy;
         }
 
         public override void update()

@@ -124,7 +124,15 @@ namespace StasisEditor.Models
                 {
                     if (results.Count == 1 && results[0] == this)
                     {
-                        _level.controller.selectedActor = this;
+                        if (_level.controller.shift)
+                        {
+                            EditorBoxActor copy = (EditorBoxActor)clone();
+                            copy.select();
+                        }
+                        else
+                        {
+                            select();
+                        }
                         return true;
                     }
                     return false;
@@ -152,6 +160,15 @@ namespace StasisEditor.Models
                 results.Add(this);
 
             return callback(results);
+        }
+
+        public override EditorActor clone()
+        {
+            XElement data = this.data;
+            data.SetAttributeValue("id", _level.controller.getUnusedActorID());
+            EditorBoxActor copy = new EditorBoxActor(_level, data);
+            _level.addActor(copy);
+            return copy;
         }
 
         public override void update()
