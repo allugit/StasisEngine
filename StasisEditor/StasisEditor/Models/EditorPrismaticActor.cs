@@ -40,14 +40,16 @@ namespace StasisEditor.Models
                 return d;
             }
         }
+        private float lowerLimit { get { return _lowerLimit; } set { _lowerLimit = Math.Min(value, 0f); } }
+        private float upperLimit { get { return _upperLimit; } set { _upperLimit = Math.Max(value, 0f); } }
 
         public EditorPrismaticActor(EditorLevel level)
             : base(level, ActorType.Prismatic, level.controller.getUnusedActorID())
         {
             _position = level.controller.worldMouse;
             _angle = 0f;
-            _lowerLimit = 1f;
-            _upperLimit = 1f;
+            _lowerLimit = 0f;
+            _upperLimit = 0f;
             initializeControls();
             _selectedConnectionA = true;
             _selectedConnectionB = true;
@@ -64,8 +66,8 @@ namespace StasisEditor.Models
             _actorB = actorIdB == -1 ? null : level.getActor(actorIdB);
             Vector2 axis = Loader.loadVector2(data.Attribute("axis"), new Vector2(1, 0));
             _angle = (float)Math.Atan2(axis.Y, axis.X);
-            _lowerLimit = Loader.loadFloat(data.Attribute("lower_limit"), 1f);
-            _upperLimit = Loader.loadFloat(data.Attribute("upper_limit"), 1f);
+            lowerLimit = Loader.loadFloat(data.Attribute("lower_limit"), 0f);
+            upperLimit = Loader.loadFloat(data.Attribute("upper_limit"), 0f);
             initializeControls();
         }
 
@@ -216,13 +218,13 @@ namespace StasisEditor.Models
                 if (_level.controller.isKeyHeld(Keys.E))
                     _angle += angleIncrement;
                 if (_level.controller.isKeyHeld(Keys.W))
-                    _upperLimit += limitIncrement;
+                    upperLimit += limitIncrement;
                 if (_level.controller.isKeyHeld(Keys.S))
-                    _upperLimit = Math.Max(_upperLimit - limitIncrement, 0f);
+                    upperLimit -= limitIncrement;
                 if (_level.controller.isKeyHeld(Keys.A))
-                    _lowerLimit -= limitIncrement;
+                    lowerLimit -= limitIncrement;
                 if (_level.controller.isKeyHeld(Keys.D))
-                    _lowerLimit = Math.Min(_lowerLimit + limitIncrement, 0f);
+                    lowerLimit -= limitIncrement;
 
                 if (_level.controller.isKeyPressed(Keys.Escape))
                     deselect();
