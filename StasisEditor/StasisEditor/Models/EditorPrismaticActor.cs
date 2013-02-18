@@ -89,25 +89,28 @@ namespace StasisEditor.Models
         {
             if ((_selectedConnectionA || _selectedConnectionB) && !_moveActor)
             {
-                foreach (EditorActor actor in _level.actors)
+                foreach (List<EditorActor> actors in _level.sortedActors.Values)
                 {
-                    if (actor.type == ActorType.Box || actor.type == ActorType.Circle || actor.type == ActorType.Terrain)
+                    foreach (EditorActor actor in actors)
                     {
-                        PointListNode connectionControl = _selectedConnectionA ? _connectionA : _connectionB;
-                        if (actor.hitTest(connectionControl.position, (results) =>
-                            {
-                                if (results.Count > 0)
-                                {
-                                    if (_selectedConnectionA)
-                                        _actorA = actor;
-                                    else
-                                        _actorB = actor;
-                                    return true;
-                                }
-                                return false;
-                            }))
+                        if (actor.type == ActorType.Box || actor.type == ActorType.Circle || actor.type == ActorType.Terrain)
                         {
-                            break;
+                            PointListNode connectionControl = _selectedConnectionA ? _connectionA : _connectionB;
+                            if (actor.hitTest(connectionControl.position, (results) =>
+                                {
+                                    if (results.Count > 0)
+                                    {
+                                        if (_selectedConnectionA)
+                                            _actorA = actor;
+                                        else
+                                            _actorB = actor;
+                                        return true;
+                                    }
+                                    return false;
+                                }))
+                            {
+                                break;
+                            }
                         }
                     }
                 }
@@ -123,6 +126,7 @@ namespace StasisEditor.Models
                     {
                         if (results.Count > 0 && results[0] == this)
                         {
+                            Console.WriteLine(layerDepth);
                             _moveActor = true;
                             _selectedConnectionA = false;
                             _selectedConnectionB = false;
@@ -190,12 +194,12 @@ namespace StasisEditor.Models
             float limitIncrement = _level.controller.shift ? 0.0001f : 0.0005f;
 
             // Update connections
-            if (_actorA != null && !_level.actors.Contains(_actorA))
+            if (_actorA != null && !_level.containsActor(_actorA))
             {
                 _connectionA.position = _actorA.prismaticConnectionPosition;
                 _actorA = null;
             }
-            if (_actorB != null && !_level.actors.Contains(_actorB))
+            if (_actorB != null && !_level.containsActor(_actorB))
             {
                 _connectionB.position = _actorB.prismaticConnectionPosition;
                 _actorB = null;

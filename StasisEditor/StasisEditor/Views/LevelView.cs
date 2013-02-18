@@ -123,9 +123,11 @@ namespace StasisEditor.Views
                 _spriteBatch.Begin(SpriteSortMode.BackToFront, BlendState.AlphaBlend);
 
                 // Draw actor controllers
-                List<EditorActor> actors = _controller.level.actors;
-                foreach (EditorActor actor in actors)
-                    actor.draw();
+                foreach (List<EditorActor> actors in _controller.level.sortedActors.Values)
+                {
+                    foreach (EditorActor actor in actors)
+                        actor.draw();
+                }
 
                 _spriteBatch.End();
             }

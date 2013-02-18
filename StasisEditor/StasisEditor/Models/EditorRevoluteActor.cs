@@ -73,41 +73,44 @@ namespace StasisEditor.Models
             if (_selectedA || _selectedB)
             {
                 // Attempt to form a connection with another actor
-                foreach (EditorActor actor in _level.actors)
+                foreach (List<EditorActor> actors in _level.sortedActors.Values)
                 {
-                    // Only connect with certain actor types
-                    if (actor.type == ActorType.Box || actor.type == ActorType.Circle || actor.type == ActorType.Terrain)
+                    foreach (EditorActor actor in actors)
                     {
-                        if (_selectedA && actor != _actorB)
+                        // Only connect with certain actor types
+                        if (actor.type == ActorType.Box || actor.type == ActorType.Circle || actor.type == ActorType.Terrain)
                         {
-                            // Form a connection (actorA)
-                            if (actor.hitTest(_controlA.position, (results) =>
-                                {
-                                    if (results.Count > 0 && results[0] is EditorActor)
-                                    {
-                                        _actorA = actor;
-                                        return true;
-                                    }
-                                    return false;
-                                }))
+                            if (_selectedA && actor != _actorB)
                             {
-                                break;
+                                // Form a connection (actorA)
+                                if (actor.hitTest(_controlA.position, (results) =>
+                                    {
+                                        if (results.Count > 0 && results[0] is EditorActor)
+                                        {
+                                            _actorA = actor;
+                                            return true;
+                                        }
+                                        return false;
+                                    }))
+                                {
+                                    break;
+                                }
                             }
-                        }
-                        else if (_selectedB && actor != _actorA)
-                        {
-                            // Form a connection (actorB)
-                            if (actor.hitTest(_controlB.position, (results) =>
-                                {
-                                    if (results.Count > 0 && results[0] is EditorActor)
-                                    {
-                                        _actorB = actor;
-                                        return true;
-                                    }
-                                    return false;
-                                }))
+                            else if (_selectedB && actor != _actorA)
                             {
-                                break;
+                                // Form a connection (actorB)
+                                if (actor.hitTest(_controlB.position, (results) =>
+                                    {
+                                        if (results.Count > 0 && results[0] is EditorActor)
+                                        {
+                                            _actorB = actor;
+                                            return true;
+                                        }
+                                        return false;
+                                    }))
+                                {
+                                    break;
+                                }
                             }
                         }
                     }
@@ -193,12 +196,12 @@ namespace StasisEditor.Models
         {
             Vector2 worldDelta = _level.controller.worldDeltaMouse;
 
-            if (_actorA != null && !_level.actors.Contains(_actorA))
+            if (_actorA != null && !_level.containsActor(_actorA))
             {
                 _controlA.position = _actorA.revoluteConnectionPosition;
                 _actorA = null;
             }
-            if (_actorB != null && !_level.actors.Contains(_actorB))
+            if (_actorB != null && !_level.containsActor(_actorB))
             {
                 _controlB.position = _actorB.revoluteConnectionPosition;
                 _actorB = null;

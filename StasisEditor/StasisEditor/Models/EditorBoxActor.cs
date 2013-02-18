@@ -131,6 +131,7 @@ namespace StasisEditor.Models
                         }
                         else
                         {
+                            Console.WriteLine(layerDepth);
                             select();
                         }
                         return true;

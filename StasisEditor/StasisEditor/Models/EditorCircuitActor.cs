@@ -128,23 +128,26 @@ namespace StasisEditor.Models
             if (_selectedGateControls.Count == 1)
             {
                 // Perform an actor hit test and form a connection if successful
-                foreach (EditorActor actor in _level.actors)
+                foreach (List<EditorActor> actors in _level.sortedActors.Values)
                 {
-                    if (actor.type != ActorType.Circuit)
+                    foreach (EditorActor actor in actors)
                     {
-                        bool connectionFormed = actor.hitTest(_selectedGateControls[0].position, (results) =>
-                            {
-                                if (results.Count > 0)
+                        if (actor.type != ActorType.Circuit)
+                        {
+                            bool connectionFormed = actor.hitTest(_selectedGateControls[0].position, (results) =>
                                 {
-                                    _connections.Add(new CircuitConnection(this, actor, _selectedGateControls[0].gate));
-                                    _gateControls.Remove(_selectedGateControls[0]);
-                                    return true;
-                                }
-                                return false;
-                            });
+                                    if (results.Count > 0)
+                                    {
+                                        _connections.Add(new CircuitConnection(this, actor, _selectedGateControls[0].gate));
+                                        _gateControls.Remove(_selectedGateControls[0]);
+                                        return true;
+                                    }
+                                    return false;
+                                });
 
-                        if (connectionFormed)
-                            break;
+                            if (connectionFormed)
+                                break;
+                        }
                     }
                 }
             }
@@ -234,7 +237,7 @@ namespace StasisEditor.Models
             List<CircuitConnection> connectionsToRemove = new List<CircuitConnection>();
             foreach (CircuitConnection connection in _connections)
             {
-                if (!_level.actors.Contains(connection.actor))
+                if (!_level.containsActor(connection.actor))
                     connectionsToRemove.Add(connection);
             }
             foreach (CircuitConnection connection in connectionsToRemove)

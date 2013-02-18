@@ -77,6 +77,7 @@ namespace StasisEditor.Controllers
         // Get unused actor id
         public int getUnusedActorID()
         {
+            /*
             // Method to test if an id is being used
             Func<int, bool> isIdUsed = (id) =>
                 {
@@ -97,6 +98,8 @@ namespace StasisEditor.Controllers
                 current++;
 
             return current;
+            */
+            return _level.getUnusedActorId();
         }
 
         // createNewLevel
@@ -157,10 +160,15 @@ namespace StasisEditor.Controllers
 
                 case "playerSpawnButton":
                     // Remove existing player spawns before adding a new one
-                    foreach (EditorActor existingActor in _level.actors)
+                    //foreach (EditorActor existingActor in _level.actors)
+                    //{
+                    //    if (existingActor.type == ActorType.PlayerSpawn)
+                    //        _level.removeActor(existingActor);
+                    //}
+                    List<EditorPlayerSpawnActor> results = _level.getActors<EditorPlayerSpawnActor>(ActorType.PlayerSpawn);
+                    if (results.Count > 0)
                     {
-                        if (existingActor.type == ActorType.PlayerSpawn)
-                            _level.removeActor(existingActor);
+                        _level.removeActor(results[0]);
                     }
                     actor = new EditorPlayerSpawnActor(_level);
                     break;
@@ -244,7 +252,8 @@ namespace StasisEditor.Controllers
         // Update circuit actor connections
         public void updateCircuitActorConnections()
         {
-            foreach (EditorActor actor in _level.actors)
+            List<EditorCircuitActor> circuitActors = _level.getActors<EditorCircuitActor>(ActorType.Circuit);
+            foreach (EditorActor actor in circuitActors)
             {
                 if (actor.type == ActorType.Circuit)
                     throw new NotImplementedException();
@@ -261,11 +270,19 @@ namespace StasisEditor.Controllers
                 if (_selectedActor == null)
                 {
                     // Try to select an actor
-                    foreach (EditorActor actor in _level.actors)
+                    foreach (List<EditorActor> actors in _level.sortedActors.Values)
                     {
-                        if (actor.handleUnselectedClick(e.Button))
-                            break;
+                        foreach (EditorActor actor in actors)
+                        {
+                            if (actor.handleUnselectedClick(e.Button))
+                                return;
+                        }
                     }
+                    //foreach (EditorActor actor in _level.actors)
+                    //{
+                    //    if (actor.handleUnselectedClick(e.Button))
+                    //        break;
+                    //}
                 }
                 else
                 {

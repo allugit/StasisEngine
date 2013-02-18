@@ -8,26 +8,36 @@ using StasisEditor.Controllers;
 using StasisCore.Resources;
 using StasisCore.Models;
 using StasisCore.Controllers;
+using StasisCore;
 
 namespace StasisEditor.Models
 {
     public class EditorLevel : Level
     {
         private LevelController _controller;
-        private List<EditorActor> _actors;
+        private SortedDictionary<float, List<EditorActor>> _sortedActors;
+        //private List<EditorActor> _actors;
         private List<EditorActor> _actorsToAdd;
         private List<EditorActor> _actorsToRemove;
 
-        [Browsable(false)]
-        public List<EditorActor> actors { get { return _actors; } }
+        //[Browsable(false)]
+        //public List<EditorActor> actors { get { return _actors; } }
+        public SortedDictionary<float, List<EditorActor>> sortedActors { get { return _sortedActors; } }
         [Browsable(false)]
         public XElement data
         {
             get
             {
                 List<XElement> actorControllerData = new List<XElement>();
-                foreach (EditorActor actor in _actors)
-                    actorControllerData.Add(actor.data);
+                //foreach (EditorActor actor in _actors)
+                //    actorControllerData.Add(actor.data);
+                foreach (List<EditorActor> actors in _sortedActors.Values)
+                {
+                    foreach (EditorActor actor in actors)
+                    {
+                        actorControllerData.Add(actor.data);
+                    }
+                }
 
                 XElement d = new XElement("Level",
                     new XAttribute("name", _name),
@@ -45,7 +55,8 @@ namespace StasisEditor.Models
         public EditorLevel(LevelController levelController, string name) : base(name)
         {
             _controller = levelController;
-            _actors = new List<EditorActor>();
+            //_actors = new List<EditorActor>();
+            _sortedActors = new SortedDictionary<float, List<EditorActor>>();
             _actorsToAdd = new List<EditorActor>();
             _actorsToRemove = new List<EditorActor>();
         }
@@ -54,7 +65,8 @@ namespace StasisEditor.Models
         public EditorLevel(LevelController levelController, XElement data) : base(data)
         {
             _controller = levelController;
-            _actors = new List<EditorActor>();
+            //_actors = new List<EditorActor>();
+            _sortedActors = new SortedDictionary<float, List<EditorActor>>();
             _actorsToAdd = new List<EditorActor>();
             _actorsToRemove = new List<EditorActor>();
             List<XElement> secondPassData = new List<XElement>();
@@ -65,11 +77,13 @@ namespace StasisEditor.Models
                 switch (actorData.Attribute("type").Value)
                 {
                     case "Box":
-                        actors.Add(new EditorBoxActor(this, actorData));
+                        //actors.Add(new EditorBoxActor(this, actorData));
+                        addActor(new EditorBoxActor(this, actorData), true);
                         break;
 
                     case "Circle":
-                        actors.Add(new EditorCircleActor(this, actorData));
+                        //actors.Add(new EditorCircleActor(this, actorData));
+                        addActor(new EditorCircleActor(this, actorData), true);
                         break;
 
                     case "Circuit":
@@ -77,27 +91,33 @@ namespace StasisEditor.Models
                         break;
 
                     case "Fluid":
-                        actors.Add(new EditorFluidActor(this, actorData));
+                        //actors.Add(new EditorFluidActor(this, actorData));
+                        addActor(new EditorFluidActor(this, actorData), true);
                         break;
 
                     case "Item":
-                        actors.Add(new EditorItemActor(this, actorData));
+                        //actors.Add(new EditorItemActor(this, actorData));
+                        addActor(new EditorItemActor(this, actorData), true);
                         break;
 
                     case "PlayerSpawn":
-                        actors.Add(new EditorPlayerSpawnActor(this, actorData));
+                        //actors.Add(new EditorPlayerSpawnActor(this, actorData));
+                        addActor(new EditorPlayerSpawnActor(this, actorData), true);
                         break;
 
                     case "Rope":
-                        actors.Add(new EditorRopeActor(this, actorData));
+                        //actors.Add(new EditorRopeActor(this, actorData));
+                        addActor(new EditorRopeActor(this, actorData), true);
                         break;
 
                     case "Terrain":
-                        actors.Add(new EditorTerrainActor(this, actorData));
+                        //actors.Add(new EditorTerrainActor(this, actorData));
+                        addActor(new EditorTerrainActor(this, actorData), true);
                         break;
 
                     case "Tree":
-                        actors.Add(new EditorTreeActor(this, actorData));
+                        //actors.Add(new EditorTreeActor(this, actorData));
+                        addActor(new EditorTreeActor(this, actorData), true);
                         break;
 
                     case "Revolute":
@@ -116,15 +136,18 @@ namespace StasisEditor.Models
                 switch (actorData.Attribute("type").Value)
                 {
                     case "Circuit":
-                        actors.Add(new EditorCircuitActor(this, actorData));
+                        //actors.Add(new EditorCircuitActor(this, actorData));
+                        addActor(new EditorCircleActor(this, actorData), true);
                         break;
 
                     case "Revolute":
-                        actors.Add(new EditorRevoluteActor(this, actorData));
+                        //actors.Add(new EditorRevoluteActor(this, actorData));
+                        addActor(new EditorRevoluteActor(this, actorData), true);
                         break;
 
                     case "Prismatic":
-                        actors.Add(new EditorPrismaticActor(this, actorData));
+                        //actors.Add(new EditorPrismaticActor(this, actorData));
+                        addActor(new EditorPrismaticActor(this, actorData), true);
                         break;
                 }
             }
@@ -133,24 +156,81 @@ namespace StasisEditor.Models
         // Get actor by id
         public EditorActor getActor(int id)
         {
+            /*
             foreach (EditorActor actor in _actors)
             {
                 if (actor.id == id)
                     return actor;
+            }*/
+
+            foreach (List<EditorActor> actors in _sortedActors.Values)
+            {
+                foreach (EditorActor actor in actors)
+                {
+                    if (actor.id == id)
+                        return actor;
+                }
             }
+
             return null;
         }
 
-        // Add an actor
-        public void addActor(EditorActor actor)
+        // Get actors by type
+        public List<T> getActors<T>(ActorType actorType) where T : EditorActor
         {
-            _actorsToAdd.Add(actor);
+            List<T> results = new List<T>();
+
+            foreach (List<EditorActor> actors in _sortedActors.Values)
+            {
+                foreach (EditorActor actor in actors)
+                {
+                    if (actor.type == actorType)
+                        results.Add(actor as T);
+                }
+            }
+
+            return results;
+        }
+
+        // Contains actor
+        public bool containsActor(EditorActor actor)
+        {
+            foreach (List<EditorActor> actors in _sortedActors.Values)
+            {
+                if (actors.Contains(actor))
+                    return true;
+            }
+            return false;
+        }
+
+        // Add an actor
+        public void addActor(EditorActor actor, bool immediate = false)
+        {
+            if (immediate)
+            {
+                if (!_sortedActors.ContainsKey(actor.layerDepth))
+                    _sortedActors.Add(actor.layerDepth, new List<EditorActor>());
+                _sortedActors[actor.layerDepth].Add(actor);
+            }
+            else
+            {
+                _actorsToAdd.Add(actor);
+            }
         }
 
         // Remove an actor
-        public void removeActor(EditorActor actor)
+        public void removeActor(EditorActor actor, bool immediate = false)
         {
-            _actorsToRemove.Add(actor);
+            if (immediate)
+            {
+                _sortedActors[actor.layerDepth].Remove(actor);
+                if (_sortedActors[actor.layerDepth].Count == 0)
+                    _sortedActors.Remove(actor.layerDepth);
+            }
+            else
+            {
+                _actorsToRemove.Add(actor);
+            }
         }
 
         // Save
@@ -170,27 +250,88 @@ namespace StasisEditor.Models
             doc.Save(filePath);
         }
 
+        // Get unused actor id
+        public int getUnusedActorId()
+        {
+            // Method to test if an id is being used
+            Func<int, bool> isIdUsed = (id) =>
+            {
+                /*
+                foreach (EditorActor actor in _level.actors)
+                {
+                    if (actor.id == id)
+                    {
+                        id++;
+                        return true;
+                    }
+                }*/
+                foreach (List<EditorActor> actors in _sortedActors.Values)
+                {
+                    foreach (EditorActor actor in actors)
+                    {
+                        if (actor.id == id)
+                        {
+                            id++;
+                            return true;
+                        }
+                    }
+                }
+                return false;
+            };
+
+            // Start at zero, and increment until an id is not used
+            int current = 0;
+            while (isIdUsed(current))
+                current++;
+
+            return current;
+        }
+
         // Update
         public void update()
         {
+            //foreach (EditorActor actor in _actorsToAdd)
+            //    _actors.Add(actor);
             foreach (EditorActor actor in _actorsToAdd)
-                _actors.Add(actor);
+            {
+                if (!_sortedActors.ContainsKey(actor.layerDepth))
+                    _sortedActors.Add(actor.layerDepth, new List<EditorActor>());
+                _sortedActors[actor.layerDepth].Add(actor);
+            }
             _actorsToAdd.Clear();
 
+            //foreach (EditorActor actor in _actorsToRemove)
+            //    _actors.Remove(actor);
             foreach (EditorActor actor in _actorsToRemove)
-                _actors.Remove(actor);
+            {
+                _sortedActors[actor.layerDepth].Remove(actor);
+                if (_sortedActors[actor.layerDepth].Count == 0)
+                    _sortedActors.Remove(actor.layerDepth);
+            }
             _actorsToRemove.Clear();
 
-            foreach (EditorActor actor in _actors)
-                actor.update();
+            //foreach (EditorActor actor in _actors)
+            //    actor.update();
+            foreach (List<EditorActor> actors in _sortedActors.Values)
+            {
+                foreach (EditorActor actor in actors)
+                {
+                    actor.update();
+                }
+            }
         }
 
         // Draw
         public void draw()
         {
-            foreach (EditorActor actor in _actors)
+            //foreach (EditorActor actor in _actors)
+            //    actor.draw();
+            foreach (List<EditorActor> actors in _sortedActors.Values)
             {
-                actor.draw();
+                foreach (EditorActor actor in actors)
+                {
+                    actor.draw();
+                }
             }
         }
     }
