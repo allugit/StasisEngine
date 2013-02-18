@@ -81,11 +81,14 @@
     <Compile Include="Components\BodyFocusPointComponent.cs" />
     <Compile Include="Components\CharacterMovementComponent.cs" />
     <Compile Include="Components\CharacterRenderComponent.cs" />
+    <Compile Include="Components\EditorIdComponent.cs" />
+    <Compile Include="Components\GroundBodyComponent.cs" />
     <Compile Include="Components\IComponent.cs" />
     <Compile Include="Components\IgnoreTreeCollisionComponent.cs" />
     <Compile Include="Components\InputComponent.cs" />
     <Compile Include="Components\ItemComponent.cs" />
     <Compile Include="Components\PlayerComponent.cs" />
+    <Compile Include="Components\RevoluteComponent.cs" />
     <Compile Include="Components\TreeComponent.cs" />
     <Compile Include="Components\WorldItemRenderComponent.cs" />
     <Compile Include="Components\Particle.cs" />

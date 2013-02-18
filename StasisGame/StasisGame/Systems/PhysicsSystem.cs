@@ -30,19 +30,21 @@ namespace StasisGame.Systems
             BodyDef groundBodyDef = new BodyDef();
             CircleShape circleShape = new CircleShape();
             FixtureDef fixtureDef = new FixtureDef();
+            int groundId = _entityManager.createEntity();
 
             // Create world
             _world = new World(Loader.loadVector2(data.Attribute("gravity"), new Vector2(0, 32)), true);
             _world.ContactListener = this;
 
-            // Create ground body
+            // Create ground body/entity
             groundBodyDef.type = BodyType.Static;
-            groundBodyDef.userData = _entityManager.createEntity();
+            groundBodyDef.userData = groundId;
             circleShape._radius = 0.1f;
             fixtureDef.isSensor = true;
             fixtureDef.shape = circleShape;
             _groundBody = world.CreateBody(groundBodyDef);
             _groundBody.CreateFixture(fixtureDef);
+            _entityManager.addComponent(groundId, new GroundBodyComponent(_groundBody));
         }
 
         public void update()

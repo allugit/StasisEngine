@@ -16,7 +16,10 @@ namespace StasisGame.Components
         CharacterMovement,
         BodyFocusPoint,
         Tree,
-        IgnoreTreeCollision
+        IgnoreTreeCollision,
+        GroundBody,
+        EditorId,
+        Revolute
     };
 
     public interface IComponent

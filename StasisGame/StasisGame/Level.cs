@@ -117,6 +117,7 @@ namespace StasisGame
                         break;
 
                     case "Revolute":
+                        _entityManager.factory.createRevoluteJoint(actorData);
                         break;
 
                     case "Prismatic":

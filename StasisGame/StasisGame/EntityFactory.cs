@@ -188,6 +188,7 @@ namespace StasisGame
 
             _entityManager.addComponent(entityId, new PhysicsComponent(body));
             _entityManager.addComponent(entityId, createBodyRenderComponent(data));
+            _entityManager.addComponent(entityId, new EditorIdComponent(int.Parse(data.Attribute("id").Value)));
         }
 
         public void createCircle(XElement data)
@@ -213,6 +214,7 @@ namespace StasisGame
 
             _entityManager.addComponent(entityId, new PhysicsComponent(body));
             _entityManager.addComponent(entityId, createBodyRenderComponent(data));
+            _entityManager.addComponent(entityId, new EditorIdComponent(int.Parse(data.Attribute("id").Value)));
         }
 
         public void createFluid(XElement data)
@@ -253,6 +255,7 @@ namespace StasisGame
             _entityManager.addComponent(entityId, new ItemComponent(Loader.loadInt(data.Attribute("quantity"), 1)));
             _entityManager.addComponent(entityId, new WorldItemRenderComponent(worldTexture));
             _entityManager.addComponent(entityId, new IgnoreTreeCollisionComponent());
+            _entityManager.addComponent(entityId, new EditorIdComponent(int.Parse(data.Attribute("id").Value)));
         }
 
         // Process of creating a rope
@@ -385,6 +388,7 @@ namespace StasisGame
             _entityManager.addComponent(entityId, new RopePhysicsComponent(head));
             _entityManager.addComponent(entityId, new RopeRenderComponent());
             _entityManager.addComponent(entityId, new IgnoreTreeCollisionComponent());
+            _entityManager.addComponent(entityId, new EditorIdComponent(int.Parse(data.Attribute("id").Value)));
 
             RopeNode current = head;
             while (current != null)
@@ -449,6 +453,7 @@ namespace StasisGame
             _entityManager.addComponent(entityId, new PhysicsComponent(body));
             _entityManager.addComponent(entityId, createBodyRenderComponent(data));
             _entityManager.addComponent(entityId, new IgnoreTreeCollisionComponent());
+            _entityManager.addComponent(entityId, new EditorIdComponent(int.Parse(data.Attribute("id").Value)));
         }
 
         public void createTree(XElement data)
@@ -501,6 +506,7 @@ namespace StasisGame
             }
 
             _entityManager.addComponent(entityId, new TreeComponent(tree));
+            _entityManager.addComponent(entityId, new EditorIdComponent(int.Parse(data.Attribute("id").Value)));
         }
 
         public void createPlayer(XElement data)
@@ -544,6 +550,43 @@ namespace StasisGame
             _entityManager.addComponent(entityId, new BodyFocusPointComponent(body, new Vector2(0, -8f), FocusType.Multiple));
             _entityManager.addComponent(entityId, new IgnoreTreeCollisionComponent());
             (_systemManager.getSystem(SystemType.Player) as PlayerSystem).playerId = entityId;
+        }
+
+        public void createRevoluteJoint(XElement data)
+        {
+            World world = (_systemManager.getSystem(SystemType.Physics) as PhysicsSystem).world;
+            int entityId = _entityManager.createEntity();
+            GroundBodyComponent groundBodyComponent = _entityManager.getComponents<GroundBodyComponent>(ComponentType.GroundBody)[0];
+            int editorIdA = int.Parse(data.Attribute("actor_a").Value);
+            int editorIdB = int.Parse(data.Attribute("actor_b").Value);
+            Vector2 jointWorldPosition = Loader.loadVector2(data.Attribute("position"), Vector2.Zero);
+            List<int> editorIdEntities = _entityManager.getEntitiesPosessing(ComponentType.EditorId);
+            RevoluteJointDef jointDef = new RevoluteJointDef();
+            Body bodyA = null;
+            Body bodyB = null;
+
+            for (int i = 0; i < editorIdEntities.Count; i++)
+            {
+                EditorIdComponent editorIdComponent = _entityManager.getComponent(editorIdEntities[i], ComponentType.EditorId) as EditorIdComponent;
+                if (editorIdComponent.id == editorIdA)
+                    bodyA = (_entityManager.getComponent(editorIdEntities[i], ComponentType.Physics) as PhysicsComponent).body;
+                else if (editorIdComponent.id == editorIdB)
+                    bodyB = (_entityManager.getComponent(editorIdEntities[i], ComponentType.Physics) as PhysicsComponent).body;
+            }
+
+            if (editorIdA == -1 && editorIdB == -1)
+                return;
+
+            bodyA = editorIdA == -1 ? groundBodyComponent.body : bodyA;
+            bodyB = editorIdB == -1 ? groundBodyComponent.body : bodyB;
+
+            jointDef.bodyA = bodyA;
+            jointDef.bodyB = bodyB;
+            jointDef.collideConnected = false;
+            jointDef.localAnchorA = bodyA.GetLocalPoint(jointWorldPosition);
+            jointDef.localAnchorB = bodyB.GetLocalPoint(jointWorldPosition);
+
+            _entityManager.addComponent(entityId, new RevoluteComponent((RevoluteJoint)world.CreateJoint(jointDef)));
         }
     }
 }
