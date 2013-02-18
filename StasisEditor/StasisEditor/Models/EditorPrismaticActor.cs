@@ -10,9 +10,12 @@ namespace StasisEditor.Models
 {
     public class EditorPrismaticActor : EditorActor, IActorComponent
     {
-        private EditorActor _actor;
-        private PointListNode _connectionPoint;
-        private bool _selectedActorControl;
+        private EditorActor _actorA;
+        private EditorActor _actorB;
+        private PointListNode _connectionA;
+        private PointListNode _connectionB;
+        private bool _selectedConnectionA;
+        private bool _selectedConnectionB;
         private bool _moveActor;
         private float _angle;
 
@@ -29,7 +32,8 @@ namespace StasisEditor.Models
             {
                 XElement d = base.data;
                 d.SetAttributeValue("position", _position);
-                d.SetAttributeValue("actor_id", _actor == null ? -1 : _actor.id);
+                d.SetAttributeValue("actor_a", _actorA == null ? -1 : _actorA.id);
+                d.SetAttributeValue("actor_b", _actorB == null ? -1 : _actorB.id);
                 d.SetAttributeValue("axis", new Vector2((float)Math.Cos(_angle), (float)Math.Sin(_angle)));
                 d.SetAttributeValue("lower_limit", _lowerLimit);
                 d.SetAttributeValue("upper_limit", _upperLimit);
@@ -45,15 +49,19 @@ namespace StasisEditor.Models
             _lowerLimit = 1f;
             _upperLimit = 1f;
             initializeControls();
-            _selectedActorControl = true;
+            _selectedConnectionA = true;
+            _selectedConnectionB = true;
             _moveActor = true;
         }
 
         public EditorPrismaticActor(EditorLevel level, XElement data)
             : base(level, data)
         {
+            int actorIdA = Loader.loadInt(data.Attribute("actor_a"), -1);
+            int actorIdB = Loader.loadInt(data.Attribute("actor_b"), -1);
             _position = Loader.loadVector2(data.Attribute("position"), Vector2.Zero);
-            _actor = data.Attribute("actor_id").Value == "-1" ? null : level.getActor(int.Parse(data.Attribute("actor_id").Value));
+            _actorA = actorIdA == -1 ? null : level.getActor(actorIdA);
+            _actorB = actorIdB == -1 ? null : level.getActor(actorIdB);
             Vector2 axis = Loader.loadVector2(data.Attribute("axis"), new Vector2(1, 0));
             _angle = (float)Math.Atan2(axis.Y, axis.X);
             _lowerLimit = Loader.loadFloat(data.Attribute("lower_limit"), 1f);
@@ -63,29 +71,35 @@ namespace StasisEditor.Models
 
         private void initializeControls()
         {
-            _connectionPoint = new PointListNode(_position + new Vector2(-24f, 0f) / _level.controller.scale);
+            _connectionA = new PointListNode(_position + new Vector2(-24f, 0f) / _level.controller.scale);
+            _connectionB = new PointListNode(_position + new Vector2(24f, 0f) / _level.controller.scale);
         }
 
         protected override void deselect()
         {
-            _selectedActorControl = false;
+            _selectedConnectionA = false;
+            _selectedConnectionB = false;
             _moveActor = true;
             base.deselect();
         }
 
         public override void handleSelectedClick(System.Windows.Forms.MouseButtons button)
         {
-            if (_selectedActorControl && !_moveActor)
+            if ((_selectedConnectionA || _selectedConnectionB) && !_moveActor)
             {
                 foreach (EditorActor actor in _level.actors)
                 {
                     if (actor.type == ActorType.Box || actor.type == ActorType.Circle || actor.type == ActorType.Terrain)
                     {
-                        if (actor.hitTest(_connectionPoint.position, (results) =>
+                        PointListNode connectionControl = _selectedConnectionA ? _connectionA : _connectionB;
+                        if (actor.hitTest(connectionControl.position, (results) =>
                             {
                                 if (results.Count > 0)
                                 {
-                                    _actor = actor;
+                                    if (_selectedConnectionA)
+                                        _actorA = actor;
+                                    else
+                                        _actorB = actor;
                                     return true;
                                 }
                                 return false;
@@ -108,14 +122,18 @@ namespace StasisEditor.Models
                         if (results.Count > 0 && results[0] == this)
                         {
                             _moveActor = true;
-                            _selectedActorControl = false;
+                            _selectedConnectionA = false;
+                            _selectedConnectionB = false;
                             select();
                             return true;
                         }
-                        else if (results.Count > 0 && results[0] == _connectionPoint)
+                        else if (results.Count > 0 && (results[0] == _connectionA || results[0] == _connectionB))
                         {
                             _moveActor = false;
-                            _selectedActorControl = true;
+                            if (results[0] == _connectionA)
+                                _selectedConnectionA = true;
+                            else if (results[0] == _connectionB)
+                                _selectedConnectionB = true;
                             select();
                             return true;
                         }
@@ -149,9 +167,14 @@ namespace StasisEditor.Models
             }
 
             // Hit test connection control
-            if (_level.controller.hitTestPoint(testPoint, _connectionPoint.position))
+            if (_level.controller.hitTestPoint(testPoint, _connectionA.position))
             {
-                results.Add(_connectionPoint);
+                results.Add(_connectionA);
+                return callback(results);
+            }
+            else if (_level.controller.hitTestPoint(testPoint, _connectionB.position))
+            {
+                results.Add(_connectionB);
                 return callback(results);
             }
 
@@ -165,10 +188,15 @@ namespace StasisEditor.Models
             float limitIncrement = _level.controller.shift ? 0.0001f : 0.0005f;
 
             // Update connections
-            if (_actor != null && !_level.actors.Contains(_actor))
+            if (_actorA != null && !_level.actors.Contains(_actorA))
             {
-                _connectionPoint.position = _actor.prismaticConnectionPosition;
-                _actor = null;
+                _connectionA.position = _actorA.prismaticConnectionPosition;
+                _actorA = null;
+            }
+            if (_actorB != null && !_level.actors.Contains(_actorB))
+            {
+                _connectionB.position = _actorB.prismaticConnectionPosition;
+                _actorB = null;
             }
 
             if (selected)
@@ -177,8 +205,10 @@ namespace StasisEditor.Models
                 {
                     if (_moveActor)
                         _position += worldDelta;
-                    if (_selectedActorControl)
-                        _connectionPoint.position += worldDelta;
+                    if (_selectedConnectionA)
+                        _connectionA.position += worldDelta;
+                    if (_selectedConnectionB)
+                        _connectionB.position += worldDelta;
                 }
 
                 if (_level.controller.isKeyHeld(Keys.Q))
@@ -214,14 +244,23 @@ namespace StasisEditor.Models
             _level.controller.view.drawLine(_position, _position - axis * _lowerLimit, Color.DarkGray, _layerDepth);
 
             // Connections and controls
-            if (_actor == null)
+            if (_actorA == null)
             {
-                _level.controller.view.drawLine(_position, _connectionPoint.position, Color.DarkGreen, _layerDepth);
-                _level.controller.view.drawPoint(_connectionPoint.position, Color.Green, _layerDepth);
+                _level.controller.view.drawLine(_position, _connectionA.position, Color.DarkGreen, _layerDepth);
+                _level.controller.view.drawPoint(_connectionA.position, Color.Green, _layerDepth);
             }
             else
             {
-                _level.controller.view.drawLine(_position, _actor.prismaticConnectionPosition, Color.DarkGreen * 0.5f, _layerDepth);
+                _level.controller.view.drawLine(_position, _actorA.prismaticConnectionPosition, Color.DarkGreen * 0.5f, _layerDepth);
+            }
+            if (_actorB == null)
+            {
+                _level.controller.view.drawLine(_position, _connectionB.position, Color.DarkRed, _layerDepth);
+                _level.controller.view.drawPoint(_connectionB.position, Color.Red, _layerDepth);
+            }
+            else
+            {
+                _level.controller.view.drawLine(_position, _actorB.prismaticConnectionPosition, Color.DarkRed * 0.5f, _layerDepth);
             }
         }
     }

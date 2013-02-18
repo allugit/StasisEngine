@@ -649,18 +649,22 @@ namespace StasisGame
             int entityId;
             GroundBodyComponent groundBodyComponent = _entityManager.getComponents<GroundBodyComponent>(ComponentType.GroundBody)[0];
             PrismaticJointDef jointDef = new PrismaticJointDef();
-            int editorId = int.Parse(data.Attribute("actor_id").Value);
+            int editorIdA = Loader.loadInt(data.Attribute("actor_a"), -1);
+            int editorIdB = Loader.loadInt(data.Attribute("actor_b"), -1);
             Vector2 jointWorldPosition = Loader.loadVector2(data.Attribute("position"), Vector2.Zero);
             Vector2 axis = Loader.loadVector2(data.Attribute("axis"), new Vector2(1, 0));
             float upperLimit = Loader.loadFloat(data.Attribute("upper_limit"), 0f);
             float lowerLimit = Loader.loadFloat(data.Attribute("lower_limit"), 0f);
             Body bodyA = null;
+            Body bodyB = null;
 
-            if (editorId == -1)
+            if (editorIdA == -1 && editorIdB == -1)
                 return;
 
-            bodyA = matchBodyToEditorId(editorId);
-            jointDef.Initialize(bodyA, groundBodyComponent.body, bodyA.GetWorldCenter(), axis);
+            bodyA = matchBodyToEditorId(editorIdA);
+            bodyB = matchBodyToEditorId(editorIdB);
+
+            jointDef.Initialize(bodyA, bodyB, bodyA.GetWorldCenter(), axis);
             jointDef.lowerTranslation = lowerLimit;
             jointDef.upperTranslation = upperLimit;
             jointDef.enableLimit = lowerLimit != 0 || upperLimit != 0;
