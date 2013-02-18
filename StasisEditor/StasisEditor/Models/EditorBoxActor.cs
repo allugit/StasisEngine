@@ -31,8 +31,8 @@ namespace StasisEditor.Models
         public float chunkSpacingX { get { return _chunkSpacingX; } set { _chunkSpacingX = value; } }
         public float chunkSpacingY { get { return _chunkSpacingY; } set { _chunkSpacingY = value; } }
         public int destructibleSeed { get { return _destructibleSeed; } set { _destructibleSeed = value; } }
-        public float halfWidth { get { return _halfWidth; } set { _halfWidth = value; } }
-        public float halfHeight { get { return _halfHeight; } set { _halfHeight = value; } }
+        public float halfWidth { get { return _halfWidth; } set { _halfWidth = Math.Max(value, 0.05f); } }
+        public float halfHeight { get { return _halfHeight; } set { _halfHeight = Math.Max(value, 0.05f); } }
         public float angle { get { return _angle; } set { _angle = value; } }
         public float density { get { return _density; } set { _density = value; } }
         public float friction { get { return _friction; } set { _friction = value; } }
@@ -171,14 +171,14 @@ namespace StasisEditor.Models
                     rotate(_level.controller.worldMouse, angleIncrement);
 
                 if (_level.controller.isKeyHeld(Keys.A))
-                    _halfWidth = Math.Max(1f, _halfWidth + sizeIncrement);
+                    halfWidth = _halfWidth + sizeIncrement;
                 if (_level.controller.isKeyHeld(Keys.D))
-                    _halfWidth = Math.Max(1f, _halfWidth - sizeIncrement);
+                    halfWidth = _halfWidth - sizeIncrement;
 
                 if (_level.controller.isKeyHeld(Keys.W))
-                    _halfHeight = Math.Max(1f, _halfHeight + sizeIncrement);
+                    halfHeight = _halfHeight + sizeIncrement;
                 if (_level.controller.isKeyHeld(Keys.S))
-                    _halfHeight = Math.Max(1f, _halfHeight - sizeIncrement);
+                    halfHeight = _halfHeight - sizeIncrement;
 
                 if (_level.controller.isKeyPressed(Keys.Escape))
                     deselect();
