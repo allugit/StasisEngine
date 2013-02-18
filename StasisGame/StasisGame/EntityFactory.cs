@@ -188,14 +188,23 @@ namespace StasisGame
             BodyDef bodyDef = new BodyDef();
             PolygonShape boxShape = new PolygonShape();
             FixtureDef boxFixtureDef = new FixtureDef();
+            BodyType bodyType = (BodyType)Loader.loadEnum(typeof(BodyType), data.Attribute("body_type"), (int)BodyType.Static);
 
-            bodyDef.type = (BodyType)Loader.loadEnum(typeof(BodyType), data.Attribute("body_type"), (int)BodyType.Static);
+            bodyDef.type = bodyType;
             bodyDef.position = Loader.loadVector2(data.Attribute("position"), Vector2.Zero);
             bodyDef.angle = Loader.loadFloat(data.Attribute("angle"), 0f);
             bodyDef.userData = entityId;
             boxFixtureDef.density = Loader.loadFloat(data.Attribute("density"), 1f);
             boxFixtureDef.friction = Loader.loadFloat(data.Attribute("friction"), 1f);
             boxFixtureDef.restitution = Loader.loadFloat(data.Attribute("restitution"), 1f);
+            boxFixtureDef.filter.categoryBits = bodyType == BodyType.Dynamic ? (ushort)CollisionCategory.DynamicGeometry : (ushort)CollisionCategory.StaticGeometry;
+            boxFixtureDef.filter.maskBits =
+                (ushort)CollisionCategory.DynamicGeometry |
+                (ushort)CollisionCategory.Grenade |
+                (ushort)CollisionCategory.Player |
+                (ushort)CollisionCategory.Rope |
+                (ushort)CollisionCategory.StaticGeometry |
+                (ushort)CollisionCategory.Item;
             boxShape.SetAsBox(Loader.loadFloat(data.Attribute("half_width"), 1f), Loader.loadFloat(data.Attribute("half_height"), 1f));
             boxFixtureDef.shape = boxShape;
 
@@ -215,13 +224,22 @@ namespace StasisGame
             BodyDef bodyDef = new BodyDef();
             FixtureDef circleFixtureDef = new FixtureDef();
             CircleShape circleShape = new CircleShape();
+            BodyType bodyType = (BodyType)Loader.loadEnum(typeof(BodyType), data.Attribute("body_type"), (int)BodyType.Static);
 
-            bodyDef.type = (BodyType)Loader.loadEnum(typeof(BodyType), data.Attribute("body_type"), (int)BodyType.Static);
+            bodyDef.type = bodyType;
             bodyDef.position = Loader.loadVector2(data.Attribute("position"), Vector2.Zero);
             bodyDef.userData = entityId;
             circleFixtureDef.density = Loader.loadFloat(data.Attribute("density"), 1f);
             circleFixtureDef.friction = Loader.loadFloat(data.Attribute("friction"), 1f);
             circleFixtureDef.restitution = Loader.loadFloat(data.Attribute("restitution"), 1f);
+            circleFixtureDef.filter.categoryBits = bodyType == BodyType.Dynamic ? (ushort)CollisionCategory.DynamicGeometry : (ushort)CollisionCategory.StaticGeometry;
+            circleFixtureDef.filter.maskBits =
+                (ushort)CollisionCategory.DynamicGeometry |
+                (ushort)CollisionCategory.Grenade |
+                (ushort)CollisionCategory.Player |
+                (ushort)CollisionCategory.Rope |
+                (ushort)CollisionCategory.StaticGeometry |
+                (ushort)CollisionCategory.Item;
             circleShape._radius = Loader.loadFloat(data.Attribute("radius"), 1f);
             circleFixtureDef.shape = circleShape;
 
@@ -261,6 +279,12 @@ namespace StasisGame
             fixtureDef.density = Loader.loadFloat(data.Attribute("density"), 1f);
             fixtureDef.friction = Loader.loadFloat(data.Attribute("friction"), 1f);
             fixtureDef.restitution = Loader.loadFloat(data.Attribute("restitution"), 0f);
+            fixtureDef.filter.categoryBits = (ushort)CollisionCategory.Item;
+            fixtureDef.filter.maskBits =
+                (ushort)CollisionCategory.DynamicGeometry |
+                (ushort)CollisionCategory.Player |
+                (ushort)CollisionCategory.Rope |
+                (ushort)CollisionCategory.StaticGeometry;
             shape.SetAsBox(Loader.loadFloat(data.Attribute("half_width"), 0.25f), Loader.loadFloat(data.Attribute("half_height"), 0.25f));
             fixtureDef.shape = shape;
 
@@ -360,6 +384,12 @@ namespace StasisGame
                 fixtureDef.density = 0.5f;
                 fixtureDef.friction = 0.5f;
                 fixtureDef.restitution = 0f;
+                fixtureDef.filter.categoryBits = (ushort)CollisionCategory.Rope;
+                fixtureDef.filter.maskBits = 
+                    (ushort)CollisionCategory.DynamicGeometry |
+                    (ushort)CollisionCategory.Item |
+                    (ushort)CollisionCategory.Player |
+                    (ushort)CollisionCategory.StaticGeometry;
                 fixtureDef.shape = shape;
 
                 body = world.CreateBody(bodyDef);
@@ -425,8 +455,9 @@ namespace StasisGame
             Polygon polygon;
             Vector2 center = Vector2.Zero;
             Body body = null;
+            BodyType bodyType = (BodyType)Loader.loadEnum(typeof(BodyType), data.Attribute("body_type"), (int)BodyType.Static);
 
-            bodyDef.type = (BodyType)Loader.loadEnum(typeof(BodyType), data.Attribute("body_type"), (int)BodyType.Static);
+            bodyDef.type = bodyType;
             bodyDef.userData = entityId;
 
             foreach (XElement pointData in data.Elements("Point"))
@@ -458,6 +489,14 @@ namespace StasisGame
                 fixtureDef.friction = Loader.loadFloat(data.Attribute("friction"), 1f);
                 fixtureDef.restitution = Loader.loadFloat(data.Attribute("restitution"), 0f);
                 fixtureDef.shape = shape;
+                fixtureDef.filter.categoryBits = bodyType == BodyType.Dynamic ? (ushort)CollisionCategory.DynamicGeometry : (ushort)CollisionCategory.StaticGeometry;
+                fixtureDef.filter.maskBits =
+                    (ushort)CollisionCategory.DynamicGeometry |
+                    (ushort)CollisionCategory.Grenade |
+                    (ushort)CollisionCategory.Item |
+                    (ushort)CollisionCategory.Player |
+                    (ushort)CollisionCategory.Rope |
+                    (ushort)CollisionCategory.StaticGeometry;
                 fixtureDefs.Add(fixtureDef);
             }
 
@@ -548,12 +587,20 @@ namespace StasisGame
             bodyFixtureDef.friction = 0f;
             bodyFixtureDef.restitution = 0f;
             bodyFixtureDef.shape = bodyShape;
+            bodyFixtureDef.filter.categoryBits = (ushort)CollisionCategory.Player;
+            bodyFixtureDef.filter.maskBits =
+                (ushort)CollisionCategory.DynamicGeometry |
+                (ushort)CollisionCategory.Item |
+                (ushort)CollisionCategory.Rope |
+                (ushort)CollisionCategory.StaticGeometry;
 
             feetShape._radius = 0.18f;
             feetShape._p = new Vector2(0, 0.27f);
             feetFixtureDef.density = 0.1f;
             feetFixtureDef.friction = 0.1f;
             feetFixtureDef.shape = feetShape;
+            feetFixtureDef.filter.categoryBits = bodyFixtureDef.filter.categoryBits;
+            feetFixtureDef.filter.maskBits = bodyFixtureDef.filter.maskBits;
 
             body = world.CreateBody(bodyDef);
             body.CreateFixture(bodyFixtureDef);

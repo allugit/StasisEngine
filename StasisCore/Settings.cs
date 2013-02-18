@@ -5,6 +5,17 @@
         public const float BASE_SCALE = 35f;
     }
 
+    public enum CollisionCategory
+    {
+        Player = 1,
+        Rope = 2,
+        StaticGeometry = 4,
+        DynamicGeometry = 8,
+        Wall = 16,
+        Grenade = 32,
+        Item = 64
+    };
+
     public enum ActorType
     {
         Box,
