@@ -224,7 +224,7 @@ namespace StasisEditor.Models
                 if (_level.controller.isKeyHeld(Keys.A))
                     lowerLimit -= limitIncrement;
                 if (_level.controller.isKeyHeld(Keys.D))
-                    lowerLimit -= limitIncrement;
+                    lowerLimit += limitIncrement;
 
                 if (_level.controller.isKeyPressed(Keys.Escape))
                     deselect();
