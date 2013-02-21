@@ -69,7 +69,19 @@ namespace StasisEditor.Models
             {
                 EditorActor actor = level.getActor(int.Parse(connectionData.Attribute("actor_id").Value));
                 Gate gate = _circuit.getGate(int.Parse(connectionData.Attribute("gate_id").Value));
-                _connections.Add(new CircuitConnection(this, actor, gate));
+                string connectionType = connectionData.Attribute("type").Value;
+
+                if (connectionType == "input")
+                {
+                    GameEventType listenToEvent = (GameEventType)Loader.loadEnum(typeof(GameEventType), connectionData.Attribute("listen_to_event"), 0);
+                    _connections.Add(new CircuitInputConnection(this, actor, gate, listenToEvent));
+                }
+                else if (connectionType == "output")
+                {
+                    GameEventType onEnabledEvent = (GameEventType)Loader.loadEnum(typeof(GameEventType), connectionData.Attribute("on_enabled_event"), 0);
+                    GameEventType onDisabledEvent = (GameEventType)Loader.loadEnum(typeof(GameEventType), connectionData.Attribute("on_disabled_event"), 0);
+                    _connections.Add(new CircuitOutputConnection(this, actor, gate, onEnabledEvent, onDisabledEvent));
+                }
             }
             initializeGateControls();
         }
@@ -138,7 +150,11 @@ namespace StasisEditor.Models
                                 {
                                     if (results.Count > 0)
                                     {
-                                        _connections.Add(new CircuitConnection(this, actor, _selectedGateControls[0].gate));
+                                        if (_selectedGateControls[0].gate.type == "input")
+                                            _connections.Add(new CircuitInputConnection(this, actor, _selectedGateControls[0].gate, GameEventType.None));
+                                        else if (_selectedGateControls[0].gate.type == "output")
+                                            _connections.Add(new CircuitOutputConnection(this, actor, _selectedGateControls[0].gate, GameEventType.None, GameEventType.None));
+
                                         _gateControls.Remove(_selectedGateControls[0]);
                                         return true;
                                     }
@@ -277,6 +293,7 @@ namespace StasisEditor.Models
                 Color dotColor = gateControl.gate.type == "input" ? Color.Green : Color.Red;
                 _level.controller.view.drawLine(_position, gateControl.position, lineColor, _layerDepth - 0.0001f);
                 _level.controller.view.drawPoint(gateControl.position, dotColor, _layerDepth - 0.0001f);
+                _level.controller.view.drawString(gateControl.gate.id.ToString(), gateControl.position, Color.White);
             }
 
             // Connections
@@ -286,6 +303,7 @@ namespace StasisEditor.Models
                 Color dotColor = (connection.gate.type == "input" ? Color.Green : Color.Red) * 0.5f;
                 _level.controller.view.drawLine(_position, connection.actor.circuitConnectionPosition, lineColor, _layerDepth - 0.0001f);
                 _level.controller.view.drawPoint(connection.actor.circuitConnectionPosition, dotColor, _layerDepth - 0.0001f);
+                _level.controller.view.drawString(connection.gate.id.ToString(), (_position + connection.actor.circuitConnectionPosition) / 2, Color.White);
             }
         }
     }

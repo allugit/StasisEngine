@@ -88,6 +88,8 @@
     <Compile Include="Controllers\LevelController.cs" />
     <Compile Include="Controllers\MaterialController.cs" />
     <Compile Include="Models\CircuitConnection.cs" />
+    <Compile Include="Models\CircuitInputConnection.cs" />
+    <Compile Include="Models\CircuitOutputConnection.cs" />
     <Compile Include="Models\EditorCircleActor.cs" />
     <Compile Include="Models\EditorCircuitActor.cs" />
     <Compile Include="Models\EditorFluidActor.cs" />

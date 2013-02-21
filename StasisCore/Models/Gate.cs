@@ -7,12 +7,12 @@ namespace StasisCore.Models
 {
     public class Gate
     {
-        private int _id;
-        private string _type;
-        private Vector2 _position;
-        private List<Gate> _outputs;
-        private List<Gate> _inputs;
-        private Circuit _circuit;
+        protected int _id;
+        protected string _type;
+        protected Vector2 _position;
+        protected List<Gate> _outputs;
+        protected List<Gate> _inputs;
+        protected Circuit _circuit;
 
         public int id { get { return _id; } }
         public string type { get { return _type; } set { _type = value; } }
@@ -20,7 +20,7 @@ namespace StasisCore.Models
         public List<Gate> outputs { get { return _outputs; } set { _outputs = value; } }
         public List<Gate> inputs { get { return _inputs; } set { _inputs = value; } }
         public Circuit circuit { get { return _circuit; } }
-        public XElement data
+        virtual public XElement data
         {
             get
             {

@@ -46,7 +46,15 @@ namespace StasisCore.Models
             foreach (XElement gateData in data.Elements("Gate"))
             {
                 int id = int.Parse(gateData.Attribute("id").Value);
-                initialGates[id] = new Gate(this, id, gateData.Attribute("type").Value, Loader.loadVector2(gateData.Attribute("position"), Vector2.Zero));
+                string type = gateData.Attribute("type").Value;
+                Vector2 position = Loader.loadVector2(gateData.Attribute("position"), Vector2.Zero);
+
+                if (type == "input")
+                    initialGates[id] = new InputGate(this, id, position);
+                else if (type == "output")
+                    initialGates[id] = new OutputGate(this, id, position);
+                else
+                    initialGates[id] = new Gate(this, id, type, position);
             }
 
             // Associate gates

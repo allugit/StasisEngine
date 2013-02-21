@@ -24,6 +24,7 @@ namespace StasisEditor.Views
         private SpriteBatch _spriteBatch;
         private Texture2D _pixel;
         private Texture2D _circle;
+        private SpriteFont _font;
         private Effect _primitivesEffect;
         private bool _draw = true;
         private bool _keysEnabled = true;
@@ -57,6 +58,7 @@ namespace StasisEditor.Views
             _circuitIcon = _contentManager.Load<Texture2D>("actor_icons\\circuit");
             _revoluteIcon = _contentManager.Load<Texture2D>("actor_icons\\revolute");
             _prismaticIcon = _contentManager.Load<Texture2D>("actor_icons\\prismatic");
+            _font = _contentManager.Load<SpriteFont>("arial");
 
             _coreContentManager = new ContentManager(Services, "StasisCoreContent");
             _primitivesEffect = _coreContentManager.Load<Effect>("effects\\primitives");
@@ -235,6 +237,13 @@ namespace StasisEditor.Views
             Rectangle rect = texture == _pixel ? new Rectangle(0, 0, 24, 24) : texture.Bounds;
 
             _spriteBatch.Draw(texture, (position + _controller.worldOffset) * _controller.scale, rect, Color.White, 0, new Vector2(rect.Width, rect.Height) / 2, 1f, SpriteEffects.None, layerDepth);
+        }
+
+        // drawString
+        public void drawString(string text, Vector2 position, Color color)
+        {
+            _spriteBatch.DrawString(_font, text, (position + _controller.worldOffset) * _controller.scale + new Vector2(1, 1), Color.Black, 0, Vector2.Zero, 1f, SpriteEffects.None, 0.0001f);
+            _spriteBatch.DrawString(_font, text, (position + _controller.worldOffset) * _controller.scale, color, 0, Vector2.Zero, 1f, SpriteEffects.None, 0);
         }
 
         // Render polygon
