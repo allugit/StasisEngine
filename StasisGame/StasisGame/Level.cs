@@ -35,6 +35,7 @@ namespace StasisGame
             _systemManager.add(new InputSystem(_systemManager, _entityManager));
             _systemManager.add(new PhysicsSystem(_systemManager, _entityManager, data));
             _systemManager.add(new CameraSystem(_systemManager, _entityManager));
+            _systemManager.add(new EventSystem(_systemManager, _entityManager));
             _renderSystem = new RenderSystem(_game, _systemManager, _entityManager);
             _systemManager.add(_renderSystem);
 
