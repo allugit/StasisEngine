@@ -670,7 +670,7 @@ namespace StasisGame
             _entityManager.addComponent(entityId, new InputComponent());
             _entityManager.addComponent(entityId, new CharacterMovementComponent(feetFixture));
             _entityManager.addComponent(entityId, new CharacterRenderComponent());
-            _entityManager.addComponent(entityId, new BodyFocusPointComponent(body, new Vector2(0, -8f), FocusType.Multiple));
+            _entityManager.addComponent(entityId, new BodyFocusPointComponent(body, new Vector2(0, -7f), FocusType.Multiple));
             _entityManager.addComponent(entityId, new IgnoreTreeCollisionComponent());
             (_systemManager.getSystem(SystemType.Player) as PlayerSystem).playerId = entityId;
         }
@@ -719,11 +719,11 @@ namespace StasisGame
             Vector2 axis = Loader.loadVector2(data.Attribute("axis"), new Vector2(1, 0));
             float upperLimit = Loader.loadFloat(data.Attribute("upper_limit"), 0f);
             float lowerLimit = Loader.loadFloat(data.Attribute("lower_limit"), 0f);
-            bool isButton = Loader.loadBool(data.Attribute("is_button"), false);
-            float buttonForceDifference = Loader.loadFloat(data.Attribute("button_force_difference"), 0f);
-            bool disableOnLowerLimitReached = Loader.loadBool(data.Attribute("disable_on_lower_limit_reached"), false);
-            bool disableOnUpperLimitReached = Loader.loadBool(data.Attribute("disable_on_upper_limit_reached"), false);
+            bool autoCalculateForce = Loader.loadBool(data.Attribute("auto_calculate_force"), false);
+            float buttonForceDifference = Loader.loadFloat(data.Attribute("auto_force_difference"), 0f);
             float motorSpeed = Loader.loadFloat(data.Attribute("motor_speed"), 0f);
+            bool motorEnabled = Loader.loadBool(data.Attribute("motor_enabled"), false);
+            float maxMotorForce = Loader.loadFloat(data.Attribute("max_motor_force"), 0f);
             Body bodyA = null;
             Body bodyB = null;
             PrismaticJointComponent prismaticJointComponent = null;
@@ -738,16 +738,9 @@ namespace StasisGame
             jointDef.lowerTranslation = lowerLimit;
             jointDef.upperTranslation = upperLimit;
             jointDef.enableLimit = lowerLimit != 0 || upperLimit != 0;
-            if (isButton)
-            {
-                jointDef.enableMotor = true;
-                jointDef.maxMotorForce = bodyA.GetMass() * world.Gravity.Length() + buttonForceDifference;
-                jointDef.motorSpeed = motorSpeed;
-            }
-            else
-            {
-                jointDef.enableMotor = false;
-            }
+            jointDef.enableMotor = motorEnabled;
+            jointDef.motorSpeed = motorSpeed;
+            jointDef.maxMotorForce = autoCalculateForce ? bodyA.GetMass() * world.Gravity.Length() + buttonForceDifference : maxMotorForce;
 
             entityId = _entityManager.createEntity();
             prismaticJointComponent = new PrismaticJointComponent((PrismaticJoint)world.CreateJoint(jointDef));
@@ -761,7 +754,6 @@ namespace StasisGame
                     GateOutputComponent gateOutputComponent = _actorIdEntityIdGateComponentMap[actorId][gateEntityId];
                     eventSystem.addHandler(gateOutputComponent.onEnabledEvent, gateEntityId, prismaticJointComponent);
                     eventSystem.addHandler(gateOutputComponent.onDisabledEvent, gateEntityId, prismaticJointComponent);
-                    Console.WriteLine("event handlers setup");
                 }
             }
         }
