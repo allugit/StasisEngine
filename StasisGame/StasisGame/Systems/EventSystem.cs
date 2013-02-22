@@ -28,11 +28,15 @@ namespace StasisGame.Systems
             if (!_handlers[gameEventType].ContainsKey(listeningToEntityId))
                 _handlers[gameEventType].Add(listeningToEntityId, new List<IEventHandler>());
             if (!_handlers[gameEventType][listeningToEntityId].Contains(handler))
+            {
                 _handlers[gameEventType][listeningToEntityId].Add(handler);
+                Console.WriteLine("event handler added: [{0}][{1}][{2}]", gameEventType, listeningToEntityId, handler);
+            }
         }
 
         public void postEvent(GameEvent e)
         {
+            Console.WriteLine("event posted: {0}", e);
             Dictionary<int, List<IEventHandler>> row;
             List<IEventHandler> handlers;
             if (_handlers.TryGetValue(e.type, out row))

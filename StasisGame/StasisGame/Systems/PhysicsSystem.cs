@@ -49,7 +49,9 @@ namespace StasisGame.Systems
 
         public void update()
         {
+            EventSystem eventSystem = _systemManager.getSystem(SystemType.Event) as EventSystem;
             List<CharacterMovementComponent> movementComponents = _entityManager.getComponents<CharacterMovementComponent>(ComponentType.CharacterMovement);
+            List<int> prismaticEntities = _entityManager.getEntitiesPosessing(ComponentType.Prismatic);
 
             for (int i = 0; i < movementComponents.Count; i++)
             {
@@ -58,6 +60,26 @@ namespace StasisGame.Systems
                 {
                     movementComponent.allowJumpResetOnCollision = true;
                 }
+            }
+
+            for (int i = 0; i < prismaticEntities.Count; i++)
+            {
+                PrismaticJointComponent prismaticJointComponent = _entityManager.getComponent(prismaticEntities[i], ComponentType.Prismatic) as PrismaticJointComponent;
+                LimitState limitState = prismaticJointComponent.prismaticJoint._limitState;
+
+                if (prismaticJointComponent.previousLimitState != limitState)
+                {
+                    if (limitState == LimitState.AtLower)
+                    {
+                        eventSystem.postEvent(new GameEvent(GameEventType.OnLowerLimitReached, prismaticEntities[i]));
+                    }
+                    else if (limitState == LimitState.AtUpper)
+                    {
+                        //eventSystem.postEvent(new GameEvent(GameEventType.OnUpperLimitReached, prismaticEntities[i]));
+                    }
+                }
+
+                prismaticJointComponent.previousLimitState = limitState;
             }
 
             _world.Step(_dt, 12, 8);

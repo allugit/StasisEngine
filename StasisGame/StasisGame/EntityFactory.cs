@@ -802,7 +802,7 @@ namespace StasisGame
                 if (connectionType == "input")
                 {
                     InputGate inputGate = getGateById(gateId) as InputGate;
-                    GameEventType listenToEvent = (GameEventType)Loader.loadEnum(typeof(GameEventType), data.Attribute("listen_to_event"), 0);
+                    GameEventType listenToEvent = (GameEventType)Loader.loadEnum(typeof(GameEventType), connectionData.Attribute("listen_to_event"), 0);
                     int gateActorId = int.Parse(connectionData.Attribute("actor_id").Value);
                     int gateEntityId = matchEntityIdToEditorId(gateActorId);
                     System.Diagnostics.Debug.Assert(gateEntityId != -1);
