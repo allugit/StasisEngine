@@ -807,6 +807,8 @@ namespace StasisGame
                     eventSystem.addHandler(inputGate.listenToEvent, gateEntityId, inputGate);
                 }
             }
+
+            circuit.updateOutput();
         }
     }
 }

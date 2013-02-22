@@ -23,7 +23,9 @@ namespace StasisCore.Models
 
         public override bool calculateState()
         {
-            return _inputs[0].calculateState();
+            bool state = _inputs[0].calculateState();
+            Console.WriteLine("[{0}] {1}", id, state);
+            return state;
         }
     }
 }

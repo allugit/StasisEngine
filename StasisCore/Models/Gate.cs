@@ -38,6 +38,7 @@ namespace StasisCore.Models
 
         public Gate(Circuit circuit, int id, string type, Vector2 position)
         {
+            Console.WriteLine("created gate [{0}], type {1}", id, type);
             _circuit = circuit;
             _id = id;
             _type = type;
@@ -48,14 +49,23 @@ namespace StasisCore.Models
 
         virtual public bool calculateState()
         {
-            if (type == "and")
-                return _inputs[0].calculateState() && _inputs[1].calculateState();
-            else if (type == "or")
-                return _inputs[0].calculateState() || _inputs[1].calculateState();
-            else if (type == "not")
-                return !_inputs[0].calculateState();
+            bool state = false;
 
-            throw new Exception();
+            if (type == "and")
+            {
+                // This is bizarre... the following line of code should work, but ends up not calling _inputs[1].calculateState()
+                //state = _inputs[0].calculateState() && _inputs[1].calculateState();
+                bool state1 = _inputs[0].calculateState();
+                bool state2 = _inputs[1].calculateState();
+                state = state1 && state2;
+            }
+            else if (type == "or")
+                state = _inputs[0].calculateState() || _inputs[1].calculateState();
+            else if (type == "not")
+                state = !_inputs[0].calculateState();
+
+            Console.WriteLine("[{0}] {1}", id, state);
+            return state;
         }
     }
 }
