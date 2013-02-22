@@ -20,7 +20,9 @@ namespace StasisGame.Components
         GroundBody,
         EditorId,
         Revolute,
-        Prismatic
+        Prismatic,
+        GateOutput,
+        Circuit
     };
 
     public interface IComponent

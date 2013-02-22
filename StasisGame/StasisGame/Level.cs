@@ -1,10 +1,15 @@
 ﻿using System;
 using System.IO;
 using System.Collections.Generic;
+using System.Linq;
 using System.Xml.Linq;
 using Microsoft.Xna.Framework;
+using StasisCore;
+using StasisCore.Models;
+using StasisCore.Controllers;
 using StasisGame.Systems;
 using StasisGame.Managers;
+using StasisGame.Components;
 
 namespace StasisGame
 {
@@ -38,6 +43,9 @@ namespace StasisGame
             _systemManager.add(new EventSystem(_systemManager, _entityManager));
             _renderSystem = new RenderSystem(_game, _systemManager, _entityManager);
             _systemManager.add(_renderSystem);
+
+            // Create output gate entities
+            _entityManager.factory.createOutputGates(data);
 
             // Create entities
             foreach (XElement actorData in data.Elements("Actor"))
@@ -107,6 +115,7 @@ namespace StasisGame
                 switch (actorData.Attribute("type").Value)
                 {
                     case "Circuit":
+                        _entityManager.factory.createCircuit(actorData);
                         break;
 
                     case "Fluid":

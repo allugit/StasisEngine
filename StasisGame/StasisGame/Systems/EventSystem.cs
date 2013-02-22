@@ -10,7 +10,6 @@ namespace StasisGame.Systems
         private SystemManager _systemManager;
         private EntityManager _entityManager;
         private Dictionary<GameEventType, Dictionary<int, List<IEventHandler>>> _handlers;
-        private Dictionary<GameEventType, Dictionary<int, List<int>>> _subscriptions;
 
         public int defaultPriority { get { return 50; } }
         public SystemType systemType { get { return SystemType.Event; } }
@@ -19,28 +18,31 @@ namespace StasisGame.Systems
         {
             _systemManager = systemManager;
             _entityManager = entityManager;
-            _handlers = new Dictionary<GameEventType, Dictionary<int, List<IEventHandler>>>();
-            _subscriptions = new Dictionary<GameEventType, Dictionary<int, List<int>>>();
+            _handlers = new Dictionary<GameEventType,Dictionary<int,List<IEventHandler>>>();
         }
 
-        public void addHandler(GameEventType gameEventType, int handlerEntityId, IEventHandler handler)
+        public void addHandler(GameEventType gameEventType, int listeningToEntityId, IEventHandler handler)
         {
             if (!_handlers.ContainsKey(gameEventType))
-                _handlers.Add(gameEventType, new Dictionary<int, List<IEventHandler>>());
-            if (!_handlers[gameEventType].ContainsKey(handlerEntityId))
-                _handlers[gameEventType].Add(handlerEntityId, new List<IEventHandler>());
-            if (!_handlers[gameEventType][handlerEntityId].Contains(handler))
-                _handlers[gameEventType][handlerEntityId].Add(handler);
+                _handlers.Add(gameEventType, new Dictionary<int,List<IEventHandler>>());
+            if (!_handlers[gameEventType].ContainsKey(listeningToEntityId))
+                _handlers[gameEventType].Add(listeningToEntityId, new List<IEventHandler>());
+            if (!_handlers[gameEventType][listeningToEntityId].Contains(handler))
+                _handlers[gameEventType][listeningToEntityId].Add(handler);
         }
 
-        public void subscribe(GameEventType gameEventType, int handlerEntityId, int senderEntityId)
+        public void postEvent(GameEvent e)
         {
-            if (!_subscriptions.ContainsKey(gameEventType))
-                _subscriptions.Add(gameEventType, new Dictionary<int, List<int>>());
-            if (!_subscriptions[gameEventType].ContainsKey(handlerEntityId))
-                _subscriptions[gameEventType].Add(handlerEntityId, new List<int>());
-            if (!_subscriptions[gameEventType][handlerEntityId].Contains(senderEntityId))
-                _subscriptions[gameEventType][handlerEntityId].Add(senderEntityId);
+            Dictionary<int, List<IEventHandler>> row;
+            List<IEventHandler> handlers;
+            if (_handlers.TryGetValue(e.type, out row))
+            {
+                if (row.TryGetValue(e.originEntityId, out handlers))
+                {
+                    for (int i = 0; i < handlers.Count; i++)
+                        handlers[i].trigger(e);
+                }
+            }
         }
 
         public void update()

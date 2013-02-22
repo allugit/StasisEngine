@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Xml.Linq;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
@@ -31,11 +32,17 @@ namespace StasisGame
 
         private SystemManager _systemManager;
         private EntityManager _entityManager;
+        private Dictionary<int, Dictionary<int, GateOutputComponent>> _actorIdEntityIdGateComponentMap;     // key 1) actor id needing to be listened to
+                                                                                                            // key 2) output gate's entity id
+        private Dictionary<int, Dictionary<int, GateOutputComponent>> _circuitIdGateIdGateComponentMap;     // key 1) circuit actor id
+                                                                                                            // key 2) gate id
 
         public EntityFactory(SystemManager systemManager, EntityManager entityManager)
         {
             _systemManager = systemManager;
             _entityManager = entityManager;
+            _actorIdEntityIdGateComponentMap = new Dictionary<int, Dictionary<int, GateOutputComponent>>();
+            _circuitIdGateIdGateComponentMap = new Dictionary<int, Dictionary<int, GateOutputComponent>>();
         }
 
         private Body matchBodyToEditorId(int editorId)
@@ -52,6 +59,37 @@ namespace StasisGame
                     return (_entityManager.getComponent(editorIdEntities[i], ComponentType.Physics) as PhysicsComponent).body;
             }
             return null;
+        }
+
+        public void createOutputGates(XElement data)
+        {
+            _actorIdEntityIdGateComponentMap.Clear();
+            _circuitIdGateIdGateComponentMap.Clear();
+
+            foreach (XElement circuitActorData in (from element in data.Elements("Actor") where element.Attribute("type").Value == "Circuit" select element))
+            {
+                int circuitId = int.Parse(circuitActorData.Attribute("id").Value);
+                int entityId = _entityManager.createEntity();
+
+                foreach (XElement connectionData in (from element in circuitActorData.Elements("CircuitConnection") where element.Attribute("type").Value == "output" select element))
+                {
+                    int actorIdToListenTo = int.Parse(connectionData.Attribute("actor_id").Value);
+                    int gateId = int.Parse(connectionData.Attribute("gate_id").Value);
+                    GateOutputComponent gateOutputComponent = new GateOutputComponent();
+
+                    if (!_actorIdEntityIdGateComponentMap.ContainsKey(actorIdToListenTo))
+                        _actorIdEntityIdGateComponentMap.Add(actorIdToListenTo, new Dictionary<int, GateOutputComponent>());
+                    if (!_actorIdEntityIdGateComponentMap[actorIdToListenTo].ContainsKey(entityId))
+                        _actorIdEntityIdGateComponentMap[actorIdToListenTo].Add(entityId, gateOutputComponent);
+
+                    if (!_circuitIdGateIdGateComponentMap.ContainsKey(circuitId))
+                        _circuitIdGateIdGateComponentMap.Add(circuitId, new Dictionary<int, GateOutputComponent>());
+                    if (!_circuitIdGateIdGateComponentMap[circuitId].ContainsKey(gateId))
+                        _circuitIdGateIdGateComponentMap[circuitId][gateId] = gateOutputComponent;
+
+                    _entityManager.addComponent(entityId, gateOutputComponent);
+                }
+            }
         }
 
         private BodyRenderComponent createBodyRenderComponent(XElement data)
@@ -645,7 +683,9 @@ namespace StasisGame
 
         public void createPrismaticJoint(XElement data)
         {
+            EventSystem eventSystem = _systemManager.getSystem(SystemType.Event) as EventSystem;
             World world = (_systemManager.getSystem(SystemType.Physics) as PhysicsSystem).world;
+            int actorId = int.Parse(data.Attribute("id").Value);
             int entityId;
             GroundBodyComponent groundBodyComponent = _entityManager.getComponents<GroundBodyComponent>(ComponentType.GroundBody)[0];
             PrismaticJointDef jointDef = new PrismaticJointDef();
@@ -686,6 +726,63 @@ namespace StasisGame
 
             entityId = _entityManager.createEntity();
             _entityManager.addComponent(entityId, new PrismaticJointComponent((PrismaticJoint)world.CreateJoint(jointDef)));
+
+            if (_actorIdEntityIdGateComponentMap.ContainsKey(actorId))
+            {
+                Console.WriteLine("this entity needs to listen to an output gate");
+            }
+        }
+
+        public void createCircuit(XElement data)
+        {
+            int actorId = int.Parse(data.Attribute("id").Value);
+            string circuitUID = data.Attribute("circuit_uid").Value;
+            XElement circuitData = ResourceController.getResource(circuitUID);
+            Circuit circuit = new Circuit(circuitData);
+            CircuitComponent circuitComponent = new CircuitComponent(circuit);
+            int entityId = _entityManager.createEntity();
+            Func<int, Gate> getGateById = (id) =>
+                {
+                    foreach (Gate gate in circuit.gates)
+                    {
+                        if (gate.id == id)
+                            return gate;
+                    }
+                    return null;
+                };
+
+            _entityManager.addComponent(entityId, circuitComponent);
+
+            foreach (Gate gate in circuit.gates)
+            {
+                if (gate.type == "output")
+                {
+                    _circuitIdGateIdGateComponentMap[actorId][gate.id].outputGate = gate as OutputGate;
+                }
+            }
+
+            foreach (XElement connectionData in data.Elements("CircuitConnection"))
+            {
+                string connectionType = connectionData.Attribute("type").Value;
+                int gateId = int.Parse(connectionData.Attribute("gate_id").Value);
+
+                if (connectionType == "input")
+                {
+                    InputGate inputGate = getGateById(gateId) as InputGate;
+                    GameEventType listenToEvent = (GameEventType)Loader.loadEnum(typeof(GameEventType), data.Attribute("listen_to_event"), 0);
+
+                    inputGate.listenToEvent = listenToEvent;
+                }
+                else if (connectionType == "output")
+                {
+                    OutputGate outputGate  = getGateById(gateId) as OutputGate;
+                    GameEventType onEnabledEvent = (GameEventType)Loader.loadEnum(typeof(GameEventType), data.Attribute("on_enabled_event"), 0);
+                    GameEventType onDisabledEvent = (GameEventType)Loader.loadEnum(typeof(GameEventType), data.Attribute("on_disabled_event"), 0);
+
+                    outputGate.onEnabledEvent = onEnabledEvent;
+                    outputGate.onDisabledEvent = onDisabledEvent;
+                }
+            }
         }
     }
 }

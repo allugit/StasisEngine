@@ -81,7 +81,9 @@
     <Compile Include="Components\BodyFocusPointComponent.cs" />
     <Compile Include="Components\CharacterMovementComponent.cs" />
     <Compile Include="Components\CharacterRenderComponent.cs" />
+    <Compile Include="Components\CircuitComponent.cs" />
     <Compile Include="Components\EditorIdComponent.cs" />
+    <Compile Include="Components\GateOutputComponent.cs" />
     <Compile Include="Components\GroundBodyComponent.cs" />
     <Compile Include="Components\IComponent.cs" />
     <Compile Include="Components\IgnoreTreeCollisionComponent.cs" />
