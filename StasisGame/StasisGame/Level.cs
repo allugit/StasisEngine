@@ -115,6 +115,10 @@ namespace StasisGame
                 switch (actorData.Attribute("type").Value)
                 {
                     case "Circuit":
+                        if (_systemManager.getSystem(SystemType.Circuit) == null)
+                        {
+                            _systemManager.add(new CircuitSystem(_systemManager, _entityManager));
+                        }
                         _entityManager.factory.createCircuit(actorData);
                         break;
 

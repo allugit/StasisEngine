@@ -36,7 +36,7 @@ namespace StasisGame.Systems
 
         public void postEvent(GameEvent e)
         {
-            Console.WriteLine("event posted: {0}", e);
+            Console.WriteLine("Event posted. origin: {0}, type: {1}", e.originEntityId, e.type);
             Dictionary<int, List<IEventHandler>> row;
             List<IEventHandler> handlers;
             if (_handlers.TryGetValue(e.type, out row))

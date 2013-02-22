@@ -45,5 +45,17 @@ namespace StasisCore.Models
             _outputs = new List<Gate>();
             _inputs = new List<Gate>();
         }
+
+        virtual public bool calculateState()
+        {
+            if (type == "and")
+                return _inputs[0].calculateState() && _inputs[1].calculateState();
+            else if (type == "or")
+                return _inputs[0].calculateState() || _inputs[1].calculateState();
+            else if (type == "not")
+                return !_inputs[0].calculateState();
+
+            throw new Exception();
+        }
     }
 }

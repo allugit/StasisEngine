@@ -72,5 +72,22 @@ namespace StasisCore.Models
                 _gates.Add(gate);
             }
         }
+
+        // Update output gates' previous states
+        public void updateOutput()
+        {
+            foreach (Gate gate in _gates)
+            {
+                if (gate.type == "output")
+                {
+                    OutputGate outputGate = gate as OutputGate;
+                    outputGate.state = outputGate.calculateState();
+                    if (outputGate.state != outputGate.previousState)
+                        outputGate.postEvent = true;
+                    else
+                        outputGate.postEvent = false;
+                }
+            }
+        }
     }
 }

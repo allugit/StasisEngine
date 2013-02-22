@@ -115,6 +115,7 @@
     <Compile Include="LoderGame.cs" />
     <Compile Include="Systems\CameraSystem.cs" />
     <Compile Include="Systems\CharacterMovementSystem.cs" />
+    <Compile Include="Systems\CircuitSystem.cs" />
     <Compile Include="Systems\EventSystem.cs" />
     <Compile Include="Systems\FluidSystem.cs" />
     <Compile Include="Systems\InputSystem.cs" />

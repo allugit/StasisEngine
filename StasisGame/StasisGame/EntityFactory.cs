@@ -85,7 +85,6 @@ namespace StasisGame
             foreach (XElement circuitActorData in (from element in data.Elements("Actor") where element.Attribute("type").Value == "Circuit" select element))
             {
                 int circuitId = int.Parse(circuitActorData.Attribute("id").Value);
-                int entityId = _entityManager.createEntity();
 
                 foreach (XElement connectionData in (from element in circuitActorData.Elements("CircuitConnection") where element.Attribute("type").Value == "output" select element))
                 {
@@ -93,10 +92,12 @@ namespace StasisGame
                     int gateId = int.Parse(connectionData.Attribute("gate_id").Value);
                     GameEventType onEnabledEvent = (GameEventType)Loader.loadEnum(typeof(GameEventType), connectionData.Attribute("on_enabled_event"), 0);
                     GameEventType onDisabledEvent = (GameEventType)Loader.loadEnum(typeof(GameEventType), connectionData.Attribute("on_disabled_event"), 0);
+                    int entityId = _entityManager.createEntity();
                     GateOutputComponent gateOutputComponent = new GateOutputComponent();
 
                     gateOutputComponent.onEnabledEvent = onEnabledEvent;
                     gateOutputComponent.onDisabledEvent = onDisabledEvent;
+                    gateOutputComponent.entityId = entityId;
 
                     if (!_actorIdEntityIdGateComponentMap.ContainsKey(actorIdToListenTo))
                         _actorIdEntityIdGateComponentMap.Add(actorIdToListenTo, new Dictionary<int, GateOutputComponent>());
@@ -790,7 +791,10 @@ namespace StasisGame
             {
                 if (gate.type == "output")
                 {
-                    _circuitIdGateIdGateComponentMap[actorId][gate.id].outputGate = gate as OutputGate;
+                    OutputGate outputGate = gate as OutputGate;
+                    GateOutputComponent gateOutputComponent = _circuitIdGateIdGateComponentMap[actorId][gate.id];
+                    gateOutputComponent.outputGate = outputGate;
+                    outputGate.entityId = gateOutputComponent.entityId;
                 }
             }
 

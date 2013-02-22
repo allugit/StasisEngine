@@ -20,7 +20,7 @@ namespace StasisGame.Components
 
         public void trigger(GameEvent e)
         {
-            Console.WriteLine("Prismatic joint component event: {0}", e);
+            Console.WriteLine("Prismatic joint component event. origin: {0}, type: {1}", e.originEntityId, e.type);
         }
     }
 }

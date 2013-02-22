@@ -7,6 +7,7 @@ namespace StasisCore.Models
     public class InputGate : Gate, IEventHandler
     {
         private GameEventType _listenToEvent;
+        private bool _inputState;
 
         public GameEventType listenToEvent { get { return _listenToEvent; } set { _listenToEvent = value; } }
 
@@ -18,6 +19,14 @@ namespace StasisCore.Models
 
         public void trigger(GameEvent e)
         {
+            _inputState = !_inputState;
+
+            _circuit.updateOutput();
+        }
+
+        public override bool calculateState()
+        {
+            return _inputState;
         }
     }
 }
