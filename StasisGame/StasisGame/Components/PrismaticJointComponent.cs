@@ -20,7 +20,20 @@ namespace StasisGame.Components
 
         public void trigger(GameEvent e)
         {
-            Console.WriteLine("Prismatic joint component event. origin: {0}, type: {1}", e.originEntityId, e.type);
+            switch (e.type)
+            {
+                case GameEventType.EnableMotor:
+                    prismaticJoint.EnableMotor(true);
+                    break;
+
+                case GameEventType.DisableMotor:
+                    prismaticJoint.EnableMotor(false);
+                    break;
+
+                case GameEventType.ReverseMotor:
+                    prismaticJoint.SetMotorSpeed(-prismaticJoint.GetMotorSpeed());
+                    break;
+            }
         }
     }
 }
