@@ -677,6 +677,7 @@ namespace StasisGame
 
         public void createRevoluteJoint(XElement data)
         {
+            EventSystem eventSystem = _systemManager.getSystem(SystemType.Event) as EventSystem;
             World world = (_systemManager.getSystem(SystemType.Physics) as PhysicsSystem).world;
             int actorId = int.Parse(data.Attribute("id").Value);
             int entityId;
@@ -693,6 +694,7 @@ namespace StasisGame
             float maxMotorTorque = float.Parse(data.Attribute("max_motor_torque").Value);
             float motorSpeed = float.Parse(data.Attribute("motor_speed").Value);
             bool enableMotor = bool.Parse(data.Attribute("enable_motor").Value);
+            RevoluteComponent revoluteJointComponent;
 
             if (editorIdA == -1 && editorIdB == -1)
                 return;
@@ -711,10 +713,21 @@ namespace StasisGame
             jointDef.upperAngle = upperLimit;
             jointDef.maxMotorTorque = maxMotorTorque;
             jointDef.motorSpeed = motorSpeed;
+            revoluteJointComponent = new RevoluteComponent((RevoluteJoint)world.CreateJoint(jointDef));
 
             entityId = _entityManager.createEntity();
-            _entityManager.addComponent(entityId, new RevoluteComponent((RevoluteJoint)world.CreateJoint(jointDef)));
+            _entityManager.addComponent(entityId, revoluteJointComponent);
             _entityManager.addComponent(entityId, new EditorIdComponent(actorId));
+
+            if (_actorIdEntityIdGateComponentMap.ContainsKey(actorId))
+            {
+                foreach (int gateEntityId in _actorIdEntityIdGateComponentMap[actorId].Keys)
+                {
+                    GateOutputComponent gateOutputComponent = _actorIdEntityIdGateComponentMap[actorId][gateEntityId];
+                    eventSystem.addHandler(gateOutputComponent.onEnabledEvent, gateEntityId, revoluteJointComponent);
+                    eventSystem.addHandler(gateOutputComponent.onDisabledEvent, gateEntityId, revoluteJointComponent);
+                }
+            }
         }
 
         public void createPrismaticJoint(XElement data)
