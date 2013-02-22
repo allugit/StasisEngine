@@ -67,7 +67,8 @@ namespace StasisGame.Systems
                     // Fake friction when not moving
                     if ((body.GetLinearVelocity().X > 0 && characterMovementComponent.walkLeft) ||
                         (body.GetLinearVelocity().X < 0 && characterMovementComponent.walkRight) ||
-                        (!characterMovementComponent.walkLeft && !characterMovementComponent.walkRight))
+                        (!characterMovementComponent.walkLeft && !characterMovementComponent.walkRight) &&
+                        !characterMovementComponent.jump)
                     {
                         // All conditions necessary for damping have been met
                         if (Math.Abs(body.GetLinearVelocity().Y) < 1 || Math.Abs(body.GetLinearVelocity().Length()) < 10)
