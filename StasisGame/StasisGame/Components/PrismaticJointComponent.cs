@@ -1,9 +1,10 @@
 ﻿using System;
 using Box2D.XNA;
+using StasisCore;
 
 namespace StasisGame.Components
 {
-    public class PrismaticJointComponent : IComponent
+    public class PrismaticJointComponent : IComponent, IEventHandler
     {
         private PrismaticJoint _prismaticJoint;
 
@@ -13,6 +14,11 @@ namespace StasisGame.Components
         public PrismaticJointComponent(PrismaticJoint prismaticJoint)
         {
             _prismaticJoint = prismaticJoint;
+        }
+
+        public void trigger(GameEvent e)
+        {
+            Console.WriteLine("Prismatic joint component event: {0}", e);
         }
     }
 }
