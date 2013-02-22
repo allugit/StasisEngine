@@ -687,6 +687,12 @@ namespace StasisGame
             RevoluteJointDef jointDef = new RevoluteJointDef();
             Body bodyA = null;
             Body bodyB = null;
+            float lowerLimit = float.Parse(data.Attribute("lower_angle").Value);
+            float upperLimit = float.Parse(data.Attribute("upper_angle").Value);
+            bool enableLimit = bool.Parse(data.Attribute("enable_limit").Value);
+            float maxMotorTorque = float.Parse(data.Attribute("max_motor_torque").Value);
+            float motorSpeed = float.Parse(data.Attribute("motor_speed").Value);
+            bool enableMotor = bool.Parse(data.Attribute("enable_motor").Value);
 
             if (editorIdA == -1 && editorIdB == -1)
                 return;
@@ -699,6 +705,12 @@ namespace StasisGame
             jointDef.collideConnected = false;
             jointDef.localAnchorA = bodyA.GetLocalPoint(jointWorldPosition);
             jointDef.localAnchorB = bodyB.GetLocalPoint(jointWorldPosition);
+            jointDef.enableLimit = enableLimit;
+            jointDef.enableMotor = enableMotor;
+            jointDef.lowerAngle = lowerLimit;
+            jointDef.upperAngle = upperLimit;
+            jointDef.maxMotorTorque = maxMotorTorque;
+            jointDef.motorSpeed = motorSpeed;
 
             entityId = _entityManager.createEntity();
             _entityManager.addComponent(entityId, new RevoluteComponent((RevoluteJoint)world.CreateJoint(jointDef)));

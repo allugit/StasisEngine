@@ -17,11 +17,22 @@ namespace StasisEditor.Models
         private bool _selectedA;
         private bool _selectedB;
         private bool _moveActor;
-
         private Vector2 _position;
+        private float _lowerAngle;
+        private float _upperAngle;
+        private bool _enableLimit;
+        private float _maxMotorTorque;
+        private float _motorSpeed;
+        private bool _enableMotor;
 
         [Browsable(false)]
         public override Vector2 circuitConnectionPosition { get { return _position; } }
+        public float lowerAngle { get { return _lowerAngle; } set { _lowerAngle = value; } }
+        public float upperAngle { get { return _upperAngle; } set { _upperAngle = value; } }
+        public bool enableLimit { get { return _enableLimit; } set { _enableLimit = value; } }
+        public float maxMotorTorque { get { return _maxMotorTorque; } set { _maxMotorTorque = value; } }
+        public float motorSpeed { get { return _motorSpeed; } set { _motorSpeed = value; } }
+        public bool enableMotor { get { return _enableMotor; } set { _enableMotor = value; } }
         [Browsable(false)]
         public override XElement data
         {
@@ -31,6 +42,12 @@ namespace StasisEditor.Models
                 d.SetAttributeValue("position", _position);
                 d.SetAttributeValue("actor_a", _actorA == null ? -1 : _actorA.id);  // -1 signifies ground body should be used in game
                 d.SetAttributeValue("actor_b", _actorB == null ? -1 : _actorB.id);
+                d.SetAttributeValue("lower_angle", _lowerAngle);
+                d.SetAttributeValue("upper_angle", _upperAngle);
+                d.SetAttributeValue("enable_limit", _enableLimit);
+                d.SetAttributeValue("max_motor_torque", _maxMotorTorque);
+                d.SetAttributeValue("motor_speed", _motorSpeed);
+                d.SetAttributeValue("enable_motor", _enableMotor);
                 return d;
             }
         }
@@ -51,6 +68,12 @@ namespace StasisEditor.Models
             _position = Loader.loadVector2(data.Attribute("position"), Vector2.Zero);
             _actorA = data.Attribute("actor_a").Value == "-1" ? null : level.getActor(int.Parse(data.Attribute("actor_a").Value));
             _actorB = data.Attribute("actor_b").Value == "-1" ? null : level.getActor(int.Parse(data.Attribute("actor_b").Value));
+            _lowerAngle = Loader.loadFloat(data.Attribute("lower_angle"), 0f);
+            _upperAngle = Loader.loadFloat(data.Attribute("upper_angle"), 0f);
+            _enableLimit = Loader.loadBool(data.Attribute("enable_limit"), false);
+            _maxMotorTorque = Loader.loadFloat(data.Attribute("max_motor_torque"), 0f);
+            _motorSpeed = Loader.loadFloat(data.Attribute("motor_speed"), 0f);
+            _enableMotor = Loader.loadBool(data.Attribute("enable_motor"), false);
             initializeControls();
         }
 
