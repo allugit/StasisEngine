@@ -27,8 +27,8 @@ namespace StasisEditor.Models
 
         [Browsable(false)]
         public override Vector2 circuitConnectionPosition { get { return _position; } }
-        public float lowerAngle { get { return _lowerAngle; } set { _lowerAngle = value; } }
-        public float upperAngle { get { return _upperAngle; } set { _upperAngle = value; } }
+        public float lowerAngle { get { return _lowerAngle; } set { _lowerAngle = Math.Min(value, _upperAngle); } }
+        public float upperAngle { get { return _upperAngle; } set { _upperAngle = Math.Max(value, _lowerAngle); } }
         public bool enableLimit { get { return _enableLimit; } set { _enableLimit = value; } }
         public float maxMotorTorque { get { return _maxMotorTorque; } set { _maxMotorTorque = value; } }
         public float motorSpeed { get { return _motorSpeed; } set { _motorSpeed = value; } }
@@ -218,6 +218,7 @@ namespace StasisEditor.Models
         public override void update()
         {
             Vector2 worldDelta = _level.controller.worldDeltaMouse;
+            float angleIncrement = _level.controller.shift ? 0.00005f : 0.0005f;
 
             if (_actorA != null && !_level.containsActor(_actorA))
             {
@@ -241,6 +242,15 @@ namespace StasisEditor.Models
                     if (_selectedB)
                         _controlB.position += worldDelta;
                 }
+
+                if (_level.controller.isKeyHeld(Keys.A))
+                    lowerAngle += angleIncrement;
+                if (_level.controller.isKeyHeld(Keys.D))
+                    lowerAngle -= angleIncrement;
+                if (_level.controller.isKeyHeld(Keys.W))
+                    upperAngle -= angleIncrement;
+                if (_level.controller.isKeyHeld(Keys.S))
+                    upperAngle += angleIncrement;
 
                 if (_level.controller.isKeyPressed(Keys.Escape))
                     deselect();
@@ -273,6 +283,17 @@ namespace StasisEditor.Models
             else
             {
                 _level.controller.view.drawLine(_position, _actorB.revoluteConnectionPosition, Color.DarkGray * 0.5f, _layerDepth);
+            }
+
+            // Angle limits
+            if (_enableLimit)
+            {
+                float lower = _lowerAngle * -1 + StasisMathHelper.pi;
+                float upper = _upperAngle * -1 + StasisMathHelper.pi;
+                Vector2 lowerPoint = new Vector2((float)Math.Cos(lower), (float)Math.Sin(lower));
+                Vector2 upperPoint = new Vector2((float)Math.Cos(upper), (float)Math.Sin(upper));
+                _level.controller.view.drawLine(_position, _position + lowerPoint, Color.DarkBlue, _layerDepth + 0.0001f);
+                _level.controller.view.drawLine(_position, _position + upperPoint, Color.Blue, _layerDepth + 0.0001f);
             }
         }
     }
