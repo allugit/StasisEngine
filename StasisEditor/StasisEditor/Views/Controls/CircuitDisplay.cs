@@ -21,6 +21,7 @@ namespace StasisEditor.Views.Controls
         private Texture2D _not;
         private Texture2D _input;
         private Texture2D _output;
+        private SpriteFont _font;
         private CircuitsView _view;
         private Gate _inputSource;
         private CircuitController _controller;
@@ -51,6 +52,7 @@ namespace StasisEditor.Views.Controls
                 _input = _contentManager.Load<Texture2D>("logic_gate_icons\\input");
                 _output = _contentManager.Load<Texture2D>("logic_gate_icons\\output");
                 _circle = _contentManager.Load<Texture2D>("circle");
+                _font = _contentManager.Load<SpriteFont>("gate_font");
 
                 // Events
                 Application.Idle += delegate { Invalidate(); };
@@ -404,6 +406,10 @@ namespace StasisEditor.Views.Controls
                         _spriteBatch.Draw(_or, (gate.position + worldOffset) * scale, _or.Bounds, Color.White, 0, new Vector2(_or.Width, _or.Height) / 2, 1f, SpriteEffects.None, 0);
                         break;
                 }
+
+                // Draw gate id
+                _spriteBatch.DrawString(_font, gate.id.ToString(), (gate.position + worldOffset) * scale + new Vector2(1, 1), Color.Black);
+                _spriteBatch.DrawString(_font, gate.id.ToString(), (gate.position + worldOffset) * scale, Color.White);
             }
         }
     }

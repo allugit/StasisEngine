@@ -13,6 +13,7 @@ Content\actor_icons\item.xnb
 Content\actor_icons\circuit.xnb
 Content\actor_icons\revolute.xnb
 Content\actor_icons\prismatic.xnb
+Content\gate_font.xnb
 StasisCoreContent\effects\primitives.xnb
 StasisCoreContent\effects\texture.xnb
 StasisCoreContent\effects\noise.xnb
