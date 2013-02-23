@@ -26,7 +26,7 @@ namespace PSProcessorLib
         public override PSSourceCode Import(string filename, ContentImporterContext context)
         {
             string code = System.IO.File.ReadAllText(filename);
-            return new PSSourceCode(code);
+            return new PSSourceCode(code, filename);
         }
     }
 }
