@@ -24,11 +24,6 @@
     <Reference Include="Microsoft.Xna.Framework.Content.Pipeline.VideoImporters, Version=4.0.0.0, Culture=neutral, PublicKeyToken=842cf8be1de50553, processorArchitecture=MSIL" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="effects\noise_functions.fx">
-      <Name>noise_functions</Name>
-      <Importer>EffectImporter</Importer>
-      <Processor>EffectProcessor</Processor>
-    </None>
     <Compile Include="effects\primitives.fx">
       <Name>primitives</Name>
       <Importer>EffectImporter</Importer>
@@ -41,15 +36,15 @@
     </Compile>
     <None Include="effects\normal_functions.fx">
       <Name>normal_functions</Name>
-      <Importer>EffectImporter</Importer>
-      <Processor>EffectProcessor</Processor>
+      <Importer>PSImporter</Importer>
+      <Processor>PSProcessor</Processor>
     </None>
   </ItemGroup>
   <ItemGroup>
     <Compile Include="effects\noise.fx">
       <Name>noise</Name>
-      <Importer>EffectImporter</Importer>
-      <Processor>EffectProcessor</Processor>
+      <Importer>PSImporter</Importer>
+      <Processor>PSProcessor</Processor>
     </Compile>
   </ItemGroup>
   <ItemGroup>

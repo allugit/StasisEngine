@@ -1,0 +1,5 @@
+E:\_C#\StasisEngine\PSProcessorLib\bin\x86\Debug\PSProcessorLib.dll
+E:\_C#\StasisEngine\PSProcessorLib\bin\x86\Debug\PSProcessorLib.pdb
+E:\_C#\StasisEngine\PSProcessorLib\obj\x86\Debug\ResolveAssemblyReference.cache
+E:\_C#\StasisEngine\PSProcessorLib\obj\x86\Debug\PSProcessorLib.dll
+E:\_C#\StasisEngine\PSProcessorLib\obj\x86\Debug\PSProcessorLib.pdb

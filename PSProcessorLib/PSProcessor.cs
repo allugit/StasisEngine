@@ -7,10 +7,6 @@ using Microsoft.Xna.Framework.Content.Pipeline;
 using Microsoft.Xna.Framework.Content.Pipeline.Graphics;
 using Microsoft.Xna.Framework.Content.Pipeline.Processors;
 
-// TODO: replace these with the processor input and output types.
-using TInput = System.String;
-using TOutput = System.String;
-
 namespace PSProcessorLib
 {
     /// <summary>
@@ -25,15 +21,14 @@ namespace PSProcessorLib
     /// display name for this processor.
     /// </summary>
     [ContentProcessor(DisplayName = "Custom FX Processor")]
-    public class PSProcessor : ContentProcessor<PSSourceCode, Effect>
+    public class PSProcessor : ContentProcessor<PSSourceCode, CompiledEffectContent>
     {
-        public override Effect Process(PSSourceCode input, ContentProcessorContext context)
+        public override CompiledEffectContent Process(PSSourceCode input, ContentProcessorContext context)
         {
             EffectContent content = new EffectContent();
             content.EffectCode = input.code;
             EffectProcessor compiler = new EffectProcessor();
-            CompiledEffectContent compiledContent = compiler.Process(content, context);
-
+            return compiler.Process(content, context);
         }
     }
 }

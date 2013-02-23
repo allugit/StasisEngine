@@ -1,11 +1,4 @@
-#include <noise_functions.fx>
-
-sampler baseSampler : register(s0) = sampler_state
-{
-	AddressU = Wrap;
-	AddressV = Wrap;
-};
-
+float2 fbmOffset;
 float2 aspectRatio;
 float2 offset;
 float noiseFrequency;
@@ -26,6 +19,167 @@ int blendType;
 int worleyFeature;	// 0 = F1, 1 = F2, 2 = F2-F1 -- defined in noise_functions.fx
 bool invert;
 float4x4 matrixTransform;
+
+////////////////////////////////////////////////////
+// Perlin noise
+////////////////////////////////////////////////////
+float2 noiseSize;
+float noiseScale;
+float2 renderSize;
+sampler noiseSampler : register(s1) = sampler_state
+{
+	AddressU = Wrap;
+	AddressV = Wrap;
+	MinFilter = Point;
+	MagFilter = Point;
+	MipFilter = Point;
+};
+
+float weight(float x)
+{
+	return 6 * pow(x, 5) - 15 * pow(x, 4) + 10 * pow(x, 3);
+}
+
+float perlin(float2 p)
+{
+	// Scale texture coordinates from [0, 1] to [0, textureSize]
+	float2 realPosition = p * noiseSize;
+
+	// Grid points
+	int x0 = floor(realPosition.x);
+	int y0 = floor(realPosition.y);
+	int x1 = x0 + 1;
+	int y1 = y0 + 1;
+
+	// Gradients
+	float2 g00 = tex2D(noiseSampler, float2(x0, y0) / noiseSize).rg * 2 - 1;
+	float2 g10 = tex2D(noiseSampler, float2(x1, y0) / noiseSize).rg * 2 - 1;
+	float2 g01 = tex2D(noiseSampler, float2(x0, y1) / noiseSize).rg * 2 - 1;
+	float2 g11 = tex2D(noiseSampler, float2(x1, y1) / noiseSize).rg * 2 - 1;
+
+	// Position inside grid
+	float u = realPosition.x - x0;
+	float v = realPosition.y - y0;
+
+	// Influence (dot product of gradient and distance to position from grid point)
+	float n00 = dot(g00, float2(u, v));
+	float n10 = dot(g10, float2(u - 1, v));
+	float n01 = dot(g01, float2(u, v - 1));
+	float n11 = dot(g11, float2(u - 1, v - 1));
+
+	// Weighted contributions
+	float nx0 = n00 * (1 - weight(u)) + n10 * weight(u);
+	float nx1 = n01 * (1 - weight(u)) + n11 * weight(u);
+	float nxy = nx0 * (1 - weight(v)) + nx1 * weight(v);
+	
+	return nxy;
+}
+
+///////////////////////////////////////////
+// Worley noise
+///////////////////////////////////////////
+sampler worleySampler : register(s2) = sampler_state
+{
+	AddressU = Wrap;
+	AddressV = Wrap;
+};
+int worleyFeatureF1 = 0;
+int worleyFeatureF2 = 1;
+int worleyFeatureF2mF1 = 2;
+float4 getWorleyCell(int x, int y, float jitter)
+{
+	float u = (x + y * 6) / noiseSize.x;
+	float v = (x * 1.5) / noiseSize.y;
+	return tex2D(worleySampler, float2(u, v)) * jitter;
+}
+float worley(float2 p, int feature = 0, float jitter = 2.0)
+{
+	// Resize coords
+	p *= 16;
+
+	int xi = int(floor(p.x));
+	int yi = int(floor(p.y));
+
+	float xf = p.x - float(xi);
+	float yf = p.y - float(yi);
+
+	float distance1 = 9999999;
+	float distance2 = 9999999;
+
+	float2 cell;
+
+	for (int y = -2; y < 2; y++)
+	{
+		for (int x = -2; x < 2; x++)
+		{
+			cell = getWorleyCell(xi + x, yi + y, jitter).rg;
+			cell.x += (float(x) - xf);
+			cell.y += (float(y) - yf);
+			float distance = dot(cell, cell);
+			if (distance < distance1)
+			{
+				distance2 = distance1;
+				distance1 = distance;
+			}
+			else if (distance < distance2)
+			{
+				distance2 = distance;
+			}
+		}
+	}
+
+	// Features
+	float value = 0;
+	if (feature == worleyFeatureF1)
+		value = sqrt(distance1);
+	else if (feature == worleyFeatureF2)
+		value = sqrt(distance2);
+	else if (feature == worleyFeatureF2mF1)
+		value = sqrt(distance2) - sqrt(distance1);
+
+	return value;
+
+	// This algorithm inverts worley by default
+	//return 1 - value;
+}
+
+///////////////////////////////////////////
+// Fractional Brownian Motion
+///////////////////////////////////////////
+float fbmPerlin(float2 p, int count, float frequency, float gain, float lacunarity)
+{
+	float total = 0;
+	float amplitude = gain;
+
+	for (int i = 0; i < count; i++)
+	{
+		total += perlin(p * frequency + total * fbmOffset) * amplitude;
+		frequency *= lacunarity;
+		amplitude *= gain;
+	}
+
+	return total + 0.5;
+}
+float fbmWorley(float2 p, int feature, int count, float frequency, float gain, float lacunarity)
+{
+	float total = 0;
+	float amplitude = gain;
+
+	for (int i = 0; i < count; i++)
+	{
+		total += worley(p * frequency + total * fbmOffset, feature) * amplitude;
+		frequency *= lacunarity;
+		amplitude *= gain;
+	}
+
+	return total;
+}
+
+sampler baseSampler : register(s0) = sampler_state
+{
+	AddressU = Wrap;
+	AddressV = Wrap;
+};
 
 // scaleTexCoords
 float2 scaleTexCoords(float2 texCoords)

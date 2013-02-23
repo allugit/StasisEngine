@@ -20,7 +20,7 @@ namespace PSProcessorLib
     /// TODO: change the ContentImporter attribute to specify the correct file
     /// extension, display name, and default processor for this importer.
     /// </summary>
-    [ContentImporter(".cfx", DisplayName = "Custom FX Processor", DefaultProcessor = "PSProcessor")]
+    [ContentImporter(".fx", DisplayName = "Custom FX Processor", DefaultProcessor = "PSProcessor")]
     public class PSImporter : ContentImporter<PSSourceCode>
     {
         public override PSSourceCode Import(string filename, ContentImporterContext context)
