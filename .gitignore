@@ -18,3 +18,5 @@ StasisEditor/StasisEditor/StasisEditor.csproj.Debug.cachefile
 StasisEditor/StasisEditor/StasisEditor.csproj.Release.cachefile
 StasisGame/StasisGame/StasisGame.csproj.Debug.cachefile
 StasisGame/StasisGame/StasisGame.csproj.Release.cachefile
+PSProcessorLib/bin
+PSProcessorLib/obj
