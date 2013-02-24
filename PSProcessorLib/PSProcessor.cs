@@ -30,26 +30,9 @@ namespace PSProcessorLib
             EffectContent content = new EffectContent();
             content.EffectCode = input.code;
 
-            /*
             EffectProcessor compiler = new EffectProcessor();
+            compiler.DebugMode = EffectProcessorDebugMode.Debug;
             CompiledEffectContent compiledEffect = compiler.Process(content, context);
-            using (FileStream fs = new FileStream(String.Format("E:\\ShaderDebug\\{0}.fxcode", input.name), FileMode.Create))
-            {
-                byte[] code = compiledEffect.GetEffectCode();
-                fs.Write(code, 0, code.Length);
-            }*/
-
-            
-            CompiledEffectContent compiledEffect;
-            string temporaryFilename = context.IntermediateDirectory + "\\" + input.name + ".fx";
-            string fxcPath = "C:\\Program Files (x86)\\Microsoft DirectX SDK (June 2010)\\Utilities\\bin\\x86\\fxc.exe";
-            string fxcArguments = "/Tfx_2_0 " + input.filename + " /Fo:" + temporaryFilename;
-            Process process = new Process();
-            process.StartInfo = new ProcessStartInfo(fxcPath, fxcArguments);
-            process.Start();
-            process.WaitForExit();
-
-            compiledEffect = new CompiledEffectContent(File.ReadAllBytes(temporaryFilename));
             
             return compiledEffect;
         }
