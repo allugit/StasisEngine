@@ -136,8 +136,11 @@ namespace StasisEditor.Models
 
             if (selected)
             {
-                foreach (PointListNode node in _selectedPoints)
-                    node.position += worldDelta;
+                if (!_level.controller.ctrl)
+                {
+                    foreach (PointListNode node in _selectedPoints)
+                        node.position += worldDelta;
+                }
 
                 if (_level.controller.isKeyPressed(Keys.Escape))
                     deselect();

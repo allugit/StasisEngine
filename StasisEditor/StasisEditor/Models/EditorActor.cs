@@ -29,6 +29,8 @@ namespace StasisEditor.Models
         [Browsable(false)]
         virtual public Vector2 prismaticConnectionPosition { get { return Vector2.Zero; } }
         [Browsable(false)]
+        virtual public Vector2 collisionFilterConnectionPosition { get { return Vector2.Zero; } }
+        [Browsable(false)]
         virtual public XElement data
         {
             get

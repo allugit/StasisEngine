@@ -313,6 +313,26 @@
         Jjv8iJwUnAXwnE75Zznz7pjrPUz/AmPpttUEVU+oAAAAAElFTkSuQmCC
 </value>
   </data>
+  <data name="prismaticButton.Image" type="System.Drawing.Bitmap, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
+    <value>
+        iVBORw0KGgoAAAANSUhEUgAAABYAAAAWCAYAAADEtGw7AAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8
+        YQUAAAAJcEhZcwAADsMAAA7DAcdvqGQAAAMrSURBVEhLlZVPSFRRFMavELVqGYwIjsNMEDo5mYjUODYl
+        KgiBf0Ydx/G/MoqjqAyW4KJsJULLFrpJ2rmphVGLijaBi1LIXdEmKiJwFRS1+Trfdc7jzohgDz7efe/d
+        87vfPefe+4zJX6Ojo9dFKyMjI+uih/+pdcYODw/fUJ69j42NrS8sLGB5edlqaWkJuVwO8/PzmJ2dxfT0
+        NKamppDJZDA+Pg7pbyUwT/qOxiyUTufm5rC1tYW1tTULymazHmhiYsKDESSBEGcFGhoass/8xj7WOadA
+        h6urqwVB7KwaHByEamBgAFQ6nS4Q3znwFUPri4uL1iU/EFYM6uzsRFdXlwfq7+8HlUqlPPGZcXRt08Ei
+        MZeTk5MFUHXGuz8QRCAYsjAX2NfXBxUHUdeShU0LnpmZAXPJoGQyaTvodJubm1GSuI2S1C00NTV5DhXI
+        /mwTzPRw1h6YFWdVW1tb4fP50NDQYAdhgK+yFubxAcyrA5RGatDb2+u5JJTSd0fAdMtq0mV7eztCoRDK
+        y8sRiURgMg9g3gHmK1By9z6i0aiFKZBQis9HwFybnALBmsfGxkacClyG2f4N817A30Q/fuHslau2kArs
+        6ekBRTBjC1LBNPAFR9RKV4Uvwtx5BvNWgB8IFUH0/Ckqw2ELo7q7u6040BEw08BlphVva2vDmVgS5rWA
+        9kVfRD/zYPzF6XQCLS0tHlTBNEWOVzyCuQb5gQULVIrbzU8wHwX2XfRHofn75x2UVV1AIpHwRHgBmHQu
+        auaXH2LX4jA3szCP9mGe7MG8EO2Idndh9t6IXkrOt2FyKVScD6Gjo8Pm3AVLWje5pS2Y+aXb2rp6+Gvq
+        UVF9CX5VRNqyQvyRalFYVIWyumqcKyu1yzMWi1nnjM+fG4dgLRwr6xaELnS6dKXiFlfF43EEg0Hr/Fgw
+        K3sSGKEEueKgxeANdeyCj3NYDOWG4gCcGWuUX8cb9thkjrkqOKLCXecMcgdyU6JtxunOE949w0M5fzh7
+        O0+XnXt6sa1bufjObw708KDnxfPT/Tu4h3xx2z2rte3+Qbxfk/78OAqnIAMw51wpJ5bEbTDW/Zn+Ax0g
+        uRiAG5niAAAAAElFTkSuQmCC
+</value>
+  </data>
   <data name="goalButton.Image" type="System.Drawing.Bitmap, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
     <value>
         iVBORw0KGgoAAAANSUhEUgAAABYAAAAWCAYAAADEtGw7AAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8
@@ -334,7 +354,7 @@
 </value>
   </data>
   <assembly alias="System.Windows.Forms" name="System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089" />
-  <data name="prismaticButton.Image" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\..\Resources\prismatic.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  <data name="collisionFilterButton.Image" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\..\Resources\collision_filter.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
 </root>

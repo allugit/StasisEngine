@@ -45,6 +45,8 @@ namespace StasisEditor.Models
         [Browsable(false)]
         public override Vector2 prismaticConnectionPosition { get { return _position; } }
         [Browsable(false)]
+        public override Vector2 collisionFilterConnectionPosition { get { return _position; } }
+        [Browsable(false)]
         public override XElement data
         {
             get

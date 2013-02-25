@@ -79,12 +79,10 @@ namespace StasisEditor.Models
                 switch (actorData.Attribute("type").Value)
                 {
                     case "Box":
-                        //actors.Add(new EditorBoxActor(this, actorData));
                         addActor(new EditorBoxActor(this, actorData), true);
                         break;
 
                     case "Circle":
-                        //actors.Add(new EditorCircleActor(this, actorData));
                         addActor(new EditorCircleActor(this, actorData), true);
                         break;
 
@@ -93,32 +91,26 @@ namespace StasisEditor.Models
                         break;
 
                     case "Fluid":
-                        //actors.Add(new EditorFluidActor(this, actorData));
                         addActor(new EditorFluidActor(this, actorData), true);
                         break;
 
                     case "Item":
-                        //actors.Add(new EditorItemActor(this, actorData));
                         addActor(new EditorItemActor(this, actorData), true);
                         break;
 
                     case "PlayerSpawn":
-                        //actors.Add(new EditorPlayerSpawnActor(this, actorData));
                         addActor(new EditorPlayerSpawnActor(this, actorData), true);
                         break;
 
                     case "Rope":
-                        //actors.Add(new EditorRopeActor(this, actorData));
                         addActor(new EditorRopeActor(this, actorData), true);
                         break;
 
                     case "Terrain":
-                        //actors.Add(new EditorTerrainActor(this, actorData));
                         addActor(new EditorTerrainActor(this, actorData), true);
                         break;
 
                     case "Tree":
-                        //actors.Add(new EditorTreeActor(this, actorData));
                         addActor(new EditorTreeActor(this, actorData), true);
                         break;
 
@@ -127,6 +119,10 @@ namespace StasisEditor.Models
                         break;
 
                     case "Prismatic":
+                        secondPassData.Add(actorData);
+                        break;
+
+                    case "CollisionFilter":
                         secondPassData.Add(actorData);
                         break;
                 }
@@ -138,18 +134,19 @@ namespace StasisEditor.Models
                 switch (actorData.Attribute("type").Value)
                 {
                     case "Circuit":
-                        //actors.Add(new EditorCircuitActor(this, actorData));
                         addActor(new EditorCircuitActor(this, actorData), true);
                         break;
 
                     case "Revolute":
-                        //actors.Add(new EditorRevoluteActor(this, actorData));
                         addActor(new EditorRevoluteActor(this, actorData), true);
                         break;
 
                     case "Prismatic":
-                        //actors.Add(new EditorPrismaticActor(this, actorData));
                         addActor(new EditorPrismaticActor(this, actorData), true);
+                        break;
+
+                    case "CollisionFilter":
+                        addActor(new EditorCollisionFilterActor(this, actorData), true);
                         break;
                 }
             }

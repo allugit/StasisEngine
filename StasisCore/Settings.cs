@@ -28,7 +28,8 @@
         Item,
         Circuit,
         Revolute,
-        Prismatic
+        Prismatic,
+        CollisionFilter
     };
 
     public enum PlantType

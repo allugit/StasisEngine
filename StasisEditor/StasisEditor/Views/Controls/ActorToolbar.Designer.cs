@@ -40,8 +40,9 @@
             this.playerSpawnButton = new System.Windows.Forms.ToolStripButton();
             this.circuitsButton = new System.Windows.Forms.ToolStripButton();
             this.revoluteButton = new System.Windows.Forms.ToolStripButton();
-            this.goalButton = new System.Windows.Forms.ToolStripButton();
             this.prismaticButton = new System.Windows.Forms.ToolStripButton();
+            this.goalButton = new System.Windows.Forms.ToolStripButton();
+            this.collisionFilterButton = new System.Windows.Forms.ToolStripButton();
             this.anchorToolStrip.SuspendLayout();
             this.SuspendLayout();
             // 
@@ -66,6 +67,7 @@
             this.circuitsButton,
             this.revoluteButton,
             this.prismaticButton,
+            this.collisionFilterButton,
             this.goalButton});
             this.anchorToolStrip.LayoutStyle = System.Windows.Forms.ToolStripLayoutStyle.Flow;
             this.anchorToolStrip.Location = new System.Drawing.Point(0, 0);
@@ -175,6 +177,16 @@
             this.revoluteButton.Size = new System.Drawing.Size(26, 26);
             this.revoluteButton.Text = "Revolute";
             // 
+            // prismaticButton
+            // 
+            this.prismaticButton.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
+            this.prismaticButton.Image = ((System.Drawing.Image)(resources.GetObject("prismaticButton.Image")));
+            this.prismaticButton.ImageTransparentColor = System.Drawing.Color.Magenta;
+            this.prismaticButton.Margin = new System.Windows.Forms.Padding(0);
+            this.prismaticButton.Name = "prismaticButton";
+            this.prismaticButton.Size = new System.Drawing.Size(26, 26);
+            this.prismaticButton.Text = "Prismatic";
+            // 
             // goalButton
             // 
             this.goalButton.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
@@ -186,15 +198,16 @@
             this.goalButton.Size = new System.Drawing.Size(26, 26);
             this.goalButton.Text = "Goal";
             // 
-            // prismaticButton
+            // collisionFilterButton
             // 
-            this.prismaticButton.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
-            this.prismaticButton.Image = ((System.Drawing.Image)(resources.GetObject("prismaticButton.Image")));
-            this.prismaticButton.ImageTransparentColor = System.Drawing.Color.Magenta;
-            this.prismaticButton.Margin = new System.Windows.Forms.Padding(0);
-            this.prismaticButton.Name = "prismaticButton";
-            this.prismaticButton.Size = new System.Drawing.Size(26, 26);
-            this.prismaticButton.Text = "Prismatic";
+            this.collisionFilterButton.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
+            this.collisionFilterButton.Image = ((System.Drawing.Image)(resources.GetObject("collisionFilterButton.Image")));
+            this.collisionFilterButton.ImageTransparentColor = System.Drawing.Color.Magenta;
+            this.collisionFilterButton.Margin = new System.Windows.Forms.Padding(0);
+            this.collisionFilterButton.Name = "collisionFilterButton";
+            this.collisionFilterButton.Size = new System.Drawing.Size(26, 26);
+            this.collisionFilterButton.Text = "toolStripButton1";
+            this.collisionFilterButton.ToolTipText = "Collision Filter";
             // 
             // ActorToolbar
             // 
@@ -224,5 +237,6 @@
         private System.Windows.Forms.ToolStripButton circuitsButton;
         private System.Windows.Forms.ToolStripButton revoluteButton;
         private System.Windows.Forms.ToolStripButton prismaticButton;
+        private System.Windows.Forms.ToolStripButton collisionFilterButton;
     }
 }

@@ -214,6 +214,10 @@ namespace StasisEditor.Controllers
                 case "prismaticButton":
                     actor = new EditorPrismaticActor(_level);
                     break;
+
+                case "collisionFilterButton":
+                    actor = new EditorCollisionFilterActor(_level);
+                    break;
             }
 
             if (actor != null)
