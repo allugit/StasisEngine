@@ -65,8 +65,148 @@ namespace StasisCore
             pixel.SetData<Color>(new[] { Color.White });
         }
 
+        // Trim transparent edges
+        private Texture2D trimTransparentEdges(Texture2D canvas)
+        {
+            Color[] data1d = new Color[canvas.Width * canvas.Height];
+            Color[,] data2d = new Color[canvas.Width, canvas.Height];
+            int halfWidth = canvas.Width / 2;
+            int halfHeight = canvas.Height / 2;
+            int lastTransparentColumnFromLeft;
+            int lastTransparentColumnFromRight;
+            int lastTransparentRowFromTop;
+            int lastTransparentRowFromBottom;
+            Func<int, int> findTransparentColumnFromLeft = (end) =>
+                {
+                    int lastTransparentColumn = 0;
+                    for (int i = 0; i < end; i++)
+                    {
+                        for (int j = 0; j < canvas.Height; j++)
+                        {
+                            if (data2d[i, j].A > 0)
+                            {
+                                return lastTransparentColumn;
+                            }
+                        }
+                        lastTransparentColumn = i;
+                    }
+
+                    return lastTransparentColumn;
+                };
+            Func<int, int> findTransparentColumnFromRight = (end) =>
+            {
+                int lastTransparentColumn = canvas.Width - 1;
+                for (int i = canvas.Width - 1; i >= end; i--)
+                {
+                    for (int j = 0; j < canvas.Height; j++)
+                    {
+                        if (data2d[i, j].A > 0)
+                        {
+                            return lastTransparentColumn;
+                        }
+                    }
+                    lastTransparentColumn = i;
+                }
+
+                return lastTransparentColumn;
+            };
+            Func<int, int> findTransparentRowFromTop = (end) =>
+            {
+                int lastTransparentRow = 0;
+                for (int j = 0; j < end; j++)
+                {
+                    for (int i = 0; i < canvas.Width; i++)
+                    {
+                        if (data2d[i, j].A > 0)
+                        {
+                            return lastTransparentRow;
+                        }
+                    }
+                    lastTransparentRow = j;
+                }
+
+                return lastTransparentRow;
+            };
+            Func<int, int> findTransparentRowFromBottom = (end) =>
+            {
+                int lastTransparentRow = canvas.Height - 1;
+                for (int j = canvas.Height - 1; j >= end; j--)
+                {
+                    for (int i = 0; i < canvas.Width; i++)
+                    {
+                        if (data2d[i, j].A > 0)
+                        {
+                            return lastTransparentRow;
+                        }
+                    }
+                    lastTransparentRow = j;
+                }
+
+                return lastTransparentRow;
+            };
+
+            canvas.GetData<Color>(data1d);
+            for (int i = 0; i < canvas.Width; i++)
+            {
+                for (int j = 0; j < canvas.Height; j++)
+                {
+                    data2d[i, j] = data1d[i + j * canvas.Width];
+                }
+            }
+
+            lastTransparentColumnFromLeft = findTransparentColumnFromLeft(halfWidth);
+            lastTransparentColumnFromRight = findTransparentColumnFromRight(halfWidth);
+            lastTransparentRowFromTop = findTransparentRowFromTop(halfHeight);
+            lastTransparentRowFromBottom = findTransparentRowFromBottom(halfHeight);
+
+
+
+            /*
+            for (int i = 0; i < lastTransparentColumnFromLeft; i++)
+            {
+                for (int j = 0; j < canvas.Height; j++)
+                {
+                    data2d[i, j] = Color.Red * 0.25f;
+                }
+            }
+            for (int i = canvas.Width - 1; i >= lastTransparentColumnFromRight; i--)
+            {
+                for (int j = 0; j < canvas.Height; j++)
+                {
+                    data2d[i, j] = Color.Red * 0.25f;
+                }
+            }
+            for (int j = 0; j < lastTransparentRowFromTop; j++)
+            {
+                for (int i = 0; i < canvas.Width; i++)
+                {
+                    data2d[i, j] = Color.Red * 0.25f;
+                }
+            }
+            for (int j = canvas.Height - 1; j >= lastTransparentRowFromBottom; j--)
+            {
+                for (int i = 0; i < canvas.Width; i++)
+                {
+                    data2d[i, j] = Color.Red * 0.25f;
+                }
+            }
+
+            for (int i = 0; i < canvas.Width; i++)
+            {
+                for (int j = 0; j < canvas.Height; j++)
+                {
+                    data1d[i + j * canvas.Width] = data2d[i, j];
+                }
+            }
+
+            canvas.SetData<Color>(data1d);
+            */
+
+            return canvas;
+        }
+
         // Render material
-        public Texture2D renderMaterial(Material material, List<Vector2> polygonPoints, float growthFactor)
+        public Texture2D renderMaterial(Material material, List<Vector2> polygonPoints, float growthFactor, bool trimTransparentEdges = false)
         {
             // Calculate width and height
             Vector2 topLeft = polygonPoints[0];
@@ -82,6 +222,10 @@ namespace StasisCore
 
             // Recursively render layers
             canvas = recursiveRenderLayers(canvas, polygonPoints, growthFactor, material.rootLayer);
+
+            // Trim transparent edges
+            if (trimTransparentEdges)
+                canvas = this.trimTransparentEdges(canvas);
 
             return canvas;
         }

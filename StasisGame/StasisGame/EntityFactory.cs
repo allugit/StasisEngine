@@ -600,9 +600,9 @@ namespace StasisGame
             maxLeafPoints.Add(new Vector2(256f, -256f) / renderSystem.scale);
             for (float r = leafRange; r < 1f; r += leafRange)
             {
-                leafTextures.Add(renderSystem.materialRenderer.renderMaterial(leafMaterial, maxLeafPoints, r));
+                leafTextures.Add(renderSystem.materialRenderer.renderMaterial(leafMaterial, maxLeafPoints, r, true));
             }
-            leafTextures.Add(renderSystem.materialRenderer.renderMaterial(leafMaterial, maxLeafPoints, 1f));
+            leafTextures.Add(renderSystem.materialRenderer.renderMaterial(leafMaterial, maxLeafPoints, 1f, true));
 
             tree = new Tree(_systemManager.getSystem(SystemType.Tree) as TreeSystem, barkTexture, leafTextures, data);
 
