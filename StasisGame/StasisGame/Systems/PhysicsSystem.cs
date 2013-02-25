@@ -87,6 +87,15 @@ namespace StasisGame.Systems
 
         public void PreSolve(Contact contact, ref Manifold manifold)
         {
+            Fixture fixtureA = contact.GetFixtureA();
+            Fixture fixtureB = contact.GetFixtureB();
+            int entityA = (int)fixtureA.GetBody().GetUserData();
+            int entityB = (int)fixtureB.GetBody().GetUserData();
+
+            if (fixtureA.IsIgnoredEntity(entityB))
+                contact.SetEnabled(false);
+            else if (fixtureB.IsIgnoredEntity(entityA))
+                contact.SetEnabled(false);
         }
 
         public void PostSolve(Contact contact, ref ContactImpulse impulse)
