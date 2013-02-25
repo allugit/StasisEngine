@@ -70,12 +70,17 @@ namespace StasisCore
         {
             Color[] data1d = new Color[canvas.Width * canvas.Height];
             Color[,] data2d = new Color[canvas.Width, canvas.Height];
+            Color[] newData;
             int halfWidth = canvas.Width / 2;
             int halfHeight = canvas.Height / 2;
             int lastTransparentColumnFromLeft;
             int lastTransparentColumnFromRight;
             int lastTransparentRowFromTop;
             int lastTransparentRowFromBottom;
+            int newWidth;
+            int newHeight;
+            int widthTrim;
+            int heightTrim;
             Func<int, int> findTransparentColumnFromLeft = (end) =>
                 {
                     int lastTransparentColumn = 0;
@@ -159,48 +164,29 @@ namespace StasisCore
             lastTransparentRowFromTop = findTransparentRowFromTop(halfHeight);
             lastTransparentRowFromBottom = findTransparentRowFromBottom(halfHeight);
 
+            widthTrim = Math.Min(lastTransparentColumnFromLeft, (canvas.Width - 1) - lastTransparentColumnFromRight);
+            heightTrim = Math.Min(lastTransparentRowFromTop, (canvas.Height - 1) - lastTransparentRowFromBottom);
+            newWidth = canvas.Width - (widthTrim * 2);
+            newHeight = canvas.Height - (heightTrim * 2);
 
-
-            /*
-            for (int i = 0; i < lastTransparentColumnFromLeft; i++)
+            if (newWidth < 1 || newHeight < 1)
             {
-                for (int j = 0; j < canvas.Height; j++)
-                {
-                    data2d[i, j] = Color.Red * 0.25f;
-                }
-            }
-            for (int i = canvas.Width - 1; i >= lastTransparentColumnFromRight; i--)
-            {
-                for (int j = 0; j < canvas.Height; j++)
-                {
-                    data2d[i, j] = Color.Red * 0.25f;
-                }
-            }
-            for (int j = 0; j < lastTransparentRowFromTop; j++)
-            {
-                for (int i = 0; i < canvas.Width; i++)
-                {
-                    data2d[i, j] = Color.Red * 0.25f;
-                }
-            }
-            for (int j = canvas.Height - 1; j >= lastTransparentRowFromBottom; j--)
-            {
-                for (int i = 0; i < canvas.Width; i++)
-                {
-                    data2d[i, j] = Color.Red * 0.25f;
-                }
+                canvas.Dispose();
+                canvas = new Texture2D(_graphicsDevice, 1, 1);
+                canvas.SetData<Color>(new[] { Color.Transparent });
             }
 
-            for (int i = 0; i < canvas.Width; i++)
+            newData = new Color[newWidth * newHeight];
+            for (int i = 0; i < newWidth; i++)
             {
-                for (int j = 0; j < canvas.Height; j++)
+                for (int j = 0; j < newHeight; j++)
                 {
-                    data1d[i + j * canvas.Width] = data2d[i, j];
+                    newData[i + j * newWidth] = data2d[widthTrim + i, heightTrim + j];
                 }
             }
-
-            canvas.SetData<Color>(data1d);
-            */
+            canvas.Dispose();
+            canvas = new Texture2D(_graphicsDevice, newWidth, newHeight);
+            canvas.SetData<Color>(newData);
 
             return canvas;
         }
