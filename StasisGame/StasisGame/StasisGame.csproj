@@ -101,6 +101,7 @@
     <Compile Include="Components\RopePhysicsComponent.cs" />
     <Compile Include="Components\RopeRenderComponent.cs" />
     <Compile Include="DistanceMetamerConstraint.cs" />
+    <Compile Include="IRenderablePrimitive.cs" />
     <Compile Include="Level.cs" />
     <Compile Include="MainMenu.cs" />
     <Compile Include="Managers\EntityManager.cs" />

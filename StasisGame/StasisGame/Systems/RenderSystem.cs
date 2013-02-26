@@ -30,6 +30,7 @@ namespace StasisGame.Systems
         private Matrix _viewMatrix;
         private Matrix _projectionMatrix;
         private Vector2 _halfScreen;
+        private SortedDictionary<float, List<IRenderablePrimitive>> _sortedRenderablePrimitives;
 
         public int defaultPriority { get { return 90; } }
         public SystemType systemType { get { return SystemType.Render; } }
@@ -46,6 +47,7 @@ namespace StasisGame.Systems
             _game = game;
             _systemManager = systemManager;
             _entityManager = entityManager;
+            _sortedRenderablePrimitives = new SortedDictionary<float, List<IRenderablePrimitive>>();
             _cameraSystem = _systemManager.getSystem(SystemType.Camera) as CameraSystem;
 
             _graphicsDevice = game.GraphicsDevice;
@@ -63,6 +65,30 @@ namespace StasisGame.Systems
         {
             _contentManager.Unload();
             _coreContentManager.Unload();
+        }
+
+        public void addRenderablePrimitive(IRenderablePrimitive renderablePrimitive)
+        {
+            float layerDepth = -renderablePrimitive.layerDepth;     // match sprite batch's layering order
+            if (!_sortedRenderablePrimitives.ContainsKey(layerDepth))
+                _sortedRenderablePrimitives.Add(layerDepth, new List<IRenderablePrimitive>());
+            _sortedRenderablePrimitives[layerDepth].Add(renderablePrimitive);
+        }
+
+        public void drawRenderablePrimitives()
+        {
+            foreach (List<IRenderablePrimitive> primitives in _sortedRenderablePrimitives.Values)
+            {
+                for (int i = 0; i < primitives.Count; i++)
+                {
+                    _graphicsDevice.Textures[0] = primitives[i].texture;
+                    _primitivesEffect.Parameters["world"].SetValue(primitives[i].worldMatrix);
+                    _primitivesEffect.CurrentTechnique.Passes["textured_primitives"].Apply();
+                    _graphicsDevice.DrawUserPrimitives(PrimitiveType.TriangleList, primitives[i].vertices, 0, primitives[i].primitiveCount, CustomVertexFormat.VertexDeclaration);
+                }
+            }
+
+            _sortedRenderablePrimitives.Clear();
         }
 
         public void update()
@@ -94,10 +120,13 @@ namespace StasisGame.Systems
 
                 bodyRenderComponent.worldMatrix = Matrix.CreateRotationZ(physicsComponent.body.GetAngle()) * Matrix.CreateTranslation(new Vector3(physicsComponent.body.GetPosition(), 0));
 
+                addRenderablePrimitive(bodyRenderComponent);
+                /*
                 _graphicsDevice.Textures[0] = bodyRenderComponent.texture;
                 _primitivesEffect.Parameters["world"].SetValue(bodyRenderComponent.worldMatrix);
                 _primitivesEffect.CurrentTechnique.Passes["textured_primitives"].Apply();
                 _graphicsDevice.DrawUserPrimitives(PrimitiveType.TriangleList, bodyRenderComponent.vertices, 0, bodyRenderComponent.primitiveCount, CustomVertexFormat.VertexDeclaration);
+                */
             }
 
             for (int i = 0; i < ropeRenderEntities.Count; i++)
@@ -159,12 +188,15 @@ namespace StasisGame.Systems
 
                 if (treeComponent.tree.active)
                 {
-                    _graphicsDevice.Textures[0] = treeComponent.tree.barkTexture;
-                    _primitivesEffect.CurrentTechnique.Passes["textured_primitives"].Apply();
-                    _graphicsDevice.DrawUserPrimitives(PrimitiveType.TriangleList, treeComponent.tree.vertices, 0, treeComponent.tree.primitiveCount, CustomVertexFormat.VertexDeclaration);
+                    addRenderablePrimitive(treeComponent.tree);
+                    //_graphicsDevice.Textures[0] = treeComponent.tree.barkTexture;
+                    //_primitivesEffect.CurrentTechnique.Passes["textured_primitives"].Apply();
+                    //_graphicsDevice.DrawUserPrimitives(PrimitiveType.TriangleList, treeComponent.tree.vertices, 0, treeComponent.tree.primitiveCount, CustomVertexFormat.VertexDeclaration);
                     treeComponent.tree.rootMetamer.draw(this);
                 }
             }
+
+            drawRenderablePrimitives();
         }
     }
 }

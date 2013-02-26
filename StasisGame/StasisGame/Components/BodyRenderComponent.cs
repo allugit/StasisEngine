@@ -7,7 +7,7 @@ using StasisCore.Models;
 
 namespace StasisGame.Components
 {
-    public class BodyRenderComponent : IComponent
+    public class BodyRenderComponent : IComponent, IRenderablePrimitive
     {
         private Texture2D _texture;
         private CustomVertexFormat[] _vertices;

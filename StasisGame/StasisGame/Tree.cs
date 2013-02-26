@@ -11,7 +11,7 @@ namespace StasisGame
 {
     using Settings = StasisCore.Settings;
 
-    public class Tree
+    public class Tree : IRenderablePrimitive
     {
         public const int NUM_CONSTRAINT_ITERATIONS = 2;
         public const int SHADOW_DEPTH = 4;
@@ -56,6 +56,7 @@ namespace StasisGame
         private int _primitiveCount;
         private Texture2D _barkTexture;
         private List<Texture2D> _leafTextures;
+        private float _layerDepth;
         //private Vector3 barkColor;
 
         public TreeSystem treeSystem { get { return _treeSystem; } }
@@ -92,24 +93,9 @@ namespace StasisGame
         public float minLeafRatioCutoff { get { return _minLeafRatioCutoff; } }
         public float leafRatioOffset { get { return _leafRatioOffset; } }
         public bool active { get { return _active; } }
-
-        /*
-        // Debug
-        public List<Vector2> pointsInTerminalBudPerceptionCone;
-        public List<Vector2> pointsInLateralBudPerceptionCone;
-        public static bool drawGrid = false;
-        public static bool drawOccupancyZones = false;
-        public static bool drawPerceptionPoints = false;
-        public static bool drawMarkerPoints = true;
-        public static bool drawInternodes = true;
-        public static bool drawOptimalGrowthDirection = false;
-        public static bool drawDistanceConstraints = false;
-        public static bool drawAngularConstraints = false;
-        public static bool drawTails = true;
-        public static bool drawBranchingPoints = true;
-        public static bool drawMetamers = true;
-        public static bool drawTrunkBodies = true;
-        */
+        public float layerDepth { get { return _layerDepth; } }
+        public Matrix worldMatrix { get { return Matrix.Identity; } }
+        public Texture2D texture { get { return _barkTexture; } }
 
         // Constructor
         public Tree(TreeSystem treeSystem, Texture2D barkTexture, List<Texture2D> leafTextures, XElement data)
@@ -137,6 +123,7 @@ namespace StasisGame
             _minLeafRatioCutoff = Loader.loadFloat(data.Attribute("min_leaf_ratio_cutoff"), 0f);
             _leafRatioOffset = Loader.loadFloat(data.Attribute("leaf_ratio_offset"), 0f);
             _position = Loader.loadVector2(data.Attribute("position"), Vector2.Zero);
+            _layerDepth = Loader.loadFloat(data.Attribute("layer_depth"), 0.1f);
 
             _vertices = new CustomVertexFormat[MAX_VERTICES];
             _random = new Random(_seed);
