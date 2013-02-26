@@ -36,6 +36,7 @@ namespace StasisGame
                                                                                                             // key 2) output gate's entity id
         private Dictionary<int, Dictionary<int, GateOutputComponent>> _circuitIdGateIdGateComponentMap;     // key 1) circuit actor id
                                                                                                             // key 2) gate id
+        private Dictionary<int, int> _actorIdToEntityId;
 
         public EntityFactory(SystemManager systemManager, EntityManager entityManager)
         {
@@ -43,6 +44,7 @@ namespace StasisGame
             _entityManager = entityManager;
             _actorIdEntityIdGateComponentMap = new Dictionary<int, Dictionary<int, GateOutputComponent>>();
             _circuitIdGateIdGateComponentMap = new Dictionary<int, Dictionary<int, GateOutputComponent>>();
+            _actorIdToEntityId = new Dictionary<int, int>();
         }
 
         private Body matchBodyToEditorId(int editorId)
@@ -249,6 +251,9 @@ namespace StasisGame
             PolygonShape boxShape = new PolygonShape();
             FixtureDef boxFixtureDef = new FixtureDef();
             BodyType bodyType = (BodyType)Loader.loadEnum(typeof(BodyType), data.Attribute("body_type"), (int)BodyType.Static);
+            int actorId = int.Parse(data.Attribute("id").Value);
+
+            _actorIdToEntityId.Add(actorId, entityId);
 
             bodyDef.type = bodyType;
             bodyDef.position = Loader.loadVector2(data.Attribute("position"), Vector2.Zero);
@@ -273,18 +278,21 @@ namespace StasisGame
 
             _entityManager.addComponent(entityId, new PhysicsComponent(body));
             _entityManager.addComponent(entityId, createBodyRenderComponent(data));
-            _entityManager.addComponent(entityId, new EditorIdComponent(int.Parse(data.Attribute("id").Value)));
+            _entityManager.addComponent(entityId, new EditorIdComponent(actorId));
         }
 
         public void createCircle(XElement data)
         {
             World world = (_systemManager.getSystem(SystemType.Physics) as PhysicsSystem).world;
             int entityId = _entityManager.createEntity();
+            int actorId = int.Parse(data.Attribute("id").Value);
             Body body = null;
             BodyDef bodyDef = new BodyDef();
             FixtureDef circleFixtureDef = new FixtureDef();
             CircleShape circleShape = new CircleShape();
             BodyType bodyType = (BodyType)Loader.loadEnum(typeof(BodyType), data.Attribute("body_type"), (int)BodyType.Static);
+
+            _actorIdToEntityId.Add(actorId, entityId);
 
             bodyDef.type = bodyType;
             bodyDef.position = Loader.loadVector2(data.Attribute("position"), Vector2.Zero);
@@ -308,7 +316,7 @@ namespace StasisGame
 
             _entityManager.addComponent(entityId, new PhysicsComponent(body));
             _entityManager.addComponent(entityId, createBodyRenderComponent(data));
-            _entityManager.addComponent(entityId, new EditorIdComponent(int.Parse(data.Attribute("id").Value)));
+            _entityManager.addComponent(entityId, new EditorIdComponent(actorId));
         }
 
         public void createFluid(XElement data)
@@ -325,12 +333,15 @@ namespace StasisGame
         {
             World world = (_systemManager.getSystem(SystemType.Physics) as PhysicsSystem).world;
             int entityId = _entityManager.createEntity();
+            int actorId = int.Parse(data.Attribute("id").Value);
             Body body = null;
             BodyDef bodyDef = new BodyDef();
             PolygonShape shape = new PolygonShape();
             FixtureDef fixtureDef = new FixtureDef();
             XElement itemData = ResourceController.getResource(data.Attribute("item_uid").Value);
             Texture2D worldTexture = ResourceController.getTexture(Loader.loadString(itemData.Attribute("world_texture_uid"), "default_item"));
+
+            _actorIdToEntityId.Add(actorId, entityId);
 
             bodyDef.type = (BodyType)Loader.loadEnum(typeof(BodyType), data.Attribute("body_type"), (int)BodyType.Dynamic);
             bodyDef.position = Loader.loadVector2(data.Attribute("position"), Vector2.Zero);
@@ -370,6 +381,7 @@ namespace StasisGame
         {
             World world = (_systemManager.getSystem(SystemType.Physics) as PhysicsSystem).world;
             int entityId;
+            int actorId = int.Parse(data.Attribute("id").Value);
             float segmentLength = 0.5f;
             float segmentHalfLength = segmentLength * 0.5f;
             bool doubleAnchor = Loader.loadBool(data.Attribute("double_anchor"), false);
@@ -491,6 +503,7 @@ namespace StasisGame
             }
 
             entityId = _entityManager.createEntity();
+            _actorIdToEntityId.Add(actorId, entityId);
             _entityManager.addComponent(entityId, new RopePhysicsComponent(head));
             _entityManager.addComponent(entityId, new RopeRenderComponent());
             _entityManager.addComponent(entityId, new IgnoreTreeCollisionComponent());
@@ -508,6 +521,7 @@ namespace StasisGame
         {
             World world = (_systemManager.getSystem(SystemType.Physics) as PhysicsSystem).world;
             int entityId = _entityManager.createEntity();
+            int actorId = int.Parse(data.Attribute("id").Value);
             BodyDef bodyDef = new BodyDef();
             List<FixtureDef> fixtureDefs = new List<FixtureDef>();
             List<Vector2> points = new List<Vector2>();
@@ -516,6 +530,8 @@ namespace StasisGame
             Vector2 center = Vector2.Zero;
             Body body = null;
             BodyType bodyType = (BodyType)Loader.loadEnum(typeof(BodyType), data.Attribute("body_type"), (int)BodyType.Static);
+
+            _actorIdToEntityId.Add(actorId, entityId);
 
             bodyDef.type = bodyType;
             bodyDef.userData = entityId;
@@ -575,6 +591,7 @@ namespace StasisGame
         {
             RenderSystem renderSystem = _systemManager.getSystem(SystemType.Render) as RenderSystem;
             int entityId = _entityManager.createEntity();
+            int actorId = int.Parse(data.Attribute("id").Value);
             Material barkMaterial = new Material(ResourceController.getResource(data.Attribute("bark_material_uid").Value));
             Material leafMaterial = new Material(ResourceController.getResource(data.Attribute("leaf_material_uid").Value));
             List<Vector2> barkPoints = new List<Vector2>();
@@ -585,6 +602,8 @@ namespace StasisGame
             float maxBaseHalfWidth = Loader.loadFloat(data.Attribute("max_base_half_width"), 0.5f);
             float internodeHalfLength = Loader.loadFloat(data.Attribute("internode_half_length"), 0.5f);
             float leafRange = 1f / 8f;  // 1f / numSizes
+
+            _actorIdToEntityId.Add(actorId, entityId);
 
             // Bark texture
             barkPoints.Add(new Vector2(-maxBaseHalfWidth, -internodeHalfLength));
@@ -716,6 +735,7 @@ namespace StasisGame
             revoluteJointComponent = new RevoluteComponent((RevoluteJoint)world.CreateJoint(jointDef));
 
             entityId = _entityManager.createEntity();
+            _actorIdToEntityId.Add(actorId, entityId);
             _entityManager.addComponent(entityId, revoluteJointComponent);
             _entityManager.addComponent(entityId, new EditorIdComponent(actorId));
 
@@ -768,6 +788,7 @@ namespace StasisGame
             jointDef.maxMotorForce = autoCalculateForce ? bodyA.GetMass() * world.Gravity.Length() + buttonForceDifference : maxMotorForce;
 
             entityId = _entityManager.createEntity();
+            _actorIdToEntityId.Add(actorId, entityId);
             prismaticJointComponent = new PrismaticJointComponent((PrismaticJoint)world.CreateJoint(jointDef));
             _entityManager.addComponent(entityId, prismaticJointComponent);
             _entityManager.addComponent(entityId, new EditorIdComponent(actorId));
@@ -786,12 +807,12 @@ namespace StasisGame
         public void createCircuit(XElement data)
         {
             EventSystem eventSystem = _systemManager.getSystem(SystemType.Event) as EventSystem;
+            int entityId = _entityManager.createEntity();
             int actorId = int.Parse(data.Attribute("id").Value);
             string circuitUID = data.Attribute("circuit_uid").Value;
             XElement circuitData = ResourceController.getResource(circuitUID);
             Circuit circuit = new Circuit(circuitData);
             CircuitComponent circuitComponent = new CircuitComponent(circuit);
-            int entityId = _entityManager.createEntity();
             Func<int, Gate> getGateById = (id) =>
                 {
                     foreach (Gate gate in circuit.gates)
@@ -802,6 +823,7 @@ namespace StasisGame
                     return null;
                 };
 
+            _actorIdToEntityId.Add(actorId, entityId);
             _entityManager.addComponent(entityId, circuitComponent);
 
             foreach (Gate gate in circuit.gates)
@@ -834,6 +856,55 @@ namespace StasisGame
             }
 
             circuit.updateOutput();
+        }
+
+        public void createCollisionFilter(XElement data)
+        {
+            int actorA = int.Parse(data.Attribute("actor_a").Value);
+            int actorB = int.Parse(data.Attribute("actor_b").Value);
+            int entityA = _actorIdToEntityId[actorA];
+            int entityB = _actorIdToEntityId[actorB];
+            Action<int, int> addEntityToIgnored = (ignored, ignorer) =>
+                {
+                    List<IComponent> components = _entityManager.getEntityComponents(ignorer);
+
+                    foreach (IComponent component in components)
+                    {
+                        switch (component.componentType)
+                        {
+                            case ComponentType.Physics:
+                                PhysicsComponent physicsComponent = component as PhysicsComponent;
+                                Fixture currentPhysicsFixture = physicsComponent.body.GetFixtureList();
+                                while (currentPhysicsFixture != null)
+                                {
+                                    if (!currentPhysicsFixture.IsIgnoredEntity(ignored))
+                                        currentPhysicsFixture.AddIgnoredEntity(ignored);
+                                    currentPhysicsFixture = currentPhysicsFixture.GetNext();
+                                }
+                                break;
+
+                            case ComponentType.CharacterMovement:
+                                CharacterMovementComponent characterMovementComponent = component as CharacterMovementComponent;
+                                if (!characterMovementComponent.feetFixture.IsIgnoredEntity(ignored))
+                                    characterMovementComponent.feetFixture.AddIgnoredEntity(ignored);
+                                break;
+
+                            case ComponentType.RopePhysics:
+                                RopePhysicsComponent ropePhysicsComponent = component as RopePhysicsComponent;
+                                RopeNode currentRopeNode = ropePhysicsComponent.head;
+                                while (currentRopeNode != null)
+                                {
+                                    if (!currentRopeNode.body.GetFixtureList().IsIgnoredEntity(ignored))
+                                        currentRopeNode.body.GetFixtureList().AddIgnoredEntity(ignored);
+                                    currentRopeNode = currentRopeNode.next;
+                                }
+                                break;
+                        }
+                    }
+                };
+
+            addEntityToIgnored(entityA, entityB);
+            addEntityToIgnored(entityB, entityA);
         }
     }
 }

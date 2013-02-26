@@ -94,5 +94,13 @@ namespace StasisGame.Managers
             }
             return results;
         }
+
+        public List<IComponent> getEntityComponents(int entityId)
+        {
+            if (_entities.ContainsKey(entityId))
+                return _entities[entityId];
+
+            return null;
+        }
     }
 }

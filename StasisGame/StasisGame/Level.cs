@@ -106,6 +106,10 @@ namespace StasisGame
                     case "Prismatic":
                         secondPassData.Add(actorData);
                         break;
+
+                    case "CollisionFilter":
+                        secondPassData.Add(actorData);
+                        break;
                 }
             }
 
@@ -136,6 +140,10 @@ namespace StasisGame
 
                     case "Prismatic":
                         _entityManager.factory.createPrismaticJoint(actorData);
+                        break;
+
+                    case "CollisionFilter":
+                        _entityManager.factory.createCollisionFilter(actorData);
                         break;
                 }
             }
