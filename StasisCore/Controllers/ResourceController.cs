@@ -26,6 +26,7 @@ namespace StasisCore.Controllers
         private static Dictionary<string, ResourceObject> _dialogueResources;
         private static Dictionary<string, ResourceObject> _levelResources;
         private static Dictionary<string, ResourceObject> _circuitResources;
+        private static Dictionary<string, ResourceObject> _backgroundResources;
         private static Dictionary<string, Texture2D> _cachedTextures;
         private static List<Dictionary<string, ResourceObject>> _resources;
 
@@ -37,6 +38,7 @@ namespace StasisCore.Controllers
         public static string characterPath { get { return String.Format("{0}\\characters.xml", RESOURCE_PATH); } }
         public static string dialoguePath { get { return String.Format("{0}\\dialogues.xml", RESOURCE_PATH); } }
         public static string circuitPath { get { return String.Format("{0}\\circuits.xml", RESOURCE_PATH); } }
+        public static string backgroundPath { get { return String.Format("{0}\\backgrounds.xml", RESOURCE_PATH); } }
 
         // Initialize -- Called once when the application starts
         public static void initialize(GraphicsDevice graphicsDevice)
@@ -48,6 +50,7 @@ namespace StasisCore.Controllers
             _dialogueResources = new Dictionary<string, ResourceObject>();
             _levelResources = new Dictionary<string, ResourceObject>();
             _circuitResources = new Dictionary<string, ResourceObject>();
+            _backgroundResources = new Dictionary<string, ResourceObject>();
             _cachedTextures = new Dictionary<string, Texture2D>();
 
             // Store all resource dictionaries in a list
@@ -58,6 +61,7 @@ namespace StasisCore.Controllers
             _resources.Add(_dialogueResources);
             _resources.Add(_levelResources);
             _resources.Add(_circuitResources);
+            _resources.Add(_backgroundResources);
         }
 
         // Checks to see if a resource has been loaded
@@ -144,6 +148,17 @@ namespace StasisCore.Controllers
                     foreach (XElement circuitData in data.Elements("Circuit"))
                     {
                         if (circuitData.Attribute("uid").Value == uid)
+                            return true;
+                    }
+                }
+
+                // Check backgrounds
+                using (FileStream fs = new FileStream(backgroundPath, FileMode.Open))
+                {
+                    XElement data = XElement.Load(fs);
+                    foreach (XElement backgroundData in data.Elements("Background"))
+                    {
+                        if (backgroundData.Attribute("uid").Value == uid)
                             return true;
                     }
                 }
@@ -261,6 +276,10 @@ namespace StasisCore.Controllers
 
                 // Dialogue
                 if (updateXml(dialoguePath, "Dialogues", "Dialogue"))
+                    return;
+
+                // Backgrounds
+                if (updateXml(dialoguePath, "Backgrounds", "Background"))
                     return;
             }
             catch (XmlException e)
@@ -428,6 +447,26 @@ namespace StasisCore.Controllers
                 {
                     ResourceObject resource = new ResourceObject(circuitData);
                     _circuitResources[resource.uid] = resource;
+                    loaded.Add(resource);
+                }
+            }
+
+            return loaded;
+        }
+
+        // Load backgrounds
+        public static List<ResourceObject> loadBackgrounds()
+        {
+            _backgroundResources.Clear();
+
+            List<ResourceObject> loaded = new List<ResourceObject>();
+            using (FileStream fs = new FileStream(backgroundPath, FileMode.Open))
+            {
+                XElement data = XElement.Load(fs);
+                foreach (XElement backgroundData in data.Elements("Background"))
+                {
+                    ResourceObject resource = new ResourceObject(backgroundData);
+                    _backgroundResources[resource.uid] = resource;
                     loaded.Add(resource);
                 }
             }
