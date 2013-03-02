@@ -91,6 +91,8 @@
     <Compile Include="Models\CircuitConnection.cs" />
     <Compile Include="Models\CircuitInputConnection.cs" />
     <Compile Include="Models\CircuitOutputConnection.cs" />
+    <Compile Include="Models\EditorBackground.cs" />
+    <Compile Include="Models\EditorBackgroundLayer.cs" />
     <Compile Include="Models\EditorCircleActor.cs" />
     <Compile Include="Models\EditorCircuitActor.cs" />
     <Compile Include="Models\EditorCollisionFilterActor.cs" />

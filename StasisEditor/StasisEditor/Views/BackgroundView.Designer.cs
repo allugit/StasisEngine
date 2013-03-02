@@ -28,33 +28,33 @@
         /// </summary>
         private void InitializeComponent()
         {
-            this.listBox1 = new System.Windows.Forms.ListBox();
-            this.listBox2 = new System.Windows.Forms.ListBox();
+            this.backgroundList = new System.Windows.Forms.ListBox();
+            this.layerList = new System.Windows.Forms.ListBox();
             this.removeBackgroundButton = new System.Windows.Forms.Button();
             this.addBackgroundButton = new System.Windows.Forms.Button();
             this.saveBackgroundsButton = new System.Windows.Forms.Button();
             this.addBackgroundLayer = new System.Windows.Forms.Button();
             this.removeLayerButton = new System.Windows.Forms.Button();
-            this.backgroundDisplay1 = new StasisEditor.Views.Controls.BackgroundDisplay();
+            this.backgroundDisplay = new StasisEditor.Views.Controls.BackgroundDisplay();
             this.SuspendLayout();
             // 
-            // listBox1
+            // backgroundList
             // 
-            this.listBox1.FormattingEnabled = true;
-            this.listBox1.Location = new System.Drawing.Point(3, 3);
-            this.listBox1.Name = "listBox1";
-            this.listBox1.Size = new System.Drawing.Size(187, 160);
-            this.listBox1.TabIndex = 1;
+            this.backgroundList.FormattingEnabled = true;
+            this.backgroundList.Location = new System.Drawing.Point(3, 3);
+            this.backgroundList.Name = "backgroundList";
+            this.backgroundList.Size = new System.Drawing.Size(187, 160);
+            this.backgroundList.TabIndex = 1;
             // 
-            // listBox2
+            // layerList
             // 
-            this.listBox2.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom)
+            this.layerList.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom)
                         | System.Windows.Forms.AnchorStyles.Left)));
-            this.listBox2.FormattingEnabled = true;
-            this.listBox2.Location = new System.Drawing.Point(4, 209);
-            this.listBox2.Name = "listBox2";
-            this.listBox2.Size = new System.Drawing.Size(186, 290);
-            this.listBox2.TabIndex = 2;
+            this.layerList.FormattingEnabled = true;
+            this.layerList.Location = new System.Drawing.Point(4, 209);
+            this.layerList.Name = "layerList";
+            this.layerList.Size = new System.Drawing.Size(186, 290);
+            this.layerList.TabIndex = 2;
             // 
             // removeBackgroundButton
             // 
@@ -104,16 +104,16 @@
             this.removeLayerButton.Text = "Remove";
             this.removeLayerButton.UseVisualStyleBackColor = true;
             // 
-            // backgroundDisplay1
+            // backgroundDisplay
             // 
-            this.backgroundDisplay1.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom)
+            this.backgroundDisplay.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom)
                         | System.Windows.Forms.AnchorStyles.Left)
                         | System.Windows.Forms.AnchorStyles.Right)));
-            this.backgroundDisplay1.Location = new System.Drawing.Point(196, 0);
-            this.backgroundDisplay1.Name = "backgroundDisplay1";
-            this.backgroundDisplay1.Size = new System.Drawing.Size(589, 499);
-            this.backgroundDisplay1.TabIndex = 0;
-            this.backgroundDisplay1.Text = "backgroundDisplay1";
+            this.backgroundDisplay.Location = new System.Drawing.Point(196, 0);
+            this.backgroundDisplay.Name = "backgroundDisplay";
+            this.backgroundDisplay.Size = new System.Drawing.Size(589, 499);
+            this.backgroundDisplay.TabIndex = 0;
+            this.backgroundDisplay.Text = "backgroundDisplay";
             // 
             // BackgroundView
             // 
@@ -124,9 +124,9 @@
             this.Controls.Add(this.saveBackgroundsButton);
             this.Controls.Add(this.addBackgroundButton);
             this.Controls.Add(this.removeBackgroundButton);
-            this.Controls.Add(this.listBox2);
-            this.Controls.Add(this.listBox1);
-            this.Controls.Add(this.backgroundDisplay1);
+            this.Controls.Add(this.layerList);
+            this.Controls.Add(this.backgroundList);
+            this.Controls.Add(this.backgroundDisplay);
             this.Margin = new System.Windows.Forms.Padding(0);
             this.Name = "BackgroundView";
             this.Size = new System.Drawing.Size(785, 537);
@@ -136,9 +136,9 @@
 
         #endregion
 
-        private Controls.BackgroundDisplay backgroundDisplay1;
-        private System.Windows.Forms.ListBox listBox1;
-        private System.Windows.Forms.ListBox listBox2;
+        private Controls.BackgroundDisplay backgroundDisplay;
+        private System.Windows.Forms.ListBox backgroundList;
+        private System.Windows.Forms.ListBox layerList;
         private System.Windows.Forms.Button removeBackgroundButton;
         private System.Windows.Forms.Button addBackgroundButton;
         private System.Windows.Forms.Button saveBackgroundsButton;

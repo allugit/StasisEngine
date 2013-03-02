@@ -150,7 +150,7 @@
             // 
             this.mainSplit.Panel2.BackColor = System.Drawing.SystemColors.Control;
             this.mainSplit.Panel2.Controls.Add(this.editorTabControl);
-            this.mainSplit.Size = new System.Drawing.Size(987, 424);
+            this.mainSplit.Size = new System.Drawing.Size(987, 403);
             this.mainSplit.SplitterDistance = 261;
             this.mainSplit.TabIndex = 1;
             this.mainSplit.TabStop = false;
@@ -167,7 +167,7 @@
             this.editorTabControl.Margin = new System.Windows.Forms.Padding(0);
             this.editorTabControl.Name = "editorTabControl";
             this.editorTabControl.SelectedIndex = 0;
-            this.editorTabControl.Size = new System.Drawing.Size(720, 422);
+            this.editorTabControl.Size = new System.Drawing.Size(720, 401);
             this.editorTabControl.TabIndex = 0;
             this.editorTabControl.SelectedIndexChanged += new System.EventHandler(this.editorTabControl_SelectedIndexChanged);
             // 
@@ -177,7 +177,7 @@
             this.levelTab.Controls.Add(this.levelView1);
             this.levelTab.Location = new System.Drawing.Point(4, 22);
             this.levelTab.Name = "levelTab";
-            this.levelTab.Size = new System.Drawing.Size(712, 396);
+            this.levelTab.Size = new System.Drawing.Size(712, 375);
             this.levelTab.TabIndex = 0;
             this.levelTab.Text = "Level";
             // 
@@ -188,7 +188,7 @@
             this.levelView1.Location = new System.Drawing.Point(0, 0);
             this.levelView1.Margin = new System.Windows.Forms.Padding(0);
             this.levelView1.Name = "levelView1";
-            this.levelView1.Size = new System.Drawing.Size(712, 396);
+            this.levelView1.Size = new System.Drawing.Size(712, 375);
             this.levelView1.TabIndex = 0;
             // 
             // materialsTab
@@ -197,7 +197,7 @@
             this.materialsTab.Location = new System.Drawing.Point(4, 22);
             this.materialsTab.Margin = new System.Windows.Forms.Padding(0);
             this.materialsTab.Name = "materialsTab";
-            this.materialsTab.Size = new System.Drawing.Size(712, 417);
+            this.materialsTab.Size = new System.Drawing.Size(712, 375);
             this.materialsTab.TabIndex = 1;
             this.materialsTab.Text = "Materials";
             this.materialsTab.UseVisualStyleBackColor = true;
@@ -208,7 +208,7 @@
             this.materialView1.Location = new System.Drawing.Point(0, 0);
             this.materialView1.Margin = new System.Windows.Forms.Padding(0);
             this.materialView1.Name = "materialView1";
-            this.materialView1.Size = new System.Drawing.Size(712, 417);
+            this.materialView1.Size = new System.Drawing.Size(712, 375);
             this.materialView1.TabIndex = 0;
             // 
             // blueprintsTab
@@ -217,7 +217,7 @@
             this.blueprintsTab.Location = new System.Drawing.Point(4, 22);
             this.blueprintsTab.Margin = new System.Windows.Forms.Padding(0);
             this.blueprintsTab.Name = "blueprintsTab";
-            this.blueprintsTab.Size = new System.Drawing.Size(712, 417);
+            this.blueprintsTab.Size = new System.Drawing.Size(712, 396);
             this.blueprintsTab.TabIndex = 2;
             this.blueprintsTab.Text = "Blueprints";
             this.blueprintsTab.UseVisualStyleBackColor = true;
@@ -230,7 +230,7 @@
             this.blueprintView1.Location = new System.Drawing.Point(0, 0);
             this.blueprintView1.Margin = new System.Windows.Forms.Padding(0);
             this.blueprintView1.Name = "blueprintView1";
-            this.blueprintView1.Size = new System.Drawing.Size(712, 417);
+            this.blueprintView1.Size = new System.Drawing.Size(712, 396);
             this.blueprintView1.TabIndex = 0;
             // 
             // circuitsTab
@@ -238,7 +238,7 @@
             this.circuitsTab.Controls.Add(this.circuitsView1);
             this.circuitsTab.Location = new System.Drawing.Point(4, 22);
             this.circuitsTab.Name = "circuitsTab";
-            this.circuitsTab.Size = new System.Drawing.Size(712, 417);
+            this.circuitsTab.Size = new System.Drawing.Size(712, 375);
             this.circuitsTab.TabIndex = 3;
             this.circuitsTab.Text = "Circuits";
             this.circuitsTab.UseVisualStyleBackColor = true;
@@ -250,7 +250,7 @@
             this.circuitsView1.Location = new System.Drawing.Point(0, 0);
             this.circuitsView1.Margin = new System.Windows.Forms.Padding(0);
             this.circuitsView1.Name = "circuitsView1";
-            this.circuitsView1.Size = new System.Drawing.Size(712, 417);
+            this.circuitsView1.Size = new System.Drawing.Size(712, 375);
             this.circuitsView1.TabIndex = 0;
             // 
             // backgroundsTab
@@ -259,7 +259,7 @@
             this.backgroundsTab.Location = new System.Drawing.Point(4, 22);
             this.backgroundsTab.Margin = new System.Windows.Forms.Padding(0);
             this.backgroundsTab.Name = "backgroundsTab";
-            this.backgroundsTab.Size = new System.Drawing.Size(712, 396);
+            this.backgroundsTab.Size = new System.Drawing.Size(712, 375);
             this.backgroundsTab.TabIndex = 4;
             this.backgroundsTab.Text = "Backgrounds";
             this.backgroundsTab.UseVisualStyleBackColor = true;
@@ -270,14 +270,14 @@
             this.backgroundView1.Location = new System.Drawing.Point(0, 0);
             this.backgroundView1.Margin = new System.Windows.Forms.Padding(0);
             this.backgroundView1.Name = "backgroundView1";
-            this.backgroundView1.Size = new System.Drawing.Size(712, 396);
+            this.backgroundView1.Size = new System.Drawing.Size(712, 375);
             this.backgroundView1.TabIndex = 0;
             // 
             // EditorView
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(987, 423);
+            this.ClientSize = new System.Drawing.Size(987, 402);
             this.Controls.Add(this.mainSplit);
             this.Menu = this.mainMenu1;
             this.Name = "EditorView";
