@@ -150,7 +150,7 @@
             // 
             this.mainSplit.Panel2.BackColor = System.Drawing.SystemColors.Control;
             this.mainSplit.Panel2.Controls.Add(this.editorTabControl);
-            this.mainSplit.Size = new System.Drawing.Size(987, 403);
+            this.mainSplit.Size = new System.Drawing.Size(987, 562);
             this.mainSplit.SplitterDistance = 261;
             this.mainSplit.TabIndex = 1;
             this.mainSplit.TabStop = false;
@@ -167,7 +167,7 @@
             this.editorTabControl.Margin = new System.Windows.Forms.Padding(0);
             this.editorTabControl.Name = "editorTabControl";
             this.editorTabControl.SelectedIndex = 0;
-            this.editorTabControl.Size = new System.Drawing.Size(720, 401);
+            this.editorTabControl.Size = new System.Drawing.Size(720, 560);
             this.editorTabControl.TabIndex = 0;
             this.editorTabControl.SelectedIndexChanged += new System.EventHandler(this.editorTabControl_SelectedIndexChanged);
             // 
@@ -177,7 +177,7 @@
             this.levelTab.Controls.Add(this.levelView1);
             this.levelTab.Location = new System.Drawing.Point(4, 22);
             this.levelTab.Name = "levelTab";
-            this.levelTab.Size = new System.Drawing.Size(712, 375);
+            this.levelTab.Size = new System.Drawing.Size(712, 534);
             this.levelTab.TabIndex = 0;
             this.levelTab.Text = "Level";
             // 
@@ -188,7 +188,7 @@
             this.levelView1.Location = new System.Drawing.Point(0, 0);
             this.levelView1.Margin = new System.Windows.Forms.Padding(0);
             this.levelView1.Name = "levelView1";
-            this.levelView1.Size = new System.Drawing.Size(712, 375);
+            this.levelView1.Size = new System.Drawing.Size(712, 534);
             this.levelView1.TabIndex = 0;
             // 
             // materialsTab
@@ -217,7 +217,7 @@
             this.blueprintsTab.Location = new System.Drawing.Point(4, 22);
             this.blueprintsTab.Margin = new System.Windows.Forms.Padding(0);
             this.blueprintsTab.Name = "blueprintsTab";
-            this.blueprintsTab.Size = new System.Drawing.Size(712, 396);
+            this.blueprintsTab.Size = new System.Drawing.Size(712, 375);
             this.blueprintsTab.TabIndex = 2;
             this.blueprintsTab.Text = "Blueprints";
             this.blueprintsTab.UseVisualStyleBackColor = true;
@@ -266,6 +266,7 @@
             // 
             // backgroundView1
             // 
+            this.backgroundView1.controller = null;
             this.backgroundView1.Dock = System.Windows.Forms.DockStyle.Fill;
             this.backgroundView1.Location = new System.Drawing.Point(0, 0);
             this.backgroundView1.Margin = new System.Windows.Forms.Padding(0);
@@ -277,7 +278,7 @@
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(987, 402);
+            this.ClientSize = new System.Drawing.Size(987, 561);
             this.Controls.Add(this.mainSplit);
             this.Menu = this.mainMenu1;
             this.Name = "EditorView";
