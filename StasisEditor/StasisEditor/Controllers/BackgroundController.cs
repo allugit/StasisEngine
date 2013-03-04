@@ -14,6 +14,8 @@ namespace StasisEditor.Controllers
         private BackgroundView _view;
         private BindingList<EditorBackground> _backgrounds;
 
+        public BindingList<EditorBackground> backgrounds { get { return _backgrounds; } }
+
         public BackgroundController(EditorController editorController, BackgroundView view)
         {
             _editorController = editorController;

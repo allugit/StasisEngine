@@ -35,6 +35,7 @@
             this.saveBackgroundsButton = new System.Windows.Forms.Button();
             this.addBackgroundLayer = new System.Windows.Forms.Button();
             this.removeLayerButton = new System.Windows.Forms.Button();
+            this.propertyGrid1 = new System.Windows.Forms.PropertyGrid();
             this.backgroundDisplay = new StasisEditor.Views.Controls.BackgroundDisplay();
             this.SuspendLayout();
             // 
@@ -53,7 +54,7 @@
             this.layerList.FormattingEnabled = true;
             this.layerList.Location = new System.Drawing.Point(4, 209);
             this.layerList.Name = "layerList";
-            this.layerList.Size = new System.Drawing.Size(186, 290);
+            this.layerList.Size = new System.Drawing.Size(186, 134);
             this.layerList.TabIndex = 2;
             // 
             // removeBackgroundButton
@@ -73,6 +74,7 @@
             this.addBackgroundButton.TabIndex = 4;
             this.addBackgroundButton.Text = "Add";
             this.addBackgroundButton.UseVisualStyleBackColor = true;
+            this.addBackgroundButton.Click += new System.EventHandler(this.addBackgroundButton_Click);
             // 
             // saveBackgroundsButton
             // 
@@ -87,7 +89,7 @@
             // addBackgroundLayer
             // 
             this.addBackgroundLayer.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
-            this.addBackgroundLayer.Location = new System.Drawing.Point(4, 511);
+            this.addBackgroundLayer.Location = new System.Drawing.Point(4, 349);
             this.addBackgroundLayer.Name = "addBackgroundLayer";
             this.addBackgroundLayer.Size = new System.Drawing.Size(75, 23);
             this.addBackgroundLayer.TabIndex = 6;
@@ -97,12 +99,21 @@
             // removeLayerButton
             // 
             this.removeLayerButton.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
-            this.removeLayerButton.Location = new System.Drawing.Point(85, 511);
+            this.removeLayerButton.Location = new System.Drawing.Point(85, 349);
             this.removeLayerButton.Name = "removeLayerButton";
             this.removeLayerButton.Size = new System.Drawing.Size(75, 23);
             this.removeLayerButton.TabIndex = 7;
             this.removeLayerButton.Text = "Remove";
             this.removeLayerButton.UseVisualStyleBackColor = true;
+            // 
+            // propertyGrid1
+            // 
+            this.propertyGrid1.HelpVisible = false;
+            this.propertyGrid1.Location = new System.Drawing.Point(4, 388);
+            this.propertyGrid1.Name = "propertyGrid1";
+            this.propertyGrid1.Size = new System.Drawing.Size(186, 146);
+            this.propertyGrid1.TabIndex = 8;
+            this.propertyGrid1.ToolbarVisible = false;
             // 
             // backgroundDisplay
             // 
@@ -119,6 +130,7 @@
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
+            this.Controls.Add(this.propertyGrid1);
             this.Controls.Add(this.removeLayerButton);
             this.Controls.Add(this.addBackgroundLayer);
             this.Controls.Add(this.saveBackgroundsButton);
@@ -144,5 +156,6 @@
         private System.Windows.Forms.Button saveBackgroundsButton;
         private System.Windows.Forms.Button addBackgroundLayer;
         private System.Windows.Forms.Button removeLayerButton;
+        private System.Windows.Forms.PropertyGrid propertyGrid1;
     }
 }

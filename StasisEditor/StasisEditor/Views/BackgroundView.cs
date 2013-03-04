@@ -8,6 +8,8 @@ using System.Text;
 using System.Windows.Forms;
 using StasisEditor.Controllers;
 using StasisEditor.Models;
+using StasisEditor.Views.Controls;
+using StasisCore.Controllers;
 
 namespace StasisEditor.Views
 {
@@ -21,6 +23,17 @@ namespace StasisEditor.Views
         public BackgroundView()
         {
             InitializeComponent();
+        }
+
+        // Add new background
+        private void addBackgroundButton_Click(object sender, EventArgs e)
+        {
+            CreateResourceView createResourceView = new CreateResourceView();
+            if (createResourceView.ShowDialog() == DialogResult.OK)
+            {
+                EditorBackground background = new EditorBackground(createResourceView.uid);
+                _controller.backgrounds.Add(background);
+            }
         }
     }
 }
