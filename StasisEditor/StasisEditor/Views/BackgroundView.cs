@@ -72,6 +72,7 @@ namespace StasisEditor.Views
             background.layers.Add(layer);
 
             layerList.SelectedItem = layer;
+            layerList.RefreshItems();
         }
 
         // Remove background layer
@@ -79,11 +80,21 @@ namespace StasisEditor.Views
         {
             EditorBackground background = selectedBackground;
             EditorBackgroundLayer layer = selectedBackgroundLayer;
+            int selectedIndex;
 
             if (background == null || layer == null)
                 return;
 
+            selectedIndex = layerList.Items.IndexOf(layer);
             background.layers.Remove(layer);
+            layerList.DataSource = null;
+            layerList.DataSource = background.layers;
+        }
+
+        // Property changed
+        private void layerProperties_PropertyValueChanged(object s, PropertyValueChangedEventArgs e)
+        {
+            layerList.RefreshItems();
         }
     }
 }

@@ -1,4 +1,6 @@
-﻿namespace StasisEditor.Views
+﻿using StasisEditor.Views.Controls;
+
+namespace StasisEditor.Views
 {
     partial class BackgroundView
     {
@@ -28,8 +30,8 @@
         /// </summary>
         private void InitializeComponent()
         {
-            this.backgroundList = new System.Windows.Forms.ListBox();
-            this.layerList = new System.Windows.Forms.ListBox();
+            this.backgroundList = new StasisEditor.Views.Controls.RefreshingListBox();
+            this.layerList = new StasisEditor.Views.Controls.RefreshingListBox();
             this.removeBackgroundButton = new System.Windows.Forms.Button();
             this.addBackgroundButton = new System.Windows.Forms.Button();
             this.saveBackgroundsButton = new System.Windows.Forms.Button();
@@ -127,6 +129,7 @@
             this.layerProperties.Size = new System.Drawing.Size(184, 104);
             this.layerProperties.TabIndex = 8;
             this.layerProperties.ToolbarVisible = false;
+            this.layerProperties.PropertyValueChanged += new System.Windows.Forms.PropertyValueChangedEventHandler(this.layerProperties_PropertyValueChanged);
             // 
             // splitContainer1
             // 
@@ -182,8 +185,8 @@
         #endregion
 
         private Controls.BackgroundDisplay backgroundDisplay;
-        private System.Windows.Forms.ListBox backgroundList;
-        private System.Windows.Forms.ListBox layerList;
+        private RefreshingListBox backgroundList;
+        private RefreshingListBox layerList;
         private System.Windows.Forms.Button removeBackgroundButton;
         private System.Windows.Forms.Button addBackgroundButton;
         private System.Windows.Forms.Button saveBackgroundsButton;
