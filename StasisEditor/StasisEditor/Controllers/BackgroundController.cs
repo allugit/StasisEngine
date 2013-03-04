@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel;
+using System.Xml.Linq;
 using StasisEditor.Views;
 using StasisEditor.Models;
 using StasisCore.Resources;
@@ -31,6 +32,16 @@ namespace StasisEditor.Controllers
                 _backgrounds.Add(new EditorBackground(resource.data));
             }
             _view.backgrounds = _backgrounds;
+        }
+
+        public void saveBackgrounds()
+        {
+            XElement data = new XElement("Backgrounds");
+
+            foreach (EditorBackground background in _backgrounds)
+                data.Add(background.data);
+
+            ResourceController.saveBackgroundResources(data);
         }
     }
 }

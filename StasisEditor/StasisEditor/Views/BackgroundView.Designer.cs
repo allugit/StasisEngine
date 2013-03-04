@@ -30,8 +30,6 @@ namespace StasisEditor.Views
         /// </summary>
         private void InitializeComponent()
         {
-            this.backgroundList = new StasisEditor.Views.Controls.RefreshingListBox();
-            this.layerList = new StasisEditor.Views.Controls.RefreshingListBox();
             this.removeBackgroundButton = new System.Windows.Forms.Button();
             this.addBackgroundButton = new System.Windows.Forms.Button();
             this.saveBackgroundsButton = new System.Windows.Forms.Button();
@@ -39,34 +37,14 @@ namespace StasisEditor.Views
             this.removeLayerButton = new System.Windows.Forms.Button();
             this.layerProperties = new System.Windows.Forms.PropertyGrid();
             this.splitContainer1 = new System.Windows.Forms.SplitContainer();
+            this.backgroundList = new StasisEditor.Views.Controls.RefreshingListBox();
+            this.layerList = new StasisEditor.Views.Controls.RefreshingListBox();
             this.backgroundDisplay = new StasisEditor.Views.Controls.BackgroundDisplay();
             ((System.ComponentModel.ISupportInitialize)(this.splitContainer1)).BeginInit();
             this.splitContainer1.Panel1.SuspendLayout();
             this.splitContainer1.Panel2.SuspendLayout();
             this.splitContainer1.SuspendLayout();
             this.SuspendLayout();
-            // 
-            // backgroundList
-            // 
-            this.backgroundList.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
-                        | System.Windows.Forms.AnchorStyles.Right)));
-            this.backgroundList.FormattingEnabled = true;
-            this.backgroundList.Location = new System.Drawing.Point(0, 0);
-            this.backgroundList.Name = "backgroundList";
-            this.backgroundList.Size = new System.Drawing.Size(187, 160);
-            this.backgroundList.TabIndex = 1;
-            this.backgroundList.SelectedValueChanged += new System.EventHandler(this.backgroundList_SelectedValueChanged);
-            // 
-            // layerList
-            // 
-            this.layerList.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
-                        | System.Windows.Forms.AnchorStyles.Right)));
-            this.layerList.FormattingEnabled = true;
-            this.layerList.Location = new System.Drawing.Point(1, 206);
-            this.layerList.Name = "layerList";
-            this.layerList.Size = new System.Drawing.Size(186, 147);
-            this.layerList.TabIndex = 2;
-            this.layerList.SelectedValueChanged += new System.EventHandler(this.layerList_SelectedValueChanged);
             // 
             // removeBackgroundButton
             // 
@@ -97,6 +75,7 @@ namespace StasisEditor.Views
             this.saveBackgroundsButton.TabIndex = 5;
             this.saveBackgroundsButton.Text = "Save";
             this.saveBackgroundsButton.UseVisualStyleBackColor = true;
+            this.saveBackgroundsButton.Click += new System.EventHandler(this.saveBackgroundsButton_Click);
             // 
             // addBackgroundLayer
             // 
@@ -155,6 +134,28 @@ namespace StasisEditor.Views
             this.splitContainer1.Size = new System.Drawing.Size(782, 505);
             this.splitContainer1.SplitterDistance = 192;
             this.splitContainer1.TabIndex = 9;
+            // 
+            // backgroundList
+            // 
+            this.backgroundList.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
+                        | System.Windows.Forms.AnchorStyles.Right)));
+            this.backgroundList.FormattingEnabled = true;
+            this.backgroundList.Location = new System.Drawing.Point(0, 0);
+            this.backgroundList.Name = "backgroundList";
+            this.backgroundList.Size = new System.Drawing.Size(187, 160);
+            this.backgroundList.TabIndex = 1;
+            this.backgroundList.SelectedValueChanged += new System.EventHandler(this.backgroundList_SelectedValueChanged);
+            // 
+            // layerList
+            // 
+            this.layerList.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
+                        | System.Windows.Forms.AnchorStyles.Right)));
+            this.layerList.FormattingEnabled = true;
+            this.layerList.Location = new System.Drawing.Point(1, 206);
+            this.layerList.Name = "layerList";
+            this.layerList.Size = new System.Drawing.Size(186, 147);
+            this.layerList.TabIndex = 2;
+            this.layerList.SelectedValueChanged += new System.EventHandler(this.layerList_SelectedValueChanged);
             // 
             // backgroundDisplay
             // 

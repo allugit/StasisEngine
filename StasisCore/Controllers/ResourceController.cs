@@ -241,6 +241,26 @@ namespace StasisCore.Controllers
             loadCircuits();
         }
 
+        // Save background resources
+        public static void saveBackgroundResources(XElement data, bool backup = true)
+        {
+            // Backup backgrounds
+            if (backup)
+            {
+                string backupFile = backgroundPath + ".bak";
+                if (File.Exists(backupFile))
+                    File.Delete(backupFile);
+                File.Move(backgroundPath, backupFile);
+            }
+
+            // Save backgrounds
+            XDocument doc = new XDocument(data);
+            doc.Save(backgroundPath);
+
+            // Reload background
+            loadBackgrounds();
+        }
+
         // Destroy a resource
         public static void destroy(string uid)
         {

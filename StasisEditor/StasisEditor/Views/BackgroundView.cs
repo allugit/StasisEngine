@@ -96,5 +96,11 @@ namespace StasisEditor.Views
         {
             layerList.RefreshItems();
         }
+
+        // Save backgrounds
+        private void saveBackgroundsButton_Click(object sender, EventArgs e)
+        {
+            _controller.saveBackgrounds();
+        }
     }
 }
