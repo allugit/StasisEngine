@@ -19,6 +19,8 @@ namespace StasisEditor.Views
 
         public BackgroundController controller { get { return _controller; } set { _controller = value; } }
         public BindingList<EditorBackground> backgrounds { set { backgroundList.DataSource = value; } }
+        public EditorBackground selectedBackground { get { return backgroundList.SelectedItem as EditorBackground; } }
+        public EditorBackgroundLayer selectedBackgroundLayer { get { return layerList.SelectedItem as EditorBackgroundLayer; } }
 
         public BackgroundView()
         {
@@ -34,6 +36,54 @@ namespace StasisEditor.Views
                 EditorBackground background = new EditorBackground(createResourceView.uid);
                 _controller.backgrounds.Add(background);
             }
+        }
+
+        // Remove background
+        private void removeBackgroundButton_Click(object sender, EventArgs e)
+        {
+            if (selectedBackground != null)
+            {
+                _controller.backgrounds.Remove(selectedBackground);
+            }
+        }
+
+        // Selected background changed
+        private void backgroundList_SelectedValueChanged(object sender, EventArgs e)
+        {
+            layerList.DataSource = selectedBackground.layers;
+        }
+
+        // Selected layer changed
+        private void layerList_SelectedValueChanged(object sender, EventArgs e)
+        {
+            layerProperties.SelectedObject = selectedBackgroundLayer;
+        }
+
+        // Add background layer
+        private void addBackgroundLayer_Click(object sender, EventArgs e)
+        {
+            EditorBackground background = selectedBackground;
+            EditorBackgroundLayer layer;
+
+            if (background == null)
+                return;
+
+            layer = new EditorBackgroundLayer();
+            background.layers.Add(layer);
+
+            layerList.SelectedItem = layer;
+        }
+
+        // Remove background layer
+        private void removeLayerButton_Click(object sender, EventArgs e)
+        {
+            EditorBackground background = selectedBackground;
+            EditorBackgroundLayer layer = selectedBackgroundLayer;
+
+            if (background == null || layer == null)
+                return;
+
+            background.layers.Remove(layer);
         }
     }
 }

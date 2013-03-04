@@ -11,6 +11,7 @@ namespace StasisEditor.Models
         private List<EditorBackgroundLayer> _layers;
 
         public string uid { get { return _uid; } set { _uid = value; } }
+        public List<EditorBackgroundLayer> layers { get { return _layers; } }
         public XElement data
         {
             get

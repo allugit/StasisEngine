@@ -35,40 +35,50 @@
             this.saveBackgroundsButton = new System.Windows.Forms.Button();
             this.addBackgroundLayer = new System.Windows.Forms.Button();
             this.removeLayerButton = new System.Windows.Forms.Button();
-            this.propertyGrid1 = new System.Windows.Forms.PropertyGrid();
+            this.layerProperties = new System.Windows.Forms.PropertyGrid();
+            this.splitContainer1 = new System.Windows.Forms.SplitContainer();
             this.backgroundDisplay = new StasisEditor.Views.Controls.BackgroundDisplay();
+            ((System.ComponentModel.ISupportInitialize)(this.splitContainer1)).BeginInit();
+            this.splitContainer1.Panel1.SuspendLayout();
+            this.splitContainer1.Panel2.SuspendLayout();
+            this.splitContainer1.SuspendLayout();
             this.SuspendLayout();
             // 
             // backgroundList
             // 
+            this.backgroundList.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
+                        | System.Windows.Forms.AnchorStyles.Right)));
             this.backgroundList.FormattingEnabled = true;
-            this.backgroundList.Location = new System.Drawing.Point(3, 3);
+            this.backgroundList.Location = new System.Drawing.Point(0, 0);
             this.backgroundList.Name = "backgroundList";
             this.backgroundList.Size = new System.Drawing.Size(187, 160);
             this.backgroundList.TabIndex = 1;
+            this.backgroundList.SelectedValueChanged += new System.EventHandler(this.backgroundList_SelectedValueChanged);
             // 
             // layerList
             // 
-            this.layerList.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom)
-                        | System.Windows.Forms.AnchorStyles.Left)));
+            this.layerList.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
+                        | System.Windows.Forms.AnchorStyles.Right)));
             this.layerList.FormattingEnabled = true;
-            this.layerList.Location = new System.Drawing.Point(4, 209);
+            this.layerList.Location = new System.Drawing.Point(1, 206);
             this.layerList.Name = "layerList";
-            this.layerList.Size = new System.Drawing.Size(186, 134);
+            this.layerList.Size = new System.Drawing.Size(186, 147);
             this.layerList.TabIndex = 2;
+            this.layerList.SelectedValueChanged += new System.EventHandler(this.layerList_SelectedValueChanged);
             // 
             // removeBackgroundButton
             // 
-            this.removeBackgroundButton.Location = new System.Drawing.Point(85, 169);
+            this.removeBackgroundButton.Location = new System.Drawing.Point(82, 166);
             this.removeBackgroundButton.Name = "removeBackgroundButton";
             this.removeBackgroundButton.Size = new System.Drawing.Size(75, 23);
             this.removeBackgroundButton.TabIndex = 3;
             this.removeBackgroundButton.Text = "Remove";
             this.removeBackgroundButton.UseVisualStyleBackColor = true;
+            this.removeBackgroundButton.Click += new System.EventHandler(this.removeBackgroundButton_Click);
             // 
             // addBackgroundButton
             // 
-            this.addBackgroundButton.Location = new System.Drawing.Point(4, 169);
+            this.addBackgroundButton.Location = new System.Drawing.Point(1, 166);
             this.addBackgroundButton.Name = "addBackgroundButton";
             this.addBackgroundButton.Size = new System.Drawing.Size(75, 23);
             this.addBackgroundButton.TabIndex = 4;
@@ -88,41 +98,67 @@
             // 
             // addBackgroundLayer
             // 
-            this.addBackgroundLayer.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
-            this.addBackgroundLayer.Location = new System.Drawing.Point(4, 349);
+            this.addBackgroundLayer.Location = new System.Drawing.Point(1, 359);
             this.addBackgroundLayer.Name = "addBackgroundLayer";
             this.addBackgroundLayer.Size = new System.Drawing.Size(75, 23);
             this.addBackgroundLayer.TabIndex = 6;
             this.addBackgroundLayer.Text = "Add";
             this.addBackgroundLayer.UseVisualStyleBackColor = true;
+            this.addBackgroundLayer.Click += new System.EventHandler(this.addBackgroundLayer_Click);
             // 
             // removeLayerButton
             // 
-            this.removeLayerButton.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
-            this.removeLayerButton.Location = new System.Drawing.Point(85, 349);
+            this.removeLayerButton.Location = new System.Drawing.Point(82, 359);
             this.removeLayerButton.Name = "removeLayerButton";
             this.removeLayerButton.Size = new System.Drawing.Size(75, 23);
             this.removeLayerButton.TabIndex = 7;
             this.removeLayerButton.Text = "Remove";
             this.removeLayerButton.UseVisualStyleBackColor = true;
+            this.removeLayerButton.Click += new System.EventHandler(this.removeLayerButton_Click);
             // 
-            // propertyGrid1
+            // layerProperties
             // 
-            this.propertyGrid1.HelpVisible = false;
-            this.propertyGrid1.Location = new System.Drawing.Point(4, 388);
-            this.propertyGrid1.Name = "propertyGrid1";
-            this.propertyGrid1.Size = new System.Drawing.Size(186, 146);
-            this.propertyGrid1.TabIndex = 8;
-            this.propertyGrid1.ToolbarVisible = false;
+            this.layerProperties.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom)
+                        | System.Windows.Forms.AnchorStyles.Left)
+                        | System.Windows.Forms.AnchorStyles.Right)));
+            this.layerProperties.HelpVisible = false;
+            this.layerProperties.Location = new System.Drawing.Point(3, 398);
+            this.layerProperties.Name = "layerProperties";
+            this.layerProperties.Size = new System.Drawing.Size(184, 104);
+            this.layerProperties.TabIndex = 8;
+            this.layerProperties.ToolbarVisible = false;
+            // 
+            // splitContainer1
+            // 
+            this.splitContainer1.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom)
+                        | System.Windows.Forms.AnchorStyles.Left)
+                        | System.Windows.Forms.AnchorStyles.Right)));
+            this.splitContainer1.Location = new System.Drawing.Point(0, 0);
+            this.splitContainer1.Name = "splitContainer1";
+            // 
+            // splitContainer1.Panel1
+            // 
+            this.splitContainer1.Panel1.Controls.Add(this.backgroundList);
+            this.splitContainer1.Panel1.Controls.Add(this.layerProperties);
+            this.splitContainer1.Panel1.Controls.Add(this.layerList);
+            this.splitContainer1.Panel1.Controls.Add(this.removeLayerButton);
+            this.splitContainer1.Panel1.Controls.Add(this.removeBackgroundButton);
+            this.splitContainer1.Panel1.Controls.Add(this.addBackgroundLayer);
+            this.splitContainer1.Panel1.Controls.Add(this.addBackgroundButton);
+            // 
+            // splitContainer1.Panel2
+            // 
+            this.splitContainer1.Panel2.Controls.Add(this.backgroundDisplay);
+            this.splitContainer1.Size = new System.Drawing.Size(782, 505);
+            this.splitContainer1.SplitterDistance = 192;
+            this.splitContainer1.TabIndex = 9;
             // 
             // backgroundDisplay
             // 
-            this.backgroundDisplay.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom)
-                        | System.Windows.Forms.AnchorStyles.Left)
-                        | System.Windows.Forms.AnchorStyles.Right)));
-            this.backgroundDisplay.Location = new System.Drawing.Point(196, 0);
+            this.backgroundDisplay.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.backgroundDisplay.Location = new System.Drawing.Point(0, 0);
             this.backgroundDisplay.Name = "backgroundDisplay";
-            this.backgroundDisplay.Size = new System.Drawing.Size(589, 499);
+            this.backgroundDisplay.Size = new System.Drawing.Size(586, 505);
             this.backgroundDisplay.TabIndex = 0;
             this.backgroundDisplay.Text = "backgroundDisplay";
             // 
@@ -130,18 +166,15 @@
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.Controls.Add(this.propertyGrid1);
-            this.Controls.Add(this.removeLayerButton);
-            this.Controls.Add(this.addBackgroundLayer);
+            this.Controls.Add(this.splitContainer1);
             this.Controls.Add(this.saveBackgroundsButton);
-            this.Controls.Add(this.addBackgroundButton);
-            this.Controls.Add(this.removeBackgroundButton);
-            this.Controls.Add(this.layerList);
-            this.Controls.Add(this.backgroundList);
-            this.Controls.Add(this.backgroundDisplay);
             this.Margin = new System.Windows.Forms.Padding(0);
             this.Name = "BackgroundView";
             this.Size = new System.Drawing.Size(785, 537);
+            this.splitContainer1.Panel1.ResumeLayout(false);
+            this.splitContainer1.Panel2.ResumeLayout(false);
+            ((System.ComponentModel.ISupportInitialize)(this.splitContainer1)).EndInit();
+            this.splitContainer1.ResumeLayout(false);
             this.ResumeLayout(false);
 
         }
@@ -156,6 +189,7 @@
         private System.Windows.Forms.Button saveBackgroundsButton;
         private System.Windows.Forms.Button addBackgroundLayer;
         private System.Windows.Forms.Button removeLayerButton;
-        private System.Windows.Forms.PropertyGrid propertyGrid1;
+        private System.Windows.Forms.PropertyGrid layerProperties;
+        private System.Windows.Forms.SplitContainer splitContainer1;
     }
 }

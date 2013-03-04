@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Xml.Linq;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
@@ -18,6 +19,7 @@ namespace StasisEditor.Models
         public Vector2 speedScale { get { return _speedScale; } set { _speedScale = value; } }
         public Vector2 initialOffset { get { return _initialOffset; } set { _initialOffset = value; } }
         public float layerDepth { get { return _layerDepth; } set { _layerDepth = value; } }
+        [Browsable(false)]
         public XElement data
         {
             get
@@ -42,6 +44,11 @@ namespace StasisEditor.Models
             _initialOffset = Loader.loadVector2(data.Attribute("initial_offset"), Vector2.Zero);
             _speedScale = Loader.loadVector2(data.Attribute("speed_scale"), Vector2.Zero);
             _layerDepth = Loader.loadFloat(data.Attribute("layer_depth"), 1f);
+        }
+
+        public override string ToString()
+        {
+            return _textureUID;
         }
     }
 }
