@@ -37,6 +37,7 @@ namespace StasisEditor.Views
             this.removeLayerButton = new System.Windows.Forms.Button();
             this.layerProperties = new System.Windows.Forms.PropertyGrid();
             this.splitContainer1 = new System.Windows.Forms.SplitContainer();
+            this.previewButton = new System.Windows.Forms.Button();
             this.backgroundList = new StasisEditor.Views.Controls.RefreshingListBox();
             this.layerList = new StasisEditor.Views.Controls.RefreshingListBox();
             this.backgroundDisplay = new StasisEditor.Views.Controls.BackgroundDisplay();
@@ -135,6 +136,17 @@ namespace StasisEditor.Views
             this.splitContainer1.SplitterDistance = 192;
             this.splitContainer1.TabIndex = 9;
             // 
+            // previewButton
+            // 
+            this.previewButton.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
+            this.previewButton.Location = new System.Drawing.Point(626, 511);
+            this.previewButton.Name = "previewButton";
+            this.previewButton.Size = new System.Drawing.Size(75, 23);
+            this.previewButton.TabIndex = 10;
+            this.previewButton.Text = "Preview";
+            this.previewButton.UseVisualStyleBackColor = true;
+            this.previewButton.Click += new System.EventHandler(this.previewButton_Click);
+            // 
             // backgroundList
             // 
             this.backgroundList.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
@@ -165,11 +177,13 @@ namespace StasisEditor.Views
             this.backgroundDisplay.Size = new System.Drawing.Size(586, 505);
             this.backgroundDisplay.TabIndex = 0;
             this.backgroundDisplay.Text = "backgroundDisplay";
+            this.backgroundDisplay.view = null;
             // 
             // BackgroundView
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
+            this.Controls.Add(this.previewButton);
             this.Controls.Add(this.splitContainer1);
             this.Controls.Add(this.saveBackgroundsButton);
             this.Margin = new System.Windows.Forms.Padding(0);
@@ -195,5 +209,6 @@ namespace StasisEditor.Views
         private System.Windows.Forms.Button removeLayerButton;
         private System.Windows.Forms.PropertyGrid layerProperties;
         private System.Windows.Forms.SplitContainer splitContainer1;
+        private System.Windows.Forms.Button previewButton;
     }
 }

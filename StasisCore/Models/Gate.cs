@@ -38,7 +38,6 @@ namespace StasisCore.Models
 
         public Gate(Circuit circuit, int id, string type, Vector2 position)
         {
-            Console.WriteLine("created gate [{0}], type {1}", id, type);
             _circuit = circuit;
             _id = id;
             _type = type;

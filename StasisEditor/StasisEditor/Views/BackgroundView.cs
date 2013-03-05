@@ -6,25 +6,31 @@ using System.Data;
 using System.Linq;
 using System.Text;
 using System.Windows.Forms;
+using StasisCore.Resources;
+using StasisCore.Controllers;
 using StasisEditor.Controllers;
 using StasisEditor.Models;
 using StasisEditor.Views.Controls;
-using StasisCore.Controllers;
 
 namespace StasisEditor.Views
 {
+    using Vector2 = Microsoft.Xna.Framework.Vector2;
+
     public partial class BackgroundView : UserControl
     {
         private BackgroundController _controller;
+        private Vector2 _screenOffset;
 
         public BackgroundController controller { get { return _controller; } set { _controller = value; } }
         public BindingList<EditorBackground> backgrounds { set { backgroundList.DataSource = value; } }
         public EditorBackground selectedBackground { get { return backgroundList.SelectedItem as EditorBackground; } }
         public EditorBackgroundLayer selectedBackgroundLayer { get { return layerList.SelectedItem as EditorBackgroundLayer; } }
+        public Vector2 screenOffset { get { return _screenOffset; } set { _screenOffset = value; } }
 
         public BackgroundView()
         {
             InitializeComponent();
+            backgroundDisplay.view = this;
         }
 
         // Add new background
@@ -50,7 +56,12 @@ namespace StasisEditor.Views
         // Selected background changed
         private void backgroundList_SelectedValueChanged(object sender, EventArgs e)
         {
-            layerList.DataSource = selectedBackground.layers;
+            EditorBackground background = selectedBackground;
+
+            if (background != null)
+            {
+                layerList.DataSource = selectedBackground.layers;
+            }
         }
 
         // Selected layer changed
@@ -101,6 +112,24 @@ namespace StasisEditor.Views
         private void saveBackgroundsButton_Click(object sender, EventArgs e)
         {
             _controller.saveBackgrounds();
+        }
+
+        private void previewButton_Click(object sender, EventArgs e)
+        {
+            EditorBackground background = selectedBackground;
+
+            if (background == null)
+                return;
+
+            try
+            {
+                background.loadTextures();
+                backgroundDisplay.previewBackground(background);
+            }
+            catch (ResourceNotFoundException ex)
+            {
+                MessageBox.Show(String.Format("Error previewing the background: {0}", ex.Message));
+            }
         }
     }
 }

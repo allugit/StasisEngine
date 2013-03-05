@@ -2,23 +2,20 @@
 using System.Collections.Generic;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
+using StasisCore.Models;
 
 namespace StasisCore
 {
     public class BackgroundRenderer
     {
         private SpriteBatch _spriteBatch;
-        private List<BackgroundLayer> _layers;
-        private Vector2 _screenOffset;
+        private Background _background;
+
+        public Background background { get { return _background; } set { _background = value; } }
 
         public BackgroundRenderer(SpriteBatch spriteBatch)
         {
             _spriteBatch = spriteBatch;
-        }
-
-        public void addLayer(Texture2D texture, Vector2 initialOffset, Vector2 speedScale, float layerDepth)
-        {
-            _layers.Add(new BackgroundLayer(texture, initialOffset, speedScale, layerDepth));
         }
 
         public float modulo(float x, float y)
@@ -26,16 +23,16 @@ namespace StasisCore
             return (x % y) + (x < 0 ? y : 0);
         }
 
-        public void draw()
+        public void draw(Vector2 screenOffset)
         {
             Vector2 screenSize = new Vector2(_spriteBatch.GraphicsDevice.Viewport.Width, _spriteBatch.GraphicsDevice.Viewport.Height);
 
-            foreach (BackgroundLayer layer in _layers)
+            foreach (BackgroundLayer layer in _background.layers)
             {
                 float textureWidth = (float)layer.texture.Width;
                 float scrollingWidth = (float)(Math.Ceiling(screenSize.X / textureWidth) + 1) * textureWidth;
                 int count = (int)Math.Ceiling(scrollingWidth / textureWidth);
-                Vector2 scaledScreenOffset = _screenOffset * layer.speedScale;
+                Vector2 scaledScreenOffset = screenOffset * layer.speedScale;
 
                 for (int i = 0; i < count; i++)
                 {

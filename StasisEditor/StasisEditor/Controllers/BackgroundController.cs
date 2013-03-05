@@ -28,9 +28,8 @@ namespace StasisEditor.Controllers
             _view.controller = this;
 
             foreach (ResourceObject resource in resources)
-            {
                 _backgrounds.Add(new EditorBackground(resource.data));
-            }
+
             _view.backgrounds = _backgrounds;
         }
 

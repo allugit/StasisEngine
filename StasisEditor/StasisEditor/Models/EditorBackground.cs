@@ -2,16 +2,15 @@
 using System.Collections.Generic;
 using System.Xml.Linq;
 using StasisCore;
+using StasisCore.Models;
 
 namespace StasisEditor.Models
 {
-    public class EditorBackground
+    public class EditorBackground : Background
     {
         private string _uid;
-        private List<EditorBackgroundLayer> _layers;
 
         public string uid { get { return _uid; } set { _uid = value; } }
-        public List<EditorBackgroundLayer> layers { get { return _layers; } }
         public XElement data
         {
             get
@@ -25,17 +24,18 @@ namespace StasisEditor.Models
             }
         }
 
-        public EditorBackground(string uid)
+        public EditorBackground(string uid) : base()
         {
             _uid = uid;
-            _layers = new List<EditorBackgroundLayer>();
         }
 
-        public EditorBackground(XElement data)
+        public EditorBackground(XElement data) : base(data)
         {
-            _layers = new List<EditorBackgroundLayer>();
             _uid = Loader.loadString(data.Attribute("uid"), "");
+        }
 
+        public override void createLayers(XElement data)
+        {
             foreach (XElement layerData in data.Elements("BackgroundLayer"))
                 _layers.Add(new EditorBackgroundLayer(layerData));
         }
