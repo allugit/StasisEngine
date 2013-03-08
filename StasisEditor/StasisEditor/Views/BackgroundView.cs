@@ -15,6 +15,9 @@ using StasisEditor.Views.Controls;
 namespace StasisEditor.Views
 {
     using Vector2 = Microsoft.Xna.Framework.Vector2;
+    using KeyboardState = Microsoft.Xna.Framework.Input.KeyboardState;
+    using Keys = Microsoft.Xna.Framework.Input.Keys;
+    using Keyboard = Microsoft.Xna.Framework.Input.Keyboard;
 
     public partial class BackgroundView : UserControl
     {
@@ -31,6 +34,34 @@ namespace StasisEditor.Views
         {
             InitializeComponent();
             backgroundDisplay.view = this;
+
+            Application.Idle += new EventHandler(updateInput);
+        }
+
+        void updateInput(object sender, EventArgs e)
+        {
+            KeyboardState keyboardState = Keyboard.GetState();
+
+            if (keyboardState.IsKeyDown(Keys.Left))
+            {
+                _screenOffset += new Vector2(1, 0);
+            }
+            if (keyboardState.IsKeyDown(Keys.Right))
+            {
+                _screenOffset -= new Vector2(1, 0);
+            }
+            if (keyboardState.IsKeyDown(Keys.Up))
+            {
+                _screenOffset += new Vector2(0, 1);
+            }
+            if (keyboardState.IsKeyDown(Keys.Down))
+            {
+                _screenOffset -= new Vector2(0, 1);
+            }
+            if (keyboardState.IsKeyDown(Keys.Home))
+            {
+                _screenOffset = Vector2.Zero;
+            }
         }
 
         // Add new background
