@@ -81,6 +81,7 @@
     <Reference Include="System.Net" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Controllers\BackgroundController.cs" />
     <Compile Include="Controllers\BlueprintController.cs" />
     <Compile Include="Controllers\CircuitController.cs" />
     <Compile Include="Controllers\Controller.cs" />
@@ -90,6 +91,8 @@
     <Compile Include="Models\CircuitConnection.cs" />
     <Compile Include="Models\CircuitInputConnection.cs" />
     <Compile Include="Models\CircuitOutputConnection.cs" />
+    <Compile Include="Models\EditorBackground.cs" />
+    <Compile Include="Models\EditorBackgroundLayer.cs" />
     <Compile Include="Models\EditorCircleActor.cs" />
     <Compile Include="Models\EditorCircuitActor.cs" />
     <Compile Include="Models\EditorCollisionFilterActor.cs" />
@@ -120,6 +123,12 @@
     <Compile Include="Models\EditorMaterial.cs" />
     <Compile Include="Models\PointListNode.cs" />
     <Compile Include="ServiceContainer.cs" />
+    <Compile Include="Views\BackgroundView.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="Views\BackgroundView.Designer.cs">
+      <DependentUpon>BackgroundView.cs</DependentUpon>
+    </Compile>
     <Compile Include="Views\BlueprintView.cs">
       <SubType>UserControl</SubType>
     </Compile>
@@ -143,6 +152,9 @@
     </Compile>
     <Compile Include="Views\Controls\ActorToolbar.Designer.cs">
       <DependentUpon>ActorToolbar.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Views\Controls\BackgroundDisplay.cs">
+      <SubType>Component</SubType>
     </Compile>
     <Compile Include="Views\Controls\CircuitDisplay.cs">
       <SubType>Component</SubType>
@@ -312,6 +324,9 @@
     </BootstrapperPackage>
   </ItemGroup>
   <ItemGroup>
+    <EmbeddedResource Include="Views\BackgroundView.resx">
+      <DependentUpon>BackgroundView.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="Views\BlueprintView.resx">
       <DependentUpon>BlueprintView.cs</DependentUpon>
     </EmbeddedResource>

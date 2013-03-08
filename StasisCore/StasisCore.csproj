@@ -62,6 +62,9 @@
     <Reference Include="System.Net" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Models\Background.cs" />
+    <Compile Include="Models\BackgroundLayer.cs" />
+    <Compile Include="BackgroundRenderer.cs" />
     <Compile Include="Controllers\ResourceController.cs" />
     <Compile Include="CustomVertexFormat.cs" />
     <Compile Include="IEventHandler.cs" />

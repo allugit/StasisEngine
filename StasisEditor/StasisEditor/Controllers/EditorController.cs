@@ -20,6 +20,7 @@ namespace StasisEditor.Controllers
         private LevelController _levelController;
         private BlueprintController _blueprintController;
         private CircuitController _circuitController;
+        private BackgroundController _backgroundController;
         private GraphicsDeviceService _graphicsDeviceService;
 
         private EditorView _editorView;
@@ -32,6 +33,7 @@ namespace StasisEditor.Controllers
         public LevelController levelController { get { return _levelController; } }
         public BlueprintController blueprintController { get { return _blueprintController; } }
         public CircuitController circuitController { get { return _circuitController; } }
+        public BackgroundController backgroundController { get { return _backgroundController; } }
         public float scale { get { return _scale; } set { _scale = value; } }
 
         public EditorController(EditorView view)
@@ -46,17 +48,12 @@ namespace StasisEditor.Controllers
             _editorView = view;
             view.setController(this);
 
-            // Create material controller
+            // Create controllers
             _materialController = new MaterialController(this, _editorView.materialView);
-
-            // Create level controller
             _levelController = new LevelController(this, _editorView.levelView);
-
-            // Create blueprint controller
             _blueprintController = new BlueprintController(this, _editorView.blueprintView);
-
-            // Create circuit controller
             _circuitController = new CircuitController(this, _editorView.circuitsView);
+            _backgroundController = new BackgroundController(this, _editorView.backgroundView);
         }
 
         // setActorToolbarEnabled
