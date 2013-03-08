@@ -17,7 +17,7 @@ namespace StasisCore.Controllers
      */
     public class ResourceController
     {
-        public const string RESOURCE_PATH = @"E:\StasisResources";
+        public const string RESOURCE_PATH = @"D:\StasisResources";
 
         private static GraphicsDevice _graphicsDevice;
         private static Dictionary<string, ResourceObject> _materialResources;

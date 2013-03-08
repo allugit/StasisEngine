@@ -136,11 +136,6 @@
     </Content>
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\..\StasisCoreContent\StasisCoreContent.contentproj">
-      <Project>{84F6D086-1D47-489A-B334-E2058D1A752B}</Project>
-      <Name>StasisCoreContent</Name>
-      <XnaReferenceType>Content</XnaReferenceType>
-    </ProjectReference>
     <ProjectReference Include="..\..\StasisCore\StasisCore.csproj">
       <Project>{FF9881A5-29E0-4B52-8E75-42715D66842B}</Project>
       <Name>StasisCore</Name>
@@ -179,6 +174,10 @@
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <Import Project="$(MSBuildExtensionsPath)\Microsoft\XNA Game Studio\Microsoft.Xna.GameStudio.targets" />
+  <PropertyGroup>
+    <PreBuildEvent>
+    </PreBuildEvent>
+  </PropertyGroup>
   <!--
       To modify your build process, add your task inside one of the targets below and uncomment it. 
       Other similar extension points exist, see Microsoft.Common.targets.
