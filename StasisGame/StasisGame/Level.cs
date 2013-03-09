@@ -28,6 +28,9 @@ namespace StasisGame
 
             XElement data = null;
             List<XElement> secondPassData = new List<XElement>();
+            string backgroundUID;
+            XElement backgroundData;
+            Background background;
 
             // Load xml
             using (FileStream stream = new FileStream(filePath, FileMode.Open))
@@ -43,6 +46,14 @@ namespace StasisGame
             _systemManager.add(new EventSystem(_systemManager, _entityManager));
             _renderSystem = new RenderSystem(_game, _systemManager, _entityManager);
             _systemManager.add(_renderSystem);
+
+            // Create background
+            ResourceController.loadBackgrounds();
+            backgroundUID = Loader.loadString(data.Attribute("background_uid"), "default_background");
+            backgroundData = ResourceController.getResource(backgroundUID);
+            background = new Background(backgroundData);
+            background.loadTextures();
+            _renderSystem.setBackground(background);
 
             // Create output gate entities
             _entityManager.factory.createOutputGates(data);

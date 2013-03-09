@@ -163,8 +163,8 @@ namespace StasisGame
         {
             GraphicsDevice.Clear(Color.Black);
 
-            _spriteBatch.Begin();
-            _spriteBatch.DrawString(_arial, _argsDebug, new Vector2(16, 16), Color.White);
+            //_spriteBatch.Begin();
+            //_spriteBatch.DrawString(_arial, _argsDebug, new Vector2(16, 16), Color.White);
 
             switch (_gameState)
             {
@@ -177,7 +177,7 @@ namespace StasisGame
                     break;
             }
 
-            _spriteBatch.End();
+            //_spriteBatch.End();
 
             base.Draw(gameTime);
         }

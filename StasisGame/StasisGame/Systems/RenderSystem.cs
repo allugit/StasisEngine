@@ -31,6 +31,7 @@ namespace StasisGame.Systems
         private Matrix _projectionMatrix;
         private Vector2 _halfScreen;
         private SortedDictionary<float, List<IRenderablePrimitive>> _sortedRenderablePrimitives;
+        private BackgroundRenderer _backgroundRenderer;
 
         public int defaultPriority { get { return 90; } }
         public SystemType systemType { get { return SystemType.Render; } }
@@ -49,9 +50,9 @@ namespace StasisGame.Systems
             _entityManager = entityManager;
             _sortedRenderablePrimitives = new SortedDictionary<float, List<IRenderablePrimitive>>();
             _cameraSystem = _systemManager.getSystem(SystemType.Camera) as CameraSystem;
-
             _graphicsDevice = game.GraphicsDevice;
             _spriteBatch = game.spriteBatch;
+            _backgroundRenderer = new BackgroundRenderer(_spriteBatch);
 
             _contentManager = new ContentManager(game.Services, "Content");
             _coreContentManager = new ContentManager(game.Services, "StasisCoreContent");
@@ -65,6 +66,11 @@ namespace StasisGame.Systems
         {
             _contentManager.Unload();
             _coreContentManager.Unload();
+        }
+
+        public void setBackground(Background background)
+        {
+            _backgroundRenderer.background = background;
         }
 
         public void addRenderablePrimitive(IRenderablePrimitive renderablePrimitive)
@@ -106,6 +112,16 @@ namespace StasisGame.Systems
             List<int> treeEntities = _entityManager.getEntitiesPosessing(ComponentType.Tree);
             Vector2 screenCenter = _cameraSystem.screenCenter;
 
+            // Draw background
+            if (_backgroundRenderer.background != null)
+            {
+                _spriteBatch.Begin(SpriteSortMode.BackToFront, BlendState.AlphaBlend);
+                _backgroundRenderer.draw(screenCenter);
+                _spriteBatch.End();
+            }
+
+            // Draw primitives
+            _spriteBatch.Begin(SpriteSortMode.BackToFront, BlendState.AlphaBlend);
             _halfScreen = new Vector2(_graphicsDevice.Viewport.Width, _graphicsDevice.Viewport.Height) / 2;
             _viewMatrix = Matrix.CreateTranslation(new Vector3(-screenCenter, 0)) * Matrix.CreateScale(new Vector3(_scale, -_scale, 1f));
             _projectionMatrix = Matrix.CreateOrthographic(_graphicsDevice.Viewport.Width, _graphicsDevice.Viewport.Height, 0, 1);
@@ -197,6 +213,8 @@ namespace StasisGame.Systems
             }
 
             drawRenderablePrimitives();
+
+            _spriteBatch.End();
         }
     }
 }
