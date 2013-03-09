@@ -19,6 +19,17 @@ namespace StasisCore.Models
         public Vector2 speedScale { get { return _speedScale; } set { _speedScale = value; } }
         public float layerDepth { get { return _layerDepth; } set { _layerDepth = value; } }
         public Vector2 initialOffset { get { return _initialOffset; } set { _initialOffset = value; } }
+        public XElement data
+        {
+            get
+            {
+                return new XElement("BackgroundLayer",
+                    new XAttribute("texture_uid", _textureUID),
+                    new XAttribute("initial_offset", _initialOffset),
+                    new XAttribute("speed_scale", _speedScale),
+                    new XAttribute("layer_depth", _layerDepth));
+            }
+        }
 
         public BackgroundLayer(XElement data)
         {

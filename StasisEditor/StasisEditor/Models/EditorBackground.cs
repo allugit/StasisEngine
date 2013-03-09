@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Xml.Linq;
 using StasisCore;
 using StasisCore.Models;
@@ -11,16 +12,14 @@ namespace StasisEditor.Models
         private string _uid;
 
         public string uid { get { return _uid; } set { _uid = value; } }
-        public XElement data
+        [Browsable(false)]
+        public override XElement data
         {
             get
             {
-                List<XElement> layerData = new List<XElement>();
-                foreach (EditorBackgroundLayer layer in _layers)
-                    layerData.Add(layer.data);
-                return new XElement("Background",
-                    new XAttribute("uid", _uid),
-                    layerData);
+                XElement d = base.data;
+                d.SetAttributeValue("uid", _uid);
+                return d;
             }
         }
 
@@ -43,6 +42,14 @@ namespace StasisEditor.Models
         public override string ToString()
         {
             return _uid;
+        }
+
+        override public Background clone()
+        {
+            EditorBackground copy = new EditorBackground(data);
+            copy.loadTextures();
+
+            return copy;
         }
     }
 }

@@ -9,6 +9,17 @@ namespace StasisCore.Models
         protected List<BackgroundLayer> _layers;
 
         public List<BackgroundLayer> layers { get { return _layers; } }
+        virtual public XElement data
+        {
+            get
+            {
+                List<XElement> layerData = new List<XElement>();
+                foreach (BackgroundLayer layer in _layers)
+                    layerData.Add(layer.data);
+                return new XElement("Background",
+                    layerData);
+            }
+        }
 
         public Background()
         {
@@ -31,6 +42,14 @@ namespace StasisCore.Models
         {
             foreach (XElement layerData in data.Elements("BackgroundLayer"))
                 _layers.Add(new BackgroundLayer(layerData));
+        }
+
+        virtual public Background clone()
+        {
+            Background copy = new Background(data);
+            copy.loadTextures();
+
+            return copy;
         }
     }
 }

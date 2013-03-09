@@ -155,7 +155,7 @@ namespace StasisEditor.Views
             try
             {
                 background.loadTextures();
-                backgroundDisplay.previewBackground(background);
+                backgroundDisplay.previewBackground(background.clone() as EditorBackground);
             }
             catch (ResourceNotFoundException ex)
             {
