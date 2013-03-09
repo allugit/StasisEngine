@@ -26,23 +26,24 @@ namespace StasisCore
         public void draw(Vector2 screenOffset)
         {
             Vector2 screenSize = new Vector2(_spriteBatch.GraphicsDevice.Viewport.Width, _spriteBatch.GraphicsDevice.Viewport.Height);
+            Vector2 halfScreen = screenSize / 2f;
 
             foreach (BackgroundLayer layer in _background.layers)
             {
                 float textureWidth = (float)layer.texture.Width;
-                float scrollingWidth = (float)(Math.Ceiling(screenSize.X / textureWidth) + 1) * textureWidth;
-                int count = (int)Math.Ceiling(scrollingWidth / textureWidth);
+                int count = (int)(Math.Ceiling(screenSize.X / textureWidth) + 1);
+                float scrollingWidth = (float)count * textureWidth;
+                float halfScrollingWidth = scrollingWidth / 2f;
                 Vector2 scaledScreenOffset = screenOffset * layer.speedScale;
 
                 for (int i = 0; i < count; i++)
                 {
                     float xOffset = (float)i * textureWidth;
-                    float tiledScaledX = scaledScreenOffset.X + xOffset + layer.initialOffset.X;
                     Vector2 position = new Vector2(
-                        modulo(tiledScaledX, scrollingWidth) - textureWidth / 2f,
+                        modulo(scaledScreenOffset.X + xOffset + layer.initialOffset.X, scrollingWidth),
                         scaledScreenOffset.Y + layer.initialOffset.Y);
 
-                    _spriteBatch.Draw(layer.texture, position, layer.texture.Bounds, Color.White, 0f, new Vector2(layer.texture.Width, layer.texture.Height) / 2, 1f, SpriteEffects.None, layer.layerDepth);
+                    _spriteBatch.Draw(layer.texture, position + halfScreen - new Vector2(halfScrollingWidth, 0), layer.texture.Bounds, Color.White, 0f, new Vector2(layer.texture.Width, layer.texture.Height) / 2, 1f, SpriteEffects.None, layer.layerDepth);
                 }
             }
         }
