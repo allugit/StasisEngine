@@ -22,46 +22,24 @@ namespace StasisEditor.Views
     public partial class BackgroundView : UserControl
     {
         private BackgroundController _controller;
-        private Vector2 _screenOffset;
+        private bool _draw;
+        private bool _keysEnabled;
 
+        public bool active
+        {
+            get { return _draw && _keysEnabled; }
+            set { _draw = value; _keysEnabled = value; }
+        }
+        public bool keysEnabled { get { return _keysEnabled; } }
         public BackgroundController controller { get { return _controller; } set { _controller = value; } }
         public BindingList<EditorBackground> backgrounds { set { backgroundList.DataSource = value; } }
         public EditorBackground selectedBackground { get { return backgroundList.SelectedItem as EditorBackground; } }
         public EditorBackgroundLayer selectedBackgroundLayer { get { return layerList.SelectedItem as EditorBackgroundLayer; } }
-        public Vector2 screenOffset { get { return _screenOffset; } set { _screenOffset = value; } }
 
         public BackgroundView()
         {
             InitializeComponent();
             backgroundDisplay.view = this;
-
-            Application.Idle += new EventHandler(updateInput);
-        }
-
-        void updateInput(object sender, EventArgs e)
-        {
-            KeyboardState keyboardState = Keyboard.GetState();
-
-            if (keyboardState.IsKeyDown(Keys.Left))
-            {
-                _screenOffset += new Vector2(1, 0);
-            }
-            if (keyboardState.IsKeyDown(Keys.Right))
-            {
-                _screenOffset -= new Vector2(1, 0);
-            }
-            if (keyboardState.IsKeyDown(Keys.Up))
-            {
-                _screenOffset += new Vector2(0, 1);
-            }
-            if (keyboardState.IsKeyDown(Keys.Down))
-            {
-                _screenOffset -= new Vector2(0, 1);
-            }
-            if (keyboardState.IsKeyDown(Keys.Home))
-            {
-                _screenOffset = Vector2.Zero;
-            }
         }
 
         // Add new background

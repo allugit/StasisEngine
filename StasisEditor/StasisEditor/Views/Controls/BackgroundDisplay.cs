@@ -9,6 +9,8 @@ using StasisEditor.Models;
 
 namespace StasisEditor.Views.Controls
 {
+    using Keys = System.Windows.Forms.Keys;
+
     public class BackgroundDisplay : GraphicsDeviceControl
     {
         private SpriteBatch _spriteBatch;
@@ -27,6 +29,42 @@ namespace StasisEditor.Views.Controls
             _backgroundRenderer = new BackgroundRenderer(_spriteBatch);
 
             System.Windows.Forms.Application.Idle += delegate { Invalidate(); };
+            MouseMove += new System.Windows.Forms.MouseEventHandler(BackgroundDisplay_MouseMove);
+            FindForm().KeyDown += new System.Windows.Forms.KeyEventHandler(Parent_KeyDown);
+            FindForm().KeyUp += new System.Windows.Forms.KeyEventHandler(Parent_KeyUp);
+        }
+
+        void BackgroundDisplay_MouseMove(object sender, System.Windows.Forms.MouseEventArgs e)
+        {
+            // Update mouse position
+            _view.controller.mouse = e.Location;
+            Vector2 delta = _view.controller.mouseDelta;
+
+            if (_view.controller.ctrl)
+            {
+                // Move screen
+                _view.controller.screenCenter += delta;
+            }
+        }
+
+        // Key up
+        void Parent_KeyUp(object sender, System.Windows.Forms.KeyEventArgs e)
+        {
+            if (_view.keysEnabled)
+            {
+                if (e.KeyCode == Keys.Control || e.KeyCode == Keys.ControlKey || e.KeyCode == Keys.LControlKey || e.KeyCode == Keys.RControlKey)
+                    _view.controller.ctrl = false;
+            }
+        }
+
+        // Key down
+        void Parent_KeyDown(object sender, System.Windows.Forms.KeyEventArgs e)
+        {
+            if (_view.keysEnabled)
+            {
+                if (e.KeyCode == Keys.Control || e.KeyCode == Keys.ControlKey || e.KeyCode == Keys.LControlKey || e.KeyCode == Keys.RControlKey)
+                    _view.controller.ctrl = true;
+            }
         }
 
         public void previewBackground(EditorBackground background)
@@ -42,7 +80,7 @@ namespace StasisEditor.Views.Controls
 
             if (_backgroundRenderer.background != null)
             {
-                _backgroundRenderer.draw(view.screenOffset);
+                _backgroundRenderer.draw(_view.controller.screenCenter);
             }
 
             _spriteBatch.End();
