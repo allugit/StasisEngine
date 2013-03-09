@@ -14,7 +14,7 @@ namespace StasisEditor.Controllers
 {
     public class EditorController : Controller
     {
-        public const string GAME_PATH = @"E:\_C#\StasisEngine\StasisGame\StasisGame\bin\x86\Debug\StasisGame.exe";
+        public const string GAME_PATH = @"D:\_C#\StasisEngine\StasisGame\StasisGame\bin\x86\Debug\StasisGame.exe";
         public const float ORIGINAL_SCALE = 35f;
         private MaterialController _materialController;
         private LevelController _levelController;

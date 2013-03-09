@@ -116,7 +116,7 @@ namespace StasisGame.Systems
             if (_backgroundRenderer.background != null)
             {
                 _spriteBatch.Begin(SpriteSortMode.BackToFront, BlendState.AlphaBlend);
-                _backgroundRenderer.draw(screenCenter);
+                _backgroundRenderer.draw(-screenCenter);
                 _spriteBatch.End();
             }
 

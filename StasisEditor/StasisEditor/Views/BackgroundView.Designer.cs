@@ -37,18 +37,21 @@ namespace StasisEditor.Views
             this.removeLayerButton = new System.Windows.Forms.Button();
             this.layerProperties = new System.Windows.Forms.PropertyGrid();
             this.splitContainer1 = new System.Windows.Forms.SplitContainer();
+            this.backgroundList = new StasisEditor.Views.Controls.RefreshingListBox();
+            this.layerList = new StasisEditor.Views.Controls.RefreshingListBox();
+            this.backgroundDisplay = new StasisEditor.Views.Controls.BackgroundDisplay();
             this.previewButton = new System.Windows.Forms.Button();
             this.horizontalScrollList = new System.Windows.Forms.ComboBox();
             this.label1 = new System.Windows.Forms.Label();
             this.verticalScrollList = new System.Windows.Forms.ComboBox();
             this.label2 = new System.Windows.Forms.Label();
-            this.backgroundList = new StasisEditor.Views.Controls.RefreshingListBox();
-            this.layerList = new StasisEditor.Views.Controls.RefreshingListBox();
-            this.backgroundDisplay = new StasisEditor.Views.Controls.BackgroundDisplay();
+            this.scrollSpeed = new System.Windows.Forms.NumericUpDown();
+            this.label3 = new System.Windows.Forms.Label();
             ((System.ComponentModel.ISupportInitialize)(this.splitContainer1)).BeginInit();
             this.splitContainer1.Panel1.SuspendLayout();
             this.splitContainer1.Panel2.SuspendLayout();
             this.splitContainer1.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.scrollSpeed)).BeginInit();
             this.SuspendLayout();
             // 
             // removeBackgroundButton
@@ -140,65 +143,6 @@ namespace StasisEditor.Views
             this.splitContainer1.SplitterDistance = 192;
             this.splitContainer1.TabIndex = 9;
             // 
-            // previewButton
-            // 
-            this.previewButton.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
-            this.previewButton.Location = new System.Drawing.Point(626, 511);
-            this.previewButton.Name = "previewButton";
-            this.previewButton.Size = new System.Drawing.Size(75, 23);
-            this.previewButton.TabIndex = 10;
-            this.previewButton.Text = "Preview";
-            this.previewButton.UseVisualStyleBackColor = true;
-            this.previewButton.Click += new System.EventHandler(this.previewButton_Click);
-            // 
-            // horizontalScrollList
-            // 
-            this.horizontalScrollList.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
-            this.horizontalScrollList.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
-            this.horizontalScrollList.FormattingEnabled = true;
-            this.horizontalScrollList.Items.AddRange(new object[] {
-            "None",
-            "Left",
-            "Right"});
-            this.horizontalScrollList.Location = new System.Drawing.Point(499, 511);
-            this.horizontalScrollList.Name = "horizontalScrollList";
-            this.horizontalScrollList.Size = new System.Drawing.Size(121, 21);
-            this.horizontalScrollList.TabIndex = 11;
-            // 
-            // label1
-            // 
-            this.label1.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
-            this.label1.AutoSize = true;
-            this.label1.Location = new System.Drawing.Point(385, 516);
-            this.label1.Name = "label1";
-            this.label1.Size = new System.Drawing.Size(108, 13);
-            this.label1.TabIndex = 12;
-            this.label1.Text = "Horizontal Auto Scroll";
-            // 
-            // verticalScrollList
-            // 
-            this.verticalScrollList.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
-            this.verticalScrollList.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
-            this.verticalScrollList.FormattingEnabled = true;
-            this.verticalScrollList.Items.AddRange(new object[] {
-            "None",
-            "Up",
-            "Down"});
-            this.verticalScrollList.Location = new System.Drawing.Point(214, 511);
-            this.verticalScrollList.Name = "verticalScrollList";
-            this.verticalScrollList.Size = new System.Drawing.Size(121, 21);
-            this.verticalScrollList.TabIndex = 13;
-            // 
-            // label2
-            // 
-            this.label2.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
-            this.label2.AutoSize = true;
-            this.label2.Location = new System.Drawing.Point(112, 516);
-            this.label2.Name = "label2";
-            this.label2.Size = new System.Drawing.Size(96, 13);
-            this.label2.TabIndex = 14;
-            this.label2.Text = "Vertical Auto Scroll";
-            // 
             // backgroundList
             // 
             this.backgroundList.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
@@ -231,10 +175,105 @@ namespace StasisEditor.Views
             this.backgroundDisplay.Text = "backgroundDisplay";
             this.backgroundDisplay.view = null;
             // 
+            // previewButton
+            // 
+            this.previewButton.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
+            this.previewButton.Location = new System.Drawing.Point(626, 511);
+            this.previewButton.Name = "previewButton";
+            this.previewButton.Size = new System.Drawing.Size(75, 23);
+            this.previewButton.TabIndex = 10;
+            this.previewButton.Text = "Preview";
+            this.previewButton.UseVisualStyleBackColor = true;
+            this.previewButton.Click += new System.EventHandler(this.previewButton_Click);
+            // 
+            // horizontalScrollList
+            // 
+            this.horizontalScrollList.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
+            this.horizontalScrollList.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.horizontalScrollList.FormattingEnabled = true;
+            this.horizontalScrollList.Items.AddRange(new object[] {
+            "None",
+            "Left",
+            "Right"});
+            this.horizontalScrollList.Location = new System.Drawing.Point(499, 511);
+            this.horizontalScrollList.Name = "horizontalScrollList";
+            this.horizontalScrollList.Size = new System.Drawing.Size(121, 21);
+            this.horizontalScrollList.TabIndex = 11;
+            // 
+            // label1
+            // 
+            this.label1.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
+            this.label1.AutoSize = true;
+            this.label1.Location = new System.Drawing.Point(407, 516);
+            this.label1.Name = "label1";
+            this.label1.Size = new System.Drawing.Size(86, 13);
+            this.label1.TabIndex = 12;
+            this.label1.Text = "Horizontal Scroll:";
+            // 
+            // verticalScrollList
+            // 
+            this.verticalScrollList.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
+            this.verticalScrollList.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.verticalScrollList.FormattingEnabled = true;
+            this.verticalScrollList.Items.AddRange(new object[] {
+            "None",
+            "Up",
+            "Down"});
+            this.verticalScrollList.Location = new System.Drawing.Point(269, 511);
+            this.verticalScrollList.Name = "verticalScrollList";
+            this.verticalScrollList.Size = new System.Drawing.Size(121, 21);
+            this.verticalScrollList.TabIndex = 13;
+            // 
+            // label2
+            // 
+            this.label2.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
+            this.label2.AutoSize = true;
+            this.label2.Location = new System.Drawing.Point(189, 516);
+            this.label2.Name = "label2";
+            this.label2.Size = new System.Drawing.Size(74, 13);
+            this.label2.TabIndex = 14;
+            this.label2.Text = "Vertical Scroll:";
+            // 
+            // scrollSpeed
+            // 
+            this.scrollSpeed.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
+            this.scrollSpeed.DecimalPlaces = 4;
+            this.scrollSpeed.Increment = new decimal(new int[] {
+            1,
+            0,
+            0,
+            262144});
+            this.scrollSpeed.Location = new System.Drawing.Point(95, 512);
+            this.scrollSpeed.Minimum = new decimal(new int[] {
+            1,
+            0,
+            0,
+            262144});
+            this.scrollSpeed.Name = "scrollSpeed";
+            this.scrollSpeed.Size = new System.Drawing.Size(77, 20);
+            this.scrollSpeed.TabIndex = 15;
+            this.scrollSpeed.Value = new decimal(new int[] {
+            1,
+            0,
+            0,
+            131072});
+            // 
+            // label3
+            // 
+            this.label3.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
+            this.label3.AutoSize = true;
+            this.label3.Location = new System.Drawing.Point(22, 516);
+            this.label3.Name = "label3";
+            this.label3.Size = new System.Drawing.Size(67, 13);
+            this.label3.TabIndex = 16;
+            this.label3.Text = "Scroll Speed";
+            // 
             // BackgroundView
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
+            this.Controls.Add(this.label3);
+            this.Controls.Add(this.scrollSpeed);
             this.Controls.Add(this.label2);
             this.Controls.Add(this.verticalScrollList);
             this.Controls.Add(this.label1);
@@ -249,6 +288,7 @@ namespace StasisEditor.Views
             this.splitContainer1.Panel2.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)(this.splitContainer1)).EndInit();
             this.splitContainer1.ResumeLayout(false);
+            ((System.ComponentModel.ISupportInitialize)(this.scrollSpeed)).EndInit();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -271,5 +311,7 @@ namespace StasisEditor.Views
         private System.Windows.Forms.Label label1;
         private System.Windows.Forms.ComboBox verticalScrollList;
         private System.Windows.Forms.Label label2;
+        private System.Windows.Forms.NumericUpDown scrollSpeed;
+        private System.Windows.Forms.Label label3;
     }
 }

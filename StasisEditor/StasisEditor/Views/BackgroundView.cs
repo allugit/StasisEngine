@@ -53,16 +53,17 @@ namespace StasisEditor.Views
             Vector2 delta = Vector2.Zero;
             string verticalScroll = verticalScrollList.SelectedItem as string;
             string horizontalScroll = horizontalScrollList.SelectedItem as string;
+            float speed = (float)scrollSpeed.Value;
 
             if (verticalScroll == "Up")
-                delta.Y -= 1f;
+                delta.Y -= speed;
             else if (verticalScroll == "Down")
-                delta.Y += 1f;
+                delta.Y += speed;
 
             if (horizontalScroll == "Left")
-                delta.X -= 1f;
+                delta.X -= speed;
             else if (horizontalScroll == "Right")
-                delta.X += 1f;
+                delta.X += speed;
 
             _controller.screenCenter += delta;
         }
