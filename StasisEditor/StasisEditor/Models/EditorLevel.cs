@@ -16,13 +16,10 @@ namespace StasisEditor.Models
     {
         private LevelController _controller;
         private SortedDictionary<float, List<EditorActor>> _sortedActors;
-        //private List<EditorActor> _actors;
         private List<EditorActor> _actorsToAdd;
         private List<EditorActor> _actorsToRemove;
         private bool _firstDraw = true;
 
-        //[Browsable(false)]
-        //public List<EditorActor> actors { get { return _actors; } }
         [Browsable(false)]
         public SortedDictionary<float, List<EditorActor>> sortedActors { get { return _sortedActors; } }
         [Browsable(false)]
@@ -31,8 +28,6 @@ namespace StasisEditor.Models
             get
             {
                 List<XElement> actorControllerData = new List<XElement>();
-                //foreach (EditorActor actor in _actors)
-                //    actorControllerData.Add(actor.data);
                 foreach (List<EditorActor> actors in _sortedActors.Values)
                 {
                     foreach (EditorActor actor in actors)
@@ -45,6 +40,7 @@ namespace StasisEditor.Models
                     new XAttribute("name", _name),
                     new XAttribute("gravity", _gravity),
                     new XAttribute("wind", _wind),
+                    new XAttribute("background_uid", _backgroundUID),
                     actorControllerData);
 
                 return d;
@@ -57,7 +53,6 @@ namespace StasisEditor.Models
         public EditorLevel(LevelController levelController, string name) : base(name)
         {
             _controller = levelController;
-            //_actors = new List<EditorActor>();
             _sortedActors = new SortedDictionary<float, List<EditorActor>>();
             _actorsToAdd = new List<EditorActor>();
             _actorsToRemove = new List<EditorActor>();
@@ -67,7 +62,6 @@ namespace StasisEditor.Models
         public EditorLevel(LevelController levelController, XElement data) : base(data)
         {
             _controller = levelController;
-            //_actors = new List<EditorActor>();
             _sortedActors = new SortedDictionary<float, List<EditorActor>>();
             _actorsToAdd = new List<EditorActor>();
             _actorsToRemove = new List<EditorActor>();
@@ -155,13 +149,6 @@ namespace StasisEditor.Models
         // Get actor by id
         public EditorActor getActor(int id)
         {
-            /*
-            foreach (EditorActor actor in _actors)
-            {
-                if (actor.id == id)
-                    return actor;
-            }*/
-
             foreach (List<EditorActor> actors in _sortedActors.Values)
             {
                 foreach (EditorActor actor in actors)
@@ -255,15 +242,6 @@ namespace StasisEditor.Models
             // Method to test if an id is being used
             Func<int, bool> isIdUsed = (id) =>
             {
-                /*
-                foreach (EditorActor actor in _level.actors)
-                {
-                    if (actor.id == id)
-                    {
-                        id++;
-                        return true;
-                    }
-                }*/
                 foreach (List<EditorActor> actors in _sortedActors.Values)
                 {
                     foreach (EditorActor actor in actors)
@@ -289,8 +267,6 @@ namespace StasisEditor.Models
         // Update
         public void update()
         {
-            //foreach (EditorActor actor in _actorsToAdd)
-            //    _actors.Add(actor);
             foreach (EditorActor actor in _actorsToAdd)
             {
                 if (!_sortedActors.ContainsKey(actor.layerDepth))
@@ -299,8 +275,6 @@ namespace StasisEditor.Models
             }
             _actorsToAdd.Clear();
 
-            //foreach (EditorActor actor in _actorsToRemove)
-            //    _actors.Remove(actor);
             foreach (EditorActor actor in _actorsToRemove)
             {
                 _sortedActors[actor.layerDepth].Remove(actor);
@@ -309,8 +283,6 @@ namespace StasisEditor.Models
             }
             _actorsToRemove.Clear();
 
-            //foreach (EditorActor actor in _actors)
-            //    actor.update();
             foreach (List<EditorActor> actors in _sortedActors.Values)
             {
                 foreach (EditorActor actor in actors)
