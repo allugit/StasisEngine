@@ -35,11 +35,36 @@ namespace StasisEditor.Views
         public BindingList<EditorBackground> backgrounds { set { backgroundList.DataSource = value; } }
         public EditorBackground selectedBackground { get { return backgroundList.SelectedItem as EditorBackground; } }
         public EditorBackgroundLayer selectedBackgroundLayer { get { return layerList.SelectedItem as EditorBackgroundLayer; } }
+        
 
         public BackgroundView()
         {
             InitializeComponent();
             backgroundDisplay.view = this;
+            verticalScrollList.SelectedIndex = 0;
+            horizontalScrollList.SelectedIndex = 0;
+
+            Application.Idle += new EventHandler(updateScreenPosition);
+        }
+
+        // Update screen position based on the scrolling types
+        void updateScreenPosition(object sender, EventArgs e)
+        {
+            Vector2 delta = Vector2.Zero;
+            string verticalScroll = verticalScrollList.SelectedItem as string;
+            string horizontalScroll = horizontalScrollList.SelectedItem as string;
+
+            if (verticalScroll == "Up")
+                delta.Y -= 1f;
+            else if (verticalScroll == "Down")
+                delta.Y += 1f;
+
+            if (horizontalScroll == "Left")
+                delta.X -= 1f;
+            else if (horizontalScroll == "Right")
+                delta.X += 1f;
+
+            _controller.screenCenter += delta;
         }
 
         // Add new background
@@ -126,6 +151,7 @@ namespace StasisEditor.Views
         private void previewButton_Click(object sender, EventArgs e)
         {
             EditorBackground background = selectedBackground;
+            _controller.screenCenter = Vector2.Zero;
 
             if (background == null)
                 return;

@@ -11,6 +11,12 @@ namespace StasisEditor.Models
 {
     public class EditorBackgroundLayer : BackgroundLayer
     {
+        [Browsable(false)]
+        public override XElement data { get { return base.data; } }
+        
+        [Browsable(false)]
+        public override Texture2D texture { get { return base.texture; } set { base.texture = value; } }
+
         public EditorBackgroundLayer() : base()
         {
         }

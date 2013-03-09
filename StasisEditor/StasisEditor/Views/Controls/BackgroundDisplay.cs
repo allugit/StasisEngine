@@ -76,7 +76,7 @@ namespace StasisEditor.Views.Controls
         {
             GraphicsDevice.Clear(Color.Black);
 
-            _spriteBatch.Begin();
+            _spriteBatch.Begin(SpriteSortMode.BackToFront, BlendState.AlphaBlend);
 
             if (_backgroundRenderer.background != null)
             {
