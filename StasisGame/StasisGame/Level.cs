@@ -89,6 +89,7 @@ namespace StasisGame
                         if (_systemManager.getSystem(SystemType.CharacterMovement) == null)
                         {
                             _systemManager.add(new CharacterMovementSystem(_systemManager, _entityManager));
+                            (_systemManager.getSystem(SystemType.Camera) as CameraSystem).enableManualMovement = false;
                         }
                         _systemManager.add(new PlayerSystem(_systemManager, _entityManager));
                         _entityManager.factory.createPlayer(actorData);

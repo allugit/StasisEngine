@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using Microsoft.Xna.Framework;
+using Microsoft.Xna.Framework.Input;
 using StasisGame.Managers;
 using StasisGame.Components;
 
@@ -17,10 +18,14 @@ namespace StasisGame.Systems
         private SystemManager _systemManager;
         private EntityManager _entityManager;
         private Vector2 _screenCenter;
+        private bool _enableManualMovement = true;
+        private KeyboardState _keyState;
+        private KeyboardState _oldKeyState;
 
         public int defaultPriority { get { return 80; } }
         public SystemType systemType { get { return SystemType.Camera; } }
         public Vector2 screenCenter { get { return _screenCenter; } }
+        public bool enableManualMovement { get { return _enableManualMovement; } set { _enableManualMovement = value; } }
 
         public CameraSystem(SystemManager systemManager, EntityManager entityManager)
         {
@@ -30,31 +35,51 @@ namespace StasisGame.Systems
 
         public void update()
         {
-            List<BodyFocusPointComponent> bodyFocusPoints = _entityManager.getComponents<BodyFocusPointComponent>(ComponentType.BodyFocusPoint);
-            Vector2 singleTarget = _screenCenter;
-            Vector2 multipleTarget = Vector2.Zero;
-            bool useSingleTarget = false;
-            int multipleTargetCount = 0;
-
-            for (int i = 0; i < bodyFocusPoints.Count; i++)
+            if (_enableManualMovement)
             {
-                if (bodyFocusPoints[i].focusType == FocusType.Multiple)
-                {
-                    multipleTarget += bodyFocusPoints[i].focusPoint;
-                    multipleTargetCount++;
-                }
-                else if (bodyFocusPoints[i].focusType == FocusType.Single)
-                {
-                    singleTarget = bodyFocusPoints[i].focusPoint;
-                    useSingleTarget = true;
-                    break;
-                }
-            }
+                float speed = 0.1f;
 
-            if (useSingleTarget)
-                _screenCenter += (singleTarget - _screenCenter) / 2f;
+                _keyState = Keyboard.GetState();
+
+                if (_keyState.IsKeyDown(Keys.NumPad8))
+                    _screenCenter += new Vector2(0, -speed);
+                if (_keyState.IsKeyDown(Keys.NumPad2))
+                    _screenCenter += new Vector2(0, speed);
+                if (_keyState.IsKeyDown(Keys.NumPad4))
+                    _screenCenter += new Vector2(-speed, 0);
+                if (_keyState.IsKeyDown(Keys.NumPad6))
+                    _screenCenter += new Vector2(speed, 0);
+
+                _oldKeyState = _keyState;
+            }
             else
-                _screenCenter += (multipleTarget / multipleTargetCount - _screenCenter) / 2f;
+            {
+                List<BodyFocusPointComponent> bodyFocusPoints = _entityManager.getComponents<BodyFocusPointComponent>(ComponentType.BodyFocusPoint);
+                Vector2 singleTarget = _screenCenter;
+                Vector2 multipleTarget = Vector2.Zero;
+                bool useSingleTarget = false;
+                int multipleTargetCount = 0;
+
+                for (int i = 0; i < bodyFocusPoints.Count; i++)
+                {
+                    if (bodyFocusPoints[i].focusType == FocusType.Multiple)
+                    {
+                        multipleTarget += bodyFocusPoints[i].focusPoint;
+                        multipleTargetCount++;
+                    }
+                    else if (bodyFocusPoints[i].focusType == FocusType.Single)
+                    {
+                        singleTarget = bodyFocusPoints[i].focusPoint;
+                        useSingleTarget = true;
+                        break;
+                    }
+                }
+
+                if (useSingleTarget)
+                    _screenCenter += (singleTarget - _screenCenter) / 2f;
+                else
+                    _screenCenter += (multipleTarget / multipleTargetCount - _screenCenter) / 2f;
+            }
         }
     }
 }
