@@ -39,6 +39,7 @@ namespace StasisCore.Controllers
         public static string dialoguePath { get { return String.Format("{0}\\dialogues.xml", RESOURCE_PATH); } }
         public static string circuitPath { get { return String.Format("{0}\\circuits.xml", RESOURCE_PATH); } }
         public static string backgroundPath { get { return String.Format("{0}\\backgrounds.xml", RESOURCE_PATH); } }
+        public static GraphicsDevice graphicsDevice { get { return _graphicsDevice; } }
 
         // Initialize -- Called once when the application starts
         public static void initialize(GraphicsDevice graphicsDevice)
