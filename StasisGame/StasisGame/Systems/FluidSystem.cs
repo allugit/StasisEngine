@@ -554,10 +554,10 @@ namespace StasisGame.Systems
                 Vector2 screenCenter = _renderSystem.screenCenter;
                 float width = (_renderSystem.screenWidth / _renderSystem.scale) * 0.75f;
                 float height = (_renderSystem.screenHeight / _renderSystem.scale);
-                simulationAABB.lowerBound.X = -screenCenter.X - width;
-                simulationAABB.upperBound.X = -screenCenter.X + width;
-                simulationAABB.lowerBound.Y = -screenCenter.Y - height;
-                simulationAABB.upperBound.Y = -screenCenter.Y + height;
+                simulationAABB.lowerBound.X = screenCenter.X - width;
+                simulationAABB.upperBound.X = screenCenter.X + width;
+                simulationAABB.lowerBound.Y = screenCenter.Y - height;
+                simulationAABB.upperBound.Y = screenCenter.Y + height;
             //}
 
             // Flag active particles
