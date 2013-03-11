@@ -6,7 +6,7 @@ float4 LiquidPS(float2 texCoord:TEXCOORD0) : COLOR0
 	// Base texture has density information in the red channel,
 	//   and x and y velocity in the green and blue channels.
     float4 base = tex2D(baseSample, texCoord);
-	float4 blue = float4(0.15, 0.3, 0.6, clamp(base.a, 0, 0.5));
+	float4 blue = float4(0.15, 0.35, 0.5, clamp(base.a, 0, 0.7));
 	float4 result = blue;
 
 	// Pixel size
