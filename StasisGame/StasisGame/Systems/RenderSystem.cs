@@ -32,6 +32,10 @@ namespace StasisGame.Systems
         private Vector2 _halfScreen;
         private SortedDictionary<float, List<IRenderablePrimitive>> _sortedRenderablePrimitives;
         private BackgroundRenderer _backgroundRenderer;
+        private RenderTarget2D _fluidRenderTarget;
+        private RenderTarget2D _renderedFluid;
+        private Texture2D _fluidParticleTexture;
+        private Effect _fluidEffect;
 
         public int defaultPriority { get { return 90; } }
         public SystemType systemType { get { return SystemType.Render; } }
@@ -53,8 +57,12 @@ namespace StasisGame.Systems
             _graphicsDevice = game.GraphicsDevice;
             _spriteBatch = game.spriteBatch;
             _backgroundRenderer = new BackgroundRenderer(_spriteBatch);
+            _fluidRenderTarget = new RenderTarget2D(_graphicsDevice, _graphicsDevice.Viewport.Width, _graphicsDevice.Viewport.Height);
+            _renderedFluid = new RenderTarget2D(_graphicsDevice, _graphicsDevice.Viewport.Width, _graphicsDevice.Viewport.Height);
 
             _contentManager = new ContentManager(game.Services, "Content");
+            _fluidEffect = _contentManager.Load<Effect>("fluid_effect");
+            _fluidParticleTexture = _contentManager.Load<Texture2D>("fluid_particle");
             _coreContentManager = new ContentManager(game.Services, "StasisCoreContent");
             _materialRenderer = new MaterialRenderer(game.GraphicsDevice, _contentManager, game.spriteBatch);
             _primitivesEffect = _coreContentManager.Load<Effect>("effects\\primitives");
@@ -112,6 +120,39 @@ namespace StasisGame.Systems
             List<int> treeEntities = _entityManager.getEntitiesPosessing(ComponentType.Tree);
             Vector2 screenCenter = _cameraSystem.screenCenter;
 
+            // Pre render fluid
+            if (fluidSystem != null)
+            {
+                // Draw on render target
+                _graphicsDevice.SetRenderTarget(_fluidRenderTarget);
+                _graphicsDevice.Clear(Color.Transparent);
+                spriteBatch.Begin();
+                int limit = fluidSystem.numActiveParticles;
+                for (int i = 0; i < limit; i++)
+                {
+                    // Current particle
+                    Particle particle = fluidSystem.liquid[fluidSystem.activeParticles[i]];
+                    Color color = new Color(1, particle.velocity.X, particle.velocity.Y);
+                    spriteBatch.Draw(_fluidParticleTexture, (particle.position - _cameraSystem.screenCenter) * scale + _halfScreen, _fluidParticleTexture.Bounds, color, 0, new Vector2(12, 12), 1, SpriteEffects.None, 0);
+                }
+                spriteBatch.End();
+                _graphicsDevice.SetRenderTarget(_renderedFluid);
+                _graphicsDevice.Clear(Color.Transparent);
+
+                // Draw post-processed render target to screen
+                _fluidEffect.Parameters["renderSize"].SetValue(new Vector2(_renderedFluid.Width, _renderedFluid.Height));
+                spriteBatch.Begin(SpriteSortMode.Immediate, BlendState.AlphaBlend, null, null, null, _fluidEffect);
+                spriteBatch.Draw(_fluidRenderTarget, Vector2.Zero, Color.DarkBlue);
+                spriteBatch.End();
+                _graphicsDevice.SetRenderTarget(null);
+                /*
+                for (int i = 0; i < fluidSystem.numActiveParticles; i++)
+                {
+                    Particle particle = fluidSystem.liquid[fluidSystem.activeParticles[i]];
+                    _spriteBatch.Draw(_pixel, (particle.position - screenCenter) * _scale + _halfScreen, new Rectangle(0, 0, 4, 4), Color.Blue, 0, new Vector2(2, 2), 1f, SpriteEffects.None, 0);
+                }*/
+            }
+
             // Draw background
             if (_backgroundRenderer.background != null)
             {
@@ -120,8 +161,18 @@ namespace StasisGame.Systems
                 _spriteBatch.End();
             }
 
-            // Draw primitives
+            // Draw fluid
+            if (fluidSystem != null)
+            {
+                _spriteBatch.Begin();
+                _spriteBatch.Draw(_renderedFluid, _renderedFluid.Bounds, Color.White);
+                _spriteBatch.End();
+            }
+
+            // Begin ordered drawing
             _spriteBatch.Begin(SpriteSortMode.BackToFront, BlendState.AlphaBlend);
+
+            // Draw primitives
             _halfScreen = new Vector2(_graphicsDevice.Viewport.Width, _graphicsDevice.Viewport.Height) / 2;
             _viewMatrix = Matrix.CreateTranslation(new Vector3(-screenCenter, 0)) * Matrix.CreateScale(new Vector3(_scale, -_scale, 1f));
             _projectionMatrix = Matrix.CreateOrthographic(_graphicsDevice.Viewport.Width, _graphicsDevice.Viewport.Height, 0, 1);
@@ -154,15 +205,6 @@ namespace StasisGame.Systems
                 {
                     _spriteBatch.Draw(_pixel, (current.body.GetPosition() - screenCenter) * _scale + _halfScreen, new Rectangle(0, 0, 16, 4), Color.Red, current.body.GetAngle(), new Vector2(8, 2), 1f, SpriteEffects.None, 0);
                     current = current.next;
-                }
-            }
-
-            if (fluidSystem != null)
-            {
-                for (int i = 0; i < fluidSystem.numActiveParticles; i++)
-                {
-                    Particle particle = fluidSystem.liquid[fluidSystem.activeParticles[i]];
-                    _spriteBatch.Draw(_pixel, (particle.position - screenCenter) * _scale + _halfScreen, new Rectangle(0, 0, 4, 4), Color.Blue, 0, new Vector2(2, 2), 1f, SpriteEffects.None, 0);
                 }
             }
 
