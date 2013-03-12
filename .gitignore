@@ -22,3 +22,5 @@ StasisGame/StasisGame/StasisGame.csproj.Debug.cachefile
 StasisGame/StasisGame/StasisGame.csproj.Release.cachefile
 PSProcessorLib/bin
 PSProcessorLib/obj
+EasyStorage/obj
+EasyStorage/bin
