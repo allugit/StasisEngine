@@ -90,7 +90,7 @@ namespace StasisEditor.Controllers
         // Save circuits
         public void saveCircuits()
         {
-            ResourceManager.saveCircuitResources(new List<Circuit>(_circuits), true);
+            EditorResourceManager.saveCircuitResources(new List<Circuit>(_circuits), true);
             _editorController.levelController.updateCircuitActorConnections();
         }
 

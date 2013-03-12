@@ -88,6 +88,7 @@
     <Compile Include="Controllers\EditorController.cs" />
     <Compile Include="Controllers\LevelController.cs" />
     <Compile Include="Controllers\MaterialController.cs" />
+    <Compile Include="EditorResourceManager.cs" />
     <Compile Include="Models\CircuitConnection.cs" />
     <Compile Include="Models\CircuitInputConnection.cs" />
     <Compile Include="Models\CircuitOutputConnection.cs" />

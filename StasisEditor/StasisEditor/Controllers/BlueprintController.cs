@@ -84,7 +84,7 @@ namespace StasisEditor.Controllers
         // saveBlueprints
         public void saveBlueprints()
         {
-            ResourceManager.saveBlueprintResources(new List<Blueprint>(_blueprints), true);
+            EditorResourceManager.saveBlueprintResources(new List<Blueprint>(_blueprints), true);
         }
 
         // checkUnsavedBlueprints

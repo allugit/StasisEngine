@@ -56,7 +56,7 @@ namespace StasisEditor.Controllers
             foreach (EditorBackground background in _backgrounds)
                 data.Add(background.data);
 
-            ResourceManager.saveBackgroundResources(data, true);
+            EditorResourceManager.saveBackgroundResources(data, true);
         }
     }
 }

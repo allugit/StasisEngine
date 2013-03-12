@@ -106,7 +106,7 @@ namespace StasisEditor.Controllers
         // saveMaterials
         public void saveMaterials()
         {
-            ResourceManager.saveMaterialResources(new List<Material>(_materials), true);
+            EditorResourceManager.saveMaterialResources(new List<Material>(_materials), true);
         }
 
         // createMaterial
