@@ -9,7 +9,6 @@ using Microsoft.Xna.Framework.GamerServices;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 using Microsoft.Xna.Framework.Media;
-using StasisCore.Controllers;
 using StasisCore;
 
 namespace StasisGame
@@ -93,12 +92,12 @@ namespace StasisGame
 
         protected override void LoadContent()
         {
-            ResourceController.initialize(GraphicsDevice);
-            ResourceController.loadCharacters();
-            ResourceController.loadCircuits();
-            ResourceController.loadDialogue();
-            ResourceController.loadItems();
-            ResourceController.loadMaterials();
+            ResourceManager.initialize(GraphicsDevice);
+            //ResourceManager.loadAllCharacters();
+            //ResourceManager.loadAllCircuits();
+            //ResourceManager.loadAllDialogue();
+            //ResourceManager.loadAllItems();
+            //ResourceManager.loadAllMaterials();
 
             _spriteBatch = new SpriteBatch(GraphicsDevice);
             _arial = Content.Load<SpriteFont>("arial");

@@ -5,9 +5,7 @@ using System.IO;
 using System.Xml.Linq;
 using Microsoft.Xna.Framework;
 using StasisEditor.Controllers;
-using StasisCore.Resources;
 using StasisCore.Models;
-using StasisCore.Controllers;
 using StasisCore;
 
 namespace StasisEditor.Models
@@ -222,7 +220,7 @@ namespace StasisEditor.Models
         // Save
         public void save()
         {
-            string filePath = ResourceController.levelPath + "\\" + _name + ".xml";
+            string filePath = ResourceManager.levelPath + "\\" + _name + ".xml";
             if (File.Exists(filePath))
             {
                 string backupFilePath = filePath + ".bak";

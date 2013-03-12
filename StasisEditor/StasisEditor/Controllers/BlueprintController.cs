@@ -6,8 +6,7 @@ using System.Linq;
 using StasisEditor.Views;
 using StasisEditor.Models;
 using StasisCore.Models;
-using StasisCore.Controllers;
-using StasisCore.Resources;
+using StasisCore;
 
 namespace StasisEditor.Controllers
 {
@@ -29,9 +28,10 @@ namespace StasisEditor.Controllers
             _view.setController(this);
 
             // Load blueprints
-            List<ResourceObject> resources = ResourceController.loadItems("blueprint");
-            foreach (ResourceObject resource in resources)
-                _blueprints.Add(initializeBlueprint(resource.data));
+            ResourceManager.loadAllBlueprints();
+            List<XElement> blueprintResources = ResourceManager.blueprintResources;
+            foreach (XElement data in blueprintResources)
+                _blueprints.Add(initializeBlueprint(data));
         }
 
         // initializeBlueprint
@@ -84,7 +84,7 @@ namespace StasisEditor.Controllers
         // saveBlueprints
         public void saveBlueprints()
         {
-            ResourceController.saveBlueprintResources(new List<Blueprint>(_blueprints));
+            ResourceManager.saveBlueprintResources(new List<Blueprint>(_blueprints), true);
         }
 
         // checkUnsavedBlueprints
@@ -158,7 +158,7 @@ namespace StasisEditor.Controllers
             try
             {
                 if (destroy)
-                    ResourceController.destroy(uid);
+                    ResourceManager.destroy(uid);
             }
             catch (ResourceNotFoundException e)
             {

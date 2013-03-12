@@ -2,8 +2,7 @@
 using System.Collections.Generic;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
-using StasisCore.Controllers;
-using StasisCore.Resources;
+using StasisCore;
 
 namespace StasisEditor.Views.Controls
 {
@@ -70,7 +69,7 @@ namespace StasisEditor.Views.Controls
 
             try
             {
-                _texture = ResourceController.getTexture(_textureUID);
+                _texture = ResourceManager.getTexture(_textureUID);
                 _textureCenter = new Vector2(_texture.Width, _texture.Height) / 2;
             }
             catch (ResourceNotFoundException ex)

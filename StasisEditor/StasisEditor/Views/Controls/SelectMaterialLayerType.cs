@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Windows.Forms;
-using StasisCore.Resources;
 namespace StasisEditor.Views.Controls
 {
     public class SelectMaterialLayerType : Form

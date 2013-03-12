@@ -6,8 +6,7 @@ using System.Drawing;
 using System.Linq;
 using System.Text;
 using System.Windows.Forms;
-using StasisCore.Controllers;
-using StasisCore.Resources;
+using StasisCore;
 
 namespace StasisEditor.Views.Controls
 {
@@ -33,7 +32,7 @@ namespace StasisEditor.Views.Controls
 
             try
             {
-                if (ResourceController.exists(uidBox.Text))
+                if (ResourceManager.exists(uidBox.Text))
                 {
                     MessageBox.Show("That uid already exists.", "Duplicate UID");
                 }

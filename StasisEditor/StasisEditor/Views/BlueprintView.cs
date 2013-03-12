@@ -7,12 +7,11 @@ using System.Linq;
 using System.Text;
 using System.Windows.Forms;
 using Microsoft.Xna.Framework;
-using StasisCore.Controllers;
 using StasisCore.Models;
-using StasisCore.Resources;
 using StasisEditor.Controllers;
 using StasisEditor.Views.Controls;
 using StasisEditor.Models;
+using StasisCore;
 
 namespace StasisEditor.Views
 {

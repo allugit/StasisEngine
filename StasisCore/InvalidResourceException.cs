@@ -1,6 +1,6 @@
 ﻿using System.Xml;
 
-namespace StasisCore.Resources
+namespace StasisCore
 {
     public class InvalidResourceException : XmlException
     {

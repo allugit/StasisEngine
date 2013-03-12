@@ -6,11 +6,10 @@ using System.Data;
 using System.Linq;
 using System.Text;
 using System.Windows.Forms;
-using StasisCore.Resources;
-using StasisCore.Controllers;
 using StasisEditor.Controllers;
 using StasisEditor.Models;
 using StasisEditor.Views.Controls;
+using StasisCore;
 
 namespace StasisEditor.Views
 {

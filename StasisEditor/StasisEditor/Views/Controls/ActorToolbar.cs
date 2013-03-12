@@ -7,7 +7,6 @@ using System.Linq;
 using System.Text;
 using System.Windows.Forms;
 using StasisEditor.Controllers;
-using StasisCore.Resources;
 
 namespace StasisEditor.Views.Controls
 {

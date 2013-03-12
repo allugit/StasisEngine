@@ -4,9 +4,7 @@ using System.Collections.Generic;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Content;
 using Microsoft.Xna.Framework.Graphics;
-using StasisCore.Resources;
 using StasisCore.Models;
-using StasisCore.Controllers;
 
 namespace StasisCore
 {
@@ -246,7 +244,7 @@ namespace StasisCore
                     MaterialTextureLayer textureLayer = layer as MaterialTextureLayer;
                     current = texturePass(
                         current,
-                        ResourceController.getTexture(textureLayer.textureUID),
+                        ResourceManager.getTexture(textureLayer.textureUID),
                         textureLayer.blendType,
                         textureLayer.scale,
                         textureLayer.multiplier,
@@ -513,7 +511,7 @@ namespace StasisCore
             List<Texture2D> textures = new List<Texture2D>();
             foreach (string textureUID in textureUIDs)
             {
-                Texture2D texture = ResourceController.getTexture(textureUID);
+                Texture2D texture = ResourceManager.getTexture(textureUID);
                 if (texture == null)
                     return result;
                 textures.Add(texture);
@@ -585,7 +583,7 @@ namespace StasisCore
             List<Texture2D> textures = new List<Texture2D>();
             foreach (string textureUID in textureUIDs)
             {
-                Texture2D texture = ResourceController.getTexture(textureUID);
+                Texture2D texture = ResourceManager.getTexture(textureUID);
                 if (texture == null)
                     return result;
                 textures.Add(texture);
@@ -685,7 +683,7 @@ namespace StasisCore
             List<Texture2D> textures = new List<Texture2D>();
             foreach (string textureUID in textureUIDs)
             {
-                Texture2D texture = ResourceController.getTexture(textureUID);
+                Texture2D texture = ResourceManager.getTexture(textureUID);
                 if (texture == null)
                     return result;
                 textures.Add(texture);

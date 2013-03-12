@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.ComponentModel;
 using System.Xml.Linq;
 using StasisCore.Models;
-using StasisCore.Controllers;
 
 namespace StasisEditor.Models
 {

@@ -2,7 +2,6 @@
 using System.Xml.Linq;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
-using StasisCore.Controllers;
 
 namespace StasisCore.Models
 {
@@ -64,11 +63,11 @@ namespace StasisCore.Models
         {
             if (_textureUID != null && _textureUID != "")
             {
-                _texture = ResourceController.getTexture(_textureUID);
+                _texture = ResourceManager.getTexture(_textureUID);
 
                 if (fitToScreen)
                 {
-                    _scale = (float)ResourceController.graphicsDevice.Viewport.Height / (float)texture.Height;
+                    _scale = (float)ResourceManager.graphicsDevice.Viewport.Height / (float)texture.Height;
 
                     //int screenWidth = ResourceController.graphicsDevice.Viewport.Width;
                     //int screenHeight = ResourceController.graphicsDevice.Viewport.Height;

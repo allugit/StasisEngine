@@ -6,7 +6,6 @@ using System.Xml.Linq;
 using Microsoft.Xna.Framework;
 using StasisCore;
 using StasisCore.Models;
-using StasisCore.Controllers;
 using StasisGame.Systems;
 using StasisGame.Managers;
 using StasisGame.Components;
@@ -48,9 +47,9 @@ namespace StasisGame
             _systemManager.add(_renderSystem);
 
             // Create background
-            ResourceController.loadBackgrounds();
+            ResourceManager.loadAllBackgrounds();
             backgroundUID = Loader.loadString(data.Attribute("background_uid"), "default_background");
-            backgroundData = ResourceController.getResource(backgroundUID);
+            backgroundData = ResourceManager.getResource(backgroundUID);
             background = new Background(backgroundData);
             background.loadTextures();
             _renderSystem.setBackground(background);

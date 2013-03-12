@@ -4,11 +4,11 @@ using System.ComponentModel;
 using System.Data;
 using System.Drawing;
 using System.Linq;
+using System.Xml.Linq;
 using System.Text;
 using System.Windows.Forms;
-using StasisCore.Controllers;
-using StasisCore.Resources;
 using StasisEditor.Controllers;
+using StasisCore;
 
 namespace StasisEditor.Views.Controls
 {
@@ -21,8 +21,8 @@ namespace StasisEditor.Views.Controls
             InitializeComponent();
 
             // Populate item uids
-            List<ResourceObject> resources = ResourceController.loadItems();
-            List<string> uids = new List<string>(from resource in resources select resource.uid);
+            List<XElement> resources = ResourceManager.itemResources;
+            List<string> uids = new List<string>(from resource in resources select resource.Attribute("uid").Value);
             itemUIDs.DataSource = uids;
         }
 

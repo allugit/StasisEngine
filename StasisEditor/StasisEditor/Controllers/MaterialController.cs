@@ -9,9 +9,7 @@ using System.Xml.Linq;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using StasisCore;
-using StasisCore.Controllers;
 using StasisCore.Models;
-using StasisCore.Resources;
 using StasisEditor.Models;
 using StasisEditor.Views;
 using StasisEditor.Views.Controls;
@@ -39,11 +37,13 @@ namespace StasisEditor.Controllers
             _editorController = editorController;
             _materialView = materialView;
             _materials = new BindingList<EditorMaterial>();
+            List<XElement> materialData;
 
             // Load materials
-            List<ResourceObject> resources = ResourceController.loadMaterials();
-            foreach (ResourceObject resource in resources)
-                _materials.Add(new EditorMaterial(resource.data));
+            ResourceManager.loadAllMaterials();
+            materialData = ResourceManager.materialResources;
+            foreach (XElement data in materialData)
+                _materials.Add(new EditorMaterial(data));
 
             // Initialize material view
             materialView.setController(this);
@@ -106,7 +106,7 @@ namespace StasisEditor.Controllers
         // saveMaterials
         public void saveMaterials()
         {
-            ResourceController.saveMaterialResources(new List<Material>(_materials));
+            ResourceManager.saveMaterialResources(new List<Material>(_materials), true);
         }
 
         // createMaterial
@@ -146,7 +146,7 @@ namespace StasisEditor.Controllers
             try
             {
                 if (destroy)
-                    ResourceController.destroy(uid);
+                    ResourceManager.destroy(uid);
             }
             catch (ResourceNotFoundException e)
             {
@@ -223,7 +223,7 @@ namespace StasisEditor.Controllers
         {
             EditorMaterial material = source.clone();
             string newUID = material.uid + "_copy";
-            while (ResourceController.exists(newUID))
+            while (ResourceManager.exists(newUID))
                 newUID = newUID + "_copy";
             while (materialExists(newUID))
                 newUID = newUID + "_copy";

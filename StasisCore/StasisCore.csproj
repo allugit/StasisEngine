@@ -65,7 +65,7 @@
     <Compile Include="Models\Background.cs" />
     <Compile Include="Models\BackgroundLayer.cs" />
     <Compile Include="BackgroundRenderer.cs" />
-    <Compile Include="Controllers\ResourceController.cs" />
+    <Compile Include="ResourceManager.cs" />
     <Compile Include="CustomVertexFormat.cs" />
     <Compile Include="IEventHandler.cs" />
     <Compile Include="Models\GameEvent.cs" />
@@ -88,10 +88,9 @@
     <Compile Include="Models\MaterialScatterLayer.cs" />
     <Compile Include="Models\MaterialTextureLayer.cs" />
     <Compile Include="Models\MaterialUniformScatterLayer.cs" />
-    <Compile Include="Resources\Exceptions\DuplicateResourceException.cs" />
-    <Compile Include="Resources\Exceptions\InvalidResourceException.cs" />
-    <Compile Include="Resources\Exceptions\ResourceNotFoundException.cs" />
-    <Compile Include="Resources\ResourceObject.cs" />
+    <Compile Include="DuplicateResourceException.cs" />
+    <Compile Include="InvalidResourceException.cs" />
+    <Compile Include="ResourceNotFoundException.cs" />
     <Compile Include="Loader.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="MaterialRenderer.cs" />

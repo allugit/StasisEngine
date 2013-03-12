@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using System.Xml.Linq;
 using Microsoft.Xna.Framework;
-using StasisCore.Resources;
 
 namespace StasisCore.Models
 {

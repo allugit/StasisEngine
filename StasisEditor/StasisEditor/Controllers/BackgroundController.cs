@@ -5,8 +5,7 @@ using System.Xml.Linq;
 using Microsoft.Xna.Framework;
 using StasisEditor.Views;
 using StasisEditor.Models;
-using StasisCore.Resources;
-using StasisCore.Controllers;
+using StasisCore;
 
 namespace StasisEditor.Controllers
 {
@@ -37,13 +36,15 @@ namespace StasisEditor.Controllers
             _editorController = editorController;
             _view = view;
             _backgrounds = new BindingList<EditorBackground>();
+            List<XElement> backgroundData;
 
-            List<ResourceObject> resources = ResourceController.loadBackgrounds();
+            ResourceManager.loadAllBackgrounds();
 
             _view.controller = this;
 
-            foreach (ResourceObject resource in resources)
-                _backgrounds.Add(new EditorBackground(resource.data));
+            backgroundData = ResourceManager.backgroundResources;
+            foreach (XElement data in backgroundData)
+                _backgrounds.Add(new EditorBackground(data));
 
             _view.backgrounds = _backgrounds;
         }
@@ -55,7 +56,7 @@ namespace StasisEditor.Controllers
             foreach (EditorBackground background in _backgrounds)
                 data.Add(background.data);
 
-            ResourceController.saveBackgroundResources(data);
+            ResourceManager.saveBackgroundResources(data, true);
         }
     }
 }

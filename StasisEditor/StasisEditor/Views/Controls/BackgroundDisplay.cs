@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using StasisCore;
-using StasisCore.Controllers;
 using StasisCore.Models;
 using StasisEditor.Models;
 

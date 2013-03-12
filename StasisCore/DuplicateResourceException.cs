@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace StasisCore.Resources
+namespace StasisCore
 {
     public class DuplicateResourceException : Exception
     {

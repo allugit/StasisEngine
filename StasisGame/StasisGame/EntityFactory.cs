@@ -7,7 +7,6 @@ using Microsoft.Xna.Framework.Graphics;
 using Box2D.XNA;
 using StasisCore;
 using StasisCore.Models;
-using StasisCore.Controllers;
 using StasisGame.Systems;
 using StasisGame.Components;
 using StasisGame.Managers;
@@ -119,7 +118,7 @@ namespace StasisGame
         private BodyRenderComponent createBodyRenderComponent(XElement data)
         {
             RenderSystem renderSystem = (RenderSystem)_systemManager.getSystem(SystemType.Render);
-            Material material = new Material(ResourceController.getResource(data.Attribute("material_uid").Value));
+            Material material = new Material(ResourceManager.getResource(data.Attribute("material_uid").Value));
             List<Vector2> polygonPoints = new List<Vector2>();
             Texture2D texture = null;
             int primitiveCount;
@@ -338,8 +337,8 @@ namespace StasisGame
             BodyDef bodyDef = new BodyDef();
             PolygonShape shape = new PolygonShape();
             FixtureDef fixtureDef = new FixtureDef();
-            XElement itemData = ResourceController.getResource(data.Attribute("item_uid").Value);
-            Texture2D worldTexture = ResourceController.getTexture(Loader.loadString(itemData.Attribute("world_texture_uid"), "default_item"));
+            XElement itemData = ResourceManager.getResource(data.Attribute("item_uid").Value);
+            Texture2D worldTexture = ResourceManager.getTexture(Loader.loadString(itemData.Attribute("world_texture_uid"), "default_item"));
 
             _actorIdToEntityId.Add(actorId, entityId);
 
@@ -592,8 +591,8 @@ namespace StasisGame
             RenderSystem renderSystem = _systemManager.getSystem(SystemType.Render) as RenderSystem;
             int entityId = _entityManager.createEntity();
             int actorId = int.Parse(data.Attribute("id").Value);
-            Material barkMaterial = new Material(ResourceController.getResource(data.Attribute("bark_material_uid").Value));
-            Material leafMaterial = new Material(ResourceController.getResource(data.Attribute("leaf_material_uid").Value));
+            Material barkMaterial = new Material(ResourceManager.getResource(data.Attribute("bark_material_uid").Value));
+            Material leafMaterial = new Material(ResourceManager.getResource(data.Attribute("leaf_material_uid").Value));
             List<Vector2> barkPoints = new List<Vector2>();
             List<Vector2> maxLeafPoints = new List<Vector2>();
             Texture2D barkTexture;
@@ -810,7 +809,7 @@ namespace StasisGame
             int entityId = _entityManager.createEntity();
             int actorId = int.Parse(data.Attribute("id").Value);
             string circuitUID = data.Attribute("circuit_uid").Value;
-            XElement circuitData = ResourceController.getResource(circuitUID);
+            XElement circuitData = ResourceManager.getResource(circuitUID);
             Circuit circuit = new Circuit(circuitData);
             CircuitComponent circuitComponent = new CircuitComponent(circuit);
             Func<int, Gate> getGateById = (id) =>

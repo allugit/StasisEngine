@@ -12,7 +12,6 @@ using Microsoft.Xna.Framework.Content;
 using StasisEditor.Controllers;
 using StasisCore;
 using StasisCore.Models;
-using StasisCore.Resources;
 
 namespace StasisEditor.Views.Controls
 {

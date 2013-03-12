@@ -4,11 +4,10 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
 using Microsoft.Xna.Framework;
-using StasisCore.Controllers;
-using StasisCore.Resources;
 using StasisEditor.Views;
 using StasisEditor.Views.Controls;
 using StasisEditor.Models;
+using StasisCore;
 
 namespace StasisEditor.Controllers
 {
@@ -42,7 +41,7 @@ namespace StasisEditor.Controllers
             _graphicsDeviceService = GraphicsDeviceService.AddRef(view.Handle, view.Width, view.Height);
 
             // Initialize core resource controller
-            ResourceController.initialize(_graphicsDeviceService.GraphicsDevice);
+            ResourceManager.initialize(_graphicsDeviceService.GraphicsDevice);
 
             // Initialize view
             _editorView = view;
@@ -128,7 +127,7 @@ namespace StasisEditor.Controllers
         public void runGame()
         {
             string levelFileName = _levelController.level.name + ".xml";
-            string levelPath = ResourceController.levelPath + "\\" + levelFileName;
+            string levelPath = ResourceManager.levelPath + "\\" + levelFileName;
             System.Diagnostics.Process.Start(EditorController.GAME_PATH, String.Format("-l {0}", levelPath));
         }
 

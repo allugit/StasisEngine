@@ -6,7 +6,6 @@ using System.Data;
 using System.Linq;
 using System.Text;
 using System.Windows.Forms;
-using StasisCore.Resources;
 using StasisCore.Models;
 using StasisEditor.Models;
 

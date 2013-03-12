@@ -3,11 +3,10 @@ using System.Collections.Generic;
 using System.ComponentModel;
 using System.Xml.Linq;
 using Microsoft.Xna.Framework;
-using StasisCore.Controllers;
-using StasisCore.Resources;
 using StasisCore.Models;
 using StasisEditor.Models;
 using StasisEditor.Views;
+using StasisCore;
 
 namespace StasisEditor.Controllers
 {
@@ -43,11 +42,13 @@ namespace StasisEditor.Controllers
             _view = circuitsView;
             _circuits = new BindingList<EditorCircuit>();
             _view.setController(this);
+            List<XElement> circuitData;
 
             // Initialize resources
-            List<ResourceObject> resources = ResourceController.loadCircuits();
-            foreach (ResourceObject resource in resources)
-                _circuits.Add(new EditorCircuit(resource.data));
+            ResourceManager.loadAllCircuits();
+            circuitData = ResourceManager.circuitResources;
+            foreach (XElement data in circuitData)
+                _circuits.Add(new EditorCircuit(data));
         }
 
         // Get circuit
@@ -89,7 +90,7 @@ namespace StasisEditor.Controllers
         // Save circuits
         public void saveCircuits()
         {
-            ResourceController.saveCircuitResources(new List<Circuit>(_circuits));
+            ResourceManager.saveCircuitResources(new List<Circuit>(_circuits), true);
             _editorController.levelController.updateCircuitActorConnections();
         }
 

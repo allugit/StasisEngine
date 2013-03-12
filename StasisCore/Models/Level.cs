@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Xml.Linq;
-using StasisCore.Resources;
 using Microsoft.Xna.Framework;
 
 namespace StasisCore.Models

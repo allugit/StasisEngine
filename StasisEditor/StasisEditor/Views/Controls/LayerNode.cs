@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Windows.Forms;
-using StasisCore.Resources;
 using StasisCore.Models;
 
 namespace StasisEditor.Views.Controls

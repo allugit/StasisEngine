@@ -5,11 +5,11 @@ using System.Data;
 using System.Diagnostics;
 using System.Drawing;
 using System.Windows.Forms;
-using StasisCore.Resources;
 using StasisCore.Models;
 using StasisEditor.Controllers;
 using StasisEditor.Views.Controls;
 using StasisEditor.Models;
+using StasisCore;
 
 namespace StasisEditor.Views
 {

@@ -6,8 +6,6 @@ using Microsoft.Xna.Framework.Graphics;
 using Poly2Tri;
 using StasisCore;
 using StasisCore.Models;
-using StasisCore.Resources;
-using StasisCore.Controllers;
 using StasisEditor.Controllers;
 
 namespace StasisEditor.Views.Controls

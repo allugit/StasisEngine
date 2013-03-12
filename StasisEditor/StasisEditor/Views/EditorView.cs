@@ -2,13 +2,11 @@
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
-//using System.Drawing;
 using System.Linq;
 using System.Text;
 using System.Windows.Forms;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
-using StasisCore.Resources;
 using StasisEditor.Controllers;
 using StasisEditor.Views.Controls;
 using StasisEditor.Models;

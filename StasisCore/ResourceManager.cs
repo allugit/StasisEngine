@@ -5,30 +5,30 @@ using System.Xml;
 using System.Xml.Linq;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
-using StasisCore.Resources;
 using StasisCore.Models;
 
-namespace StasisCore.Controllers
+namespace StasisCore
 {
     /*
      * Resource controller
      *   Loads resources from file and populates resource objects with the data. Resource objects are
      *   stored in a dictionary, using their UIDs as keys.
      */
-    public class ResourceController
+    public class ResourceManager
     {
         public const string RESOURCE_PATH = @"D:\StasisResources";
 
         private static GraphicsDevice _graphicsDevice;
-        private static Dictionary<string, ResourceObject> _materialResources;
-        private static Dictionary<string, ResourceObject> _itemResources;
-        private static Dictionary<string, ResourceObject> _characterResources;
-        private static Dictionary<string, ResourceObject> _dialogueResources;
-        private static Dictionary<string, ResourceObject> _levelResources;
-        private static Dictionary<string, ResourceObject> _circuitResources;
-        private static Dictionary<string, ResourceObject> _backgroundResources;
+        private static Dictionary<string, XElement> _materialResources;
+        private static Dictionary<string, XElement> _itemResources;
+        private static Dictionary<string, XElement> _blueprintResources;
+        private static Dictionary<string, XElement> _characterResources;
+        private static Dictionary<string, XElement> _dialogueResources;
+        private static Dictionary<string, XElement> _levelResources;
+        private static Dictionary<string, XElement> _circuitResources;
+        private static Dictionary<string, XElement> _backgroundResources;
         private static Dictionary<string, Texture2D> _cachedTextures;
-        private static List<Dictionary<string, ResourceObject>> _resources;
+        private static List<Dictionary<string, XElement>> _resources;
 
         public static string texturePath { get { return String.Format("{0}\\textures", RESOURCE_PATH); } }
         public static string levelPath { get { return String.Format("{0}\\levels", RESOURCE_PATH); } }
@@ -41,23 +41,106 @@ namespace StasisCore.Controllers
         public static string backgroundPath { get { return String.Format("{0}\\backgrounds.xml", RESOURCE_PATH); } }
         public static GraphicsDevice graphicsDevice { get { return _graphicsDevice; } }
 
+        public static List<XElement> materialResources
+        {
+            get
+            {
+                List<XElement> resources = new List<XElement>();
+                foreach (XElement resource in _materialResources.Values)
+                    resources.Add(resource);
+                return resources;
+            }
+        }
+        public static List<XElement> itemResources
+        {
+            get
+            {
+                List<XElement> resources = new List<XElement>();
+                foreach (XElement resource in _itemResources.Values)
+                    resources.Add(resource);
+                return resources;
+            }
+        }
+        public static List<XElement> blueprintResources
+        {
+            get
+            {
+                List<XElement> resources = new List<XElement>();
+                foreach (XElement resource in _blueprintResources.Values)
+                    resources.Add(resource);
+                return resources;
+            }
+        }
+        public static List<XElement> characterResources
+        {
+            get
+            {
+                List<XElement> resources = new List<XElement>();
+                foreach (XElement resource in _characterResources.Values)
+                    resources.Add(resource);
+                return resources;
+            }
+        }
+        public static List<XElement> dialogueResources
+        {
+            get
+            {
+                List<XElement> resources = new List<XElement>();
+                foreach (XElement resource in _dialogueResources.Values)
+                    resources.Add(resource);
+                return resources;
+            }
+        }
+        public static List<XElement> levelResources
+        {
+            get
+            {
+                List<XElement> resources = new List<XElement>();
+                foreach (XElement resource in _levelResources.Values)
+                    resources.Add(resource);
+                return resources;
+            }
+        }
+        public static List<XElement> circuitResources
+        {
+            get
+            {
+                List<XElement> resources = new List<XElement>();
+                foreach (XElement resource in _circuitResources.Values)
+                    resources.Add(resource);
+                return resources;
+            }
+        }
+        public static List<XElement> backgroundResources
+        {
+            get
+            {
+                List<XElement> resources = new List<XElement>();
+                foreach (XElement resource in _backgroundResources.Values)
+                    resources.Add(resource);
+                return resources;
+            }
+        }
+
         // Initialize -- Called once when the application starts
         public static void initialize(GraphicsDevice graphicsDevice)
         {
             _graphicsDevice = graphicsDevice;
-            _materialResources = new Dictionary<string, ResourceObject>();
-            _itemResources = new Dictionary<string, ResourceObject>();
-            _characterResources = new Dictionary<string, ResourceObject>();
-            _dialogueResources = new Dictionary<string, ResourceObject>();
-            _levelResources = new Dictionary<string, ResourceObject>();
-            _circuitResources = new Dictionary<string, ResourceObject>();
-            _backgroundResources = new Dictionary<string, ResourceObject>();
+            _materialResources = new Dictionary<string, XElement>();
+            _itemResources = new Dictionary<string, XElement>();
+            _blueprintResources = new Dictionary<string, XElement>();
+            _characterResources = new Dictionary<string, XElement>();
+            _dialogueResources = new Dictionary<string, XElement>();
+            _levelResources = new Dictionary<string, XElement>();
+            _circuitResources = new Dictionary<string, XElement>();
+            _backgroundResources = new Dictionary<string, XElement>();
             _cachedTextures = new Dictionary<string, Texture2D>();
 
             // Store all resource dictionaries in a list
-            _resources = new List<Dictionary<string, ResourceObject>>();
+            _resources = new List<Dictionary<string, XElement>>();
             _resources.Add(_materialResources);
             _resources.Add(_itemResources);
+            _resources.Add(_blueprintResources);
             _resources.Add(_characterResources);
             _resources.Add(_dialogueResources);
             _resources.Add(_levelResources);
@@ -68,7 +151,7 @@ namespace StasisCore.Controllers
         // Checks to see if a resource has been loaded
         public static bool isResourceLoaded(string uid)
         {
-            foreach (Dictionary<string, ResourceObject> dictionary in _resources)
+            foreach (Dictionary<string, XElement> dictionary in _resources)
             {
                 if (dictionary.ContainsKey(uid))
                     return true;
@@ -80,10 +163,10 @@ namespace StasisCore.Controllers
         // Returns a resource that matches a uid
         public static XElement getResource(string uid)
         {
-            foreach (Dictionary<string, ResourceObject> dictionary in _resources)
+            foreach (Dictionary<string, XElement> dictionary in _resources)
             {
                 if (dictionary.ContainsKey(uid))
-                    return dictionary[uid].data;
+                    return dictionary[uid];
             }
 
             return null;
@@ -116,6 +199,17 @@ namespace StasisCore.Controllers
                     foreach (XElement itemData in data.Elements("Item"))
                     {
                         if (itemData.Attribute("uid").Value == uid)
+                            return true;
+                    }
+                }
+
+                // Check blueprints
+                using (FileStream fs = new FileStream(blueprintPath, FileMode.Open))
+                {
+                    XElement data = XElement.Load(fs);
+                    foreach (XElement blueprintData in data.Elements("Item"))
+                    {
+                        if (blueprintData.Attribute("uid").Value == uid)
                             return true;
                     }
                 }
@@ -177,7 +271,7 @@ namespace StasisCore.Controllers
         }
 
         // Save material resources
-        public static void saveMaterialResources(List<Material> materials, bool backup = true)
+        public static void saveMaterialResources(List<Material> materials, bool backup)
         {
             // Backup materials
             if (backup)
@@ -195,11 +289,11 @@ namespace StasisCore.Controllers
             doc.Save(materialPath);
 
             // Reload materials
-            loadMaterials();
+            loadAllMaterials();
         }
 
         // Save blueprint resources
-        public static void saveBlueprintResources(List<Blueprint> blueprints, bool backup = true)
+        public static void saveBlueprintResources(List<Blueprint> blueprints, bool backup)
         {
             // Backup blueprints
             if (backup)
@@ -217,11 +311,11 @@ namespace StasisCore.Controllers
             doc.Save(blueprintPath);
 
             // Reload blueprints
-            loadItems();
+            loadAllItems();
         }
 
         // Save circuit resources
-        public static void saveCircuitResources(List<Circuit> circuits, bool backup = true)
+        public static void saveCircuitResources(List<Circuit> circuits, bool backup)
         {
             // Backup circuits
             if (backup)
@@ -239,11 +333,11 @@ namespace StasisCore.Controllers
             doc.Save(circuitPath);
 
             // Reload circuits
-            loadCircuits();
+            loadAllCircuits();
         }
 
         // Save background resources
-        public static void saveBackgroundResources(XElement data, bool backup = true)
+        public static void saveBackgroundResources(XElement data, bool backup)
         {
             // Backup backgrounds
             if (backup)
@@ -259,7 +353,7 @@ namespace StasisCore.Controllers
             doc.Save(backgroundPath);
 
             // Reload background
-            loadBackgrounds();
+            loadAllBackgrounds();
         }
 
         // Destroy a resource
@@ -373,58 +467,55 @@ namespace StasisCore.Controllers
         }
 
         // Load materials
-        public static List<ResourceObject> loadMaterials()
+        public static void loadAllMaterials()
         {
             _materialResources.Clear();
 
-            List<ResourceObject> resourcesLoaded = new List<ResourceObject>();
             using (FileStream fs = new FileStream(materialPath, FileMode.Open))
             {
                 XElement data = XElement.Load(fs);
 
                 foreach (XElement materialData in data.Elements("Material"))
                 {
-                    ResourceObject resource = new ResourceObject(materialData);
-                    _materialResources[resource.uid] = resource;
-                    resourcesLoaded.Add(resource);
+                    _materialResources[materialData.Attribute("uid").Value] = materialData;
                 }
             }
-
-            return resourcesLoaded;
         }
 
         // Load items
-        public static List<ResourceObject> loadItems(string type = "")
+        public static void loadAllItems()
         {
-            // Clear current item resources
             _itemResources.Clear();
 
-            // Include blueprint items
-            string[] paths = new[] { itemPath, blueprintPath };
-
-            // Load resources
-            List<ResourceObject> resourcesLoaded = new List<ResourceObject>();
-            foreach (string path in paths)
+            using (FileStream fs = new FileStream(itemPath, FileMode.Open))
             {
-                using (FileStream fs = new FileStream(path, FileMode.Open))
+                XElement data = XElement.Load(fs);
+
+                foreach (XElement itemData in data.Elements("Item"))
                 {
-                    XElement data = XElement.Load(fs);
-                    foreach (XElement itemData in data.Descendants("Item"))
-                    {
-                        if (type == "" || type == itemData.Attribute("type").Value)
-                        {
-                            ResourceObject resource = new ResourceObject(itemData);
-                            _itemResources[resource.uid] = resource;
-                            resourcesLoaded.Add(resource);
-                        }
-                    }
+                    _itemResources[itemData.Attribute("uid").Value] = itemData;
                 }
             }
-            return resourcesLoaded;
+        }
+
+        // Load blueprints
+        public static void loadAllBlueprints()
+        {
+            _blueprintResources.Clear();
+
+            using (FileStream fs = new FileStream(blueprintPath, FileMode.Open))
+            {
+                XElement data = XElement.Load(fs);
+
+                foreach (XElement blueprintData in data.Elements("Item"))
+                {
+                    _blueprintResources[blueprintData.Attribute("uid").Value] = blueprintData;
+                }
+            }
         }
 
         // Load characters
-        public static void loadCharacters()
+        public static void loadAllCharacters()
         {
             _characterResources.Clear();
 
@@ -433,14 +524,13 @@ namespace StasisCore.Controllers
                 XElement data = XElement.Load(fs);
                 foreach (XElement characterData in data.Elements("Character"))
                 {
-                    ResourceObject resource = new ResourceObject(characterData);
-                    _characterResources[resource.uid] = resource;
+                    _characterResources[characterData.Attribute("uid").Value] = characterData;
                 }
             }
         }
 
         // Load dialogue
-        public static void loadDialogue()
+        public static void loadAllDialogue()
         {
             _dialogueResources.Clear();
 
@@ -449,50 +539,39 @@ namespace StasisCore.Controllers
                 XElement data = XElement.Load(fs);
                 foreach (XElement dialogueData in data.Elements("Dialogue"))
                 {
-                    ResourceObject resource = new ResourceObject(dialogueData);
-                    _dialogueResources[resource.uid] = resource;
+                    _dialogueResources[dialogueData.Attribute("uid").Value] = dialogueData;
                 }
             }
         }
 
         // Load circuits
-        public static List<ResourceObject> loadCircuits()
+        public static void loadAllCircuits()
         {
             _circuitResources.Clear();
 
-            List<ResourceObject> loaded = new List<ResourceObject>();
             using (FileStream fs = new FileStream(circuitPath, FileMode.Open))
             {
                 XElement data = XElement.Load(fs);
                 foreach (XElement circuitData in data.Elements("Circuit"))
                 {
-                    ResourceObject resource = new ResourceObject(circuitData);
-                    _circuitResources[resource.uid] = resource;
-                    loaded.Add(resource);
+                    _circuitResources[circuitData.Attribute("uid").Value] = circuitData;
                 }
             }
-
-            return loaded;
         }
 
         // Load backgrounds
-        public static List<ResourceObject> loadBackgrounds()
+        public static void loadAllBackgrounds()
         {
             _backgroundResources.Clear();
 
-            List<ResourceObject> loaded = new List<ResourceObject>();
             using (FileStream fs = new FileStream(backgroundPath, FileMode.Open))
             {
                 XElement data = XElement.Load(fs);
                 foreach (XElement backgroundData in data.Elements("Background"))
                 {
-                    ResourceObject resource = new ResourceObject(backgroundData);
-                    _backgroundResources[resource.uid] = resource;
-                    loaded.Add(resource);
+                    _backgroundResources[backgroundData.Attribute("uid").Value] = backgroundData;
                 }
             }
-
-            return loaded;
         }
     }
 }

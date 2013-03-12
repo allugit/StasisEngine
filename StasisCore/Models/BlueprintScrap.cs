@@ -3,8 +3,6 @@ using System.Collections.Generic;
 using System.Xml.Linq;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
-using StasisCore.Controllers;
-using StasisCore.Resources;
 
 namespace StasisCore.Models
 {
@@ -76,7 +74,7 @@ namespace StasisCore.Models
         public BlueprintScrap(XElement data) : base(data)
         {
             _scrapTextureUID = data.Attribute("scrap_texture_uid").Value;
-            _scrapTexture = ResourceController.getTexture(_scrapTextureUID);
+            _scrapTexture = ResourceManager.getTexture(_scrapTextureUID);
             _textureCenter = new Vector2(_scrapTexture.Width, _scrapTexture.Height) / 2;
             _blueprintUID = data.Attribute("blueprint_uid").Value;
             _currentCraftPosition = Loader.loadVector2(data.Attribute("current_craft_position"), Vector2.Zero);

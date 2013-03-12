@@ -2,17 +2,15 @@
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
-//using System.Drawing;
 using System.Linq;
 using System.Text;
 using System.Windows.Forms;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
-using StasisCore.Resources;
 using StasisCore.Models;
-using StasisCore.Controllers;
 using StasisEditor.Controllers;
 using StasisEditor.Models;
+using StasisCore;
 
 namespace StasisEditor.Views.Controls
 {
@@ -40,7 +38,7 @@ namespace StasisEditor.Views.Controls
             {
                 // Texture
                 if (scrap.scrapTexture == null)
-                    scrap.scrapTexture = ResourceController.getTexture(scrap.scrapTextureUID);
+                    scrap.scrapTexture = ResourceManager.getTexture(scrap.scrapTextureUID);
                 scrap.textureCenter = new Vector2(scrap.scrapTexture.Width, scrap.scrapTexture.Height) / 2;
             }
 
