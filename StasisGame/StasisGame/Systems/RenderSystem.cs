@@ -30,7 +30,9 @@ namespace StasisGame.Systems
         private Matrix _viewMatrix;
         private Matrix _projectionMatrix;
         private Vector2 _halfScreen;
-        private SortedDictionary<float, List<IRenderablePrimitive>> _sortedRenderablePrimitives;
+        //private SortedDictionary<float, List<IRenderablePrimitive>> _sortedRenderablePrimitives;
+        private RenderablePrimitiveNode _headNode;
+
         private BackgroundRenderer _backgroundRenderer;
         private RenderTarget2D _fluidRenderTarget;
         private RenderTarget2D _renderedFluid;
@@ -52,7 +54,7 @@ namespace StasisGame.Systems
             _game = game;
             _systemManager = systemManager;
             _entityManager = entityManager;
-            _sortedRenderablePrimitives = new SortedDictionary<float, List<IRenderablePrimitive>>();
+            //_sortedRenderablePrimitives = new SortedDictionary<float, List<IRenderablePrimitive>>();
             _cameraSystem = _systemManager.getSystem(SystemType.Camera) as CameraSystem;
             _graphicsDevice = game.GraphicsDevice;
             _spriteBatch = game.spriteBatch;
@@ -84,25 +86,54 @@ namespace StasisGame.Systems
         public void addRenderablePrimitive(IRenderablePrimitive renderablePrimitive)
         {
             float layerDepth = -renderablePrimitive.layerDepth;     // match sprite batch's layering order
+
+            if (_headNode == null)
+            {
+                _headNode = new RenderablePrimitiveNode(renderablePrimitive);
+            }
+            else
+            {
+                RenderablePrimitiveNode current = _headNode;
+
+                while (current != null)
+                {
+                    // A layerDepth of 1 is at the background, and a layerDepth of 0 is at the foreground.
+                    if (layerDepth <= current.renderablePrimitive.layerDepth)
+                    {
+                        // Insert when the current node has a layerDepth > the renderablePrimitive's
+                        current.insert(new RenderablePrimitiveNode(renderablePrimitive));
+                        return;
+                    }
+
+                    current = current.next;
+                }
+
+                // This should never be reached
+                System.Diagnostics.Debug.Assert(false);
+            }
+
+            /*
             if (!_sortedRenderablePrimitives.ContainsKey(layerDepth))
                 _sortedRenderablePrimitives.Add(layerDepth, new List<IRenderablePrimitive>());
             _sortedRenderablePrimitives[layerDepth].Add(renderablePrimitive);
+            */
         }
 
         public void drawRenderablePrimitives()
         {
-            foreach (List<IRenderablePrimitive> primitives in _sortedRenderablePrimitives.Values)
+            RenderablePrimitiveNode current = _headNode;
+
+            while (current != null)
             {
-                for (int i = 0; i < primitives.Count; i++)
-                {
-                    _graphicsDevice.Textures[0] = primitives[i].texture;
-                    _primitivesEffect.Parameters["world"].SetValue(primitives[i].worldMatrix);
-                    _primitivesEffect.CurrentTechnique.Passes["textured_primitives"].Apply();
-                    _graphicsDevice.DrawUserPrimitives(PrimitiveType.TriangleList, primitives[i].vertices, 0, primitives[i].primitiveCount, CustomVertexFormat.VertexDeclaration);
-                }
+                _graphicsDevice.Textures[0] = current.renderablePrimitive.texture;
+                _primitivesEffect.Parameters["world"].SetValue(current.renderablePrimitive.worldMatrix);
+                _primitivesEffect.CurrentTechnique.Passes["textured_primitives"].Apply();
+                _graphicsDevice.DrawUserPrimitives(PrimitiveType.TriangleList, current.renderablePrimitive.vertices, 0, current.renderablePrimitive.primitiveCount, CustomVertexFormat.VertexDeclaration);
+
+                current = current.next;
             }
 
-            _sortedRenderablePrimitives.Clear();
+            _headNode = null;
         }
 
         public void update()
@@ -188,12 +219,6 @@ namespace StasisGame.Systems
                 bodyRenderComponent.worldMatrix = Matrix.CreateRotationZ(physicsComponent.body.GetAngle()) * Matrix.CreateTranslation(new Vector3(physicsComponent.body.GetPosition(), 0));
 
                 addRenderablePrimitive(bodyRenderComponent);
-                /*
-                _graphicsDevice.Textures[0] = bodyRenderComponent.texture;
-                _primitivesEffect.Parameters["world"].SetValue(bodyRenderComponent.worldMatrix);
-                _primitivesEffect.CurrentTechnique.Passes["textured_primitives"].Apply();
-                _graphicsDevice.DrawUserPrimitives(PrimitiveType.TriangleList, bodyRenderComponent.vertices, 0, bodyRenderComponent.primitiveCount, CustomVertexFormat.VertexDeclaration);
-                */
             }
 
             for (int i = 0; i < ropeRenderEntities.Count; i++)
@@ -247,9 +272,6 @@ namespace StasisGame.Systems
                 if (treeComponent.tree.active)
                 {
                     addRenderablePrimitive(treeComponent.tree);
-                    //_graphicsDevice.Textures[0] = treeComponent.tree.barkTexture;
-                    //_primitivesEffect.CurrentTechnique.Passes["textured_primitives"].Apply();
-                    //_graphicsDevice.DrawUserPrimitives(PrimitiveType.TriangleList, treeComponent.tree.vertices, 0, treeComponent.tree.primitiveCount, CustomVertexFormat.VertexDeclaration);
                     treeComponent.tree.rootMetamer.draw(this);
                 }
             }

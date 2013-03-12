@@ -99,6 +99,7 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="LoderGame.cs" />
+    <Compile Include="RenderablePrimitiveNode.cs" />
     <Compile Include="Systems\CameraSystem.cs" />
     <Compile Include="Systems\CharacterMovementSystem.cs" />
     <Compile Include="Systems\CircuitSystem.cs" />
