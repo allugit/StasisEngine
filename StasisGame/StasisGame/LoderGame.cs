@@ -149,10 +149,24 @@ namespace StasisGame
 
                         saveDevice.Load("LodersFall_Save", "settings.xml", (stream) =>
                         {
+                            DisplayMode largestDisplayMode = null;
+                            foreach (DisplayMode displayMode in GraphicsAdapter.DefaultAdapter.SupportedDisplayModes)
+                            {
+                                if (largestDisplayMode == null)
+                                {
+                                    largestDisplayMode = displayMode;
+                                    continue;
+                                }
+
+                                largestDisplayMode = displayMode.Width * displayMode.Height > largestDisplayMode.Width * largestDisplayMode.Height ? displayMode : largestDisplayMode;
+                            }
+
                             XDocument doc = XDocument.Load(stream);
                             XElement data = doc.Element("Settings");
-                            GameSettings.screenWidth = Loader.loadInt(data.Element("ScreenWidth"), 1280);
-                            GameSettings.screenHeight = Loader.loadInt(data.Element("ScreenHeight"), 768);
+                            GameSettings.screenWidth = Loader.loadInt(data.Element("ScreenWidth"), largestDisplayMode.Width);
+                            GameSettings.screenHeight = Loader.loadInt(data.Element("ScreenHeight"), largestDisplayMode.Height);
+                            System.Diagnostics.Debug.WriteLine(GameSettings.screenWidth);
+                            System.Diagnostics.Debug.WriteLine(GameSettings.screenHeight);
                         });
 
                         _graphics.PreferMultiSampling = true;
