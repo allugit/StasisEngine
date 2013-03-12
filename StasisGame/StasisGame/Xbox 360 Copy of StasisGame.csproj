@@ -119,6 +119,10 @@
     <Content Include="Game.ico" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\..\EasyStorage\EasyStorage [Xbox].csproj">
+      <Project>{46C81A1E-8509-4B35-AE33-121730BDD910}</Project>
+      <Name>EasyStorage [Xbox]</Name>
+    </ProjectReference>
     <ProjectReference Include="..\..\StasisCore\Xbox 360 Copy of StasisCore.csproj">
       <Project>{ef22073a-e9a4-47e5-aa1e-cace6eb9aecb}</Project>
       <Name>Xbox 360 Copy of StasisCore</Name>

@@ -10,6 +10,7 @@ using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 using Microsoft.Xna.Framework.Media;
 using StasisCore;
+using EasyStorage;
 
 namespace StasisGame
 {
@@ -33,6 +34,7 @@ namespace StasisGame
         private GameState _gameState;
         private Level _level;
         private MainMenu _mainMenu;
+        public static IAsyncSaveDevice saveDevice;
 
         public SpriteBatch spriteBatch { get { return _spriteBatch; } }
 
@@ -48,46 +50,34 @@ namespace StasisGame
 
         protected override void Initialize()
         {
-            loadGameSettings();
+            EasyStorageSettings.SetSupportedLanguages(Language.English);
+            SharedSaveDevice sharedSaveDevice = new SharedSaveDevice();
+
+            saveDevice = sharedSaveDevice;
+
+            sharedSaveDevice.DeviceSelectorCanceled += (s, e) =>
+            {
+                e.Response = SaveDeviceEventResponse.Force;
+            };
+            sharedSaveDevice.DeviceDisconnected += (s, e) =>
+            {
+                e.Response = SaveDeviceEventResponse.Force;
+            };
+            sharedSaveDevice.PromptForDevice();
+
+            Components.Add(sharedSaveDevice);
+            Components.Add(new GamerServicesComponent(this));
+
+            saveDevice.SaveCompleted += new SaveCompletedEventHandler(saveDevice_SaveCompleted);
 
             base.Initialize();
 
             handleArgs();
         }
 
-        private void loadGameSettings()
+        void saveDevice_SaveCompleted(object sender, FileActionCompletedEventArgs args)
         {
-            string appDataDirectory = Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData);
-            string gameConfigDirectory = appDataDirectory + "\\LoderGame";
-            string gameConfigFile = gameConfigDirectory + "\\settings.xml";
-            XDocument settingsDocument = null;
-            XElement gameSettings = null;
-            int screenWidth;
-            int screenHeight;
-            bool fullscreen;
-
-            if (!Directory.Exists(gameConfigDirectory))
-                Directory.CreateDirectory(gameConfigDirectory);
-            if (File.Exists(gameConfigFile))
-            {
-                settingsDocument = XDocument.Load(gameConfigFile);
-                gameSettings = settingsDocument.Element("Settings");
-            }
-            else
-            {
-                settingsDocument = new XDocument(new XElement("Settings"));
-                settingsDocument.Save(gameConfigFile);
-                gameSettings = settingsDocument.Element("Settings");
-            }
-
-            screenWidth = Loader.loadInt(gameSettings.Element("ScreenWidth"), 1280);
-            screenHeight = Loader.loadInt(gameSettings.Element("ScreenHeight"), 768);
-            fullscreen = Loader.loadBool(gameSettings.Element("Fullscreen"), false);
-
-            _graphics.PreferredBackBufferWidth = screenWidth;
-            _graphics.PreferredBackBufferHeight = screenHeight;
-            _graphics.IsFullScreen = fullscreen;
-            _graphics.ApplyChanges();
+            Console.WriteLine("save completed.");
         }
 
         protected override void LoadContent()

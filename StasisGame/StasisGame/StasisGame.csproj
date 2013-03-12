@@ -137,6 +137,10 @@
     </Content>
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\..\EasyStorage\EasyStorage [Windows].csproj">
+      <Project>{A89EB1D5-B286-48EB-A864-315ABCDAA024}</Project>
+      <Name>EasyStorage [Windows]</Name>
+    </ProjectReference>
     <ProjectReference Include="..\..\StasisCore\StasisCore.csproj">
       <Project>{FF9881A5-29E0-4B52-8E75-42715D66842B}</Project>
       <Name>StasisCore</Name>
