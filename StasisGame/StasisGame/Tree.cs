@@ -224,7 +224,7 @@ namespace StasisGame
                 //prepareCollisions();
 
                 // Resolve collisions
-                _rootMetamer.resolveCollisions();
+                //_rootMetamer.resolveCollisions();
 
                 // Reset vertices
                 numVertices = 0;

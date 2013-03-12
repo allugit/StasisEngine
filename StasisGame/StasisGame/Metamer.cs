@@ -77,12 +77,8 @@ namespace StasisGame
         public List<MetamerConstraint> relatedConstraints;
         private MetamerConstraint internodeConstraint;
         private bool constraintsCreated;
-        private float verletDampingCoeff = 0.98f;
         private float currentTextureAngle;
         private Color textureColor = Color.White;
-        //private Vector2 debugCurrentReactionForce;
-        //private Vector2 debugTargetReactionForce;
-        //private Vector2 debugBranchNormal;
         private int timeToLive = 360;
         private CustomVertexFormat[] _vertices;
         private Texture2D leafTexture;
@@ -486,20 +482,6 @@ namespace StasisGame
                     }
                 }
             }
-
-            /*
-            // Debug draw associated marker points
-            if (Tree.drawPerceptionPoints)
-            {
-                for (int i = 0; i < associatedMarkers.Count; i++)
-                {
-                    if (budType == BudType.TERMINAL)
-                        tree.pointsInTerminalBudPerceptionCone.Add(associatedMarkers[i].point);
-                    else if (budType == BudType.LATERAL)
-                        tree.pointsInLateralBudPerceptionCone.Add(associatedMarkers[i].point);
-                }
-            }
-            */
         }
 
         // appendNewShoots
@@ -589,15 +571,6 @@ namespace StasisGame
                     BudState subsequentTerminalBudState = onLastMetamer ? BudState.DORMANT : BudState.NODE;
                     BudState subsequentLateralBudState = BudState.DORMANT;
 
-                    // Calculate subsequent axis
-                    /*
-                    Vector2 newGrowthDirection = new Vector2((float)Math.Cos(axis), (float)Math.Sin(axis));
-                    newGrowthDirection += (optimalGrowthDirection * tree.optimalGrowthWeight);
-                    newGrowthDirection += (tree.tropism * tree.tropismWeight);
-                    newGrowthDirection.Normalize();
-                    float subsequentAxis = (float)Math.Atan2(newGrowthDirection.Y, newGrowthDirection.X);
-                    */
-
                     // Add metamer onto most recently created metamer
                     tail.mainMetamer = new Metamer(
                         tree,
@@ -612,10 +585,6 @@ namespace StasisGame
                     tail = tail.mainMetamer;
                 }
                 tail.isTail = true;
-
-                // Create angular constraint
-                //if (!isRoot)
-                //    constraints.Add(new AngularConstraint(previousMetamer, this, head, 0.5f, 0.4f));
 
                 // Create distance constraint between this metamer and the tail
                 constraints.Add(new DistanceMetamerConstraint(this, tail, (position - tail.position).Length(), 1f));
@@ -647,26 +616,6 @@ namespace StasisGame
             //width = Math.Max(widthWeight(tree.maxBaseWidth * apexRatio), tree.minBaseWidth);
             width = Math.Max(tree.maxBaseHalfWidth * 2 * widthWeight(apexRatio), tree.minBaseHalfWidth);
             textureWidth = (width / tree.maxBaseHalfWidth);
-
-            /*
-            // Determine body status
-            if (!isRoot)
-            {
-                if (width / tree.maxBaseWidth >= trunkBodyThreshold)
-                {
-                    if (body == null)
-                    {
-                        isTrunk = true;
-                        createTrunkBody();
-                    }
-                    else
-                    {
-                        // Resize body
-                        body.GetFixtureList().GetShape()._radius = width * 1.5f;
-                        body.ResetMassData();
-                    }
-                }
-            }*/
 
             // Calculate new mass (mass = volume * density)
             //float area = width * tree.internodeLength;
@@ -744,7 +693,7 @@ namespace StasisGame
 
             Vector2 temporary = position;
             if (isBroken)
-                position += verletDampingCoeff * (position - oldPosition) + force;
+                position += 0.98f * (position - oldPosition) + force;
             else
                 position += (position - oldPosition) + force;
             oldPosition = temporary;

@@ -169,7 +169,7 @@ namespace StasisGame
                             System.Diagnostics.Debug.WriteLine(GameSettings.screenHeight);
                         });
 
-                        _graphics.PreferMultiSampling = true;
+                        //_graphics.PreferMultiSampling = true;
                         _graphics.PreferredBackBufferWidth = GameSettings.screenWidth;
                         _graphics.PreferredBackBufferHeight = GameSettings.screenHeight;
                         _graphics.ApplyChanges();
