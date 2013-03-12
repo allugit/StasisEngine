@@ -137,7 +137,7 @@ namespace StasisEditor.Views.Controls
             {
                 // Move selected scrap
                 if (_view.selectedScrap != null)
-                    _view.selectedScrap.move(delta);
+                    _view.selectedScrap.move(delta, true);
                 //if (_view.selectedScrap != null)
                 //    _view.selectedScrap.currentCraftPosition += delta;
             }

@@ -37,7 +37,7 @@ namespace StasisEditor.Views.Controls
             _spriteBatch = new SpriteBatch(GraphicsDevice);
             try
             {
-                _materialRenderer = new MaterialRenderer(GraphicsDevice, _contentManager, _spriteBatch);
+                _materialRenderer = new MaterialRenderer(GraphicsDevice, _contentManager, _spriteBatch, 32, 32, 1234);
             }
             catch (ContentLoadException e)
             {
@@ -107,7 +107,7 @@ namespace StasisEditor.Views.Controls
 
             try
             {
-                _texture = _materialRenderer.renderMaterial(material, polygonPoints, growthFactor);
+                _texture = _materialRenderer.renderMaterial(material, polygonPoints, growthFactor, false);
                 Invalidate();
             }
             catch (ResourceNotFoundException e)
