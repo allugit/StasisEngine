@@ -16,6 +16,7 @@ namespace StasisGame
 {
     public enum GameState
     {
+        Initializing,
         Intro,
         MainMenu,
         Options,
@@ -34,6 +35,7 @@ namespace StasisGame
         private GameState _gameState;
         private Level _level;
         private MainMenu _mainMenu;
+        private bool _settingsInitialized;
         public static IAsyncSaveDevice saveDevice;
 
         public SpriteBatch spriteBatch { get { return _spriteBatch; } }
@@ -45,7 +47,7 @@ namespace StasisGame
             Content.RootDirectory = "Content";
             IsMouseVisible = true;
             Window.Title = "Loder's Fall";
-            _gameState = GameState.Intro;
+            _gameState = GameState.Initializing;
         }
 
         protected override void Initialize()
@@ -72,7 +74,7 @@ namespace StasisGame
 
             base.Initialize();
 
-            handleArgs();
+            //handleArgs();
         }
 
         void saveDevice_SaveCompleted(object sender, FileActionCompletedEventArgs args)
@@ -133,6 +135,37 @@ namespace StasisGame
         {
             switch (_gameState)
             {
+                case GameState.Initializing:
+                    if (!_settingsInitialized && saveDevice.IsReady)
+                    {
+                        if (!saveDevice.FileExists("LodersFall_Save", "settings.xml"))
+                        {
+                            saveDevice.Save("LodersFall_Save", "settings.xml", (stream) =>
+                            {
+                                XDocument doc = new XDocument(new XElement("Settings"));
+                                doc.Save(stream);
+                            });
+                        }
+
+                        saveDevice.Load("LodersFall_Save", "settings.xml", (stream) =>
+                        {
+                            XDocument doc = XDocument.Load(stream);
+                            XElement data = doc.Element("Settings");
+                            GameSettings.screenWidth = Loader.loadInt(data.Element("ScreenWidth"), 1280);
+                            GameSettings.screenHeight = Loader.loadInt(data.Element("ScreenHeight"), 768);
+                        });
+
+                        _graphics.PreferMultiSampling = true;
+                        _graphics.PreferredBackBufferWidth = GameSettings.screenWidth;
+                        _graphics.PreferredBackBufferHeight = GameSettings.screenHeight;
+                        _graphics.ApplyChanges();
+
+                        _settingsInitialized = true;
+
+                        handleArgs();
+                    }
+                    break;
+
                 case GameState.Intro:
                     _gameState = GameState.MainMenu;
                     _mainMenu = new MainMenu(this);
