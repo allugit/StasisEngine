@@ -3,4 +3,7 @@
   <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Debug|Xbox 360'">
     <StartArguments>-l data\levels\new_level.xml</StartArguments>
   </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Release|Xbox 360'">
+    <StartArguments>-l data\levels\new_level.xml</StartArguments>
+  </PropertyGroup>
 </Project>

@@ -168,7 +168,8 @@
     <Reference Include="Microsoft.Xna.Framework.GamerServices" />
     <Reference Include="Microsoft.Xna.Framework.Graphics" />
     <Reference Include="mscorlib" />
-    <Reference Include="Poly2Tri">
+    <Reference Include="Poly2Tri, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
       <HintPath>..\..\..\Poly2Tri\Poly2Tri - Xbox\bin\Xbox 360\Release\Poly2Tri.dll</HintPath>
     </Reference>
     <Reference Include="System" />
