@@ -160,7 +160,9 @@ namespace StasisGame
             switch (_gameState)
             {
                 case GameState.MainMenu:
+                    _spriteBatch.Begin();
                     _mainMenu.draw(gameTime);
+                    _spriteBatch.End();
                     break;
 
                 case GameState.Level:
