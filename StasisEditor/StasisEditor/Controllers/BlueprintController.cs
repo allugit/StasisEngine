@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel;
+using System.IO;
 using System.Xml.Linq;
 using System.Linq;
 using StasisEditor.Views;
@@ -28,7 +29,7 @@ namespace StasisEditor.Controllers
             _view.setController(this);
 
             // Load blueprints
-            ResourceManager.loadAllBlueprints();
+            ResourceManager.loadAllBlueprints(new FileStream(ResourceManager.blueprintPath, FileMode.Open));
             List<XElement> blueprintResources = ResourceManager.blueprintResources;
             foreach (XElement data in blueprintResources)
                 _blueprints.Add(initializeBlueprint(data));
@@ -155,6 +156,7 @@ namespace StasisEditor.Controllers
 
             _blueprints.Remove(blueprintToRemove);
 
+            /*
             try
             {
                 if (destroy)
@@ -163,7 +165,7 @@ namespace StasisEditor.Controllers
             catch (ResourceNotFoundException e)
             {
                 System.Windows.Forms.MessageBox.Show(String.Format("Could not destroy resource.\n{0}", e.Message), "Resource Error", System.Windows.Forms.MessageBoxButtons.OK, System.Windows.Forms.MessageBoxIcon.Error);
-            }
+            }*/
         }
 
         // removeBlueprintScrap

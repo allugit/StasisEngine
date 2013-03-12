@@ -11,9 +11,9 @@
     <VerifyUploadedFiles>false</VerifyUploadedFiles>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Debug|x86'">
-    <StartArguments>-l D:\StasisResources\levels\new_level.xml</StartArguments>
+    <StartArguments>-l data\levels\new_level.xml</StartArguments>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Release|x86'">
-    <StartArguments>-l D:\StasisResources\levels\new_level.xml</StartArguments>
+    <StartArguments>-l data\levels\new_level.xml</StartArguments>
   </PropertyGroup>
 </Project>

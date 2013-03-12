@@ -16,8 +16,6 @@ namespace StasisCore
      */
     public class ResourceManager
     {
-        public const string RESOURCE_PATH = @"D:\StasisResources";
-
         private static GraphicsDevice _graphicsDevice;
         private static Dictionary<string, XElement> _materialResources;
         private static Dictionary<string, XElement> _itemResources;
@@ -29,16 +27,17 @@ namespace StasisCore
         private static Dictionary<string, XElement> _backgroundResources;
         private static Dictionary<string, Texture2D> _cachedTextures;
         private static List<Dictionary<string, XElement>> _resources;
+        public static string rootDirectory = "";
 
-        public static string texturePath { get { return String.Format("{0}\\textures", RESOURCE_PATH); } }
-        public static string levelPath { get { return String.Format("{0}\\levels", RESOURCE_PATH); } }
-        public static string materialPath { get { return String.Format("{0}\\materials.xml", RESOURCE_PATH); } }
-        public static string itemPath { get { return String.Format("{0}\\items.xml", RESOURCE_PATH); } }
-        public static string blueprintPath { get { return String.Format("{0}\\blueprints.xml", RESOURCE_PATH); } }
-        public static string characterPath { get { return String.Format("{0}\\characters.xml", RESOURCE_PATH); } }
-        public static string dialoguePath { get { return String.Format("{0}\\dialogues.xml", RESOURCE_PATH); } }
-        public static string circuitPath { get { return String.Format("{0}\\circuits.xml", RESOURCE_PATH); } }
-        public static string backgroundPath { get { return String.Format("{0}\\backgrounds.xml", RESOURCE_PATH); } }
+        public static string texturePath { get { return rootDirectory + @"data\textures"; } }
+        public static string levelPath { get { return rootDirectory + @"data\levels"; } }
+        public static string materialPath { get { return rootDirectory + @"data\materials.xml"; } }
+        public static string itemPath { get { return rootDirectory + @"data\items.xml"; } }
+        public static string blueprintPath { get { return rootDirectory + @"data\blueprints.xml"; } }
+        public static string characterPath { get { return rootDirectory + @"data\characters.xml"; } }
+        public static string dialoguePath { get { return rootDirectory + @"data\dialogues.xml"; } }
+        public static string circuitPath { get { return rootDirectory + @"data\circuits.xml"; } }
+        public static string backgroundPath { get { return rootDirectory + @"data\backgrounds.xml"; } }
         public static GraphicsDevice graphicsDevice { get { return _graphicsDevice; } }
 
         public static List<XElement> materialResources
@@ -172,104 +171,7 @@ namespace StasisCore
             return null;
         }
 
-        // Checks to see if a resource exists
-        public static bool exists(string uid)
-        {
-            try
-            {
-                // Check to see if the resource is loaded already
-                if (isResourceLoaded(uid))
-                    return true;
-
-                // Check materials
-                using (FileStream fs = new FileStream(materialPath, FileMode.Open))
-                {
-                    XElement data = XElement.Load(fs);
-                    foreach (XElement materialData in data.Elements("Material"))
-                    {
-                        if (materialData.Attribute("uid").Value == uid)
-                            return true;
-                    }
-                }
-
-                // Check items
-                using (FileStream fs = new FileStream(itemPath, FileMode.Open))
-                {
-                    XElement data = XElement.Load(fs);
-                    foreach (XElement itemData in data.Elements("Item"))
-                    {
-                        if (itemData.Attribute("uid").Value == uid)
-                            return true;
-                    }
-                }
-
-                // Check blueprints
-                using (FileStream fs = new FileStream(blueprintPath, FileMode.Open))
-                {
-                    XElement data = XElement.Load(fs);
-                    foreach (XElement blueprintData in data.Elements("Item"))
-                    {
-                        if (blueprintData.Attribute("uid").Value == uid)
-                            return true;
-                    }
-                }
-
-                // Check characters
-                using (FileStream fs = new FileStream(characterPath, FileMode.Open))
-                {
-                    XElement data = XElement.Load(fs);
-                    foreach (XElement characterData in data.Elements("Character"))
-                    {
-                        if (characterData.Attribute("uid").Value == uid)
-                            return true;
-                    }
-                }
-
-                // Check dialogue
-                using (FileStream fs = new FileStream(dialoguePath, FileMode.Open))
-                {
-                    XElement data = XElement.Load(fs);
-                    foreach (XElement dialogueData in data.Elements("Dialogue"))
-                    {
-                        if (dialogueData.Attribute("uid").Value == uid)
-                            return true;
-                    }
-                }
-
-                // Check circuits
-                using (FileStream fs = new FileStream(dialoguePath, FileMode.Open))
-                {
-                    XElement data = XElement.Load(fs);
-                    foreach (XElement circuitData in data.Elements("Circuit"))
-                    {
-                        if (circuitData.Attribute("uid").Value == uid)
-                            return true;
-                    }
-                }
-
-                // Check backgrounds
-                using (FileStream fs = new FileStream(backgroundPath, FileMode.Open))
-                {
-                    XElement data = XElement.Load(fs);
-                    foreach (XElement backgroundData in data.Elements("Background"))
-                    {
-                        if (backgroundData.Attribute("uid").Value == uid)
-                            return true;
-                    }
-                }
-            }
-            catch (XmlException e)
-            {
-                throw new InvalidResourceException();
-            }
-            catch (FileNotFoundException e)
-            {
-                throw new ResourceNotFoundException(uid);
-            }
-
-            return false;
-        }
-
+        /*
         // Destroy a resource
         public static void destroy(string uid)
         {
@@ -315,7 +217,7 @@ namespace StasisCore
             {
                 throw new InvalidResourceException();
             }
-        }
+        }*/
 
         // Get texture -- Try to get the texture from the cache before loading it from file
         public static Texture2D getTexture(string textureUID)
@@ -329,8 +231,13 @@ namespace StasisCore
                     throw new ResourceNotFoundException(textureUID);
 
                 // Load texture
+#if XBOX
+                using (Stream stream = TitleContainer.OpenStream(textureFiles[0]))
+                    texture = Texture2D.FromStream(_graphicsDevice, stream);
+#else
                 using (FileStream fs = new FileStream(textureFiles[0], FileMode.Open))
                     texture = Texture2D.FromStream(_graphicsDevice, fs);
+#endif
 
                 // Premultiply alpha
                 RenderTarget2D result = new RenderTarget2D(_graphicsDevice, texture.Width, texture.Height);
@@ -381,111 +288,105 @@ namespace StasisCore
         }
 
         // Load materials
-        public static void loadAllMaterials()
+        public static void loadAllMaterials(Stream stream)
         {
             _materialResources.Clear();
 
-            using (FileStream fs = new FileStream(materialPath, FileMode.Open))
-            {
-                XElement data = XElement.Load(fs);
+            XElement data = XElement.Load(stream);
 
-                foreach (XElement materialData in data.Elements("Material"))
-                {
-                    _materialResources[materialData.Attribute("uid").Value] = materialData;
-                }
+            foreach (XElement materialData in data.Elements("Material"))
+            {
+                _materialResources[materialData.Attribute("uid").Value] = materialData;
             }
+
+            stream.Close();
         }
 
         // Load items
-        public static void loadAllItems()
+        public static void loadAllItems(Stream stream)
         {
             _itemResources.Clear();
 
-            using (FileStream fs = new FileStream(itemPath, FileMode.Open))
-            {
-                XElement data = XElement.Load(fs);
+            XElement data = XElement.Load(stream);
 
-                foreach (XElement itemData in data.Elements("Item"))
-                {
-                    _itemResources[itemData.Attribute("uid").Value] = itemData;
-                }
+            foreach (XElement itemData in data.Elements("Item"))
+            {
+                _itemResources[itemData.Attribute("uid").Value] = itemData;
             }
+
+            stream.Close();
         }
 
         // Load blueprints
-        public static void loadAllBlueprints()
+        public static void loadAllBlueprints(Stream stream)
         {
             _blueprintResources.Clear();
 
-            using (FileStream fs = new FileStream(blueprintPath, FileMode.Open))
-            {
-                XElement data = XElement.Load(fs);
+            XElement data = XElement.Load(stream);
 
-                foreach (XElement blueprintData in data.Elements("Item"))
-                {
-                    _blueprintResources[blueprintData.Attribute("uid").Value] = blueprintData;
-                }
+            foreach (XElement blueprintData in data.Elements("Item"))
+            {
+                _blueprintResources[blueprintData.Attribute("uid").Value] = blueprintData;
             }
+
+            stream.Close();
         }
 
         // Load characters
-        public static void loadAllCharacters()
+        public static void loadAllCharacters(Stream stream)
         {
             _characterResources.Clear();
 
-            using (FileStream fs = new FileStream(characterPath, FileMode.Open))
+            XElement data = XElement.Load(stream);
+            foreach (XElement characterData in data.Elements("Character"))
             {
-                XElement data = XElement.Load(fs);
-                foreach (XElement characterData in data.Elements("Character"))
-                {
-                    _characterResources[characterData.Attribute("uid").Value] = characterData;
-                }
+                _characterResources[characterData.Attribute("uid").Value] = characterData;
             }
+
+            stream.Close();
         }
 
         // Load dialogue
-        public static void loadAllDialogue()
+        public static void loadAllDialogue(Stream stream)
         {
             _dialogueResources.Clear();
 
-            using (FileStream fs = new FileStream(dialoguePath, FileMode.Open))
+            XElement data = XElement.Load(stream);
+
+            foreach (XElement dialogueData in data.Elements("Dialogue"))
             {
-                XElement data = XElement.Load(fs);
-                foreach (XElement dialogueData in data.Elements("Dialogue"))
-                {
-                    _dialogueResources[dialogueData.Attribute("uid").Value] = dialogueData;
-                }
+                _dialogueResources[dialogueData.Attribute("uid").Value] = dialogueData;
             }
+
+            stream.Close();
         }
 
         // Load circuits
-        public static void loadAllCircuits()
+        public static void loadAllCircuits(Stream stream)
         {
             _circuitResources.Clear();
 
-            using (FileStream fs = new FileStream(circuitPath, FileMode.Open))
+            XElement data = XElement.Load(stream);
+            foreach (XElement circuitData in data.Elements("Circuit"))
             {
-                XElement data = XElement.Load(fs);
-                foreach (XElement circuitData in data.Elements("Circuit"))
-                {
-                    _circuitResources[circuitData.Attribute("uid").Value] = circuitData;
-                }
+                _circuitResources[circuitData.Attribute("uid").Value] = circuitData;
             }
+
+            stream.Close();
         }
 
         // Load backgrounds
-        public static void loadAllBackgrounds()
+        public static void loadAllBackgrounds(Stream stream)
         {
             _backgroundResources.Clear();
 
-            using (FileStream fs = new FileStream(backgroundPath, FileMode.Open))
+            XElement data = XElement.Load(stream);
+            foreach (XElement backgroundData in data.Elements("Background"))
             {
-                XElement data = XElement.Load(fs);
-                foreach (XElement backgroundData in data.Elements("Background"))
-                {
-                    _backgroundResources[backgroundData.Attribute("uid").Value] = backgroundData;
-                }
+                _backgroundResources[backgroundData.Attribute("uid").Value] = backgroundData;
             }
+
+            stream.Close();
         }
     }
 }

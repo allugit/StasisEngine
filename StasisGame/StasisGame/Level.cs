@@ -47,7 +47,6 @@ namespace StasisGame
             _systemManager.add(_renderSystem);
 
             // Create background
-            ResourceManager.loadAllBackgrounds();
             backgroundUID = Loader.loadString(data.Attribute("background_uid"), "default_background");
             backgroundData = ResourceManager.getResource(backgroundUID);
             background = new Background(backgroundData);

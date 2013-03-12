@@ -40,7 +40,7 @@ namespace StasisEditor.Controllers
             List<XElement> materialData;
 
             // Load materials
-            ResourceManager.loadAllMaterials();
+            ResourceManager.loadAllMaterials(new FileStream(ResourceManager.materialPath, FileMode.Open));
             materialData = ResourceManager.materialResources;
             foreach (XElement data in materialData)
                 _materials.Add(new EditorMaterial(data));
@@ -143,6 +143,7 @@ namespace StasisEditor.Controllers
 
             _materials.Remove(materialToRemove);
 
+            /*
             try
             {
                 if (destroy)
@@ -151,7 +152,7 @@ namespace StasisEditor.Controllers
             catch (ResourceNotFoundException e)
             {
                 System.Windows.Forms.MessageBox.Show(String.Format("Could not destroy resource.\n{0}", e.Message), "Resource Error", System.Windows.Forms.MessageBoxButtons.OK, System.Windows.Forms.MessageBoxIcon.Error);
-            }
+            }*/
         }
 
         // addTerrainLayer
@@ -223,7 +224,7 @@ namespace StasisEditor.Controllers
         {
             EditorMaterial material = source.clone();
             string newUID = material.uid + "_copy";
-            while (ResourceManager.exists(newUID))
+            while (EditorResourceManager.exists(newUID))
                 newUID = newUID + "_copy";
             while (materialExists(newUID))
                 newUID = newUID + "_copy";

@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel;
+using System.IO;
 using System.Xml.Linq;
 using Microsoft.Xna.Framework;
 using StasisEditor.Views;
@@ -38,7 +39,7 @@ namespace StasisEditor.Controllers
             _backgrounds = new BindingList<EditorBackground>();
             List<XElement> backgroundData;
 
-            ResourceManager.loadAllBackgrounds();
+            ResourceManager.loadAllBackgrounds(new FileStream(ResourceManager.backgroundPath, FileMode.Open));
 
             _view.controller = this;
 

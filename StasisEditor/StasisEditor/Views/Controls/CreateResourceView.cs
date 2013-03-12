@@ -32,7 +32,7 @@ namespace StasisEditor.Views.Controls
 
             try
             {
-                if (ResourceManager.exists(uidBox.Text))
+                if (EditorResourceManager.exists(uidBox.Text))
                 {
                     MessageBox.Show("That uid already exists.", "Duplicate UID");
                 }

@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Xml.Linq;
+using System.Xml;
 using StasisCore;
 using StasisCore.Models;
 
@@ -9,6 +10,106 @@ namespace StasisEditor
 {
     public class EditorResourceManager
     {
+        public const string RESOURCE_SOURCE_PATH = @"D:\StasisResources";
+
+        // Checks to see if a resource exists
+        public static bool exists(string uid)
+        {
+            try
+            {
+                // Check to see if the resource is loaded already
+                if (ResourceManager.isResourceLoaded(uid))
+                    return true;
+
+                // Check materials
+                using (FileStream fs = new FileStream(RESOURCE_SOURCE_PATH + ResourceManager.materialPath, FileMode.Open))
+                {
+                    XElement data = XElement.Load(fs);
+                    foreach (XElement materialData in data.Elements("Material"))
+                    {
+                        if (materialData.Attribute("uid").Value == uid)
+                            return true;
+                    }
+                }
+
+                // Check items
+                using (FileStream fs = new FileStream(RESOURCE_SOURCE_PATH + ResourceManager.itemPath, FileMode.Open))
+                {
+                    XElement data = XElement.Load(fs);
+                    foreach (XElement itemData in data.Elements("Item"))
+                    {
+                        if (itemData.Attribute("uid").Value == uid)
+                            return true;
+                    }
+                }
+
+                // Check blueprints
+                using (FileStream fs = new FileStream(RESOURCE_SOURCE_PATH + ResourceManager.blueprintPath, FileMode.Open))
+                {
+                    XElement data = XElement.Load(fs);
+                    foreach (XElement blueprintData in data.Elements("Item"))
+                    {
+                        if (blueprintData.Attribute("uid").Value == uid)
+                            return true;
+                    }
+                }
+
+                // Check characters
+                using (FileStream fs = new FileStream(RESOURCE_SOURCE_PATH + ResourceManager.characterPath, FileMode.Open))
+                {
+                    XElement data = XElement.Load(fs);
+                    foreach (XElement characterData in data.Elements("Character"))
+                    {
+                        if (characterData.Attribute("uid").Value == uid)
+                            return true;
+                    }
+                }
+
+                // Check dialogue
+                using (FileStream fs = new FileStream(RESOURCE_SOURCE_PATH + ResourceManager.dialoguePath, FileMode.Open))
+                {
+                    XElement data = XElement.Load(fs);
+                    foreach (XElement dialogueData in data.Elements("Dialogue"))
+                    {
+                        if (dialogueData.Attribute("uid").Value == uid)
+                            return true;
+                    }
+                }
+
+                // Check circuits
+                using (FileStream fs = new FileStream(RESOURCE_SOURCE_PATH + ResourceManager.dialoguePath, FileMode.Open))
+                {
+                    XElement data = XElement.Load(fs);
+                    foreach (XElement circuitData in data.Elements("Circuit"))
+                    {
+                        if (circuitData.Attribute("uid").Value == uid)
+                            return true;
+                    }
+                }
+
+                // Check backgrounds
+                using (FileStream fs = new FileStream(RESOURCE_SOURCE_PATH + ResourceManager.backgroundPath, FileMode.Open))
+                {
+                    XElement data = XElement.Load(fs);
+                    foreach (XElement backgroundData in data.Elements("Background"))
+                    {
+                        if (backgroundData.Attribute("uid").Value == uid)
+                            return true;
+                    }
+                }
+            }
+            catch (XmlException e)
+            {
+                throw new InvalidResourceException();
+            }
+            catch (FileNotFoundException e)
+            {
+                throw new ResourceNotFoundException(uid);
+            }
+
+            return false;
+        }
+
         // Save material resources
         public static void saveMaterialResources(List<Material> materials, bool backup)
         {
@@ -28,7 +129,8 @@ namespace StasisEditor
             doc.Save(ResourceManager.materialPath);
 
             // Reload materials
-            ResourceManager.loadAllMaterials();
+            FileStream fs = new FileStream(EditorResourceManager.RESOURCE_SOURCE_PATH + ResourceManager.materialResources, FileMode.Open);
+            ResourceManager.loadAllMaterials(fs);
         }
 
         // Save blueprint resources
@@ -50,7 +152,8 @@ namespace StasisEditor
             doc.Save(ResourceManager.blueprintPath);
 
             // Reload blueprints
-            ResourceManager.loadAllItems();
+            FileStream fs = new FileStream(EditorResourceManager.RESOURCE_SOURCE_PATH + ResourceManager.blueprintResources, FileMode.Open);
+            ResourceManager.loadAllItems(fs);
         }
 
         // Save circuit resources
@@ -72,7 +175,7 @@ namespace StasisEditor
             doc.Save(ResourceManager.circuitPath);
 
             // Reload circuits
-            ResourceManager.loadAllCircuits();
+            ResourceManager.loadAllCircuits(new FileStream(EditorResourceManager.RESOURCE_SOURCE_PATH + ResourceManager.circuitPath, FileMode.Open));
         }
 
         // Save background resources
@@ -92,7 +195,7 @@ namespace StasisEditor
             doc.Save(ResourceManager.backgroundPath);
 
             // Reload background
-            ResourceManager.loadAllBackgrounds();
+            ResourceManager.loadAllBackgrounds(new FileStream(RESOURCE_SOURCE_PATH + ResourceManager.backgroundPath, FileMode.Open));
         }
     }
 }

@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel;
+using System.IO;
 using System.Xml.Linq;
 using Microsoft.Xna.Framework;
 using StasisCore.Models;
@@ -45,7 +46,7 @@ namespace StasisEditor.Controllers
             List<XElement> circuitData;
 
             // Initialize resources
-            ResourceManager.loadAllCircuits();
+            ResourceManager.loadAllCircuits(new FileStream(ResourceManager.circuitPath, FileMode.Open));
             circuitData = ResourceManager.circuitResources;
             foreach (XElement data in circuitData)
                 _circuits.Add(new EditorCircuit(data));

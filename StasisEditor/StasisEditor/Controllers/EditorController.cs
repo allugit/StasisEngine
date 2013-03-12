@@ -42,6 +42,7 @@ namespace StasisEditor.Controllers
 
             // Initialize core resource controller
             ResourceManager.initialize(_graphicsDeviceService.GraphicsDevice);
+            ResourceManager.rootDirectory = EditorResourceManager.RESOURCE_SOURCE_PATH + "\\";
 
             // Initialize view
             _editorView = view;

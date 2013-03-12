@@ -93,11 +93,13 @@ namespace StasisGame
         protected override void LoadContent()
         {
             ResourceManager.initialize(GraphicsDevice);
-            ResourceManager.loadAllCharacters();
-            ResourceManager.loadAllCircuits();
-            ResourceManager.loadAllDialogue();
-            ResourceManager.loadAllItems();
-            ResourceManager.loadAllMaterials();
+            ResourceManager.loadAllCharacters(TitleContainer.OpenStream(ResourceManager.characterPath));
+            ResourceManager.loadAllCircuits(TitleContainer.OpenStream(ResourceManager.circuitPath));
+            ResourceManager.loadAllDialogue(TitleContainer.OpenStream(ResourceManager.dialoguePath));
+            ResourceManager.loadAllItems(TitleContainer.OpenStream(ResourceManager.itemPath));
+            ResourceManager.loadAllBlueprints(TitleContainer.OpenStream(ResourceManager.blueprintPath));
+            ResourceManager.loadAllMaterials(TitleContainer.OpenStream(ResourceManager.materialPath));
+            ResourceManager.loadAllBackgrounds(TitleContainer.OpenStream(ResourceManager.backgroundPath));
 
             _spriteBatch = new SpriteBatch(GraphicsDevice);
             _arial = Content.Load<SpriteFont>("arial");
