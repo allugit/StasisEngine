@@ -32,11 +32,17 @@ namespace StasisGame
             Background background;
 
             // Load xml
-            using (FileStream stream = new FileStream(filePath, FileMode.Open))
+            using (Stream stream = TitleContainer.OpenStream(filePath))
             {
                 XDocument doc = XDocument.Load(stream);
                 data = doc.Element("Level");
             }
+            /*
+            using (FileStream stream = new FileStream(filePath, FileMode.Open))
+            {
+                XDocument doc = XDocument.Load(stream);
+                data = doc.Element("Level");
+            }*/
 
             // Create systems
             _systemManager.add(new InputSystem(_systemManager, _entityManager), -1);
