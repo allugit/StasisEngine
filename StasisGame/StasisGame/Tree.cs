@@ -126,6 +126,8 @@ namespace StasisGame
             _layerDepth = Loader.loadFloat(data.Attribute("layer_depth"), 0.1f);
 
             _vertices = new CustomVertexFormat[MAX_VERTICES];
+            for (int i = 0; i < MAX_VERTICES; i++)
+                _vertices[i].color = new Vector3(1, 1, 1);
             _random = new Random(_seed);
             _internodeLengthSq = _internodeLength * _internodeLength;
             _aabb = new AABB();

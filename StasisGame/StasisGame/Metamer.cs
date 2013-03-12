@@ -1165,39 +1165,49 @@ namespace StasisGame
                 int count = tree.numVertices;
                 // 1
                 tree.vertices[count].position = _vertices[0].position;
-                tree.vertices[count].texCoord = new Vector2(0, 0);
+                //tree.vertices[count].texCoord = new Vector2(0, 0);
+                tree.vertices[count].texCoord.X = 0f;
+                tree.vertices[count].texCoord.Y = 0f;
                 //tree.vertices[count].color = tree.barkColor;
-                tree.vertices[count].color = new Vector3(1, 1, 1);
+                //tree.vertices[count].color = new Vector3(1, 1, 1);
                 count++;
                 // 2
                 tree.vertices[count].position = _vertices[1].position;
-                tree.vertices[count].texCoord = new Vector2(textureWidth, 0);
+                //tree.vertices[count].texCoord = new Vector2(textureWidth, 0);
+                tree.vertices[count].texCoord.X = textureWidth;
+                tree.vertices[count].texCoord.Y = 0f;
                 //tree.vertices[count].color = tree.barkColor;
-                tree.vertices[count].color = new Vector3(1, 1, 1);
+                //tree.vertices[count].color = new Vector3(1, 1, 1);
                 count++;
                 // 3
                 tree.vertices[count].position = previousMetamer.vertices[0].position;
-                tree.vertices[count].texCoord = new Vector2(0, 1);
+                //tree.vertices[count].texCoord = new Vector2(0, 1);
+                tree.vertices[count].texCoord.X = 0f;
+                tree.vertices[count].texCoord.Y = 1f;
                 //tree.vertices[count].color = tree.barkColor;
-                tree.vertices[count].color = new Vector3(1, 1, 1);
+                //tree.vertices[count].color = new Vector3(1, 1, 1);
                 count++;
                 // 4
                 tree.vertices[count].position = vertices[1].position;
                 tree.vertices[count].texCoord = new Vector2(textureWidth, 0);
                 //tree.vertices[count].color = tree.barkColor;
-                tree.vertices[count].color = new Vector3(1, 1, 1);
+                //tree.vertices[count].color = new Vector3(1, 1, 1);
                 count++;
                 // 5
                 tree.vertices[count].position = previousMetamer.vertices[1].position;
-                tree.vertices[count].texCoord = new Vector2(previousMetamer.textureWidth, 1);
+                //tree.vertices[count].texCoord = new Vector2(previousMetamer.textureWidth, 1);
+                tree.vertices[count].texCoord.X = previousMetamer.textureWidth;
+                tree.vertices[count].texCoord.Y = 1f;
                 //tree.vertices[count].color = tree.barkColor;
-                tree.vertices[count].color = new Vector3(1, 1, 1);
+                //tree.vertices[count].color = new Vector3(1, 1, 1);
                 count++;
                 // 6
                 tree.vertices[count].position = previousMetamer.vertices[0].position;
-                tree.vertices[count].texCoord = new Vector2(0, 1);
+                //tree.vertices[count].texCoord = new Vector2(0, 1);
+                tree.vertices[count].texCoord.X = 0f;
+                tree.vertices[count].texCoord.Y = 1f;
                 //tree.vertices[count].color = tree.barkColor;
-                tree.vertices[count].color = new Vector3(1, 1, 1);
+                //tree.vertices[count].color = new Vector3(1, 1, 1);
                 tree.numVertices += 6;
                 tree.primitiveCount += 2;
             }
