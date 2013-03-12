@@ -24,7 +24,7 @@ namespace StasisCore
 
         public Effect primitivesEffect { get { return _primitivesEffect; } }
 
-        public MaterialRenderer(GraphicsDevice graphicsDevice, ContentManager contentManager, SpriteBatch spriteBatch, int randomTextureWidth = 32, int randomTextureHeight = 32, int seed = 1234)
+        public MaterialRenderer(GraphicsDevice graphicsDevice, ContentManager contentManager, SpriteBatch spriteBatch, int randomTextureWidth, int randomTextureHeight, int seed)
         {
             _graphicsDevice = graphicsDevice;
             _contentManager = contentManager;
@@ -190,7 +190,7 @@ namespace StasisCore
         }
 
         // Render material
-        public Texture2D renderMaterial(Material material, List<Vector2> polygonPoints, float growthFactor, bool trimTransparentEdges = false)
+        public Texture2D renderMaterial(Material material, List<Vector2> polygonPoints, float growthFactor, bool trimTransparentEdges)
         {
             // Calculate width and height
             Vector2 topLeft = polygonPoints[0];

@@ -89,7 +89,7 @@ namespace StasisGame
 
         public CustomVertexFormat[] vertices { get { return _vertices; } }
 
-        public Metamer(Tree tree, Metamer previousMetamer, BudType activeBud, BudState terminalBudState, BudState lateralBudState, float axis, bool placeBudOnLeft = true)
+        public Metamer(Tree tree, Metamer previousMetamer, BudType activeBud, BudState terminalBudState, BudState lateralBudState, float axis, bool placeBudOnLeft)
         {
             this.tree = tree;
             this.activeBud = activeBud;

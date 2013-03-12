@@ -1,6 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Threading.Tasks;
+//using System.Threading.Tasks;
 using Microsoft.Xna.Framework;
 using Box2D.XNA;
 using Poly2Tri;
@@ -548,6 +548,7 @@ namespace StasisGame.Systems
         // Update
         public void update()
         {
+            /*
             // Update simulation AABB
             //if (!GameEnvironment.paused)
             //{
@@ -615,6 +616,7 @@ namespace StasisGame.Systems
             for (int i = numActiveParticles - 1; i >= 0; i--)
                 updateParticle(activeParticles[i]);
                 //liquid[activeParticles[i]].update();
+            */
         }
     }
 }

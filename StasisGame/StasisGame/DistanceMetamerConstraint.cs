@@ -12,7 +12,7 @@ namespace StasisGame
         public float distance;
         public float stiffness;
         private float distanceSq;
-        public DistanceMetamerConstraint(Metamer metamerA, Metamer metamerB, float distance, float stiffness = 1f)
+        public DistanceMetamerConstraint(Metamer metamerA, Metamer metamerB, float distance, float stiffness)
             : base(ConstraintType.DISTANCE)
         {
             this.metamerA = metamerA;

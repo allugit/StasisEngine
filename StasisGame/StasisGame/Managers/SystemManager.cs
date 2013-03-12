@@ -41,7 +41,7 @@ namespace StasisGame.Managers
             return null;
         }
 
-        public void add(ISystem system, int priority = -1)
+        public void add(ISystem system, int priority)
         {
             priority = priority == -1 ? system.defaultPriority : priority;
             Debug.Assert(priority != -1);

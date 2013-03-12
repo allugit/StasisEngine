@@ -64,7 +64,7 @@ namespace StasisGame.Systems
             _fluidEffect = _contentManager.Load<Effect>("fluid_effect");
             _fluidParticleTexture = _contentManager.Load<Texture2D>("fluid_particle");
             _coreContentManager = new ContentManager(game.Services, "StasisCoreContent");
-            _materialRenderer = new MaterialRenderer(game.GraphicsDevice, _contentManager, game.spriteBatch);
+            _materialRenderer = new MaterialRenderer(game.GraphicsDevice, _contentManager, game.spriteBatch, 32, 32, 1234);
             _primitivesEffect = _coreContentManager.Load<Effect>("effects\\primitives");
             _pixel = new Texture2D(_graphicsDevice, 1, 1);
             _pixel.SetData<Color>(new [] { Color.White });

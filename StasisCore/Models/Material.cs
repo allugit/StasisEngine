@@ -26,7 +26,7 @@ namespace StasisCore.Models
         public Material(string uid)
         {
             _uid = uid;
-            _rootLayer = new MaterialGroupLayer("root");
+            _rootLayer = new MaterialGroupLayer("root", true);
         }
 
         // Create from xml

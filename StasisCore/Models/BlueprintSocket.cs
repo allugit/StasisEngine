@@ -47,7 +47,7 @@ namespace StasisCore.Models
         }
 
         // test
-        public void test(float distanceTolerance = 10f)
+        public void test(float distanceTolerance)
         {
             if (_satisfied && _opposingSocket.satisfied)
                 return;
@@ -61,7 +61,7 @@ namespace StasisCore.Models
             if (_satisfied && _opposingSocket.satisfied)
             {
                 // Snap to ideal position before connecting
-                _scrapB.move(-difference);
+                _scrapB.move(-difference, true);
                 _scrapB.rotate(_scrapA.currentCraftAngle - _scrapB.currentCraftAngle);
 
                 // Form a connection

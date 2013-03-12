@@ -83,7 +83,7 @@ namespace StasisCore.Models
             switch (type)
             {
                 case "group":
-                    layer = new MaterialGroupLayer();
+                    layer = new MaterialGroupLayer("group", true);
                     break;
 
                 case "texture":

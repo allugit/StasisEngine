@@ -141,7 +141,7 @@ namespace StasisGame
             _anchorNormal = new Vector2((float)Math.Cos(anchorAngle), (float)Math.Sin(anchorAngle));
 
             // Create first metamer
-            _rootMetamer = new Metamer(this, null, BudType.TERMINAL, BudState.DORMANT, BudState.DEAD, _angle);
+            _rootMetamer = new Metamer(this, null, BudType.TERMINAL, BudState.DORMANT, BudState.DEAD, _angle, true);
             _rootMetamer.isTail = true;
         }
 
@@ -153,7 +153,7 @@ namespace StasisGame
         }
 
         // iterate
-        public void iterate(int count = 1)
+        public void iterate(int count)
         {
             // Clear marker competition and shadow values
             foreach (Dictionary<int, MarkerCell> gridRow in _treeSystem.markerGrid.Values)

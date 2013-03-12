@@ -118,7 +118,7 @@ namespace StasisCore.Models
         }
 
         // move
-        public void move(Vector2 delta, bool moveConnected = true)
+        public void move(Vector2 delta, bool moveConnected)
         {
             // Move
             _currentCraftPosition += delta;

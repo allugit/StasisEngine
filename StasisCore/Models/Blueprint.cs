@@ -57,7 +57,7 @@ namespace StasisCore.Models
         private void checkSockets()
         {
             foreach (BlueprintSocket socket in _sockets)
-                socket.test();
+                socket.test(10f);
         }
     }
 }

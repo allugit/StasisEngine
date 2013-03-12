@@ -39,12 +39,12 @@ namespace StasisGame
             }
 
             // Create systems
-            _systemManager.add(new InputSystem(_systemManager, _entityManager));
-            _systemManager.add(new PhysicsSystem(_systemManager, _entityManager, data));
-            _systemManager.add(new CameraSystem(_systemManager, _entityManager));
-            _systemManager.add(new EventSystem(_systemManager, _entityManager));
+            _systemManager.add(new InputSystem(_systemManager, _entityManager), -1);
+            _systemManager.add(new PhysicsSystem(_systemManager, _entityManager, data), -1);
+            _systemManager.add(new CameraSystem(_systemManager, _entityManager), -1);
+            _systemManager.add(new EventSystem(_systemManager, _entityManager), -1);
             _renderSystem = new RenderSystem(_game, _systemManager, _entityManager);
-            _systemManager.add(_renderSystem);
+            _systemManager.add(_renderSystem, -1);
 
             // Create background
             backgroundUID = Loader.loadString(data.Attribute("background_uid"), "default_background");
@@ -75,7 +75,7 @@ namespace StasisGame
 
                     case "Fluid":
                         if (_systemManager.getSystem(SystemType.Fluid) == null)
-                            _systemManager.add(new FluidSystem(_systemManager, _entityManager));
+                            _systemManager.add(new FluidSystem(_systemManager, _entityManager), -1);
                         secondPassData.Add(actorData);
                         break;
 
@@ -86,10 +86,10 @@ namespace StasisGame
                     case "PlayerSpawn":
                         if (_systemManager.getSystem(SystemType.CharacterMovement) == null)
                         {
-                            _systemManager.add(new CharacterMovementSystem(_systemManager, _entityManager));
+                            _systemManager.add(new CharacterMovementSystem(_systemManager, _entityManager), -1);
                             (_systemManager.getSystem(SystemType.Camera) as CameraSystem).enableManualMovement = false;
                         }
-                        _systemManager.add(new PlayerSystem(_systemManager, _entityManager));
+                        _systemManager.add(new PlayerSystem(_systemManager, _entityManager), -1);
                         _entityManager.factory.createPlayer(actorData);
                         break;
 
@@ -104,7 +104,7 @@ namespace StasisGame
                     case "Tree":
                         if (_systemManager.getSystem(SystemType.Tree) == null)
                         {
-                            _systemManager.add(new TreeSystem(_systemManager, _entityManager));
+                            _systemManager.add(new TreeSystem(_systemManager, _entityManager), -1);
                         }
                         _entityManager.factory.createTree(actorData);
                         break;
@@ -131,7 +131,7 @@ namespace StasisGame
                     case "Circuit":
                         if (_systemManager.getSystem(SystemType.Circuit) == null)
                         {
-                            _systemManager.add(new CircuitSystem(_systemManager, _entityManager));
+                            _systemManager.add(new CircuitSystem(_systemManager, _entityManager), -1);
                         }
                         _entityManager.factory.createCircuit(actorData);
                         break;

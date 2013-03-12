@@ -169,7 +169,7 @@ namespace StasisGame
                         polygonPoints[i] -= center;
                     break;
             }
-            texture = renderSystem.materialRenderer.renderMaterial(material, polygonPoints, 1f);
+            texture = renderSystem.materialRenderer.renderMaterial(material, polygonPoints, 1f, false);
 
             topLeft = polygonPoints[0];
             bottomRight = polygonPoints[0];
@@ -609,7 +609,7 @@ namespace StasisGame
             barkPoints.Add(new Vector2(-maxBaseHalfWidth, internodeHalfLength));
             barkPoints.Add(new Vector2(maxBaseHalfWidth, internodeHalfLength));
             barkPoints.Add(new Vector2(maxBaseHalfWidth, -internodeHalfLength));
-            barkTexture = renderSystem.materialRenderer.renderMaterial(barkMaterial, barkPoints, 1f);
+            barkTexture = renderSystem.materialRenderer.renderMaterial(barkMaterial, barkPoints, 1f, false);
 
             // Leaf textures
             maxLeafPoints.Add(new Vector2(-256f, -256f) / renderSystem.scale);
@@ -628,7 +628,7 @@ namespace StasisGame
             while ((int)tree.age > tree.iterations)
             {
                 // Iterate
-                tree.iterate();
+                tree.iterate(1);
 
                 // Relax if on last iteration
                 if ((int)tree.age == tree.iterations)
