@@ -31,14 +31,20 @@ namespace StasisGame.Systems
             if (inputComponent.usingGamepad)
             {
                 if (inputComponent.newGamepadState.ThumbSticks.Left.X < 0)
+                {
+                    characterMovementComponent.walkSpeedModifier = Math.Abs(inputComponent.newGamepadState.ThumbSticks.Left.X);
                     characterMovementComponent.walkLeft = true;
+                }
                 else if (inputComponent.newGamepadState.DPad.Left == ButtonState.Pressed)
                     characterMovementComponent.walkLeft = true;
                 else
                     characterMovementComponent.walkLeft = false;
 
                 if (inputComponent.newGamepadState.ThumbSticks.Left.X > 0)
+                {
+                    characterMovementComponent.walkSpeedModifier = inputComponent.newGamepadState.ThumbSticks.Left.X;
                     characterMovementComponent.walkRight = true;
+                }
                 else if (inputComponent.newGamepadState.DPad.Right == ButtonState.Pressed)
                     characterMovementComponent.walkRight = true;
                 else
@@ -48,6 +54,7 @@ namespace StasisGame.Systems
             }
             else
             {
+                characterMovementComponent.walkSpeedModifier = 1f;
                 characterMovementComponent.walkLeft = inputComponent.newKeyState.IsKeyDown(Keys.A) || inputComponent.newKeyState.IsKeyDown(Keys.Left);
                 characterMovementComponent.walkRight = inputComponent.newKeyState.IsKeyDown(Keys.D) || inputComponent.newKeyState.IsKeyDown(Keys.Right);
                 characterMovementComponent.jump = inputComponent.newKeyState.IsKeyDown(Keys.Space);

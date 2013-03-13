@@ -35,7 +35,7 @@ namespace StasisGame.Systems
                 CharacterMovementComponent characterMovementComponent = (CharacterMovementComponent)_entityManager.getComponent(characterEntities[i], ComponentType.CharacterMovement);
                 Body body = physicsComponent.body;
                 Vector2 averageNormal = Vector2.Zero;
-                float modifier = 1;
+                float modifier = characterMovementComponent.walkSpeedModifier;
                 bool applyForce =
                     (characterMovementComponent.walkLeft && characterMovementComponent.allowLeftMovement) ||
                     (characterMovementComponent.walkRight && characterMovementComponent.allowRightMovement);

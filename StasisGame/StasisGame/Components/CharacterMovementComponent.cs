@@ -13,6 +13,7 @@ namespace StasisGame.Components
         private Vector2 _movementNormal;
         private bool _walkLeft;
         private bool _walkRight;
+        private float _walkSpeedModifier = 1f;
         private Fixture _feetFixture;
         private bool _jump;
         private bool _alreadyJumped;
@@ -26,6 +27,7 @@ namespace StasisGame.Components
         public Vector2 movementNormal { get { return _movementNormal; } }
         public bool walkLeft { get { return _walkLeft; } set { _walkLeft = value; } }
         public bool walkRight { get { return _walkRight; } set { _walkRight = value; } }
+        public float walkSpeedModifier { get { return _walkSpeedModifier; } set { _walkSpeedModifier = value; } }
         public bool onSurface { get { return _collisionNormals.Count > 0; } }
         public Fixture feetFixture { get { return _feetFixture; } }
         public bool jump { get { return _jump; } set { _jump = value; } }
