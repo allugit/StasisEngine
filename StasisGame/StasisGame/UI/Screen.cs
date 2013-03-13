@@ -4,7 +4,7 @@ using Microsoft.Xna.Framework;
 
 namespace StasisGame.UI
 {
-    public class Screen
+    abstract public class Screen
     {
         private List<IUIComponent> _UIComponents;
         private int _selectedIndex;
@@ -57,7 +57,7 @@ namespace StasisGame.UI
             _UIComponents[_selectedIndex].onSelect();
         }
 
-        public void update()
+        virtual public void update()
         {
             for (int i = 0; i < _UIComponents.Count; i++)
             {
@@ -65,7 +65,7 @@ namespace StasisGame.UI
             }
         }
 
-        public void draw()
+        virtual public void draw()
         {
             for (int i = 0; i < _UIComponents.Count; i++)
             {

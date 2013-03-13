@@ -10,6 +10,8 @@ using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 using Microsoft.Xna.Framework.Media;
 using StasisGame.Managers;
+using StasisGame.UI;
+using StasisGame.Systems;
 using StasisCore;
 using EasyStorage;
 
@@ -34,8 +36,9 @@ namespace StasisGame
         private SpriteBatch _spriteBatch;
         private SpriteFont _arial;
         private GameState _gameState;
+        private MainMenuScreen _mainMenuScreen;
+        private ScreenSystem _screenSystem;
         private Level _level;
-        private MainMenu _mainMenu;
         private bool _settingsInitialized;
         private SystemManager _systemManager;
         public static IAsyncSaveDevice saveDevice;
@@ -59,6 +62,8 @@ namespace StasisGame
             SharedSaveDevice sharedSaveDevice = new SharedSaveDevice();
 
             _systemManager = new SystemManager();
+            _screenSystem = new ScreenSystem(_systemManager);
+            _systemManager.add(_screenSystem, -1);
 
             saveDevice = sharedSaveDevice;
             sharedSaveDevice.DeviceSelectorCanceled += (s, e) => { e.Response = SaveDeviceEventResponse.Force; };
@@ -181,11 +186,12 @@ namespace StasisGame
 
                 case GameState.Intro:
                     _gameState = GameState.MainMenu;
-                    _mainMenu = new MainMenu(this);
+                    _mainMenuScreen = new MainMenuScreen(this);
+                    _screenSystem.addScreen(_mainMenuScreen);
                     break;
 
                 case GameState.MainMenu:
-                    _mainMenu.update(gameTime);
+                    _systemManager.process();
                     break;
 
                 case GameState.Level:
@@ -208,7 +214,7 @@ namespace StasisGame
             {
                 case GameState.MainMenu:
                     _spriteBatch.Begin();
-                    _mainMenu.draw(gameTime);
+                    _mainMenuScreen.draw();
                     _spriteBatch.End();
                     break;
 

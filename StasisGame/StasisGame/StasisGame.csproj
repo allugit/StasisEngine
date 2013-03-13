@@ -104,7 +104,6 @@
     <Compile Include="GameSettings.cs" />
     <Compile Include="IRenderablePrimitive.cs" />
     <Compile Include="Level.cs" />
-    <Compile Include="MainMenu.cs" />
     <Compile Include="Managers\EntityManager.cs" />
     <Compile Include="Managers\SystemManager.cs" />
     <Compile Include="EntityFactory.cs" />
@@ -126,11 +125,13 @@
     <Compile Include="Systems\PlayerSystem.cs" />
     <Compile Include="Systems\RenderSystem.cs" />
     <Compile Include="Systems\PhysicsSystem.cs" />
+    <Compile Include="Systems\ScreenSystem.cs" />
     <Compile Include="Systems\SystemNode.cs" />
     <Compile Include="Systems\TreeSystem.cs" />
     <Compile Include="Tree.cs" />
     <Compile Include="TrunkMetamerConstraint.cs" />
     <Compile Include="UI\IUIComponent.cs" />
+    <Compile Include="UI\MainMenuScreen.cs" />
     <Compile Include="UI\Screen.cs" />
   </ItemGroup>
   <ItemGroup>

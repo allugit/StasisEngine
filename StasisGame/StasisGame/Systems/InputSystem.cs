@@ -19,7 +19,7 @@ namespace StasisGame.Systems
         private GamePadState _newGamepadState;
         private GamePadState _oldGamepadState;
 
-        public int defaultPriority { get { return 0; } }
+        public int defaultPriority { get { return 1; } }
         public SystemType systemType { get { return SystemType.Input; } }
 
         public InputSystem(SystemManager systemManager, EntityManager entityManager)
