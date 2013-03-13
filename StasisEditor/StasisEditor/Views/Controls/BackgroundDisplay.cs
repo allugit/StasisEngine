@@ -24,13 +24,16 @@ namespace StasisEditor.Views.Controls
 
         protected override void Initialize()
         {
-            _spriteBatch = new SpriteBatch(GraphicsDevice);
-            _backgroundRenderer = new BackgroundRenderer(_spriteBatch);
+            if (!IsDesignerHosted)
+            {
+                _spriteBatch = new SpriteBatch(GraphicsDevice);
+                _backgroundRenderer = new BackgroundRenderer(_spriteBatch);
 
-            System.Windows.Forms.Application.Idle += delegate { Invalidate(); };
-            MouseMove += new System.Windows.Forms.MouseEventHandler(BackgroundDisplay_MouseMove);
-            FindForm().KeyDown += new System.Windows.Forms.KeyEventHandler(Parent_KeyDown);
-            FindForm().KeyUp += new System.Windows.Forms.KeyEventHandler(Parent_KeyUp);
+                System.Windows.Forms.Application.Idle += delegate { Invalidate(); };
+                MouseMove += new System.Windows.Forms.MouseEventHandler(BackgroundDisplay_MouseMove);
+                FindForm().KeyDown += new System.Windows.Forms.KeyEventHandler(Parent_KeyDown);
+                FindForm().KeyUp += new System.Windows.Forms.KeyEventHandler(Parent_KeyUp);
+            }
         }
 
         void BackgroundDisplay_MouseMove(object sender, System.Windows.Forms.MouseEventArgs e)
@@ -73,16 +76,19 @@ namespace StasisEditor.Views.Controls
 
         protected override void Draw()
         {
-            GraphicsDevice.Clear(Color.Black);
-
-            _spriteBatch.Begin(SpriteSortMode.BackToFront, BlendState.AlphaBlend);
-
-            if (_backgroundRenderer.background != null)
+            if (!IsDesignerHosted)
             {
-                _backgroundRenderer.draw(_view.controller.screenCenter);
-            }
+                GraphicsDevice.Clear(Color.Black);
 
-            _spriteBatch.End();
+                _spriteBatch.Begin(SpriteSortMode.BackToFront, BlendState.AlphaBlend);
+
+                if (_backgroundRenderer.background != null)
+                {
+                    _backgroundRenderer.draw(_view.controller.screenCenter);
+                }
+
+                _spriteBatch.End();
+            }
         }
     }
 }

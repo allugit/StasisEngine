@@ -11,6 +11,7 @@ namespace StasisEditor
     public class EditorResourceManager
     {
         public const string RESOURCE_SOURCE_PATH = @"D:\StasisResources";
+        public const string RESOURCE_DESTINATION_PATH = @"D:\_C#\StasisEngine\StasisGame\StasisGame\bin\x86\Debug";
 
         // Checks to see if a resource exists
         public static bool exists(string uid)
@@ -108,6 +109,74 @@ namespace StasisEditor
             }
 
             return false;
+        }
+
+        // Push resources
+        public static void pushResources()
+        {
+            string previousRootDirectory = ResourceManager.rootDirectory;
+            ResourceManager.rootDirectory = "";
+
+            if (Directory.Exists(RESOURCE_DESTINATION_PATH + "\\data"))
+                Directory.Delete(RESOURCE_DESTINATION_PATH + "\\data", true);
+            Directory.CreateDirectory(RESOURCE_DESTINATION_PATH + "\\data");
+
+            // Textures
+            string textureDestination = RESOURCE_DESTINATION_PATH + "\\" + ResourceManager.texturePath;
+            string textureSource = RESOURCE_SOURCE_PATH + "\\" + ResourceManager.texturePath;
+            Directory.CreateDirectory(textureDestination);
+            string[] texturePaths = Directory.GetFiles(textureSource);
+            foreach (string texturePath in texturePaths)
+            {
+                File.Copy(texturePath, textureDestination + "\\" + Path.GetFileName(texturePath));
+            }
+
+            // Materials
+            string materialDestination = RESOURCE_DESTINATION_PATH + "\\" + ResourceManager.materialPath;
+            string materialSource = RESOURCE_SOURCE_PATH + "\\" + ResourceManager.materialPath;
+            File.Copy(materialSource, materialDestination);
+
+            // Blueprints
+            string blueprintDestination = RESOURCE_DESTINATION_PATH + "\\" + ResourceManager.blueprintPath;
+            string blueprintSource = RESOURCE_SOURCE_PATH + "\\" + ResourceManager.blueprintPath;
+            File.Copy(blueprintSource, blueprintDestination);
+
+            // Circuits
+            string circuitDestination = RESOURCE_DESTINATION_PATH + "\\" + ResourceManager.circuitPath;
+            string circuitSource = RESOURCE_SOURCE_PATH + "\\" + ResourceManager.circuitPath;
+            File.Copy(circuitSource, circuitDestination);
+
+            // Backgrounds
+            string backgroundDestination = RESOURCE_DESTINATION_PATH + "\\" + ResourceManager.backgroundPath;
+            string backgroundSource = RESOURCE_SOURCE_PATH + "\\" + ResourceManager.backgroundPath;
+            File.Copy(backgroundSource, backgroundDestination);
+
+            // Characters
+            string characterDestination = RESOURCE_DESTINATION_PATH + "\\" + ResourceManager.characterPath;
+            string characterSource = RESOURCE_SOURCE_PATH + "\\" + ResourceManager.characterPath;
+            File.Copy(characterSource, characterDestination);
+
+            // Dialogue
+            string dialogueDestination = RESOURCE_DESTINATION_PATH + "\\" + ResourceManager.dialoguePath;
+            string dialogueSource = RESOURCE_SOURCE_PATH + "\\" + ResourceManager.dialoguePath;
+            File.Copy(dialogueSource, dialogueDestination);
+
+            // Items
+            string itemDestination = RESOURCE_DESTINATION_PATH + "\\" + ResourceManager.itemPath;
+            string itemSource = RESOURCE_SOURCE_PATH + "\\" + ResourceManager.itemPath;
+            File.Copy(itemSource, itemDestination);
+
+            // Levels
+            string levelDestination = RESOURCE_DESTINATION_PATH + "\\" + ResourceManager.levelPath;
+            string levelSource = RESOURCE_SOURCE_PATH + "\\" + ResourceManager.levelPath;
+            Directory.CreateDirectory(levelDestination);
+            string[] levelPaths = Directory.GetFiles(levelSource, "*.xml");
+            foreach (string levelPath in levelPaths)
+            {
+                File.Copy(levelPath, levelDestination + "\\" + Path.GetFileName(levelPath));
+            }
+
+            ResourceManager.rootDirectory = previousRootDirectory;
         }
 
         // Save material resources

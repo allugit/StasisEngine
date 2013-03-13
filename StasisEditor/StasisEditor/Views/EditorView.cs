@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
-using System.Linq;
+using System.Xml.Linq;
 using System.Text;
 using System.Windows.Forms;
 using Microsoft.Xna.Framework;
@@ -10,6 +10,7 @@ using Microsoft.Xna.Framework.Graphics;
 using StasisEditor.Controllers;
 using StasisEditor.Views.Controls;
 using StasisEditor.Models;
+using StasisCore;
 
 namespace StasisEditor.Views
 {
@@ -228,6 +229,13 @@ namespace StasisEditor.Views
             }
 
             _controller.runGame();
+        }
+
+        // "Push Resources" menu item clicked
+        private void pushResourcesMenuItem_Click(object sender, EventArgs e)
+        {
+            EditorResourceManager.pushResources();
+            MessageBox.Show("Resources pushed.");
         }
     }
 }

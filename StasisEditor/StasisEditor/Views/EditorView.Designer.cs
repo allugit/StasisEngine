@@ -31,6 +31,8 @@
             this.components = new System.ComponentModel.Container();
             this.mainMenu1 = new System.Windows.Forms.MainMenu(this.components);
             this.menuFile = new System.Windows.Forms.MenuItem();
+            this.pushResourcesMenuItem = new System.Windows.Forms.MenuItem();
+            this.menuItem3 = new System.Windows.Forms.MenuItem();
             this.menuFileExit = new System.Windows.Forms.MenuItem();
             this.menuLevel = new System.Windows.Forms.MenuItem();
             this.menuLevelNew = new System.Windows.Forms.MenuItem();
@@ -72,12 +74,25 @@
             // 
             this.menuFile.Index = 0;
             this.menuFile.MenuItems.AddRange(new System.Windows.Forms.MenuItem[] {
+            this.pushResourcesMenuItem,
+            this.menuItem3,
             this.menuFileExit});
             this.menuFile.Text = "File";
             // 
+            // pushResourcesMenuItem
+            // 
+            this.pushResourcesMenuItem.Index = 0;
+            this.pushResourcesMenuItem.Text = "Push Resources";
+            this.pushResourcesMenuItem.Click += new System.EventHandler(this.pushResourcesMenuItem_Click);
+            // 
+            // menuItem3
+            // 
+            this.menuItem3.Index = 1;
+            this.menuItem3.Text = "-";
+            // 
             // menuFileExit
             // 
-            this.menuFileExit.Index = 0;
+            this.menuFileExit.Index = 2;
             this.menuFileExit.Text = "Exit";
             this.menuFileExit.Click += new System.EventHandler(this.menuFileExit_Click);
             // 
@@ -197,7 +212,7 @@
             this.materialsTab.Location = new System.Drawing.Point(4, 22);
             this.materialsTab.Margin = new System.Windows.Forms.Padding(0);
             this.materialsTab.Name = "materialsTab";
-            this.materialsTab.Size = new System.Drawing.Size(712, 375);
+            this.materialsTab.Size = new System.Drawing.Size(712, 534);
             this.materialsTab.TabIndex = 1;
             this.materialsTab.Text = "Materials";
             this.materialsTab.UseVisualStyleBackColor = true;
@@ -217,7 +232,7 @@
             this.blueprintsTab.Location = new System.Drawing.Point(4, 22);
             this.blueprintsTab.Margin = new System.Windows.Forms.Padding(0);
             this.blueprintsTab.Name = "blueprintsTab";
-            this.blueprintsTab.Size = new System.Drawing.Size(712, 375);
+            this.blueprintsTab.Size = new System.Drawing.Size(712, 534);
             this.blueprintsTab.TabIndex = 2;
             this.blueprintsTab.Text = "Blueprints";
             this.blueprintsTab.UseVisualStyleBackColor = true;
@@ -230,7 +245,7 @@
             this.blueprintView1.Location = new System.Drawing.Point(0, 0);
             this.blueprintView1.Margin = new System.Windows.Forms.Padding(0);
             this.blueprintView1.Name = "blueprintView1";
-            this.blueprintView1.Size = new System.Drawing.Size(712, 396);
+            this.blueprintView1.Size = new System.Drawing.Size(712, 534);
             this.blueprintView1.TabIndex = 0;
             // 
             // circuitsTab
@@ -238,7 +253,7 @@
             this.circuitsTab.Controls.Add(this.circuitsView1);
             this.circuitsTab.Location = new System.Drawing.Point(4, 22);
             this.circuitsTab.Name = "circuitsTab";
-            this.circuitsTab.Size = new System.Drawing.Size(712, 375);
+            this.circuitsTab.Size = new System.Drawing.Size(712, 534);
             this.circuitsTab.TabIndex = 3;
             this.circuitsTab.Text = "Circuits";
             this.circuitsTab.UseVisualStyleBackColor = true;
@@ -250,7 +265,7 @@
             this.circuitsView1.Location = new System.Drawing.Point(0, 0);
             this.circuitsView1.Margin = new System.Windows.Forms.Padding(0);
             this.circuitsView1.Name = "circuitsView1";
-            this.circuitsView1.Size = new System.Drawing.Size(712, 375);
+            this.circuitsView1.Size = new System.Drawing.Size(712, 534);
             this.circuitsView1.TabIndex = 0;
             // 
             // backgroundsTab
@@ -259,19 +274,20 @@
             this.backgroundsTab.Location = new System.Drawing.Point(4, 22);
             this.backgroundsTab.Margin = new System.Windows.Forms.Padding(0);
             this.backgroundsTab.Name = "backgroundsTab";
-            this.backgroundsTab.Size = new System.Drawing.Size(712, 375);
+            this.backgroundsTab.Size = new System.Drawing.Size(712, 534);
             this.backgroundsTab.TabIndex = 4;
             this.backgroundsTab.Text = "Backgrounds";
             this.backgroundsTab.UseVisualStyleBackColor = true;
             // 
             // backgroundView1
             // 
+            this.backgroundView1.active = false;
             this.backgroundView1.controller = null;
             this.backgroundView1.Dock = System.Windows.Forms.DockStyle.Fill;
             this.backgroundView1.Location = new System.Drawing.Point(0, 0);
             this.backgroundView1.Margin = new System.Windows.Forms.Padding(0);
             this.backgroundView1.Name = "backgroundView1";
-            this.backgroundView1.Size = new System.Drawing.Size(712, 375);
+            this.backgroundView1.Size = new System.Drawing.Size(712, 534);
             this.backgroundView1.TabIndex = 0;
             // 
             // EditorView
@@ -321,6 +337,8 @@
         private System.Windows.Forms.MenuItem menuLevelPreview;
         private System.Windows.Forms.TabPage backgroundsTab;
         private BackgroundView backgroundView1;
+        private System.Windows.Forms.MenuItem pushResourcesMenuItem;
+        private System.Windows.Forms.MenuItem menuItem3;
 
     }
 }
