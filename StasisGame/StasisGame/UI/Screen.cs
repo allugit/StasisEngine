@@ -7,7 +7,7 @@ namespace StasisGame.UI
     abstract public class Screen
     {
         private List<IUIComponent> _UIComponents;
-        private int _selectedIndex;
+        private int _selectedIndex = -1;
 
         public Screen()
         {
@@ -26,7 +26,7 @@ namespace StasisGame.UI
 
         public void select(IUIComponent component)
         {
-            if (_UIComponents.Contains(component))
+            if (component.selectable && _UIComponents.Contains(component))
             {
                 _selectedIndex = _UIComponents.IndexOf(component);
                 component.onSelect();
@@ -35,26 +35,72 @@ namespace StasisGame.UI
 
         public void selectNextComponent()
         {
-            int newIndex = _selectedIndex + 1;
+            bool selectableComponentExists = false;
 
-            if (newIndex >= _UIComponents.Count)
-                newIndex = 0;
+            for (int i = 0; i < _UIComponents.Count; i++)
+            {
+                if (_UIComponents[i].selectable)
+                {
+                    selectableComponentExists = true;
+                    break;
+                }
+            }
 
-            _selectedIndex = newIndex;
+            if (selectableComponentExists)
+            {
+                bool foundNextSelectableComponent = false;
+                int index = _selectedIndex;
 
-            _UIComponents[_selectedIndex].onSelect();
+                while (!foundNextSelectableComponent)
+                {
+                    index++;
+
+                    if (index >= _UIComponents.Count)
+                        index = 0;
+
+                    if (_UIComponents[index].selectable)
+                    {
+                        foundNextSelectableComponent = true;
+                        _selectedIndex = index;
+                        _UIComponents[index].onSelect();
+                    }
+                }
+            }
         }
 
         public void selectPreviousComponent()
         {
-            int newIndex = _selectedIndex - 1;
+            bool selectableComponentExists = false;
 
-            if (newIndex < 0)
-                newIndex = _UIComponents.Count - 1;
+            for (int i = 0; i < _UIComponents.Count; i++)
+            {
+                if (_UIComponents[i].selectable)
+                {
+                    selectableComponentExists = true;
+                    break;
+                }
+            }
 
-            _selectedIndex = newIndex;
+            if (selectableComponentExists)
+            {
+                bool foundNextSelectableComponent = false;
+                int index = _selectedIndex;
 
-            _UIComponents[_selectedIndex].onSelect();
+                while (!foundNextSelectableComponent)
+                {
+                    index--;
+
+                    if (index < 0)
+                        index = _UIComponents.Count - 1;
+
+                    if (_UIComponents[index].selectable)
+                    {
+                        foundNextSelectableComponent = true;
+                        _selectedIndex = index;
+                        _UIComponents[index].onSelect();
+                    }
+                }
+            }
         }
 
         virtual public void update()

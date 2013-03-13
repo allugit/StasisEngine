@@ -11,5 +11,6 @@ namespace StasisGame.UI
         void onSelect();
         void UIUpdate();
         void UIDraw();
+        bool selectable { get; }
     }
 }

@@ -52,13 +52,6 @@
     </Compile>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="logo_bg.png">
-      <Name>logo_bg</Name>
-      <Importer>TextureImporter</Importer>
-      <Processor>TextureProcessor</Processor>
-    </Compile>
-  </ItemGroup>
-  <ItemGroup>
     <Compile Include="logo.png">
       <Name>logo</Name>
       <Importer>TextureImporter</Importer>
@@ -106,6 +99,13 @@
       <Name>andy</Name>
       <Importer>FontDescriptionImporter</Importer>
       <Processor>FontDescriptionProcessor</Processor>
+    </Compile>
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="main_menu_bg.jpg">
+      <Name>main_menu_bg</Name>
+      <Importer>TextureImporter</Importer>
+      <Processor>TextureProcessor</Processor>
     </Compile>
   </ItemGroup>
   <Import Project="$(MSBuildExtensionsPath)\Microsoft\XNA Game Studio\$(XnaFrameworkVersion)\Microsoft.Xna.GameStudio.ContentPipeline.targets" />
