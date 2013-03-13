@@ -222,11 +222,8 @@ namespace StasisGame
                 if (_iterations > 0)
                     step();
 
-                // Prepare collisions
-                //prepareCollisions();
-
                 // Resolve collisions
-                //_rootMetamer.resolveCollisions();
+                _rootMetamer.resolveCollisions();
 
                 // Reset vertices
                 numVertices = 0;

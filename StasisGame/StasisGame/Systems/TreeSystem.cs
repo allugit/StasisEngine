@@ -4,7 +4,6 @@ using Microsoft.Xna.Framework;
 using Box2D.XNA;
 using StasisGame.Managers;
 using StasisGame.Components;
-using ParallelTasks;
 
 namespace StasisGame.Systems
 {
@@ -56,13 +55,6 @@ namespace StasisGame.Systems
 
             prepareCollisions();
 
-            /*
-            Parallel.For(0, treeEntities.Count, (i) =>
-                {
-                    TreeComponent treeComponent = (TreeComponent)_entityManager.getComponent(treeEntities[i], ComponentType.Tree);
-                    treeComponent.tree.update();
-                });
-            */
             for (int i = 0; i < treeEntities.Count; i++)
             {
                 TreeComponent treeComponent = (TreeComponent)_entityManager.getComponent(treeEntities[i], ComponentType.Tree);
