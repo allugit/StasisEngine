@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Input;
 using StasisGame.Components;
 using StasisGame.Managers;
@@ -15,6 +16,8 @@ namespace StasisGame.Systems
         private KeyboardState _oldKeyState;
         private MouseState _newMouseState;
         private MouseState _oldMouseState;
+        private GamePadState _newGamepadState;
+        private GamePadState _oldGamepadState;
 
         public int defaultPriority { get { return 0; } }
         public SystemType systemType { get { return SystemType.Input; } }
@@ -31,16 +34,20 @@ namespace StasisGame.Systems
 
             _oldKeyState = _newKeyState;
             _oldMouseState = _newMouseState;
+            _oldGamepadState = _newGamepadState;
 
             _newKeyState = Keyboard.GetState();
             _newMouseState = Mouse.GetState();
+            _newGamepadState = GamePad.GetState(PlayerIndex.One);
 
             for (int i = 0; i < inputComponents.Count; i++)
             {
                 inputComponents[i].newKeyState = _newKeyState;
                 inputComponents[i].newMouseState = _newMouseState;
+                inputComponents[i].newGamepadState = _newGamepadState;
                 inputComponents[i].oldKeyState = _oldKeyState;
                 inputComponents[i].oldMouseState = _oldMouseState;
+                inputComponents[i].oldGamepadState = _oldGamepadState;
             }
         }
     }

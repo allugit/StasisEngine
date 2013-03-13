@@ -5,16 +5,15 @@ namespace StasisGame.Components
 {
     public class InputComponent : IComponent
     {
-        private KeyboardState _newKeyState;
-        private KeyboardState _oldKeyState;
-        private MouseState _newMouseState;
-        private MouseState _oldMouseState;
+        public KeyboardState newKeyState;
+        public KeyboardState oldKeyState;
+        public MouseState newMouseState;
+        public MouseState oldMouseState;
+        public GamePadState newGamepadState;
+        public GamePadState oldGamepadState;
+        public bool usingGamepad { get { return GameSettings.controllerType == ControllerType.Gamepad && newGamepadState.IsConnected; } }
 
         public ComponentType componentType { get { return ComponentType.Input; } }
-        public KeyboardState newKeyState { get { return _newKeyState; } set { _newKeyState = value; } }
-        public KeyboardState oldKeyState { get { return _oldKeyState; } set { _oldKeyState = value; } }
-        public MouseState newMouseState { get { return _newMouseState; } set { _newMouseState = value; } }
-        public MouseState oldMouseState { get { return _oldMouseState; } set { _oldMouseState = value; } }
 
         public InputComponent()
         {
