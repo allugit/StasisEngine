@@ -13,7 +13,7 @@ namespace StasisEditor.Controllers
 {
     public class EditorController : Controller
     {
-        public const string GAME_PATH = @"D:\_C#\StasisEngine\StasisGame\StasisGame\bin\x86\Debug\StasisGame.exe";
+        public const string GAME_PATH = @"D:\_C#\StasisEngine\StasisGame\StasisGame\bin\x86\Debug";
         public const float ORIGINAL_SCALE = 35f;
         private MaterialController _materialController;
         private LevelController _levelController;
@@ -128,8 +128,11 @@ namespace StasisEditor.Controllers
         public void runGame()
         {
             string levelFileName = _levelController.level.name + ".xml";
-            string levelPath = ResourceManager.levelPath + "\\" + levelFileName;
-            System.Diagnostics.Process.Start(EditorController.GAME_PATH, String.Format("-l {0}", levelPath));
+            string levelPath = "data\\levels\\" + levelFileName;
+            //System.Diagnostics.Process.Start(EditorController.GAME_PATH, String.Format("-l {0}", levelPath));
+            ProcessStartInfo startInfo = new ProcessStartInfo(GAME_PATH + "\\StasisGame.exe", "-l " + levelPath);
+            startInfo.WorkingDirectory = GAME_PATH;
+            System.Diagnostics.Process.Start(startInfo);
         }
 
         // exit

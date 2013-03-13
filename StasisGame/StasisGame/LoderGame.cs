@@ -175,6 +175,7 @@ namespace StasisGame
                         _graphics.ApplyChanges();
 
                         _settingsInitialized = true;
+                        _gameState = GameState.Intro;
 
                         handleArgs();
                     }
