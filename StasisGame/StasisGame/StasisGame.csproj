@@ -130,6 +130,8 @@
     <Compile Include="Systems\TreeSystem.cs" />
     <Compile Include="Tree.cs" />
     <Compile Include="TrunkMetamerConstraint.cs" />
+    <Compile Include="UI\IUIComponent.cs" />
+    <Compile Include="UI\Screen.cs" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="Game.ico" />

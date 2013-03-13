@@ -15,14 +15,14 @@ namespace StasisGame
     public class Level
     {
         private LoderGame _game;
-        private SystemManager _systemManager;
         private EntityManager _entityManager;
         private RenderSystem _renderSystem;
+        private SystemManager _systemManager;
 
         public Level(LoderGame game, string filePath)
         {
             _game = game;
-            _systemManager = new SystemManager();
+            _systemManager = _game.systemManager;
             _entityManager = new EntityManager(_systemManager);
 
             XElement data = null;
@@ -167,7 +167,6 @@ namespace StasisGame
 
         public void update(GameTime gameTime)
         {
-            _systemManager.process();
         }
 
         public void draw(GameTime gameTime)

@@ -9,6 +9,7 @@ using Microsoft.Xna.Framework.GamerServices;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 using Microsoft.Xna.Framework.Media;
+using StasisGame.Managers;
 using StasisCore;
 using EasyStorage;
 
@@ -36,9 +37,11 @@ namespace StasisGame
         private Level _level;
         private MainMenu _mainMenu;
         private bool _settingsInitialized;
+        private SystemManager _systemManager;
         public static IAsyncSaveDevice saveDevice;
 
         public SpriteBatch spriteBatch { get { return _spriteBatch; } }
+        public SystemManager systemManager { get { return _systemManager; } }
 
         public LoderGame(string[] args)
         {
@@ -55,16 +58,11 @@ namespace StasisGame
             EasyStorageSettings.SetSupportedLanguages(Language.English);
             SharedSaveDevice sharedSaveDevice = new SharedSaveDevice();
 
-            saveDevice = sharedSaveDevice;
+            _systemManager = new SystemManager();
 
-            sharedSaveDevice.DeviceSelectorCanceled += (s, e) =>
-            {
-                e.Response = SaveDeviceEventResponse.Force;
-            };
-            sharedSaveDevice.DeviceDisconnected += (s, e) =>
-            {
-                e.Response = SaveDeviceEventResponse.Force;
-            };
+            saveDevice = sharedSaveDevice;
+            sharedSaveDevice.DeviceSelectorCanceled += (s, e) => { e.Response = SaveDeviceEventResponse.Force; };
+            sharedSaveDevice.DeviceDisconnected += (s, e) => { e.Response = SaveDeviceEventResponse.Force; };
             sharedSaveDevice.PromptForDevice();
 
             Components.Add(sharedSaveDevice);
@@ -191,6 +189,7 @@ namespace StasisGame
                     break;
 
                 case GameState.Level:
+                    _systemManager.process();
                     _level.update(gameTime);
                     break;
             }
