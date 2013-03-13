@@ -23,7 +23,7 @@ namespace StasisEditor
                     return true;
 
                 // Check materials
-                using (FileStream fs = new FileStream(RESOURCE_SOURCE_PATH + ResourceManager.materialPath, FileMode.Open))
+                using (FileStream fs = new FileStream(ResourceManager.materialPath, FileMode.Open))
                 {
                     XElement data = XElement.Load(fs);
                     foreach (XElement materialData in data.Elements("Material"))
@@ -34,7 +34,7 @@ namespace StasisEditor
                 }
 
                 // Check items
-                using (FileStream fs = new FileStream(RESOURCE_SOURCE_PATH + ResourceManager.itemPath, FileMode.Open))
+                using (FileStream fs = new FileStream(ResourceManager.itemPath, FileMode.Open))
                 {
                     XElement data = XElement.Load(fs);
                     foreach (XElement itemData in data.Elements("Item"))
@@ -45,7 +45,7 @@ namespace StasisEditor
                 }
 
                 // Check blueprints
-                using (FileStream fs = new FileStream(RESOURCE_SOURCE_PATH + ResourceManager.blueprintPath, FileMode.Open))
+                using (FileStream fs = new FileStream(ResourceManager.blueprintPath, FileMode.Open))
                 {
                     XElement data = XElement.Load(fs);
                     foreach (XElement blueprintData in data.Elements("Item"))
@@ -56,7 +56,7 @@ namespace StasisEditor
                 }
 
                 // Check characters
-                using (FileStream fs = new FileStream(RESOURCE_SOURCE_PATH + ResourceManager.characterPath, FileMode.Open))
+                using (FileStream fs = new FileStream(ResourceManager.characterPath, FileMode.Open))
                 {
                     XElement data = XElement.Load(fs);
                     foreach (XElement characterData in data.Elements("Character"))
@@ -67,7 +67,7 @@ namespace StasisEditor
                 }
 
                 // Check dialogue
-                using (FileStream fs = new FileStream(RESOURCE_SOURCE_PATH + ResourceManager.dialoguePath, FileMode.Open))
+                using (FileStream fs = new FileStream(ResourceManager.dialoguePath, FileMode.Open))
                 {
                     XElement data = XElement.Load(fs);
                     foreach (XElement dialogueData in data.Elements("Dialogue"))
@@ -78,7 +78,7 @@ namespace StasisEditor
                 }
 
                 // Check circuits
-                using (FileStream fs = new FileStream(RESOURCE_SOURCE_PATH + ResourceManager.dialoguePath, FileMode.Open))
+                using (FileStream fs = new FileStream(ResourceManager.dialoguePath, FileMode.Open))
                 {
                     XElement data = XElement.Load(fs);
                     foreach (XElement circuitData in data.Elements("Circuit"))
@@ -89,7 +89,7 @@ namespace StasisEditor
                 }
 
                 // Check backgrounds
-                using (FileStream fs = new FileStream(RESOURCE_SOURCE_PATH + ResourceManager.backgroundPath, FileMode.Open))
+                using (FileStream fs = new FileStream(ResourceManager.backgroundPath, FileMode.Open))
                 {
                     XElement data = XElement.Load(fs);
                     foreach (XElement backgroundData in data.Elements("Background"))
@@ -198,7 +198,7 @@ namespace StasisEditor
             doc.Save(ResourceManager.materialPath);
 
             // Reload materials
-            FileStream fs = new FileStream(EditorResourceManager.RESOURCE_SOURCE_PATH + ResourceManager.materialResources, FileMode.Open);
+            FileStream fs = new FileStream(ResourceManager.materialPath, FileMode.Open);
             ResourceManager.loadAllMaterials(fs);
         }
 
@@ -221,7 +221,7 @@ namespace StasisEditor
             doc.Save(ResourceManager.blueprintPath);
 
             // Reload blueprints
-            FileStream fs = new FileStream(EditorResourceManager.RESOURCE_SOURCE_PATH + ResourceManager.blueprintResources, FileMode.Open);
+            FileStream fs = new FileStream(ResourceManager.blueprintPath, FileMode.Open);
             ResourceManager.loadAllItems(fs);
         }
 
@@ -244,7 +244,7 @@ namespace StasisEditor
             doc.Save(ResourceManager.circuitPath);
 
             // Reload circuits
-            ResourceManager.loadAllCircuits(new FileStream(EditorResourceManager.RESOURCE_SOURCE_PATH + ResourceManager.circuitPath, FileMode.Open));
+            ResourceManager.loadAllCircuits(new FileStream(ResourceManager.circuitPath, FileMode.Open));
         }
 
         // Save background resources
@@ -264,7 +264,7 @@ namespace StasisEditor
             doc.Save(ResourceManager.backgroundPath);
 
             // Reload background
-            ResourceManager.loadAllBackgrounds(new FileStream(RESOURCE_SOURCE_PATH + ResourceManager.backgroundPath, FileMode.Open));
+            ResourceManager.loadAllBackgrounds(new FileStream(ResourceManager.backgroundPath, FileMode.Open));
         }
     }
 }
