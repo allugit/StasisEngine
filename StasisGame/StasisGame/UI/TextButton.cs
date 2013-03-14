@@ -95,7 +95,7 @@ namespace StasisGame.UI
             if (_selected)
             {
                 Rectangle hitBox = new Rectangle(_x, _y, _hitBoxWidth, _hitBoxHeight);
-                _spriteBatch.Draw(_pixel, hitBox, hitBox, Color.Red * 0.5f, 0f, new Vector2(_hitBoxOffsetX, _hitBoxOffsetY), SpriteEffects.None, 0.1f);
+                _spriteBatch.Draw(_pixel, hitBox, hitBox, Color.Red * 0.35f, 0f, new Vector2(_hitBoxOffsetX, _hitBoxOffsetY), SpriteEffects.None, 0.1f);
             }
 
             if (_alignment == UIComponentAlignment.TopLeft)

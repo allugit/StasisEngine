@@ -17,12 +17,12 @@ namespace StasisGame.UI
         private SpriteFont _arial;
         private ContentManager _content;
         private List<DisplayMode> _displayModes;
-        //private DisplayMode _currentDisplayMode;
         private DisplayMode _selectedDisplayMode;
         private TextButton _displayModeButton;
         private TextButton _fullscreenButton;
-        //private bool _currentFullscreen;
         private bool _selectedFullscreen;
+        private ControllerType _selectedControllerType;
+        private TextButton _controllerTypeButton;
 
         public OptionsMenuScreen(LoderGame game) : base(ScreenType.OptionsMenu)
         {
@@ -35,6 +35,9 @@ namespace StasisGame.UI
             _santaBarbaraNormal = _content.Load<SpriteFont>("santa_barbara_normal");
             _arial = _content.Load<SpriteFont>("arial");
             _displayModes = new List<DisplayMode>();
+
+            _selectedControllerType = GameSettings.controllerType;
+
             DisplayMode currentDisplayMode = _game.GraphicsDevice.Adapter.CurrentDisplayMode;
             foreach (DisplayMode displayMode in _game.GraphicsDevice.Adapter.SupportedDisplayModes)
             {
@@ -95,26 +98,43 @@ namespace StasisGame.UI
                 UIComponentAlignment.TopLeft,
                 (component) => { });
 
+            Label controllerTypeLabel = new Label(
+                _game.spriteBatch,
+                _arial,
+                "Selected Controller",
+                (int)(_game.GraphicsDevice.Viewport.Width / 2f) - 200,
+                360);
+
+            _controllerTypeButton = new TextButton(
+                _game.spriteBatch,
+                _arial,
+                Color.LightGreen,
+                (int)(_game.GraphicsDevice.Viewport.Width / 2f) + 140,
+                360,
+                getControllerTypeText(_selectedControllerType),
+                UIComponentAlignment.TopLeft,
+                (component) => { selectNextControllerType(); });
+
             Label displayLabel = new Label(
                 _game.spriteBatch,
                 _santaBarbaraNormal,
                 "Display",
                 (int)(_game.GraphicsDevice.Viewport.Width / 2f) - 220,
-                380);
+                400);
 
             Label resolutionLabel = new Label(
                 _game.spriteBatch,
                 _arial,
                 "Resolution",
                 (int)(_game.GraphicsDevice.Viewport.Width / 2f) - 200,
-                420);
+                440);
 
             _displayModeButton = new TextButton(
                 _game.spriteBatch,
                 _arial,
                 Color.LightGreen,
                 (int)(_game.GraphicsDevice.Viewport.Width / 2f) + 140,
-                420,
+                440,
                 String.Format("{0} x {1}", _selectedDisplayMode.Width, _selectedDisplayMode.Height),
                 UIComponentAlignment.TopLeft,
                 (component) => { selectNextDisplayMode(); });
@@ -124,14 +144,14 @@ namespace StasisGame.UI
                 _arial,
                 "Fullscreen",
                 (int)(_game.GraphicsDevice.Viewport.Width / 2f) - 200,
-                440);
+                460);
 
             _fullscreenButton = new TextButton(
                 _game.spriteBatch,
                 _arial,
                 Color.LightGreen,
                 (int)(_game.GraphicsDevice.Viewport.Width / 2f) + 140,
-                440,
+                460,
                 _selectedFullscreen ? "True" : "False",
                 UIComponentAlignment.TopLeft,
                 (component) => { switchFullscreen(); });
@@ -141,6 +161,8 @@ namespace StasisGame.UI
             _UIComponents.Add(gamepadLabel);
             _UIComponents.Add(redefineKeyboardButton);
             _UIComponents.Add(redefineGamepadButton);
+            _UIComponents.Add(controllerTypeLabel);
+            _UIComponents.Add(_controllerTypeButton);
 
             _UIComponents.Add(displayLabel);
             _UIComponents.Add(resolutionLabel);
@@ -154,6 +176,31 @@ namespace StasisGame.UI
         ~OptionsMenuScreen()
         {
             _content.Unload();
+        }
+
+        public string getControllerTypeText(ControllerType type)
+        {
+            switch (type)
+            {
+                case ControllerType.Gamepad: return "Gamepad";
+                case ControllerType.KeyboardAndMouse: return "Keyboard and Mouse";
+            }
+
+            return "";
+        }
+
+        public void selectNextControllerType()
+        {
+            List<ControllerType> values = new List<ControllerType>((ControllerType[])Enum.GetValues(typeof(ControllerType)));
+            int index = values.IndexOf(_selectedControllerType);
+
+            index++;
+
+            if (index >= values.Count)
+                index = 0;
+
+            _selectedControllerType = values[index];
+            _controllerTypeButton.text = getControllerTypeText(_selectedControllerType);
         }
 
         private bool compareDisplayModes(DisplayMode a, DisplayMode b)
