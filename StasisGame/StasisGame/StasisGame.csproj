@@ -130,11 +130,13 @@
     <Compile Include="Systems\TreeSystem.cs" />
     <Compile Include="Tree.cs" />
     <Compile Include="TrunkMetamerConstraint.cs" />
+    <Compile Include="UI\ISelectableUIComponent.cs" />
     <Compile Include="UI\IUIComponent.cs" />
     <Compile Include="UI\MainMenuScreen.cs" />
     <Compile Include="UI\OptionsMenuScreen.cs" />
     <Compile Include="UI\Screen.cs" />
     <Compile Include="UI\TextureButton.cs" />
+    <Compile Include="UI\UIComponentContainer.cs" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="Game.ico" />

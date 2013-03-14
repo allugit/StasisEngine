@@ -5,19 +5,13 @@ using Microsoft.Xna.Framework.Graphics;
 
 namespace StasisGame.UI
 {
-    public enum TextureButtonAlignment
-    {
-        TopLeft,
-        Center
-    };
-
-    public class TextureButton : IUIComponent
+    public class TextureButton : ISelectableUIComponent
     {
         private SpriteBatch _spriteBatch;
         private Texture2D _selectedTexture;
         private Texture2D _deselectedTexture;
         private bool _selected;
-        private TextureButtonAlignment _alignment;
+        private UIComponentAlignment _alignment;
         private Texture2D _pixel;
         private Rectangle _destRect;
         private int _x;
@@ -31,7 +25,7 @@ namespace StasisGame.UI
         public bool selectable { get { return true; } }
         public float layerDepth { get { return 0f; } }
 
-        public TextureButton(SpriteBatch spriteBatch, int x, int y, int hitBoxWidth, int hitBoxHeight, Texture2D selectedTexture, Texture2D deselectedTexture, TextureButtonAlignment alignment, UIComponentAction action)
+        public TextureButton(SpriteBatch spriteBatch, int x, int y, int hitBoxWidth, int hitBoxHeight, Texture2D selectedTexture, Texture2D deselectedTexture, UIComponentAlignment alignment, UIComponentAction action)
         {
             _spriteBatch = spriteBatch;
             _selectedTexture = selectedTexture;
@@ -44,7 +38,7 @@ namespace StasisGame.UI
             _destRect = new Rectangle(_x, _y, 1, 1);
             _action = action;
 
-            if (_alignment == TextureButtonAlignment.Center)
+            if (_alignment == UIComponentAlignment.Center)
             {
                 _hitBoxOffsetX = (int)(_hitBoxWidth / 2f);
                 _hitBoxOffsetY = (int)(_hitBoxHeight / 2f);
@@ -92,7 +86,10 @@ namespace StasisGame.UI
             _destRect.Width = texture.Width;
             _destRect.Height = texture.Height;
 
-            _spriteBatch.Draw(texture, _destRect, texture.Bounds, Color.White, 0f, new Vector2((int)(texture.Width / 2f), (int)(texture.Height / 2f)), SpriteEffects.None, 0f);
+            if (_alignment == UIComponentAlignment.TopLeft)
+                _spriteBatch.Draw(texture, _destRect, texture.Bounds, Color.White, 0f, Vector2.Zero, SpriteEffects.None, 0f);
+            else if (_alignment == UIComponentAlignment.Center)
+                _spriteBatch.Draw(texture, _destRect, texture.Bounds, Color.White, 0f, new Vector2((int)(texture.Width / 2f), (int)(texture.Height / 2f)), SpriteEffects.None, 0f);
 
             //Rectangle hitBox = new Rectangle(_x, _y, _hitBoxWidth, _hitBoxHeight);
             //_spriteBatch.Draw(_pixel, hitBox, hitBox, Color.Green * 0.5f, 0f, new Vector2(_hitBoxOffsetX, _hitBoxOffsetY), SpriteEffects.None, 0f);

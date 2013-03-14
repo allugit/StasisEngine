@@ -6,6 +6,12 @@ using Microsoft.Xna.Framework.Input;
 namespace StasisGame.UI
 {
     public delegate void UIComponentAction(IUIComponent component);
+    public enum UIComponentAlignment
+    {
+        TopLeft,
+        TopCenter,
+        Center
+    };
     public enum ScreenType
     {
         MainMenu,
@@ -39,7 +45,9 @@ namespace StasisGame.UI
             if (_selectedIndex == -1)
             {
                 _selectedIndex = _UIComponents.Count - 1;
-                component.onSelect();
+
+                if (component.selectable)
+                    (component as ISelectableUIComponent).onSelect();
             }
         }
 
@@ -48,12 +56,12 @@ namespace StasisGame.UI
             _UIComponents.Remove(component);
         }
 
-        public void select(IUIComponent component)
+        public void select(ISelectableUIComponent component)
         {
             if (component.selectable && _UIComponents.Contains(component))
             {
                 if (_selectedIndex != -1)
-                    _UIComponents[_selectedIndex].onDeselect();
+                    (_UIComponents[_selectedIndex] as ISelectableUIComponent).onDeselect();
 
                 _selectedIndex = _UIComponents.IndexOf(component);
                 component.onSelect();
@@ -88,9 +96,9 @@ namespace StasisGame.UI
                     if (_UIComponents[index].selectable)
                     {
                         foundNextSelectableComponent = true;
-                        _UIComponents[_selectedIndex].onDeselect();
+                        (_UIComponents[_selectedIndex] as ISelectableUIComponent).onDeselect();
                         _selectedIndex = index;
-                        _UIComponents[index].onSelect();
+                        (_UIComponents[index] as ISelectableUIComponent).onSelect();
                     }
                 }
             }
@@ -111,10 +119,10 @@ namespace StasisGame.UI
 
             if (selectableComponentExists)
             {
-                bool foundNextSelectableComponent = false;
+                bool foundPreviousSelectableComponent = false;
                 int index = _selectedIndex;
 
-                while (!foundNextSelectableComponent)
+                while (!foundPreviousSelectableComponent)
                 {
                     index--;
 
@@ -123,10 +131,10 @@ namespace StasisGame.UI
 
                     if (_UIComponents[index].selectable)
                     {
-                        foundNextSelectableComponent = true;
-                        _UIComponents[_selectedIndex].onDeselect();
+                        foundPreviousSelectableComponent = true;
+                        (_UIComponents[_selectedIndex] as ISelectableUIComponent).onDeselect();
                         _selectedIndex = index;
-                        _UIComponents[index].onSelect();
+                        (_UIComponents[index] as ISelectableUIComponent).onSelect();
                     }
                 }
             }

@@ -21,6 +21,15 @@ namespace StasisGame.UI
             _content.RootDirectory = "Content";
             _background = _content.Load<Texture2D>("main_menu/bg");
             _logo = _content.Load<Texture2D>("main_menu/logo");
+
+            UIComponentContainer container = new UIComponentContainer(
+                _game.spriteBatch,
+                _content.Load<Texture2D>("options_menu/options_container"),
+                (int)(_game.GraphicsDevice.Viewport.Width / 2f),
+                160,
+                UIComponentAlignment.TopCenter);
+
+            _UIComponents.Add(container);
         }
 
         ~OptionsMenuScreen()
@@ -41,13 +50,19 @@ namespace StasisGame.UI
             // Mouse input
             for (int i = 0; i < _UIComponents.Count; i++)
             {
-                if (_UIComponents[i].hitTest(new Vector2(_newMouseState.X, _newMouseState.Y)))
-                {
-                    if (_oldMouseState.X - _newMouseState.X != 0 || _oldMouseState.Y - _newMouseState.Y != 0)
-                        select(_UIComponents[i]);
+                IUIComponent component = _UIComponents[i];
 
-                    if (_oldMouseState.LeftButton == ButtonState.Released && _newMouseState.LeftButton == ButtonState.Pressed)
-                        _UIComponents[i].activate();
+                if (component.selectable)
+                {
+                    ISelectableUIComponent selectableComponent = component as ISelectableUIComponent;
+                    if (selectableComponent.hitTest(new Vector2(_newMouseState.X, _newMouseState.Y)))
+                    {
+                        if (_oldMouseState.X - _newMouseState.X != 0 || _oldMouseState.Y - _newMouseState.Y != 0)
+                            select(selectableComponent);
+
+                        if (_oldMouseState.LeftButton == ButtonState.Released && _newMouseState.LeftButton == ButtonState.Pressed)
+                            selectableComponent.activate();
+                    }
                 }
             }
 
@@ -67,7 +82,7 @@ namespace StasisGame.UI
 
                 if (activate && _selectedIndex != -1)
                 {
-                    _UIComponents[_selectedIndex].activate();
+                    (_UIComponents[_selectedIndex] as ISelectableUIComponent).activate();
                 }
             }
 
