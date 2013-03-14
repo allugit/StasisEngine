@@ -6,6 +6,11 @@ using Microsoft.Xna.Framework.Input;
 namespace StasisGame.UI
 {
     public delegate void UIComponentAction(IUIComponent component);
+    public enum ScreenType
+    {
+        MainMenu,
+        OptionsMenu
+    };
 
     abstract public class Screen
     {
@@ -17,9 +22,13 @@ namespace StasisGame.UI
         protected KeyboardState _oldKeyState;
         protected MouseState _newMouseState;
         protected MouseState _oldMouseState;
+        protected ScreenType _screenType;
 
-        public Screen()
+        public ScreenType screenType { get { return _screenType; } set { _screenType = value; } }
+
+        public Screen(ScreenType screenType)
         {
+            _screenType = screenType;
             _UIComponents = new List<IUIComponent>();
         }
 

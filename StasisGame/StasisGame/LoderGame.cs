@@ -144,6 +144,14 @@ namespace StasisGame
 
         public void openOptionsMenu()
         {
+            _screenSystem.removeScreen(_mainMenuScreen);
+            _screenSystem.addScreen(new OptionsMenuScreen(this));
+        }
+
+        public void closeOptionsMenu()
+        {
+            _screenSystem.removeScreen(ScreenType.OptionsMenu);
+            _screenSystem.addScreen(_mainMenuScreen);
         }
 
         protected override void Update(GameTime gameTime)
@@ -226,7 +234,7 @@ namespace StasisGame
             {
                 case GameState.MainMenu:
                     _spriteBatch.Begin();
-                    _mainMenuScreen.draw();
+                    _screenSystem.draw();
                     _spriteBatch.End();
                     break;
 

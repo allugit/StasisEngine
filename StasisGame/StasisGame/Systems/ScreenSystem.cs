@@ -24,6 +24,20 @@ namespace StasisGame.Systems
             _screens.Add(screen);
         }
 
+        public void removeScreen(ScreenType screenType)
+        {
+            Screen screenToRemove = null;
+
+            for (int i = 0; i < _screens.Count; i++)
+            {
+                if (_screens[i].screenType == screenType)
+                    screenToRemove = _screens[i];
+            }
+
+            if (screenToRemove != null)
+                removeScreen(screenToRemove);
+        }
+
         public void removeScreen(Screen screen)
         {
             _screens.Remove(screen);
