@@ -24,6 +24,22 @@ namespace StasisGame.UI
 
         public bool selectable { get { return true; } }
         public float layerDepth { get { return 0f; } }
+        public string text
+        {
+            get { return _text; }
+            set
+            {
+                _text = value;
+                _hitBoxWidth = (int)_font.MeasureString(_text).X;
+                _hitBoxHeight = (int)_font.MeasureString(_text).Y;
+
+                if (_alignment == UIComponentAlignment.Center)
+                {
+                    _hitBoxOffsetX = (int)(_hitBoxWidth / 2f);
+                    _hitBoxOffsetY = (int)(_hitBoxHeight / 2f);
+                }
+            }
+        }
 
         public TextButton(SpriteBatch spriteBatch, SpriteFont font, Color color, int x, int y, string text, UIComponentAlignment alignment, UIComponentAction action)
         {
@@ -34,15 +50,7 @@ namespace StasisGame.UI
             _x = x;
             _y = y;
             _action = action;
-            _text = text;
-            _hitBoxWidth = (int)_font.MeasureString(_text).X;
-            _hitBoxHeight = (int)_font.MeasureString(_text).Y;
-
-            if (_alignment == UIComponentAlignment.Center)
-            {
-                _hitBoxOffsetX = (int)(_hitBoxWidth / 2f);
-                _hitBoxOffsetY = (int)(_hitBoxHeight / 2f);
-            }
+            this.text = text;
 
             _pixel = new Texture2D(spriteBatch.GraphicsDevice, 1, 1);
             _pixel.SetData<Color>(new[] { Color.White });

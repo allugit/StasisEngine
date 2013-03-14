@@ -16,6 +16,10 @@ namespace StasisGame.UI
         private SpriteFont _santaBarbaraNormal;
         private SpriteFont _arial;
         private ContentManager _content;
+        private List<DisplayMode> _displayModes;
+        private DisplayMode _currentDisplayMode;
+        private DisplayMode _selectedDisplayMode;
+        private TextButton _displayModeButton;
 
         public OptionsMenuScreen(LoderGame game) : base(ScreenType.OptionsMenu)
         {
@@ -27,6 +31,14 @@ namespace StasisGame.UI
             _optionsContainer = _content.Load<Texture2D>("options_menu/options_container");
             _santaBarbaraNormal = _content.Load<SpriteFont>("santa_barbara_normal");
             _arial = _content.Load<SpriteFont>("arial");
+            _displayModes = new List<DisplayMode>();
+            _currentDisplayMode = _game.GraphicsDevice.Adapter.CurrentDisplayMode;
+            foreach (DisplayMode displayMode in _game.GraphicsDevice.Adapter.SupportedDisplayModes)
+            {
+                if (compareDisplayModes(_currentDisplayMode, displayMode))
+                    _selectedDisplayMode = displayMode;
+                _displayModes.Add(displayMode);
+            }
 
             TextureButton saveButton = new TextureButton(
                 _game.spriteBatch,
@@ -57,7 +69,7 @@ namespace StasisGame.UI
                 _game.spriteBatch,
                 _arial,
                 Color.LightGreen,
-                (int)(_game.GraphicsDevice.Viewport.Width / 2f) + 150,
+                (int)(_game.GraphicsDevice.Viewport.Width / 2f) + 140,
                 320,
                 "Redefine Keys",
                 UIComponentAlignment.TopLeft,
@@ -74,23 +86,81 @@ namespace StasisGame.UI
                 _game.spriteBatch,
                 _arial,
                 Color.LightGreen,
-                (int)(_game.GraphicsDevice.Viewport.Width / 2f) + 150,
+                (int)(_game.GraphicsDevice.Viewport.Width / 2f) + 140,
                 340,
                 "Redefine Buttons",
                 UIComponentAlignment.TopLeft,
                 (component) => { });
+
+            Label displayLabel = new Label(
+                _game.spriteBatch,
+                _santaBarbaraNormal,
+                "Display",
+                (int)(_game.GraphicsDevice.Viewport.Width / 2f) - 220,
+                380);
+
+            Label resolutionLabel = new Label(
+                _game.spriteBatch,
+                _arial,
+                "Resolution",
+                (int)(_game.GraphicsDevice.Viewport.Width / 2f) - 200,
+                420);
+
+            _displayModeButton = new TextButton(
+                _game.spriteBatch,
+                _arial,
+                Color.LightGreen,
+                (int)(_game.GraphicsDevice.Viewport.Width / 2f) + 140,
+                420,
+                String.Format("{0} x {1}", _selectedDisplayMode.Width, _selectedDisplayMode.Height),
+                UIComponentAlignment.TopLeft,
+                (component) => { selectNextDisplayMode(); });
 
             _UIComponents.Add(controllerLabel);
             _UIComponents.Add(keyboardLabel);
             _UIComponents.Add(gamepadLabel);
             _UIComponents.Add(redefineKeyboardButton);
             _UIComponents.Add(redefineGamepadButton);
+
+            _UIComponents.Add(displayLabel);
+            _UIComponents.Add(resolutionLabel);
+            _UIComponents.Add(_displayModeButton);
+
             _UIComponents.Add(saveButton);
         }
 
         ~OptionsMenuScreen()
         {
             _content.Unload();
+        }
+
+        private bool compareDisplayModes(DisplayMode a, DisplayMode b)
+        {
+            if (a.AspectRatio != b.AspectRatio)
+                return false;
+            if (a.Format != b.Format)
+                return false;
+            if (a.Height != b.Height)
+                return false;
+            if (a.TitleSafeArea != b.TitleSafeArea)
+                return false;
+            if (a.Width != b.Width)
+                return false;
+
+            return true;
+        }
+
+        public void selectNextDisplayMode()
+        {
+            int index = _displayModes.IndexOf(_selectedDisplayMode);
+
+            index++;
+
+            if (index >= _displayModes.Count)
+                index = 0;
+
+            _selectedDisplayMode = _displayModes[index];
+            _displayModeButton.text = String.Format("{0} x {1}", _selectedDisplayMode.Width, _selectedDisplayMode.Height);
         }
 
         override public void update()
