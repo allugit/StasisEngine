@@ -17,9 +17,12 @@ namespace StasisGame.UI
         private SpriteFont _arial;
         private ContentManager _content;
         private List<DisplayMode> _displayModes;
-        private DisplayMode _currentDisplayMode;
+        //private DisplayMode _currentDisplayMode;
         private DisplayMode _selectedDisplayMode;
         private TextButton _displayModeButton;
+        private TextButton _fullscreenButton;
+        //private bool _currentFullscreen;
+        private bool _selectedFullscreen;
 
         public OptionsMenuScreen(LoderGame game) : base(ScreenType.OptionsMenu)
         {
@@ -32,10 +35,10 @@ namespace StasisGame.UI
             _santaBarbaraNormal = _content.Load<SpriteFont>("santa_barbara_normal");
             _arial = _content.Load<SpriteFont>("arial");
             _displayModes = new List<DisplayMode>();
-            _currentDisplayMode = _game.GraphicsDevice.Adapter.CurrentDisplayMode;
+            DisplayMode currentDisplayMode = _game.GraphicsDevice.Adapter.CurrentDisplayMode;
             foreach (DisplayMode displayMode in _game.GraphicsDevice.Adapter.SupportedDisplayModes)
             {
-                if (compareDisplayModes(_currentDisplayMode, displayMode))
+                if (compareDisplayModes(currentDisplayMode, displayMode))
                     _selectedDisplayMode = displayMode;
                 _displayModes.Add(displayMode);
             }
@@ -116,6 +119,23 @@ namespace StasisGame.UI
                 UIComponentAlignment.TopLeft,
                 (component) => { selectNextDisplayMode(); });
 
+            Label fullscreenLabel = new Label(
+                _game.spriteBatch,
+                _arial,
+                "Fullscreen",
+                (int)(_game.GraphicsDevice.Viewport.Width / 2f) - 200,
+                440);
+
+            _fullscreenButton = new TextButton(
+                _game.spriteBatch,
+                _arial,
+                Color.LightGreen,
+                (int)(_game.GraphicsDevice.Viewport.Width / 2f) + 140,
+                440,
+                _selectedFullscreen ? "True" : "False",
+                UIComponentAlignment.TopLeft,
+                (component) => { switchFullscreen(); });
+
             _UIComponents.Add(controllerLabel);
             _UIComponents.Add(keyboardLabel);
             _UIComponents.Add(gamepadLabel);
@@ -125,6 +145,8 @@ namespace StasisGame.UI
             _UIComponents.Add(displayLabel);
             _UIComponents.Add(resolutionLabel);
             _UIComponents.Add(_displayModeButton);
+            _UIComponents.Add(fullscreenLabel);
+            _UIComponents.Add(_fullscreenButton);
 
             _UIComponents.Add(saveButton);
         }
@@ -161,6 +183,12 @@ namespace StasisGame.UI
 
             _selectedDisplayMode = _displayModes[index];
             _displayModeButton.text = String.Format("{0} x {1}", _selectedDisplayMode.Width, _selectedDisplayMode.Height);
+        }
+
+        public void switchFullscreen()
+        {
+            _selectedFullscreen = !_selectedFullscreen;
+            _fullscreenButton.text = _selectedFullscreen ? "True" : "False";
         }
 
         override public void update()
