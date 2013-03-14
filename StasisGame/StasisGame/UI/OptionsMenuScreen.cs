@@ -12,6 +12,7 @@ namespace StasisGame.UI
         private LoderGame _game;
         private Texture2D _background;
         private Texture2D _logo;
+        private Texture2D _optionsContainer;
         private ContentManager _content;
 
         public OptionsMenuScreen(LoderGame game) : base(ScreenType.OptionsMenu)
@@ -21,18 +22,12 @@ namespace StasisGame.UI
             _content.RootDirectory = "Content";
             _background = _content.Load<Texture2D>("main_menu/bg");
             _logo = _content.Load<Texture2D>("main_menu/logo");
-
-            UIComponentContainer container = new UIComponentContainer(
-                _game.spriteBatch,
-                _content.Load<Texture2D>("options_menu/options_container"),
-                (int)(_game.GraphicsDevice.Viewport.Width / 2f),
-                160,
-                UIComponentAlignment.TopCenter);
+            _optionsContainer = _content.Load<Texture2D>("options_menu/options_container");
 
             TextureButton saveButton = new TextureButton(
                 _game.spriteBatch,
                 (int)(_game.GraphicsDevice.Viewport.Width / 2f),
-                700,
+                690,
                 100,
                 75,
                 _content.Load<Texture2D>("options_menu/save_selected"),
@@ -40,7 +35,6 @@ namespace StasisGame.UI
                 UIComponentAlignment.Center,
                 (component) => { });
 
-            _UIComponents.Add(container);
             _UIComponents.Add(saveButton);
         }
 
@@ -105,7 +99,8 @@ namespace StasisGame.UI
         {
             float scale = (float)_background.Height / (float)_game.GraphicsDevice.Viewport.Height;
             _game.spriteBatch.Draw(_background, Vector2.Zero, new Rectangle(0, 0, _game.GraphicsDevice.Viewport.Width, _game.GraphicsDevice.Viewport.Height), Color.White, 0f, Vector2.Zero, scale, SpriteEffects.None, 0f);
-            _game.spriteBatch.Draw(_logo, new Vector2(_game.GraphicsDevice.Viewport.Width / 2f, 100f), _logo.Bounds, Color.White, 0, new Vector2(_logo.Width, _logo.Height) / 2, 0.75f, SpriteEffects.None, 0);
+            _game.spriteBatch.Draw(_logo, new Vector2((int)(_game.GraphicsDevice.Viewport.Width / 2f), 100f), _logo.Bounds, Color.White, 0, new Vector2(_logo.Width, _logo.Height) / 2, 0.75f, SpriteEffects.None, 0);
+            _game.spriteBatch.Draw(_optionsContainer, new Vector2((int)(_game.GraphicsDevice.Viewport.Width / 2f), 150f), _optionsContainer.Bounds, Color.White, 0f, new Vector2((int)(_optionsContainer.Width / 2f), 0), 1f, SpriteEffects.None, 0f);
 
             base.draw();
         }

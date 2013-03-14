@@ -136,7 +136,6 @@
     <Compile Include="UI\OptionsMenuScreen.cs" />
     <Compile Include="UI\Screen.cs" />
     <Compile Include="UI\TextureButton.cs" />
-    <Compile Include="UI\UIComponentContainer.cs" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="Game.ico" />
