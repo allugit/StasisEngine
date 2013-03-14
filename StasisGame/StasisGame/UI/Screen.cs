@@ -5,6 +5,8 @@ using Microsoft.Xna.Framework.Input;
 
 namespace StasisGame.UI
 {
+    public delegate void UIComponentAction(IUIComponent component);
+
     abstract public class Screen
     {
         protected List<IUIComponent> _UIComponents;

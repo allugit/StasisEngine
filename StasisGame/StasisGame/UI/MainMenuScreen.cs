@@ -30,7 +30,8 @@ namespace StasisGame.UI
                 80,
                 _content.Load<Texture2D>("main_menu/new_game_selected"),
                 _content.Load<Texture2D>("main_menu/new_game_unselected"),
-                TextureButtonAlignment.Center);
+                TextureButtonAlignment.Center,
+                (component) => { _game.newGame(); });
 
             TextureButton loadGameButton = new TextureButton(
                 _game.spriteBatch,
@@ -40,7 +41,8 @@ namespace StasisGame.UI
                 80,
                 _content.Load<Texture2D>("main_menu/load_game_selected"),
                 _content.Load<Texture2D>("main_menu/load_game_unselected"),
-                TextureButtonAlignment.Center);
+                TextureButtonAlignment.Center,
+                (component) => { _game.loadGame(); });
 
             TextureButton optionsButton = new TextureButton(
                 _game.spriteBatch,
@@ -50,17 +52,19 @@ namespace StasisGame.UI
                 80,
                 _content.Load<Texture2D>("main_menu/options_selected"),
                 _content.Load<Texture2D>("main_menu/options_unselected"),
-                TextureButtonAlignment.Center);
+                TextureButtonAlignment.Center,
+                (component) => { _game.openOptionsMenu(); });
 
             TextureButton exitButton = new TextureButton(
                 _game.spriteBatch,
                 (int)(_game.GraphicsDevice.Viewport.Width / 2f + 100f),
                 565,
-                240, 
+                240,
                 80,
                 _content.Load<Texture2D>("main_menu/exit_selected"),
                 _content.Load<Texture2D>("main_menu/exit_unselected"),
-                TextureButtonAlignment.Center);
+                TextureButtonAlignment.Center,
+                (component) => { _game.Exit(); });
 
             addComponent(newGameButton);
             addComponent(loadGameButton);
@@ -84,14 +88,15 @@ namespace StasisGame.UI
             _newMouseState = Mouse.GetState();
 
             // Mouse input
-            if (_oldMouseState.X - _newMouseState.X != 0 || _oldMouseState.Y - _newMouseState.Y != 0)
+            for (int i = 0; i < _UIComponents.Count; i++)
             {
-                for (int i = 0; i < _UIComponents.Count; i++)
+                if (_UIComponents[i].hitTest(new Vector2(_newMouseState.X, _newMouseState.Y)))
                 {
-                    if (_UIComponents[i].hitTest(new Vector2(_newMouseState.X, _newMouseState.Y)))
-                    {
+                    if (_oldMouseState.X - _newMouseState.X != 0 || _oldMouseState.Y - _newMouseState.Y != 0)
                         select(_UIComponents[i]);
-                    }
+
+                    if (_oldMouseState.LeftButton == ButtonState.Released && _newMouseState.LeftButton == ButtonState.Pressed)
+                        _UIComponents[i].activate();
                 }
             }
 
@@ -102,11 +107,17 @@ namespace StasisGame.UI
                     (_oldGamepadState.DPad.Up == ButtonState.Released && _newGamepadState.DPad.Up == ButtonState.Pressed);
                 bool movingDown = (_oldGamepadState.ThumbSticks.Left.Y > -0.25f && _newGamepadState.ThumbSticks.Left.Y < -0.25f) ||
                     (_oldGamepadState.DPad.Down == ButtonState.Released && _newGamepadState.DPad.Down == ButtonState.Pressed);
+                bool activate = _oldGamepadState.Buttons.A == ButtonState.Released && _newGamepadState.Buttons.A == ButtonState.Pressed;
 
                 if (movingUp)
                     selectPreviousComponent();
                 else if (movingDown)
                     selectNextComponent();
+
+                if (activate && _selectedIndex != -1)
+                {
+                    _UIComponents[_selectedIndex].activate();
+                }
             }
 
             base.update();

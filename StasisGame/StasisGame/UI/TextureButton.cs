@@ -26,11 +26,12 @@ namespace StasisGame.UI
         private int _hitBoxOffsetY;
         private int _hitBoxWidth;
         private int _hitBoxHeight;
+        private UIComponentAction _action;
 
         public bool selectable { get { return true; } }
         public float layerDepth { get { return 0f; } }
 
-        public TextureButton(SpriteBatch spriteBatch, int x, int y, int hitBoxWidth, int hitBoxHeight, Texture2D selectedTexture, Texture2D deselectedTexture, TextureButtonAlignment alignment)
+        public TextureButton(SpriteBatch spriteBatch, int x, int y, int hitBoxWidth, int hitBoxHeight, Texture2D selectedTexture, Texture2D deselectedTexture, TextureButtonAlignment alignment, UIComponentAction action)
         {
             _spriteBatch = spriteBatch;
             _selectedTexture = selectedTexture;
@@ -41,6 +42,7 @@ namespace StasisGame.UI
             _hitBoxWidth = hitBoxWidth;
             _hitBoxHeight = hitBoxHeight;
             _destRect = new Rectangle(_x, _y, 1, 1);
+            _action = action;
 
             if (_alignment == TextureButtonAlignment.Center)
             {
@@ -50,6 +52,11 @@ namespace StasisGame.UI
 
             _pixel = new Texture2D(spriteBatch.GraphicsDevice, 1, 1);
             _pixel.SetData<Color>(new[] { Color.White });
+        }
+
+        public void activate()
+        {
+            _action(this);
         }
 
         public bool hitTest(Vector2 point)
@@ -87,8 +94,8 @@ namespace StasisGame.UI
 
             _spriteBatch.Draw(texture, _destRect, texture.Bounds, Color.White, 0f, new Vector2((int)(texture.Width / 2f), (int)(texture.Height / 2f)), SpriteEffects.None, 0f);
 
-            Rectangle hitBox = new Rectangle(_x, _y, _hitBoxWidth, _hitBoxHeight);
-            _spriteBatch.Draw(_pixel, hitBox, hitBox, Color.Green * 0.5f, 0f, new Vector2(_hitBoxOffsetX, _hitBoxOffsetY), SpriteEffects.None, 0f);
+            //Rectangle hitBox = new Rectangle(_x, _y, _hitBoxWidth, _hitBoxHeight);
+            //_spriteBatch.Draw(_pixel, hitBox, hitBox, Color.Green * 0.5f, 0f, new Vector2(_hitBoxOffsetX, _hitBoxOffsetY), SpriteEffects.None, 0f);
         }
     }
 }

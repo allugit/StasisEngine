@@ -134,6 +134,18 @@ namespace StasisGame
             _level = new Level(this, filePath);
         }
 
+        public void newGame()
+        {
+        }
+
+        public void loadGame()
+        {
+        }
+
+        public void openOptionsMenu()
+        {
+        }
+
         protected override void Update(GameTime gameTime)
         {
             switch (_gameState)
