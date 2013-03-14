@@ -41,10 +41,11 @@ namespace StasisGame
         private Level _level;
         private bool _settingsInitialized;
         private SystemManager _systemManager;
-        public static IAsyncSaveDevice saveDevice;
+        public static IAsyncSaveDevice storageDevice;
 
         public SpriteBatch spriteBatch { get { return _spriteBatch; } }
         public SystemManager systemManager { get { return _systemManager; } }
+        public GraphicsDeviceManager graphics { get { return _graphics; } }
 
         public LoderGame(string[] args)
         {
@@ -65,7 +66,7 @@ namespace StasisGame
             _screenSystem = new ScreenSystem(_systemManager);
             _systemManager.add(_screenSystem, -1);
 
-            saveDevice = sharedSaveDevice;
+            storageDevice = sharedSaveDevice;
             sharedSaveDevice.DeviceSelectorCanceled += (s, e) => { e.Response = SaveDeviceEventResponse.Force; };
             sharedSaveDevice.DeviceDisconnected += (s, e) => { e.Response = SaveDeviceEventResponse.Force; };
             sharedSaveDevice.PromptForDevice();
@@ -73,7 +74,7 @@ namespace StasisGame
             Components.Add(sharedSaveDevice);
             Components.Add(new GamerServicesComponent(this));
 
-            saveDevice.SaveCompleted += new SaveCompletedEventHandler(saveDevice_SaveCompleted);
+            storageDevice.SaveCompleted += new SaveCompletedEventHandler(saveDevice_SaveCompleted);
 
             base.Initialize();
 
@@ -159,18 +160,18 @@ namespace StasisGame
             switch (_gameState)
             {
                 case GameState.Initializing:
-                    if (!_settingsInitialized && saveDevice.IsReady)
+                    if (!_settingsInitialized && storageDevice.IsReady)
                     {
-                        if (!saveDevice.FileExists("LodersFall_Save", "settings.xml"))
+                        if (!storageDevice.FileExists("LodersFall_Save", "settings.xml"))
                         {
-                            saveDevice.Save("LodersFall_Save", "settings.xml", (stream) =>
+                            storageDevice.Save("LodersFall_Save", "settings.xml", (stream) =>
                             {
                                 XDocument doc = new XDocument(new XElement("Settings"));
                                 doc.Save(stream);
                             });
                         }
 
-                        saveDevice.Load("LodersFall_Save", "settings.xml", (stream) =>
+                        storageDevice.Load("LodersFall_Save", "settings.xml", (stream) =>
                         {
                             DisplayMode largestDisplayMode = null;
                             foreach (DisplayMode displayMode in GraphicsAdapter.DefaultAdapter.SupportedDisplayModes)

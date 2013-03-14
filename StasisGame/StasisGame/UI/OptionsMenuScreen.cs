@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Xml.Linq;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Content;
 using Microsoft.Xna.Framework.Input;
@@ -55,7 +56,7 @@ namespace StasisGame.UI
                 _content.Load<Texture2D>("options_menu/save_selected"),
                 _content.Load<Texture2D>("options_menu/save_unselected"),
                 UIComponentAlignment.Center,
-                (component) => { });
+                (component) => { saveOptions(); });
 
             Label controllerLabel = new Label(
                 _game.spriteBatch,
@@ -236,6 +237,36 @@ namespace StasisGame.UI
         {
             _selectedFullscreen = !_selectedFullscreen;
             _fullscreenButton.text = _selectedFullscreen ? "True" : "False";
+        }
+
+        public void saveOptions()
+        {
+            // Apply settings
+            GameSettings.screenWidth = _selectedDisplayMode.Width;
+            GameSettings.screenHeight = _selectedDisplayMode.Height;
+            _game.graphics.PreferredBackBufferWidth = GameSettings.screenWidth;
+            _game.graphics.PreferredBackBufferHeight = GameSettings.screenHeight;
+            _game.graphics.IsFullScreen = _selectedFullscreen;
+            _game.graphics.ApplyChanges();
+            GameSettings.controllerType = _selectedControllerType;
+
+            // Save settings
+            bool saved = false;
+            while (!saved)
+            {
+                if (LoderGame.storageDevice.IsReady)
+                {
+                    LoderGame.storageDevice.Save("LodersFall_Save", "settings.xml", (stream) =>
+                        {
+                            XDocument doc = new XDocument();
+                            doc.Add(GameSettings.data);
+                            doc.Save(stream);
+                        });
+                    saved = true;
+                }
+            }
+
+            _game.closeOptionsMenu();
         }
 
         override public void update()
