@@ -24,6 +24,12 @@ namespace StasisGame.UI
         public void addComponent(IUIComponent component)
         {
             _UIComponents.Add(component);
+
+            if (_selectedIndex == -1)
+            {
+                _selectedIndex = _UIComponents.Count - 1;
+                component.onSelect();
+            }
         }
 
         public void removeComponent(IUIComponent component)

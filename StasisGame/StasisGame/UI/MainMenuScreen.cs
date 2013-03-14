@@ -83,12 +83,30 @@ namespace StasisGame.UI
             _newKeyState = Keyboard.GetState();
             _newMouseState = Mouse.GetState();
 
-            for (int i = 0; i < _UIComponents.Count; i++)
+            // Mouse input
+            if (_oldMouseState.X - _newMouseState.X != 0 || _oldMouseState.Y - _newMouseState.Y != 0)
             {
-                if (_UIComponents[i].hitTest(new Vector2(_newMouseState.X, _newMouseState.Y)))
+                for (int i = 0; i < _UIComponents.Count; i++)
                 {
-                    select(_UIComponents[i]);
+                    if (_UIComponents[i].hitTest(new Vector2(_newMouseState.X, _newMouseState.Y)))
+                    {
+                        select(_UIComponents[i]);
+                    }
                 }
+            }
+
+            // Gamepad input
+            if (_newGamepadState.IsConnected)
+            {
+                bool movingUp = (_oldGamepadState.ThumbSticks.Left.Y < 0.25f && _newGamepadState.ThumbSticks.Left.Y > 0.25f) ||
+                    (_oldGamepadState.DPad.Up == ButtonState.Released && _newGamepadState.DPad.Up == ButtonState.Pressed);
+                bool movingDown = (_oldGamepadState.ThumbSticks.Left.Y > -0.25f && _newGamepadState.ThumbSticks.Left.Y < -0.25f) ||
+                    (_oldGamepadState.DPad.Down == ButtonState.Released && _newGamepadState.DPad.Down == ButtonState.Pressed);
+
+                if (movingUp)
+                    selectPreviousComponent();
+                else if (movingDown)
+                    selectNextComponent();
             }
 
             base.update();
