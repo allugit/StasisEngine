@@ -1,13 +1,20 @@
 ﻿using System;
 using System.Collections.Generic;
 using Microsoft.Xna.Framework;
+using Microsoft.Xna.Framework.Input;
 
 namespace StasisGame.UI
 {
     abstract public class Screen
     {
-        private List<IUIComponent> _UIComponents;
-        private int _selectedIndex = -1;
+        protected List<IUIComponent> _UIComponents;
+        protected int _selectedIndex = -1;
+        protected GamePadState _newGamepadState;
+        protected GamePadState _oldGamepadState;
+        protected KeyboardState _newKeyState;
+        protected KeyboardState _oldKeyState;
+        protected MouseState _newMouseState;
+        protected MouseState _oldMouseState;
 
         public Screen()
         {
@@ -28,6 +35,9 @@ namespace StasisGame.UI
         {
             if (component.selectable && _UIComponents.Contains(component))
             {
+                if (_selectedIndex != -1)
+                    _UIComponents[_selectedIndex].onDeselect();
+
                 _selectedIndex = _UIComponents.IndexOf(component);
                 component.onSelect();
             }
@@ -61,6 +71,7 @@ namespace StasisGame.UI
                     if (_UIComponents[index].selectable)
                     {
                         foundNextSelectableComponent = true;
+                        _UIComponents[_selectedIndex].onDeselect();
                         _selectedIndex = index;
                         _UIComponents[index].onSelect();
                     }
@@ -96,6 +107,7 @@ namespace StasisGame.UI
                     if (_UIComponents[index].selectable)
                     {
                         foundNextSelectableComponent = true;
+                        _UIComponents[_selectedIndex].onDeselect();
                         _selectedIndex = index;
                         _UIComponents[index].onSelect();
                     }
