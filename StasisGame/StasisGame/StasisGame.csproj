@@ -136,6 +136,7 @@
     <Compile Include="UI\MainMenuScreen.cs" />
     <Compile Include="UI\OptionsMenuScreen.cs" />
     <Compile Include="UI\Screen.cs" />
+    <Compile Include="UI\TextButton.cs" />
     <Compile Include="UI\TextureButton.cs" />
   </ItemGroup>
   <ItemGroup>

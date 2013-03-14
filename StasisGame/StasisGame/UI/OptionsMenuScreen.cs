@@ -14,6 +14,7 @@ namespace StasisGame.UI
         private Texture2D _logo;
         private Texture2D _optionsContainer;
         private SpriteFont _santaBarbaraNormal;
+        private SpriteFont _arial;
         private ContentManager _content;
 
         public OptionsMenuScreen(LoderGame game) : base(ScreenType.OptionsMenu)
@@ -25,6 +26,7 @@ namespace StasisGame.UI
             _logo = _content.Load<Texture2D>("main_menu/logo");
             _optionsContainer = _content.Load<Texture2D>("options_menu/options_container");
             _santaBarbaraNormal = _content.Load<SpriteFont>("santa_barbara_normal");
+            _arial = _content.Load<SpriteFont>("arial");
 
             TextureButton saveButton = new TextureButton(
                 _game.spriteBatch,
@@ -44,8 +46,46 @@ namespace StasisGame.UI
                 (int)(_game.GraphicsDevice.Viewport.Width / 2f) - 220,
                 280);
 
-            _UIComponents.Add(saveButton);
+            Label keyboardLabel = new Label(
+                _game.spriteBatch,
+                _arial,
+                "Keyboard",
+                (int)(_game.GraphicsDevice.Viewport.Width / 2f) - 200,
+                320);
+
+            TextButton redefineKeyboardButton = new TextButton(
+                _game.spriteBatch,
+                _arial,
+                Color.LightGreen,
+                (int)(_game.GraphicsDevice.Viewport.Width / 2f) + 150,
+                320,
+                "Redefine Keys",
+                UIComponentAlignment.TopLeft,
+                (component) => { });
+
+            Label gamepadLabel = new Label(
+                _game.spriteBatch,
+                _arial,
+                "Gamepad",
+                (int)(_game.GraphicsDevice.Viewport.Width / 2f) - 200,
+                340);
+
+            TextButton redefineGamepadButton = new TextButton(
+                _game.spriteBatch,
+                _arial,
+                Color.LightGreen,
+                (int)(_game.GraphicsDevice.Viewport.Width / 2f) + 150,
+                340,
+                "Redefine Buttons",
+                UIComponentAlignment.TopLeft,
+                (component) => { });
+
             _UIComponents.Add(controllerLabel);
+            _UIComponents.Add(keyboardLabel);
+            _UIComponents.Add(gamepadLabel);
+            _UIComponents.Add(redefineKeyboardButton);
+            _UIComponents.Add(redefineGamepadButton);
+            _UIComponents.Add(saveButton);
         }
 
         ~OptionsMenuScreen()
