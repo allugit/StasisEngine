@@ -131,8 +131,8 @@ namespace StasisGame.UI
 
         override public void draw()
         {
-            float scale = (float)_background.Height / (float)_game.GraphicsDevice.Viewport.Height;
-            _game.spriteBatch.Draw(_background, Vector2.Zero, new Rectangle(0, 0, _game.GraphicsDevice.Viewport.Width, _game.GraphicsDevice.Viewport.Height), Color.White, 0f, Vector2.Zero, scale, SpriteEffects.None, 0f);
+            float scale = (float)_game.GraphicsDevice.Viewport.Height / (float)_background.Height;
+            _game.spriteBatch.Draw(_background, Vector2.Zero, _background.Bounds, Color.White, 0f, Vector2.Zero, scale, SpriteEffects.None, 0f);
             _game.spriteBatch.Draw(_logo, new Vector2(_game.GraphicsDevice.Viewport.Width / 2f, 100f), _logo.Bounds, Color.White, 0, new Vector2(_logo.Width, _logo.Height) / 2, 0.75f, SpriteEffects.None, 0);
 
             base.draw();
