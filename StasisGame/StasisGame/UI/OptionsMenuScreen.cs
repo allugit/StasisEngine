@@ -13,6 +13,7 @@ namespace StasisGame.UI
         private Texture2D _background;
         private Texture2D _logo;
         private Texture2D _optionsContainer;
+        private SpriteFont _santaBarbaraNormal;
         private ContentManager _content;
 
         public OptionsMenuScreen(LoderGame game) : base(ScreenType.OptionsMenu)
@@ -23,6 +24,7 @@ namespace StasisGame.UI
             _background = _content.Load<Texture2D>("main_menu/bg");
             _logo = _content.Load<Texture2D>("main_menu/logo");
             _optionsContainer = _content.Load<Texture2D>("options_menu/options_container");
+            _santaBarbaraNormal = _content.Load<SpriteFont>("santa_barbara_normal");
 
             TextureButton saveButton = new TextureButton(
                 _game.spriteBatch,
@@ -35,7 +37,15 @@ namespace StasisGame.UI
                 UIComponentAlignment.Center,
                 (component) => { });
 
+            Label controllerLabel = new Label(
+                _game.spriteBatch,
+                _santaBarbaraNormal,
+                "Controller",
+                (int)(_game.GraphicsDevice.Viewport.Width / 2f) - 220,
+                280);
+
             _UIComponents.Add(saveButton);
+            _UIComponents.Add(controllerLabel);
         }
 
         ~OptionsMenuScreen()
