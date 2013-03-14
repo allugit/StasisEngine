@@ -120,9 +120,9 @@ namespace StasisGame.UI
                 else if (movingDown)
                     selectNextComponent();
 
-                if (activate && _selectedIndex != -1)
+                if (activate && _selectedComponent != null)
                 {
-                    (_UIComponents[_selectedIndex] as ISelectableUIComponent).activate();
+                    _selectedComponent.activate();
                 }
             }
 

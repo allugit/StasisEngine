@@ -29,7 +29,19 @@ namespace StasisGame.UI
                 160,
                 UIComponentAlignment.TopCenter);
 
+            TextureButton saveButton = new TextureButton(
+                _game.spriteBatch,
+                (int)(_game.GraphicsDevice.Viewport.Width / 2f),
+                700,
+                100,
+                75,
+                _content.Load<Texture2D>("options_menu/save_selected"),
+                _content.Load<Texture2D>("options_menu/save_unselected"),
+                UIComponentAlignment.Center,
+                (component) => { });
+
             _UIComponents.Add(container);
+            _UIComponents.Add(saveButton);
         }
 
         ~OptionsMenuScreen()
@@ -80,9 +92,9 @@ namespace StasisGame.UI
                 else if (movingDown)
                     selectNextComponent();
 
-                if (activate && _selectedIndex != -1)
+                if (activate && _selectedComponent != null)
                 {
-                    (_UIComponents[_selectedIndex] as ISelectableUIComponent).activate();
+                    _selectedComponent.activate();
                 }
             }
 

@@ -21,7 +21,7 @@ namespace StasisGame.UI
     abstract public class Screen
     {
         protected List<IUIComponent> _UIComponents;
-        protected int _selectedIndex = -1;
+        protected ISelectableUIComponent _selectedComponent;
         protected GamePadState _newGamepadState;
         protected GamePadState _oldGamepadState;
         protected KeyboardState _newKeyState;
@@ -41,14 +41,6 @@ namespace StasisGame.UI
         public void addComponent(IUIComponent component)
         {
             _UIComponents.Add(component);
-
-            if (_selectedIndex == -1)
-            {
-                _selectedIndex = _UIComponents.Count - 1;
-
-                if (component.selectable)
-                    (component as ISelectableUIComponent).onSelect();
-            }
         }
 
         public void removeComponent(IUIComponent component)
@@ -60,10 +52,10 @@ namespace StasisGame.UI
         {
             if (component.selectable && _UIComponents.Contains(component))
             {
-                if (_selectedIndex != -1)
-                    (_UIComponents[_selectedIndex] as ISelectableUIComponent).onDeselect();
+                if (_selectedComponent != null)
+                    _selectedComponent.onDeselect();
 
-                _selectedIndex = _UIComponents.IndexOf(component);
+                _selectedComponent = component;
                 component.onSelect();
             }
         }
@@ -84,7 +76,7 @@ namespace StasisGame.UI
             if (selectableComponentExists)
             {
                 bool foundNextSelectableComponent = false;
-                int index = _selectedIndex;
+                int index = _selectedComponent == null ? -1 : _UIComponents.IndexOf(_selectedComponent);
 
                 while (!foundNextSelectableComponent)
                 {
@@ -96,9 +88,10 @@ namespace StasisGame.UI
                     if (_UIComponents[index].selectable)
                     {
                         foundNextSelectableComponent = true;
-                        (_UIComponents[_selectedIndex] as ISelectableUIComponent).onDeselect();
-                        _selectedIndex = index;
-                        (_UIComponents[index] as ISelectableUIComponent).onSelect();
+                        if (_selectedComponent != null)
+                            _selectedComponent.onDeselect();
+                        _selectedComponent = _UIComponents[index] as ISelectableUIComponent;
+                        _selectedComponent.onSelect();
                     }
                 }
             }
@@ -120,7 +113,7 @@ namespace StasisGame.UI
             if (selectableComponentExists)
             {
                 bool foundPreviousSelectableComponent = false;
-                int index = _selectedIndex;
+                int index = _selectedComponent == null ? 1 : _UIComponents.IndexOf(_selectedComponent);
 
                 while (!foundPreviousSelectableComponent)
                 {
@@ -132,9 +125,9 @@ namespace StasisGame.UI
                     if (_UIComponents[index].selectable)
                     {
                         foundPreviousSelectableComponent = true;
-                        (_UIComponents[_selectedIndex] as ISelectableUIComponent).onDeselect();
-                        _selectedIndex = index;
-                        (_UIComponents[index] as ISelectableUIComponent).onSelect();
+                         _selectedComponent.onDeselect();
+                        _selectedComponent = _UIComponents[index] as ISelectableUIComponent;
+                        _selectedComponent.onSelect();
                     }
                 }
             }
