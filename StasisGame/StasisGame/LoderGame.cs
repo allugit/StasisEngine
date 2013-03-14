@@ -77,8 +77,6 @@ namespace StasisGame
             storageDevice.SaveCompleted += new SaveCompletedEventHandler(saveDevice_SaveCompleted);
 
             base.Initialize();
-
-            //handleArgs();
         }
 
         void saveDevice_SaveCompleted(object sender, FileActionCompletedEventArgs args)
@@ -162,40 +160,49 @@ namespace StasisGame
                 case GameState.Initializing:
                     if (!_settingsInitialized && storageDevice.IsReady)
                     {
+                        // Create default settings
                         if (!storageDevice.FileExists("LodersFall_Save", "settings.xml"))
                         {
                             storageDevice.Save("LodersFall_Save", "settings.xml", (stream) =>
                             {
-                                XDocument doc = new XDocument(new XElement("Settings"));
+                                // Find suitable screen size
+                                int screenWidth = 1024;
+                                int screenHeight = 512;
+                                DisplayMode current = GraphicsDevice.Adapter.CurrentDisplayMode;
+                                foreach (DisplayMode displayMode in GraphicsDevice.Adapter.SupportedDisplayModes)
+                                {
+                                    if (displayMode.Width < current.Width && displayMode.Height < current.Height &&
+                                        displayMode.Width >= screenWidth && displayMode.Height >= screenHeight)
+                                    {
+                                        screenWidth = displayMode.Width;
+                                        screenHeight = displayMode.Height;
+                                    }
+                                }
+
+                                GameSettings.screenWidth = screenWidth;
+                                GameSettings.screenHeight = screenHeight;
+                                GameSettings.fullscreen = false;
+                                GameSettings.controllerType = ControllerType.Gamepad;
+
+                                XDocument doc = new XDocument(GameSettings.data);
                                 doc.Save(stream);
                             });
                         }
 
+                        // Load settings
                         storageDevice.Load("LodersFall_Save", "settings.xml", (stream) =>
                         {
-                            DisplayMode largestDisplayMode = null;
-                            foreach (DisplayMode displayMode in GraphicsAdapter.DefaultAdapter.SupportedDisplayModes)
-                            {
-                                if (largestDisplayMode == null)
-                                {
-                                    largestDisplayMode = displayMode;
-                                    continue;
-                                }
-
-                                largestDisplayMode = displayMode.Width * displayMode.Height > largestDisplayMode.Width * largestDisplayMode.Height ? displayMode : largestDisplayMode;
-                            }
-
                             XDocument doc = XDocument.Load(stream);
                             XElement data = doc.Element("Settings");
-                            GameSettings.screenWidth = Loader.loadInt(data.Element("ScreenWidth"), largestDisplayMode.Width);
-                            GameSettings.screenHeight = Loader.loadInt(data.Element("ScreenHeight"), largestDisplayMode.Height);
-                            System.Diagnostics.Debug.WriteLine(GameSettings.screenWidth);
-                            System.Diagnostics.Debug.WriteLine(GameSettings.screenHeight);
+                            GameSettings.screenWidth = Loader.loadInt(data.Element("ScreenWidth"), GraphicsDevice.Viewport.Width);
+                            GameSettings.screenHeight = Loader.loadInt(data.Element("ScreenHeight"), GraphicsDevice.Viewport.Height);
+                            GameSettings.controllerType = (ControllerType)Loader.loadEnum(typeof(ControllerType), data.Element("ControllerType"), (int)ControllerType.Gamepad);
                         });
 
                         //_graphics.PreferMultiSampling = true;
                         _graphics.PreferredBackBufferWidth = GameSettings.screenWidth;
                         _graphics.PreferredBackBufferHeight = GameSettings.screenHeight;
+                        _graphics.IsFullScreen = GameSettings.fullscreen;
                         _graphics.ApplyChanges();
 
                         _settingsInitialized = true;
