@@ -198,6 +198,7 @@ namespace StasisGame
                             XElement data = doc.Element("Settings");
                             GameSettings.screenWidth = Loader.loadInt(data.Element("ScreenWidth"), GraphicsDevice.Viewport.Width);
                             GameSettings.screenHeight = Loader.loadInt(data.Element("ScreenHeight"), GraphicsDevice.Viewport.Height);
+                            GameSettings.fullscreen = Loader.loadBool(data.Element("Fullscreen"), false);
                             GameSettings.controllerType = (ControllerType)Loader.loadEnum(typeof(ControllerType), data.Element("ControllerType"), (int)ControllerType.Gamepad);
                         });
 

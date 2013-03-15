@@ -8,6 +8,33 @@ using Microsoft.Xna.Framework.Graphics;
 
 namespace StasisGame.UI
 {
+    public class DisplayDimensions
+    {
+        public int width;
+        public int height;
+        public DisplayDimensions(int width, int height)
+        {
+            this.width = width;
+            this.height = height;
+        }
+
+        public override bool Equals(object obj)
+        {
+            if (obj.GetType() == typeof(DisplayDimensions))
+            {
+                DisplayDimensions o = (DisplayDimensions)obj;
+                return o.width == width && o.height == height;
+            }
+            else if (obj.GetType() == typeof(DisplayMode))
+            {
+                DisplayMode o = (DisplayMode)obj;
+                return o.Width == width && o.Height == height;
+            }
+
+            return base.Equals(obj);
+        }
+    };
+
     public class OptionsMenuScreen : Screen
     {
         private LoderGame _game;
@@ -17,8 +44,8 @@ namespace StasisGame.UI
         private SpriteFont _santaBarbaraNormal;
         private SpriteFont _arial;
         private ContentManager _content;
-        private List<DisplayMode> _displayModes;
-        private DisplayMode _selectedDisplayMode;
+        private List<DisplayDimensions> _displayDimensions;
+        private DisplayDimensions _selectedDimensions;
         private TextButton _displayModeButton;
         private TextButton _fullscreenButton;
         private bool _selectedFullscreen;
@@ -35,16 +62,16 @@ namespace StasisGame.UI
             _optionsContainer = _content.Load<Texture2D>("options_menu/options_container");
             _santaBarbaraNormal = _content.Load<SpriteFont>("santa_barbara_normal");
             _arial = _content.Load<SpriteFont>("arial");
-            _displayModes = new List<DisplayMode>();
-
+            _displayDimensions = new List<DisplayDimensions>();
+            _selectedFullscreen = GameSettings.fullscreen;
             _selectedControllerType = GameSettings.controllerType;
+            _selectedDimensions = new DisplayDimensions(GameSettings.screenWidth, GameSettings.screenHeight);
+            _displayDimensions.Add(_selectedDimensions);
 
-            DisplayMode currentDisplayMode = _game.GraphicsDevice.Adapter.CurrentDisplayMode;
             foreach (DisplayMode displayMode in _game.GraphicsDevice.Adapter.SupportedDisplayModes)
             {
-                if (compareDisplayModes(currentDisplayMode, displayMode))
-                    _selectedDisplayMode = displayMode;
-                _displayModes.Add(displayMode);
+                if (!_selectedDimensions.Equals(displayMode))
+                    _displayDimensions.Add(new DisplayDimensions(displayMode.Width, displayMode.Height));
             }
 
             TextureButton saveButton = new TextureButton(
@@ -142,7 +169,7 @@ namespace StasisGame.UI
                 Color.LightGreen,
                 140,
                 440,
-                String.Format("{0} x {1}", _selectedDisplayMode.Width, _selectedDisplayMode.Height),
+                String.Format("{0} x {1}", _selectedDimensions.width, _selectedDimensions.height),
                 UIComponentAlignment.TopCenter,
                 (component) => { selectNextDisplayMode(); });
 
@@ -211,33 +238,17 @@ namespace StasisGame.UI
             _controllerTypeButton.text = getControllerTypeText(_selectedControllerType);
         }
 
-        private bool compareDisplayModes(DisplayMode a, DisplayMode b)
-        {
-            if (a.AspectRatio != b.AspectRatio)
-                return false;
-            if (a.Format != b.Format)
-                return false;
-            if (a.Height != b.Height)
-                return false;
-            if (a.TitleSafeArea != b.TitleSafeArea)
-                return false;
-            if (a.Width != b.Width)
-                return false;
-
-            return true;
-        }
-
         public void selectNextDisplayMode()
         {
-            int index = _displayModes.IndexOf(_selectedDisplayMode);
+            int index = _displayDimensions.IndexOf(_selectedDimensions);
 
             index++;
 
-            if (index >= _displayModes.Count)
+            if (index >= _displayDimensions.Count)
                 index = 0;
 
-            _selectedDisplayMode = _displayModes[index];
-            _displayModeButton.text = String.Format("{0} x {1}", _selectedDisplayMode.Width, _selectedDisplayMode.Height);
+            _selectedDimensions = _displayDimensions[index];
+            _displayModeButton.text = String.Format("{0} x {1}", _selectedDimensions.width, _selectedDimensions.height);
         }
 
         public void switchFullscreen()
@@ -249,11 +260,12 @@ namespace StasisGame.UI
         public void saveOptions()
         {
             // Apply settings
-            GameSettings.screenWidth = _selectedDisplayMode.Width;
-            GameSettings.screenHeight = _selectedDisplayMode.Height;
+            GameSettings.screenWidth = _selectedDimensions.width;
+            GameSettings.screenHeight = _selectedDimensions.height;
+            GameSettings.fullscreen = _selectedFullscreen;
             _game.graphics.PreferredBackBufferWidth = GameSettings.screenWidth;
             _game.graphics.PreferredBackBufferHeight = GameSettings.screenHeight;
-            _game.graphics.IsFullScreen = _selectedFullscreen;
+            _game.graphics.IsFullScreen = GameSettings.fullscreen;
             _game.graphics.ApplyChanges();
             GameSettings.controllerType = _selectedControllerType;
 
