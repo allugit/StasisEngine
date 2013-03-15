@@ -235,6 +235,7 @@ namespace StasisGame
                     break;
 
                 case GameState.WorldMap:
+                    _systemManager.process();
                     break;
 
                 case GameState.Level:

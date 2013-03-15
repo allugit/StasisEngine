@@ -28,6 +28,7 @@ namespace StasisGame.UI
         private int _worldHeight = 5250;
         private Matrix _view;
         private float _scale;
+        private Vector2 _screenCenter;
 
         public WorldMapScreen(LoderGame game) : base(ScreenType.WorldMap)
         {
@@ -53,6 +54,26 @@ namespace StasisGame.UI
 
         public override void update()
         {
+            _oldGamepadState = _newGamepadState;
+            _oldKeyState = _newKeyState;
+            _oldMouseState = _newMouseState;
+
+            _newGamepadState = GamePad.GetState(PlayerIndex.One);
+            _newKeyState = Keyboard.GetState();
+            _newMouseState = Mouse.GetState();
+
+            if (_newGamepadState.IsConnected)
+            {
+                Vector2 newScreenCenter = _screenCenter;
+
+                newScreenCenter += _newGamepadState.ThumbSticks.Left * 50 * new Vector2(1, -1);
+                newScreenCenter += _newGamepadState.ThumbSticks.Right * 50 * new Vector2(1, -1);
+                _screenCenter += (_screenCenter - newScreenCenter) / 4f;
+
+                _scale = Math.Max(0.25f, _scale - _newGamepadState.Triggers.Left / 500f);
+                _scale = Math.Min(1f, _scale + _newGamepadState.Triggers.Right / 500f);
+            }
+
             base.update();
         }
 
@@ -60,6 +81,7 @@ namespace StasisGame.UI
         {
             _view =
                 Matrix.CreateTranslation(new Vector3(-_worldWidth, -_worldHeight, 0) / 2f) *
+                Matrix.CreateTranslation(new Vector3(_screenCenter, 0)) *
                 Matrix.CreateScale(_scale) *
                 Matrix.CreateTranslation(new Vector3(_game.GraphicsDevice.Viewport.Width, _game.GraphicsDevice.Viewport.Height, 0) / 2f);
 
