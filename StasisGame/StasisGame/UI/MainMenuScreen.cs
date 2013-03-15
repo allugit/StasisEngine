@@ -24,46 +24,46 @@ namespace StasisGame.UI
 
             TextureButton newGameButton = new TextureButton(
                 _game.spriteBatch,
-                (int)(_game.GraphicsDevice.Viewport.Width / 2f),
+                0,
                 256,
                 475,
                 80,
                 _content.Load<Texture2D>("main_menu/new_game_selected"),
                 _content.Load<Texture2D>("main_menu/new_game_unselected"),
-                UIComponentAlignment.Center,
+                UIComponentAlignment.TopCenter,
                 (component) => { _game.newGame(); });
             
             TextureButton loadGameButton = new TextureButton(
                 _game.spriteBatch,
-                (int)(_game.GraphicsDevice.Viewport.Width / 2f),
+                0,
                 358,
                 475,
                 80,
                 _content.Load<Texture2D>("main_menu/load_game_selected"),
                 _content.Load<Texture2D>("main_menu/load_game_unselected"),
-                UIComponentAlignment.Center,
+                UIComponentAlignment.TopCenter,
                 (component) => { _game.loadGame(); });
             
             TextureButton optionsButton = new TextureButton(
                 _game.spriteBatch,
-                (int)(_game.GraphicsDevice.Viewport.Width / 2f),
+                0,
                 465,
                 475,
                 80,
                 _content.Load<Texture2D>("main_menu/options_selected"),
                 _content.Load<Texture2D>("main_menu/options_unselected"),
-                UIComponentAlignment.Center,
+                UIComponentAlignment.TopCenter,
                 (component) => { _game.openOptionsMenu(); });
 
             TextureButton exitButton = new TextureButton(
                 _game.spriteBatch,
-                (int)(_game.GraphicsDevice.Viewport.Width / 2f + 100f),
+                100,
                 565,
                 240,
                 80,
                 _content.Load<Texture2D>("main_menu/exit_selected"),
                 _content.Load<Texture2D>("main_menu/exit_unselected"),
-                UIComponentAlignment.Center,
+                UIComponentAlignment.TopCenter,
                 (component) => { _game.Exit(); });
             
             addComponent(newGameButton);

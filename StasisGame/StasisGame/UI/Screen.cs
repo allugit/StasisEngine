@@ -9,8 +9,7 @@ namespace StasisGame.UI
     public enum UIComponentAlignment
     {
         TopLeft,
-        TopCenter,
-        Center
+        TopCenter
     };
     public enum ScreenType
     {
@@ -125,7 +124,8 @@ namespace StasisGame.UI
                     if (_UIComponents[index].selectable)
                     {
                         foundPreviousSelectableComponent = true;
-                         _selectedComponent.onDeselect();
+                        if (_selectedComponent != null)
+                            _selectedComponent.onDeselect();
                         _selectedComponent = _UIComponents[index] as ISelectableUIComponent;
                         _selectedComponent.onSelect();
                     }

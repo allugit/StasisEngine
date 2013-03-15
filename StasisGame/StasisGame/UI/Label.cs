@@ -10,19 +10,38 @@ namespace StasisGame.UI
         private SpriteBatch _spriteBatch;
         private SpriteFont _font;
         private string _text;
-        private int _x;
-        private int _y;
+        private int _xOffset;
+        private int _yOffset;
+        private UIComponentAlignment _alignment;
 
         public bool selectable { get { return false; } }
         public float layerDepth { get { return 0f; } }
+        public int x
+        {
+            get
+            {
+                if (_alignment == UIComponentAlignment.TopCenter)
+                    return _xOffset + (int)(_spriteBatch.GraphicsDevice.Viewport.Width / 2f);
 
-        public Label(SpriteBatch spriteBatch, SpriteFont font, string text, int x, int y)
+                return _xOffset;
+            }
+        }
+        public int y
+        {
+            get
+            {
+                return _yOffset;
+            }
+        }
+
+        public Label(SpriteBatch spriteBatch, SpriteFont font, string text, int xOffset, int yOffset, UIComponentAlignment alignment)
         {
             _spriteBatch = spriteBatch;
             _font = font;
             _text = text;
-            _x = x;
-            _y = y;
+            _xOffset = xOffset;
+            _yOffset = yOffset;
+            _alignment = alignment;
         }
 
         public void UIUpdate()
@@ -31,7 +50,7 @@ namespace StasisGame.UI
 
         public void UIDraw()
         {
-            _spriteBatch.DrawString(_font, _text, new Vector2(_x, _y), Color.White, 0f, Vector2.Zero, 1f, SpriteEffects.None, layerDepth);
+            _spriteBatch.DrawString(_font, _text, new Vector2(x, y), Color.White, 0f, Vector2.Zero, 1f, SpriteEffects.None, layerDepth);
         }
     }
 }

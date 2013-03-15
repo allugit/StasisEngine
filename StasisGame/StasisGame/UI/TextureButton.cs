@@ -13,9 +13,8 @@ namespace StasisGame.UI
         private bool _selected;
         private UIComponentAlignment _alignment;
         private Texture2D _pixel;
-        private Rectangle _destRect;
-        private int _x;
-        private int _y;
+        private int _xOffset;
+        private int _yOffset;
         private int _hitBoxOffsetX;
         private int _hitBoxOffsetY;
         private int _hitBoxWidth;
@@ -24,21 +23,37 @@ namespace StasisGame.UI
 
         public bool selectable { get { return true; } }
         public float layerDepth { get { return 0f; } }
+        public int x
+        {
+            get
+            {
+                if (_alignment == UIComponentAlignment.TopCenter)
+                    return _xOffset + (int)(_spriteBatch.GraphicsDevice.Viewport.Width / 2f);
 
-        public TextureButton(SpriteBatch spriteBatch, int x, int y, int hitBoxWidth, int hitBoxHeight, Texture2D selectedTexture, Texture2D deselectedTexture, UIComponentAlignment alignment, UIComponentAction action)
+                return _xOffset;
+            }
+        }
+        public int y
+        {
+            get
+            {
+                return _yOffset;
+            }
+        }
+
+        public TextureButton(SpriteBatch spriteBatch, int xOffset, int yOffset, int hitBoxWidth, int hitBoxHeight, Texture2D selectedTexture, Texture2D deselectedTexture, UIComponentAlignment alignment, UIComponentAction action)
         {
             _spriteBatch = spriteBatch;
             _selectedTexture = selectedTexture;
             _deselectedTexture = deselectedTexture;
             _alignment = alignment;
-            _x = x;
-            _y = y;
+            _xOffset = xOffset;
+            _yOffset = yOffset;
             _hitBoxWidth = hitBoxWidth;
             _hitBoxHeight = hitBoxHeight;
-            _destRect = new Rectangle(_x, _y, 1, 1);
             _action = action;
 
-            if (_alignment == UIComponentAlignment.Center)
+            if (_alignment == UIComponentAlignment.TopCenter)
             {
                 _hitBoxOffsetX = (int)(_hitBoxWidth / 2f);
                 _hitBoxOffsetY = (int)(_hitBoxHeight / 2f);
@@ -58,9 +73,9 @@ namespace StasisGame.UI
             int pointX = (int)point.X;
             int pointY = (int)point.Y;
 
-            if (pointX < _x - _hitBoxOffsetX || pointX > -_hitBoxOffsetX + _x + _hitBoxWidth)
+            if (pointX < x - _hitBoxOffsetX || pointX > -_hitBoxOffsetX + x + _hitBoxWidth)
                 return false;
-            else if (pointY < _y - _hitBoxOffsetY || pointY > -_hitBoxOffsetY + _y + _hitBoxHeight)
+            else if (pointY < y - _hitBoxOffsetY || pointY > -_hitBoxOffsetY + y + _hitBoxHeight)
                 return false;
 
             return true;
@@ -83,13 +98,11 @@ namespace StasisGame.UI
         public void UIDraw()
         {
             Texture2D texture = _selected ? _selectedTexture : _deselectedTexture;
-            _destRect.Width = texture.Width;
-            _destRect.Height = texture.Height;
 
             if (_alignment == UIComponentAlignment.TopLeft)
-                _spriteBatch.Draw(texture, _destRect, texture.Bounds, Color.White, 0f, Vector2.Zero, SpriteEffects.None, 0f);
-            else if (_alignment == UIComponentAlignment.Center)
-                _spriteBatch.Draw(texture, _destRect, texture.Bounds, Color.White, 0f, new Vector2((int)(texture.Width / 2f), (int)(texture.Height / 2f)), SpriteEffects.None, 0f);
+                _spriteBatch.Draw(texture, new Rectangle(x, y, texture.Width, texture.Height), texture.Bounds, Color.White, 0f, Vector2.Zero, SpriteEffects.None, 0f);
+            else if (_alignment == UIComponentAlignment.TopCenter)
+                _spriteBatch.Draw(texture, new Rectangle(x, y, texture.Width, texture.Height), texture.Bounds, Color.White, 0f, new Vector2((int)(texture.Width / 2f), (int)(texture.Height / 2f)), SpriteEffects.None, 0f);
 
             //Rectangle hitBox = new Rectangle(_x, _y, _hitBoxWidth, _hitBoxHeight);
             //_spriteBatch.Draw(_pixel, hitBox, hitBox, Color.Green * 0.5f, 0f, new Vector2(_hitBoxOffsetX, _hitBoxOffsetY), SpriteEffects.None, 0f);

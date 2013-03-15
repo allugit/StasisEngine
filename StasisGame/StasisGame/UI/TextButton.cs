@@ -14,8 +14,8 @@ namespace StasisGame.UI
         private UIComponentAlignment _alignment;
         private Texture2D _pixel;
         private Color _color;
-        private int _x;
-        private int _y;
+        private int _xOffset;
+        private int _yOffset;
         private int _hitBoxOffsetX;
         private int _hitBoxOffsetY;
         private int _hitBoxWidth;
@@ -33,22 +33,39 @@ namespace StasisGame.UI
                 _hitBoxWidth = (int)_font.MeasureString(_text).X;
                 _hitBoxHeight = (int)_font.MeasureString(_text).Y;
 
-                if (_alignment == UIComponentAlignment.Center)
+                if (_alignment == UIComponentAlignment.TopCenter)
                 {
                     _hitBoxOffsetX = (int)(_hitBoxWidth / 2f);
                     _hitBoxOffsetY = (int)(_hitBoxHeight / 2f);
                 }
             }
         }
+        public int x
+        {
+            get
+            {
+                if (_alignment == UIComponentAlignment.TopCenter)
+                    return _xOffset + (int)(_spriteBatch.GraphicsDevice.Viewport.Width / 2f);
 
-        public TextButton(SpriteBatch spriteBatch, SpriteFont font, Color color, int x, int y, string text, UIComponentAlignment alignment, UIComponentAction action)
+                return _xOffset;
+            }
+        }
+        public int y
+        {
+            get
+            {
+                return _yOffset;
+            }
+        }
+
+        public TextButton(SpriteBatch spriteBatch, SpriteFont font, Color color, int xOffset, int yOffset, string text, UIComponentAlignment alignment, UIComponentAction action)
         {
             _spriteBatch = spriteBatch;
             _font = font;
             _color = color;
             _alignment = alignment;
-            _x = x;
-            _y = y;
+            _xOffset = xOffset;
+            _yOffset = yOffset;
             _action = action;
             this.text = text;
 
@@ -66,9 +83,9 @@ namespace StasisGame.UI
             int pointX = (int)point.X;
             int pointY = (int)point.Y;
 
-            if (pointX < _x - _hitBoxOffsetX || pointX > -_hitBoxOffsetX + _x + _hitBoxWidth)
+            if (pointX < x || pointX > x + _hitBoxWidth)
                 return false;
-            else if (pointY < _y - _hitBoxOffsetY || pointY > -_hitBoxOffsetY + _y + _hitBoxHeight)
+            else if (pointY < y || pointY > y + _hitBoxHeight)
                 return false;
 
             return true;
@@ -94,17 +111,17 @@ namespace StasisGame.UI
 
             if (_selected)
             {
-                Rectangle hitBox = new Rectangle(_x, _y, _hitBoxWidth, _hitBoxHeight);
-                _spriteBatch.Draw(_pixel, hitBox, hitBox, Color.Red * 0.35f, 0f, new Vector2(_hitBoxOffsetX, _hitBoxOffsetY), SpriteEffects.None, 0.1f);
+                Rectangle hitBox = new Rectangle(x, y, _hitBoxWidth, _hitBoxHeight);
+                _spriteBatch.Draw(_pixel, hitBox, hitBox, Color.Red * 0.35f, 0f, Vector2.Zero, SpriteEffects.None, 0.1f);
             }
 
             if (_alignment == UIComponentAlignment.TopLeft)
             {
-                _spriteBatch.DrawString(_font, _text, new Vector2(_x, _y), color);
+                _spriteBatch.DrawString(_font, _text, new Vector2(x, y), color);
             }
-            else if (_alignment == UIComponentAlignment.Center)
+            else if (_alignment == UIComponentAlignment.TopCenter)
             {
-                _spriteBatch.DrawString(_font, _text, new Vector2(_x, _y), color, 0f, new Vector2(_hitBoxWidth, _hitBoxHeight) / 2f, 1f, SpriteEffects.None, 0f);
+                _spriteBatch.DrawString(_font, _text, new Vector2(x, y), color, 0f, Vector2.Zero, 1f, SpriteEffects.None, 0f);
             }
         }
     }

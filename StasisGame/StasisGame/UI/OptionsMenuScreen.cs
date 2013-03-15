@@ -49,112 +49,119 @@ namespace StasisGame.UI
 
             TextureButton saveButton = new TextureButton(
                 _game.spriteBatch,
-                (int)(_game.GraphicsDevice.Viewport.Width / 2f),
+                0,
                 690,
                 100,
                 75,
                 _content.Load<Texture2D>("options_menu/save_selected"),
                 _content.Load<Texture2D>("options_menu/save_unselected"),
-                UIComponentAlignment.Center,
+                UIComponentAlignment.TopCenter,
                 (component) => { saveOptions(); });
 
             Label controllerLabel = new Label(
                 _game.spriteBatch,
                 _santaBarbaraNormal,
                 "Controller",
-                (int)(_game.GraphicsDevice.Viewport.Width / 2f) - 220,
-                280);
+                -220,
+                280,
+                UIComponentAlignment.TopCenter);
 
             Label keyboardLabel = new Label(
                 _game.spriteBatch,
                 _arial,
                 "Keyboard",
-                (int)(_game.GraphicsDevice.Viewport.Width / 2f) - 200,
-                320);
+                -200,
+                320,
+                UIComponentAlignment.TopCenter);
 
             TextButton redefineKeyboardButton = new TextButton(
                 _game.spriteBatch,
                 _arial,
                 Color.LightGreen,
-                (int)(_game.GraphicsDevice.Viewport.Width / 2f) + 140,
+                140,
                 320,
                 "Redefine Keys",
-                UIComponentAlignment.TopLeft,
+                UIComponentAlignment.TopCenter,
                 (component) => { });
 
             Label gamepadLabel = new Label(
                 _game.spriteBatch,
                 _arial,
                 "Gamepad",
-                (int)(_game.GraphicsDevice.Viewport.Width / 2f) - 200,
-                340);
+                -200,
+                340,
+                UIComponentAlignment.TopCenter);
 
             TextButton redefineGamepadButton = new TextButton(
                 _game.spriteBatch,
                 _arial,
                 Color.LightGreen,
-                (int)(_game.GraphicsDevice.Viewport.Width / 2f) + 140,
+                140,
                 340,
                 "Redefine Buttons",
-                UIComponentAlignment.TopLeft,
+                UIComponentAlignment.TopCenter,
                 (component) => { });
 
             Label controllerTypeLabel = new Label(
                 _game.spriteBatch,
                 _arial,
                 "Selected Controller",
-                (int)(_game.GraphicsDevice.Viewport.Width / 2f) - 200,
-                360);
+                -200,
+                360,
+                UIComponentAlignment.TopCenter);
 
             _controllerTypeButton = new TextButton(
                 _game.spriteBatch,
                 _arial,
                 Color.LightGreen,
-                (int)(_game.GraphicsDevice.Viewport.Width / 2f) + 140,
+                140,
                 360,
                 getControllerTypeText(_selectedControllerType),
-                UIComponentAlignment.TopLeft,
+                UIComponentAlignment.TopCenter,
                 (component) => { selectNextControllerType(); });
 
             Label displayLabel = new Label(
                 _game.spriteBatch,
                 _santaBarbaraNormal,
                 "Display",
-                (int)(_game.GraphicsDevice.Viewport.Width / 2f) - 220,
-                400);
+                -220,
+                400,
+                UIComponentAlignment.TopCenter);
 
             Label resolutionLabel = new Label(
                 _game.spriteBatch,
                 _arial,
                 "Resolution",
-                (int)(_game.GraphicsDevice.Viewport.Width / 2f) - 200,
-                440);
+                -200,
+                440,
+                UIComponentAlignment.TopCenter);
 
             _displayModeButton = new TextButton(
                 _game.spriteBatch,
                 _arial,
                 Color.LightGreen,
-                (int)(_game.GraphicsDevice.Viewport.Width / 2f) + 140,
+                140,
                 440,
                 String.Format("{0} x {1}", _selectedDisplayMode.Width, _selectedDisplayMode.Height),
-                UIComponentAlignment.TopLeft,
+                UIComponentAlignment.TopCenter,
                 (component) => { selectNextDisplayMode(); });
 
             Label fullscreenLabel = new Label(
                 _game.spriteBatch,
                 _arial,
                 "Fullscreen",
-                (int)(_game.GraphicsDevice.Viewport.Width / 2f) - 200,
-                460);
+                -200,
+                460,
+                UIComponentAlignment.TopCenter);
 
             _fullscreenButton = new TextButton(
                 _game.spriteBatch,
                 _arial,
                 Color.LightGreen,
-                (int)(_game.GraphicsDevice.Viewport.Width / 2f) + 140,
+                140,
                 460,
                 _selectedFullscreen ? "True" : "False",
-                UIComponentAlignment.TopLeft,
+                UIComponentAlignment.TopCenter,
                 (component) => { switchFullscreen(); });
 
             _UIComponents.Add(controllerLabel);
