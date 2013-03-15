@@ -138,6 +138,7 @@
     <Compile Include="UI\Screen.cs" />
     <Compile Include="UI\TextButton.cs" />
     <Compile Include="UI\TextureButton.cs" />
+    <Compile Include="UI\WorldMapScreen.cs" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="Game.ico" />

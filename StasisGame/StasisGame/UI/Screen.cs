@@ -14,7 +14,8 @@ namespace StasisGame.UI
     public enum ScreenType
     {
         MainMenu,
-        OptionsMenu
+        OptionsMenu,
+        WorldMap
     };
 
     abstract public class Screen

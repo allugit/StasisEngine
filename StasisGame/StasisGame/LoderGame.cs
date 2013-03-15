@@ -135,6 +135,9 @@ namespace StasisGame
 
         public void newGame()
         {
+            _screenSystem.removeScreen(_mainMenuScreen);
+            // TODO: Destroy main menu screen?
+            _gameState = GameState.CreatePlayer;
         }
 
         public void loadGame()
@@ -225,6 +228,15 @@ namespace StasisGame
                     _systemManager.process();
                     break;
 
+                case GameState.CreatePlayer:
+                    // TODO: Create player data (player name, story progress, starting items, etc...)
+                    _screenSystem.addScreen(new WorldMapScreen(this));
+                    _gameState = GameState.WorldMap;
+                    break;
+
+                case GameState.WorldMap:
+                    break;
+
                 case GameState.Level:
                     _systemManager.process();
                     _level.update(gameTime);
@@ -244,6 +256,12 @@ namespace StasisGame
             switch (_gameState)
             {
                 case GameState.MainMenu:
+                    _spriteBatch.Begin();
+                    _screenSystem.draw();
+                    _spriteBatch.End();
+                    break;
+
+                case GameState.WorldMap:
                     _spriteBatch.Begin();
                     _screenSystem.draw();
                     _spriteBatch.End();
