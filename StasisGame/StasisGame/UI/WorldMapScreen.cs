@@ -4,6 +4,7 @@ using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 using Microsoft.Xna.Framework.Content;
+using StasisCore;
 
 namespace StasisGame.UI
 {
@@ -47,7 +48,7 @@ namespace StasisGame.UI
             {
                 for (int i = 0; i < widthSegments; i++)
                 {
-                    _textures.Add(new PositionTexture(new Vector2(2048f * i, 2048f * j), _content.Load<Texture2D>("world_map\\" + count.ToString())));
+                    _textures.Add(new PositionTexture(new Vector2(2048f * i, 2048f * j), ResourceManager.getTexture("world_map_" + count.ToString())));
                     count++;
                 }
             }
