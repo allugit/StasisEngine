@@ -28,7 +28,8 @@ namespace StasisGame.UI
         private int _worldHeight = 5250;
         private Matrix _view;
         private float _scale;
-        private Vector2 _screenCenter;
+        private Vector2 _currentScreenCenter;
+        private Vector2 _targetScreenCenter;
 
         public WorldMapScreen(LoderGame game) : base(ScreenType.WorldMap)
         {
@@ -37,7 +38,7 @@ namespace StasisGame.UI
             _textures = new List<PositionTexture>();
             _content = new ContentManager(_game.Services);
             _content.RootDirectory = "Content";
-            _scale = 0.05f;
+            _scale = 1f;
             int widthSegments = (int)Math.Ceiling((float)_worldWidth / 2048f);
             int heightSegments = (int)Math.Ceiling((float)_worldHeight / 2048f);
 
@@ -64,13 +65,11 @@ namespace StasisGame.UI
 
             if (_newGamepadState.IsConnected)
             {
-                Vector2 newScreenCenter = _screenCenter;
+                _targetScreenCenter += _newGamepadState.ThumbSticks.Left * 7 * new Vector2(-1, 1);
+                _targetScreenCenter += _newGamepadState.ThumbSticks.Right * 7 * new Vector2(-1, 1);
+                _currentScreenCenter += (_targetScreenCenter - _currentScreenCenter) / 11f;
 
-                newScreenCenter += _newGamepadState.ThumbSticks.Left * 50 * new Vector2(1, -1);
-                newScreenCenter += _newGamepadState.ThumbSticks.Right * 50 * new Vector2(1, -1);
-                _screenCenter += (_screenCenter - newScreenCenter) / 4f;
-
-                _scale = Math.Max(0.25f, _scale - _newGamepadState.Triggers.Left / 500f);
+                _scale = Math.Max(0.5f, _scale - _newGamepadState.Triggers.Left / 500f);
                 _scale = Math.Min(1f, _scale + _newGamepadState.Triggers.Right / 500f);
             }
 
@@ -81,7 +80,7 @@ namespace StasisGame.UI
         {
             _view =
                 Matrix.CreateTranslation(new Vector3(-_worldWidth, -_worldHeight, 0) / 2f) *
-                Matrix.CreateTranslation(new Vector3(_screenCenter, 0)) *
+                Matrix.CreateTranslation(new Vector3(_currentScreenCenter, 0)) *
                 Matrix.CreateScale(_scale) *
                 Matrix.CreateTranslation(new Vector3(_game.GraphicsDevice.Viewport.Width, _game.GraphicsDevice.Viewport.Height, 0) / 2f);
 
