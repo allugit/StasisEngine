@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
 using System.Drawing;
+using System.IO;
 using System.Linq;
 using System.Xml.Linq;
 using System.Text;
@@ -21,7 +22,9 @@ namespace StasisEditor.Views.Controls
             InitializeComponent();
 
             // Populate item uids
+            ResourceManager.loadAllItems(new FileStream(ResourceManager.itemPath, FileMode.Open));
             List<XElement> resources = ResourceManager.itemResources;
+            resources.AddRange(ResourceManager.blueprintResources);
             List<string> uids = new List<string>(from resource in resources select resource.Attribute("uid").Value);
             itemUIDs.DataSource = uids;
         }
