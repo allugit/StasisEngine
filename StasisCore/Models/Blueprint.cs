@@ -26,7 +26,7 @@ namespace StasisCore.Models
             get
             {
                 XElement d = base.data;
-                d.SetAttributeValue("type", "blueprint");
+                d.SetAttributeValue("type", "Blueprint");
                 d.SetAttributeValue("item_uid", _itemUID);
                 foreach (BlueprintScrap scrap in _scraps)
                     d.Add(scrap.data);

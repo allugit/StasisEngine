@@ -42,7 +42,7 @@ namespace StasisEditor.Controllers
             List<BlueprintScrap> scraps = new List<BlueprintScrap>();
             foreach (XElement childData in data.Elements("Item"))
             {
-                if (childData.Attribute("type").Value == "blueprint_scrap")
+                if (childData.Attribute("type").Value == "BlueprintScrap")
                     scraps.Add(new EditorBlueprintScrap(childData));
             }
 

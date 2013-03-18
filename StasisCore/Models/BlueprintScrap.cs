@@ -45,7 +45,7 @@ namespace StasisCore.Models
             get
             {
                 XElement d = base.data;
-                d.SetAttributeValue("type", "blueprint_scrap");
+                d.SetAttributeValue("type", "BlueprintScrap");
                 d.SetAttributeValue("current_craft_angle", _currentCraftAngle);
                 d.SetAttributeValue("current_craft_position", _currentCraftPosition);
                 d.SetAttributeValue("scrap_texture_uid", _scrapTextureUID);
