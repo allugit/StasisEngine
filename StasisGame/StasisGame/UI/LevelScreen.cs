@@ -18,6 +18,8 @@ namespace StasisGame.UI
             _level = level;
             _pixel = new Texture2D(_game.GraphicsDevice, 1, 1);
             _pixel.SetData<Color>(new[] { Color.White });
+
+            _UIComponents.Add(new LargeHealthBar(_game.spriteBatch));
         }
 
         public override void update()

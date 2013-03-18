@@ -134,6 +134,7 @@
     <Compile Include="UI\ISelectableUIComponent.cs" />
     <Compile Include="UI\IUIComponent.cs" />
     <Compile Include="UI\Label.cs" />
+    <Compile Include="UI\LargeHealthBar.cs" />
     <Compile Include="UI\LevelScreen.cs" />
     <Compile Include="UI\MainMenuScreen.cs" />
     <Compile Include="UI\OptionsMenuScreen.cs" />
