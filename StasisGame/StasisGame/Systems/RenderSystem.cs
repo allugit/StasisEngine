@@ -39,7 +39,7 @@ namespace StasisGame.Systems
         private Texture2D _fluidParticleTexture;
         private Effect _fluidEffect;
 
-        public int defaultPriority { get { return 90; } }
+        public int defaultPriority { get { return 85; } }
         public SystemType systemType { get { return SystemType.Render; } }
         public MaterialRenderer materialRenderer { get { return _materialRenderer; } }
         public float scale { get { return _scale; } }

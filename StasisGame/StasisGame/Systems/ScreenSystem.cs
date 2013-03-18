@@ -11,7 +11,7 @@ namespace StasisGame.Systems
         private List<Screen> _screens;
 
         public SystemType systemType { get { return SystemType.Screen; } }
-        public int defaultPriority { get { return 0; } }
+        public int defaultPriority { get { return 90; } }
 
         public ScreenSystem(SystemManager systemManager)
         {

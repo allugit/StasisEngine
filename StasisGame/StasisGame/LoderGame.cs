@@ -131,6 +131,7 @@ namespace StasisGame
             // Load level
             _gameState = GameState.Level;
             _level = new Level(this, filePath);
+            _screenSystem.addScreen(new LevelScreen(this, _level));
         }
 
         public void newGame()
@@ -270,6 +271,10 @@ namespace StasisGame
 
                 case GameState.Level:
                     _level.draw(gameTime);
+
+                    _spriteBatch.Begin();
+                    _screenSystem.draw();
+                    _spriteBatch.End();
                     break;
             }
 
