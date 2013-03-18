@@ -22,7 +22,8 @@ namespace StasisGame.Components
         Revolute,
         Prismatic,
         GateOutput,
-        Circuit
+        Circuit,
+        Inventory
     };
 
     public interface IComponent

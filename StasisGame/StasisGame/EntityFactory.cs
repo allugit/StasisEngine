@@ -361,8 +361,11 @@ namespace StasisGame
             body = world.CreateBody(bodyDef);
             body.CreateFixture(fixtureDef);
 
+            _entityManager.addComponent(entityId, new ItemComponent(
+                (ItemType)Loader.loadEnum(typeof(ItemType), itemData.Attribute("type"), 0),
+                Loader.loadInt(data.Attribute("quantity"), 1)));
+
             _entityManager.addComponent(entityId, new PhysicsComponent(body));
-            _entityManager.addComponent(entityId, new ItemComponent(Loader.loadInt(data.Attribute("quantity"), 1)));
             _entityManager.addComponent(entityId, new WorldItemRenderComponent(worldTexture));
             _entityManager.addComponent(entityId, new IgnoreTreeCollisionComponent());
             _entityManager.addComponent(entityId, new EditorIdComponent(int.Parse(data.Attribute("id").Value)));
