@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Xml.Linq;
 using Microsoft.Xna.Framework;
+using Microsoft.Xna.Framework.Graphics;
 using StasisCore;
 using StasisCore.Models;
 using StasisGame.Systems;
@@ -18,15 +19,18 @@ namespace StasisGame
         private EntityManager _entityManager;
         private RenderSystem _renderSystem;
         private SystemManager _systemManager;
+        private Texture2D _inventoryBackground;
 
         public EntityManager entityManager { get { return _entityManager; } }
         public SystemManager systemManager { get { return _systemManager; } }
+        public Texture2D inventoryBackground { get { return _inventoryBackground; } }
 
         public Level(LoderGame game, string filePath)
         {
             _game = game;
             _systemManager = _game.systemManager;
             _entityManager = new EntityManager(_systemManager);
+            _inventoryBackground = _game.Content.Load<Texture2D>("inventory_background");
 
             XElement data = null;
             List<XElement> secondPassData = new List<XElement>();
@@ -40,12 +44,6 @@ namespace StasisGame
                 XDocument doc = XDocument.Load(stream);
                 data = doc.Element("Level");
             }
-            /*
-            using (FileStream stream = new FileStream(filePath, FileMode.Open))
-            {
-                XDocument doc = XDocument.Load(stream);
-                data = doc.Element("Level");
-            }*/
 
             // Create systems
             _systemManager.add(new InputSystem(_systemManager, _entityManager), -1);

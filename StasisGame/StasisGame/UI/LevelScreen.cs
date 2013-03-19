@@ -59,22 +59,24 @@ namespace StasisGame.UI
             if (_displayInventory)
             {
                 InventoryComponent inventoryComponent = (InventoryComponent)_entityManager.getComponent(_playerId, ComponentType.Inventory);
+                Vector2 halfScreen = new Vector2(_game.GraphicsDevice.Viewport.Width, _game.GraphicsDevice.Viewport.Height) / 2f;
                 int columnWidth = 4;
                 Vector2 spacing = new Vector2(36, 36);
-                Vector2 containerPosition = new Vector2(_game.GraphicsDevice.Viewport.Width, _game.GraphicsDevice.Viewport.Height) / 2f - new Vector2(columnWidth * spacing.X, (float)Math.Floor((decimal)(inventoryComponent.slots / columnWidth)) * spacing.Y) / 2f;
+                Vector2 containerPosition = halfScreen - new Vector2(columnWidth * spacing.X, (float)Math.Floor((decimal)(inventoryComponent.slots / columnWidth)) * spacing.Y) / 2f;
                 Rectangle tileSize = new Rectangle(0, 0, 32, 32);
 
+                _spriteBatch.Draw(_level.inventoryBackground, halfScreen - new Vector2(_level.inventoryBackground.Width, _level.inventoryBackground.Height) / 2f + new Vector2(0, 18), Color.White);
                 for (int i = 0; i < inventoryComponent.slots; i++)
                 {
                     int x = i % columnWidth;
                     int y = (int)Math.Floor((decimal)(i / columnWidth));
-                    Vector2 tilePosition = spacing * new Vector2(x, y);
+                    Vector2 tilePosition = containerPosition + spacing * new Vector2(x, y) + new Vector2(2, 2);
                     ItemComponent itemComponent = inventoryComponent.getItem(i);
 
-                    _spriteBatch.Draw(_pixel, containerPosition + tilePosition, tileSize, Color.Black);
+                    _spriteBatch.Draw(_pixel, tilePosition, tileSize, Color.Black);
 
                     if (itemComponent != null)
-                        _spriteBatch.Draw(itemComponent.inventoryTexture, containerPosition + tilePosition + new Vector2(2, 2), Color.White);
+                        _spriteBatch.Draw(itemComponent.inventoryTexture, new Rectangle((int)tilePosition.X + 2, (int)tilePosition.Y + 2, 28, 28), Color.White);
                 }
             }
 
