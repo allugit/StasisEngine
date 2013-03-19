@@ -19,12 +19,6 @@ namespace StasisGame.UI
         private SpriteBatch _spriteBatch;
         private bool _displayInventory;
         private int _playerId;
-        private KeyboardState _newKeyboardState;
-        private KeyboardState _oldKeyboardState;
-        private MouseState _newMouseState;
-        private MouseState _oldMouseState;
-        private GamePadState _newGamepadState;
-        private GamePadState _oldGamepadState;
 
         public LevelScreen(LoderGame game, Level level)
             : base(ScreenType.Level)
@@ -44,14 +38,14 @@ namespace StasisGame.UI
         public override void update()
         {
             _oldGamepadState = _newGamepadState;
-            _oldKeyboardState = _newKeyboardState;
+            _oldKeyState = _newKeyState;
             _oldMouseState = _newMouseState;
 
             _newMouseState = Mouse.GetState();
-            _newKeyboardState = Keyboard.GetState();
+            _newKeyState = Keyboard.GetState();
             _newGamepadState = GamePad.GetState(PlayerIndex.One);
 
-            if (_newKeyboardState.IsKeyDown(Keys.I) && _oldKeyboardState.IsKeyUp(Keys.I))
+            if (_newKeyState.IsKeyDown(Keys.I) && _oldKeyState.IsKeyUp(Keys.I))
                 _displayInventory = !_displayInventory;
 
             if (_newGamepadState.Buttons.Y == ButtonState.Pressed && _oldGamepadState.Buttons.Y == ButtonState.Released)

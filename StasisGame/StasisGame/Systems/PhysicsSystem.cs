@@ -115,25 +115,20 @@ namespace StasisGame.Systems
             // Check for item pickup
             if (contact.IsTouching() && (entityA == playerId || entityB == playerId))
             {
-                ItemComponent itemComponent = _entityManager.getComponent(entityA, ComponentType.Item) as ItemComponent;
-                if (itemComponent != null && itemComponent.inWorld)
+                int itemEntityId = entityA == playerId ? entityB : entityA;
+                Fixture fixture = entityA == playerId ? fixtureB : fixtureA;
+                ItemComponent itemComponent = _entityManager.getComponent(itemEntityId, ComponentType.Item) as ItemComponent;
+
+                if (itemComponent != null)
                 {
-                    InventoryComponent playerInventory = _entityManager.getComponent(playerId, ComponentType.Inventory) as InventoryComponent;
-                    playerInventory.addItem(itemComponent);
-                    itemComponent.inWorld = false;
-                    _bodiesToRemove.Add(fixtureA.GetBody());
-                    _entityManager.killEntity(entityA);
-                }
-                else
-                {
-                    itemComponent = _entityManager.getComponent(entityB, ComponentType.Item) as ItemComponent;
-                    if (itemComponent != null && itemComponent.inWorld)
+                    contact.SetEnabled(false);
+                    if (itemComponent.inWorld)
                     {
                         InventoryComponent playerInventory = _entityManager.getComponent(playerId, ComponentType.Inventory) as InventoryComponent;
                         playerInventory.addItem(itemComponent);
                         itemComponent.inWorld = false;
-                        _bodiesToRemove.Add(fixtureB.GetBody());
-                        _entityManager.killEntity(entityB);
+                        _bodiesToRemove.Add(fixture.GetBody());
+                        _entityManager.killEntity(itemEntityId);
                     }
                 }
             }
