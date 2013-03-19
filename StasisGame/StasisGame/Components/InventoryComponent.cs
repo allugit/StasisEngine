@@ -18,6 +18,15 @@ namespace StasisGame.Components
             _inventory = new Dictionary<int, ItemComponent>();
         }
 
+        public ItemComponent getItem(int i)
+        {
+            ItemComponent itemComponent;
+
+            _inventory.TryGetValue(i, out itemComponent);
+
+            return itemComponent;
+        }
+
         public void addItem(ItemComponent item)
         {
             for (int i = 0; i < _slots; i++)

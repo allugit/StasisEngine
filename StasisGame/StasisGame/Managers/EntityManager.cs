@@ -54,10 +54,13 @@ namespace StasisGame.Managers
 
         public IComponent getComponent(int id, ComponentType componentType)
         {
-            foreach (IComponent component in _entities[id])
+            if (_entities.ContainsKey(id))
             {
-                if (component.componentType == componentType)
-                    return component;
+                foreach (IComponent component in _entities[id])
+                {
+                    if (component.componentType == componentType)
+                        return component;
+                }
             }
             return null;
         }

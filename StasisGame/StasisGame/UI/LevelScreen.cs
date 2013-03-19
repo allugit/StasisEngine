@@ -42,16 +42,21 @@ namespace StasisGame.UI
         {
             InventoryComponent inventoryComponent = (InventoryComponent)_entityManager.getComponent(_playerId, ComponentType.Inventory);
             int columnWidth = 4;
-            Vector2 spacing = new Vector2(34, 34);
-            Vector2 position = new Vector2(_game.GraphicsDevice.Viewport.Width, _game.GraphicsDevice.Viewport.Height) / 2f - new Vector2(columnWidth * spacing.X, (float)Math.Floor((decimal)(inventoryComponent.slots / columnWidth)) * spacing.Y) / 2f;
+            Vector2 spacing = new Vector2(36, 36);
+            Vector2 containerPosition = new Vector2(_game.GraphicsDevice.Viewport.Width, _game.GraphicsDevice.Viewport.Height) / 2f - new Vector2(columnWidth * spacing.X, (float)Math.Floor((decimal)(inventoryComponent.slots / columnWidth)) * spacing.Y) / 2f;
             Rectangle tileSize = new Rectangle(0, 0, 32, 32);
 
             for (int i = 0; i < inventoryComponent.slots; i++)
             {
                 int x = i % columnWidth;
                 int y = (int)Math.Floor((decimal)(i / columnWidth));
+                Vector2 tilePosition = spacing * new Vector2(x, y);
+                ItemComponent itemComponent = inventoryComponent.getItem(i);
 
-                _spriteBatch.Draw(_pixel, position + spacing * new Vector2(x, y), tileSize, Color.Black);
+                _spriteBatch.Draw(_pixel, containerPosition + tilePosition, tileSize, Color.Black);
+
+                if (itemComponent != null)
+                    _spriteBatch.Draw(itemComponent.inventoryTexture, containerPosition + tilePosition + new Vector2(2, 2), Color.White);
             }
 
             base.draw();

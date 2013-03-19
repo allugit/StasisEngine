@@ -339,6 +339,7 @@ namespace StasisGame
             FixtureDef fixtureDef = new FixtureDef();
             XElement itemData = ResourceManager.getResource(data.Attribute("item_uid").Value);
             Texture2D worldTexture = ResourceManager.getTexture(Loader.loadString(itemData.Attribute("world_texture_uid"), "default_item"));
+            Texture2D inventoryTexture = ResourceManager.getTexture(Loader.loadString(itemData.Attribute("inventory_texture_uid"), "default_item"));
 
             _actorIdToEntityId.Add(actorId, entityId);
 
@@ -363,6 +364,7 @@ namespace StasisGame
 
             _entityManager.addComponent(entityId, new ItemComponent(
                 (ItemType)Loader.loadEnum(typeof(ItemType), itemData.Attribute("type"), 0),
+                inventoryTexture,
                 Loader.loadInt(data.Attribute("quantity"), 1),
                 true));
 
