@@ -697,6 +697,7 @@ namespace StasisGame
             _entityManager.addComponent(entityId, new BodyFocusPointComponent(body, new Vector2(0, -7f), FocusType.Multiple));
             _entityManager.addComponent(entityId, new IgnoreTreeCollisionComponent());
             _entityManager.addComponent(entityId, new InventoryComponent(32));
+            _entityManager.addComponent(entityId, new ToolbarComponent(4));
             (_systemManager.getSystem(SystemType.Player) as PlayerSystem).playerId = entityId;
         }
 

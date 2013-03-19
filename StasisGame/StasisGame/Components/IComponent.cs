@@ -23,7 +23,8 @@ namespace StasisGame.Components
         Prismatic,
         GateOutput,
         Circuit,
-        Inventory
+        Inventory,
+        Toolbar
     };
 
     public interface IComponent

@@ -94,6 +94,7 @@
     <Compile Include="Components\PlayerComponent.cs" />
     <Compile Include="Components\PrismaticJointComponent.cs" />
     <Compile Include="Components\RevoluteComponent.cs" />
+    <Compile Include="Components\ToolbarComponent.cs" />
     <Compile Include="Components\TreeComponent.cs" />
     <Compile Include="Components\WorldItemRenderComponent.cs" />
     <Compile Include="Components\Particle.cs" />
@@ -143,6 +144,7 @@
     <Compile Include="UI\Screen.cs" />
     <Compile Include="UI\TextButton.cs" />
     <Compile Include="UI\TextureButton.cs" />
+    <Compile Include="UI\ToolbarDisplay.cs" />
     <Compile Include="UI\WorldMapScreen.cs" />
   </ItemGroup>
   <ItemGroup>

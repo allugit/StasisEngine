@@ -20,6 +20,7 @@ namespace StasisGame.UI
         private bool _displayInventory;
         private int _playerId;
         private InventoryDisplay _inventoryDisplay;
+        private ToolbarDisplay _toolbarDisplay;
 
         public LevelScreen(LoderGame game, Level level)
             : base(ScreenType.Level)
@@ -34,6 +35,7 @@ namespace StasisGame.UI
             _pixel.SetData<Color>(new[] { Color.White });
             _inventoryDisplay = new InventoryDisplay(_game.spriteBatch, (InventoryComponent)_entityManager.getComponent(_playerId, ComponentType.Inventory));
             _inventoryDisplay.inFocus = true;
+            _toolbarDisplay = new ToolbarDisplay(_game.spriteBatch, (ToolbarComponent)_entityManager.getComponent(_playerId, ComponentType.Toolbar));
 
             _UIComponents.Add(new LargeHealthBar(_game.spriteBatch));
         }
@@ -58,6 +60,7 @@ namespace StasisGame.UI
             {
                 _inventoryDisplay.update();
             }
+            _toolbarDisplay.update();
 
             base.update();
         }
@@ -68,6 +71,7 @@ namespace StasisGame.UI
             {
                 _inventoryDisplay.draw();
             }
+            _toolbarDisplay.draw();
 
             base.draw();
         }
