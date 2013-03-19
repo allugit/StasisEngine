@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
+using Microsoft.Xna.Framework.Input;
 using StasisGame.Components;
 
 namespace StasisGame.UI
@@ -15,6 +16,15 @@ namespace StasisGame.UI
         private Texture2D _pixel;
         private int _selectedIndex = 0;
         private Rectangle _tileSize = new Rectangle(0, 0, 32, 32);
+        private KeyboardState _newKeyState;
+        private KeyboardState _oldKeyState;
+        private MouseState _newMouseState;
+        private MouseState _oldMouseState;
+        private GamePadState _newGamepadState;
+        private GamePadState _oldGamepadState;
+        private bool _inFocus;
+
+        public bool inFocus { get { return _inFocus; } set { _inFocus = value; } }
 
         public ToolbarDisplay(SpriteBatch spriteBatch, ToolbarComponent toolbarComponent)
         {
@@ -26,6 +36,25 @@ namespace StasisGame.UI
 
         public void update()
         {
+            _oldGamepadState = _newGamepadState;
+            _oldKeyState = _newKeyState;
+            _oldMouseState = _newMouseState;
+
+            _newGamepadState = GamePad.GetState(PlayerIndex.One);
+            _newMouseState = Mouse.GetState();
+            _newKeyState = Keyboard.GetState();
+
+            if (_inFocus)
+            {
+                if (_newKeyState.IsKeyDown(Keys.D1) && _oldKeyState.IsKeyUp(Keys.D1))
+                    _selectedIndex = 0;
+                if (_newKeyState.IsKeyDown(Keys.D2) && _oldKeyState.IsKeyUp(Keys.D2))
+                    _selectedIndex = 1;
+                if (_newKeyState.IsKeyDown(Keys.D3) && _oldKeyState.IsKeyUp(Keys.D3))
+                    _selectedIndex = 2;
+                if (_newKeyState.IsKeyDown(Keys.D4) && _oldKeyState.IsKeyUp(Keys.D4))
+                    _selectedIndex = 3;
+            }
         }
 
         public void draw()

@@ -11,6 +11,7 @@ namespace StasisGame.UI
     {
         private SpriteBatch _spriteBatch;
         private InventoryComponent _inventoryComponent;
+        private ToolbarComponent _toolbarComponent;
         private Texture2D _pixel;
         private int _columnWidth = 5;
         private Vector2 _spacing = new Vector2(36, 36);
@@ -27,10 +28,11 @@ namespace StasisGame.UI
         public InventoryComponent inventoryComponent { get { return _inventoryComponent; } set { _inventoryComponent = value; } }
         public bool inFocus { get { return _inFocus; } set { _inFocus = value; } }
 
-        public InventoryDisplay(SpriteBatch spriteBatch, InventoryComponent inventoryComponent)
+        public InventoryDisplay(SpriteBatch spriteBatch, InventoryComponent inventoryComponent, ToolbarComponent toolbarComponent)
         {
             _spriteBatch = spriteBatch;
             _inventoryComponent = inventoryComponent;
+            _toolbarComponent = toolbarComponent;
             _pixel = new Texture2D(_spriteBatch.GraphicsDevice, 1, 1);
             _pixel.SetData<Color>(new[] { Color.White });
         }
@@ -52,6 +54,7 @@ namespace StasisGame.UI
                 Vector2 mouse = new Vector2(_newMouseState.X, _newMouseState.Y);
                 bool mouseMoved = _newMouseState.X - _oldMouseState.X != 0 || _newMouseState.Y - _oldMouseState.Y != 0;
 
+                // Gamepad input
                 if (_newGamepadState.IsConnected)
                 {
                     bool movingDown = (_oldGamepadState.ThumbSticks.Right.Y < 0.15f && _newGamepadState.ThumbSticks.Right.Y > 0.15f);
@@ -99,6 +102,21 @@ namespace StasisGame.UI
                             break;
                         }
                     }
+                }
+
+                // Keyboard input
+                ItemComponent selectedItem = _inventoryComponent.getItem(_selectedIndex);
+
+                if (selectedItem != null)
+                {
+                    if (_newKeyState.IsKeyDown(Keys.D1) && _oldKeyState.IsKeyUp(Keys.D1))
+                        _toolbarComponent.assignItem(0, selectedItem);
+                    if (_newKeyState.IsKeyDown(Keys.D2) && _oldKeyState.IsKeyUp(Keys.D2))
+                        _toolbarComponent.assignItem(1, selectedItem);
+                    if (_newKeyState.IsKeyDown(Keys.D3) && _oldKeyState.IsKeyUp(Keys.D3))
+                        _toolbarComponent.assignItem(2, selectedItem);
+                    if (_newKeyState.IsKeyDown(Keys.D4) && _oldKeyState.IsKeyUp(Keys.D4))
+                        _toolbarComponent.assignItem(3, selectedItem);
                 }
             }
         }

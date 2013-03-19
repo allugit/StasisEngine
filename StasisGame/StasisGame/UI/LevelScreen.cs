@@ -33,9 +33,13 @@ namespace StasisGame.UI
             _playerId = (_systemManager.getSystem(SystemType.Player) as PlayerSystem).playerId;
             _pixel = new Texture2D(_game.GraphicsDevice, 1, 1);
             _pixel.SetData<Color>(new[] { Color.White });
-            _inventoryDisplay = new InventoryDisplay(_game.spriteBatch, (InventoryComponent)_entityManager.getComponent(_playerId, ComponentType.Inventory));
-            _inventoryDisplay.inFocus = true;
-            _toolbarDisplay = new ToolbarDisplay(_game.spriteBatch, (ToolbarComponent)_entityManager.getComponent(_playerId, ComponentType.Toolbar));
+
+            ToolbarComponent toolbarComponent = (ToolbarComponent)_entityManager.getComponent(_playerId, ComponentType.Toolbar);
+
+            _toolbarDisplay = new ToolbarDisplay(_game.spriteBatch, toolbarComponent);
+            _inventoryDisplay = new InventoryDisplay(_game.spriteBatch, (InventoryComponent)_entityManager.getComponent(_playerId, ComponentType.Inventory), toolbarComponent);
+            _inventoryDisplay.inFocus = false;
+            _toolbarDisplay.inFocus = true;
 
             _UIComponents.Add(new LargeHealthBar(_game.spriteBatch));
         }
@@ -50,11 +54,22 @@ namespace StasisGame.UI
             _newKeyState = Keyboard.GetState();
             _newGamepadState = GamePad.GetState(PlayerIndex.One);
 
-            if (_newKeyState.IsKeyDown(Keys.I) && _oldKeyState.IsKeyUp(Keys.I))
+            if ((_newKeyState.IsKeyDown(Keys.I) && _oldKeyState.IsKeyUp(Keys.I)) ||
+                (_newGamepadState.Buttons.Y == ButtonState.Pressed && _oldGamepadState.Buttons.Y == ButtonState.Released))
+            {
                 _displayInventory = !_displayInventory;
 
-            if (_newGamepadState.Buttons.Y == ButtonState.Pressed && _oldGamepadState.Buttons.Y == ButtonState.Released)
-                _displayInventory = !_displayInventory;
+                if (_displayInventory)
+                {
+                    _inventoryDisplay.inFocus = true;
+                    _toolbarDisplay.inFocus = false;
+                }
+                else
+                {
+                    _inventoryDisplay.inFocus = false;
+                    _toolbarDisplay.inFocus = true;
+                }
+            }
 
             if (_displayInventory)
             {
