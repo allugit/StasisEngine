@@ -33,6 +33,7 @@ namespace StasisGame.UI
             _pixel = new Texture2D(_game.GraphicsDevice, 1, 1);
             _pixel.SetData<Color>(new[] { Color.White });
             _inventoryDisplay = new InventoryDisplay(_game.spriteBatch, (InventoryComponent)_entityManager.getComponent(_playerId, ComponentType.Inventory));
+            _inventoryDisplay.inFocus = true;
 
             _UIComponents.Add(new LargeHealthBar(_game.spriteBatch));
         }
