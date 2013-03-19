@@ -19,6 +19,9 @@ namespace StasisGame
         private RenderSystem _renderSystem;
         private SystemManager _systemManager;
 
+        public EntityManager entityManager { get { return _entityManager; } }
+        public SystemManager systemManager { get { return _systemManager; } }
+
         public Level(LoderGame game, string filePath)
         {
             _game = game;

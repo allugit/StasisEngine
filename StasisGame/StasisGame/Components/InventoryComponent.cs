@@ -6,19 +6,21 @@ namespace StasisGame.Components
     public class InventoryComponent : IComponent
     {
         private Dictionary<int, ItemComponent> _inventory;
-        private int _maxSlots;
+        private int _slots;
 
         public ComponentType componentType { get { return ComponentType.Inventory; } }
+        public Dictionary<int, ItemComponent> inventory { get { return _inventory; } }
+        public int slots { get { return _slots; } }
 
-        public InventoryComponent(int maxSlots)
+        public InventoryComponent(int slots)
         {
-            _maxSlots = maxSlots;
+            _slots = slots;
             _inventory = new Dictionary<int, ItemComponent>();
         }
 
         public void addItem(ItemComponent item)
         {
-            for (int i = 0; i < _maxSlots; i++)
+            for (int i = 0; i < _slots; i++)
             {
                 if (!_inventory.ContainsKey(i))
                 {
