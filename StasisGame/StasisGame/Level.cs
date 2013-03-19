@@ -19,18 +19,15 @@ namespace StasisGame
         private EntityManager _entityManager;
         private RenderSystem _renderSystem;
         private SystemManager _systemManager;
-        private Texture2D _inventoryBackground;
 
         public EntityManager entityManager { get { return _entityManager; } }
         public SystemManager systemManager { get { return _systemManager; } }
-        public Texture2D inventoryBackground { get { return _inventoryBackground; } }
 
         public Level(LoderGame game, string filePath)
         {
             _game = game;
             _systemManager = _game.systemManager;
             _entityManager = new EntityManager(_systemManager);
-            _inventoryBackground = _game.Content.Load<Texture2D>("inventory_background");
 
             XElement data = null;
             List<XElement> secondPassData = new List<XElement>();
