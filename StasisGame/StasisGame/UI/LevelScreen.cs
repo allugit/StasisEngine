@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
+using Microsoft.Xna.Framework.Input;
 using StasisGame.Managers;
 using StasisGame.Systems;
 using StasisGame.Components;
@@ -16,7 +17,14 @@ namespace StasisGame.UI
         private SystemManager _systemManager;
         private EntityManager _entityManager;
         private SpriteBatch _spriteBatch;
+        private bool _displayInventory;
         private int _playerId;
+        private KeyboardState _newKeyboardState;
+        private KeyboardState _oldKeyboardState;
+        private MouseState _newMouseState;
+        private MouseState _oldMouseState;
+        private GamePadState _newGamepadState;
+        private GamePadState _oldGamepadState;
 
         public LevelScreen(LoderGame game, Level level)
             : base(ScreenType.Level)
@@ -35,28 +43,45 @@ namespace StasisGame.UI
 
         public override void update()
         {
+            _oldGamepadState = _newGamepadState;
+            _oldKeyboardState = _newKeyboardState;
+            _oldMouseState = _newMouseState;
+
+            _newMouseState = Mouse.GetState();
+            _newKeyboardState = Keyboard.GetState();
+            _newGamepadState = GamePad.GetState(PlayerIndex.One);
+
+            if (_newKeyboardState.IsKeyDown(Keys.I) && _oldKeyboardState.IsKeyUp(Keys.I))
+                _displayInventory = !_displayInventory;
+
+            if (_newGamepadState.Buttons.Y == ButtonState.Pressed && _oldGamepadState.Buttons.Y == ButtonState.Released)
+                _displayInventory = !_displayInventory;
+
             base.update();
         }
 
         public override void draw()
         {
-            InventoryComponent inventoryComponent = (InventoryComponent)_entityManager.getComponent(_playerId, ComponentType.Inventory);
-            int columnWidth = 4;
-            Vector2 spacing = new Vector2(36, 36);
-            Vector2 containerPosition = new Vector2(_game.GraphicsDevice.Viewport.Width, _game.GraphicsDevice.Viewport.Height) / 2f - new Vector2(columnWidth * spacing.X, (float)Math.Floor((decimal)(inventoryComponent.slots / columnWidth)) * spacing.Y) / 2f;
-            Rectangle tileSize = new Rectangle(0, 0, 32, 32);
-
-            for (int i = 0; i < inventoryComponent.slots; i++)
+            if (_displayInventory)
             {
-                int x = i % columnWidth;
-                int y = (int)Math.Floor((decimal)(i / columnWidth));
-                Vector2 tilePosition = spacing * new Vector2(x, y);
-                ItemComponent itemComponent = inventoryComponent.getItem(i);
+                InventoryComponent inventoryComponent = (InventoryComponent)_entityManager.getComponent(_playerId, ComponentType.Inventory);
+                int columnWidth = 4;
+                Vector2 spacing = new Vector2(36, 36);
+                Vector2 containerPosition = new Vector2(_game.GraphicsDevice.Viewport.Width, _game.GraphicsDevice.Viewport.Height) / 2f - new Vector2(columnWidth * spacing.X, (float)Math.Floor((decimal)(inventoryComponent.slots / columnWidth)) * spacing.Y) / 2f;
+                Rectangle tileSize = new Rectangle(0, 0, 32, 32);
 
-                _spriteBatch.Draw(_pixel, containerPosition + tilePosition, tileSize, Color.Black);
+                for (int i = 0; i < inventoryComponent.slots; i++)
+                {
+                    int x = i % columnWidth;
+                    int y = (int)Math.Floor((decimal)(i / columnWidth));
+                    Vector2 tilePosition = spacing * new Vector2(x, y);
+                    ItemComponent itemComponent = inventoryComponent.getItem(i);
 
-                if (itemComponent != null)
-                    _spriteBatch.Draw(itemComponent.inventoryTexture, containerPosition + tilePosition + new Vector2(2, 2), Color.White);
+                    _spriteBatch.Draw(_pixel, containerPosition + tilePosition, tileSize, Color.Black);
+
+                    if (itemComponent != null)
+                        _spriteBatch.Draw(itemComponent.inventoryTexture, containerPosition + tilePosition + new Vector2(2, 2), Color.White);
+                }
             }
 
             base.draw();
