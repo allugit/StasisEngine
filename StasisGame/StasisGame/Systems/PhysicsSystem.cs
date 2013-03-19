@@ -16,6 +16,7 @@ namespace StasisGame.Systems
         private World _world;
         private float _dt = 1f / 60f;
         private Body _groundBody;
+        private List<Body> _bodiesToRemove;
 
         public int defaultPriority { get { return 20; } }
         public SystemType systemType { get { return SystemType.Physics; } }
@@ -26,6 +27,7 @@ namespace StasisGame.Systems
         {
             _systemManager = systemManager;
             _entityManager = entityManager;
+            _bodiesToRemove = new List<Body>();
 
             BodyDef groundBodyDef = new BodyDef();
             CircleShape circleShape = new CircleShape();
@@ -47,11 +49,22 @@ namespace StasisGame.Systems
             _entityManager.addComponent(groundId, new GroundBodyComponent(_groundBody));
         }
 
+        public void removeBody(Body body)
+        {
+            _bodiesToRemove.Add(body);
+        }
+
         public void update()
         {
             EventSystem eventSystem = _systemManager.getSystem(SystemType.Event) as EventSystem;
             List<CharacterMovementComponent> movementComponents = _entityManager.getComponents<CharacterMovementComponent>(ComponentType.CharacterMovement);
             List<int> prismaticEntities = _entityManager.getEntitiesPosessing(ComponentType.Prismatic);
+
+            for (int i = 0; i < _bodiesToRemove.Count; i++)
+            {
+                _world.DestroyBody(_bodiesToRemove[i]);
+            }
+            _bodiesToRemove.Clear();
 
             for (int i = 0; i < movementComponents.Count; i++)
             {
@@ -91,11 +104,39 @@ namespace StasisGame.Systems
             Fixture fixtureB = contact.GetFixtureB();
             int entityA = (int)fixtureA.GetBody().GetUserData();
             int entityB = (int)fixtureB.GetBody().GetUserData();
+            int playerId = (_systemManager.getSystem(SystemType.Player) as PlayerSystem).playerId;
 
+            // Check for custom collision filters
             if (fixtureA.IsIgnoredEntity(entityB))
                 contact.SetEnabled(false);
             else if (fixtureB.IsIgnoredEntity(entityA))
                 contact.SetEnabled(false);
+
+            // Check for item pickup
+            if (contact.IsTouching() && (entityA == playerId || entityB == playerId))
+            {
+                ItemComponent itemComponent = _entityManager.getComponent(entityA, ComponentType.Item) as ItemComponent;
+                if (itemComponent != null && itemComponent.inWorld)
+                {
+                    InventoryComponent playerInventory = _entityManager.getComponent(playerId, ComponentType.Inventory) as InventoryComponent;
+                    playerInventory.addItem(itemComponent);
+                    itemComponent.inWorld = false;
+                    _bodiesToRemove.Add(fixtureA.GetBody());
+                    _entityManager.killEntity(entityA);
+                }
+                else
+                {
+                    itemComponent = _entityManager.getComponent(entityB, ComponentType.Item) as ItemComponent;
+                    if (itemComponent != null && itemComponent.inWorld)
+                    {
+                        InventoryComponent playerInventory = _entityManager.getComponent(playerId, ComponentType.Inventory) as InventoryComponent;
+                        playerInventory.addItem(itemComponent);
+                        itemComponent.inWorld = false;
+                        _bodiesToRemove.Add(fixtureB.GetBody());
+                        _entityManager.killEntity(entityB);
+                    }
+                }
+            }
         }
 
         public void PostSolve(Contact contact, ref ContactImpulse impulse)

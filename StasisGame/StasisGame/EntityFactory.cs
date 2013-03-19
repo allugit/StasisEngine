@@ -363,7 +363,8 @@ namespace StasisGame
 
             _entityManager.addComponent(entityId, new ItemComponent(
                 (ItemType)Loader.loadEnum(typeof(ItemType), itemData.Attribute("type"), 0),
-                Loader.loadInt(data.Attribute("quantity"), 1)));
+                Loader.loadInt(data.Attribute("quantity"), 1),
+                true));
 
             _entityManager.addComponent(entityId, new PhysicsComponent(body));
             _entityManager.addComponent(entityId, new WorldItemRenderComponent(worldTexture));
