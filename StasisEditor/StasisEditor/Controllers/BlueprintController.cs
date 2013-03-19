@@ -40,10 +40,9 @@ namespace StasisEditor.Controllers
         {
             // Create scraps
             List<BlueprintScrap> scraps = new List<BlueprintScrap>();
-            foreach (XElement childData in data.Elements("Item"))
+            foreach (XElement childData in data.Elements("BlueprintScrap"))
             {
-                if (childData.Attribute("type").Value == "BlueprintScrap")
-                    scraps.Add(new EditorBlueprintScrap(childData));
+                scraps.Add(new EditorBlueprintScrap(childData));
             }
 
             // Create sockets

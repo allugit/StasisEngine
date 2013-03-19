@@ -10,8 +10,9 @@ namespace StasisCore.Models
      * Blueprint scrap -- A piece of a blueprint. It consists of:
      * - Connections - Links between scraps that form whenever sockets are correctly positioned
      */
-    public class BlueprintScrap : Item
+    public class BlueprintScrap
     {
+        protected string _uid;
         private Texture2D _scrapTexture;
         private Vector2 _textureCenter;
         private List<Vector2> _points;
@@ -21,7 +22,10 @@ namespace StasisCore.Models
         private string _blueprintUID;
         private Matrix _rotationMatrix;
         private List<BlueprintScrap> _connected;
+        private string _worldTextureUID;
+        private string _inventoryTextureUID;
 
+        public string uid { get { return _uid; } set { _uid = value; } }
         public Texture2D scrapTexture { get { return _scrapTexture; } set { _scrapTexture = value; } }
         public Vector2 textureCenter { get { return _textureCenter; } set { _textureCenter = value; } }
         public List<Vector2> points { get { return _points; } set { _points = value; } }
@@ -39,17 +43,21 @@ namespace StasisCore.Models
         public string blueprintUID { get { return _blueprintUID; } set { _blueprintUID = value; } }
         public Matrix rotationMatrix { get { return _rotationMatrix; } }
         public List<BlueprintScrap> connected { get { return _connected; } }
+        public string worldTextureUID { get { return _worldTextureUID; } set { _worldTextureUID = value; } }
+        public string inventoryTextureUID { get { return _inventoryTextureUID; } set { _inventoryTextureUID = value; } }
 
-        public override XElement data
+        public XElement data
         {
             get
             {
-                XElement d = base.data;
-                d.SetAttributeValue("type", "BlueprintScrap");
-                d.SetAttributeValue("current_craft_angle", _currentCraftAngle);
-                d.SetAttributeValue("current_craft_position", _currentCraftPosition);
-                d.SetAttributeValue("scrap_texture_uid", _scrapTextureUID);
-                d.SetAttributeValue("blueprint_uid", _blueprintUID);
+                XElement d = new XElement("BlueprintScrap",
+                    new XAttribute("uid", _uid),
+                    new XAttribute("world_texture_uid", _worldTextureUID),
+                    new XAttribute("inventory_texture_uid", _inventoryTextureUID),
+                    new XAttribute("current_craft_angle", _currentCraftAngle),
+                    new XAttribute("current_craft_position", _currentCraftPosition),
+                    new XAttribute("scrap_texture_uid", _scrapTextureUID),
+                    new XAttribute("blueprint_uid", _blueprintUID));
                 foreach (Vector2 point in _points)
                     d.Add(new XElement("Point", point));
 
@@ -58,10 +66,13 @@ namespace StasisCore.Models
         }
 
         // Create new
-        public BlueprintScrap(string uid) : base(uid)
+        public BlueprintScrap(string uid)
         {
+            _uid = uid;
             _points = new List<Vector2>();
             _scrapTextureUID = "default_texture";
+            _inventoryTextureUID = "default_item";
+            _worldTextureUID = "default_item";
             _blueprintUID = "";
             _currentCraftPosition = Vector2.Zero;
             _currentCraftAngle = 0;
@@ -71,9 +82,12 @@ namespace StasisCore.Models
         }
 
         // Create from xml
-        public BlueprintScrap(XElement data) : base(data)
+        public BlueprintScrap(XElement data)
         {
+            _uid = data.Attribute("uid").Value;
             _scrapTextureUID = data.Attribute("scrap_texture_uid").Value;
+            _inventoryTextureUID = Loader.loadString(data.Attribute("inventory_texture_uid"), "default_item");
+            _worldTextureUID = Loader.loadString(data.Attribute("world_texture_uid"), "default_item");
             _scrapTexture = ResourceManager.getTexture(_scrapTextureUID);
             _textureCenter = new Vector2(_scrapTexture.Width, _scrapTexture.Height) / 2;
             _blueprintUID = data.Attribute("blueprint_uid").Value;

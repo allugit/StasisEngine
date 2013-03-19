@@ -20,6 +20,7 @@ namespace StasisCore
         private static Dictionary<string, XElement> _materialResources;
         private static Dictionary<string, XElement> _itemResources;
         private static Dictionary<string, XElement> _blueprintResources;
+        private static Dictionary<string, XElement> _blueprintScrapResources;
         private static Dictionary<string, XElement> _characterResources;
         private static Dictionary<string, XElement> _dialogueResources;
         private static Dictionary<string, XElement> _levelResources;
@@ -66,6 +67,16 @@ namespace StasisCore
             {
                 List<XElement> resources = new List<XElement>();
                 foreach (XElement resource in _blueprintResources.Values)
+                    resources.Add(resource);
+                return resources;
+            }
+        }
+        public static List<XElement> blueprintScrapResources
+        {
+            get
+            {
+                List<XElement> resources = new List<XElement>();
+                foreach (XElement resource in _blueprintScrapResources.Values)
                     resources.Add(resource);
                 return resources;
             }
@@ -128,6 +139,7 @@ namespace StasisCore
             _materialResources = new Dictionary<string, XElement>();
             _itemResources = new Dictionary<string, XElement>();
             _blueprintResources = new Dictionary<string, XElement>();
+            _blueprintScrapResources = new Dictionary<string, XElement>();
             _characterResources = new Dictionary<string, XElement>();
             _dialogueResources = new Dictionary<string, XElement>();
             _levelResources = new Dictionary<string, XElement>();
@@ -140,6 +152,7 @@ namespace StasisCore
             _resources.Add(_materialResources);
             _resources.Add(_itemResources);
             _resources.Add(_blueprintResources);
+            _resources.Add(_blueprintScrapResources);
             _resources.Add(_characterResources);
             _resources.Add(_dialogueResources);
             _resources.Add(_levelResources);
@@ -321,12 +334,17 @@ namespace StasisCore
         public static void loadAllBlueprints(Stream stream)
         {
             _blueprintResources.Clear();
+            _blueprintScrapResources.Clear();
 
             XElement data = XElement.Load(stream);
 
-            foreach (XElement blueprintData in data.Elements("Item"))
+            foreach (XElement blueprintData in data.Elements("Blueprint"))
             {
                 _blueprintResources[blueprintData.Attribute("uid").Value] = blueprintData;
+                foreach (XElement blueprintScrapData in blueprintData.Elements("BlueprintScrap"))
+                {
+                    _blueprintScrapResources[blueprintScrapData.Attribute("uid").Value] = blueprintScrapData;
+                }
             }
 
             stream.Close();

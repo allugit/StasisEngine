@@ -23,8 +23,10 @@ namespace StasisEditor.Views.Controls
 
             // Populate item uids
             ResourceManager.loadAllItems(new FileStream(ResourceManager.itemPath, FileMode.Open));
+            ResourceManager.loadAllBlueprints(new FileStream(ResourceManager.blueprintPath, FileMode.Open));
             List<XElement> resources = ResourceManager.itemResources;
             resources.AddRange(ResourceManager.blueprintResources);
+            resources.AddRange(ResourceManager.blueprintScrapResources);
             List<string> uids = new List<string>(from resource in resources select resource.Attribute("uid").Value);
             itemUIDs.DataSource = uids;
         }

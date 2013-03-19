@@ -48,7 +48,7 @@ namespace StasisEditor
                 using (FileStream fs = new FileStream(ResourceManager.blueprintPath, FileMode.Open))
                 {
                     XElement data = XElement.Load(fs);
-                    foreach (XElement blueprintData in data.Elements("Item"))
+                    foreach (XElement blueprintData in data.Elements("Blueprint"))
                     {
                         if (blueprintData.Attribute("uid").Value == uid)
                             return true;
@@ -215,9 +215,9 @@ namespace StasisEditor
             }
 
             // Save blueprints
-            XDocument doc = new XDocument(new XElement("Items"));
+            XDocument doc = new XDocument(new XElement("Blueprints"));
             foreach (Blueprint blueprint in blueprints)
-                doc.Element("Items").Add(blueprint.data);
+                doc.Element("Blueprints").Add(blueprint.data);
             doc.Save(ResourceManager.blueprintPath);
 
             // Reload blueprints
