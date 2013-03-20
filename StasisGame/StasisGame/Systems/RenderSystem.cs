@@ -33,7 +33,7 @@ namespace StasisGame.Systems
         //private SortedDictionary<float, List<IRenderablePrimitive>> _sortedRenderablePrimitives;
         private RenderablePrimitiveNode _headNode;
         private Texture2D _reticle;
-        private Texture2D _rangeCircle;
+        //private Texture2D _rangeCircle;
 
         private BackgroundRenderer _backgroundRenderer;
         private RenderTarget2D _fluidRenderTarget;
@@ -68,7 +68,7 @@ namespace StasisGame.Systems
             _fluidEffect = _contentManager.Load<Effect>("fluid_effect");
             _fluidParticleTexture = _contentManager.Load<Texture2D>("fluid_particle");
             _reticle = _contentManager.Load<Texture2D>("reticle");
-            _rangeCircle = _contentManager.Load<Texture2D>("range_circle");
+            //_rangeCircle = _contentManager.Load<Texture2D>("range_circle");
 
             _coreContentManager = new ContentManager(game.Services, "StasisCoreContent");
             _materialRenderer = new MaterialRenderer(game.GraphicsDevice, _contentManager, game.spriteBatch, 32, 32, 1234);
@@ -277,9 +277,9 @@ namespace StasisGame.Systems
                 AimComponent aimComponent = (AimComponent)_entityManager.getComponent(aimEntities[i], ComponentType.Aim);
                 Vector2 worldPosition = (_entityManager.getComponent(aimEntities[i], ComponentType.WorldPosition) as WorldPositionComponent).position;
                 float length = aimComponent.length;
-                float textureScale = (_scale / (float)(_rangeCircle.Width - 128)) * length * 2f;
+                //float textureScale = (_scale / (float)(_rangeCircle.Width - 128)) * length * 2f;
 
-                _spriteBatch.Draw(_rangeCircle, (worldPosition - screenCenter) * _scale + _halfScreen, _rangeCircle.Bounds, Color.Red, aimComponent.angle, new Vector2(_rangeCircle.Width, _rangeCircle.Height) / 2f, textureScale, SpriteEffects.None, 0f);
+                //_spriteBatch.Draw(_rangeCircle, (worldPosition - screenCenter) * _scale + _halfScreen, _rangeCircle.Bounds, Color.Red, aimComponent.angle, new Vector2(_rangeCircle.Width, _rangeCircle.Height) / 2f, textureScale, SpriteEffects.None, 0f);
                 _spriteBatch.Draw(_reticle, (worldPosition - screenCenter + new Vector2((float)Math.Cos(aimComponent.angle), (float)Math.Sin(aimComponent.angle)) * length) * _scale + _halfScreen, _reticle.Bounds, Color.Red, aimComponent.angle, new Vector2(_reticle.Width, _reticle.Height) / 2f, 1f, SpriteEffects.None, 0f);
             }
 
