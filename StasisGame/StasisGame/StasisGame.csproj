@@ -104,6 +104,7 @@
     <Compile Include="Components\RopeNode.cs" />
     <Compile Include="Components\RopePhysicsComponent.cs" />
     <Compile Include="Components\RopeRenderComponent.cs" />
+    <Compile Include="Components\WorldPositionComponent.cs" />
     <Compile Include="DistanceMetamerConstraint.cs" />
     <Compile Include="GameSettings.cs" />
     <Compile Include="IRenderablePrimitive.cs" />

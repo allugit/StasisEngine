@@ -278,6 +278,7 @@ namespace StasisGame
             _entityManager.addComponent(entityId, new PhysicsComponent(body));
             _entityManager.addComponent(entityId, createBodyRenderComponent(data));
             _entityManager.addComponent(entityId, new EditorIdComponent(actorId));
+            _entityManager.addComponent(entityId, new WorldPositionComponent(body.GetPosition()));
         }
 
         public void createCircle(XElement data)
@@ -316,6 +317,7 @@ namespace StasisGame
             _entityManager.addComponent(entityId, new PhysicsComponent(body));
             _entityManager.addComponent(entityId, createBodyRenderComponent(data));
             _entityManager.addComponent(entityId, new EditorIdComponent(actorId));
+            _entityManager.addComponent(entityId, new WorldPositionComponent(body.GetPosition()));
         }
 
         public void createFluid(XElement data)
@@ -366,12 +368,15 @@ namespace StasisGame
                 (ItemType)Loader.loadEnum(typeof(ItemType), itemData.Attribute("type"), 0),
                 inventoryTexture,
                 Loader.loadInt(data.Attribute("quantity"), 1),
-                true));
+                true,
+                Loader.loadBool(itemData.Attribute("adds_reticle"), false),
+                Loader.loadFloat(itemData.Attribute("range"), 1f)));
 
             _entityManager.addComponent(entityId, new PhysicsComponent(body));
             _entityManager.addComponent(entityId, new WorldItemRenderComponent(worldTexture));
             _entityManager.addComponent(entityId, new IgnoreTreeCollisionComponent());
             _entityManager.addComponent(entityId, new EditorIdComponent(int.Parse(data.Attribute("id").Value)));
+            _entityManager.addComponent(entityId, new WorldPositionComponent(body.GetPosition()));
         }
 
         // Process of creating a rope
@@ -587,6 +592,7 @@ namespace StasisGame
                 body.CreateFixture(fixtureDef);
 
             _entityManager.addComponent(entityId, new PhysicsComponent(body));
+            _entityManager.addComponent(entityId, new WorldPositionComponent(body.GetPosition()));
             _entityManager.addComponent(entityId, createBodyRenderComponent(data));
             _entityManager.addComponent(entityId, new IgnoreTreeCollisionComponent());
             _entityManager.addComponent(entityId, new EditorIdComponent(int.Parse(data.Attribute("id").Value)));
@@ -646,6 +652,7 @@ namespace StasisGame
 
             _entityManager.addComponent(entityId, new TreeComponent(tree));
             _entityManager.addComponent(entityId, new EditorIdComponent(int.Parse(data.Attribute("id").Value)));
+            _entityManager.addComponent(entityId, new WorldPositionComponent(tree.position));
         }
 
         public void createPlayer(XElement data)
@@ -697,7 +704,8 @@ namespace StasisGame
             _entityManager.addComponent(entityId, new BodyFocusPointComponent(body, new Vector2(0, -7f), FocusType.Multiple));
             _entityManager.addComponent(entityId, new IgnoreTreeCollisionComponent());
             _entityManager.addComponent(entityId, new InventoryComponent(32));
-            _entityManager.addComponent(entityId, new ToolbarComponent(4));
+            _entityManager.addComponent(entityId, new ToolbarComponent(4, entityId));
+            _entityManager.addComponent(entityId, new WorldPositionComponent(body.GetPosition()));
             (_systemManager.getSystem(SystemType.Player) as PlayerSystem).playerId = entityId;
         }
 

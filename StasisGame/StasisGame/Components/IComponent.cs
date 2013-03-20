@@ -25,7 +25,8 @@ namespace StasisGame.Components
         Circuit,
         Inventory,
         Toolbar,
-        Aim
+        Aim,
+        WorldPosition
     };
 
     public interface IComponent

@@ -18,7 +18,8 @@ namespace StasisGame.Systems
         Event,
         Circuit,
         Screen,
-        Equipment
+        Equipment,
+        Aim
     };
 
     public interface ISystem

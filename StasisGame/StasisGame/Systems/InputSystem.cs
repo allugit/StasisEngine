@@ -18,6 +18,7 @@ namespace StasisGame.Systems
         public static MouseState oldMouseState;
         public static GamePadState newGamepadState;
         public static GamePadState oldGamepadState;
+        public static Vector2 worldMouse;
 
         public int defaultPriority { get { return 1; } }
         public SystemType systemType { get { return SystemType.Input; } }
@@ -31,6 +32,7 @@ namespace StasisGame.Systems
         public void update()
         {
             List<InputComponent> inputComponents = _entityManager.getComponents<InputComponent>(ComponentType.Input);
+            RenderSystem renderSystem = (RenderSystem)_systemManager.getSystem(SystemType.Render);
 
             oldKeyState = newKeyState;
             oldMouseState = newMouseState;
@@ -39,6 +41,8 @@ namespace StasisGame.Systems
             newKeyState = Keyboard.GetState();
             newMouseState = Mouse.GetState();
             newGamepadState = GamePad.GetState(PlayerIndex.One);
+
+            worldMouse = (new Vector2(newMouseState.X, newMouseState.Y) - renderSystem.halfScreen) / renderSystem.scale + renderSystem.screenCenter;
 
             for (int i = 0; i < inputComponents.Count; i++)
             {

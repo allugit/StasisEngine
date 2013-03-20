@@ -59,6 +59,7 @@ namespace StasisGame.Systems
             EventSystem eventSystem = _systemManager.getSystem(SystemType.Event) as EventSystem;
             List<CharacterMovementComponent> movementComponents = _entityManager.getComponents<CharacterMovementComponent>(ComponentType.CharacterMovement);
             List<int> prismaticEntities = _entityManager.getEntitiesPosessing(ComponentType.Prismatic);
+            List<int> physicsEntities;
 
             for (int i = 0; i < _bodiesToRemove.Count; i++)
             {
@@ -96,6 +97,16 @@ namespace StasisGame.Systems
             }
 
             _world.Step(_dt, 12, 8);
+
+            // Update world positions
+            physicsEntities = _entityManager.getEntitiesPosessing(ComponentType.Physics);
+            for (int i = 0; i < physicsEntities.Count; i++)
+            {
+                PhysicsComponent physicsComponent = _entityManager.getComponent(physicsEntities[i], ComponentType.Physics) as PhysicsComponent;
+                WorldPositionComponent worldPositionComponent = _entityManager.getComponent(physicsEntities[i], ComponentType.WorldPosition) as WorldPositionComponent;
+
+                worldPositionComponent.position = physicsComponent.body.GetPosition();
+            }
         }
 
         public void PreSolve(Contact contact, ref Manifold manifold)

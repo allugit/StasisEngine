@@ -33,6 +33,7 @@ namespace StasisGame.Systems
         //private SortedDictionary<float, List<IRenderablePrimitive>> _sortedRenderablePrimitives;
         private RenderablePrimitiveNode _headNode;
         private Texture2D _reticle;
+        private Texture2D _rangeCircle;
 
         private BackgroundRenderer _backgroundRenderer;
         private RenderTarget2D _fluidRenderTarget;
@@ -67,6 +68,7 @@ namespace StasisGame.Systems
             _fluidEffect = _contentManager.Load<Effect>("fluid_effect");
             _fluidParticleTexture = _contentManager.Load<Texture2D>("fluid_particle");
             _reticle = _contentManager.Load<Texture2D>("reticle");
+            _rangeCircle = _contentManager.Load<Texture2D>("range_circle");
 
             _coreContentManager = new ContentManager(game.Services, "StasisCoreContent");
             _materialRenderer = new MaterialRenderer(game.GraphicsDevice, _contentManager, game.spriteBatch, 32, 32, 1234);
@@ -114,12 +116,6 @@ namespace StasisGame.Systems
                 // This should never be reached
                 System.Diagnostics.Debug.Assert(false);
             }
-
-            /*
-            if (!_sortedRenderablePrimitives.ContainsKey(layerDepth))
-                _sortedRenderablePrimitives.Add(layerDepth, new List<IRenderablePrimitive>());
-            _sortedRenderablePrimitives[layerDepth].Add(renderablePrimitive);
-            */
         }
 
         public void drawRenderablePrimitives()
@@ -152,6 +148,7 @@ namespace StasisGame.Systems
             List<int> characterRenderEntities = _entityManager.getEntitiesPosessing(ComponentType.CharacterRender);
             List<int> characterMovementEntities = _entityManager.getEntitiesPosessing(ComponentType.CharacterMovement);
             List<int> treeEntities = _entityManager.getEntitiesPosessing(ComponentType.Tree);
+            List<int> aimEntities = _entityManager.getEntitiesPosessing(ComponentType.Aim);
             Vector2 screenCenter = _cameraSystem.screenCenter;
 
             // Pre render fluid
@@ -179,12 +176,6 @@ namespace StasisGame.Systems
                 spriteBatch.Draw(_fluidRenderTarget, Vector2.Zero, Color.DarkBlue);
                 spriteBatch.End();
                 _graphicsDevice.SetRenderTarget(null);
-                /*
-                for (int i = 0; i < fluidSystem.numActiveParticles; i++)
-                {
-                    Particle particle = fluidSystem.liquid[fluidSystem.activeParticles[i]];
-                    _spriteBatch.Draw(_pixel, (particle.position - screenCenter) * _scale + _halfScreen, new Rectangle(0, 0, 4, 4), Color.Blue, 0, new Vector2(2, 2), 1f, SpriteEffects.None, 0);
-                }*/
             }
 
             // Draw background
@@ -280,6 +271,19 @@ namespace StasisGame.Systems
             }
 
             drawRenderablePrimitives();
+
+            for (int i = 0; i < aimEntities.Count; i++)
+            {
+                AimComponent aimComponent = (AimComponent)_entityManager.getComponent(aimEntities[i], ComponentType.Aim);
+                Vector2 worldPosition = (_entityManager.getComponent(aimEntities[i], ComponentType.WorldPosition) as WorldPositionComponent).position;
+                float length = aimComponent.length;
+                float textureScale = (_scale / (float)(_rangeCircle.Width - 128)) * length * 2f;
+
+                _spriteBatch.Draw(_rangeCircle, (worldPosition - screenCenter) * _scale + _halfScreen, _rangeCircle.Bounds, Color.Red, aimComponent.angle, new Vector2(_rangeCircle.Width, _rangeCircle.Height) / 2f, textureScale, SpriteEffects.None, 0f);
+                _spriteBatch.Draw(_reticle, (worldPosition - screenCenter + new Vector2((float)Math.Cos(aimComponent.angle), (float)Math.Sin(aimComponent.angle)) * length) * _scale + _halfScreen, _reticle.Bounds, Color.Red, aimComponent.angle, new Vector2(_reticle.Width, _reticle.Height) / 2f, 1f, SpriteEffects.None, 0f);
+            }
+
+            //_spriteBatch.Draw(_reticle, (InputSystem.worldMouse - screenCenter) * _scale + _halfScreen, _reticle.Bounds, Color.Red, 0, new Vector2(_reticle.Width, _reticle.Height) / 2f, 1f, SpriteEffects.None, 0f);
 
             _spriteBatch.End();
         }

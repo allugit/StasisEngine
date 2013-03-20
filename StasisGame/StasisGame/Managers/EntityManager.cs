@@ -47,6 +47,12 @@ namespace StasisGame.Managers
             _entities[id].Add(component);
         }
 
+        public void removeComponent(int id, ComponentType componentType)
+        {
+            IComponent component = getComponent(id, componentType);
+            removeComponent(id, component);
+        }
+
         public void removeComponent(int id, IComponent component)
         {
             _entities[id].Remove(component);
