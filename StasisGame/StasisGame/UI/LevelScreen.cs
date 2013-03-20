@@ -21,6 +21,7 @@ namespace StasisGame.UI
         private int _playerId;
         private InventoryDisplay _inventoryDisplay;
         private ToolbarDisplay _toolbarDisplay;
+        private EquipmentSystem _equipmentSystem;
 
         public LevelScreen(LoderGame game, Level level)
             : base(ScreenType.Level)
@@ -30,14 +31,15 @@ namespace StasisGame.UI
             _systemManager = _level.systemManager;
             _entityManager = _level.entityManager;
             _spriteBatch = _game.spriteBatch;
+            _equipmentSystem = _systemManager.getSystem(SystemType.Equipment) as EquipmentSystem;
             _playerId = (_systemManager.getSystem(SystemType.Player) as PlayerSystem).playerId;
             _pixel = new Texture2D(_game.GraphicsDevice, 1, 1);
             _pixel.SetData<Color>(new[] { Color.White });
 
             ToolbarComponent toolbarComponent = (ToolbarComponent)_entityManager.getComponent(_playerId, ComponentType.Toolbar);
 
-            _toolbarDisplay = new ToolbarDisplay(_game.spriteBatch, toolbarComponent);
-            _inventoryDisplay = new InventoryDisplay(_game.spriteBatch, (InventoryComponent)_entityManager.getComponent(_playerId, ComponentType.Inventory), toolbarComponent);
+            _toolbarDisplay = new ToolbarDisplay(_game.spriteBatch, _equipmentSystem, toolbarComponent);
+            _inventoryDisplay = new InventoryDisplay(_game.spriteBatch, _equipmentSystem, (InventoryComponent)_entityManager.getComponent(_playerId, ComponentType.Inventory), toolbarComponent);
             _inventoryDisplay.inFocus = false;
             _toolbarDisplay.inFocus = true;
 

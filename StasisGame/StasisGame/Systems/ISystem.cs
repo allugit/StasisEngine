@@ -17,7 +17,8 @@ namespace StasisGame.Systems
         Tree,
         Event,
         Circuit,
-        Screen
+        Screen,
+        Equipment
     };
 
     public interface ISystem

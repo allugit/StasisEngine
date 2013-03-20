@@ -4,12 +4,14 @@ using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 using StasisGame.Components;
+using StasisGame.Systems;
 
 namespace StasisGame.UI
 {
     public class InventoryDisplay
     {
         private SpriteBatch _spriteBatch;
+        private EquipmentSystem _equipmentSystem;
         private InventoryComponent _inventoryComponent;
         private ToolbarComponent _toolbarComponent;
         private Texture2D _pixel;
@@ -25,12 +27,12 @@ namespace StasisGame.UI
         private GamePadState _newGamepadState;
         private GamePadState _oldGamepadState;
 
-        public InventoryComponent inventoryComponent { get { return _inventoryComponent; } set { _inventoryComponent = value; } }
         public bool inFocus { get { return _inFocus; } set { _inFocus = value; } }
 
-        public InventoryDisplay(SpriteBatch spriteBatch, InventoryComponent inventoryComponent, ToolbarComponent toolbarComponent)
+        public InventoryDisplay(SpriteBatch spriteBatch, EquipmentSystem equipmentSystem, InventoryComponent inventoryComponent, ToolbarComponent toolbarComponent)
         {
             _spriteBatch = spriteBatch;
+            _equipmentSystem = equipmentSystem;
             _inventoryComponent = inventoryComponent;
             _toolbarComponent = toolbarComponent;
             _pixel = new Texture2D(_spriteBatch.GraphicsDevice, 1, 1);
@@ -110,13 +112,21 @@ namespace StasisGame.UI
                 if (selectedItem != null)
                 {
                     if (_newKeyState.IsKeyDown(Keys.D1) && _oldKeyState.IsKeyUp(Keys.D1))
-                        _toolbarComponent.assignItem(0, selectedItem);
+                    {
+                        _equipmentSystem.assignItemToToolbar(selectedItem, _toolbarComponent, 0);
+                    }
                     if (_newKeyState.IsKeyDown(Keys.D2) && _oldKeyState.IsKeyUp(Keys.D2))
-                        _toolbarComponent.assignItem(1, selectedItem);
+                    {
+                        _equipmentSystem.assignItemToToolbar(selectedItem, _toolbarComponent, 1);
+                    }
                     if (_newKeyState.IsKeyDown(Keys.D3) && _oldKeyState.IsKeyUp(Keys.D3))
-                        _toolbarComponent.assignItem(2, selectedItem);
+                    {
+                        _equipmentSystem.assignItemToToolbar(selectedItem, _toolbarComponent, 2);
+                    }
                     if (_newKeyState.IsKeyDown(Keys.D4) && _oldKeyState.IsKeyUp(Keys.D4))
-                        _toolbarComponent.assignItem(3, selectedItem);
+                    {
+                        _equipmentSystem.assignItemToToolbar(selectedItem, _toolbarComponent, 3);
+                    }
                 }
             }
         }
@@ -126,7 +136,6 @@ namespace StasisGame.UI
             Vector2 halfScreen = new Vector2(_spriteBatch.GraphicsDevice.Viewport.Width, _spriteBatch.GraphicsDevice.Viewport.Height) / 2f;
             Vector2 containerPosition = halfScreen - new Vector2(_columnWidth * _spacing.X, (float)Math.Floor((decimal)(_inventoryComponent.slots / _columnWidth)) * _spacing.Y) / 2f;
 
-            //_spriteBatch.Draw(_level.inventoryBackground, halfScreen - new Vector2(_level.inventoryBackground.Width, _level.inventoryBackground.Height) / 2f + new Vector2(0, 18), Color.White);
             for (int i = 0; i < _inventoryComponent.slots; i++)
             {
                 int x = i % _columnWidth;

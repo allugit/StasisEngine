@@ -4,6 +4,7 @@ using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 using StasisGame.Components;
+using StasisGame.Systems;
 
 namespace StasisGame.UI
 {
@@ -14,7 +15,6 @@ namespace StasisGame.UI
         private int _columnWidth = 4;
         private Vector2 _spacing = new Vector2(36, 36);
         private Texture2D _pixel;
-        private int _selectedIndex = 0;
         private Rectangle _tileSize = new Rectangle(0, 0, 32, 32);
         private KeyboardState _newKeyState;
         private KeyboardState _oldKeyState;
@@ -22,14 +22,16 @@ namespace StasisGame.UI
         private MouseState _oldMouseState;
         private GamePadState _newGamepadState;
         private GamePadState _oldGamepadState;
+        private EquipmentSystem _equipmentSystem;
         private bool _inFocus;
 
         public bool inFocus { get { return _inFocus; } set { _inFocus = value; } }
 
-        public ToolbarDisplay(SpriteBatch spriteBatch, ToolbarComponent toolbarComponent)
+        public ToolbarDisplay(SpriteBatch spriteBatch, EquipmentSystem equipmentSystem, ToolbarComponent toolbarComponent)
         {
             _spriteBatch = spriteBatch;
             _toolbarComponent = toolbarComponent;
+            _equipmentSystem = equipmentSystem;
             _pixel = new Texture2D(_spriteBatch.GraphicsDevice, 1, 1);
             _pixel.SetData<Color>(new[] { Color.White });
         }
@@ -47,30 +49,27 @@ namespace StasisGame.UI
             if (_inFocus)
             {
                 if (_newKeyState.IsKeyDown(Keys.D1) && _oldKeyState.IsKeyUp(Keys.D1))
-                    _selectedIndex = 0;
+                    _equipmentSystem.selectToolbarSlot(_toolbarComponent, 0);
                 if (_newKeyState.IsKeyDown(Keys.D2) && _oldKeyState.IsKeyUp(Keys.D2))
-                    _selectedIndex = 1;
+                    _equipmentSystem.selectToolbarSlot(_toolbarComponent, 1);
                 if (_newKeyState.IsKeyDown(Keys.D3) && _oldKeyState.IsKeyUp(Keys.D3))
-                    _selectedIndex = 2;
+                    _equipmentSystem.selectToolbarSlot(_toolbarComponent, 2);
                 if (_newKeyState.IsKeyDown(Keys.D4) && _oldKeyState.IsKeyUp(Keys.D4))
-                    _selectedIndex = 3;
+                    _equipmentSystem.selectToolbarSlot(_toolbarComponent, 3);
             }
         }
 
         public void draw()
         {
-            //Vector2 halfScreen = new Vector2(_spriteBatch.GraphicsDevice.Viewport.Width, _spriteBatch.GraphicsDevice.Viewport.Height) / 2f;
-            //Vector2 containerPosition = halfScreen - new Vector2(_columnWidth * _spacing.X, (float)Math.Floor((decimal)(_toolbarComponent.slots / _columnWidth)) * _spacing.Y) / 2f;
-
-            //_spriteBatch.Draw(_level.inventoryBackground, halfScreen - new Vector2(_level.inventoryBackground.Width, _level.inventoryBackground.Height) / 2f + new Vector2(0, 18), Color.White);
             for (int i = 0; i < _toolbarComponent.slots; i++)
             {
                 int x = i % _columnWidth;
                 int y = (int)Math.Floor((decimal)(i / _columnWidth));
                 Vector2 tilePosition = new Vector2(32, _spriteBatch.GraphicsDevice.Viewport.Height - (_spacing.Y + 32)) + _spacing * new Vector2(x, y) + new Vector2(2, 2);
-                ItemComponent itemComponent = _toolbarComponent.getItem(i);
+                ItemComponent itemComponent = _toolbarComponent.inventory[i];
+                bool selected = i == _toolbarComponent.selectedIndex;
 
-                if (_selectedIndex == i)
+                if (selected)
                 {
                     _spriteBatch.Draw(_pixel, tilePosition, _tileSize, Color.Yellow);
                     _spriteBatch.Draw(_pixel, tilePosition + new Vector2(2, 2), new Rectangle(0, 0, _tileSize.Width - 4, _tileSize.Height - 4), Color.Black);

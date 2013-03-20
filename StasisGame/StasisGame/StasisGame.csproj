@@ -79,6 +79,7 @@
     <Reference Include="System.Net" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Components\AimComponent.cs" />
     <Compile Include="Components\BodyFocusPointComponent.cs" />
     <Compile Include="Components\CharacterMovementComponent.cs" />
     <Compile Include="Components\CharacterRenderComponent.cs" />
@@ -124,6 +125,7 @@
     <Compile Include="Systems\EventSystem.cs" />
     <Compile Include="Systems\FluidSystem.cs" />
     <Compile Include="Systems\InputSystem.cs" />
+    <Compile Include="Systems\EquipmentSystem.cs" />
     <Compile Include="Systems\ISystem.cs" />
     <Compile Include="Systems\PlayerSystem.cs" />
     <Compile Include="Systems\RenderSystem.cs" />

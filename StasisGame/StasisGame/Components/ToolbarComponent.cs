@@ -9,10 +9,13 @@ namespace StasisGame.Components
     {
         private Dictionary<int, ItemComponent> _inventory;
         private int _slots;
+        private int _selectedIndex;
 
         public ComponentType componentType { get { return ComponentType.Toolbar; } }
         public Dictionary<int, ItemComponent> inventory { get { return _inventory; } }
         public int slots { get { return _slots; } }
+        public int selectedIndex { get { return _selectedIndex; } set { _selectedIndex = value; } }
+        public ItemComponent selectedItem { get { return _inventory[_selectedIndex]; } }
 
         public ToolbarComponent(int slots)
         {
@@ -23,21 +26,6 @@ namespace StasisGame.Components
             {
                 _inventory.Add(i, null);
             }
-        }
-
-        public ItemComponent getItem(int slot)
-        {
-            return _inventory[slot];
-        }
-
-        public void assignItem(int slot, ItemComponent itemComponent)
-        {
-            _inventory[slot] = itemComponent;
-        }
-
-        public void clearItem(int slot)
-        {
-            _inventory[slot] = null;
         }
     }
 }

@@ -32,6 +32,7 @@ namespace StasisGame.Systems
         private Vector2 _halfScreen;
         //private SortedDictionary<float, List<IRenderablePrimitive>> _sortedRenderablePrimitives;
         private RenderablePrimitiveNode _headNode;
+        private Texture2D _reticle;
 
         private BackgroundRenderer _backgroundRenderer;
         private RenderTarget2D _fluidRenderTarget;
@@ -65,6 +66,8 @@ namespace StasisGame.Systems
             _contentManager = new ContentManager(game.Services, "Content");
             _fluidEffect = _contentManager.Load<Effect>("fluid_effect");
             _fluidParticleTexture = _contentManager.Load<Texture2D>("fluid_particle");
+            _reticle = _contentManager.Load<Texture2D>("reticle");
+
             _coreContentManager = new ContentManager(game.Services, "StasisCoreContent");
             _materialRenderer = new MaterialRenderer(game.GraphicsDevice, _contentManager, game.spriteBatch, 32, 32, 1234);
             _primitivesEffect = _coreContentManager.Load<Effect>("effects\\primitives");

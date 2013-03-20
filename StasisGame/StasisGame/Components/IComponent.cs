@@ -24,7 +24,8 @@ namespace StasisGame.Components
         GateOutput,
         Circuit,
         Inventory,
-        Toolbar
+        Toolbar,
+        Aim
     };
 
     public interface IComponent
