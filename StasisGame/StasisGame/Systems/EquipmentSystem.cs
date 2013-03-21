@@ -47,7 +47,9 @@ namespace StasisGame.Systems
         public void update()
         {
             PlayerSystem playerSystem = _systemManager.getSystem(SystemType.Player) as PlayerSystem;
+            List<int> toolbarEntities = _entityManager.getEntitiesPosessing(ComponentType.Toolbar);
 
+            // Player
             if (playerSystem != null)
             {
                 int playerId = playerSystem.playerId;
@@ -58,12 +60,18 @@ namespace StasisGame.Systems
                 if (selectedItem != null)
                 {
                     bool mouseLeftDown = InputSystem.newMouseState.LeftButton == ButtonState.Pressed && InputSystem.oldMouseState.LeftButton == ButtonState.Released;
+                    bool mouseRightDown = InputSystem.newMouseState.RightButton == ButtonState.Pressed && InputSystem.oldMouseState.RightButton == ButtonState.Released;
                     bool leftTriggerDown = InputSystem.newGamepadState.IsConnected && InputSystem.newGamepadState.Triggers.Left > 0.5f && InputSystem.oldGamepadState.Triggers.Left <= 0.5f;
+                    bool rightTriggerDown = InputSystem.newGamepadState.IsConnected && InputSystem.newGamepadState.Triggers.Right > 0.5f && InputSystem.oldGamepadState.Triggers.Right <= 0.5f;
                     AimComponent aimComponent = _entityManager.getComponent(playerId, ComponentType.Aim) as AimComponent;
 
                     if (mouseLeftDown || leftTriggerDown)
                     {
-                        Console.WriteLine("Firing: {0}", selectedItem.itemType);
+                        selectedItem.primaryAction = true;
+                    }
+                    if (mouseRightDown || rightTriggerDown)
+                    {
+                        selectedItem.secondaryAction = true;
                     }
 
                     if (selectedItem.hasAiming && aimComponent != null)
@@ -87,6 +95,41 @@ namespace StasisGame.Systems
                 }
             }
 
+            // All toolbars
+            for (int i = 0; i < toolbarEntities.Count; i++)
+            {
+                ToolbarComponent toolbarComponent = _entityManager.getComponent(toolbarEntities[i], ComponentType.Toolbar) as ToolbarComponent;
+                ItemComponent selectedItem = toolbarComponent.selectedItem;
+
+                if (selectedItem != null)
+                {
+                    if (selectedItem != null && (selectedItem.primaryAction || selectedItem.secondaryAction))
+                    {
+                        if (selectedItem.primaryAction)
+                            Console.WriteLine("primary action");
+                        if (selectedItem.secondaryAction)
+                            Console.WriteLine("secondary action");
+
+                        switch (selectedItem.itemType)
+                        {
+                            case ItemType.RopeGun:
+                                Console.WriteLine("Rope gun");
+                                break;
+
+                            case ItemType.Blueprint:
+                                Console.WriteLine("Blueprint");
+                                break;
+
+                            case ItemType.BlueprintScrap:
+                                Console.WriteLine("Blueprint scrap");
+                                break;
+                        }
+
+                        selectedItem.primaryAction = false;
+                        selectedItem.secondaryAction = false;
+                    }
+                }
+            }
         }
     }
 }

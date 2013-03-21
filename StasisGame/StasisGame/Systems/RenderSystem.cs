@@ -277,13 +277,9 @@ namespace StasisGame.Systems
                 AimComponent aimComponent = (AimComponent)_entityManager.getComponent(aimEntities[i], ComponentType.Aim);
                 Vector2 worldPosition = (_entityManager.getComponent(aimEntities[i], ComponentType.WorldPosition) as WorldPositionComponent).position;
                 float length = aimComponent.length;
-                //float textureScale = (_scale / (float)(_rangeCircle.Width - 128)) * length * 2f;
 
-                //_spriteBatch.Draw(_rangeCircle, (worldPosition - screenCenter) * _scale + _halfScreen, _rangeCircle.Bounds, Color.Red, aimComponent.angle, new Vector2(_rangeCircle.Width, _rangeCircle.Height) / 2f, textureScale, SpriteEffects.None, 0f);
                 _spriteBatch.Draw(_reticle, (worldPosition - screenCenter + new Vector2((float)Math.Cos(aimComponent.angle), (float)Math.Sin(aimComponent.angle)) * length) * _scale + _halfScreen, _reticle.Bounds, Color.Red, aimComponent.angle, new Vector2(_reticle.Width, _reticle.Height) / 2f, 1f, SpriteEffects.None, 0f);
             }
-
-            //_spriteBatch.Draw(_reticle, (InputSystem.worldMouse - screenCenter) * _scale + _halfScreen, _reticle.Bounds, Color.Red, 0, new Vector2(_reticle.Width, _reticle.Height) / 2f, 1f, SpriteEffects.None, 0f);
 
             _spriteBatch.End();
         }

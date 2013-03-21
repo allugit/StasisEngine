@@ -19,6 +19,8 @@ namespace StasisGame.Components
         private bool _inWorld;
         private bool _hasAiming;
         private float _maxRange;
+        private bool _primaryAction;
+        private bool _secondaryAction;
 
         public ComponentType componentType { get { return ComponentType.Item; } }
         public ItemType itemType { get { return _itemType; } }
@@ -27,6 +29,8 @@ namespace StasisGame.Components
         public bool inWorld { get { return _inWorld; } set { _inWorld = value; } }
         public bool hasAiming { get { return _hasAiming; } set { _hasAiming = value; } }
         public float maxRange { get { return _maxRange; } set { _maxRange = value; } }
+        public bool primaryAction { get { return _primaryAction; } set { _primaryAction = value; } }
+        public bool secondaryAction { get { return _secondaryAction; } set { _secondaryAction = value; } }
 
         public ItemComponent(ItemType itemType, Texture2D inventoryTexture, int quantity, bool inWorld, bool hasAiming, float maxRange)
         {
