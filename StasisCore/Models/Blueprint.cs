@@ -32,6 +32,7 @@ namespace StasisCore.Models
             get
             {
                 XElement d = new XElement("Blueprint",
+                    new XAttribute("type", "Blueprint"),
                     new XAttribute("uid", _uid),
                     new XAttribute("world_texture_uid", _worldTextureUID),
                     new XAttribute("inventory_texture_uid", _inventoryTextureUID),
