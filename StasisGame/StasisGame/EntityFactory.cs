@@ -417,6 +417,10 @@ namespace StasisGame
             
             world.RayCast((fixture, point, normal, fraction) =>
                 {
+                    int fixtureEntityId = (int)fixture.GetBody().GetUserData();
+                    if (_entityManager.getComponent(fixtureEntityId, ComponentType.RopePhysics) != null)
+                        return -1;
+
                     abResult.fixture = fixture;
                     abResult.worldPoint = point;
                     abResult.success = true;
@@ -427,6 +431,10 @@ namespace StasisGame
 
             world.RayCast((fixture, point, normal, fraction) =>
                 {
+                    int fixtureEntityId = (int)fixture.GetBody().GetUserData();
+                    if (_entityManager.getComponent(fixtureEntityId, ComponentType.RopePhysics) != null)
+                        return -1;
+
                     baResult.fixture = fixture;
                     baResult.worldPoint = point;
                     baResult.success = true;
@@ -517,13 +525,13 @@ namespace StasisGame
             }
 
             entityId = _entityManager.createEntity();
-            _actorIdToEntityId.Add(actorId, entityId);
             _entityManager.addComponent(entityId, new RopePhysicsComponent(head));
             _entityManager.addComponent(entityId, new RopeRenderComponent());
             _entityManager.addComponent(entityId, new IgnoreTreeCollisionComponent());
 
             if (actorId != -1)
             {
+                _actorIdToEntityId.Add(actorId, entityId);
                 _entityManager.addComponent(entityId, new EditorIdComponent(actorId));
             }
 

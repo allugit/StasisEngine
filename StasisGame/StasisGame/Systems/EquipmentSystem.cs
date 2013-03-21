@@ -106,7 +106,13 @@ namespace StasisGame.Systems
                     if (selectedItem != null && (selectedItem.primaryAction || selectedItem.secondaryAction))
                     {
                         if (selectedItem.primaryAction)
-                            Console.WriteLine("primary action");
+                        {
+                            AimComponent aimComponent = _entityManager.getComponent(toolbarEntities[i], ComponentType.Aim) as AimComponent;
+                            Vector2 initialPointA = (_entityManager.getComponent(toolbarEntities[i], ComponentType.WorldPosition) as WorldPositionComponent).position;
+                            Vector2 initialPointB = initialPointA + new Vector2((float)Math.Cos(aimComponent.angle), (float)Math.Sin(aimComponent.angle)) * aimComponent.length;
+
+                            _entityManager.factory.createRope(true, initialPointA, initialPointB, -1);
+                        }
                         if (selectedItem.secondaryAction)
                             Console.WriteLine("secondary action");
 
