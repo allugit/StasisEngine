@@ -389,14 +389,18 @@ namespace StasisGame
         // 7) Create entity with rope component
         public void createRope(XElement data)
         {
+            createRope(
+                Loader.loadBool(data.Attribute("double_anchor"), false),
+                Loader.loadVector2(data.Attribute("point_a"), Vector2.Zero),
+                Loader.loadVector2(data.Attribute("point_b"), Vector2.Zero),
+                Loader.loadInt(data.Attribute("id"), -1));
+        }
+        public void createRope(bool doubleAnchor, Vector2 initialPointA, Vector2 initialPointB, int actorId)
+        {
             World world = (_systemManager.getSystem(SystemType.Physics) as PhysicsSystem).world;
             int entityId;
-            int actorId = int.Parse(data.Attribute("id").Value);
             float segmentLength = 0.5f;
             float segmentHalfLength = segmentLength * 0.5f;
-            bool doubleAnchor = Loader.loadBool(data.Attribute("double_anchor"), false);
-            Vector2 initialPointA = Loader.loadVector2(data.Attribute("point_a"), Vector2.Zero);
-            Vector2 initialPointB = Loader.loadVector2(data.Attribute("point_b"), Vector2.Zero);
             RopeRaycastResult abResult = new RopeRaycastResult();
             RopeRaycastResult baResult = new RopeRaycastResult();
             Vector2 finalPointA = Vector2.Zero;
@@ -517,7 +521,11 @@ namespace StasisGame
             _entityManager.addComponent(entityId, new RopePhysicsComponent(head));
             _entityManager.addComponent(entityId, new RopeRenderComponent());
             _entityManager.addComponent(entityId, new IgnoreTreeCollisionComponent());
-            _entityManager.addComponent(entityId, new EditorIdComponent(int.Parse(data.Attribute("id").Value)));
+
+            if (actorId != -1)
+            {
+                _entityManager.addComponent(entityId, new EditorIdComponent(actorId));
+            }
 
             RopeNode current = head;
             while (current != null)
