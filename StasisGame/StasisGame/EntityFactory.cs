@@ -506,6 +506,8 @@ namespace StasisGame
                 lastNode = ropeNode;
             }
 
+            bool resultHandled = false;
+
             if (baResult.success)
             {
                 anchorADef.bodyA = baResult.fixture.GetBody();
@@ -513,15 +515,20 @@ namespace StasisGame
                 anchorADef.localAnchorA = baResult.fixture.GetBody().GetLocalPoint(baResult.worldPoint);
                 anchorADef.localAnchorB = new Vector2(segmentHalfLength, 0);
                 world.CreateJoint(anchorADef);
+                resultHandled = true;
             }
 
-            if (doubleAnchor && abResult.success)
+            if ((!doubleAnchor && !resultHandled) ||
+                (doubleAnchor && resultHandled))
             {
-                anchorBDef.bodyA = lastNode.body;
-                anchorBDef.bodyB = abResult.fixture.GetBody();
-                anchorBDef.localAnchorA = new Vector2(-segmentHalfLength, 0);
-                anchorBDef.localAnchorB = abResult.fixture.GetBody().GetLocalPoint(abResult.worldPoint);
-                world.CreateJoint(anchorBDef);
+                if (abResult.success)
+                {
+                    anchorBDef.bodyA = lastNode.body;
+                    anchorBDef.bodyB = abResult.fixture.GetBody();
+                    anchorBDef.localAnchorA = new Vector2(-segmentHalfLength, 0);
+                    anchorBDef.localAnchorB = abResult.fixture.GetBody().GetLocalPoint(abResult.worldPoint);
+                    world.CreateJoint(anchorBDef);
+                }
             }
 
             entityId = _entityManager.createEntity();
