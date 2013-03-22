@@ -483,8 +483,9 @@ namespace StasisGame
                 fixtureDef.filter.maskBits = 
                     (ushort)CollisionCategory.DynamicGeometry |
                     (ushort)CollisionCategory.Item |
-                    (ushort)CollisionCategory.Player |
                     (ushort)CollisionCategory.StaticGeometry;
+                if (doubleAnchor)
+                    fixtureDef.filter.maskBits |= (ushort)CollisionCategory.Player;
                 fixtureDef.shape = shape;
 
                 body = world.CreateBody(bodyDef);
@@ -499,7 +500,7 @@ namespace StasisGame
                     joint = (RevoluteJoint)world.CreateJoint(jointDef);
                 }
 
-                ropeNode = new RopeNode(body, joint);
+                ropeNode = new RopeNode(body, joint, segmentHalfLength);
 
                 if (head == null)
                     head = ropeNode;

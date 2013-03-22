@@ -149,6 +149,7 @@ namespace StasisGame.Systems
             List<int> characterMovementEntities = _entityManager.getEntitiesPosessing(ComponentType.CharacterMovement);
             List<int> treeEntities = _entityManager.getEntitiesPosessing(ComponentType.Tree);
             List<int> aimEntities = _entityManager.getEntitiesPosessing(ComponentType.Aim);
+            List<RopeGrabComponent> ropeGrabComponents = _entityManager.getComponents<RopeGrabComponent>(ComponentType.RopeGrab);
             Vector2 screenCenter = _cameraSystem.screenCenter;
 
             // Pre render fluid
@@ -279,6 +280,19 @@ namespace StasisGame.Systems
                 float length = aimComponent.length;
 
                 _spriteBatch.Draw(_reticle, (worldPosition - screenCenter + new Vector2((float)Math.Cos(aimComponent.angle), (float)Math.Sin(aimComponent.angle)) * length) * _scale + _halfScreen, _reticle.Bounds, Color.Red, aimComponent.angle, new Vector2(_reticle.Width, _reticle.Height) / 2f, 1f, SpriteEffects.None, 0f);
+            }
+
+            for (int i = 0; i < ropeGrabComponents.Count; i++)
+            {
+                foreach (KeyValuePair<Body, RevoluteJoint> pair in ropeGrabComponents[i].joints)
+                {
+                    Vector2 pointA = pair.Value.GetBodyA().GetPosition();
+                    Vector2 pointB = pair.Value.GetBodyB().GetPosition();
+                    Vector2 relative = pointB - pointA;
+                    float angle = (float)Math.Atan2(relative.Y, relative.X);
+
+                    _spriteBatch.Draw(_pixel, (pointA - screenCenter) * _scale + _halfScreen, new Rectangle(0, 0, (int)(relative.Length() * _scale), 2), Color.Green, angle, new Vector2(0, 1), 1f, SpriteEffects.None, 0f);
+                }
             }
 
             _spriteBatch.End();

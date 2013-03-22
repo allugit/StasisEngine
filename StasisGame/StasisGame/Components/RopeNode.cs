@@ -10,10 +10,12 @@ namespace StasisGame.Components
         private RopeNode _next;
         private RopeNode _previous;
         private Body _body;
+        private float _halfLength;
 
         public RopeNode next { get { return _next; } set { _next = value; } }
         public RopeNode previous { get { return _previous; } set { _previous = value; } }
         public Body body { get { return _body; } }
+        public float halfLength { get { return _halfLength; } }
         public RopeNode head
         {
             get
@@ -49,9 +51,10 @@ namespace StasisGame.Components
             }
         }
 
-        public RopeNode(Body body, RevoluteJoint joint)
+        public RopeNode(Body body, RevoluteJoint joint, float halfLength)
         {
             _body = body;
+            _halfLength = halfLength;
         }
 
         public RopeNode getByIndex(int index)

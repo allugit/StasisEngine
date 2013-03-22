@@ -13,7 +13,7 @@ namespace StasisGame.Systems
         public const float MAX_WALK_SPEED = 7;
         public const float WALK_FORCE = 12;
         public const float JUMP_FORCE = 10.5f;
-        public const float CLIMB_SPEED = 0.25f;
+        public const float CLIMB_SPEED = 0.05f;
         private SystemManager _systemManager;
         private EntityManager _entityManager;
 
@@ -126,10 +126,13 @@ namespace StasisGame.Systems
                     float climbSpeed = characterMovementComponent.climbAmount * CLIMB_SPEED;
                     if (characterMovementComponent.climbUp)
                     {
+                        ropeGrabComponent.distance += climbSpeed;
+                        ropeGrabComponent.moveAttachedBody(physicsComponent.body, ropeGrabComponent.distance);
                     }
                     else if (characterMovementComponent.climbDown)
                     {
-                        Console.WriteLine("climb down by: {0}", climbSpeed);
+                        ropeGrabComponent.distance -= climbSpeed;
+                        ropeGrabComponent.moveAttachedBody(physicsComponent.body, ropeGrabComponent.distance);
                     }
                 }
 
