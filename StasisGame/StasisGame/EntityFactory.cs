@@ -418,7 +418,7 @@ namespace StasisGame
             world.RayCast((fixture, point, normal, fraction) =>
                 {
                     int fixtureEntityId = (int)fixture.GetBody().GetUserData();
-                    if (_entityManager.getComponent(fixtureEntityId, ComponentType.RopePhysics) != null)
+                    if (_entityManager.getComponent(fixtureEntityId, ComponentType.IgnoreRopeRaycast) != null)
                         return -1;
 
                     abResult.fixture = fixture;
@@ -432,7 +432,7 @@ namespace StasisGame
             world.RayCast((fixture, point, normal, fraction) =>
                 {
                     int fixtureEntityId = (int)fixture.GetBody().GetUserData();
-                    if (_entityManager.getComponent(fixtureEntityId, ComponentType.RopePhysics) != null)
+                    if (_entityManager.getComponent(fixtureEntityId, ComponentType.IgnoreRopeRaycast) != null)
                         return -1;
 
                     baResult.fixture = fixture;
@@ -528,6 +528,7 @@ namespace StasisGame
             _entityManager.addComponent(entityId, new RopePhysicsComponent(head));
             _entityManager.addComponent(entityId, new RopeRenderComponent());
             _entityManager.addComponent(entityId, new IgnoreTreeCollisionComponent());
+            _entityManager.addComponent(entityId, new IgnoreRopeRaycastComponent());
 
             if (actorId != -1)
             {
@@ -719,6 +720,7 @@ namespace StasisGame
             _entityManager.addComponent(entityId, new CharacterRenderComponent());
             _entityManager.addComponent(entityId, new BodyFocusPointComponent(body, new Vector2(0, -7f), FocusType.Multiple));
             _entityManager.addComponent(entityId, new IgnoreTreeCollisionComponent());
+            _entityManager.addComponent(entityId, new IgnoreRopeRaycastComponent());
             _entityManager.addComponent(entityId, new InventoryComponent(32));
             _entityManager.addComponent(entityId, new ToolbarComponent(4, entityId));
             _entityManager.addComponent(entityId, new WorldPositionComponent(body.GetPosition()));

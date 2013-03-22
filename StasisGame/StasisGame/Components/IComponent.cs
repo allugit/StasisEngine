@@ -12,7 +12,6 @@ namespace StasisGame.Components
         Item,
         Input,
         CharacterRender,
-        Player,
         CharacterMovement,
         BodyFocusPoint,
         Tree,
@@ -26,7 +25,8 @@ namespace StasisGame.Components
         Inventory,
         Toolbar,
         Aim,
-        WorldPosition
+        WorldPosition,
+        IgnoreRopeRaycast
     };
 
     public interface IComponent
