@@ -58,6 +58,7 @@ namespace StasisGame.Systems
         {
             EventSystem eventSystem = _systemManager.getSystem(SystemType.Event) as EventSystem;
             List<CharacterMovementComponent> movementComponents = _entityManager.getComponents<CharacterMovementComponent>(ComponentType.CharacterMovement);
+            List<int> ropeGrabEntities = _entityManager.getEntitiesPosessing(ComponentType.RopeGrab);
             List<int> prismaticEntities = _entityManager.getEntitiesPosessing(ComponentType.Prismatic);
             List<int> physicsEntities;
 
@@ -97,6 +98,19 @@ namespace StasisGame.Systems
             }
 
             _world.Step(_dt, 12, 8);
+
+            // When entity is grabbing a rope, update the position
+            for (int i = 0; i < ropeGrabEntities.Count; i++)
+            {
+                PhysicsComponent physicsComponent = _entityManager.getComponent(ropeGrabEntities[i], ComponentType.Physics) as PhysicsComponent;
+                RopeGrabComponent ropeGrabComponent = null;
+
+                if (physicsComponent != null)
+                {
+                    ropeGrabComponent = _entityManager.getComponent(ropeGrabEntities[i], ComponentType.RopeGrab) as RopeGrabComponent;
+                    physicsComponent.body.Position = ropeGrabComponent.ropeNode.body.GetPosition();
+                }
+            }
 
             // Update world positions
             physicsEntities = _entityManager.getEntitiesPosessing(ComponentType.Physics);

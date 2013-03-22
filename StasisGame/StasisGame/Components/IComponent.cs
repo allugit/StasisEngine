@@ -26,7 +26,8 @@ namespace StasisGame.Components
         Toolbar,
         Aim,
         WorldPosition,
-        IgnoreRopeRaycast
+        IgnoreRopeRaycast,
+        RopeGrab
     };
 
     public interface IComponent

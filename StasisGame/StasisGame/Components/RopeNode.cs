@@ -8,14 +8,51 @@ namespace StasisGame.Components
         private RopeNode _next;
         private RopeNode _previous;
         private Body _body;
+        private RevoluteJoint _joint;
 
         public RopeNode next { get { return _next; } set { _next = value; } }
         public RopeNode previous { get { return _previous; } set { _previous = value; } }
         public Body body { get { return _body; } }
+        public RevoluteJoint joint { get { return _joint; } set { _joint = value; } }
+        public RopeNode head
+        {
+            get
+            {
+                RopeNode current = this;
+                while (current.previous != null)
+                    current = current.previous;
+                return current;
+            }
+        }
+        public RopeNode tail
+        {
+            get
+            {
+                RopeNode current = this;
+                while (current.next != null)
+                    current = current.next;
+                return current;
+            }
+        }
+        public int count
+        {
+            get
+            {
+                RopeNode current = head;
+                int i = 1;
+                while (current.next != null)
+                {
+                    i++;
+                    current = current.next;
+                }
+                return i;
+            }
+        }
 
-        public RopeNode(Body body)
+        public RopeNode(Body body, RevoluteJoint joint)
         {
             _body = body;
+            _joint = joint;
         }
 
         public void insert(RopeNode node)

@@ -24,6 +24,7 @@ namespace StasisGame.Systems
         public void assignItemToToolbar(ItemComponent itemComponent, ToolbarComponent toolbarComponent, int toolbarSlot)
         {
             toolbarComponent.inventory[toolbarSlot] = itemComponent;
+            selectToolbarSlot(toolbarComponent, toolbarComponent.selectedIndex);
         }
 
         public void selectToolbarSlot(ToolbarComponent toolbarComponent, int slot)
@@ -103,15 +104,23 @@ namespace StasisGame.Systems
 
                 if (selectedItem != null)
                 {
-                    if (selectedItem != null && (selectedItem.primaryAction || selectedItem.secondaryAction))
+                    if (selectedItem.primaryAction || selectedItem.secondaryAction)
                     {
                         if (selectedItem.primaryAction)
                         {
                             AimComponent aimComponent = _entityManager.getComponent(toolbarEntities[i], ComponentType.Aim) as AimComponent;
                             Vector2 initialPointA = (_entityManager.getComponent(toolbarEntities[i], ComponentType.WorldPosition) as WorldPositionComponent).position;
                             Vector2 initialPointB = initialPointA + new Vector2((float)Math.Cos(aimComponent.angle), (float)Math.Sin(aimComponent.angle)) * aimComponent.length;
+                            int ropeEntityId = _entityManager.factory.createRope(false, initialPointA, initialPointB, -1);
 
-                            _entityManager.factory.createRope(false, initialPointA, initialPointB, -1);
+                            if (ropeEntityId != -1)
+                            {
+                                if (_entityManager.getComponent(toolbarComponent.entityId, ComponentType.RopeGrab) == null)
+                                {
+                                    RopePhysicsComponent ropePhysicsComponent = _entityManager.getComponent(ropeEntityId, ComponentType.RopePhysics) as RopePhysicsComponent;
+                                    _entityManager.addComponent(toolbarComponent.entityId, new RopeGrabComponent(ropePhysicsComponent.head));
+                                }
+                            }
                         }
                         if (selectedItem.secondaryAction)
                             Console.WriteLine("secondary action");

@@ -387,18 +387,18 @@ namespace StasisGame
         // 5) Ensure total length between point A and B is longer than 1 rope segment
         // 6) Create rope
         // 7) Create entity with rope component
-        public void createRope(XElement data)
+        public int createRope(XElement data)
         {
-            createRope(
+            return createRope(
                 Loader.loadBool(data.Attribute("double_anchor"), false),
                 Loader.loadVector2(data.Attribute("point_a"), Vector2.Zero),
                 Loader.loadVector2(data.Attribute("point_b"), Vector2.Zero),
                 Loader.loadInt(data.Attribute("id"), -1));
         }
-        public void createRope(bool doubleAnchor, Vector2 initialPointA, Vector2 initialPointB, int actorId)
+        public int createRope(bool doubleAnchor, Vector2 initialPointA, Vector2 initialPointB, int actorId)
         {
             World world = (_systemManager.getSystem(SystemType.Physics) as PhysicsSystem).world;
-            int entityId;
+            int entityId = -1;
             float segmentLength = 0.5f;
             float segmentHalfLength = segmentLength * 0.5f;
             RopeRaycastResult abResult = new RopeRaycastResult();
@@ -444,7 +444,7 @@ namespace StasisGame
                 initialPointA);
 
             if (!(abResult.success || baResult.success))
-                return;
+                return -1;
 
             finalPointA = baResult.success ? baResult.worldPoint : initialPointA;
             finalPointB = abResult.success ? abResult.worldPoint : initialPointB;
@@ -452,9 +452,9 @@ namespace StasisGame
             finalLength = finalRelativeLine.Length();
 
             if (doubleAnchor && !abResult.success)
-                return;
+                return -1;
             else if (finalLength < segmentLength)
-                return;
+                return -1;
 
             angle = (float)Math.Atan2(finalRelativeLine.Y, finalRelativeLine.X);
             ropeNormal = finalRelativeLine;
@@ -468,6 +468,7 @@ namespace StasisGame
                 Body body;
                 RopeNode ropeNode;
                 RevoluteJointDef jointDef = new RevoluteJointDef();
+                RevoluteJoint joint = null;
 
                 bodyDef.angle = angle;
                 bodyDef.position = finalPointA + ropeNormal * (segmentHalfLength + i * segmentLength);
@@ -495,10 +496,11 @@ namespace StasisGame
                     jointDef.bodyB = body;
                     jointDef.localAnchorA = new Vector2(-segmentHalfLength, 0);
                     jointDef.localAnchorB = new Vector2(segmentHalfLength, 0);
-                    world.CreateJoint(jointDef);
+                    joint = (RevoluteJoint)world.CreateJoint(jointDef);
                 }
 
-                ropeNode = new RopeNode(body);
+                ropeNode = new RopeNode(body, joint);
+
                 if (head == null)
                     head = ropeNode;
                 if (!(lastNode == null))
@@ -549,6 +551,8 @@ namespace StasisGame
                 current.body.SetUserData(entityId);
                 current = current.next;
             }
+
+            return entityId;
         }
 
         public void createTerrain(XElement data)
