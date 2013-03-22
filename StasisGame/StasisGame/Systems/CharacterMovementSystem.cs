@@ -83,23 +83,37 @@ namespace StasisGame.Systems
                 }
                 else
                 {
-                    float airWalkForce = (characterMovementComponent.walkLeft ? -WALK_FORCE : WALK_FORCE) / 4;
-
-                    // Check speed limit
-                    if (Math.Abs(body.GetLinearVelocity().X) > MAX_WALK_SPEED / 2)
+                    if (characterMovementComponent.walkLeft || characterMovementComponent.walkRight)
                     {
-                        if (body.GetLinearVelocity().X < -MAX_WALK_SPEED / 2 && airWalkForce < 0)
-                            applyForce = false;
-                        else if (body.GetLinearVelocity().X > MAX_WALK_SPEED / 2 && airWalkForce > 0)
-                            applyForce = false;
-                    }
+                        if (ropeGrabComponent != null)
+                        {
+                            // Swing
+                            float swingForce = (characterMovementComponent.walkLeft ? -WALK_FORCE : WALK_FORCE) / 2;
+                            Vector2 movement = new Vector2((float)Math.Cos(characterMovementComponent.movementAngle), (float)Math.Sin(characterMovementComponent.movementAngle));
+                            physicsComponent.body.ApplyForce(movement * swingForce, body.GetPosition());
+                        }
+                        else
+                        {
+                            // Air walk
+                            float airWalkForce = (characterMovementComponent.walkLeft ? -WALK_FORCE : WALK_FORCE) / 4;
 
-                    // Apply movement force
-                    if (applyForce)
-                    {
-                        Vector2 movement = new Vector2((float)Math.Cos(characterMovementComponent.movementAngle), (float)Math.Sin(characterMovementComponent.movementAngle));
-                        movement *= airWalkForce;
-                        body.ApplyForce(movement, body.GetPosition());
+                            // Check speed limit
+                            if (Math.Abs(body.GetLinearVelocity().X) > MAX_WALK_SPEED / 2)
+                            {
+                                if (body.GetLinearVelocity().X < -MAX_WALK_SPEED / 2 && airWalkForce < 0)
+                                    applyForce = false;
+                                else if (body.GetLinearVelocity().X > MAX_WALK_SPEED / 2 && airWalkForce > 0)
+                                    applyForce = false;
+                            }
+
+                            // Apply movement force
+                            if (applyForce)
+                            {
+                                Vector2 movement = new Vector2((float)Math.Cos(characterMovementComponent.movementAngle), (float)Math.Sin(characterMovementComponent.movementAngle));
+                                movement *= airWalkForce;
+                                body.ApplyForce(movement, body.GetPosition());
+                            }
+                        }
                     }
                 }
 
