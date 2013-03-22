@@ -27,11 +27,11 @@ namespace StasisGame.Components
             int index = (int)Math.Floor(distance);
             float fraction = distance - (float)index;
             RopeNode node = _ropeNode.getByIndex(index);
-            float lengthPosition = node.halfLength * 2 * fraction - node.halfLength;
+            float lengthPosition = -(node.halfLength * 2 * fraction - node.halfLength);
             RevoluteJoint joint = null;
             RevoluteJointDef jointDef = new RevoluteJointDef();
 
-            bodyToAttach.Position = node.body.GetWorldPoint(new Vector2(-lengthPosition, 0));
+            bodyToAttach.Position = node.body.GetWorldPoint(new Vector2(lengthPosition, 0));
             jointDef.bodyA = bodyToAttach;
             jointDef.bodyB = node.body;
             jointDef.localAnchorA = Vector2.Zero;

@@ -141,7 +141,8 @@ namespace StasisGame.Systems
 
                                                 _entityManager.addComponent(toolbarComponent.entityId, ropeGrabComponent);
 
-                                                // TEMPORARY
+                                                /*
+                                                // TEMPORARY -- Pause after rope creation
                                                 SystemNode node = _systemManager.head;
                                                 while (node != null)
                                                 {
@@ -152,6 +153,7 @@ namespace StasisGame.Systems
 
                                                     node = node.next;
                                                 }
+                                                */
                                             }
                                         }
                                     }

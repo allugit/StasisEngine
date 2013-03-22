@@ -470,7 +470,7 @@ namespace StasisGame
                 RevoluteJointDef jointDef = new RevoluteJointDef();
                 RevoluteJoint joint = null;
 
-                bodyDef.angle = angle;
+                bodyDef.angle = angle + StasisMathHelper.pi; // Adding pi fixes a problem where rope segments are created backwards, and then snap into the correct positions
                 bodyDef.position = finalPointA + ropeNormal * (segmentHalfLength + i * segmentLength);
                 bodyDef.type = BodyType.Dynamic;
 

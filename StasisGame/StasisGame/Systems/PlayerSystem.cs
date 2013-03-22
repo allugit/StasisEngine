@@ -61,12 +61,12 @@ namespace StasisGame.Systems
                 if (inputComponent.newGamepadState.ThumbSticks.Left.Y > 0)
                 {
                     characterMovementComponent.climbUp = true;
-                    characterMovementComponent.climbAmount = inputComponent.newGamepadState.ThumbSticks.Left.Y;
+                    characterMovementComponent.climbAmount = Math.Abs(inputComponent.newGamepadState.ThumbSticks.Left.Y);
                 }
                 else if (inputComponent.newGamepadState.ThumbSticks.Left.Y < 0)
                 {
                     characterMovementComponent.climbDown = true;
-                    characterMovementComponent.climbAmount = inputComponent.newGamepadState.ThumbSticks.Left.Y;
+                    characterMovementComponent.climbAmount = Math.Abs(inputComponent.newGamepadState.ThumbSticks.Left.Y);
                 }
 
                 characterMovementComponent.jump = inputComponent.newGamepadState.Buttons.A == ButtonState.Pressed;

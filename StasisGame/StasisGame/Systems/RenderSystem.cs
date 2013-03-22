@@ -225,7 +225,7 @@ namespace StasisGame.Systems
                 RopeNode current = ropePhysicsComponent.head;
                 while (current != null)
                 {
-                    _spriteBatch.Draw(_pixel, (current.body.GetPosition() - screenCenter) * _scale + _halfScreen, new Rectangle(0, 0, 16, 4), Color.Red, current.body.GetAngle(), new Vector2(8, 2), 1f, SpriteEffects.None, 0);
+                    _spriteBatch.Draw(_pixel, (current.body.GetPosition() - screenCenter) * _scale + _halfScreen, new Rectangle(0, 0, 16, 4), Color.Red, current.body.GetAngle(), new Vector2(8, 2), 1f, SpriteEffects.None, 0.1f);
                     current = current.next;
                 }
             }
@@ -247,7 +247,7 @@ namespace StasisGame.Systems
                 Rectangle source = new Rectangle(0, 0, (int)(shapeWidth * _scale), (int)(shapeHeight * _scale));
                 Vector2 origin = new Vector2(source.Width / 2f, source.Height / 2f);
 
-                _spriteBatch.Draw(_pixel, (physicsComponent.body.GetPosition() - screenCenter) * _scale + _halfScreen, source, Color.White, 0, origin, 1f, SpriteEffects.None, 0);
+                _spriteBatch.Draw(_pixel, (physicsComponent.body.GetPosition() - screenCenter) * _scale + _halfScreen, source, Color.White, 0, origin, 1f, SpriteEffects.None, 0.1f);
             }
 
             for (int i = 0; i < characterMovementEntities.Count; i++)
