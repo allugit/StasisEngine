@@ -127,20 +127,11 @@ namespace StasisGame.Systems
                                             RopePhysicsComponent ropePhysicsComponent = _entityManager.getComponent(ropeEntityId, ComponentType.RopePhysics) as RopePhysicsComponent;
                                             PhysicsComponent physicsComponent = _entityManager.getComponent(toolbarEntities[i], ComponentType.Physics) as PhysicsComponent;
                                             RopeGrabComponent ropeGrabComponent = new RopeGrabComponent(ropePhysicsComponent.head);
-                                            RevoluteJointDef jointDef = null;
-                                            RevoluteJoint joint = null;
 
                                             if (physicsComponent == null)
                                                 break;
 
-                                            jointDef = new RevoluteJointDef();
-                                            jointDef.bodyA = physicsComponent.body;
-                                            jointDef.bodyB = ropePhysicsComponent.head.body;
-                                            jointDef.localAnchorA = Vector2.Zero;
-                                            jointDef.localAnchorB = Vector2.Zero;
-                                            joint = ((PhysicsSystem)_systemManager.getSystem(SystemType.Physics)).world.CreateJoint(jointDef) as RevoluteJoint;
-
-                                            ropeGrabComponent.ropeNode.joint = joint;
+                                            ropeGrabComponent.attachBody(physicsComponent.body, ropeGrabComponent.distance);
 
                                             _entityManager.addComponent(toolbarComponent.entityId, ropeGrabComponent);
                                         }

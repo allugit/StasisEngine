@@ -1,4 +1,6 @@
 ﻿using System;
+using System.Collections.Generic;
+using Microsoft.Xna.Framework;
 using Box2D.XNA;
 
 namespace StasisGame.Components
@@ -8,12 +10,10 @@ namespace StasisGame.Components
         private RopeNode _next;
         private RopeNode _previous;
         private Body _body;
-        private RevoluteJoint _joint;
 
         public RopeNode next { get { return _next; } set { _next = value; } }
         public RopeNode previous { get { return _previous; } set { _previous = value; } }
         public Body body { get { return _body; } }
-        public RevoluteJoint joint { get { return _joint; } set { _joint = value; } }
         public RopeNode head
         {
             get
@@ -52,7 +52,23 @@ namespace StasisGame.Components
         public RopeNode(Body body, RevoluteJoint joint)
         {
             _body = body;
-            _joint = joint;
+        }
+
+        public RopeNode getByIndex(int index)
+        {
+            int i = 0;
+            RopeNode current = head;
+
+            while (current != null)
+            {
+                if (i == index)
+                    return current;
+
+                i++;
+                current = current.next;
+            }
+
+            return null;
         }
 
         public void insert(RopeNode node)

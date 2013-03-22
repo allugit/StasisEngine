@@ -100,14 +100,23 @@ namespace StasisGame.Systems
                 }
 
                 // Jump
-                if (characterMovementComponent.jump && ! characterMovementComponent.alreadyJumped && 
-                    (characterMovementComponent.allowLeftMovement || characterMovementComponent.allowRightMovement))
+                if (characterMovementComponent.jump)
                 {
-                    if (characterMovementComponent.onSurface)
+                    if (ropeGrabComponent != null)
                     {
-                        characterMovementComponent.alreadyJumped = true;
-                        //body.ApplyLinearImpulse(new Vector2(0, -JUMP_FORCE), body.GetPosition());
-                        body.SetLinearVelocity(new Vector2(body.GetLinearVelocity().X, -JUMP_FORCE));
+                        ropeGrabComponent.detachBody(physicsComponent.body);
+                        _entityManager.removeComponent(characterEntities[i], ropeGrabComponent);
+                        ropeGrabComponent = null;
+                    }
+
+                    if (!characterMovementComponent.alreadyJumped && (characterMovementComponent.allowLeftMovement || characterMovementComponent.allowRightMovement))
+                    {
+                        if (characterMovementComponent.onSurface)
+                        {
+                            characterMovementComponent.alreadyJumped = true;
+                            //body.ApplyLinearImpulse(new Vector2(0, -JUMP_FORCE), body.GetPosition());
+                            body.SetLinearVelocity(new Vector2(body.GetLinearVelocity().X, -JUMP_FORCE));
+                        }
                     }
                 }
 
@@ -117,8 +126,6 @@ namespace StasisGame.Systems
                     float climbSpeed = characterMovementComponent.climbAmount * CLIMB_SPEED;
                     if (characterMovementComponent.climbUp)
                     {
-                        // Rope segments use width as their length
-                        Console.WriteLine("Local anchor 1: {0}", ropeGrabComponent.ropeNode.joint._localAnchor1);
                     }
                     else if (characterMovementComponent.climbDown)
                     {
