@@ -474,7 +474,7 @@ namespace StasisGame
                 bodyDef.position = finalPointA + ropeNormal * (segmentHalfLength + i * segmentLength);
                 bodyDef.type = BodyType.Dynamic;
 
-                shape.SetAsBox(segmentHalfLength, 0.1f);
+                shape.SetAsBox(segmentHalfLength, 0.3f);
 
                 fixtureDef.density = 0.5f;
                 fixtureDef.friction = 0.5f;
