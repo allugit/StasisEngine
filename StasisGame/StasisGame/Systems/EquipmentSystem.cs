@@ -12,9 +12,13 @@ namespace StasisGame.Systems
     {
         private SystemManager _systemManager;
         private EntityManager _entityManager;
+        private bool _paused;
+        private bool _singleStep;
 
         public SystemType systemType { get { return SystemType.Equipment; } }
         public int defaultPriority { get { return 10; } }
+        public bool paused { get { return _paused; } set { _paused = value; } }
+        public bool singleStep { get { return _singleStep; } set { _singleStep = value; } }
 
         public EquipmentSystem(SystemManager systemManager, EntityManager entityManager)
         {
@@ -48,110 +52,127 @@ namespace StasisGame.Systems
 
         public void update()
         {
-            PlayerSystem playerSystem = _systemManager.getSystem(SystemType.Player) as PlayerSystem;
-            List<int> toolbarEntities = _entityManager.getEntitiesPosessing(ComponentType.Toolbar);
-
-            // Player
-            if (playerSystem != null)
+            if (_singleStep || !_paused)
             {
-                int playerId = playerSystem.playerId;
-                ToolbarComponent playerToolbar = _entityManager.getComponent(playerId, ComponentType.Toolbar) as ToolbarComponent;
-                WorldPositionComponent playerPositionComponent = _entityManager.getComponent(playerId, ComponentType.WorldPosition) as WorldPositionComponent;
-                ItemComponent selectedItem = playerToolbar.selectedItem;
+                PlayerSystem playerSystem = _systemManager.getSystem(SystemType.Player) as PlayerSystem;
+                List<int> toolbarEntities = _entityManager.getEntitiesPosessing(ComponentType.Toolbar);
 
-                if (selectedItem != null)
+                // Player
+                if (playerSystem != null)
                 {
-                    bool mouseLeftDown = InputSystem.newMouseState.LeftButton == ButtonState.Pressed && InputSystem.oldMouseState.LeftButton == ButtonState.Released;
-                    bool mouseRightDown = InputSystem.newMouseState.RightButton == ButtonState.Pressed && InputSystem.oldMouseState.RightButton == ButtonState.Released;
-                    bool leftTriggerDown = InputSystem.newGamepadState.IsConnected && InputSystem.newGamepadState.Triggers.Left > 0.5f && InputSystem.oldGamepadState.Triggers.Left <= 0.5f;
-                    bool rightTriggerDown = InputSystem.newGamepadState.IsConnected && InputSystem.newGamepadState.Triggers.Right > 0.5f && InputSystem.oldGamepadState.Triggers.Right <= 0.5f;
-                    AimComponent aimComponent = _entityManager.getComponent(playerId, ComponentType.Aim) as AimComponent;
+                    int playerId = playerSystem.playerId;
+                    ToolbarComponent playerToolbar = _entityManager.getComponent(playerId, ComponentType.Toolbar) as ToolbarComponent;
+                    WorldPositionComponent playerPositionComponent = _entityManager.getComponent(playerId, ComponentType.WorldPosition) as WorldPositionComponent;
+                    ItemComponent selectedItem = playerToolbar.selectedItem;
 
-                    if (mouseLeftDown || leftTriggerDown)
+                    if (selectedItem != null)
                     {
-                        selectedItem.primaryAction = true;
-                    }
-                    if (mouseRightDown || rightTriggerDown)
-                    {
-                        selectedItem.secondaryAction = true;
-                    }
+                        bool mouseLeftDown = InputSystem.newMouseState.LeftButton == ButtonState.Pressed && InputSystem.oldMouseState.LeftButton == ButtonState.Released;
+                        bool mouseRightDown = InputSystem.newMouseState.RightButton == ButtonState.Pressed && InputSystem.oldMouseState.RightButton == ButtonState.Released;
+                        bool leftTriggerDown = InputSystem.newGamepadState.IsConnected && InputSystem.newGamepadState.Triggers.Left > 0.5f && InputSystem.oldGamepadState.Triggers.Left <= 0.5f;
+                        bool rightTriggerDown = InputSystem.newGamepadState.IsConnected && InputSystem.newGamepadState.Triggers.Right > 0.5f && InputSystem.oldGamepadState.Triggers.Right <= 0.5f;
+                        AimComponent aimComponent = _entityManager.getComponent(playerId, ComponentType.Aim) as AimComponent;
 
-                    if (selectedItem.hasAiming && aimComponent != null)
-                    {
-                        Vector2 worldPosition = (_entityManager.getComponent(playerId, ComponentType.WorldPosition) as WorldPositionComponent).position;
-
-                        if (InputSystem.newGamepadState.IsConnected)
+                        if (mouseLeftDown || leftTriggerDown)
                         {
-                            Vector2 aim = InputSystem.newGamepadState.ThumbSticks.Left * selectedItem.maxRange;
-                            aim.Y *= -1;
-                            aimComponent.angle = (float)Math.Atan2(aim.Y, aim.X);
-                            aimComponent.length = aim.Length();
+                            selectedItem.primaryAction = true;
                         }
-                        else
+                        if (mouseRightDown || rightTriggerDown)
                         {
-                            Vector2 relative = (InputSystem.worldMouse - worldPosition);
-                            aimComponent.angle = (float)Math.Atan2(relative.Y, relative.X);
-                            aimComponent.length = Math.Min(relative.Length(), selectedItem.maxRange);
+                            selectedItem.secondaryAction = true;
+                        }
+
+                        if (selectedItem.hasAiming && aimComponent != null)
+                        {
+                            Vector2 worldPosition = (_entityManager.getComponent(playerId, ComponentType.WorldPosition) as WorldPositionComponent).position;
+
+                            if (InputSystem.newGamepadState.IsConnected)
+                            {
+                                Vector2 aim = InputSystem.newGamepadState.ThumbSticks.Left * selectedItem.maxRange;
+                                aim.Y *= -1;
+                                aimComponent.angle = (float)Math.Atan2(aim.Y, aim.X);
+                                aimComponent.length = aim.Length();
+                            }
+                            else
+                            {
+                                Vector2 relative = (InputSystem.worldMouse - worldPosition);
+                                aimComponent.angle = (float)Math.Atan2(relative.Y, relative.X);
+                                aimComponent.length = Math.Min(relative.Length(), selectedItem.maxRange);
+                            }
                         }
                     }
                 }
-            }
 
-            // All toolbars
-            for (int i = 0; i < toolbarEntities.Count; i++)
-            {
-                ToolbarComponent toolbarComponent = _entityManager.getComponent(toolbarEntities[i], ComponentType.Toolbar) as ToolbarComponent;
-                ItemComponent selectedItem = toolbarComponent.selectedItem;
-
-                if (selectedItem != null)
+                // All toolbars
+                for (int i = 0; i < toolbarEntities.Count; i++)
                 {
-                    if (selectedItem.primaryAction || selectedItem.secondaryAction)
+                    ToolbarComponent toolbarComponent = _entityManager.getComponent(toolbarEntities[i], ComponentType.Toolbar) as ToolbarComponent;
+                    ItemComponent selectedItem = toolbarComponent.selectedItem;
+
+                    if (selectedItem != null)
                     {
-                        if (selectedItem.secondaryAction)
-                            Console.WriteLine("secondary action");
-
-                        switch (selectedItem.itemType)
+                        if (selectedItem.primaryAction || selectedItem.secondaryAction)
                         {
-                            case ItemType.RopeGun:
-                                if (selectedItem.primaryAction)
-                                {
-                                    AimComponent aimComponent = _entityManager.getComponent(toolbarEntities[i], ComponentType.Aim) as AimComponent;
-                                    Vector2 initialPointA = (_entityManager.getComponent(toolbarEntities[i], ComponentType.WorldPosition) as WorldPositionComponent).position;
-                                    Vector2 initialPointB = initialPointA + new Vector2((float)Math.Cos(aimComponent.angle), (float)Math.Sin(aimComponent.angle)) * aimComponent.length;
-                                    int ropeEntityId = _entityManager.factory.createRope(false, initialPointA, initialPointB, -1);
+                            if (selectedItem.secondaryAction)
+                                Console.WriteLine("secondary action");
 
-                                    if (ropeEntityId != -1)
+                            switch (selectedItem.itemType)
+                            {
+                                case ItemType.RopeGun:
+                                    if (selectedItem.primaryAction)
                                     {
-                                        if (_entityManager.getComponent(toolbarComponent.entityId, ComponentType.RopeGrab) == null)
+                                        AimComponent aimComponent = _entityManager.getComponent(toolbarEntities[i], ComponentType.Aim) as AimComponent;
+                                        Vector2 initialPointA = (_entityManager.getComponent(toolbarEntities[i], ComponentType.WorldPosition) as WorldPositionComponent).position;
+                                        Vector2 initialPointB = initialPointA + new Vector2((float)Math.Cos(aimComponent.angle), (float)Math.Sin(aimComponent.angle)) * aimComponent.length;
+                                        int ropeEntityId = _entityManager.factory.createRope(false, initialPointA, initialPointB, -1);
+
+                                        if (ropeEntityId != -1)
                                         {
-                                            RopePhysicsComponent ropePhysicsComponent = _entityManager.getComponent(ropeEntityId, ComponentType.RopePhysics) as RopePhysicsComponent;
-                                            PhysicsComponent physicsComponent = _entityManager.getComponent(toolbarEntities[i], ComponentType.Physics) as PhysicsComponent;
-                                            RopeGrabComponent ropeGrabComponent = new RopeGrabComponent(ropePhysicsComponent.head);
+                                            if (_entityManager.getComponent(toolbarComponent.entityId, ComponentType.RopeGrab) == null)
+                                            {
+                                                RopePhysicsComponent ropePhysicsComponent = _entityManager.getComponent(ropeEntityId, ComponentType.RopePhysics) as RopePhysicsComponent;
+                                                PhysicsComponent physicsComponent = _entityManager.getComponent(toolbarEntities[i], ComponentType.Physics) as PhysicsComponent;
+                                                RopeGrabComponent ropeGrabComponent = new RopeGrabComponent(ropePhysicsComponent.head);
 
-                                            if (physicsComponent == null)
-                                                break;
+                                                if (physicsComponent == null)
+                                                    break;
 
-                                            ropeGrabComponent.attachBody(physicsComponent.body, ropeGrabComponent.distance);
+                                                ropeGrabComponent.attachBody(physicsComponent.body, ropeGrabComponent.distance);
 
-                                            _entityManager.addComponent(toolbarComponent.entityId, ropeGrabComponent);
+                                                _entityManager.addComponent(toolbarComponent.entityId, ropeGrabComponent);
+
+                                                // TEMPORARY
+                                                SystemNode node = _systemManager.head;
+                                                while (node != null)
+                                                {
+                                                    if (node.system.systemType != SystemType.Render)
+                                                    {
+                                                        node.system.paused = !node.system.paused;
+                                                    }
+
+                                                    node = node.next;
+                                                }
+                                            }
                                         }
                                     }
-                                }
-                                break;
+                                    break;
 
-                            case ItemType.Blueprint:
-                                Console.WriteLine("Blueprint");
-                                break;
+                                case ItemType.Blueprint:
+                                    Console.WriteLine("Blueprint");
+                                    break;
 
-                            case ItemType.BlueprintScrap:
-                                Console.WriteLine("Blueprint scrap");
-                                break;
+                                case ItemType.BlueprintScrap:
+                                    Console.WriteLine("Blueprint scrap");
+                                    break;
+                            }
+
+                            selectedItem.primaryAction = false;
+                            selectedItem.secondaryAction = false;
                         }
-
-                        selectedItem.primaryAction = false;
-                        selectedItem.secondaryAction = false;
                     }
                 }
+
+                _singleStep = false;
             }
         }
     }

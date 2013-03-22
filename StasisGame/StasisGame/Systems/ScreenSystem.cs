@@ -9,9 +9,13 @@ namespace StasisGame.Systems
     {
         private SystemManager _systemManager;
         private List<Screen> _screens;
+        private bool _paused;
+        private bool _singleStep;
 
         public SystemType systemType { get { return SystemType.Screen; } }
         public int defaultPriority { get { return 90; } }
+        public bool paused { get { return _paused; } set { _paused = value; } }
+        public bool singleStep { get { return _singleStep; } set { _singleStep = value; } }
 
         public ScreenSystem(SystemManager systemManager)
         {

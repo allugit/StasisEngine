@@ -8,6 +8,8 @@ namespace StasisGame.Managers
     {
         private SystemNode _head;
 
+        public SystemNode head { get { return _head; } set { _head = value; } }
+
         private int count
         {
             get

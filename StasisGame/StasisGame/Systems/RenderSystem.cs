@@ -30,10 +30,10 @@ namespace StasisGame.Systems
         private Matrix _viewMatrix;
         private Matrix _projectionMatrix;
         private Vector2 _halfScreen;
-        //private SortedDictionary<float, List<IRenderablePrimitive>> _sortedRenderablePrimitives;
         private RenderablePrimitiveNode _headNode;
         private Texture2D _reticle;
-        //private Texture2D _rangeCircle;
+        private bool _paused;
+        private bool _singleStep;
 
         private BackgroundRenderer _backgroundRenderer;
         private RenderTarget2D _fluidRenderTarget;
@@ -50,6 +50,8 @@ namespace StasisGame.Systems
         public Vector2 halfScreen { get { return _halfScreen; } }
         public Vector2 screenCenter { get { return _cameraSystem.screenCenter; } }
         public SpriteBatch spriteBatch { get { return _spriteBatch; } }
+        public bool paused { get { return _paused; } set { _paused = value; } }
+        public bool singleStep { get { return _singleStep; } set { _singleStep = value; } }
 
         public RenderSystem(LoderGame game, SystemManager systemManager, EntityManager entityManager)
         {

@@ -26,5 +26,7 @@ namespace StasisGame.Systems
         void update();
         SystemType systemType { get; }
         int defaultPriority { get; }
+        bool paused { get; set; }
+        bool singleStep { get; set; }
     }
 }

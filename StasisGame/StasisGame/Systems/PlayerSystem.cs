@@ -12,10 +12,14 @@ namespace StasisGame.Systems
         private SystemManager _systemManager;
         private EntityManager _entityManager;
         private int _playerId;
+        private bool _paused;
+        private bool _singleStep;
 
         public int defaultPriority { get { return 30; } }
         public SystemType systemType { get { return SystemType.Player; } }
         public int playerId { get { return _playerId; } set { _playerId = value; } }
+        public bool paused { get { return _paused; } set { _paused = value; } }
+        public bool singleStep { get { return _singleStep; } set { _singleStep = value; } }
 
         public PlayerSystem(SystemManager systemManager, EntityManager entityManager)
         {

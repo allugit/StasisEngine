@@ -17,11 +17,15 @@ namespace StasisGame.Systems
         private float _dt = 1f / 60f;
         private Body _groundBody;
         private List<Body> _bodiesToRemove;
+        private bool _paused;
+        private bool _singleStep;
 
         public int defaultPriority { get { return 20; } }
         public SystemType systemType { get { return SystemType.Physics; } }
         public World world { get { return _world; } }
         public Body groundBody { get { return _groundBody; } }
+        public bool paused { get { return _paused; } set { _paused = value; } }
+        public bool singleStep { get { return _singleStep; } set { _singleStep = value; } }
 
         public PhysicsSystem(SystemManager systemManager, EntityManager entityManager, XElement data)
         {
@@ -56,71 +60,62 @@ namespace StasisGame.Systems
 
         public void update()
         {
-            EventSystem eventSystem = _systemManager.getSystem(SystemType.Event) as EventSystem;
-            List<CharacterMovementComponent> movementComponents = _entityManager.getComponents<CharacterMovementComponent>(ComponentType.CharacterMovement);
-            List<int> ropeGrabEntities = _entityManager.getEntitiesPosessing(ComponentType.RopeGrab);
-            List<int> prismaticEntities = _entityManager.getEntitiesPosessing(ComponentType.Prismatic);
-            List<int> physicsEntities;
-
-            for (int i = 0; i < _bodiesToRemove.Count; i++)
+            if (_singleStep || !_paused)
             {
-                _world.DestroyBody(_bodiesToRemove[i]);
-            }
-            _bodiesToRemove.Clear();
+                EventSystem eventSystem = _systemManager.getSystem(SystemType.Event) as EventSystem;
+                List<CharacterMovementComponent> movementComponents = _entityManager.getComponents<CharacterMovementComponent>(ComponentType.CharacterMovement);
+                List<int> ropeGrabEntities = _entityManager.getEntitiesPosessing(ComponentType.RopeGrab);
+                List<int> prismaticEntities = _entityManager.getEntitiesPosessing(ComponentType.Prismatic);
+                List<int> physicsEntities;
 
-            for (int i = 0; i < movementComponents.Count; i++)
-            {
-                CharacterMovementComponent movementComponent = movementComponents[i];
-                if (!movementComponent.onSurface)
+                for (int i = 0; i < _bodiesToRemove.Count; i++)
                 {
-                    movementComponent.allowJumpResetOnCollision = true;
+                    _world.DestroyBody(_bodiesToRemove[i]);
                 }
-            }
+                _bodiesToRemove.Clear();
 
-            for (int i = 0; i < prismaticEntities.Count; i++)
-            {
-                PrismaticJointComponent prismaticJointComponent = _entityManager.getComponent(prismaticEntities[i], ComponentType.Prismatic) as PrismaticJointComponent;
-                LimitState limitState = prismaticJointComponent.prismaticJoint._limitState;
-
-                if (prismaticJointComponent.previousLimitState != limitState)
+                for (int i = 0; i < movementComponents.Count; i++)
                 {
-                    if (limitState == LimitState.AtLower)
+                    CharacterMovementComponent movementComponent = movementComponents[i];
+                    if (!movementComponent.onSurface)
                     {
-                        eventSystem.postEvent(new GameEvent(GameEventType.OnLowerLimitReached, prismaticEntities[i]));
-                    }
-                    else if (limitState == LimitState.AtUpper)
-                    {
-                        //eventSystem.postEvent(new GameEvent(GameEventType.OnUpperLimitReached, prismaticEntities[i]));
+                        movementComponent.allowJumpResetOnCollision = true;
                     }
                 }
 
-                prismaticJointComponent.previousLimitState = limitState;
-            }
-
-            _world.Step(_dt, 12, 8);
-
-            // When entity is grabbing a rope, update the position
-            /*
-            for (int i = 0; i < ropeGrabEntities.Count; i++)
-            {
-                PhysicsComponent physicsComponent = _entityManager.getComponent(ropeGrabEntities[i], ComponentType.Physics) as PhysicsComponent;
-                RopeGrabComponent ropeGrabComponent = null;
-
-                if (physicsComponent != null)
+                for (int i = 0; i < prismaticEntities.Count; i++)
                 {
-                    ropeGrabComponent = _entityManager.getComponent(ropeGrabEntities[i], ComponentType.RopeGrab) as RopeGrabComponent;
-                    physicsComponent.body.Position = ropeGrabComponent.ropeNode.body.GetPosition();
+                    PrismaticJointComponent prismaticJointComponent = _entityManager.getComponent(prismaticEntities[i], ComponentType.Prismatic) as PrismaticJointComponent;
+                    LimitState limitState = prismaticJointComponent.prismaticJoint._limitState;
+
+                    if (prismaticJointComponent.previousLimitState != limitState)
+                    {
+                        if (limitState == LimitState.AtLower)
+                        {
+                            eventSystem.postEvent(new GameEvent(GameEventType.OnLowerLimitReached, prismaticEntities[i]));
+                        }
+                        else if (limitState == LimitState.AtUpper)
+                        {
+                            //eventSystem.postEvent(new GameEvent(GameEventType.OnUpperLimitReached, prismaticEntities[i]));
+                        }
+                    }
+
+                    prismaticJointComponent.previousLimitState = limitState;
                 }
-            }*/
 
-            // Update world positions
-            physicsEntities = _entityManager.getEntitiesPosessing(ComponentType.Physics);
-            for (int i = 0; i < physicsEntities.Count; i++)
-            {
-                PhysicsComponent physicsComponent = _entityManager.getComponent(physicsEntities[i], ComponentType.Physics) as PhysicsComponent;
-                WorldPositionComponent worldPositionComponent = _entityManager.getComponent(physicsEntities[i], ComponentType.WorldPosition) as WorldPositionComponent;
+                _world.Step(_dt, 12, 8);
 
-                worldPositionComponent.position = physicsComponent.body.GetPosition();
+                // Update world positions
+                physicsEntities = _entityManager.getEntitiesPosessing(ComponentType.Physics);
+                for (int i = 0; i < physicsEntities.Count; i++)
+                {
+                    PhysicsComponent physicsComponent = _entityManager.getComponent(physicsEntities[i], ComponentType.Physics) as PhysicsComponent;
+                    WorldPositionComponent worldPositionComponent = _entityManager.getComponent(physicsEntities[i], ComponentType.WorldPosition) as WorldPositionComponent;
+
+                    worldPositionComponent.position = physicsComponent.body.GetPosition();
+                }
+
+                _singleStep = false;
             }
         }
 

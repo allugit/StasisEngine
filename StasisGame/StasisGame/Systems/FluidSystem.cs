@@ -45,11 +45,14 @@ namespace StasisGame.Systems
         public bool drawCells = false;
         public bool drawVelocities = true;
         private float dt = 1f / 60f;
-        //private Renderer renderer;
+        private bool _paused;
+        private bool _singleStep;
         public AABB simulationAABB;
 
         public int defaultPriority { get { return 10; } }
         public SystemType systemType { get { return SystemType.Fluid; } }
+        public bool paused { get { return _paused; } set { _paused = value; } }
+        public bool singleStep { get { return _singleStep; } set { _singleStep = value; } }
 
         public FluidSystem(SystemManager systemManager, EntityManager entityManager)
         {

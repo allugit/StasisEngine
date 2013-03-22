@@ -21,11 +21,15 @@ namespace StasisGame.Systems
         private bool _enableManualMovement = true;
         private KeyboardState _keyState;
         private KeyboardState _oldKeyState;
+        private bool _paused;
+        private bool _singleStep;
 
         public int defaultPriority { get { return 80; } }
         public SystemType systemType { get { return SystemType.Camera; } }
         public Vector2 screenCenter { get { return _screenCenter; } }
         public bool enableManualMovement { get { return _enableManualMovement; } set { _enableManualMovement = value; } }
+        public bool paused { get { return _paused; } set { _paused = value; } }
+        public bool singleStep { get { return _singleStep; } set { _singleStep = value; } }
 
         public CameraSystem(SystemManager systemManager, EntityManager entityManager)
         {

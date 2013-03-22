@@ -11,9 +11,13 @@ namespace StasisGame.Systems
     {
         private SystemManager _systemManager;
         private EntityManager _entityManager;
+        private bool _paused;
+        private bool _singleStep;
 
         public int defaultPriority { get { return 30; } }
         public SystemType systemType { get { return SystemType.Circuit; } }
+        public bool paused { get { return _paused; } set { _paused = value; } }
+        public bool singleStep { get { return _singleStep; } set { _singleStep = value; } }
 
         public CircuitSystem(SystemManager systemManager, EntityManager entityManager)
         {

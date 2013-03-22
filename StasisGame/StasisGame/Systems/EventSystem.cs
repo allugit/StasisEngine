@@ -10,9 +10,13 @@ namespace StasisGame.Systems
         private SystemManager _systemManager;
         private EntityManager _entityManager;
         private Dictionary<GameEventType, Dictionary<int, List<IEventHandler>>> _handlers;
+        private bool _paused;
+        private bool _singleStep;
 
         public int defaultPriority { get { return 50; } }
         public SystemType systemType { get { return SystemType.Event; } }
+        public bool paused { get { return _paused; } set { _paused = value; } }
+        public bool singleStep { get { return _singleStep; } set { _singleStep = value; } }
 
         public EventSystem(SystemManager systemManager, EntityManager entityManager)
         {

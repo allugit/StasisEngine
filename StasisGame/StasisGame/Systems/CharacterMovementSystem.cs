@@ -16,9 +16,13 @@ namespace StasisGame.Systems
         public const float CLIMB_SPEED = 0.05f;
         private SystemManager _systemManager;
         private EntityManager _entityManager;
+        private bool _paused;
+        private bool _singleStep;
 
         public int defaultPriority { get { return 40; } }
         public SystemType systemType { get { return SystemType.CharacterMovement; } }
+        public bool paused { get { return _paused; } set { _paused = value; } }
+        public bool singleStep { get { return _singleStep; } set { _singleStep = value; } }
 
         public CharacterMovementSystem(SystemManager systemManager, EntityManager entityManager)
         {

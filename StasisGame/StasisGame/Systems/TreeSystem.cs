@@ -19,6 +19,8 @@ namespace StasisGame.Systems
         private Vector2 _brokenGravity = new Vector2(0, 0.02f);
         private Dictionary<int, Dictionary<int, MarkerCell>> _markerGrid;
         private Dictionary<int, Dictionary<int, List<Metamer>>> _metamerGrid;
+        private bool _paused;
+        private bool _singleStep;
         public AABB treeAABB;
 
         public int defaultPriority { get { return 30; } }
@@ -26,6 +28,8 @@ namespace StasisGame.Systems
         public Dictionary<int, Dictionary<int, MarkerCell>> markerGrid { get { return _markerGrid; } }
         public Dictionary<int, Dictionary<int, List<Metamer>>> metamerGrid { get { return _metamerGrid; } }
         public PhysicsSystem physicsSystem { get { return _physicsSystem; } }
+        public bool paused { get { return _paused; } set { _paused = value; } }
+        public bool singleStep { get { return _singleStep; } set { _singleStep = value; } }
 
         public TreeSystem(SystemManager systemManager, EntityManager entityManager)
         {
