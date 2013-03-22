@@ -80,7 +80,7 @@ namespace StasisGame.Systems
 
                         if (InputSystem.newGamepadState.IsConnected)
                         {
-                            Vector2 aim = InputSystem.newGamepadState.ThumbSticks.Right * selectedItem.maxRange;
+                            Vector2 aim = InputSystem.newGamepadState.ThumbSticks.Left * selectedItem.maxRange;
                             aim.Y *= -1;
                             aimComponent.angle = (float)Math.Atan2(aim.Y, aim.X);
                             aimComponent.length = aim.Length();
