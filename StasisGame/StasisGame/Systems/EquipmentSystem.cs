@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Input;
+using Box2D.XNA;
 using StasisGame.Components;
 using StasisGame.Managers;
 
@@ -106,29 +107,45 @@ namespace StasisGame.Systems
                 {
                     if (selectedItem.primaryAction || selectedItem.secondaryAction)
                     {
-                        if (selectedItem.primaryAction)
-                        {
-                            AimComponent aimComponent = _entityManager.getComponent(toolbarEntities[i], ComponentType.Aim) as AimComponent;
-                            Vector2 initialPointA = (_entityManager.getComponent(toolbarEntities[i], ComponentType.WorldPosition) as WorldPositionComponent).position;
-                            Vector2 initialPointB = initialPointA + new Vector2((float)Math.Cos(aimComponent.angle), (float)Math.Sin(aimComponent.angle)) * aimComponent.length;
-                            int ropeEntityId = _entityManager.factory.createRope(false, initialPointA, initialPointB, -1);
-
-                            if (ropeEntityId != -1)
-                            {
-                                if (_entityManager.getComponent(toolbarComponent.entityId, ComponentType.RopeGrab) == null)
-                                {
-                                    RopePhysicsComponent ropePhysicsComponent = _entityManager.getComponent(ropeEntityId, ComponentType.RopePhysics) as RopePhysicsComponent;
-                                    _entityManager.addComponent(toolbarComponent.entityId, new RopeGrabComponent(ropePhysicsComponent.head));
-                                }
-                            }
-                        }
                         if (selectedItem.secondaryAction)
                             Console.WriteLine("secondary action");
 
                         switch (selectedItem.itemType)
                         {
                             case ItemType.RopeGun:
-                                Console.WriteLine("Rope gun");
+                                if (selectedItem.primaryAction)
+                                {
+                                    AimComponent aimComponent = _entityManager.getComponent(toolbarEntities[i], ComponentType.Aim) as AimComponent;
+                                    Vector2 initialPointA = (_entityManager.getComponent(toolbarEntities[i], ComponentType.WorldPosition) as WorldPositionComponent).position;
+                                    Vector2 initialPointB = initialPointA + new Vector2((float)Math.Cos(aimComponent.angle), (float)Math.Sin(aimComponent.angle)) * aimComponent.length;
+                                    int ropeEntityId = _entityManager.factory.createRope(false, initialPointA, initialPointB, -1);
+
+                                    if (ropeEntityId != -1)
+                                    {
+                                        if (_entityManager.getComponent(toolbarComponent.entityId, ComponentType.RopeGrab) == null)
+                                        {
+                                            RopePhysicsComponent ropePhysicsComponent = _entityManager.getComponent(ropeEntityId, ComponentType.RopePhysics) as RopePhysicsComponent;
+                                            PhysicsComponent physicsComponent = _entityManager.getComponent(toolbarEntities[i], ComponentType.Physics) as PhysicsComponent;
+                                            RopeGrabComponent ropeGrabComponent = new RopeGrabComponent(ropePhysicsComponent.head);
+                                            RevoluteJointDef jointDef = null;
+                                            RevoluteJoint joint = null;
+
+                                            if (physicsComponent == null)
+                                                break;
+
+                                            jointDef = new RevoluteJointDef();
+                                            jointDef.bodyA = physicsComponent.body;
+                                            jointDef.bodyB = ropePhysicsComponent.head.body;
+                                            jointDef.localAnchorA = Vector2.Zero;
+                                            jointDef.localAnchorB = Vector2.Zero;
+                                            joint = ((PhysicsSystem)_systemManager.getSystem(SystemType.Physics)).world.CreateJoint(jointDef) as RevoluteJoint;
+
+                                            ropeGrabComponent.ropeNode.joint = joint;
+
+                                            _entityManager.addComponent(toolbarComponent.entityId, ropeGrabComponent);
+                                        }
+                                    }
+                                }
                                 break;
 
                             case ItemType.Blueprint:

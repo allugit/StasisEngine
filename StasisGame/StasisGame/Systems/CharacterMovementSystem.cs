@@ -13,6 +13,7 @@ namespace StasisGame.Systems
         public const float MAX_WALK_SPEED = 7;
         public const float WALK_FORCE = 12;
         public const float JUMP_FORCE = 10.5f;
+        public const float CLIMB_SPEED = 0.25f;
         private SystemManager _systemManager;
         private EntityManager _entityManager;
 
@@ -33,6 +34,7 @@ namespace StasisGame.Systems
             {
                 PhysicsComponent physicsComponent = (PhysicsComponent)_entityManager.getComponent(characterEntities[i], ComponentType.Physics);
                 CharacterMovementComponent characterMovementComponent = (CharacterMovementComponent)_entityManager.getComponent(characterEntities[i], ComponentType.CharacterMovement);
+                RopeGrabComponent ropeGrabComponent = (RopeGrabComponent)_entityManager.getComponent(characterEntities[i], ComponentType.RopeGrab);
                 Body body = physicsComponent.body;
                 Vector2 averageNormal = Vector2.Zero;
                 float modifier = characterMovementComponent.walkSpeedModifier;
@@ -106,6 +108,21 @@ namespace StasisGame.Systems
                         characterMovementComponent.alreadyJumped = true;
                         //body.ApplyLinearImpulse(new Vector2(0, -JUMP_FORCE), body.GetPosition());
                         body.SetLinearVelocity(new Vector2(body.GetLinearVelocity().X, -JUMP_FORCE));
+                    }
+                }
+
+                // Climbing
+                if (ropeGrabComponent != null)
+                {
+                    float climbSpeed = characterMovementComponent.climbAmount * CLIMB_SPEED;
+                    if (characterMovementComponent.climbUp)
+                    {
+                        // Rope segments use width as their length
+                        Console.WriteLine("Local anchor 1: {0}", ropeGrabComponent.ropeNode.joint._localAnchor1);
+                    }
+                    else if (characterMovementComponent.climbDown)
+                    {
+                        Console.WriteLine("climb down by: {0}", climbSpeed);
                     }
                 }
 

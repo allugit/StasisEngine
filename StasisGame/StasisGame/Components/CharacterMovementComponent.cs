@@ -20,6 +20,9 @@ namespace StasisGame.Components
         private bool _allowJumpResetOnCollision;
         private bool _allowLeftMovement;
         private bool _allowRightMovement;
+        private bool _climbUp;
+        private bool _climbDown;
+        private float _climbAmount;
 
         public ComponentType componentType { get { return ComponentType.CharacterMovement; } }
         public float movementAngle { get { return _movementAngle; } }
@@ -35,6 +38,9 @@ namespace StasisGame.Components
         public bool allowJumpResetOnCollision { get { return _allowJumpResetOnCollision; } set { _allowJumpResetOnCollision = value; } }
         public bool allowLeftMovement { get { return _allowLeftMovement; } }
         public bool allowRightMovement { get { return _allowRightMovement; } }
+        public bool climbUp { get { return _climbUp; } set { _climbUp = value; } }
+        public bool climbDown { get { return _climbDown; } set { _climbDown = value; } }
+        public float climbAmount { get { return _climbAmount; } set { _climbAmount = value; } }
 
         public CharacterMovementComponent(Fixture feetFixture)
         {

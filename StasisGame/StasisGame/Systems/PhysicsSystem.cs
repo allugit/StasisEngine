@@ -100,6 +100,7 @@ namespace StasisGame.Systems
             _world.Step(_dt, 12, 8);
 
             // When entity is grabbing a rope, update the position
+            /*
             for (int i = 0; i < ropeGrabEntities.Count; i++)
             {
                 PhysicsComponent physicsComponent = _entityManager.getComponent(ropeGrabEntities[i], ComponentType.Physics) as PhysicsComponent;
@@ -110,7 +111,7 @@ namespace StasisGame.Systems
                     ropeGrabComponent = _entityManager.getComponent(ropeGrabEntities[i], ComponentType.RopeGrab) as RopeGrabComponent;
                     physicsComponent.body.Position = ropeGrabComponent.ropeNode.body.GetPosition();
                 }
-            }
+            }*/
 
             // Update world positions
             physicsEntities = _entityManager.getEntitiesPosessing(ComponentType.Physics);

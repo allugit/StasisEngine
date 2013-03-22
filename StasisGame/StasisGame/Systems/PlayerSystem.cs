@@ -27,6 +27,7 @@ namespace StasisGame.Systems
         {
             InputComponent inputComponent = _entityManager.getComponent(_playerId, ComponentType.Input) as InputComponent;
             CharacterMovementComponent characterMovementComponent = _entityManager.getComponent(_playerId, ComponentType.CharacterMovement) as CharacterMovementComponent;
+            RopeGrabComponent ropeGrabComponent = _entityManager.getComponent(_playerId, ComponentType.RopeGrab) as RopeGrabComponent;
 
             if (inputComponent.usingGamepad)
             {
@@ -50,6 +51,20 @@ namespace StasisGame.Systems
                 else
                     characterMovementComponent.walkRight = false;
 
+                characterMovementComponent.climbAmount = 0f;
+                characterMovementComponent.climbDown = false;
+                characterMovementComponent.climbUp = false;
+                if (inputComponent.newGamepadState.ThumbSticks.Left.Y > 0)
+                {
+                    characterMovementComponent.climbUp = true;
+                    characterMovementComponent.climbAmount = inputComponent.newGamepadState.ThumbSticks.Left.Y;
+                }
+                else if (inputComponent.newGamepadState.ThumbSticks.Left.Y < 0)
+                {
+                    characterMovementComponent.climbDown = true;
+                    characterMovementComponent.climbAmount = inputComponent.newGamepadState.ThumbSticks.Left.Y;
+                }
+
                 characterMovementComponent.jump = inputComponent.newGamepadState.Buttons.A == ButtonState.Pressed;
             }
             else
@@ -58,6 +73,9 @@ namespace StasisGame.Systems
                 characterMovementComponent.walkLeft = inputComponent.newKeyState.IsKeyDown(Keys.A) || inputComponent.newKeyState.IsKeyDown(Keys.Left);
                 characterMovementComponent.walkRight = inputComponent.newKeyState.IsKeyDown(Keys.D) || inputComponent.newKeyState.IsKeyDown(Keys.Right);
                 characterMovementComponent.jump = inputComponent.newKeyState.IsKeyDown(Keys.Space);
+                characterMovementComponent.climbUp = inputComponent.newKeyState.IsKeyDown(Keys.W);
+                characterMovementComponent.climbDown = inputComponent.newKeyState.IsKeyDown(Keys.S);
+                characterMovementComponent.climbAmount = 1f;
             }
         }
     }
