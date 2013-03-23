@@ -13,7 +13,7 @@ namespace StasisGame.Systems
         public const float MAX_WALK_SPEED = 7;
         public const float WALK_FORCE = 12;
         public const float JUMP_FORCE = 10.5f;
-        public const float CLIMB_SPEED = 0.05f;
+        public const float CLIMB_SPEED = 0.1f;
         private SystemManager _systemManager;
         private EntityManager _entityManager;
         private bool _paused;
@@ -88,7 +88,7 @@ namespace StasisGame.Systems
                         if (ropeGrabComponent != null)
                         {
                             // Swing
-                            float swingForce = (characterMovementComponent.walkLeft ? -WALK_FORCE : WALK_FORCE) / 2;
+                            float swingForce = (characterMovementComponent.walkLeft ? -WALK_FORCE : WALK_FORCE) / 1.6f;
                             Vector2 movement = new Vector2((float)Math.Cos(characterMovementComponent.movementAngle), (float)Math.Sin(characterMovementComponent.movementAngle));
                             physicsComponent.body.ApplyForce(movement * swingForce, body.GetPosition());
                         }
