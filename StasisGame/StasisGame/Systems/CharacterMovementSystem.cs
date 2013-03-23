@@ -16,6 +16,7 @@ namespace StasisGame.Systems
         public const float CLIMB_SPEED = 0.1f;
         private SystemManager _systemManager;
         private EntityManager _entityManager;
+        private RopeSystem _ropeSystem;
         private bool _paused;
         private bool _singleStep;
 
@@ -28,6 +29,7 @@ namespace StasisGame.Systems
         {
             _systemManager = systemManager;
             _entityManager = entityManager;
+            _ropeSystem = _systemManager.getSystem(SystemType.Rope) as RopeSystem;
         }
 
         public void update()
@@ -122,7 +124,7 @@ namespace StasisGame.Systems
                 {
                     if (ropeGrabComponent != null)
                     {
-                        ropeGrabComponent.detachBody(physicsComponent.body);
+                        _ropeSystem.detachBody(ropeGrabComponent, physicsComponent.body);
                         _entityManager.removeComponent(characterEntities[i], ropeGrabComponent);
                         ropeGrabComponent = null;
 
@@ -142,11 +144,11 @@ namespace StasisGame.Systems
                     float climbSpeed = characterMovementComponent.climbAmount * CLIMB_SPEED;
                     if (characterMovementComponent.climbUp)
                     {
-                        ropeGrabComponent.moveAttachedBody(physicsComponent.body, climbSpeed);
+                        _ropeSystem.moveAttachedBody(ropeGrabComponent, physicsComponent.body, climbSpeed);
                     }
                     else if (characterMovementComponent.climbDown)
                     {
-                        ropeGrabComponent.moveAttachedBody(physicsComponent.body, -climbSpeed);
+                        _ropeSystem.moveAttachedBody(ropeGrabComponent, physicsComponent.body, -climbSpeed);
                     }
                 }
 

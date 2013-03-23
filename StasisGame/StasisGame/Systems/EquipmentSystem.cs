@@ -12,6 +12,7 @@ namespace StasisGame.Systems
     {
         private SystemManager _systemManager;
         private EntityManager _entityManager;
+        private RopeSystem _ropeSystem;
         private bool _paused;
         private bool _singleStep;
 
@@ -24,6 +25,7 @@ namespace StasisGame.Systems
         {
             _systemManager = systemManager;
             _entityManager = entityManager;
+            _ropeSystem = _systemManager.getSystem(SystemType.Rope) as RopeSystem;
         }
 
         public void assignItemToToolbar(ItemComponent itemComponent, ToolbarComponent toolbarComponent, int toolbarSlot)
@@ -135,7 +137,7 @@ namespace StasisGame.Systems
 
                                             if (ropeGrabComponent != null)
                                             {
-                                                ropeGrabComponent.detachAll();
+                                                _ropeSystem.detachAll(ropeGrabComponent);
                                                 _entityManager.removeComponent(toolbarComponent.entityId, ropeGrabComponent);
                                                 ropeGrabComponent = null;
                                             }
@@ -144,7 +146,7 @@ namespace StasisGame.Systems
                                                 break;
 
                                             newRopeGrabComponent = new RopeGrabComponent(ropePhysicsComponent.ropeNodeHead);
-                                            newRopeGrabComponent.attachBody(physicsComponent.body, newRopeGrabComponent.distance);
+                                            _ropeSystem.attachBody(newRopeGrabComponent, physicsComponent.body, newRopeGrabComponent.distance);
 
                                             _entityManager.addComponent(toolbarComponent.entityId, newRopeGrabComponent);
 

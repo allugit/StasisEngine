@@ -1,5 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
+using Microsoft.Xna.Framework;
+using Box2D.XNA;
 using StasisGame.Managers;
 using StasisGame.Components;
 
@@ -21,6 +23,53 @@ namespace StasisGame.Systems
         {
             _systemManager = systemManager;
             _entityManager = entityManager;
+        }
+
+        public void attachBody(RopeGrabComponent ropeGrabComponent, Body bodyToAttach, float distance)
+        {
+            int index = (int)Math.Floor(distance);
+            float fraction = distance - (float)index;
+            RopeNode node = ropeGrabComponent.ropeNode.getByIndex(index);
+            float lengthPosition = -(node.halfLength * 2 * fraction - node.halfLength);
+            RevoluteJoint joint = null;
+            RevoluteJointDef jointDef = new RevoluteJointDef();
+
+            bodyToAttach.Position = node.body.GetWorldPoint(new Vector2(lengthPosition, 0));
+            jointDef.bodyA = bodyToAttach;
+            jointDef.bodyB = node.body;
+            jointDef.localAnchorA = Vector2.Zero;
+            jointDef.localAnchorB = node.body.GetLocalPoint(bodyToAttach.GetPosition());
+            joint = bodyToAttach.GetWorld().CreateJoint(jointDef) as RevoluteJoint;
+            ropeGrabComponent.joints.Add(bodyToAttach, joint);
+        }
+
+        public void detachBody(RopeGrabComponent ropeGrabComponent, Body bodyToDetach)
+        {
+            RevoluteJoint joint = ropeGrabComponent.joints[bodyToDetach];
+            bodyToDetach.GetWorld().DestroyJoint(joint);
+            ropeGrabComponent.joints.Remove(bodyToDetach);
+        }
+
+        public void detachAll(RopeGrabComponent ropeGrabComponent)
+        {
+            foreach (RevoluteJoint joint in ropeGrabComponent.joints.Values)
+            {
+                joint.GetBodyA().GetWorld().DestroyJoint(joint);
+            }
+            ropeGrabComponent.joints.Clear();
+        }
+
+        public void moveAttachedBody(RopeGrabComponent ropeGrabComponent, Body bodyToMove, float climbSpeed)
+        {
+            float newDistance = ropeGrabComponent.distance + climbSpeed;
+            RopeNode newNode = ropeGrabComponent.ropeNode.getByIndex((int)Math.Floor(newDistance));
+
+            if (newNode != null)
+            {
+                detachBody(ropeGrabComponent, bodyToMove);
+                attachBody(ropeGrabComponent, bodyToMove, newDistance);
+                ropeGrabComponent.distance = newDistance;
+            }
         }
 
         public void update()
