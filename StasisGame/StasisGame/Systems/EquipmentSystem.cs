@@ -135,18 +135,19 @@ namespace StasisGame.Systems
                                             PhysicsComponent physicsComponent = _entityManager.getComponent(toolbarEntities[i], ComponentType.Physics) as PhysicsComponent;
                                             RopeGrabComponent newRopeGrabComponent = null;
 
+                                            if (physicsComponent == null)
+                                                break;
+
                                             if (ropeGrabComponent != null)
                                             {
-                                                _ropeSystem.detachAll(ropeGrabComponent);
+                                                _ropeSystem.releaseRope(ropeGrabComponent, physicsComponent.body);
+                                                ropePhysicsComponent.timeToLive = 100;
                                                 _entityManager.removeComponent(toolbarComponent.entityId, ropeGrabComponent);
                                                 ropeGrabComponent = null;
                                             }
 
-                                            if (physicsComponent == null)
-                                                break;
-
-                                            newRopeGrabComponent = new RopeGrabComponent(ropePhysicsComponent.ropeNodeHead);
-                                            _ropeSystem.attachBody(newRopeGrabComponent, physicsComponent.body, newRopeGrabComponent.distance);
+                                            newRopeGrabComponent = new RopeGrabComponent(ropeEntityId, ropePhysicsComponent.ropeNodeHead);
+                                            _ropeSystem.grabRope(newRopeGrabComponent, physicsComponent.body, newRopeGrabComponent.distance);
 
                                             _entityManager.addComponent(toolbarComponent.entityId, newRopeGrabComponent);
 

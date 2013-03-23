@@ -25,7 +25,7 @@ namespace StasisGame.Systems
             _entityManager = entityManager;
         }
 
-        public void attachBody(RopeGrabComponent ropeGrabComponent, Body bodyToAttach, float distance)
+        public void grabRope(RopeGrabComponent ropeGrabComponent, Body bodyToAttach, float distance)
         {
             int index = (int)Math.Floor(distance);
             float fraction = distance - (float)index;
@@ -43,11 +43,24 @@ namespace StasisGame.Systems
             ropeGrabComponent.joints.Add(bodyToAttach, joint);
         }
 
-        public void detachBody(RopeGrabComponent ropeGrabComponent, Body bodyToDetach)
+        public void releaseRope(RopeGrabComponent ropeGrabComponent, Body bodyToDetach)
         {
             RevoluteJoint joint = ropeGrabComponent.joints[bodyToDetach];
             bodyToDetach.GetWorld().DestroyJoint(joint);
             ropeGrabComponent.joints.Remove(bodyToDetach);
+        }
+
+        public void moveAttachedBody(RopeGrabComponent ropeGrabComponent, Body bodyToMove, float climbSpeed)
+        {
+            float newDistance = ropeGrabComponent.distance + climbSpeed;
+            RopeNode newNode = ropeGrabComponent.ropeNode.getByIndex((int)Math.Floor(newDistance));
+
+            if (newNode != null)
+            {
+                releaseRope(ropeGrabComponent, bodyToMove);
+                grabRope(ropeGrabComponent, bodyToMove, newDistance);
+                ropeGrabComponent.distance = newDistance;
+            }
         }
 
         public void detachAll(RopeGrabComponent ropeGrabComponent)
@@ -59,31 +72,54 @@ namespace StasisGame.Systems
             ropeGrabComponent.joints.Clear();
         }
 
-        public void moveAttachedBody(RopeGrabComponent ropeGrabComponent, Body bodyToMove, float climbSpeed)
+        public void killRope(int entityId)
         {
-            float newDistance = ropeGrabComponent.distance + climbSpeed;
-            RopeNode newNode = ropeGrabComponent.ropeNode.getByIndex((int)Math.Floor(newDistance));
+            RopeGrabComponent ropeGrabComponent = (RopeGrabComponent)_entityManager.getComponent(entityId, ComponentType.RopeGrab);
+            RopePhysicsComponent ropePhysicsComponent = (RopePhysicsComponent)_entityManager.getComponent(entityId, ComponentType.RopePhysics);
 
-            if (newNode != null)
+            if (ropeGrabComponent != null)
             {
-                detachBody(ropeGrabComponent, bodyToMove);
-                attachBody(ropeGrabComponent, bodyToMove, newDistance);
-                ropeGrabComponent.distance = newDistance;
+                detachAll(ropeGrabComponent);
+            }
+
+            if (ropePhysicsComponent != null)
+            {
+                RopeNode current = ropePhysicsComponent.ropeNodeHead;
+
+                while (current != null)
+                {
+                    current.body.GetWorld().DestroyBody(current.body);
+                    current = current.next;
+                }
+                _entityManager.killEntity(entityId);
             }
         }
 
         public void update()
         {
-            List<RopePhysicsComponent> ropePhysicsComponents = _entityManager.getComponents<RopePhysicsComponent>(ComponentType.RopePhysics);
+            List<int> ropePhysicsEntities = _entityManager.getEntitiesPosessing(ComponentType.RopePhysics);
 
-            for (int i = 0; i < ropePhysicsComponents.Count; i++)
+            for (int i = 0; i < ropePhysicsEntities.Count; i++)
             {
-                RopeNode head = ropePhysicsComponents[i].ropeNodeHead;
+                RopePhysicsComponent ropePhysicsComponent = (RopePhysicsComponent)_entityManager.getComponent(ropePhysicsEntities[i], ComponentType.RopePhysics);
+                RopeNode head = ropePhysicsComponent.ropeNodeHead;
                 RopeNode current = head;
                 RopeNode tail = head.tail;
 
+                // Check time to live
+                if (ropePhysicsComponent.timeToLive == 0)
+                {
+                    killRope(ropePhysicsEntities[i]);
+                    ropePhysicsComponent.timeToLive--;
+                }
+                else if (ropePhysicsComponent.timeToLive > -1)
+                {
+                    ropePhysicsComponent.timeToLive--;
+                }
+
                 while (current != null)
                 {
+                    // Check tensions
                     if (current.joint != null)
                     {
                         if (current == head)

@@ -124,7 +124,12 @@ namespace StasisGame.Systems
                 {
                     if (ropeGrabComponent != null)
                     {
-                        _ropeSystem.detachBody(ropeGrabComponent, physicsComponent.body);
+                        RopePhysicsComponent ropePhysicsComponent = _entityManager.getComponent(ropeGrabComponent.ropeEntityId, ComponentType.RopePhysics) as RopePhysicsComponent;
+
+                        if (ropePhysicsComponent != null)
+                            ropePhysicsComponent.timeToLive = 100;
+
+                        _ropeSystem.releaseRope(ropeGrabComponent, physicsComponent.body);
                         _entityManager.removeComponent(characterEntities[i], ropeGrabComponent);
                         ropeGrabComponent = null;
 
