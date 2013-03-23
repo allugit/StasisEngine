@@ -38,31 +38,6 @@ namespace StasisGame.Components
             jointDef.localAnchorB = node.body.GetLocalPoint(bodyToAttach.GetPosition());
             joint = bodyToAttach.GetWorld().CreateJoint(jointDef) as RevoluteJoint;
             _joints.Add(bodyToAttach, joint);
-
-            /*
-            // Reposition body
-            body.SetType(BodyType.Kinematic);
-            body.Position = ropeSegment.body.GetWorldPoint(new Vector2(grabPosition, 0));
-            body.SetType(BodyType.Dynamic);
-
-            // Create grab joint
-            RevoluteJointDef jointDef = new RevoluteJointDef();
-            jointDef.bodyA = body;
-            jointDef.bodyB = ropeSegment.body;
-            jointDef.localAnchorA = Vector2.Zero;
-            jointDef.localAnchorB = ropeSegment.body.GetLocalPoint(body.GetPosition());
-            grabJoint = environment.world.CreateJoint(jointDef) as RevoluteJoint;
-            */
-
-            /*
-            jointDef.bodyA = bodyToAttach;
-            jointDef.bodyB = node.body;
-            jointDef.localAnchorA = Vector2.Zero;
-            jointDef.localAnchorB = Vector2.Zero;
-
-            joint = bodyToAttach.GetWorld().CreateJoint(jointDef) as RevoluteJoint;
-            _joints.Add(bodyToAttach, joint);
-            */
         }
 
         public void detachBody(Body bodyToDetach)
@@ -72,10 +47,17 @@ namespace StasisGame.Components
             _joints.Remove(bodyToDetach);
         }
 
-        public void moveAttachedBody(Body bodyToMove, float distance)
+        public void moveAttachedBody(Body bodyToMove, float climbSpeed)
         {
-            detachBody(bodyToMove);
-            attachBody(bodyToMove, distance);
+            float newDistance = _distance + climbSpeed;
+            RopeNode newNode = _ropeNode.getByIndex((int)Math.Floor(newDistance));
+
+            if (newNode != null)
+            {
+                detachBody(bodyToMove);
+                attachBody(bodyToMove, newDistance);
+                _distance = newDistance;
+            }
         }
     }
 }

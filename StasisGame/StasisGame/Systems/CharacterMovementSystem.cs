@@ -143,13 +143,11 @@ namespace StasisGame.Systems
                     float climbSpeed = characterMovementComponent.climbAmount * CLIMB_SPEED;
                     if (characterMovementComponent.climbUp)
                     {
-                        ropeGrabComponent.distance += climbSpeed;
-                        ropeGrabComponent.moveAttachedBody(physicsComponent.body, ropeGrabComponent.distance);
+                        ropeGrabComponent.moveAttachedBody(physicsComponent.body, climbSpeed);
                     }
                     else if (characterMovementComponent.climbDown)
                     {
-                        ropeGrabComponent.distance -= climbSpeed;
-                        ropeGrabComponent.moveAttachedBody(physicsComponent.body, ropeGrabComponent.distance);
+                        ropeGrabComponent.moveAttachedBody(physicsComponent.body, -climbSpeed);
                     }
                 }
 
