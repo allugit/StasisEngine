@@ -10,8 +10,8 @@ namespace StasisEditor
 {
     public class EditorResourceManager
     {
-        public const string RESOURCE_SOURCE_PATH = @"D:\StasisResources";
-        public const string RESOURCE_DESTINATION_PATH = @"D:\_C#\StasisEngine\StasisGame\StasisGame\bin\x86\Debug";
+        public const string RESOURCE_SOURCE_PATH = @"C:\StasisResources";
+        public const string RESOURCE_DESTINATION_PATH = @"C:\code\StasisEngine\StasisGame\StasisGame\bin\x86\Debug";
 
         // Checks to see if a resource exists
         public static bool exists(string uid)
