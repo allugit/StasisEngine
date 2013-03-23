@@ -132,7 +132,6 @@ namespace StasisGame.Systems
                         if (characterMovementComponent.onSurface)
                         {
                             characterMovementComponent.alreadyJumped = true;
-                            //body.ApplyLinearImpulse(new Vector2(0, -JUMP_FORCE), body.GetPosition());
                             body.SetLinearVelocity(new Vector2(body.GetLinearVelocity().X, -JUMP_FORCE));
                         }
                     }

@@ -474,7 +474,7 @@ namespace StasisGame
                 bodyDef.position = finalPointA + ropeNormal * (segmentHalfLength + i * segmentLength);
                 bodyDef.type = BodyType.Dynamic;
 
-                shape.SetAsBox(segmentHalfLength, 0.3f);
+                shape.SetAsBox(segmentHalfLength, 0.15f);
 
                 fixtureDef.density = 0.5f;
                 fixtureDef.friction = 0.5f;
@@ -517,7 +517,7 @@ namespace StasisGame
                 anchorADef.bodyB = head.body;
                 anchorADef.localAnchorA = baResult.fixture.GetBody().GetLocalPoint(baResult.worldPoint);
                 anchorADef.localAnchorB = new Vector2(segmentHalfLength, 0);
-                world.CreateJoint(anchorADef);
+                head.anchorJoint = (RevoluteJoint)world.CreateJoint(anchorADef);
                 resultHandled = true;
             }
 
@@ -530,7 +530,7 @@ namespace StasisGame
                     anchorBDef.bodyB = abResult.fixture.GetBody();
                     anchorBDef.localAnchorA = new Vector2(-segmentHalfLength, 0);
                     anchorBDef.localAnchorB = abResult.fixture.GetBody().GetLocalPoint(abResult.worldPoint);
-                    world.CreateJoint(anchorBDef);
+                    lastNode.anchorJoint = (RevoluteJoint)world.CreateJoint(anchorBDef);
                 }
             }
 
@@ -936,7 +936,7 @@ namespace StasisGame
 
                             case ComponentType.RopePhysics:
                                 RopePhysicsComponent ropePhysicsComponent = component as RopePhysicsComponent;
-                                RopeNode currentRopeNode = ropePhysicsComponent.head;
+                                RopeNode currentRopeNode = ropePhysicsComponent.ropeNodeHead;
                                 while (currentRopeNode != null)
                                 {
                                     if (!currentRopeNode.body.GetFixtureList().IsIgnoredEntity(ignored))

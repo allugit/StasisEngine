@@ -5,14 +5,18 @@ namespace StasisGame.Components
 {
     public class RopePhysicsComponent : IComponent
     {
-        private RopeNode _head;
+        private RopeNode _ropeNodeHead;
+        private int _timeToLive;
+        private bool _detached;
 
         public ComponentType componentType { get { return ComponentType.RopePhysics; } }
-        public RopeNode head { get { return _head; } }
+        public RopeNode ropeNodeHead { get { return _ropeNodeHead; } }
+        public int timeToLive { get { return _timeToLive; } set { _timeToLive = value; } }
+        public bool detached { get { return _detached; } set { _detached = value; } }
 
-        public RopePhysicsComponent(RopeNode head)
+        public RopePhysicsComponent(RopeNode ropeNodeHead)
         {
-            _head = head;
+            _ropeNodeHead = ropeNodeHead;
         }
     }
 }

@@ -222,10 +222,19 @@ namespace StasisGame.Systems
             {
                 int entityId = ropeRenderEntities[i];
                 RopePhysicsComponent ropePhysicsComponent = (RopePhysicsComponent)_entityManager.getComponent(entityId, ComponentType.RopePhysics);
-                RopeNode current = ropePhysicsComponent.head;
+                RopeNode current = ropePhysicsComponent.ropeNodeHead.head;
+                RopeNode head = current;
+                RopeNode tail = head.tail;
+                Color color = Color.Red;
                 while (current != null)
                 {
-                    _spriteBatch.Draw(_pixel, (current.body.GetPosition() - screenCenter) * _scale + _halfScreen, new Rectangle(0, 0, 16, 4), Color.Red, current.body.GetAngle(), new Vector2(8, 2), 1f, SpriteEffects.None, 0.1f);
+                    color = Color.Red;
+                    if (current == head)
+                        color = Color.White;
+                    else if (current == tail)
+                        color = Color.Black;
+
+                    _spriteBatch.Draw(_pixel, (current.body.GetPosition() - screenCenter) * _scale + _halfScreen, new Rectangle(0, 0, 16, 4), color, current.body.GetAngle(), new Vector2(8, 2), 1f, SpriteEffects.None, 0.1f);
                     current = current.next;
                 }
             }

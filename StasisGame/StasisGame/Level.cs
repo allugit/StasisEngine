@@ -48,6 +48,7 @@ namespace StasisGame
             _systemManager.add(new CameraSystem(_systemManager, _entityManager), -1);
             _systemManager.add(new EventSystem(_systemManager, _entityManager), -1);
             _renderSystem = new RenderSystem(_game, _systemManager, _entityManager);
+            _systemManager.add(new RopeSystem(_systemManager, _entityManager), -1);
             _systemManager.add(_renderSystem, -1);
 
             // Create background

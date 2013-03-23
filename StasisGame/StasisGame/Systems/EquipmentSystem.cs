@@ -132,7 +132,7 @@ namespace StasisGame.Systems
                                             {
                                                 RopePhysicsComponent ropePhysicsComponent = _entityManager.getComponent(ropeEntityId, ComponentType.RopePhysics) as RopePhysicsComponent;
                                                 PhysicsComponent physicsComponent = _entityManager.getComponent(toolbarEntities[i], ComponentType.Physics) as PhysicsComponent;
-                                                RopeGrabComponent ropeGrabComponent = new RopeGrabComponent(ropePhysicsComponent.head);
+                                                RopeGrabComponent ropeGrabComponent = new RopeGrabComponent(ropePhysicsComponent.ropeNodeHead);
 
                                                 if (physicsComponent == null)
                                                     break;

@@ -132,6 +132,7 @@
     <Compile Include="Systems\PlayerSystem.cs" />
     <Compile Include="Systems\RenderSystem.cs" />
     <Compile Include="Systems\PhysicsSystem.cs" />
+    <Compile Include="Systems\RopeSystem.cs" />
     <Compile Include="Systems\ScreenSystem.cs" />
     <Compile Include="Systems\SystemNode.cs" />
     <Compile Include="Systems\TreeSystem.cs" />
