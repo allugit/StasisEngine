@@ -128,33 +128,39 @@ namespace StasisGame.Systems
 
                                         if (ropeEntityId != -1)
                                         {
-                                            if (_entityManager.getComponent(toolbarComponent.entityId, ComponentType.RopeGrab) == null)
+                                            RopeGrabComponent ropeGrabComponent = _entityManager.getComponent(toolbarComponent.entityId, ComponentType.RopeGrab) as RopeGrabComponent;
+                                            RopePhysicsComponent ropePhysicsComponent = _entityManager.getComponent(ropeEntityId, ComponentType.RopePhysics) as RopePhysicsComponent;
+                                            PhysicsComponent physicsComponent = _entityManager.getComponent(toolbarEntities[i], ComponentType.Physics) as PhysicsComponent;
+                                            RopeGrabComponent newRopeGrabComponent = null;
+
+                                            if (ropeGrabComponent != null)
                                             {
-                                                RopePhysicsComponent ropePhysicsComponent = _entityManager.getComponent(ropeEntityId, ComponentType.RopePhysics) as RopePhysicsComponent;
-                                                PhysicsComponent physicsComponent = _entityManager.getComponent(toolbarEntities[i], ComponentType.Physics) as PhysicsComponent;
-                                                RopeGrabComponent ropeGrabComponent = new RopeGrabComponent(ropePhysicsComponent.ropeNodeHead);
-
-                                                if (physicsComponent == null)
-                                                    break;
-
-                                                ropeGrabComponent.attachBody(physicsComponent.body, ropeGrabComponent.distance);
-
-                                                _entityManager.addComponent(toolbarComponent.entityId, ropeGrabComponent);
-
-                                                /*
-                                                // TEMPORARY -- Pause after rope creation
-                                                SystemNode node = _systemManager.head;
-                                                while (node != null)
-                                                {
-                                                    if (node.system.systemType != SystemType.Render)
-                                                    {
-                                                        node.system.paused = !node.system.paused;
-                                                    }
-
-                                                    node = node.next;
-                                                }
-                                                */
+                                                ropeGrabComponent.detachAll();
+                                                _entityManager.removeComponent(toolbarComponent.entityId, ropeGrabComponent);
+                                                ropeGrabComponent = null;
                                             }
+
+                                            if (physicsComponent == null)
+                                                break;
+
+                                            newRopeGrabComponent = new RopeGrabComponent(ropePhysicsComponent.ropeNodeHead);
+                                            newRopeGrabComponent.attachBody(physicsComponent.body, newRopeGrabComponent.distance);
+
+                                            _entityManager.addComponent(toolbarComponent.entityId, newRopeGrabComponent);
+
+                                            /*
+                                            // TEMPORARY -- Pause after rope creation
+                                            SystemNode node = _systemManager.head;
+                                            while (node != null)
+                                            {
+                                                if (node.system.systemType != SystemType.Render)
+                                                {
+                                                    node.system.paused = !node.system.paused;
+                                                }
+
+                                                node = node.next;
+                                            }
+                                            */
                                         }
                                     }
                                     break;

@@ -88,7 +88,7 @@ namespace StasisGame.Systems
                         if (ropeGrabComponent != null)
                         {
                             // Swing
-                            float swingForce = (characterMovementComponent.walkLeft ? -WALK_FORCE : WALK_FORCE) / 1.6f;
+                            float swingForce = (characterMovementComponent.walkLeft ? -WALK_FORCE : WALK_FORCE) / 1.7f;
                             Vector2 movement = new Vector2((float)Math.Cos(characterMovementComponent.movementAngle), (float)Math.Sin(characterMovementComponent.movementAngle));
                             physicsComponent.body.ApplyForce(movement * swingForce, body.GetPosition());
                         }
@@ -125,15 +125,14 @@ namespace StasisGame.Systems
                         ropeGrabComponent.detachBody(physicsComponent.body);
                         _entityManager.removeComponent(characterEntities[i], ropeGrabComponent);
                         ropeGrabComponent = null;
+
+                        body.SetLinearVelocity(new Vector2(body.GetLinearVelocity().X, body.GetLinearVelocity().Y - JUMP_FORCE / 1.66f));
                     }
 
                     if (!characterMovementComponent.alreadyJumped && (characterMovementComponent.allowLeftMovement || characterMovementComponent.allowRightMovement))
                     {
-                        if (characterMovementComponent.onSurface)
-                        {
-                            characterMovementComponent.alreadyJumped = true;
-                            body.SetLinearVelocity(new Vector2(body.GetLinearVelocity().X, -JUMP_FORCE));
-                        }
+                        characterMovementComponent.alreadyJumped = true;
+                        body.SetLinearVelocity(new Vector2(body.GetLinearVelocity().X, -JUMP_FORCE));
                     }
                 }
 

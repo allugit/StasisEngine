@@ -47,6 +47,15 @@ namespace StasisGame.Components
             _joints.Remove(bodyToDetach);
         }
 
+        public void detachAll()
+        {
+            foreach (RevoluteJoint joint in _joints.Values)
+            {
+                joint.GetBodyA().GetWorld().DestroyJoint(joint);
+            }
+            _joints.Clear();
+        }
+
         public void moveAttachedBody(Body bodyToMove, float climbSpeed)
         {
             float newDistance = _distance + climbSpeed;
