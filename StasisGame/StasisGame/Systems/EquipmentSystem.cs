@@ -57,6 +57,7 @@ namespace StasisGame.Systems
             if (_singleStep || !_paused)
             {
                 PlayerSystem playerSystem = _systemManager.getSystem(SystemType.Player) as PlayerSystem;
+                PhysicsComponent playerPhysicsComponent = _entityManager.getComponent(playerSystem.playerId, ComponentType.Physics) as PhysicsComponent;
                 List<int> toolbarEntities = _entityManager.getEntitiesPosessing(ComponentType.Toolbar);
 
                 // Player
@@ -126,7 +127,7 @@ namespace StasisGame.Systems
                                         AimComponent aimComponent = _entityManager.getComponent(toolbarEntities[i], ComponentType.Aim) as AimComponent;
                                         Vector2 initialPointA = (_entityManager.getComponent(toolbarEntities[i], ComponentType.WorldPosition) as WorldPositionComponent).position;
                                         Vector2 initialPointB = initialPointA + new Vector2((float)Math.Cos(aimComponent.angle), (float)Math.Sin(aimComponent.angle)) * aimComponent.length;
-                                        int ropeEntityId = _entityManager.factory.createRope(false, initialPointA, initialPointB, -1);
+                                        int ropeEntityId = _entityManager.factory.createRope(false, initialPointA, initialPointB, playerPhysicsComponent.body.GetLinearVelocity(), -1);
 
                                         if (ropeEntityId != -1)
                                         {
@@ -141,7 +142,7 @@ namespace StasisGame.Systems
                                             if (ropeGrabComponent != null)
                                             {
                                                 _ropeSystem.releaseRope(ropeGrabComponent, physicsComponent.body);
-                                                ropePhysicsComponent.timeToLive = 100;
+                                                (_entityManager.getComponent(ropeGrabComponent.ropeEntityId, ComponentType.RopePhysics) as RopePhysicsComponent).timeToLive = 100;
                                                 _entityManager.removeComponent(toolbarComponent.entityId, ropeGrabComponent);
                                                 ropeGrabComponent = null;
                                             }

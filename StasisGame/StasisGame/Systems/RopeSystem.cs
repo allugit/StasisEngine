@@ -74,12 +74,17 @@ namespace StasisGame.Systems
 
         public void killRope(int entityId)
         {
-            RopeGrabComponent ropeGrabComponent = (RopeGrabComponent)_entityManager.getComponent(entityId, ComponentType.RopeGrab);
             RopePhysicsComponent ropePhysicsComponent = (RopePhysicsComponent)_entityManager.getComponent(entityId, ComponentType.RopePhysics);
+            List<int> ropeGrabEntities = _entityManager.getEntitiesPosessing(ComponentType.RopeGrab);
 
-            if (ropeGrabComponent != null)
+            for (int i = 0; i < ropeGrabEntities.Count; i++)
             {
-                detachAll(ropeGrabComponent);
+                RopeGrabComponent ropeGrabComponent = (RopeGrabComponent)_entityManager.getComponent(ropeGrabEntities[i], ComponentType.RopeGrab);
+                if (ropeGrabComponent.ropeEntityId == entityId)
+                {
+                    detachAll(ropeGrabComponent);
+                    _entityManager.removeComponent(ropeGrabEntities[i], ropeGrabComponent);
+                }
             }
 
             if (ropePhysicsComponent != null)
@@ -102,6 +107,7 @@ namespace StasisGame.Systems
             for (int i = 0; i < ropePhysicsEntities.Count; i++)
             {
                 RopePhysicsComponent ropePhysicsComponent = (RopePhysicsComponent)_entityManager.getComponent(ropePhysicsEntities[i], ComponentType.RopePhysics);
+                RopeGrabComponent ropeGrabComponent = (RopeGrabComponent)_entityManager.getComponent(ropePhysicsEntities[i], ComponentType.RopeGrab);
                 RopeNode head = ropePhysicsComponent.ropeNodeHead;
                 RopeNode current = head;
                 RopeNode tail = head.tail;
@@ -122,28 +128,47 @@ namespace StasisGame.Systems
                     // Check tensions
                     if (current.joint != null)
                     {
+                        Vector2 distance;
                         if (current == head)
                         {
                             // Check anchor joint
-                            if (current.anchorJoint != null && current.anchorJoint.GetReactionForce(60f).Length() > 400f)
+                            if (current.anchorJoint != null)
                             {
-                                current.body.GetWorld().DestroyJoint(current.anchorJoint);
-                                current.anchorJoint = null;
+                                distance = current.anchorJoint.GetBodyA().GetWorldPoint(current.anchorJoint._localAnchor1) -
+                                    current.anchorJoint.GetBodyB().GetWorldPoint(current.anchorJoint._localAnchor2);
+                                if (distance.Length() > 0.4f || current.anchorJoint.GetReactionForce(60f).Length() > 200f)
+                                {
+                                    int ttl = ropePhysicsComponent.timeToLive;
+                                    ropePhysicsComponent.timeToLive = (ttl > -1 && ttl < 100) ? ttl : 100;
+                                    current.body.GetWorld().DestroyJoint(current.anchorJoint);
+                                    current.anchorJoint = null;
+                                }
                             }
                         }
                         else if (current == tail)
                         {
                             // Check anchor joint
-                            if (current.anchorJoint != null && current.anchorJoint.GetReactionForce(60f).Length() > 400f)
+                            if (current.anchorJoint != null)
                             {
-                                current.body.GetWorld().DestroyJoint(current.anchorJoint);
-                                current.anchorJoint = null;
+                                distance = current.anchorJoint.GetBodyA().GetWorldPoint(current.anchorJoint._localAnchor1) -
+                                    current.anchorJoint.GetBodyB().GetWorldPoint(current.anchorJoint._localAnchor2);
+                                if (distance.Length() > 0.4f || current.anchorJoint.GetReactionForce(60f).Length() > 200f)
+                                {
+                                    int ttl = ropePhysicsComponent.timeToLive;
+                                    ropePhysicsComponent.timeToLive = (ttl > -1 && ttl < 100) ? ttl : 100;
+                                    current.body.GetWorld().DestroyJoint(current.anchorJoint);
+                                    current.anchorJoint = null;
+                                }
                             }
                         }
 
                         // Check other joints
-                        if (current.joint.GetReactionForce(60f).Length() > 400f)
+                        distance = current.joint.GetBodyA().GetWorldPoint(current.joint._localAnchor1) -
+                                    current.joint.GetBodyB().GetWorldPoint(current.joint._localAnchor2);
+                        if (distance.Length() > 0.4f || current.joint.GetReactionForce(60f).Length() > 200f)
                         {
+                            int ttl = ropePhysicsComponent.timeToLive;
+                            ropePhysicsComponent.timeToLive = (ttl > -1 && ttl < 100) ? ttl : 100;
                             current.body.GetWorld().DestroyJoint(current.joint);
                             current.joint = null;
                         }

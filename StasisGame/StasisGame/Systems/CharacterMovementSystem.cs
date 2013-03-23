@@ -90,7 +90,7 @@ namespace StasisGame.Systems
                         if (ropeGrabComponent != null)
                         {
                             // Swing
-                            float swingForce = (characterMovementComponent.walkLeft ? -WALK_FORCE : WALK_FORCE) / 1.7f;
+                            float swingForce = (characterMovementComponent.walkLeft ? -WALK_FORCE : WALK_FORCE) / 2f;
                             Vector2 movement = new Vector2((float)Math.Cos(characterMovementComponent.movementAngle), (float)Math.Sin(characterMovementComponent.movementAngle));
                             physicsComponent.body.ApplyForce(movement * swingForce, body.GetPosition());
                         }
