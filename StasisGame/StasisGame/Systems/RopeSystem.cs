@@ -25,10 +25,10 @@ namespace StasisGame.Systems
             _entityManager = entityManager;
         }
 
-        public void grabRope(RopeGrabComponent ropeGrabComponent, Body bodyToAttach, float distance)
+        public void grabRope(RopeGrabComponent ropeGrabComponent, Body bodyToAttach)
         {
-            int index = (int)Math.Floor(distance);
-            float fraction = distance - (float)index;
+            int index = (int)Math.Floor(ropeGrabComponent.distance);
+            float fraction = ropeGrabComponent.distance - (float)index;
             RopeNode node = ropeGrabComponent.ropeNode.getByIndex(index);
             float lengthPosition = -(node.halfLength * 2 * fraction - node.halfLength);
             RevoluteJoint joint = null;
@@ -52,14 +52,14 @@ namespace StasisGame.Systems
 
         public void moveAttachedBody(RopeGrabComponent ropeGrabComponent, Body bodyToMove, float climbSpeed)
         {
-            float newDistance = ropeGrabComponent.distance + climbSpeed;
+            float newDistance = ropeGrabComponent.distance + (ropeGrabComponent.reverseClimbDirection ? climbSpeed : -climbSpeed);
             RopeNode newNode = ropeGrabComponent.ropeNode.getByIndex((int)Math.Floor(newDistance));
 
             if (newNode != null)
             {
-                releaseRope(ropeGrabComponent, bodyToMove);
-                grabRope(ropeGrabComponent, bodyToMove, newDistance);
                 ropeGrabComponent.distance = newDistance;
+                releaseRope(ropeGrabComponent, bodyToMove);
+                grabRope(ropeGrabComponent, bodyToMove);
             }
         }
 

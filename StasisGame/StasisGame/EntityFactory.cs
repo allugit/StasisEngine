@@ -524,6 +524,8 @@ namespace StasisGame
                 resultHandled = true;
             }
 
+            bool reverseClimbDirection = !doubleAnchor && !resultHandled;
+
             if ((!doubleAnchor && !resultHandled) ||
                 (doubleAnchor && resultHandled))
             {
@@ -538,7 +540,7 @@ namespace StasisGame
             }
 
             entityId = _entityManager.createEntity();
-            _entityManager.addComponent(entityId, new RopePhysicsComponent(head, destroyAfterRelease));
+            _entityManager.addComponent(entityId, new RopePhysicsComponent(head, destroyAfterRelease, reverseClimbDirection));
             _entityManager.addComponent(entityId, new RopeRenderComponent());
             _entityManager.addComponent(entityId, new IgnoreTreeCollisionComponent());
             _entityManager.addComponent(entityId, new IgnoreRopeRaycastComponent());

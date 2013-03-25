@@ -75,8 +75,8 @@ namespace StasisGame.Systems
                             _entityManager.removeComponent(characterId, existingRopeGrabComponent);
                         }
 
-                        ropeGrabComponent = new RopeGrabComponent(ropeEntityId, ropeNode);
-                        _ropeSystem.grabRope(ropeGrabComponent, physicsComponent.body, (float)nodeCount);
+                        ropeGrabComponent = new RopeGrabComponent(ropeEntityId, ropeNode, (float)nodeCount, ropePhysicsComponent.reverseClimbDirection);
+                        _ropeSystem.grabRope(ropeGrabComponent, physicsComponent.body);
                         _entityManager.addComponent(characterId, ropeGrabComponent);
 
                         return false;
