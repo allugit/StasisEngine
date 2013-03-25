@@ -80,6 +80,8 @@ namespace StasisGame.Systems
                 characterMovementComponent.climbUp = inputComponent.newKeyState.IsKeyDown(Keys.W);
                 characterMovementComponent.climbDown = inputComponent.newKeyState.IsKeyDown(Keys.S);
                 characterMovementComponent.climbAmount = 1f;
+                characterMovementComponent.doRopeGrab = inputComponent.newKeyState.IsKeyDown(Keys.E);
+                characterMovementComponent.allowRopeGrab = characterMovementComponent.allowRopeGrab ? true : (inputComponent.newKeyState.IsKeyUp(Keys.E) && inputComponent.oldKeyState.IsKeyDown(Keys.E));
             }
         }
     }

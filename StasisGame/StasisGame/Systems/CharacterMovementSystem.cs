@@ -32,6 +32,60 @@ namespace StasisGame.Systems
             _ropeSystem = _systemManager.getSystem(SystemType.Rope) as RopeSystem;
         }
 
+        public void attemptRopeGrab(int characterId, CharacterMovementComponent characterMovementComponent, PhysicsComponent physicsComponent, RopeGrabComponent existingRopeGrabComponent)
+        {
+            float margin = 0.5f;
+            AABB region = new AABB();
+            RopeNode ropeNode = null;
+            int nodeCount = 0;
+
+            region.lowerBound = physicsComponent.body.GetPosition() - new Vector2(margin, margin);
+            region.upperBound = physicsComponent.body.GetPosition() + new Vector2(margin, margin);
+
+            if (physicsComponent == null)
+                return;
+
+            // Query the world for a body, and check to see if it's a rope
+            physicsComponent.body.GetWorld().QueryAABB((fixtureProxy) =>
+                {
+                    int ropeEntityId = (int)fixtureProxy.fixture.GetBody().GetUserData();
+                    RopePhysicsComponent ropePhysicsComponent = (RopePhysicsComponent)_entityManager.getComponent(ropeEntityId, ComponentType.RopePhysics);
+
+                    if (ropePhysicsComponent != null)
+                    {
+                        RopeNode current = ropePhysicsComponent.ropeNodeHead;
+                        RopeGrabComponent ropeGrabComponent = null;
+
+                        characterMovementComponent.allowRopeGrab = false;
+
+                        while (current != null)
+                        {
+                            if (current.body == fixtureProxy.fixture.GetBody())
+                            {
+                                ropeNode = current;
+                                break;
+                            }
+                            nodeCount++;
+                            current = current.next;
+                        }
+
+                        if (existingRopeGrabComponent != null)
+                        {
+                            _ropeSystem.releaseRope(existingRopeGrabComponent, physicsComponent.body);
+                            _entityManager.removeComponent(characterId, existingRopeGrabComponent);
+                        }
+
+                        ropeGrabComponent = new RopeGrabComponent(ropeEntityId, ropeNode);
+                        _ropeSystem.grabRope(ropeGrabComponent, physicsComponent.body, (float)nodeCount);
+                        _entityManager.addComponent(characterId, ropeGrabComponent);
+
+                        return false;
+                    }
+                    return true;
+                },
+                ref region);
+        }
+
         public void update()
         {
             List<int> characterEntities = _entityManager.getEntitiesPosessing(ComponentType.CharacterMovement);
@@ -52,6 +106,11 @@ namespace StasisGame.Systems
                 float characterHorizontalSpeed = Math.Abs(characterVelocity.X);
 
                 characterMovementComponent.calculateMovementAngle();
+
+                if (characterMovementComponent.allowRopeGrab && characterMovementComponent.doRopeGrab)
+                {
+                    attemptRopeGrab(characterEntities[i], characterMovementComponent, physicsComponent, ropeGrabComponent);
+                }
 
                 if (characterMovementComponent.onSurface)
                 {
