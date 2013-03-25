@@ -52,7 +52,7 @@ namespace StasisGame.Systems
 
         public void moveAttachedBody(RopeGrabComponent ropeGrabComponent, Body bodyToMove, float climbSpeed)
         {
-            float newDistance = ropeGrabComponent.distance + (ropeGrabComponent.reverseClimbDirection ? climbSpeed : -climbSpeed);
+            float newDistance = ropeGrabComponent.distance + (ropeGrabComponent.reverseClimbDirection ? -climbSpeed : climbSpeed);
             RopeNode newNode = ropeGrabComponent.ropeNode.getByIndex((int)Math.Floor(newDistance));
 
             if (newNode != null)

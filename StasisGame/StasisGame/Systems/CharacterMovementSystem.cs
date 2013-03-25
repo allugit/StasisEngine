@@ -51,7 +51,7 @@ namespace StasisGame.Systems
                     int ropeEntityId = (int)fixtureProxy.fixture.GetBody().GetUserData();
                     RopePhysicsComponent ropePhysicsComponent = (RopePhysicsComponent)_entityManager.getComponent(ropeEntityId, ComponentType.RopePhysics);
 
-                    if (ropePhysicsComponent != null)
+                    if (ropePhysicsComponent != null && !ropePhysicsComponent.doubleAnchor)
                     {
                         RopeNode current = ropePhysicsComponent.ropeNodeHead;
                         RopeGrabComponent ropeGrabComponent = null;
@@ -71,6 +71,11 @@ namespace StasisGame.Systems
 
                         if (existingRopeGrabComponent != null)
                         {
+                            RopePhysicsComponent existingRopePhysicsComponent = (RopePhysicsComponent)_entityManager.getComponent(existingRopeGrabComponent.ropeEntityId, ComponentType.RopePhysics);
+
+                            if (existingRopePhysicsComponent.destroyAfterRelease)
+                                existingRopePhysicsComponent.timeToLive = 100;
+
                             _ropeSystem.releaseRope(existingRopeGrabComponent, physicsComponent.body);
                             _entityManager.removeComponent(characterId, existingRopeGrabComponent);
                         }

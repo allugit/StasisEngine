@@ -513,6 +513,7 @@ namespace StasisGame
             }
 
             bool resultHandled = false;
+            bool reverseClimbDirection = false;
 
             if (baResult.success)
             {
@@ -522,9 +523,8 @@ namespace StasisGame
                 anchorADef.localAnchorB = new Vector2(segmentHalfLength, 0);
                 head.anchorJoint = (RevoluteJoint)world.CreateJoint(anchorADef);
                 resultHandled = true;
+                reverseClimbDirection = !doubleAnchor;
             }
-
-            bool reverseClimbDirection = !doubleAnchor && !resultHandled;
 
             if ((!doubleAnchor && !resultHandled) ||
                 (doubleAnchor && resultHandled))
@@ -540,7 +540,7 @@ namespace StasisGame
             }
 
             entityId = _entityManager.createEntity();
-            _entityManager.addComponent(entityId, new RopePhysicsComponent(head, destroyAfterRelease, reverseClimbDirection));
+            _entityManager.addComponent(entityId, new RopePhysicsComponent(head, destroyAfterRelease, reverseClimbDirection, doubleAnchor));
             _entityManager.addComponent(entityId, new RopeRenderComponent());
             _entityManager.addComponent(entityId, new IgnoreTreeCollisionComponent());
             _entityManager.addComponent(entityId, new IgnoreRopeRaycastComponent());

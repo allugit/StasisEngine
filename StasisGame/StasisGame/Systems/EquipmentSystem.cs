@@ -141,8 +141,11 @@ namespace StasisGame.Systems
 
                                             if (ropeGrabComponent != null)
                                             {
+                                                RopePhysicsComponent previouslyGrabbedRope = _entityManager.getComponent(ropeGrabComponent.ropeEntityId, ComponentType.RopePhysics) as RopePhysicsComponent;
                                                 _ropeSystem.releaseRope(ropeGrabComponent, physicsComponent.body);
-                                                (_entityManager.getComponent(ropeGrabComponent.ropeEntityId, ComponentType.RopePhysics) as RopePhysicsComponent).timeToLive = 100;
+
+                                                if (previouslyGrabbedRope.destroyAfterRelease)
+                                                    previouslyGrabbedRope.timeToLive = 100;
                                                 _entityManager.removeComponent(toolbarComponent.entityId, ropeGrabComponent);
                                                 ropeGrabComponent = null;
                                             }
