@@ -136,7 +136,7 @@ namespace StasisGame.Systems
                             {
                                 distance = current.anchorJoint.GetBodyA().GetWorldPoint(current.anchorJoint._localAnchor1) -
                                     current.anchorJoint.GetBodyB().GetWorldPoint(current.anchorJoint._localAnchor2);
-                                if (distance.Length() > 0.4f || current.anchorJoint.GetReactionForce(60f).Length() > 200f)
+                                if (distance.Length() > 0.8f || current.anchorJoint.GetReactionForce(60f).Length() > 400f)
                                 {
                                     int ttl = ropePhysicsComponent.timeToLive;
                                     ropePhysicsComponent.timeToLive = (ttl > -1 && ttl < 100) ? ttl : 100;
@@ -152,7 +152,7 @@ namespace StasisGame.Systems
                             {
                                 distance = current.anchorJoint.GetBodyA().GetWorldPoint(current.anchorJoint._localAnchor1) -
                                     current.anchorJoint.GetBodyB().GetWorldPoint(current.anchorJoint._localAnchor2);
-                                if (distance.Length() > 0.4f || current.anchorJoint.GetReactionForce(60f).Length() > 200f)
+                                if (distance.Length() > 0.8f || current.anchorJoint.GetReactionForce(60f).Length() > 400f)
                                 {
                                     int ttl = ropePhysicsComponent.timeToLive;
                                     ropePhysicsComponent.timeToLive = (ttl > -1 && ttl < 100) ? ttl : 100;
@@ -165,7 +165,7 @@ namespace StasisGame.Systems
                         // Check other joints
                         distance = current.joint.GetBodyA().GetWorldPoint(current.joint._localAnchor1) -
                                     current.joint.GetBodyB().GetWorldPoint(current.joint._localAnchor2);
-                        if (distance.Length() > 0.4f || current.joint.GetReactionForce(60f).Length() > 200f)
+                        if (distance.Length() > 1.2f || current.joint.GetReactionForce(60f).Length() > 300f)
                         {
                             int ttl = ropePhysicsComponent.timeToLive;
                             ropePhysicsComponent.timeToLive = (ttl > -1 && ttl < 100) ? ttl : 100;
