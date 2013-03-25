@@ -185,7 +185,7 @@ namespace StasisGame.Systems
                     {
                         RopePhysicsComponent ropePhysicsComponent = _entityManager.getComponent(ropeGrabComponent.ropeEntityId, ComponentType.RopePhysics) as RopePhysicsComponent;
 
-                        if (ropePhysicsComponent != null)
+                        if (ropePhysicsComponent != null && ropePhysicsComponent.destroyAfterRelease)
                             ropePhysicsComponent.timeToLive = 100;
 
                         _ropeSystem.releaseRope(ropeGrabComponent, physicsComponent.body);

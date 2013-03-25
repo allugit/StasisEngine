@@ -24,7 +24,7 @@ namespace StasisGame.Components
         private bool _climbDown;
         private float _climbAmount;
         private bool _doRopeGrab;
-        private bool _allowRopeGrab;
+        private bool _allowRopeGrab = true;
 
         public ComponentType componentType { get { return ComponentType.CharacterMovement; } }
         public float movementAngle { get { return _movementAngle; } }

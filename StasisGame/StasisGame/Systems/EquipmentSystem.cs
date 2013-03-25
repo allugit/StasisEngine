@@ -127,7 +127,7 @@ namespace StasisGame.Systems
                                         AimComponent aimComponent = _entityManager.getComponent(toolbarEntities[i], ComponentType.Aim) as AimComponent;
                                         Vector2 initialPointA = (_entityManager.getComponent(toolbarEntities[i], ComponentType.WorldPosition) as WorldPositionComponent).position;
                                         Vector2 initialPointB = initialPointA + new Vector2((float)Math.Cos(aimComponent.angle), (float)Math.Sin(aimComponent.angle)) * aimComponent.length;
-                                        int ropeEntityId = _entityManager.factory.createRope(false, initialPointA, initialPointB, playerPhysicsComponent.body.GetLinearVelocity(), -1);
+                                        int ropeEntityId = _entityManager.factory.createRope(false, true, initialPointA, initialPointB, playerPhysicsComponent.body.GetLinearVelocity(), -1);
 
                                         if (ropeEntityId != -1)
                                         {

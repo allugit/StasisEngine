@@ -391,12 +391,13 @@ namespace StasisGame
         {
             return createRope(
                 Loader.loadBool(data.Attribute("double_anchor"), false),
+                false,
                 Loader.loadVector2(data.Attribute("point_a"), Vector2.Zero),
                 Loader.loadVector2(data.Attribute("point_b"), Vector2.Zero),
                 Vector2.Zero,
                 Loader.loadInt(data.Attribute("id"), -1));
         }
-        public int createRope(bool doubleAnchor, Vector2 initialPointA, Vector2 initialPointB, Vector2 initialVelocity, int actorId)
+        public int createRope(bool doubleAnchor, bool destroyAfterRelease, Vector2 initialPointA, Vector2 initialPointB, Vector2 initialVelocity, int actorId)
         {
             World world = (_systemManager.getSystem(SystemType.Physics) as PhysicsSystem).world;
             int entityId = -1;
@@ -537,7 +538,7 @@ namespace StasisGame
             }
 
             entityId = _entityManager.createEntity();
-            _entityManager.addComponent(entityId, new RopePhysicsComponent(head));
+            _entityManager.addComponent(entityId, new RopePhysicsComponent(head, destroyAfterRelease));
             _entityManager.addComponent(entityId, new RopeRenderComponent());
             _entityManager.addComponent(entityId, new IgnoreTreeCollisionComponent());
             _entityManager.addComponent(entityId, new IgnoreRopeRaycastComponent());
