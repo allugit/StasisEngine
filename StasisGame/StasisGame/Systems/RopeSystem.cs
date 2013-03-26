@@ -9,6 +9,7 @@ namespace StasisGame.Systems
 {
     public class RopeSystem : ISystem
     {
+        public const int ROPE_TIME_TO_LIVE = 100;
         private SystemManager _systemManager;
         private EntityManager _entityManager;
         private bool _paused;
@@ -34,6 +35,7 @@ namespace StasisGame.Systems
             RevoluteJoint joint = null;
             RevoluteJointDef jointDef = new RevoluteJointDef();
 
+            ropeGrabComponent.ropeNode = node;
             bodyToAttach.Position = node.body.GetWorldPoint(new Vector2(lengthPosition, 0));
             jointDef.bodyA = bodyToAttach;
             jointDef.bodyB = node.body;
@@ -57,6 +59,21 @@ namespace StasisGame.Systems
 
             if (newNode != null)
             {
+                if (ropeGrabComponent.reverseClimbDirection)
+                {
+                    if (climbSpeed > 0 && newNode != ropeGrabComponent.ropeNode && ropeGrabComponent.ropeNode.joint == null)
+                        return;
+                    else if (climbSpeed < 0 && newNode != ropeGrabComponent.ropeNode && newNode.joint == null)
+                        return;
+                }
+                else
+                {
+                    if (climbSpeed > 0 && newNode != ropeGrabComponent.ropeNode && newNode.joint == null)
+                        return;
+                    else if (climbSpeed < 0 && newNode != ropeGrabComponent.ropeNode && ropeGrabComponent.ropeNode.joint == null)
+                        return;
+                }
+
                 ropeGrabComponent.distance = newDistance;
                 releaseRope(ropeGrabComponent, bodyToMove);
                 grabRope(ropeGrabComponent, bodyToMove);
@@ -139,7 +156,7 @@ namespace StasisGame.Systems
                                 if (distance.Length() > 0.8f || current.anchorJoint.GetReactionForce(60f).Length() > 400f)
                                 {
                                     int ttl = ropePhysicsComponent.timeToLive;
-                                    ropePhysicsComponent.timeToLive = (ttl > -1 && ttl < 100) ? ttl : 100;
+                                    ropePhysicsComponent.timeToLive = (ttl > -1 && ttl < ROPE_TIME_TO_LIVE) ? ttl : ROPE_TIME_TO_LIVE;
                                     current.body.GetWorld().DestroyJoint(current.anchorJoint);
                                     current.anchorJoint = null;
                                 }
@@ -155,7 +172,7 @@ namespace StasisGame.Systems
                                 if (distance.Length() > 0.8f || current.anchorJoint.GetReactionForce(60f).Length() > 400f)
                                 {
                                     int ttl = ropePhysicsComponent.timeToLive;
-                                    ropePhysicsComponent.timeToLive = (ttl > -1 && ttl < 100) ? ttl : 100;
+                                    ropePhysicsComponent.timeToLive = (ttl > -1 && ttl < ROPE_TIME_TO_LIVE) ? ttl : ROPE_TIME_TO_LIVE;
                                     current.body.GetWorld().DestroyJoint(current.anchorJoint);
                                     current.anchorJoint = null;
                                 }
@@ -168,7 +185,7 @@ namespace StasisGame.Systems
                         if (distance.Length() > 1.2f || current.joint.GetReactionForce(60f).Length() > 300f)
                         {
                             int ttl = ropePhysicsComponent.timeToLive;
-                            ropePhysicsComponent.timeToLive = (ttl > -1 && ttl < 100) ? ttl : 100;
+                            ropePhysicsComponent.timeToLive = (ttl > -1 && ttl < ROPE_TIME_TO_LIVE) ? ttl : ROPE_TIME_TO_LIVE;
                             current.body.GetWorld().DestroyJoint(current.joint);
                             current.joint = null;
                         }
