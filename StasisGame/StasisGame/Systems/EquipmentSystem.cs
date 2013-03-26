@@ -127,7 +127,7 @@ namespace StasisGame.Systems
                                         AimComponent aimComponent = _entityManager.getComponent(toolbarEntities[i], ComponentType.Aim) as AimComponent;
                                         Vector2 initialPointA = (_entityManager.getComponent(toolbarEntities[i], ComponentType.WorldPosition) as WorldPositionComponent).position;
                                         Vector2 initialPointB = initialPointA + new Vector2((float)Math.Cos(aimComponent.angle), (float)Math.Sin(aimComponent.angle)) * aimComponent.length;
-                                        int ropeEntityId = _entityManager.factory.createRope(false, true, initialPointA, initialPointB, playerPhysicsComponent.body.GetLinearVelocity(), -1);
+                                        int ropeEntityId = _entityManager.factory.createRope(false, true, initialPointA, initialPointB, -1);
 
                                         if (ropeEntityId != -1)
                                         {
@@ -135,10 +135,29 @@ namespace StasisGame.Systems
                                             RopePhysicsComponent ropePhysicsComponent = _entityManager.getComponent(ropeEntityId, ComponentType.RopePhysics) as RopePhysicsComponent;
                                             PhysicsComponent physicsComponent = _entityManager.getComponent(toolbarEntities[i], ComponentType.Physics) as PhysicsComponent;
                                             RopeGrabComponent newRopeGrabComponent = null;
+                                            Vector2 initialVelocity = physicsComponent.body.GetLinearVelocity();
+                                            RopeNode currentNode = null;
+                                            int ropeSegmentCount;
 
                                             if (physicsComponent == null)
                                                 break;
 
+                                            // Handle initial velocity
+                                            currentNode = ropePhysicsComponent.ropeNodeHead;
+                                            ropeSegmentCount = currentNode.count;
+                                            System.Diagnostics.Debug.Assert(ropeSegmentCount != 0);
+                                            int count = ropeSegmentCount;
+                                            while (currentNode != null)
+                                            {
+                                                float weight = (float)count / (float)ropeSegmentCount;
+
+                                                currentNode.body.SetLinearVelocity(currentNode.body.GetLinearVelocity() + initialVelocity * weight);
+
+                                                count--;
+                                                currentNode = currentNode.next;
+                                            }
+
+                                            // Handle previous grabs
                                             if (ropeGrabComponent != null)
                                             {
                                                 RopePhysicsComponent previouslyGrabbedRope = _entityManager.getComponent(ropeGrabComponent.ropeEntityId, ComponentType.RopePhysics) as RopePhysicsComponent;

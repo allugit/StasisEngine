@@ -394,10 +394,9 @@ namespace StasisGame
                 false,
                 Loader.loadVector2(data.Attribute("point_a"), Vector2.Zero),
                 Loader.loadVector2(data.Attribute("point_b"), Vector2.Zero),
-                Vector2.Zero,
                 Loader.loadInt(data.Attribute("id"), -1));
         }
-        public int createRope(bool doubleAnchor, bool destroyAfterRelease, Vector2 initialPointA, Vector2 initialPointB, Vector2 initialVelocity, int actorId)
+        public int createRope(bool doubleAnchor, bool destroyAfterRelease, Vector2 initialPointA, Vector2 initialPointB, int actorId)
         {
             World world = (_systemManager.getSystem(SystemType.Physics) as PhysicsSystem).world;
             int entityId = -1;
@@ -475,7 +474,6 @@ namespace StasisGame
                 bodyDef.angle = angle + StasisMathHelper.pi; // Adding pi fixes a problem where rope segments are created backwards, and then snap into the correct positions
                 bodyDef.position = finalPointA + ropeNormal * (segmentHalfLength + i * segmentLength);
                 bodyDef.type = BodyType.Dynamic;
-                bodyDef.linearVelocity = initialVelocity;
 
                 shape.SetAsBox(segmentHalfLength, 0.15f);
 
