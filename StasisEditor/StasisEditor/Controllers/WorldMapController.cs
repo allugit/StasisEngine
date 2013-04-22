@@ -6,6 +6,7 @@ using System.Xml.Linq;
 using StasisEditor.Views;
 using Microsoft.Xna.Framework;
 using StasisCore;
+using StasisCore.Models;
 using StasisEditor.Models;
 
 namespace StasisEditor.Controllers
@@ -92,6 +93,17 @@ namespace StasisEditor.Controllers
             System.Diagnostics.Debug.Assert(worldMapToRemove != null);
 
             _worldMaps.Remove(worldMapToRemove);
+        }
+
+        // saveWorldMaps
+        public void saveWorldMaps()
+        {
+            XElement data = new XElement("WorldMaps");
+
+            foreach (EditorWorldMap worldMap in _worldMaps)
+                data.Add(worldMap.data);
+
+            EditorResourceManager.saveWorldMapResources(data, true);
         }
     }
 }

@@ -79,5 +79,10 @@ namespace StasisEditor.Views
                 MessageBox.Show(exception.Message, "Resource Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
         }
+
+        private void saveWorldMapsButton_Click(object sender, EventArgs e)
+        {
+            _controller.saveWorldMaps();
+        }
     }
 }

@@ -140,6 +140,7 @@
             this.saveWorldMapsButton.TabIndex = 5;
             this.saveWorldMapsButton.Text = "Save World Maps";
             this.saveWorldMapsButton.UseVisualStyleBackColor = true;
+            this.saveWorldMapsButton.Click += new System.EventHandler(this.saveWorldMapsButton_Click);
             // 
             // worldMapListBox
             // 
