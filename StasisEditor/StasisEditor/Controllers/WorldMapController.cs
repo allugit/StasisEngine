@@ -17,20 +17,8 @@ namespace StasisEditor.Controllers
     {
         private EditorController _editorController;
         private WorldMapView _view;
-        private bool _ctrl;
-        private Point _mouse;
-        private Point _oldMouse;
-        private Vector2 _screenCenter;
         private BindingList<EditorWorldMap> _worldMaps;
 
-        public Point mouse
-        {
-            get { return _mouse; }
-            set { _oldMouse = _mouse; _mouse = value; }
-        }
-        public Vector2 mouseDelta { get { return new Vector2(_mouse.X - _oldMouse.X, _mouse.Y - _oldMouse.Y); } }
-        public bool ctrl { get { return _ctrl; } set { _ctrl = value; } }
-        public Vector2 screenCenter { get { return _screenCenter; } set { _screenCenter = value; } }
         public BindingList<EditorWorldMap> worldMaps { get { return _worldMaps; } }
 
         public WorldMapController(EditorController editorController, WorldMapView worldMapView)

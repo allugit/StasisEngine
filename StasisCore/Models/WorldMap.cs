@@ -9,6 +9,8 @@ namespace StasisCore.Models
     {
         protected Texture2D _texture;
 
+        virtual public Texture2D texture { get { return _texture; } }
+
         public WorldMap()
         {
         }
