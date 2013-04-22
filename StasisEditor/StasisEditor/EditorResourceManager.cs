@@ -98,6 +98,17 @@ namespace StasisEditor
                             return true;
                     }
                 }
+
+                // Check world maps
+                using (FileStream fs = new FileStream(ResourceManager.worldMapPath, FileMode.Open))
+                {
+                    XElement data = XElement.Load(fs);
+                    foreach (XElement worldMapData in data.Elements("WorldMap"))
+                    {
+                        if (worldMapData.Attribute("uid").Value == uid)
+                            return true;
+                    }
+                }
             }
             catch (XmlException e)
             {
@@ -150,6 +161,11 @@ namespace StasisEditor
             string backgroundDestination = RESOURCE_DESTINATION_PATH + "\\" + ResourceManager.backgroundPath;
             string backgroundSource = RESOURCE_SOURCE_PATH + "\\" + ResourceManager.backgroundPath;
             File.Copy(backgroundSource, backgroundDestination);
+
+            // World maps
+            string worldMapDestination = RESOURCE_DESTINATION_PATH + "\\" + ResourceManager.worldMapPath;
+            string worldMapSource = RESOURCE_SOURCE_PATH + "\\" + ResourceManager.worldMapPath;
+            File.Copy(worldMapSource, worldMapDestination);
 
             // Characters
             string characterDestination = RESOURCE_DESTINATION_PATH + "\\" + ResourceManager.characterPath;
@@ -265,6 +281,26 @@ namespace StasisEditor
 
             // Reload background
             ResourceManager.loadAllBackgrounds(new FileStream(ResourceManager.backgroundPath, FileMode.Open));
+        }
+
+        // Save world map resources
+        public static void saveWorldMapResources(XElement data, bool backup)
+        {
+            // Backup world maps
+            if (backup)
+            {
+                string backupFile = ResourceManager.worldMapPath + ".bak";
+                if (File.Exists(backupFile))
+                    File.Delete(backupFile);
+                File.Move(ResourceManager.worldMapPath, backupFile);
+            }
+
+            // Save world maps
+            XDocument doc = new XDocument(data);
+            doc.Save(ResourceManager.worldMapPath);
+
+            // Reload background
+            ResourceManager.loadAllWorldMaps(new FileStream(ResourceManager.worldMapPath, FileMode.Open));
         }
     }
 }

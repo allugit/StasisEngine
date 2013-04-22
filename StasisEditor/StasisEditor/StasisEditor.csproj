@@ -108,6 +108,7 @@
     <Compile Include="Models\EditorRopeActor.cs" />
     <Compile Include="Models\EditorTerrainActor.cs" />
     <Compile Include="Models\EditorTreeActor.cs" />
+    <Compile Include="Models\EditorWorldMap.cs" />
     <Compile Include="Models\IActorComponent.cs" />
     <Compile Include="Models\EditorActor.cs" />
     <Compile Include="Models\EditorBoxActor.cs" />

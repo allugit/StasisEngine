@@ -7,6 +7,7 @@ using System.Linq;
 using System.Text;
 using System.Windows.Forms;
 using StasisEditor.Controllers;
+using StasisEditor.Models;
 
 namespace StasisEditor.Views
 {
@@ -23,11 +24,19 @@ namespace StasisEditor.Views
         }
         public bool keysEnabled { get { return _keysEnabled; } }
         public WorldMapController controller { get { return _controller; } set { _controller = value; } }
+        public BindingList<EditorWorldMap> worldMaps { set { worldMapListBox.DataSource = value; } }
 
         public WorldMapView()
         {
             InitializeComponent();
             worldMapDisplay1.view = this;
+        }
+
+        private void worldMapListBox_SelectedValueChanged(object sender, EventArgs e)
+        {
+            EditorWorldMap selectedWorldMap = worldMapListBox.SelectedItem as EditorWorldMap;
+
+            worldMapPropertyGrid.SelectedObject = selectedWorldMap;
         }
     }
 }

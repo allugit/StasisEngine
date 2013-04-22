@@ -26,6 +26,7 @@ namespace StasisCore
         private static Dictionary<string, XElement> _levelResources;
         private static Dictionary<string, XElement> _circuitResources;
         private static Dictionary<string, XElement> _backgroundResources;
+        private static Dictionary<string, XElement> _worldMapResources;
         private static Dictionary<string, Texture2D> _cachedTextures;
         private static List<Dictionary<string, XElement>> _resources;
         public static string rootDirectory = "";
@@ -39,6 +40,7 @@ namespace StasisCore
         public static string dialoguePath { get { return rootDirectory + @"data\dialogues.xml"; } }
         public static string circuitPath { get { return rootDirectory + @"data\circuits.xml"; } }
         public static string backgroundPath { get { return rootDirectory + @"data\backgrounds.xml"; } }
+        public static string worldMapPath { get { return rootDirectory + @"data\world_maps.xml"; } }
         public static GraphicsDevice graphicsDevice { get { return _graphicsDevice; } }
 
         public static List<XElement> materialResources
@@ -131,6 +133,16 @@ namespace StasisCore
                 return resources;
             }
         }
+        public static List<XElement> worldMapResources
+        {
+            get
+            {
+                List<XElement> resources = new List<XElement>();
+                foreach (XElement resource in _worldMapResources.Values)
+                    resources.Add(resource);
+                return resources;
+            }
+        }
 
         // Initialize -- Called once when the application starts
         public static void initialize(GraphicsDevice graphicsDevice)
@@ -145,6 +157,7 @@ namespace StasisCore
             _levelResources = new Dictionary<string, XElement>();
             _circuitResources = new Dictionary<string, XElement>();
             _backgroundResources = new Dictionary<string, XElement>();
+            _worldMapResources = new Dictionary<string, XElement>();
             _cachedTextures = new Dictionary<string, Texture2D>();
 
             // Store all resource dictionaries in a list
@@ -158,6 +171,7 @@ namespace StasisCore
             _resources.Add(_levelResources);
             _resources.Add(_circuitResources);
             _resources.Add(_backgroundResources);
+            _resources.Add(_worldMapResources);
         }
 
         // Checks to see if a resource has been loaded
@@ -183,54 +197,6 @@ namespace StasisCore
 
             return null;
         }
-
-        /*
-        // Destroy a resource
-        public static void destroy(string uid)
-        {
-            try
-            {
-                // XML helper method
-                Func<string, string, string, bool> updateXml = (string filePath, string parentElement, string element) =>
-                    {
-                        XDocument doc = XDocument.Load(filePath);
-                        foreach (XElement data in doc.Element(parentElement).Descendants(element))
-                        {
-                            if (data.Attribute("uid").Value == uid)
-                            {
-                                data.Remove();
-                                doc.Save(filePath);
-                                return true;
-                            }
-                        }
-                        return false;
-                    };
-
-                // Materials
-                if (updateXml(materialPath, "Materials", "Material"))
-                    return;
-
-                // Items
-                if (updateXml(itemPath, "Items", "Item"))
-                    return;
-
-                // Characters
-                if (updateXml(characterPath, "Characters", "Character"))
-                    return;
-
-                // Dialogue
-                if (updateXml(dialoguePath, "Dialogues", "Dialogue"))
-                    return;
-
-                // Backgrounds
-                if (updateXml(dialoguePath, "Backgrounds", "Background"))
-                    return;
-            }
-            catch (XmlException e)
-            {
-                throw new InvalidResourceException();
-            }
-        }*/
 
         // Get texture -- Try to get the texture from the cache before loading it from file
         public static Texture2D getTexture(string textureUID)
@@ -402,6 +368,20 @@ namespace StasisCore
             foreach (XElement backgroundData in data.Elements("Background"))
             {
                 _backgroundResources[backgroundData.Attribute("uid").Value] = backgroundData;
+            }
+
+            stream.Close();
+        }
+
+        // Load world maps
+        public static void loadAllWorldMaps(Stream stream)
+        {
+            _worldMapResources.Clear();
+
+            XElement data = XElement.Load(stream);
+            foreach (XElement worldMapData in data.Elements("WorldMap"))
+            {
+                _worldMapResources[worldMapData.Attribute("uid").Value] = worldMapData;
             }
 
             stream.Close();

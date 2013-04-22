@@ -1,7 +1,12 @@
 ﻿using System;
+using System.ComponentModel;
 using System.Collections.Generic;
+using System.IO;
+using System.Xml.Linq;
 using StasisEditor.Views;
 using Microsoft.Xna.Framework;
+using StasisCore;
+using StasisEditor.Models;
 
 namespace StasisEditor.Controllers
 {
@@ -15,6 +20,7 @@ namespace StasisEditor.Controllers
         private Point _mouse;
         private Point _oldMouse;
         private Vector2 _screenCenter;
+        private BindingList<EditorWorldMap> _worldMaps;
 
         public Point mouse
         {
@@ -30,6 +36,16 @@ namespace StasisEditor.Controllers
             _editorController = editorController;
             _view = worldMapView;
             _view.controller = this;
+            _worldMaps = new BindingList<EditorWorldMap>();
+
+            List<XElement> worldMapData;
+
+            ResourceManager.loadAllWorldMaps(new FileStream(ResourceManager.worldMapPath, FileMode.Open));
+            worldMapData = ResourceManager.worldMapResources;
+            foreach (XElement data in worldMapData)
+                _worldMaps.Add(new EditorWorldMap(data));
+
+            _view.worldMaps = _worldMaps;
         }
     }
 }
