@@ -107,6 +107,7 @@
             this.addWorldMapButton.TabIndex = 2;
             this.addWorldMapButton.Text = "Add";
             this.addWorldMapButton.UseVisualStyleBackColor = true;
+            this.addWorldMapButton.Click += new System.EventHandler(this.addWorldMapButton_Click);
             // 
             // removeWorldMapButton
             // 
@@ -116,6 +117,7 @@
             this.removeWorldMapButton.TabIndex = 3;
             this.removeWorldMapButton.Text = "Remove";
             this.removeWorldMapButton.UseVisualStyleBackColor = true;
+            this.removeWorldMapButton.Click += new System.EventHandler(this.removeWorldMapButton_Click);
             // 
             // worldMapPropertyGrid
             // 
