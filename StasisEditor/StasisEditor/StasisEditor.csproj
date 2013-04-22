@@ -89,6 +89,7 @@
     <Compile Include="Controllers\EditorController.cs" />
     <Compile Include="Controllers\LevelController.cs" />
     <Compile Include="Controllers\MaterialController.cs" />
+    <Compile Include="Controllers\WorldMapController.cs" />
     <Compile Include="EditorResourceManager.cs" />
     <Compile Include="Models\CircuitConnection.cs" />
     <Compile Include="Models\CircuitInputConnection.cs" />
@@ -240,6 +241,15 @@
     <Compile Include="Views\Controls\EditBlueprintSocketsGraphics.cs">
       <SubType>Component</SubType>
     </Compile>
+    <Compile Include="Views\Controls\WorldMapDisplay.cs">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="Views\WorldMapView.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="Views\WorldMapView.Designer.cs">
+      <DependentUpon>WorldMapView.cs</DependentUpon>
+    </Compile>
     <Compile Include="XNAColorEditor.cs" />
     <Compile Include="Views\LevelView.cs">
       <SubType>Component</SubType>
@@ -379,6 +389,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Views\MaterialView.resx">
       <DependentUpon>MaterialView.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Views\WorldMapView.resx">
+      <DependentUpon>WorldMapView.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <ItemGroup />
