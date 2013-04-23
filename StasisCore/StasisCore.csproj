@@ -65,7 +65,10 @@
     <Compile Include="Models\Background.cs" />
     <Compile Include="Models\BackgroundLayer.cs" />
     <Compile Include="BackgroundRenderer.cs" />
+    <Compile Include="Models\LevelIcon.cs" />
     <Compile Include="Models\WorldMap.cs" />
+    <Compile Include="Models\WorldPath.cs" />
+    <Compile Include="Models\WorldPathPoint.cs" />
     <Compile Include="ResourceManager.cs" />
     <Compile Include="CustomVertexFormat.cs" />
     <Compile Include="IEventHandler.cs" />

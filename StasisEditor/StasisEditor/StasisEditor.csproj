@@ -101,6 +101,7 @@
     <Compile Include="Models\EditorCollisionFilterActor.cs" />
     <Compile Include="Models\EditorFluidActor.cs" />
     <Compile Include="Models\EditorItemActor.cs" />
+    <Compile Include="Models\EditorLevelIcon.cs" />
     <Compile Include="Models\EditorPlayerSpawnActor.cs" />
     <Compile Include="Models\EditorPolygonActor.cs" />
     <Compile Include="Models\EditorPrismaticActor.cs" />
@@ -109,6 +110,8 @@
     <Compile Include="Models\EditorTerrainActor.cs" />
     <Compile Include="Models\EditorTreeActor.cs" />
     <Compile Include="Models\EditorWorldMap.cs" />
+    <Compile Include="Models\EditorWorldPath.cs" />
+    <Compile Include="Models\EditorWorldPathPoint.cs" />
     <Compile Include="Models\IActorComponent.cs" />
     <Compile Include="Models\EditorActor.cs" />
     <Compile Include="Models\EditorBoxActor.cs" />
@@ -125,6 +128,7 @@
     <Compile Include="Models\EditorCircuit.cs" />
     <Compile Include="Models\EditorLevel.cs" />
     <Compile Include="Models\EditorMaterial.cs" />
+    <Compile Include="Models\IWorldControl.cs" />
     <Compile Include="Models\PointListNode.cs" />
     <Compile Include="ServiceContainer.cs" />
     <Compile Include="Views\BackgroundView.cs">
