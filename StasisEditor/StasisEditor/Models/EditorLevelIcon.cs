@@ -24,12 +24,13 @@ namespace StasisEditor.Models
                     new XAttribute("position", _position),
                     new XAttribute("unfinished_icon_uid", _unfinishedIconUID),
                     new XAttribute("finished_icon_uid", _finishedIconUID),
-                    new XAttribute("level_uid", _levelUID));
+                    new XAttribute("level_uid", _levelUID),
+                    new XAttribute("id", _id));
             }
         }
 
-        public EditorLevelIcon(Vector2 position, string unfinishedIconUID, string finishedIconUID, string levelUID)
-            : base(position, ResourceManager.getTexture(unfinishedIconUID), ResourceManager.getTexture(finishedIconUID), levelUID)
+        public EditorLevelIcon(Vector2 position, string unfinishedIconUID, string finishedIconUID, string levelUID, int id)
+            : base(position, ResourceManager.getTexture(unfinishedIconUID), ResourceManager.getTexture(finishedIconUID), levelUID, id)
         {
             _unfinishedIconUID = unfinishedIconUID;
             _finishedIconUID = finishedIconUID;

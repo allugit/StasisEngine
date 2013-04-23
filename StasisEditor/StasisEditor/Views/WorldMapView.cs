@@ -76,5 +76,12 @@ namespace StasisEditor.Views
         {
             _controller.saveWorldMaps();
         }
+
+        private void createLevelIconButton_Click(object sender, EventArgs e)
+        {
+            EditorLevelIcon levelIcon = new EditorLevelIcon(worldMapDisplay1.mouseWorld, "level_unfinished_icon", "level_finished_icon", "default_level", _controller.getUnusedId(selectedWorldMap));
+            _controller.addLevelIcon(levelIcon);
+            _controller.selectedControl = levelIcon;
+        }
     }
 }

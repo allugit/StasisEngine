@@ -12,18 +12,21 @@ namespace StasisCore.Models
         protected Texture2D _unfinishedIcon;
         protected Texture2D _finishedIcon;
         protected string _levelUID;
+        protected int _id;
 
         public Vector2 position { get { return _position; } set { _position = value; } }
         public Texture2D unfinishedIcon { get { return _unfinishedIcon; } set { _unfinishedIcon = value; } }
         public Texture2D finishedIcon { get { return _finishedIcon; } set { _finishedIcon = value; } }
         public string levelUID { get { return _levelUID; } set { _levelUID = value; } }
+        public int id { get { return _id; } }
 
-        public LevelIcon(Vector2 position, Texture2D unfinishedIcon, Texture2D finishedIcon, string levelUID)
+        public LevelIcon(Vector2 position, Texture2D unfinishedIcon, Texture2D finishedIcon, string levelUID, int id)
         {
             _position = position;
             _unfinishedIcon = unfinishedIcon;
             _finishedIcon = finishedIcon;
             _levelUID = levelUID;
+            _id = id;
         }
 
         public LevelIcon(XElement data)
@@ -34,6 +37,7 @@ namespace StasisCore.Models
             _unfinishedIcon = ResourceManager.getTexture(unfinishedIconUID);
             _finishedIcon = ResourceManager.getTexture(finishedIconUID);
             _levelUID = data.Attribute("level_uid").Value;
+            _id = int.Parse(data.Attribute("id").Value);
         }
     }
 }

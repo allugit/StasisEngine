@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
+using StasisCore.Models;
 
 namespace StasisEditor.Views.Controls
 {
@@ -27,6 +28,7 @@ namespace StasisEditor.Views.Controls
         private Point _oldMousePoint;
 
         public WorldMapView view { get { return _view; } set { _view = value; } }
+        public Vector2 mouseWorld { get { return Vector2.Transform(new Vector2(_mousePoint.X, _mousePoint.Y), _invViewMatrix); } }
 
         public WorldMapDisplay()
         {
@@ -40,6 +42,7 @@ namespace StasisEditor.Views.Controls
 
                 System.Windows.Forms.Application.Idle += delegate { Invalidate(); };
                 MouseMove += new System.Windows.Forms.MouseEventHandler(WorldMapDisplay_MouseMove);
+                MouseClick += new System.Windows.Forms.MouseEventHandler(WorldMapDisplay_MouseClick);
                 FindForm().KeyDown += new System.Windows.Forms.KeyEventHandler(Parent_KeyDown);
                 FindForm().KeyUp += new System.Windows.Forms.KeyEventHandler(Parent_KeyUp);
 
@@ -48,17 +51,26 @@ namespace StasisEditor.Views.Controls
             }
         }
 
+        void WorldMapDisplay_MouseClick(object sender, System.Windows.Forms.MouseEventArgs e)
+        {
+            _view.controller.handleClick();
+        }
+
         void WorldMapDisplay_MouseMove(object sender, System.Windows.Forms.MouseEventArgs e)
         {
             Vector2 delta;
 
             _oldMousePoint = _mousePoint;
             _mousePoint = new Point(e.X, e.Y);
+            delta = new Vector2(_mousePoint.X - _oldMousePoint.X, _mousePoint.Y - _oldMousePoint.Y);
 
             if (_ctrl)
             {
-                delta = new Vector2(_mousePoint.X - _oldMousePoint.X, _mousePoint.Y - _oldMousePoint.Y);
                 _screenCenter += delta;
+            }
+            else
+            {
+                _view.controller.moveSelectedControl(delta);
             }
         }
 
@@ -101,11 +113,16 @@ namespace StasisEditor.Views.Controls
 
                 GraphicsDevice.Clear(Color.Black);
 
-                _spriteBatch.Begin(SpriteSortMode.FrontToBack, BlendState.AlphaBlend, null, null, null, null, _viewMatrix);
+                _spriteBatch.Begin(SpriteSortMode.BackToFront, BlendState.AlphaBlend, null, null, null, null, _viewMatrix);
 
                 if (_view.selectedWorldMap != null)
                 {
-                    _spriteBatch.Draw(_view.selectedWorldMap.texture, Vector2.Zero, _view.selectedWorldMap.texture.Bounds, Color.White, 0f, new Vector2(_view.selectedWorldMap.texture.Width, _view.selectedWorldMap.texture.Height) / 2f, 1f / _scale, SpriteEffects.None, 0f);
+                    _spriteBatch.Draw(_view.selectedWorldMap.texture, Vector2.Zero, _view.selectedWorldMap.texture.Bounds, Color.White, 0f, new Vector2(_view.selectedWorldMap.texture.Width, _view.selectedWorldMap.texture.Height) / 2f, 1f / _scale, SpriteEffects.None, 1f);
+
+                    foreach (LevelIcon levelIcon in _view.selectedWorldMap.levelIcons)
+                    {
+                        _spriteBatch.Draw(levelIcon.unfinishedIcon, levelIcon.position, levelIcon.unfinishedIcon.Bounds, Color.White, 0f, new Vector2(levelIcon.unfinishedIcon.Width, levelIcon.unfinishedIcon.Height) / 2f, 1f, SpriteEffects.None, 0f);
+                    }
                 }
 
                 _spriteBatch.End();

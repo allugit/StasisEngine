@@ -33,10 +33,10 @@
             this.createLevelIconButton = new System.Windows.Forms.ToolStripButton();
             this.createPathButton = new System.Windows.Forms.ToolStripButton();
             this.splitContainer1 = new System.Windows.Forms.SplitContainer();
-            this.addWorldMapButton = new System.Windows.Forms.Button();
-            this.removeWorldMapButton = new System.Windows.Forms.Button();
-            this.worldMapPropertyGrid = new System.Windows.Forms.PropertyGrid();
             this.saveWorldMapsButton = new System.Windows.Forms.Button();
+            this.worldMapPropertyGrid = new System.Windows.Forms.PropertyGrid();
+            this.removeWorldMapButton = new System.Windows.Forms.Button();
+            this.addWorldMapButton = new System.Windows.Forms.Button();
             this.worldMapListBox = new StasisEditor.Views.Controls.RefreshingListBox();
             this.worldMapDisplay1 = new StasisEditor.Views.Controls.WorldMapDisplay();
             this.toolStrip1.SuspendLayout();
@@ -67,6 +67,7 @@
             this.createLevelIconButton.Name = "createLevelIconButton";
             this.createLevelIconButton.Size = new System.Drawing.Size(23, 22);
             this.createLevelIconButton.Text = "Create Level Icon";
+            this.createLevelIconButton.Click += new System.EventHandler(this.createLevelIconButton_Click);
             // 
             // createPathButton
             // 
@@ -99,25 +100,16 @@
             this.splitContainer1.SplitterDistance = 178;
             this.splitContainer1.TabIndex = 2;
             // 
-            // addWorldMapButton
+            // saveWorldMapsButton
             // 
-            this.addWorldMapButton.Location = new System.Drawing.Point(4, 156);
-            this.addWorldMapButton.Name = "addWorldMapButton";
-            this.addWorldMapButton.Size = new System.Drawing.Size(75, 23);
-            this.addWorldMapButton.TabIndex = 2;
-            this.addWorldMapButton.Text = "Add";
-            this.addWorldMapButton.UseVisualStyleBackColor = true;
-            this.addWorldMapButton.Click += new System.EventHandler(this.addWorldMapButton_Click);
-            // 
-            // removeWorldMapButton
-            // 
-            this.removeWorldMapButton.Location = new System.Drawing.Point(86, 156);
-            this.removeWorldMapButton.Name = "removeWorldMapButton";
-            this.removeWorldMapButton.Size = new System.Drawing.Size(75, 23);
-            this.removeWorldMapButton.TabIndex = 3;
-            this.removeWorldMapButton.Text = "Remove";
-            this.removeWorldMapButton.UseVisualStyleBackColor = true;
-            this.removeWorldMapButton.Click += new System.EventHandler(this.removeWorldMapButton_Click);
+            this.saveWorldMapsButton.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
+            this.saveWorldMapsButton.Location = new System.Drawing.Point(4, 337);
+            this.saveWorldMapsButton.Name = "saveWorldMapsButton";
+            this.saveWorldMapsButton.Size = new System.Drawing.Size(108, 23);
+            this.saveWorldMapsButton.TabIndex = 5;
+            this.saveWorldMapsButton.Text = "Save World Maps";
+            this.saveWorldMapsButton.UseVisualStyleBackColor = true;
+            this.saveWorldMapsButton.Click += new System.EventHandler(this.saveWorldMapsButton_Click);
             // 
             // worldMapPropertyGrid
             // 
@@ -131,16 +123,25 @@
             this.worldMapPropertyGrid.TabIndex = 4;
             this.worldMapPropertyGrid.ToolbarVisible = false;
             // 
-            // saveWorldMapsButton
+            // removeWorldMapButton
             // 
-            this.saveWorldMapsButton.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
-            this.saveWorldMapsButton.Location = new System.Drawing.Point(4, 337);
-            this.saveWorldMapsButton.Name = "saveWorldMapsButton";
-            this.saveWorldMapsButton.Size = new System.Drawing.Size(108, 23);
-            this.saveWorldMapsButton.TabIndex = 5;
-            this.saveWorldMapsButton.Text = "Save World Maps";
-            this.saveWorldMapsButton.UseVisualStyleBackColor = true;
-            this.saveWorldMapsButton.Click += new System.EventHandler(this.saveWorldMapsButton_Click);
+            this.removeWorldMapButton.Location = new System.Drawing.Point(86, 156);
+            this.removeWorldMapButton.Name = "removeWorldMapButton";
+            this.removeWorldMapButton.Size = new System.Drawing.Size(75, 23);
+            this.removeWorldMapButton.TabIndex = 3;
+            this.removeWorldMapButton.Text = "Remove";
+            this.removeWorldMapButton.UseVisualStyleBackColor = true;
+            this.removeWorldMapButton.Click += new System.EventHandler(this.removeWorldMapButton_Click);
+            // 
+            // addWorldMapButton
+            // 
+            this.addWorldMapButton.Location = new System.Drawing.Point(4, 156);
+            this.addWorldMapButton.Name = "addWorldMapButton";
+            this.addWorldMapButton.Size = new System.Drawing.Size(75, 23);
+            this.addWorldMapButton.TabIndex = 2;
+            this.addWorldMapButton.Text = "Add";
+            this.addWorldMapButton.UseVisualStyleBackColor = true;
+            this.addWorldMapButton.Click += new System.EventHandler(this.addWorldMapButton_Click);
             // 
             // worldMapListBox
             // 
