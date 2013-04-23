@@ -117,11 +117,45 @@ namespace StasisEditor.Views.Controls
 
                 if (_view.selectedWorldMap != null)
                 {
+                    // Draw map texture
                     _spriteBatch.Draw(_view.selectedWorldMap.texture, Vector2.Zero, _view.selectedWorldMap.texture.Bounds, Color.White, 0f, new Vector2(_view.selectedWorldMap.texture.Width, _view.selectedWorldMap.texture.Height) / 2f, 1f / _scale, SpriteEffects.None, 1f);
 
+                    // Draw level icons
                     foreach (LevelIcon levelIcon in _view.selectedWorldMap.levelIcons)
                     {
-                        _spriteBatch.Draw(levelIcon.unfinishedIcon, levelIcon.position, levelIcon.unfinishedIcon.Bounds, Color.White, 0f, new Vector2(levelIcon.unfinishedIcon.Width, levelIcon.unfinishedIcon.Height) / 2f, 1f, SpriteEffects.None, 0f);
+                        _spriteBatch.Draw(levelIcon.unfinishedIcon, levelIcon.position, levelIcon.unfinishedIcon.Bounds, Color.White, 0f, new Vector2(levelIcon.unfinishedIcon.Width, levelIcon.unfinishedIcon.Height) / 2f, 1f, SpriteEffects.None, 0.1f);
+                    }
+
+                    // Draw world path construction points
+                    if (_view.controller.worldPathConstructionPoints.Count > 0)
+                    {
+                        drawLine(_view.controller.worldPathConstructionPoints[0], mouseWorld, Color.Blue);
+                    }
+                    foreach (Vector2 point in _view.controller.worldPathConstructionPoints)
+                    {
+                        drawPoint(point, Color.Blue);
+                    }
+
+                    // Draw world paths
+                    Color pointColor = Color.LightBlue;
+                    Color lineColor = Color.Blue * 0.5f;
+                    Color controlLineColor = Color.Orange * 0.5f;
+                    Color controlPointColor = Color.Yellow;
+                    float interpolateIncrement = 0.001f;
+                    foreach (WorldPath worldPath in _view.selectedWorldMap.worldPaths)
+                    {
+                        drawLine(worldPath.pointA.position, worldPath.pointB.position, lineColor);
+                        drawLine(worldPath.pointA.position, worldPath.controlA.position, controlLineColor);
+                        drawLine(worldPath.pointB.position, worldPath.controlB.position, controlLineColor);
+                        drawPoint(worldPath.controlA.position, controlPointColor);
+                        drawPoint(worldPath.controlB.position, controlPointColor);
+                        drawPoint(worldPath.pointA.position, pointColor);
+                        drawPoint(worldPath.pointB.position, pointColor);
+                        for (float i = 0; i < 1f; i += interpolateIncrement)
+                        {
+                            Vector2 point = Vector2.CatmullRom(worldPath.controlA.position, worldPath.pointA.position, worldPath.pointB.position, worldPath.controlB.position, i);
+                            drawPoint(point, Color.Yellow);
+                        }
                     }
                 }
 

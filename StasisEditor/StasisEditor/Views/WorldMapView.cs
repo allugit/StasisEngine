@@ -83,5 +83,10 @@ namespace StasisEditor.Views
             _controller.addLevelIcon(levelIcon);
             _controller.selectedControl = levelIcon;
         }
+
+        private void createPathButton_Click(object sender, EventArgs e)
+        {
+            _controller.drawingWorldPath = true;
+        }
     }
 }

@@ -19,9 +19,13 @@ namespace StasisEditor.Controllers
         private WorldMapView _view;
         private BindingList<EditorWorldMap> _worldMaps;
         private IWorldControl _selectedControl;
+        private bool _drawingWorldPath;
+        private List<Vector2> _worldPathConstructionPoints;
 
         public BindingList<EditorWorldMap> worldMaps { get { return _worldMaps; } }
         public IWorldControl selectedControl { get { return _selectedControl; } set { _selectedControl = value; } }
+        public bool drawingWorldPath { get { return _drawingWorldPath; } set { _drawingWorldPath = value; } }
+        public List<Vector2> worldPathConstructionPoints { get { return _worldPathConstructionPoints; } }
 
         public WorldMapController(EditorController editorController, WorldMapView worldMapView)
         {
@@ -29,6 +33,7 @@ namespace StasisEditor.Controllers
             _view = worldMapView;
             _view.controller = this;
             _worldMaps = new BindingList<EditorWorldMap>();
+            _worldPathConstructionPoints = new List<Vector2>();
 
             List<XElement> worldMapData;
 
@@ -97,7 +102,25 @@ namespace StasisEditor.Controllers
         // Handle click
         public void handleClick(Vector2 mouseWorld)
         {
-            if (_selectedControl == null)
+            if (_drawingWorldPath)
+            {
+                if (_worldPathConstructionPoints.Count < 2)
+                    _worldPathConstructionPoints.Add(mouseWorld);
+
+                if (_worldPathConstructionPoints.Count == 2)
+                {
+                    Vector2 pointA = _worldPathConstructionPoints[0];
+                    Vector2 pointB = _worldPathConstructionPoints[1];
+                    Vector2 controlA = (pointA - pointB) + pointA;
+                    Vector2 controlB = (pointB - pointA) + pointB;
+                    EditorWorldPath worldPath = new EditorWorldPath(controlA, controlB, pointA, pointB, getUnusedId(_view.selectedWorldMap));
+
+                    addWorldPath(worldPath);
+                    _worldPathConstructionPoints.Clear();
+                    _drawingWorldPath = false;
+                }
+            }
+            else if (_selectedControl == null)
             {
                 // Hit test controls by checking for the the shortest distance between the mouse and the control
                 float tolerance = 10f;
@@ -197,6 +220,12 @@ namespace StasisEditor.Controllers
         public void addLevelIcon(EditorLevelIcon levelIcon)
         {
             _view.selectedWorldMap.levelIcons.Add(levelIcon);
+        }
+
+        // Add world path
+        public void addWorldPath(EditorWorldPath worldPath)
+        {
+            _view.selectedWorldMap.worldPaths.Add(worldPath);
         }
     }
 }

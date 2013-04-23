@@ -76,7 +76,8 @@
             this.createPathButton.ImageTransparentColor = System.Drawing.Color.Magenta;
             this.createPathButton.Name = "createPathButton";
             this.createPathButton.Size = new System.Drawing.Size(23, 22);
-            this.createPathButton.Text = "Create Path";
+            this.createPathButton.Text = "Create World Path";
+            this.createPathButton.Click += new System.EventHandler(this.createPathButton_Click);
             // 
             // splitContainer1
             // 

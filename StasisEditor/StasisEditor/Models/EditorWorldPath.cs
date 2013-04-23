@@ -23,8 +23,12 @@ namespace StasisEditor.Models
         }
 
         public EditorWorldPath(Vector2 controlA, Vector2 controlB, Vector2 pointA, Vector2 pointB, int id)
-            : base(controlA, controlB, pointA, pointB, id)
         {
+            _controlA = new EditorWorldPathPoint(this, controlA);
+            _controlB = new EditorWorldPathPoint(this, controlB);
+            _pointA = new EditorWorldPathPoint(this, pointA);
+            _pointB = new EditorWorldPathPoint(this, pointB);
+            _id = id;
         }
 
         public EditorWorldPath(XElement data)
