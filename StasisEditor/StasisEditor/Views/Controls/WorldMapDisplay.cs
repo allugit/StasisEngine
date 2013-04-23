@@ -53,7 +53,7 @@ namespace StasisEditor.Views.Controls
 
         void WorldMapDisplay_MouseClick(object sender, System.Windows.Forms.MouseEventArgs e)
         {
-            _view.controller.handleClick();
+            _view.controller.handleClick(mouseWorld);
         }
 
         void WorldMapDisplay_MouseMove(object sender, System.Windows.Forms.MouseEventArgs e)

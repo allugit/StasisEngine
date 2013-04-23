@@ -57,6 +57,18 @@ namespace StasisEditor.Models
             _textureUID = Loader.loadString(data.Attribute("texture_uid"), "world_map");
         }
 
+        override public void createLevelIcons(XElement data)
+        {
+            foreach (XElement levelIconData in data.Elements("LevelIcon"))
+                _levelIcons.Add(new EditorLevelIcon(levelIconData));
+        }
+
+        override public void createWorldPaths(XElement data)
+        {
+            foreach (XElement worldPathData in data.Elements("WorldPath"))
+                _worldPaths.Add(new EditorWorldPath(worldPathData));
+        }
+
         public override string ToString()
         {
             return _uid;

@@ -14,6 +14,10 @@ namespace StasisCore.Models
         protected int _id;
 
         public int id { get { return _id; } }
+        public WorldPathPoint controlA { get { return _controlA; } }
+        public WorldPathPoint controlB { get { return _controlB; } }
+        public WorldPathPoint pointA { get { return _pointA; } }
+        public WorldPathPoint pointB { get { return _pointB; } }
 
         public WorldPath()
         {
