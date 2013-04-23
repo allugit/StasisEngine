@@ -60,13 +60,13 @@ namespace StasisEditor.Models
         override public void createLevelIcons(XElement data)
         {
             foreach (XElement levelIconData in data.Elements("LevelIcon"))
-                _levelIcons.Add(new EditorLevelIcon(levelIconData));
+                _levelIcons.Add(new EditorLevelIcon(this, levelIconData));
         }
 
         override public void createWorldPaths(XElement data)
         {
             foreach (XElement worldPathData in data.Elements("WorldPath"))
-                _worldPaths.Add(new EditorWorldPath(worldPathData));
+                _worldPaths.Add(new EditorWorldPath(this, worldPathData));
         }
 
         public override string ToString()

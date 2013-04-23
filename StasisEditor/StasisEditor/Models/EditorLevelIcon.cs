@@ -10,6 +10,7 @@ namespace StasisEditor.Models
 {
     public class EditorLevelIcon : LevelIcon, IWorldControl
     {
+        private EditorWorldMap _worldMap;
         private string _unfinishedIconUID;
         private string _finishedIconUID;
 
@@ -29,22 +30,24 @@ namespace StasisEditor.Models
             }
         }
 
-        public EditorLevelIcon(Vector2 position, string unfinishedIconUID, string finishedIconUID, string levelUID, int id)
+        public EditorLevelIcon(EditorWorldMap worldMap, Vector2 position, string unfinishedIconUID, string finishedIconUID, string levelUID, int id)
             : base(position, ResourceManager.getTexture(unfinishedIconUID), ResourceManager.getTexture(finishedIconUID), levelUID, id)
         {
+            _worldMap = worldMap;
             _unfinishedIconUID = unfinishedIconUID;
             _finishedIconUID = finishedIconUID;
         }
 
-        public EditorLevelIcon(XElement data) : base(data)
+        public EditorLevelIcon(EditorWorldMap worldMap, XElement data) : base(data)
         {
+            _worldMap = worldMap;
             _unfinishedIconUID = Loader.loadString(data.Attribute("unfinished_icon_uid"), "unfinished_level_icon");
             _finishedIconUID = Loader.loadString(data.Attribute("finished_icon_uid"), "finished_level_icon");
         }
 
         public void delete()
         {
-            throw new NotImplementedException();
+            _worldMap.levelIcons.Remove(this);
         }
     }
 }

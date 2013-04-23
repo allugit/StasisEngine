@@ -113,7 +113,7 @@ namespace StasisEditor.Controllers
                     Vector2 pointB = _worldPathConstructionPoints[1];
                     Vector2 controlA = (pointA - pointB) + pointA;
                     Vector2 controlB = (pointB - pointA) + pointB;
-                    EditorWorldPath worldPath = new EditorWorldPath(controlA, controlB, pointA, pointB, getUnusedId(_view.selectedWorldMap));
+                    EditorWorldPath worldPath = new EditorWorldPath(_view.selectedWorldMap, controlA, controlB, pointA, pointB, getUnusedId(_view.selectedWorldMap));
 
                     addWorldPath(worldPath);
                     _worldPathConstructionPoints.Clear();
@@ -214,6 +214,14 @@ namespace StasisEditor.Controllers
                 data.Add(worldMap.data);
 
             EditorResourceManager.saveWorldMapResources(data, true);
+        }
+
+        // Delete selected control
+        public void deleteSelected()
+        {
+            if (_selectedControl != null)
+                _selectedControl.delete();
+            _selectedControl = null;
         }
 
         // Add level icon

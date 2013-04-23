@@ -9,6 +9,8 @@ namespace StasisEditor.Models
 {
     public class EditorWorldPath : WorldPath
     {
+        private EditorWorldMap _worldMap;
+
         public XElement data
         {
             get
@@ -22,8 +24,9 @@ namespace StasisEditor.Models
             }
         }
 
-        public EditorWorldPath(Vector2 controlA, Vector2 controlB, Vector2 pointA, Vector2 pointB, int id)
+        public EditorWorldPath(EditorWorldMap worldMap, Vector2 controlA, Vector2 controlB, Vector2 pointA, Vector2 pointB, int id)
         {
+            _worldMap = worldMap;
             _controlA = new EditorWorldPathPoint(this, controlA);
             _controlB = new EditorWorldPathPoint(this, controlB);
             _pointA = new EditorWorldPathPoint(this, pointA);
@@ -31,8 +34,9 @@ namespace StasisEditor.Models
             _id = id;
         }
 
-        public EditorWorldPath(XElement data)
+        public EditorWorldPath(EditorWorldMap worldMap, XElement data)
         {
+            _worldMap = worldMap;
             _controlA = new EditorWorldPathPoint(this, Loader.loadVector2(data.Attribute("control_a"), Vector2.Zero));
             _controlB = new EditorWorldPathPoint(this, Loader.loadVector2(data.Attribute("control_b"), Vector2.Zero));
             _pointA = new EditorWorldPathPoint(this, Loader.loadVector2(data.Attribute("point_a"), Vector2.Zero));
@@ -42,7 +46,7 @@ namespace StasisEditor.Models
 
         public void delete()
         {
-            throw new NotImplementedException();
+            _worldMap.worldPaths.Remove(this);
         }
     }
 }

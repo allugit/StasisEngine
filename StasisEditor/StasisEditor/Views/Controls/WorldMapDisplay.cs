@@ -86,6 +86,11 @@ namespace StasisEditor.Views.Controls
         {
             if (e.KeyCode == Keys.Control || e.KeyCode == Keys.ControlKey || e.KeyCode == Keys.LControlKey || e.KeyCode == Keys.RControlKey)
                 _ctrl = true;
+
+            if (e.KeyCode == Keys.Delete)
+            {
+                _view.controller.deleteSelected();
+            }
         }
 
         public void drawPoint(Vector2 point, Color color)
