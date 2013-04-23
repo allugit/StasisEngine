@@ -1,5 +1,6 @@
 ﻿using System;
 using Microsoft.Xna.Framework.Input;
+using StasisGame.Managers;
 
 namespace StasisGame.Components
 {
@@ -11,7 +12,7 @@ namespace StasisGame.Components
         public MouseState oldMouseState;
         public GamePadState newGamepadState;
         public GamePadState oldGamepadState;
-        public bool usingGamepad { get { return GameSettings.controllerType == ControllerType.Gamepad && newGamepadState.IsConnected; } }
+        public bool usingGamepad { get { return DataManager.gameSettings.controllerType == ControllerType.Gamepad && newGamepadState.IsConnected; } }
 
         public ComponentType componentType { get { return ComponentType.Input; } }
 

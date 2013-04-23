@@ -5,6 +5,7 @@ using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Content;
 using Microsoft.Xna.Framework.Input;
 using Microsoft.Xna.Framework.Graphics;
+using StasisGame.Managers;
 
 namespace StasisGame.UI
 {
@@ -63,9 +64,9 @@ namespace StasisGame.UI
             _santaBarbaraNormal = _content.Load<SpriteFont>("santa_barbara_normal");
             _arial = _content.Load<SpriteFont>("arial");
             _displayDimensions = new List<DisplayDimensions>();
-            _selectedFullscreen = GameSettings.fullscreen;
-            _selectedControllerType = GameSettings.controllerType;
-            _selectedDimensions = new DisplayDimensions(GameSettings.screenWidth, GameSettings.screenHeight);
+            _selectedFullscreen = DataManager.gameSettings.fullscreen;
+            _selectedControllerType = DataManager.gameSettings.controllerType;
+            _selectedDimensions = new DisplayDimensions(DataManager.gameSettings.screenWidth, DataManager.gameSettings.screenHeight);
             _displayDimensions.Add(_selectedDimensions);
 
             foreach (DisplayMode displayMode in _game.GraphicsDevice.Adapter.SupportedDisplayModes)
@@ -260,30 +261,17 @@ namespace StasisGame.UI
         public void saveOptions()
         {
             // Apply settings
-            GameSettings.screenWidth = _selectedDimensions.width;
-            GameSettings.screenHeight = _selectedDimensions.height;
-            GameSettings.fullscreen = _selectedFullscreen;
-            _game.graphics.PreferredBackBufferWidth = GameSettings.screenWidth;
-            _game.graphics.PreferredBackBufferHeight = GameSettings.screenHeight;
-            _game.graphics.IsFullScreen = GameSettings.fullscreen;
+            DataManager.gameSettings.screenWidth = _selectedDimensions.width;
+            DataManager.gameSettings.screenHeight = _selectedDimensions.height;
+            DataManager.gameSettings.fullscreen = _selectedFullscreen;
+            _game.graphics.PreferredBackBufferWidth = DataManager.gameSettings.screenWidth;
+            _game.graphics.PreferredBackBufferHeight = DataManager.gameSettings.screenHeight;
+            _game.graphics.IsFullScreen = DataManager.gameSettings.fullscreen;
             _game.graphics.ApplyChanges();
-            GameSettings.controllerType = _selectedControllerType;
+            DataManager.gameSettings.controllerType = _selectedControllerType;
 
             // Save settings
-            bool saved = false;
-            while (!saved)
-            {
-                if (LoderGame.storageDevice.IsReady)
-                {
-                    LoderGame.storageDevice.Save("LodersFall_Save", "settings.xml", (stream) =>
-                        {
-                            XDocument doc = new XDocument();
-                            doc.Add(GameSettings.data);
-                            doc.Save(stream);
-                        });
-                    saved = true;
-                }
-            }
+            DataManager.saveGameSettings();
 
             _game.closeOptionsMenu();
         }

@@ -106,10 +106,16 @@
     <Compile Include="Components\RopePhysicsComponent.cs" />
     <Compile Include="Components\RopeRenderComponent.cs" />
     <Compile Include="Components\WorldPositionComponent.cs" />
+    <Compile Include="Data\CurrentLocation.cs" />
+    <Compile Include="Data\LevelIconData.cs" />
+    <Compile Include="Data\PlayerData.cs" />
+    <Compile Include="Data\WorldMapData.cs" />
+    <Compile Include="Data\WorldPathData.cs" />
     <Compile Include="DistanceMetamerConstraint.cs" />
-    <Compile Include="GameSettings.cs" />
+    <Compile Include="Data\GameSettings.cs" />
     <Compile Include="IRenderablePrimitive.cs" />
     <Compile Include="Level.cs" />
+    <Compile Include="Managers\DataManager.cs" />
     <Compile Include="Managers\EntityManager.cs" />
     <Compile Include="Managers\SystemManager.cs" />
     <Compile Include="EntityFactory.cs" />
@@ -199,6 +205,7 @@
       <Install>true</Install>
     </BootstrapperPackage>
   </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <Import Project="$(MSBuildExtensionsPath)\Microsoft\XNA Game Studio\Microsoft.Xna.GameStudio.targets" />
   <PropertyGroup>

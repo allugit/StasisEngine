@@ -28,6 +28,12 @@ namespace StasisGame
         Level
     };
 
+    public enum ControllerType
+    {
+        KeyboardAndMouse,
+        Gamepad
+    };
+
     public class LoderGame : Game
     {
         private string[] _args;
@@ -39,9 +45,7 @@ namespace StasisGame
         private MainMenuScreen _mainMenuScreen;
         private ScreenSystem _screenSystem;
         private Level _level;
-        private bool _settingsInitialized;
         private SystemManager _systemManager;
-        public static IAsyncSaveDevice storageDevice;
 
         public SpriteBatch spriteBatch { get { return _spriteBatch; } }
         public SystemManager systemManager { get { return _systemManager; } }
@@ -59,33 +63,19 @@ namespace StasisGame
 
         protected override void Initialize()
         {
-            EasyStorageSettings.SetSupportedLanguages(Language.English);
-            SharedSaveDevice sharedSaveDevice = new SharedSaveDevice();
-
             _systemManager = new SystemManager();
             _screenSystem = new ScreenSystem(_systemManager);
             _systemManager.add(_screenSystem, -1);
 
-            storageDevice = sharedSaveDevice;
-            sharedSaveDevice.DeviceSelectorCanceled += (s, e) => { e.Response = SaveDeviceEventResponse.Force; };
-            sharedSaveDevice.DeviceDisconnected += (s, e) => { e.Response = SaveDeviceEventResponse.Force; };
-            sharedSaveDevice.PromptForDevice();
-
-            Components.Add(sharedSaveDevice);
+            DataManager.initialize(this);
             Components.Add(new GamerServicesComponent(this));
-
-            storageDevice.SaveCompleted += new SaveCompletedEventHandler(saveDevice_SaveCompleted);
 
             base.Initialize();
         }
 
-        void saveDevice_SaveCompleted(object sender, FileActionCompletedEventArgs args)
-        {
-            Console.WriteLine("save completed.");
-        }
-
         protected override void LoadContent()
         {
+            // TODO: Be more selective about which resources to load...
             ResourceManager.initialize(GraphicsDevice);
             ResourceManager.loadAllCharacters(TitleContainer.OpenStream(ResourceManager.characterPath));
             ResourceManager.loadAllCircuits(TitleContainer.OpenStream(ResourceManager.circuitPath));
@@ -94,6 +84,7 @@ namespace StasisGame
             ResourceManager.loadAllBlueprints(TitleContainer.OpenStream(ResourceManager.blueprintPath));
             ResourceManager.loadAllMaterials(TitleContainer.OpenStream(ResourceManager.materialPath));
             ResourceManager.loadAllBackgrounds(TitleContainer.OpenStream(ResourceManager.backgroundPath));
+            ResourceManager.loadAllWorldMaps(TitleContainer.OpenStream(ResourceManager.worldMapPath));
 
             _spriteBatch = new SpriteBatch(GraphicsDevice);
             _arial = Content.Load<SpriteFont>("arial");
@@ -162,57 +153,16 @@ namespace StasisGame
             switch (_gameState)
             {
                 case GameState.Initializing:
-                    if (!_settingsInitialized && storageDevice.IsReady)
+                    if (DataManager.ready)
                     {
-                        // Create default settings
-                        if (!storageDevice.FileExists("LodersFall_Save", "settings.xml"))
-                        {
-                            storageDevice.Save("LodersFall_Save", "settings.xml", (stream) =>
-                            {
-                                // Find suitable screen size
-                                int screenWidth = 1024;
-                                int screenHeight = 512;
-                                int maxScreenWidth = GraphicsDevice.Adapter.CurrentDisplayMode.Width - 100;
-                                int maxScreenHeight = GraphicsDevice.Adapter.CurrentDisplayMode.Height - 100;
-
-                                foreach (DisplayMode displayMode in GraphicsDevice.Adapter.SupportedDisplayModes)
-                                {
-                                    if (displayMode.Width < maxScreenWidth && displayMode.Height < maxScreenHeight &&
-                                        displayMode.Width >= screenWidth && displayMode.Height >= screenHeight)
-                                    {
-                                        screenWidth = displayMode.Width;
-                                        screenHeight = displayMode.Height;
-                                    }
-                                }
-
-                                GameSettings.screenWidth = screenWidth;
-                                GameSettings.screenHeight = screenHeight;
-                                GameSettings.fullscreen = false;
-                                GameSettings.controllerType = ControllerType.Gamepad;
-
-                                XDocument doc = new XDocument(GameSettings.data);
-                                doc.Save(stream);
-                            });
-                        }
-
-                        // Load settings
-                        storageDevice.Load("LodersFall_Save", "settings.xml", (stream) =>
-                        {
-                            XDocument doc = XDocument.Load(stream);
-                            XElement data = doc.Element("Settings");
-                            GameSettings.screenWidth = Loader.loadInt(data.Element("ScreenWidth"), GraphicsDevice.Viewport.Width);
-                            GameSettings.screenHeight = Loader.loadInt(data.Element("ScreenHeight"), GraphicsDevice.Viewport.Height);
-                            GameSettings.fullscreen = Loader.loadBool(data.Element("Fullscreen"), false);
-                            GameSettings.controllerType = (ControllerType)Loader.loadEnum(typeof(ControllerType), data.Element("ControllerType"), (int)ControllerType.Gamepad);
-                        });
-
-                        //_graphics.PreferMultiSampling = true;
-                        _graphics.PreferredBackBufferWidth = GameSettings.screenWidth;
-                        _graphics.PreferredBackBufferHeight = GameSettings.screenHeight;
-                        _graphics.IsFullScreen = GameSettings.fullscreen;
+                        // Load and apply game settings
+                        DataManager.loadGameSettings();
+                        _graphics.PreferMultiSampling = true;
+                        _graphics.PreferredBackBufferWidth = DataManager.gameSettings.screenWidth;
+                        _graphics.PreferredBackBufferHeight = DataManager.gameSettings.screenHeight;
+                        _graphics.IsFullScreen = DataManager.gameSettings.fullscreen;
                         _graphics.ApplyChanges();
 
-                        _settingsInitialized = true;
                         _gameState = GameState.Intro;
 
                         handleArgs();
