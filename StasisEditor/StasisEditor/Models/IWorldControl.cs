@@ -7,6 +7,7 @@ namespace StasisEditor.Models
     public interface IWorldControl
     {
         Vector2 position { get; set; }
+        object self { get; }
         void delete();
     }
 }

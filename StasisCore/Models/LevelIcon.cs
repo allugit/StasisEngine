@@ -15,8 +15,8 @@ namespace StasisCore.Models
         protected int _id;
 
         public Vector2 position { get { return _position; } set { _position = value; } }
-        public Texture2D unfinishedIcon { get { return _unfinishedIcon; } set { _unfinishedIcon = value; } }
-        public Texture2D finishedIcon { get { return _finishedIcon; } set { _finishedIcon = value; } }
+        virtual public Texture2D unfinishedIcon { get { return _unfinishedIcon; } set { _unfinishedIcon = value; } }
+        virtual public Texture2D finishedIcon { get { return _finishedIcon; } set { _finishedIcon = value; } }
         public string levelUID { get { return _levelUID; } set { _levelUID = value; } }
         public int id { get { return _id; } }
 

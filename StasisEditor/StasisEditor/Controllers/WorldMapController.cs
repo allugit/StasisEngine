@@ -99,8 +99,58 @@ namespace StasisEditor.Controllers
                 _selectedControl.position += delta;
         }
 
-        // Handle click
-        public void handleClick(Vector2 mouseWorld)
+        // Hit test controls
+        public IWorldControl hitTestControls(Vector2 mouseWorld)
+        {
+            // Hit test controls by checking for the the shortest distance between the mouse and the control
+            float tolerance = 10f;
+            float shortestDistance = 999999999f;
+            IWorldControl closestControl = null;
+
+            // Test level icons...
+            foreach (LevelIcon levelIcon in _view.selectedWorldMap.levelIcons)
+            {
+                float distance = (levelIcon.position - mouseWorld).Length();
+                if (distance < shortestDistance)
+                {
+                    shortestDistance = distance;
+                    closestControl = levelIcon as EditorLevelIcon;
+                }
+            }
+
+            // Test world path points...
+            foreach (WorldPath worldPath in _view.selectedWorldMap.worldPaths)
+            {
+                EditorWorldPathPoint[] points = new EditorWorldPathPoint[]
+                    {
+                        worldPath.controlA as EditorWorldPathPoint,
+                        worldPath.controlB as EditorWorldPathPoint,
+                        worldPath.pointA as EditorWorldPathPoint,
+                        worldPath.pointB as EditorWorldPathPoint
+                    };
+
+                foreach (EditorWorldPathPoint point in points)
+                {
+                    float distance = (point.position - mouseWorld).Length();
+                    if (distance < shortestDistance)
+                    {
+                        shortestDistance = distance;
+                        closestControl = point;
+                    }
+                }
+            }
+
+            // Set selected control
+            if (shortestDistance < tolerance)
+            {
+                return closestControl;
+            }
+
+            return null;
+        }
+
+        // Handle left click
+        public void handleLeftClick(Vector2 mouseWorld)
         {
             if (_drawingWorldPath)
             {
@@ -122,53 +172,25 @@ namespace StasisEditor.Controllers
             }
             else if (_selectedControl == null)
             {
-                // Hit test controls by checking for the the shortest distance between the mouse and the control
-                float tolerance = 10f;
-                float shortestDistance = 999999999f;
-                IWorldControl closestControl = null;
-
-                // Test level icons...
-                foreach (LevelIcon levelIcon in _view.selectedWorldMap.levelIcons)
-                {
-                    float distance = (levelIcon.position - mouseWorld).Length();
-                    if (distance < shortestDistance)
-                    {
-                        shortestDistance = distance;
-                        closestControl = levelIcon as EditorLevelIcon;
-                    }
-                }
-
-                // Test world path points...
-                foreach (WorldPath worldPath in _view.selectedWorldMap.worldPaths)
-                {
-                    EditorWorldPathPoint[] points = new EditorWorldPathPoint[]
-                    {
-                        worldPath.controlA as EditorWorldPathPoint,
-                        worldPath.controlB as EditorWorldPathPoint,
-                        worldPath.pointA as EditorWorldPathPoint,
-                        worldPath.pointB as EditorWorldPathPoint
-                    };
-
-                    foreach (EditorWorldPathPoint point in points)
-                    {
-                        float distance = (point.position - mouseWorld).Length();
-                        if (distance < shortestDistance)
-                        {
-                            shortestDistance = distance;
-                            closestControl = point;
-                        }
-                    }
-                }
-
-                // Set selected control
-                if (shortestDistance < tolerance)
-                {
-                    _selectedControl = closestControl;
-                }
+                _selectedControl = hitTestControls(mouseWorld);
             }
             else
             {
                 _selectedControl = null;
+            }
+        }
+
+        // Handle right click
+        public void handleRightClick(Vector2 mouseWorld)
+        {
+            if (!_drawingWorldPath && _selectedControl == null)
+            {
+                IWorldControl result = hitTestControls(mouseWorld);
+
+                if (result == null)
+                    _view.properties = _view.selectedWorldMap;
+                else
+                    _view.properties = result.self;
             }
         }
 

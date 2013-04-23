@@ -1,4 +1,5 @@
 ﻿using System;
+using System.ComponentModel;
 using System.Collections.Generic;
 using System.Xml.Linq;
 using Microsoft.Xna.Framework;
@@ -16,7 +17,13 @@ namespace StasisEditor.Models
 
         public string unfinishedIconUID { get { return _unfinishedIconUID; } set { _unfinishedIconUID = value; } }
         public string finishedIconUID { get { return _finishedIconUID; } set { _finishedIconUID = value; } }
-
+        [Browsable(false)]
+        public override Texture2D unfinishedIcon { get { return base.unfinishedIcon; } set { base.unfinishedIcon = value; } }
+        [Browsable(false)]
+        public override Texture2D finishedIcon { get { return base.finishedIcon; } set { base.finishedIcon = value; } }
+        [Browsable(false)]
+        public object self { get { return this; } }
+        [Browsable(false)]
         public XElement data
         {
             get

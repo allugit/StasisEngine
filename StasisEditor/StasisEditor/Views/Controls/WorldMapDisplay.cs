@@ -53,7 +53,10 @@ namespace StasisEditor.Views.Controls
 
         void WorldMapDisplay_MouseClick(object sender, System.Windows.Forms.MouseEventArgs e)
         {
-            _view.controller.handleClick(mouseWorld);
+            if (e.Button == System.Windows.Forms.MouseButtons.Left)
+                _view.controller.handleLeftClick(mouseWorld);
+            else if (e.Button == System.Windows.Forms.MouseButtons.Right)
+                _view.controller.handleRightClick(mouseWorld);
         }
 
         void WorldMapDisplay_MouseMove(object sender, System.Windows.Forms.MouseEventArgs e)

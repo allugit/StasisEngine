@@ -20,6 +20,7 @@ namespace StasisEditor.Views
         public WorldMapController controller { get { return _controller; } set { _controller = value; } }
         public BindingList<EditorWorldMap> worldMaps { set { worldMapListBox.DataSource = value; } }
         public EditorWorldMap selectedWorldMap { get { return worldMapListBox.SelectedItem as EditorWorldMap; } }
+        public object properties { get { return worldMapPropertyGrid.SelectedObject; } set { worldMapPropertyGrid.SelectedObject = value; } }
 
         public WorldMapView()
         {

@@ -9,6 +9,8 @@ namespace StasisEditor.Models
     {
         private EditorWorldPath _path;
 
+        public object self { get { return _path; } }
+
         public EditorWorldPathPoint(EditorWorldPath path, Vector2 position)
             : base(position)
         {

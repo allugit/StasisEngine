@@ -1,4 +1,5 @@
 ﻿using System;
+using System.ComponentModel;
 using System.Collections.Generic;
 using System.Xml.Linq;
 using Microsoft.Xna.Framework;
@@ -10,7 +11,7 @@ namespace StasisEditor.Models
     public class EditorWorldPath : WorldPath
     {
         private EditorWorldMap _worldMap;
-
+        [Browsable(false)]
         public XElement data
         {
             get
