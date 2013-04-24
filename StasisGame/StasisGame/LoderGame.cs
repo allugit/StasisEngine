@@ -71,7 +71,7 @@ namespace StasisGame
             _systemManager.add(_screenSystem, -1);
 
 
-            DataManager.initialize(this);
+            DataManager.initialize(this, _systemManager);
             Components.Add(new GamerServicesComponent(this));
 
             base.Initialize();
@@ -136,8 +136,23 @@ namespace StasisGame
             _gameState = GameState.CreatePlayer;
         }
 
-        public void loadGame()
+        public void loadGame(int playerDataSlot)
         {
+            _screenSystem.removeScreen(_mainMenuScreen);
+            DataManager.loadPlayerData(playerDataSlot);
+            openWorldMap();
+        }
+
+        public void openLoadGameMenu()
+        {
+            _screenSystem.removeScreen(_mainMenuScreen);
+            _screenSystem.addScreen(new LoadGameScreen(this));
+        }
+
+        public void closeLoadGameMenu()
+        {
+            _screenSystem.removeScreen(ScreenType.LoadGameMenu);
+            _screenSystem.addScreen(_mainMenuScreen);
         }
 
         public void openOptionsMenu()
@@ -150,6 +165,12 @@ namespace StasisGame
         {
             _screenSystem.removeScreen(ScreenType.OptionsMenu);
             _screenSystem.addScreen(_mainMenuScreen);
+        }
+
+        public void openWorldMap()
+        {
+            _screenSystem.addScreen(new WorldMapScreen(this));
+            _gameState = GameState.WorldMap;
         }
 
         protected override void Update(GameTime gameTime)
@@ -186,13 +207,11 @@ namespace StasisGame
                 case GameState.CreatePlayer:
                     string playerName;
 
-                    // TODO: 
-                    // Let user name their player
+                    // TODO: Let user name their player
                     playerName = "Wamboogley";
 
                     DataManager.createPlayerData(_systemManager, playerName);
-                    _screenSystem.addScreen(new WorldMapScreen(this));
-                    _gameState = GameState.WorldMap;
+                    openWorldMap();
                     break;
 
                 case GameState.WorldMap:

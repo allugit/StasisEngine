@@ -12,7 +12,10 @@ namespace StasisGame.Managers
      * going to be used throughout the program to save and load data as it's needed. */
     public class DataManager
     {
+        public const string GLOBAL_CONTAINER = "LodersFallGlobal";
+        public const string PLAYER_CONTAINER = "LodersFallPlayer";
         private static LoderGame _game;
+        private static SystemManager _systemManager;
         private static GameSettings _gameSettings;
         private static PlayerData _playerData;
         private static IAsyncSaveDevice _storageDevice;
@@ -21,9 +24,10 @@ namespace StasisGame.Managers
         public static PlayerData playerData { get { return _playerData; } }
         public static bool ready { get { return _storageDevice.IsReady; } } // Have to wait for Update() to be called once before the storage device is ready... ugh.
 
-        public static void initialize(LoderGame game)
+        public static void initialize(LoderGame game, SystemManager systemManager)
         {
             _game = game;
+            _systemManager = systemManager;
 
             EasyStorageSettings.SetSupportedLanguages(Language.English);
             SharedSaveDevice sharedSaveDevice = new SharedSaveDevice();
@@ -46,10 +50,10 @@ namespace StasisGame.Managers
         // Load game settings
         public static void loadGameSettings()
         {
-            if (_storageDevice.FileExists("LodersFallGlobal", "settings.xml"))
+            if (_storageDevice.FileExists(GLOBAL_CONTAINER, "settings.xml"))
             {
                 // Load settings
-                _storageDevice.Load("LodersFallGlobal", "settings.xml", (stream) =>
+                _storageDevice.Load(GLOBAL_CONTAINER, "settings.xml", (stream) =>
                 {
                     XDocument doc = XDocument.Load(stream);
                     XElement data = doc.Element("Settings");
@@ -64,7 +68,7 @@ namespace StasisGame.Managers
 
                 _gameSettings = new GameSettings(_game);
                 doc = new XDocument(_gameSettings.data);
-                _storageDevice.Save("LodersFallGlobal", "settings.xml", (stream) => doc.Save(stream));
+                _storageDevice.Save(GLOBAL_CONTAINER, "settings.xml", (stream) => doc.Save(stream));
             }
         }
 
@@ -76,7 +80,7 @@ namespace StasisGame.Managers
             {
                 if (_storageDevice.IsReady)
                 {
-                    _storageDevice.Save("LodersFallGlobal", "settings.xml", (stream) =>
+                    _storageDevice.Save(GLOBAL_CONTAINER, "settings.xml", (stream) =>
                     {
                         XDocument doc = new XDocument();
                         doc.Add(_gameSettings.data);
@@ -96,7 +100,7 @@ namespace StasisGame.Managers
             {
                 if (_storageDevice.IsReady)
                 {
-                    if (_storageDevice.FileExists("LodersFallPlayer", string.Format("{0}.xml", unusedPlayerSlot)))
+                    if (_storageDevice.FileExists(PLAYER_CONTAINER, string.Format("player_data_{0}.xml", unusedPlayerSlot)))
                         unusedPlayerSlot++;
                     else
                     {
@@ -108,10 +112,46 @@ namespace StasisGame.Managers
             }
         }
 
+        // Load player saves
+        public static List<XElement> loadPlayerSaves()
+        {
+            List<XElement> savesData = new List<XElement>();
+            bool loaded = false;
+            while (!loaded)
+            {
+                if (_storageDevice.IsReady)
+                {
+                    string[] files = _storageDevice.GetFiles(PLAYER_CONTAINER, "player_data_*.xml");
+                    foreach (string file in files)
+                    {
+                        _storageDevice.Load(PLAYER_CONTAINER, file, (stream) =>
+                            {
+                                XDocument doc = XDocument.Load(stream);
+                                savesData.Add(doc.Element("PlayerData"));
+                            });
+                    }
+                    loaded = true;
+                }
+            }
+            return savesData;
+        }
+
         // Load player data
         public static void loadPlayerData(int playerSlot)
         {
-            throw new NotImplementedException();
+            bool loaded = false;
+            while (!loaded)
+            {
+                if (_storageDevice.IsReady)
+                {
+                    _storageDevice.Load(PLAYER_CONTAINER, string.Format("player_data_{0}.xml", playerSlot), (stream) =>
+                        {
+                            XDocument doc = XDocument.Load(stream);
+                            _playerData = new PlayerData(_systemManager, doc.Element("PlayerData"));
+                        });
+                    loaded = true;
+                }
+            }
         }
 
         // Save player data
@@ -122,7 +162,7 @@ namespace StasisGame.Managers
             {
                 if (_storageDevice.IsReady)
                 {
-                    _storageDevice.Save("LodersFallPlayer", string.Format("{0}.xml", _playerData.playerSlot), (stream) =>
+                    _storageDevice.Save(PLAYER_CONTAINER, string.Format("player_data_{0}.xml", _playerData.playerSlot), (stream) =>
                         {
                             XDocument doc = new XDocument();
                             doc.Add(_playerData.data);

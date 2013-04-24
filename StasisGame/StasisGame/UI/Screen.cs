@@ -16,7 +16,8 @@ namespace StasisGame.UI
         MainMenu,
         OptionsMenu,
         WorldMap,
-        Level
+        Level,
+        LoadGameMenu
     };
 
     abstract public class Screen

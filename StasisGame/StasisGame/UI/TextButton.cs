@@ -21,9 +21,11 @@ namespace StasisGame.UI
         private int _hitBoxWidth;
         private int _hitBoxHeight;
         private UIComponentAction _action;
+        private object _extraData;
 
         public bool selectable { get { return true; } }
         public float layerDepth { get { return 0f; } }
+        public object extraData { get { return _extraData; } set { _extraData = value; } }
         public string text
         {
             get { return _text; }

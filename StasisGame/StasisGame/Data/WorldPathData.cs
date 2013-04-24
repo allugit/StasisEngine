@@ -30,7 +30,8 @@ namespace StasisGame.Data
 
         public WorldPathData(XElement data)
         {
-            throw new NotImplementedException();
+            _id = int.Parse(data.Attribute("id").Value);
+            _state = (WorldPathState)Enum.Parse(typeof(WorldPathState), data.Attribute("state").Value);
         }
     }
 }

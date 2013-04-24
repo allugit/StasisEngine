@@ -1,83 +1,73 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Xml.Linq;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Content;
-using Microsoft.Xna.Framework.Input;
 using Microsoft.Xna.Framework.Graphics;
+using Microsoft.Xna.Framework.Input;
+using StasisGame.Managers;
 
 namespace StasisGame.UI
 {
-    public class MainMenuScreen : Screen
+    public class LoadGameScreen : Screen
     {
         private LoderGame _game;
         private Texture2D _background;
         private Texture2D _logo;
+        private Texture2D _savesContainer;
+        private SpriteFont _santaBarbaraNormal;
+        private SpriteFont _arial;
         private ContentManager _content;
 
-        public MainMenuScreen(LoderGame game) : base(ScreenType.MainMenu)
+        public LoadGameScreen(LoderGame game)
+            : base(ScreenType.LoadGameMenu)
         {
             _game = game;
             _content = new ContentManager(game.Services);
             _content.RootDirectory = "Content";
             _background = _content.Load<Texture2D>("main_menu/bg");
             _logo = _content.Load<Texture2D>("main_menu/logo");
+            _savesContainer = _content.Load<Texture2D>("load_game_menu/saves_container");
+            _santaBarbaraNormal = _content.Load<SpriteFont>("santa_barbara_normal");
+            _arial = _content.Load<SpriteFont>("arial");
 
-            TextureButton newGameButton = new TextureButton(
-                _game.spriteBatch,
-                0,
-                256,
-                475,
-                80,
-                _content.Load<Texture2D>("main_menu/new_game_selected"),
-                _content.Load<Texture2D>("main_menu/new_game_unselected"),
-                UIComponentAlignment.TopCenter,
-                (component) => { _game.newGame(); });
-            
-            TextureButton loadGameButton = new TextureButton(
-                _game.spriteBatch,
-                0,
-                358,
-                475,
-                80,
-                _content.Load<Texture2D>("main_menu/load_game_selected"),
-                _content.Load<Texture2D>("main_menu/load_game_unselected"),
-                UIComponentAlignment.TopCenter,
-                (component) => { _game.openLoadGameMenu(); });
-            
-            TextureButton optionsButton = new TextureButton(
-                _game.spriteBatch,
-                0,
-                465,
-                475,
-                80,
-                _content.Load<Texture2D>("main_menu/options_selected"),
-                _content.Load<Texture2D>("main_menu/options_unselected"),
-                UIComponentAlignment.TopCenter,
-                (component) => { _game.openOptionsMenu(); });
-
-            TextureButton exitButton = new TextureButton(
-                _game.spriteBatch,
-                100,
-                565,
-                240,
-                80,
-                _content.Load<Texture2D>("main_menu/exit_selected"),
-                _content.Load<Texture2D>("main_menu/exit_unselected"),
-                UIComponentAlignment.TopCenter,
-                (component) => { _game.Exit(); });
-            
-            addComponent(newGameButton);
-            addComponent(loadGameButton);
-            addComponent(optionsButton);
-            addComponent(exitButton);
+            createUIComponents();
         }
 
-        ~MainMenuScreen()
+        ~LoadGameScreen()
         {
             _content.Unload();
         }
 
-        override public void update()
+        private void createUIComponents()
+        {
+            List<XElement> playerSaves = DataManager.loadPlayerSaves();
+            List<TextButton> saveButtons = new List<TextButton>();
+            Vector2 initialPosition = new Vector2(-200, 300);
+
+            foreach (XElement playerSave in playerSaves)
+            {
+                int slot = int.Parse(playerSave.Attribute("slot").Value);
+                string text = slot.ToString() + " - " + playerSave.Attribute("name").Value;
+                TextButton button = new TextButton(
+                    _game.spriteBatch,
+                    _arial,
+                    Color.White,
+                    (int)initialPosition.X,
+                    (int)(initialPosition.Y) + saveButtons.Count * 24,
+                    text,
+                    UIComponentAlignment.TopCenter,
+                    (component) =>
+                    {
+                        _game.closeLoadGameMenu();
+                        _game.loadGame(slot);
+                    });
+                saveButtons.Add(button);
+                _UIComponents.Add(button);
+            }
+        }
+
+        public override void update()
         {
             _oldGamepadState = _newGamepadState;
             _oldKeyState = _newKeyState;
@@ -129,11 +119,12 @@ namespace StasisGame.UI
             base.update();
         }
 
-        override public void draw()
+        public override void draw()
         {
             float scale = (float)_game.GraphicsDevice.Viewport.Height / (float)_background.Height;
             _game.spriteBatch.Draw(_background, Vector2.Zero, _background.Bounds, Color.White, 0f, Vector2.Zero, scale, SpriteEffects.None, 0f);
-            _game.spriteBatch.Draw(_logo, new Vector2(_game.GraphicsDevice.Viewport.Width / 2f, 100f), _logo.Bounds, Color.White, 0, new Vector2(_logo.Width, _logo.Height) / 2, 0.75f, SpriteEffects.None, 0);
+            _game.spriteBatch.Draw(_logo, new Vector2((int)(_game.GraphicsDevice.Viewport.Width / 2f), 100f), _logo.Bounds, Color.White, 0, new Vector2(_logo.Width, _logo.Height) / 2, 0.75f, SpriteEffects.None, 0);
+            _game.spriteBatch.Draw(_savesContainer, new Vector2((int)(_game.GraphicsDevice.Viewport.Width / 2f), 150f), _savesContainer.Bounds, Color.White, 0f, new Vector2((int)(_savesContainer.Width / 2f), 0), 1f, SpriteEffects.None, 0f);
 
             base.draw();
         }

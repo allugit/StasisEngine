@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Xml.Linq;
 using Microsoft.Xna.Framework;
+using StasisCore;
 
 namespace StasisGame.Data
 {
@@ -31,7 +32,8 @@ namespace StasisGame.Data
 
         public CurrentLocation(XElement data)
         {
-            throw new NotImplementedException();
+            _worldMapUID = data.Attribute("world_map_uid").Value;
+            _position = Loader.loadVector2(data.Attribute("position"), Vector2.Zero);
         }
     }
 }

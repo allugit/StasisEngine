@@ -150,6 +150,7 @@
     <Compile Include="UI\Label.cs" />
     <Compile Include="UI\LargeHealthBar.cs" />
     <Compile Include="UI\LevelScreen.cs" />
+    <Compile Include="UI\LoadGameScreen.cs" />
     <Compile Include="UI\MainMenuScreen.cs" />
     <Compile Include="UI\OptionsMenuScreen.cs" />
     <Compile Include="UI\Screen.cs" />

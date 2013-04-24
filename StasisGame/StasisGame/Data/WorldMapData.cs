@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Xml.Linq;
+using StasisCore;
 
 namespace StasisGame.Data
 {
@@ -26,6 +27,7 @@ namespace StasisGame.Data
                     worldPathDatas.Add(worldPathData.data);
 
                 return new XElement("WorldMapData",
+                    new XAttribute("world_map_uid", _worldMapUID),
                     levelIconDatas,
                     worldPathDatas);
             }
@@ -40,7 +42,14 @@ namespace StasisGame.Data
 
         public WorldMapData(XElement data)
         {
-            throw new NotImplementedException();
+            _worldMapUID = data.Attribute("world_map_uid").Value;
+            _levelIconData = new List<LevelIconData>();
+            _worldPathData = new List<WorldPathData>();
+
+            foreach (XElement childData in data.Elements("LevelIconData"))
+                _levelIconData.Add(new LevelIconData(childData));
+            foreach (XElement childData in data.Elements("WorldPathData"))
+                _worldPathData.Add(new WorldPathData(childData));
         }
     }
 }

@@ -5,6 +5,7 @@ using Microsoft.Xna.Framework;
 using StasisGame.Systems;
 using StasisGame.Managers;
 using StasisGame.Components;
+using StasisCore;
 
 namespace StasisGame.Data
 {
@@ -26,17 +27,18 @@ namespace StasisGame.Data
                 PlayerSystem playerSystem = (PlayerSystem)_systemManager.getSystem(SystemType.Player);
                 XElement inventoryData = constructInventoryData();
                 XElement toolbarData = constructToolbarData();
-                XElement worldMapDatas = new XElement("WorldMapDatas");
 
-                foreach (WorldMapData worldMapData in _worldMapData)
-                    worldMapDatas.Add(worldMapData.data);
-
-                return new XElement("PlayerData",
+                XElement d = new XElement("PlayerData",
                     new XAttribute("name", _playerName),
+                    new XAttribute("slot", _playerSlot),
                     inventoryData,
                     toolbarData,
-                    _currentLocation.data,
-                    worldMapDatas);
+                    _currentLocation.data);
+
+                foreach (WorldMapData worldMapData in _worldMapData)
+                    d.Add(worldMapData.data);
+
+                return d;
             }
         }
 
@@ -49,14 +51,22 @@ namespace StasisGame.Data
             _currentLocation = new CurrentLocation("oria_world_map", Vector2.Zero);
             _worldMapData = new List<WorldMapData>();
             _worldMapData.Add(new WorldMapData("oria_world_map"));
-            _worldMapData[0].levelIconData.Add(new LevelIconData(0, LevelIconState.Finished));
+            _worldMapData[0].levelIconData.Add(new LevelIconData(0, LevelIconState.Finished));  // Assume (for now) the player starts at a level icon that has id=0
         }
 
         // Construct a new PlayerData using data loaded from file -- used when loading an existing player
         public PlayerData(SystemManager systemManager, XElement data)
         {
             _systemManager = systemManager;
-            throw new NotImplementedException();
+            _playerSlot = int.Parse(data.Attribute("slot").Value);
+            _playerName = data.Attribute("name").Value;
+            _currentLocation = new CurrentLocation(data.Element("CurrentLocation"));
+            _worldMapData = new List<WorldMapData>();
+
+            foreach (XElement childData in data.Elements("WorldMapData"))
+                _worldMapData.Add(new WorldMapData(childData));
+
+            // TODO: Handle loading of inventory and toolbar
         }
 
         // Helper function to construct inventory data from an inventory component

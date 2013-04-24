@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Xml.Linq;
+using StasisCore;
 
 namespace StasisGame.Data
 {
@@ -37,7 +38,8 @@ namespace StasisGame.Data
 
         public LevelIconData(XElement data)
         {
-            throw new NotImplementedException();
+            _id = int.Parse(data.Attribute("id").Value);
+            _state = (LevelIconState)Enum.Parse(typeof(LevelIconState), data.Attribute("state").Value);
         }
     }
 }
