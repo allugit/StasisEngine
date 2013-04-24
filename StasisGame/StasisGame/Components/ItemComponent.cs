@@ -13,6 +13,7 @@ namespace StasisGame.Components
 
     public class ItemComponent : IComponent
     {
+        private string _itemUID;
         private ItemType _itemType;
         private Texture2D _inventoryTexture;
         private int _quantity;
@@ -23,6 +24,7 @@ namespace StasisGame.Components
         private bool _secondaryAction;
 
         public ComponentType componentType { get { return ComponentType.Item; } }
+        public string itemUID { get { return _itemUID; } }
         public ItemType itemType { get { return _itemType; } }
         public Texture2D inventoryTexture { get { return _inventoryTexture; } }
         public int quantity { get { return _quantity; } set { _quantity = value; } }
@@ -32,8 +34,9 @@ namespace StasisGame.Components
         public bool primaryAction { get { return _primaryAction; } set { _primaryAction = value; } }
         public bool secondaryAction { get { return _secondaryAction; } set { _secondaryAction = value; } }
 
-        public ItemComponent(ItemType itemType, Texture2D inventoryTexture, int quantity, bool inWorld, bool hasAiming, float maxRange)
+        public ItemComponent(string itemUID, ItemType itemType, Texture2D inventoryTexture, int quantity, bool inWorld, bool hasAiming, float maxRange)
         {
+            _itemUID = itemUID;
             _itemType = itemType;
             _inventoryTexture = inventoryTexture;
             _quantity = quantity;

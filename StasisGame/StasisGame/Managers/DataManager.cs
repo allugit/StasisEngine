@@ -4,6 +4,7 @@ using System.Xml.Linq;
 using StasisGame.Data;
 using EasyStorage;
 using StasisCore;
+using StasisGame.Systems;
 
 namespace StasisGame.Managers
 {
@@ -86,8 +87,29 @@ namespace StasisGame.Managers
             }
         }
 
+        // Create new player data
+        public static void createPlayerData(SystemManager systemManager, string playerName)
+        {
+            bool created = false;
+            int unusedPlayerSlot = 0;
+            while (!created)
+            {
+                if (_storageDevice.IsReady)
+                {
+                    if (_storageDevice.FileExists("LodersFallPlayer", string.Format("{0}.xml", unusedPlayerSlot)))
+                        unusedPlayerSlot++;
+                    else
+                    {
+                        _playerData = new PlayerData(systemManager, unusedPlayerSlot, playerName);
+                        savePlayerData();
+                        created = true;
+                    }
+                }
+            }
+        }
+
         // Load player data
-        public static void loadPlayerData(string playerUID)
+        public static void loadPlayerData(int playerSlot)
         {
             throw new NotImplementedException();
         }
@@ -95,7 +117,20 @@ namespace StasisGame.Managers
         // Save player data
         public static void savePlayerData()
         {
-            throw new NotImplementedException();
+            bool saved = false;
+            while (!saved)
+            {
+                if (_storageDevice.IsReady)
+                {
+                    _storageDevice.Save("LodersFallPlayer", string.Format("{0}.xml", _playerData.playerSlot), (stream) =>
+                        {
+                            XDocument doc = new XDocument();
+                            doc.Add(_playerData.data);
+                            doc.Save(stream);
+                        });
+                    saved = true;
+                }
+            }
         }
     }
 }

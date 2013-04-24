@@ -30,6 +30,7 @@ namespace StasisGame.Managers
             _factory = new EntityFactory(_systemManager, this);
         }
 
+        // Create an entity
         public int createEntity()
         {
             int id = newId;
@@ -37,27 +38,38 @@ namespace StasisGame.Managers
             return id;
         }
 
+        // Kill an entity
         public void killEntity(int id)
         {
             _entities.Remove(id);
         }
 
+        // Kill all entities
+        public void killAllEntities()
+        {
+            _entities.Clear();
+        }
+
+        // Add a component to an entity
         public void addComponent(int id, IComponent component)
         {
             _entities[id].Add(component);
         }
 
+        // Remove a component from an entity, based on the type of component
         public void removeComponent(int id, ComponentType componentType)
         {
             IComponent component = getComponent(id, componentType);
             removeComponent(id, component);
         }
 
+        // Remove a component from an entity, based on an instance of the component
         public void removeComponent(int id, IComponent component)
         {
             _entities[id].Remove(component);
         }
 
+        // Get a component from an entity
         public IComponent getComponent(int id, ComponentType componentType)
         {
             if (_entities.ContainsKey(id))
@@ -71,6 +83,7 @@ namespace StasisGame.Managers
             return null;
         }
 
+        // Get all components of a certain type
         public List<T> getComponents<T>(ComponentType componentType) where T : IComponent
         {
             List<T> results = new List<T>();
@@ -87,6 +100,7 @@ namespace StasisGame.Managers
             return results;
         }
 
+        // Get all entities posessing a type of component
         public List<int> getEntitiesPosessing(ComponentType componentType)
         {
             List<int> results = new List<int>();
@@ -104,6 +118,7 @@ namespace StasisGame.Managers
             return results;
         }
 
+        // Get all of an entity's components
         public List<IComponent> getEntityComponents(int entityId)
         {
             if (_entities.ContainsKey(entityId))

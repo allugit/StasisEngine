@@ -20,6 +20,7 @@ namespace StasisGame.Systems
         public int playerId { get { return _playerId; } set { _playerId = value; } }
         public bool paused { get { return _paused; } set { _paused = value; } }
         public bool singleStep { get { return _singleStep; } set { _singleStep = value; } }
+        public EntityManager entityManager { get { return _entityManager; } }
 
         public PlayerSystem(SystemManager systemManager, EntityManager entityManager)
         {

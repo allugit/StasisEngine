@@ -18,6 +18,16 @@ namespace StasisGame.Data
         public int id { get { return _id; } set { _id = value; } }
         public WorldPathState state { get { return _state; } set { _state = value; } }
 
+        public XElement data
+        {
+            get
+            {
+                return new XElement("WorldPathData",
+                    new XAttribute("id", _id),
+                    new XAttribute("state", _state));
+            }
+        }
+
         public WorldPathData(XElement data)
         {
             throw new NotImplementedException();

@@ -46,10 +46,12 @@ namespace StasisGame
         private ScreenSystem _screenSystem;
         private Level _level;
         private SystemManager _systemManager;
+        private EntityManager _entityManager;
 
         public SpriteBatch spriteBatch { get { return _spriteBatch; } }
-        public SystemManager systemManager { get { return _systemManager; } }
         public GraphicsDeviceManager graphics { get { return _graphics; } }
+        public SystemManager systemManager { get { return _systemManager; } }
+        public EntityManager entityManager { get { return _entityManager; } }
 
         public LoderGame(string[] args)
         {
@@ -64,8 +66,10 @@ namespace StasisGame
         protected override void Initialize()
         {
             _systemManager = new SystemManager();
+            _entityManager = new EntityManager(_systemManager);
             _screenSystem = new ScreenSystem(_systemManager);
             _systemManager.add(_screenSystem, -1);
+
 
             DataManager.initialize(this);
             Components.Add(new GamerServicesComponent(this));
@@ -180,7 +184,13 @@ namespace StasisGame
                     break;
 
                 case GameState.CreatePlayer:
-                    // TODO: Create player data (player name, story progress, starting items, etc...)
+                    string playerName;
+
+                    // TODO: 
+                    // Let user name their player
+                    playerName = "Wamboogley";
+
+                    DataManager.createPlayerData(_systemManager, playerName);
                     _screenSystem.addScreen(new WorldMapScreen(this));
                     _gameState = GameState.WorldMap;
                     break;

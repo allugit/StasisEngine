@@ -27,7 +27,7 @@ namespace StasisGame
         {
             _game = game;
             _systemManager = _game.systemManager;
-            _entityManager = new EntityManager(_systemManager);
+            _entityManager = _game.entityManager;
 
             XElement data = null;
             List<XElement> secondPassData = new List<XElement>();
@@ -94,8 +94,8 @@ namespace StasisGame
                             _systemManager.add(new CharacterMovementSystem(_systemManager, _entityManager), -1);
                             (_systemManager.getSystem(SystemType.Camera) as CameraSystem).enableManualMovement = false;
                         }
-                        _systemManager.add(new EquipmentSystem(_systemManager, _entityManager), -1);
                         _systemManager.add(new PlayerSystem(_systemManager, _entityManager), -1);
+                        _systemManager.add(new EquipmentSystem(_systemManager, _entityManager), -1);
                         _entityManager.factory.createPlayer(actorData);
                         break;
 
