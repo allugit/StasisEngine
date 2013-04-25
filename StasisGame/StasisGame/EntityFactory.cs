@@ -689,61 +689,6 @@ namespace StasisGame
             _entityManager.addComponent(entityId, new WorldPositionComponent(tree.position));
         }
 
-        public void createPlayer(XElement data)
-        {
-            World world = (_systemManager.getSystem(SystemType.Physics) as PhysicsSystem).world;
-            int entityId = _entityManager.createEntity();
-            Vector2 position = Loader.loadVector2(data.Attribute("position"), Vector2.Zero);
-            Body body;
-            BodyDef bodyDef = new BodyDef();
-            PolygonShape bodyShape = new PolygonShape();
-            FixtureDef bodyFixtureDef = new FixtureDef();
-            CircleShape feetShape = new CircleShape();
-            FixtureDef feetFixtureDef = new FixtureDef();
-            Fixture feetFixture;
-
-            bodyDef.bullet = true;
-            bodyDef.fixedRotation = true;
-            bodyDef.position = position;
-            bodyDef.type = BodyType.Dynamic;
-            bodyDef.userData = entityId;
-            bodyShape.SetAsBox(0.18f, 0.27f);
-            bodyFixtureDef.density = 1f;
-            bodyFixtureDef.friction = 0f;
-            bodyFixtureDef.restitution = 0f;
-            bodyFixtureDef.shape = bodyShape;
-            bodyFixtureDef.filter.categoryBits = (ushort)CollisionCategory.Player;
-            bodyFixtureDef.filter.maskBits =
-                (ushort)CollisionCategory.DynamicGeometry |
-                (ushort)CollisionCategory.Item |
-                (ushort)CollisionCategory.Rope |
-                (ushort)CollisionCategory.StaticGeometry;
-
-            feetShape._radius = 0.18f;
-            feetShape._p = new Vector2(0, 0.27f);
-            feetFixtureDef.density = 0.1f;
-            feetFixtureDef.friction = 0.1f;
-            feetFixtureDef.shape = feetShape;
-            feetFixtureDef.filter.categoryBits = bodyFixtureDef.filter.categoryBits;
-            feetFixtureDef.filter.maskBits = bodyFixtureDef.filter.maskBits;
-
-            body = world.CreateBody(bodyDef);
-            body.CreateFixture(bodyFixtureDef);
-            feetFixture = body.CreateFixture(feetFixtureDef);
-
-            _entityManager.addComponent(entityId, new PhysicsComponent(body));
-            _entityManager.addComponent(entityId, new InputComponent());
-            _entityManager.addComponent(entityId, new CharacterMovementComponent(feetFixture));
-            _entityManager.addComponent(entityId, new CharacterRenderComponent());
-            _entityManager.addComponent(entityId, new BodyFocusPointComponent(body, new Vector2(0, -7f), FocusType.Multiple));
-            _entityManager.addComponent(entityId, new IgnoreTreeCollisionComponent());
-            _entityManager.addComponent(entityId, new IgnoreRopeRaycastComponent());
-            _entityManager.addComponent(entityId, new InventoryComponent(32));
-            _entityManager.addComponent(entityId, new ToolbarComponent(4, entityId));
-            _entityManager.addComponent(entityId, new WorldPositionComponent(body.GetPosition()));
-            (_systemManager.getSystem(SystemType.Player) as PlayerSystem).playerId = entityId;
-        }
-
         public void createRevoluteJoint(XElement data)
         {
             EventSystem eventSystem = _systemManager.getSystem(SystemType.Event) as EventSystem;

@@ -12,6 +12,7 @@ using Microsoft.Xna.Framework.Media;
 using StasisGame.Managers;
 using StasisGame.UI;
 using StasisGame.Systems;
+using StasisGame.Components;
 using StasisCore;
 using EasyStorage;
 
@@ -138,8 +139,21 @@ namespace StasisGame
 
         public void loadGame(int playerDataSlot)
         {
+            PlayerSystem playerSystem = new PlayerSystem(_systemManager, _entityManager);
+            int playerEntityId;
+
             _screenSystem.removeScreen(_mainMenuScreen);
+            _systemManager.add(playerSystem, -1);
+
             DataManager.loadPlayerData(playerDataSlot);
+            playerEntityId = _entityManager.createEntity();
+            playerSystem.playerId = playerEntityId;
+            _entityManager.initializePlayerInventory(playerEntityId, DataManager.playerData.inventoryData);
+            _entityManager.initializePlayerToolbar(
+                playerEntityId,
+                (InventoryComponent)_entityManager.getComponent(playerEntityId, ComponentType.Inventory),
+                DataManager.playerData.toolbarData);
+
             openWorldMap();
         }
 
@@ -205,13 +219,9 @@ namespace StasisGame
                     break;
 
                 case GameState.CreatePlayer:
-                    string playerName;
-
-                    // TODO: Let user name their player
-                    playerName = "Wamboogley";
-
-                    DataManager.createPlayerData(_systemManager, playerName);
-                    openWorldMap();
+                    string playerName = "Wamboogley"; // TODO: Let user name their player
+                    int playerSlot = DataManager.createPlayerData(_systemManager, playerName);
+                    loadGame(playerSlot);
                     break;
 
                 case GameState.WorldMap:

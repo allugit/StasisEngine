@@ -92,7 +92,7 @@ namespace StasisGame.Managers
         }
 
         // Create new player data
-        public static void createPlayerData(SystemManager systemManager, string playerName)
+        public static int createPlayerData(SystemManager systemManager, string playerName)
         {
             bool created = false;
             int unusedPlayerSlot = 0;
@@ -110,6 +110,7 @@ namespace StasisGame.Managers
                     }
                 }
             }
+            return unusedPlayerSlot;
         }
 
         // Load player saves

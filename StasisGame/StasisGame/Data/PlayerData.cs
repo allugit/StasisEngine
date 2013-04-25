@@ -16,27 +16,30 @@ namespace StasisGame.Data
         private string _playerName;
         private CurrentLocation _currentLocation;
         private List<WorldMapData> _worldMapData;
+        private XElement _inventoryData;
+        private XElement _toolbarData;
 
         public int playerSlot { get { return _playerSlot; } set { _playerSlot = value; } }
         public string playerName { get { return _playerName; } set { _playerName = value; } }
+        public XElement inventoryData { get { return _inventoryData; } }
+        public XElement toolbarData { get { return _toolbarData; } }
 
         public XElement data
         {
             get
             {
                 PlayerSystem playerSystem = (PlayerSystem)_systemManager.getSystem(SystemType.Player);
-                XElement inventoryData = constructInventoryData();
-                XElement toolbarData = constructToolbarData();
 
                 XElement d = new XElement("PlayerData",
                     new XAttribute("name", _playerName),
                     new XAttribute("slot", _playerSlot),
-                    inventoryData,
-                    toolbarData,
                     _currentLocation.data);
 
                 foreach (WorldMapData worldMapData in _worldMapData)
                     d.Add(worldMapData.data);
+
+                appendInventoryData(d);
+                appendToolbarData(d);
 
                 return d;
             }
@@ -60,24 +63,25 @@ namespace StasisGame.Data
             _systemManager = systemManager;
             _playerSlot = int.Parse(data.Attribute("slot").Value);
             _playerName = data.Attribute("name").Value;
+            _inventoryData = data.Element("Inventory");
+            _toolbarData = data.Element("Toolbar");
             _currentLocation = new CurrentLocation(data.Element("CurrentLocation"));
             _worldMapData = new List<WorldMapData>();
 
             foreach (XElement childData in data.Elements("WorldMapData"))
                 _worldMapData.Add(new WorldMapData(childData));
-
-            // TODO: Handle loading of inventory and toolbar
         }
 
         // Helper function to construct inventory data from an inventory component
-        private XElement constructInventoryData()
+        private void appendInventoryData(XElement d)
         {
             PlayerSystem playerSystem = (PlayerSystem)_systemManager.getSystem(SystemType.Player);
-            XElement inventoryData = new XElement("Inventory");
 
             if (playerSystem != null)
             {
                 InventoryComponent inventoryComponent = (InventoryComponent)playerSystem.entityManager.getComponent(playerSystem.playerId, ComponentType.Inventory);
+                XElement inventoryData = new XElement("Inventory", new XAttribute("slots", inventoryComponent.slots));
+
                 if (inventoryComponent != null)
                 {
                     foreach (KeyValuePair<int, ItemComponent> slotItemPair in inventoryComponent.inventory)
@@ -88,20 +92,20 @@ namespace StasisGame.Data
                             new XAttribute("quantity", slotItemPair.Value.quantity)));
                     }
                 }
+                d.Add(inventoryData);
             }
-            return inventoryData;
         }
 
         // Helper function to construct toolbar data from a toolbar component
-        private XElement constructToolbarData()
+        private void appendToolbarData(XElement d)
         {
             PlayerSystem playerSystem = (PlayerSystem)_systemManager.getSystem(SystemType.Player);
-            XElement toolbarData = new XElement("Toolbar");
 
             if (playerSystem != null)
             {
                 InventoryComponent inventoryComponent = (InventoryComponent)playerSystem.entityManager.getComponent(playerSystem.playerId, ComponentType.Inventory);
                 ToolbarComponent toolbarComponent = (ToolbarComponent)playerSystem.entityManager.getComponent(playerSystem.playerId, ComponentType.Toolbar);
+                XElement toolbarData = new XElement("Toolbar", new XAttribute("slots", toolbarComponent.slots));
                 if (inventoryComponent != null && toolbarComponent != null)
                 {
                     foreach (KeyValuePair<int, ItemComponent> toolbarSlotItemPair in toolbarComponent.inventory)
@@ -117,8 +121,8 @@ namespace StasisGame.Data
                         }
                     }
                 }
+                d.Add(toolbarData);
             }
-            return toolbarData;
         }
     }
 }
