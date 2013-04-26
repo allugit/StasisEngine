@@ -256,7 +256,11 @@ namespace StasisGame
                     break;
 
                 case GameState.WorldMap:
-                    _spriteBatch.Begin();
+
+                    if (_worldMapScreen != null)
+                        _worldMapScreen.preProcess();
+
+                    _spriteBatch.Begin(SpriteSortMode.BackToFront, BlendState.AlphaBlend);
                     _screenSystem.draw();
                     _spriteBatch.End();
                     break;

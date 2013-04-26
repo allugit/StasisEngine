@@ -191,8 +191,8 @@
     </Compile>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="world_map\fog_brush.png">
-      <Name>fog_brush</Name>
+    <Compile Include="world_map\anti_fog_brush.png">
+      <Name>anti_fog_brush</Name>
       <Importer>TextureImporter</Importer>
       <Processor>TextureProcessor</Processor>
     </Compile>
@@ -209,6 +209,13 @@
       <Name>saves_container</Name>
       <Importer>TextureImporter</Importer>
       <Processor>TextureProcessor</Processor>
+    </Compile>
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="fog_effect.fx">
+      <Name>fog_effect</Name>
+      <Importer>EffectImporter</Importer>
+      <Processor>EffectProcessor</Processor>
     </Compile>
   </ItemGroup>
   <Import Project="$(MSBuildExtensionsPath)\Microsoft\XNA Game Studio\$(XnaFrameworkVersion)\Microsoft.Xna.GameStudio.ContentPipeline.targets" />

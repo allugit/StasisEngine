@@ -25,6 +25,11 @@ namespace StasisGame.UI
         private Texture2D _pathTexture;
         private Vector2 _pathTextureOrigin;
         private ContentManager _content;
+        private Effect _fogEffect;
+        private Texture2D _antiFogBrush;
+        private Vector2 _antiFogBrushOrigin;
+        private RenderTarget2D _fogRT;
+        private RenderTarget2D _antiFogRT;
 
         public WorldMapScreen(LoderGame game) : base(ScreenType.WorldMap)
         {
@@ -34,10 +39,15 @@ namespace StasisGame.UI
             
             _content = new ContentManager(game.Services);
             _content.RootDirectory = "Content";
+            _fogEffect = _content.Load<Effect>("fog_effect");
             _pathTexture = _content.Load<Texture2D>("world_map\\path");
             _pathTextureOrigin = new Vector2(_pathTexture.Width, _pathTexture.Height) / 2f;
+            _antiFogBrush = _content.Load<Texture2D>("world_map\\anti_fog_brush");
+            _antiFogBrushOrigin = new Vector2(_antiFogBrush.Width, _antiFogBrush.Height) / 2f;
 
             _halfScreenSize = new Vector2(_spriteBatch.GraphicsDevice.Viewport.Width, _spriteBatch.GraphicsDevice.Viewport.Height) / 2f;
+            _fogRT = new RenderTarget2D(_spriteBatch.GraphicsDevice, _spriteBatch.GraphicsDevice.Viewport.Width, _spriteBatch.GraphicsDevice.Viewport.Height);
+            _antiFogRT = new RenderTarget2D(_spriteBatch.GraphicsDevice, _spriteBatch.GraphicsDevice.Viewport.Width, _spriteBatch.GraphicsDevice.Viewport.Height);
         }
 
         public void loadWorldMap(WorldMapData worldMapData)
@@ -93,6 +103,44 @@ namespace StasisGame.UI
             base.update();
         }
 
+        // Pre process (occurs before Draw())
+        public void preProcess()
+        {
+            Vector2 viewOffset = -_currentScreenCenter + _halfScreenSize;
+            float antiFogTextureScale = _scale * 0.5f;
+
+            // Draw anti fog points (points where the anti fog brush texture will be drawn
+            _spriteBatch.GraphicsDevice.SetRenderTarget(_antiFogRT);
+            _spriteBatch.GraphicsDevice.Clear(Color.Transparent);
+            _spriteBatch.Begin(SpriteSortMode.BackToFront, BlendState.AlphaBlend);
+            foreach (WorldPath worldPath in _worldMap.worldPaths)
+            {
+                if (worldPath.state == WorldPathState.Discovered)
+                {
+                    float increment = 0.1f;
+                    for (float i = 0f; i < 1f; i += increment)
+                    {
+                        Vector2 point = Vector2.CatmullRom(worldPath.controlA.position, worldPath.pointA.position, worldPath.pointB.position, worldPath.controlB.position, i);
+                        _spriteBatch.Draw(_antiFogBrush, viewOffset + point, _antiFogBrush.Bounds, Color.White * 0.5f, 0f, _antiFogBrushOrigin, antiFogTextureScale, SpriteEffects.None, 0f);
+                    }
+                }
+            }
+            foreach (LevelIcon levelIcon in _worldMap.levelIcons)
+            {
+                if (levelIcon.state != LevelIconState.Undiscovered)
+                {
+                    _spriteBatch.Draw(_antiFogBrush, viewOffset + levelIcon.position, _antiFogBrush.Bounds, Color.White * 0.5f, 0f, _antiFogBrushOrigin, antiFogTextureScale, SpriteEffects.None, 0f);
+                }
+            }
+            _spriteBatch.End();
+            _spriteBatch.GraphicsDevice.SetRenderTarget(_fogRT);
+            _spriteBatch.GraphicsDevice.Clear(Color.Transparent);
+            _spriteBatch.Begin(SpriteSortMode.BackToFront, BlendState.AlphaBlend, null, null, null, _fogEffect);
+            _spriteBatch.Draw(_antiFogRT, _antiFogRT.Bounds, Color.White);
+            _spriteBatch.End();
+            _spriteBatch.GraphicsDevice.SetRenderTarget(null);
+        }
+
         public override void draw()
         {
             Vector2 viewOffset = -_currentScreenCenter + _halfScreenSize;
@@ -109,7 +157,7 @@ namespace StasisGame.UI
                     for (float i = 0f; i < 1f; i += increment)
                     {
                         Vector2 point = Vector2.CatmullRom(worldPath.controlA.position, worldPath.pointA.position, worldPath.pointB.position, worldPath.controlB.position, i);
-                        _spriteBatch.Draw(_pathTexture, viewOffset + point, _pathTexture.Bounds, Color.Yellow, 0f, _pathTextureOrigin, 1f, SpriteEffects.None, 0f);
+                        _spriteBatch.Draw(_pathTexture, viewOffset + point, _pathTexture.Bounds, Color.Yellow, 0f, _pathTextureOrigin, _scale, SpriteEffects.None, 0.1f);
                     }
                 }
             }
@@ -120,9 +168,12 @@ namespace StasisGame.UI
                 if (levelIcon.state != LevelIconState.Undiscovered)
                 {
                     Texture2D texture = levelIcon.state == LevelIconState.Unfinished ? levelIcon.unfinishedIcon : levelIcon.finishedIcon;
-                    _spriteBatch.Draw(texture, viewOffset + levelIcon.position, texture.Bounds, Color.White, 0f, new Vector2(texture.Width, texture.Height) / 2f, 1f, SpriteEffects.None, 0f);
+                    _spriteBatch.Draw(texture, viewOffset + levelIcon.position, texture.Bounds, Color.White, 0f, new Vector2(texture.Width, texture.Height) / 2f, _scale, SpriteEffects.None, 0f);
                 }
             }
+
+            // Draw fog render target
+            _spriteBatch.Draw(_fogRT, _fogRT.Bounds, Color.White);
 
             base.draw();
         }
