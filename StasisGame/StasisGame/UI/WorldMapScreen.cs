@@ -30,6 +30,16 @@ namespace StasisGame.UI
         private Vector2 _antiFogBrushOrigin;
         private RenderTarget2D _fogRT;
         private RenderTarget2D _antiFogRT;
+        private Vector2 _levelSelectPosition;
+        private Texture2D _levelSelectIcon;
+        private Vector2 _levelSelectIconHalfSize;
+        private float _levelSelectAngle;
+        private Color _levelSelectIconColor;
+        private Color _levelSelectIconSelectedColor;
+        private Color _levelSelectIconDeselectedColor;
+        private LevelIcon _selectedLevelIcon;
+        private bool _allowNewLevelSelection = true;
+        private SpriteFont _levelSelectTitleFont;
 
         public WorldMapScreen(LoderGame game) : base(ScreenType.WorldMap)
         {
@@ -44,10 +54,20 @@ namespace StasisGame.UI
             _pathTextureOrigin = new Vector2(_pathTexture.Width, _pathTexture.Height) / 2f;
             _antiFogBrush = _content.Load<Texture2D>("world_map\\anti_fog_brush");
             _antiFogBrushOrigin = new Vector2(_antiFogBrush.Width, _antiFogBrush.Height) / 2f;
-
+            _levelSelectIcon = _content.Load<Texture2D>("level_select_icon");
+            _levelSelectIconHalfSize = new Vector2(_levelSelectIcon.Width, _levelSelectIcon.Height) / 2f;
+            _levelSelectIconSelectedColor = Color.Yellow;
+            _levelSelectIconDeselectedColor = Color.White * 0.8f;
+            _levelSelectIconColor = _levelSelectIconDeselectedColor;
+            _levelSelectTitleFont = _content.Load<SpriteFont>("world_map\\level_select_title");
             _halfScreenSize = new Vector2(_spriteBatch.GraphicsDevice.Viewport.Width, _spriteBatch.GraphicsDevice.Viewport.Height) / 2f;
             _fogRT = new RenderTarget2D(_spriteBatch.GraphicsDevice, _spriteBatch.GraphicsDevice.Viewport.Width, _spriteBatch.GraphicsDevice.Viewport.Height);
             _antiFogRT = new RenderTarget2D(_spriteBatch.GraphicsDevice, _spriteBatch.GraphicsDevice.Viewport.Width, _spriteBatch.GraphicsDevice.Viewport.Height);
+        }
+
+        ~WorldMapScreen()
+        {
+            _content.Unload();
         }
 
         public void loadWorldMap(WorldMapData worldMapData)
@@ -69,8 +89,31 @@ namespace StasisGame.UI
             }
         }
 
+        private LevelIcon hitTestLevelIcons(Vector2 mouseWorld, float tolerance)
+        {
+            float shortest = 9999999f;
+            LevelIcon result = null;
+
+            foreach (LevelIcon levelIcon in _worldMap.levelIcons)
+            {
+                float distance = (mouseWorld - levelIcon.position).Length();
+
+                if (distance <= tolerance)
+                {
+                    shortest = distance;
+                    result = levelIcon;
+                }
+            }
+            return result;
+        }
+
         public override void update()
         {
+            Vector2 mouseDelta;
+            Vector2 mousePosition;
+            Vector2 viewOffset = _halfScreenSize - _currentScreenCenter;
+            bool wasLevelIconPreviouslySelected = _selectedLevelIcon != null;
+
             _oldGamepadState = _newGamepadState;
             _oldKeyState = _newKeyState;
             _oldMouseState = _newMouseState;
@@ -78,6 +121,31 @@ namespace StasisGame.UI
             _newGamepadState = GamePad.GetState(PlayerIndex.One);
             _newKeyState = Keyboard.GetState();
             _newMouseState = Mouse.GetState();
+
+            mouseDelta = new Vector2(_newMouseState.X - _oldMouseState.X, _newMouseState.Y - _oldMouseState.Y);
+            mousePosition = new Vector2(_newMouseState.X, _newMouseState.Y) - viewOffset;
+            _allowNewLevelSelection = mouseDelta.Length() > 2f;
+            _levelSelectAngle = MathHelper.WrapAngle(_levelSelectAngle + 0.05f);
+
+            if (_allowNewLevelSelection)
+                _selectedLevelIcon = hitTestLevelIcons(mousePosition, 100f);
+
+            if (_selectedLevelIcon == null && wasLevelIconPreviouslySelected)
+            {
+                _levelSelectPosition = new Vector2(_oldMouseState.X, _oldMouseState.Y);
+                _levelSelectIconColor = _levelSelectIconDeselectedColor;
+            }
+            else if (_selectedLevelIcon != null)
+            {
+                _levelSelectPosition = _selectedLevelIcon.position + viewOffset;
+                _levelSelectIconColor = _levelSelectIconSelectedColor;
+                _targetScreenCenter += (_selectedLevelIcon.position - _currentScreenCenter) / 100f;
+            }
+            
+            if (_selectedLevelIcon == null)
+            {
+                _levelSelectPosition += mouseDelta;
+            }
 
             if (_newGamepadState.IsConnected)
             {
@@ -96,6 +164,8 @@ namespace StasisGame.UI
                 _targetScreenCenter += new Vector2(0, -7);
             if (_newKeyState.IsKeyDown(Keys.Down) || _newKeyState.IsKeyDown(Keys.S))
                 _targetScreenCenter += new Vector2(0, 7);
+
+            //_levelSelectPosition += mouseDelta;
 
             //_targetScreenCenter = Vector2.Max(_topLeft, Vector2.Min(_bottomRight, _targetScreenCenter));
             _currentScreenCenter += (_targetScreenCenter - _currentScreenCenter) / 11f;
@@ -157,7 +227,7 @@ namespace StasisGame.UI
                     for (float i = 0f; i < 1f; i += increment)
                     {
                         Vector2 point = Vector2.CatmullRom(worldPath.controlA.position, worldPath.pointA.position, worldPath.pointB.position, worldPath.controlB.position, i);
-                        _spriteBatch.Draw(_pathTexture, viewOffset + point, _pathTexture.Bounds, Color.Yellow, 0f, _pathTextureOrigin, _scale, SpriteEffects.None, 0.1f);
+                        _spriteBatch.Draw(_pathTexture, viewOffset + point, _pathTexture.Bounds, Color.Yellow, 0f, _pathTextureOrigin, _scale, SpriteEffects.None, 0.3f);
                     }
                 }
             }
@@ -168,12 +238,21 @@ namespace StasisGame.UI
                 if (levelIcon.state != LevelIconState.Undiscovered)
                 {
                     Texture2D texture = levelIcon.state == LevelIconState.Unfinished ? levelIcon.unfinishedIcon : levelIcon.finishedIcon;
-                    _spriteBatch.Draw(texture, viewOffset + levelIcon.position, texture.Bounds, Color.White, 0f, new Vector2(texture.Width, texture.Height) / 2f, _scale, SpriteEffects.None, 0f);
+                    _spriteBatch.Draw(texture, viewOffset + levelIcon.position, texture.Bounds, Color.White, 0f, new Vector2(texture.Width, texture.Height) / 2f, _scale, SpriteEffects.None, 0.2f);
                 }
             }
 
             // Draw fog render target
-            _spriteBatch.Draw(_fogRT, _fogRT.Bounds, Color.White);
+            _spriteBatch.Draw(_fogRT, Vector2.Zero, _fogRT.Bounds, Color.White, 0f, Vector2.Zero, _scale, SpriteEffects.None, 0.1f);
+
+            // Draw level select icon
+            _spriteBatch.Draw(_levelSelectIcon, _levelSelectPosition, _levelSelectIcon.Bounds, _levelSelectIconColor, _levelSelectAngle, _levelSelectIconHalfSize, _scale, SpriteEffects.None, 0f);
+
+            // Draw title text
+            if (_selectedLevelIcon != null)
+            {
+                _spriteBatch.DrawString(_levelSelectTitleFont, _selectedLevelIcon.levelUID, new Vector2(32, 32), Color.White);
+            }
 
             base.draw();
         }
