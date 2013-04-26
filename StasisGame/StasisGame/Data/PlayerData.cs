@@ -6,6 +6,7 @@ using StasisGame.Systems;
 using StasisGame.Managers;
 using StasisGame.Components;
 using StasisCore;
+using StasisCore.Models;
 
 namespace StasisGame.Data
 {
@@ -21,6 +22,7 @@ namespace StasisGame.Data
 
         public int playerSlot { get { return _playerSlot; } set { _playerSlot = value; } }
         public string playerName { get { return _playerName; } set { _playerName = value; } }
+        public CurrentLocation currentLocation { get { return _currentLocation; } }
         public XElement inventoryData { get { return _inventoryData; } }
         public XElement toolbarData { get { return _toolbarData; } }
 
@@ -70,6 +72,17 @@ namespace StasisGame.Data
 
             foreach (XElement childData in data.Elements("WorldMapData"))
                 _worldMapData.Add(new WorldMapData(childData));
+        }
+
+        // Get player specific world data
+        public WorldMapData getWorldData(string worldMapUID)
+        {
+            foreach (WorldMapData worldMapData in _worldMapData)
+            {
+                if (worldMapData.worldMapUID == worldMapUID)
+                    return worldMapData;
+            }
+            return null;
         }
 
         // Helper function to construct inventory data from an inventory component

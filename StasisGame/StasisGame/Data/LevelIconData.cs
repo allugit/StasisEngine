@@ -2,16 +2,10 @@
 using System.Collections.Generic;
 using System.Xml.Linq;
 using StasisCore;
+using StasisCore.Models;
 
 namespace StasisGame.Data
 {
-    public enum LevelIconState
-    {
-        Undiscovered,
-        Unfinished,
-        Finished
-    }
-
     public class LevelIconData
     {
         private int _id;

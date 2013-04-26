@@ -191,13 +191,19 @@
     </Compile>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="fog_brush.png">
+    <Compile Include="world_map\fog_brush.png">
       <Name>fog_brush</Name>
       <Importer>TextureImporter</Importer>
       <Processor>TextureProcessor</Processor>
     </Compile>
   </ItemGroup>
-  <ItemGroup />
+  <ItemGroup>
+    <Compile Include="world_map\path.png">
+      <Name>path</Name>
+      <Importer>TextureImporter</Importer>
+      <Processor>TextureProcessor</Processor>
+    </Compile>
+  </ItemGroup>
   <ItemGroup>
     <Compile Include="load_game_menu\saves_container.png">
       <Name>saves_container</Name>

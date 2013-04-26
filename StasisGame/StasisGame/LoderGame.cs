@@ -48,6 +48,7 @@ namespace StasisGame
         private Level _level;
         private SystemManager _systemManager;
         private EntityManager _entityManager;
+        private WorldMapScreen _worldMapScreen;
 
         public SpriteBatch spriteBatch { get { return _spriteBatch; } }
         public GraphicsDeviceManager graphics { get { return _graphics; } }
@@ -183,7 +184,9 @@ namespace StasisGame
 
         public void openWorldMap()
         {
-            _screenSystem.addScreen(new WorldMapScreen(this));
+            _worldMapScreen = new WorldMapScreen(this);
+            _screenSystem.addScreen(_worldMapScreen);
+            _worldMapScreen.loadWorldMap(DataManager.playerData.getWorldData(DataManager.playerData.currentLocation.worldMapUID));
             _gameState = GameState.WorldMap;
         }
 
@@ -261,7 +264,7 @@ namespace StasisGame
                 case GameState.Level:
                     _level.draw(gameTime);
 
-                    _spriteBatch.Begin();
+                    _spriteBatch.Begin(SpriteSortMode.BackToFront, BlendState.AlphaBlend);
                     _screenSystem.draw();
                     _spriteBatch.End();
                     break;

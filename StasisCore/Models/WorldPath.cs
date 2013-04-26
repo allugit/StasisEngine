@@ -5,6 +5,12 @@ using Microsoft.Xna.Framework;
 
 namespace StasisCore.Models
 {
+    public enum WorldPathState
+    {
+        Undiscovered,
+        Discovered
+    }
+
     public class WorldPath
     {
         protected WorldPathPoint _controlA;
@@ -12,12 +18,14 @@ namespace StasisCore.Models
         protected WorldPathPoint _pointA;
         protected WorldPathPoint _pointB;
         protected int _id;
+        protected WorldPathState _state;
 
         public int id { get { return _id; } }
         public WorldPathPoint controlA { get { return _controlA; } }
         public WorldPathPoint controlB { get { return _controlB; } }
         public WorldPathPoint pointA { get { return _pointA; } }
         public WorldPathPoint pointB { get { return _pointB; } }
+        public WorldPathState state { get { return _state; } set { _state = value; } }
 
         public WorldPath()
         {

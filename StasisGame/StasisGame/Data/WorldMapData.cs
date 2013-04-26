@@ -11,6 +11,7 @@ namespace StasisGame.Data
         private List<LevelIconData> _levelIconData;
         private List<WorldPathData> _worldPathData;
 
+        public string worldMapUID { get { return _worldMapUID; } }
         public List<LevelIconData> levelIconData { get { return _levelIconData; } }
         public List<WorldPathData> worldPathData { get { return _worldPathData; } }
 

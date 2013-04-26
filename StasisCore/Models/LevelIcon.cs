@@ -6,6 +6,13 @@ using Microsoft.Xna.Framework.Graphics;
 
 namespace StasisCore.Models
 {
+    public enum LevelIconState
+    {
+        Undiscovered,
+        Unfinished,
+        Finished
+    }
+
     public class LevelIcon
     {
         protected Vector2 _position;
@@ -13,12 +20,14 @@ namespace StasisCore.Models
         protected Texture2D _finishedIcon;
         protected string _levelUID;
         protected int _id;
+        protected LevelIconState _state;
 
         public Vector2 position { get { return _position; } set { _position = value; } }
         virtual public Texture2D unfinishedIcon { get { return _unfinishedIcon; } set { _unfinishedIcon = value; } }
         virtual public Texture2D finishedIcon { get { return _finishedIcon; } set { _finishedIcon = value; } }
         public string levelUID { get { return _levelUID; } set { _levelUID = value; } }
         public int id { get { return _id; } }
+        public LevelIconState state { get { return _state; } set { _state = value; } }
 
         public LevelIcon(Vector2 position, Texture2D unfinishedIcon, Texture2D finishedIcon, string levelUID, int id)
         {
