@@ -52,6 +52,7 @@ namespace StasisCore.Models
             _position = Loader.loadVector2(data.Attribute("position"), Vector2.Zero);
             _title = Loader.loadString(data.Attribute("title"), "");
             _description = Loader.loadString(data.Attribute("description"), "");
+            _description = _description.Replace("\\n", "\n");
             _unfinishedIcon = ResourceManager.getTexture(unfinishedIconUID);
             _finishedIcon = ResourceManager.getTexture(finishedIconUID);
             _levelUID = data.Attribute("level_uid").Value;

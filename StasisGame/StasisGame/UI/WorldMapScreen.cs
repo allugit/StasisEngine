@@ -268,7 +268,10 @@ namespace StasisGame.UI
 
             // Draw description text
             if (_selectedLevelIcon != null)
-                _spriteBatch.DrawString(_levelSelectDescriptionFont, _selectedLevelIcon.description, new Vector2(32, 96), Color.LightGray);
+            {
+                string text = wrapText(_levelSelectDescriptionFont, _selectedLevelIcon.description, 420);
+                _spriteBatch.DrawString(_levelSelectDescriptionFont, text, new Vector2(32, 96), Color.LightGray);
+            }
 
             base.draw();
         }
