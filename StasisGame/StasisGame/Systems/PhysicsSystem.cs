@@ -19,6 +19,7 @@ namespace StasisGame.Systems
         private List<Body> _bodiesToRemove;
         private bool _paused;
         private bool _singleStep;
+        private PlayerSystem _playerSystem;
 
         public int defaultPriority { get { return 20; } }
         public SystemType systemType { get { return SystemType.Physics; } }
@@ -32,6 +33,7 @@ namespace StasisGame.Systems
             _systemManager = systemManager;
             _entityManager = entityManager;
             _bodiesToRemove = new List<Body>();
+            _playerSystem = (PlayerSystem)systemManager.getSystem(SystemType.Player);
 
             BodyDef groundBodyDef = new BodyDef();
             CircleShape circleShape = new CircleShape();
@@ -125,7 +127,7 @@ namespace StasisGame.Systems
             Fixture fixtureB = contact.GetFixtureB();
             int entityA = (int)fixtureA.GetBody().GetUserData();
             int entityB = (int)fixtureB.GetBody().GetUserData();
-            int playerId = (_systemManager.getSystem(SystemType.Player) as PlayerSystem).playerId;
+            int playerId = _playerSystem.playerId;
 
             // Check for custom collision filters
             bool fixtureAIgnoresEntityB = fixtureA.IsIgnoredEntity(entityB);
@@ -180,6 +182,28 @@ namespace StasisGame.Systems
 
         public void BeginContact(Contact contact)
         {
+            List<int> levelGoalEntities = _entityManager.getEntitiesPosessing(ComponentType.LevelGoal);
+            LevelGoalSystem levelGoalSystem = (LevelGoalSystem)_systemManager.getSystem(SystemType.LevelGoal);
+
+            // See if player is touching a level goal
+            if (levelGoalEntities.Count > 0)
+            {
+                int entityA = (int)contact.GetFixtureA().GetBody().GetUserData();
+                int entityB = (int)contact.GetFixtureB().GetBody().GetUserData();
+
+                if (entityA == _playerSystem.playerId)
+                {
+                    if (levelGoalEntities.Contains(entityB))
+                        levelGoalSystem.completeGoal((LevelGoalComponent)_entityManager.getComponent(entityB, ComponentType.LevelGoal));
+                }
+                else if (entityB == _playerSystem.playerId)
+                {
+                    if (levelGoalEntities.Contains(entityA))
+                    {
+                        levelGoalSystem.completeGoal((LevelGoalComponent)_entityManager.getComponent(entityA, ComponentType.LevelGoal));
+                    }
+                }
+            }
         }
 
         public void EndContact(Contact contact)

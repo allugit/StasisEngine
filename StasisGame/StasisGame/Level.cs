@@ -48,6 +48,7 @@ namespace StasisGame
             // Create systems
             _systemManager.add(new InputSystem(_systemManager, _entityManager), -1);
             _systemManager.add(new PhysicsSystem(_systemManager, _entityManager, data), -1);
+            _systemManager.add(new LevelGoalSystem(_systemManager, _entityManager), -1);
             _systemManager.add(new CameraSystem(_systemManager, _entityManager), -1);
             _systemManager.add(new EventSystem(_systemManager, _entityManager), -1);
             _renderSystem = new RenderSystem(_game, _systemManager, _entityManager);
@@ -127,6 +128,10 @@ namespace StasisGame
 
                     case "CollisionFilter":
                         secondPassData.Add(actorData);
+                        break;
+
+                    case "Goal":
+                        _entityManager.factory.createGoal(actorData);
                         break;
                 }
             }

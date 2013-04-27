@@ -901,5 +901,73 @@ namespace StasisGame
             addEntityToIgnored(entityA, entityB);
             addEntityToIgnored(entityB, entityA);
         }
+
+        public void createGoal(XElement data)
+        {
+            LevelGoalSystem levelGoalSystem = _systemManager.getSystem(SystemType.LevelGoal) as LevelGoalSystem;
+            LevelGoalComponent levelGoalComponent = new LevelGoalComponent();
+            World world = (_systemManager.getSystem(SystemType.Physics) as PhysicsSystem).world;
+            int entityId = _entityManager.createEntity();
+            int actorId = int.Parse(data.Attribute("id").Value);
+            BodyDef bodyDef = new BodyDef();
+            List<FixtureDef> fixtureDefs = new List<FixtureDef>();
+            List<Vector2> points = new List<Vector2>();
+            List<PolygonPoint> P2TPoints = new List<PolygonPoint>();
+            Polygon polygon;
+            Vector2 center = Vector2.Zero;
+            Body body = null;
+
+            _actorIdToEntityId.Add(actorId, entityId);
+
+            bodyDef.type = BodyType.Static;
+            bodyDef.userData = entityId;
+
+            foreach (XElement pointData in data.Elements("Point"))
+                points.Add(Loader.loadVector2(pointData, Vector2.Zero));
+
+            foreach (Vector2 point in points)
+                center += point / points.Count;
+
+            foreach (Vector2 point in points)
+                P2TPoints.Add(new PolygonPoint(point.X - center.X, point.Y - center.Y));
+
+            polygon = new Polygon(P2TPoints);
+            P2T.Triangulate(polygon);
+
+            foreach (DelaunayTriangle triangle in polygon.Triangles)
+            {
+                FixtureDef fixtureDef = new FixtureDef();
+                PolygonShape shape = new PolygonShape();
+                Vector2[] vertices = new Vector2[3];
+                TriangulationPoint trianglePoint;
+
+                vertices[0] = new Vector2(triangle.Points[0].Xf, triangle.Points[0].Yf);
+                trianglePoint = triangle.PointCCWFrom(triangle.Points[0]);
+                vertices[1] = new Vector2(trianglePoint.Xf, trianglePoint.Yf);
+                trianglePoint = triangle.PointCCWFrom(trianglePoint);
+                vertices[2] = new Vector2(trianglePoint.Xf, trianglePoint.Yf);
+                shape.Set(vertices, 3);
+                fixtureDef.density = 1f;
+                fixtureDef.friction = 0f;
+                fixtureDef.restitution = 0f;
+                fixtureDef.isSensor = true;
+                fixtureDef.shape = shape;
+                fixtureDef.filter.categoryBits = (ushort)CollisionCategory.StaticGeometry;
+                fixtureDef.filter.maskBits = (ushort)CollisionCategory.Player;
+                fixtureDefs.Add(fixtureDef);
+            }
+
+            bodyDef.position = center;
+            body = world.CreateBody(bodyDef);
+            foreach (FixtureDef fixtureDef in fixtureDefs)
+                body.CreateFixture(fixtureDef);
+
+            levelGoalSystem.registerGoal(levelGoalComponent);
+            _entityManager.addComponent(entityId, new PhysicsComponent(body));
+            _entityManager.addComponent(entityId, levelGoalComponent);
+            _entityManager.addComponent(entityId, new WorldPositionComponent(body.GetPosition()));
+            _entityManager.addComponent(entityId, new IgnoreRopeRaycastComponent());
+            _entityManager.addComponent(entityId, new EditorIdComponent(int.Parse(data.Attribute("id").Value)));
+        }
     }
 }

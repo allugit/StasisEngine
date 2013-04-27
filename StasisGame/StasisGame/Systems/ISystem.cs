@@ -19,7 +19,8 @@ namespace StasisGame.Systems
         Circuit,
         Screen,
         Equipment,
-        Rope
+        Rope,
+        LevelGoal
     };
 
     public interface ISystem

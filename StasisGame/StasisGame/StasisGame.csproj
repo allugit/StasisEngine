@@ -86,6 +86,7 @@
     <Compile Include="Components\CircuitComponent.cs" />
     <Compile Include="Components\EditorIdComponent.cs" />
     <Compile Include="Components\GateOutputComponent.cs" />
+    <Compile Include="Components\LevelGoalComponent.cs" />
     <Compile Include="Components\RopeGrabComponent.cs" />
     <Compile Include="Components\GroundBodyComponent.cs" />
     <Compile Include="Components\IComponent.cs" />
@@ -135,6 +136,7 @@
     <Compile Include="Systems\InputSystem.cs" />
     <Compile Include="Systems\EquipmentSystem.cs" />
     <Compile Include="Systems\ISystem.cs" />
+    <Compile Include="Systems\LevelGoalSystem.cs" />
     <Compile Include="Systems\PlayerSystem.cs" />
     <Compile Include="Systems\RenderSystem.cs" />
     <Compile Include="Systems\PhysicsSystem.cs" />
