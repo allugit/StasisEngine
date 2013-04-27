@@ -77,28 +77,6 @@ namespace StasisEditor.Controllers
         // Get unused actor id
         public int getUnusedActorID()
         {
-            /*
-            // Method to test if an id is being used
-            Func<int, bool> isIdUsed = (id) =>
-                {
-                    foreach (EditorActor actor in _level.actors)
-                    {
-                        if (actor.id == id)
-                        {
-                            id++;
-                            return true;
-                        }
-                    }
-                    return false;
-                };
-
-            // Start at zero, and increment until an id is not used
-            int current = 0;
-            while (isIdUsed(current))
-                current++;
-
-            return current;
-            */
             return _level.getUnusedActorId();
         }
 
@@ -160,11 +138,6 @@ namespace StasisEditor.Controllers
 
                 case "playerSpawnButton":
                     // Remove existing player spawns before adding a new one
-                    //foreach (EditorActor existingActor in _level.actors)
-                    //{
-                    //    if (existingActor.type == ActorType.PlayerSpawn)
-                    //        _level.removeActor(existingActor);
-                    //}
                     List<EditorPlayerSpawnActor> results = _level.getActors<EditorPlayerSpawnActor>(ActorType.PlayerSpawn);
                     if (results.Count > 0)
                     {
@@ -217,6 +190,10 @@ namespace StasisEditor.Controllers
 
                 case "collisionFilterButton":
                     actor = new EditorCollisionFilterActor(_level);
+                    break;
+
+                case "goalButton":
+                    actor = new EditorGoalActor(_level);
                     break;
             }
 

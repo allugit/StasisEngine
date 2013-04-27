@@ -100,6 +100,7 @@
     <Compile Include="Models\EditorCircuitActor.cs" />
     <Compile Include="Models\EditorCollisionFilterActor.cs" />
     <Compile Include="Models\EditorFluidActor.cs" />
+    <Compile Include="Models\EditorGoalActor.cs" />
     <Compile Include="Models\EditorItemActor.cs" />
     <Compile Include="Models\EditorLevelIcon.cs" />
     <Compile Include="Models\EditorPlayerSpawnActor.cs" />

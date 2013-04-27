@@ -117,6 +117,10 @@ namespace StasisEditor.Models
                     case "CollisionFilter":
                         secondPassData.Add(actorData);
                         break;
+
+                    case "Goal":
+                        addActor(new EditorGoalActor(this, actorData), true);
+                        break;
                 }
             }
 

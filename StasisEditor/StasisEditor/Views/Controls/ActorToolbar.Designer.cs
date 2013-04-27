@@ -41,8 +41,8 @@
             this.circuitsButton = new System.Windows.Forms.ToolStripButton();
             this.revoluteButton = new System.Windows.Forms.ToolStripButton();
             this.prismaticButton = new System.Windows.Forms.ToolStripButton();
-            this.goalButton = new System.Windows.Forms.ToolStripButton();
             this.collisionFilterButton = new System.Windows.Forms.ToolStripButton();
+            this.goalButton = new System.Windows.Forms.ToolStripButton();
             this.anchorToolStrip.SuspendLayout();
             this.SuspendLayout();
             // 
@@ -187,17 +187,6 @@
             this.prismaticButton.Size = new System.Drawing.Size(26, 26);
             this.prismaticButton.Text = "Prismatic";
             // 
-            // goalButton
-            // 
-            this.goalButton.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
-            this.goalButton.Enabled = false;
-            this.goalButton.Image = ((System.Drawing.Image)(resources.GetObject("goalButton.Image")));
-            this.goalButton.ImageTransparentColor = System.Drawing.Color.Magenta;
-            this.goalButton.Margin = new System.Windows.Forms.Padding(0);
-            this.goalButton.Name = "goalButton";
-            this.goalButton.Size = new System.Drawing.Size(26, 26);
-            this.goalButton.Text = "Goal";
-            // 
             // collisionFilterButton
             // 
             this.collisionFilterButton.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
@@ -208,6 +197,16 @@
             this.collisionFilterButton.Size = new System.Drawing.Size(26, 26);
             this.collisionFilterButton.Text = "toolStripButton1";
             this.collisionFilterButton.ToolTipText = "Collision Filter";
+            // 
+            // goalButton
+            // 
+            this.goalButton.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
+            this.goalButton.Image = ((System.Drawing.Image)(resources.GetObject("goalButton.Image")));
+            this.goalButton.ImageTransparentColor = System.Drawing.Color.Magenta;
+            this.goalButton.Margin = new System.Windows.Forms.Padding(0);
+            this.goalButton.Name = "goalButton";
+            this.goalButton.Size = new System.Drawing.Size(26, 26);
+            this.goalButton.Text = "Goal";
             // 
             // ActorToolbar
             // 

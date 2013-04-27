@@ -117,10 +117,10 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
-  <assembly alias="System.Drawing" name="System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a" />
-  <data name="anchorToolStrip.TrayLocation" type="System.Drawing.Point, System.Drawing">
+  <metadata name="anchorToolStrip.TrayLocation" type="System.Drawing.Point, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
     <value>17, 17</value>
-  </data>
+  </metadata>
+  <assembly alias="System.Drawing" name="System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a" />
   <data name="boxButton.Image" type="System.Drawing.Bitmap, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
     <value>
         iVBORw0KGgoAAAANSUhEUgAAABYAAAAWCAYAAADEtGw7AAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8
@@ -333,6 +333,31 @@
         uRiAG5niAAAAAElFTkSuQmCC
 </value>
   </data>
+  <data name="collisionFilterButton.Image" type="System.Drawing.Bitmap, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
+    <value>
+        iVBORw0KGgoAAAANSUhEUgAAABYAAAAWCAYAAADEtGw7AAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8
+        YQUAAAAJcEhZcwAADsMAAA7DAcdvqGQAAARpSURBVEhLjZXrTxxVGMYJVgkhabilJYp84Y6JGE1NCIZE
+        QyCYWDUogrILO5fdmd2dvV8pJa1c5KKJtU2xsFBoG7VYaiK1tkWg4ZsmNm1RP1m1NinGmv4Lj+97Zna3
+        VE0keXLODDu/88zzvudMTo71J0nSi6R3HQ7HDGkhLUmWFyVZJaVHddEhSQvmtSmHLM/ws/39/S+leWKU
+        6R+hUAiDg4NC8XgcQboOhqPwhyLw+gJwe33QPAZUTYfi0kg6ZNVFcgopPCoqeBEBZaeBQABLS0uYmpqC
+        YRigheD0+KAH49ACUbj8ETh9YahGGIo3BNkTMOX2Q9Z9cDjdkJwaJMUJSVYgnPMrJJNJTExMgF4f3d3d
+        eO3NbjgTI5ZGocaHs4rRnKRED0OOHIIUPACHLwaHOwDJ5YFEzsn1cA5nGovF4PV6eSW0t7fjdYcXnsmT
+        Qu6JebjTI89J+ngK+tgstNGP4Tz0EZSBcUihg5A8QcguN0Wjphi8EAwGoWka+vr60NjYiHcOHkNgbjWr
+        1BUESP6Uec8/exn+mUswjn8Jz4dL0MbnoQ5OQQ4kIekGuVZPCzDnqqqqAJeVlcEzt47o8k3SFiLnbiDy
+        +XVzPHeT5uZ1+Ow1hD75Fv75dXiPLsM1Mi2ikcm1pLpMsK5Thalgdrsd+fn5iF+4hcTF26TfEP/qV3P+
+        9W3E+dq6F1v5GdEvfkLo0+9gnLhouk6MQqYCy07tjACzWyoibDYbCgoKYHx2HcnVbVNXrFHM71r37iJx
+        6Q5iK7fEG/jn1qBPLkJNjkExIlmwoogWEeDi4mLUtezH3sqnsOvRPDE+/4YO25EVDKzdE0p+86dYME5v
+        Eln+Af6TG9DfPw0l+R4UX5TAuumYY2Bwc3MzKioqoD+3D5f3lGP7iUoxhncX4emKauxPTmNg/S8TvvoH
+        xXPHAl8l8Bmo1B0m2IqCY+jo6EB1dTWGhoZw7dhx3H+yGvfLqzKaKd4r4LYjFzLgOOUeOf8jOTbB7HhH
+        xgxuaGgQxdvc3BT6pce+A8yLsHOOJe1YgEUUV6FNnYKSGMuCCbrIO66oqAjT09MZ8PfTJ7C974UdcI5l
+        D2WeBf9O4C0LbGbMjh0qRZEG5+bmYm1tLQNm11uHR3Cv/pkMnDN/ZNdjWbBVPN/8BlzUFXLCAnPxGMyF
+        e9hxOhKGp53/wzGBw7RpfLRJXBMLBKYovGH0y84suL6+fkfGaTCPHAtnHt5dbGa8zl2xLXqZMzaoj12T
+        pwg8Cpvsgs1uF+BZdtzW1pbpigeh6Tl3S8Xj5Xj2lX68/cF5GGdvIEa7Uk9t4K0DR/GyTUfHq53o6uri
+        1k2JY5OLxx3R1NQk4DznQnLmPPJ1ZWUlqqqqhEpLS8XWz8vLQ0lJCWpqatDS0oLOzk5x3hBvOIcPZW63
+        9M5j53V1dSgsLAQXlMfa2lq0traKs/rf1NPTg97eXsFgk5lPFJ/JDLduilX/S+z+YfFv01Bm7fju8Sr8
+        Clbm3Cn/W/TcLD/74Mf0b65FNqed+sAhAAAAAElFTkSuQmCC
+</value>
+  </data>
   <data name="goalButton.Image" type="System.Drawing.Bitmap, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
     <value>
         iVBORw0KGgoAAAANSUhEUgAAABYAAAAWCAYAAADEtGw7AAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8
@@ -352,9 +377,5 @@
         FR+Lcmlx9v4823bu6mXbkDo8DXedKG0Ej1sU66e7O7iL/NNrd9G31+4O4m1NdvNDOSmYCfCcTvnvMOO2
         GOtupr8BWjbnkM+VtIoAAAAASUVORK5CYII=
 </value>
-  </data>
-  <assembly alias="System.Windows.Forms" name="System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089" />
-  <data name="collisionFilterButton.Image" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\..\Resources\collision_filter.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
 </root>
