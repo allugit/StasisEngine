@@ -98,7 +98,7 @@ namespace StasisGame
                             (_systemManager.getSystem(SystemType.Camera) as CameraSystem).enableManualMovement = false;
                         }
                         (_systemManager.getSystem(SystemType.Player) as PlayerSystem).spawnPosition = Loader.loadVector2(actorData.Attribute("position"), Vector2.Zero);
-                        _systemManager.add(new EquipmentSystem(_systemManager, _entityManager), -1);
+                        //_systemManager.add(new EquipmentSystem(_systemManager, _entityManager), -1);
                         break;
 
                     case "Rope":

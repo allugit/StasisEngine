@@ -26,6 +26,7 @@ namespace StasisGame.UI
         private MouseState _oldMouseState;
         private GamePadState _newGamepadState;
         private GamePadState _oldGamepadState;
+        private float _layerDepth = 0.1f;
 
         public bool inFocus { get { return _inFocus; } set { _inFocus = value; } }
 
@@ -145,16 +146,16 @@ namespace StasisGame.UI
 
                 if (_selectedIndex == i)
                 {
-                    _spriteBatch.Draw(_pixel, tilePosition, _tileSize, Color.Yellow);
-                    _spriteBatch.Draw(_pixel, tilePosition + new Vector2(2, 2), new Rectangle(0, 0, _tileSize.Width - 4, _tileSize.Height - 4), Color.Black);
+                    _spriteBatch.Draw(_pixel, tilePosition, _tileSize, Color.Yellow, 0f, Vector2.Zero, 1f, SpriteEffects.None, _layerDepth);
+                    _spriteBatch.Draw(_pixel, tilePosition + new Vector2(2, 2), new Rectangle(0, 0, _tileSize.Width - 4, _tileSize.Height - 4), Color.Black, 0f, Vector2.Zero, 1f, SpriteEffects.None, _layerDepth - 0.0001f);
                 }
                 else
                 {
-                    _spriteBatch.Draw(_pixel, tilePosition, _tileSize, Color.Black);
+                    _spriteBatch.Draw(_pixel, tilePosition, _tileSize, Color.Black, 0f, Vector2.Zero, 1f, SpriteEffects.None, _layerDepth);
                 }
 
                 if (itemComponent != null)
-                    _spriteBatch.Draw(itemComponent.inventoryTexture, new Rectangle((int)tilePosition.X + 2, (int)tilePosition.Y + 2, 28, 28), Color.White);
+                    _spriteBatch.Draw(itemComponent.inventoryTexture, new Rectangle((int)tilePosition.X + 2, (int)tilePosition.Y + 2, 28, 28), itemComponent.inventoryTexture.Bounds, Color.White, 0f, Vector2.Zero, SpriteEffects.None, _layerDepth - 0.0002f);
             }
         }
     }

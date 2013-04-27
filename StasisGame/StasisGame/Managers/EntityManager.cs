@@ -168,13 +168,17 @@ namespace StasisGame.Managers
             {
                 int slots = int.Parse(data.Attribute("slots").Value);
                 ToolbarComponent toolbarComponent = new ToolbarComponent(slots, playerId);
+                EquipmentSystem equipmentSystem = (EquipmentSystem)_systemManager.getSystem(SystemType.Equipment);
+
                 foreach (XElement slotData in data.Elements("Slot"))
                 {
                     int slotId = int.Parse(slotData.Attribute("id").Value);
                     int inventorySlot = int.Parse(slotData.Attribute("inventory_slot").Value);
                     ItemComponent itemComponent = inventoryComponent.getItem(inventorySlot);
-                    toolbarComponent.inventory[slotId] = itemComponent;
+                    //toolbarComponent.inventory[slotId] = itemComponent;
+                    equipmentSystem.assignItemToToolbar(itemComponent, toolbarComponent, slotId);
                 }
+                addComponent(playerId, toolbarComponent);
             }
             else
             {

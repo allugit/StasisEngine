@@ -97,7 +97,7 @@ namespace StasisGame.UI
         {
             int playerId = (_systemManager.getSystem(SystemType.Player) as PlayerSystem).playerId;
             PhysicsComponent physicsComponent = (PhysicsComponent)_entityManager.getComponent(playerId, ComponentType.Physics);
-            string text = string.Format("Body count: {0}", physicsComponent.body.GetWorld().BodyCount);
+            //string text = string.Format("Body count: {0}", physicsComponent.body.GetWorld().BodyCount);
 
             if (_displayInventory)
             {
@@ -105,8 +105,8 @@ namespace StasisGame.UI
             }
             _toolbarDisplay.draw();
 
-            _spriteBatch.DrawString(_arial, text, new Vector2(8, 8), Color.White, 0f, Vector2.Zero, 1f, SpriteEffects.None, 0f);
-            _spriteBatch.DrawString(_arial, text, new Vector2(9, 9), Color.Black, 0f, Vector2.Zero, 1f, SpriteEffects.None, 0.00001f);
+            //_spriteBatch.DrawString(_arial, text, new Vector2(8, 8), Color.White, 0f, Vector2.Zero, 1f, SpriteEffects.None, 0f);
+            //_spriteBatch.DrawString(_arial, text, new Vector2(9, 9), Color.Black, 0f, Vector2.Zero, 1f, SpriteEffects.None, 0.00001f);
 
             base.draw();
         }

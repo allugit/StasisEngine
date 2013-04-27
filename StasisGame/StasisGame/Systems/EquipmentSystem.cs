@@ -12,7 +12,6 @@ namespace StasisGame.Systems
     {
         private SystemManager _systemManager;
         private EntityManager _entityManager;
-        private RopeSystem _ropeSystem;
         private bool _paused;
         private bool _singleStep;
 
@@ -25,7 +24,6 @@ namespace StasisGame.Systems
         {
             _systemManager = systemManager;
             _entityManager = entityManager;
-            _ropeSystem = _systemManager.getSystem(SystemType.Rope) as RopeSystem;
         }
 
         public void assignItemToToolbar(ItemComponent itemComponent, ToolbarComponent toolbarComponent, int toolbarSlot)
@@ -57,6 +55,7 @@ namespace StasisGame.Systems
             if (_singleStep || !_paused)
             {
                 PlayerSystem playerSystem = _systemManager.getSystem(SystemType.Player) as PlayerSystem;
+                RopeSystem ropeSystem = _systemManager.getSystem(SystemType.Rope) as RopeSystem;
                 PhysicsComponent playerPhysicsComponent = _entityManager.getComponent(playerSystem.playerId, ComponentType.Physics) as PhysicsComponent;
                 List<int> toolbarEntities = _entityManager.getEntitiesPosessing(ComponentType.Toolbar);
 
@@ -87,20 +86,24 @@ namespace StasisGame.Systems
 
                         if (selectedItem.hasAiming && aimComponent != null)
                         {
-                            Vector2 worldPosition = (_entityManager.getComponent(playerId, ComponentType.WorldPosition) as WorldPositionComponent).position;
+                            WorldPositionComponent worldPositionComponent = _entityManager.getComponent(playerId, ComponentType.WorldPosition) as WorldPositionComponent;
 
-                            if (InputSystem.newGamepadState.IsConnected)
+                            if (worldPositionComponent != null)
                             {
-                                Vector2 aim = InputSystem.newGamepadState.ThumbSticks.Left * selectedItem.maxRange;
-                                aim.Y *= -1;
-                                aimComponent.angle = (float)Math.Atan2(aim.Y, aim.X);
-                                aimComponent.length = aim.Length();
-                            }
-                            else
-                            {
-                                Vector2 relative = (InputSystem.worldMouse - worldPosition);
-                                aimComponent.angle = (float)Math.Atan2(relative.Y, relative.X);
-                                aimComponent.length = Math.Min(relative.Length(), selectedItem.maxRange);
+                                Vector2 worldPosition = worldPositionComponent.position;
+                                if (InputSystem.newGamepadState.IsConnected)
+                                {
+                                    Vector2 aim = InputSystem.newGamepadState.ThumbSticks.Left * selectedItem.maxRange;
+                                    aim.Y *= -1;
+                                    aimComponent.angle = (float)Math.Atan2(aim.Y, aim.X);
+                                    aimComponent.length = aim.Length();
+                                }
+                                else
+                                {
+                                    Vector2 relative = (InputSystem.worldMouse - worldPosition);
+                                    aimComponent.angle = (float)Math.Atan2(relative.Y, relative.X);
+                                    aimComponent.length = Math.Min(relative.Length(), selectedItem.maxRange);
+                                }
                             }
                         }
                     }
@@ -161,7 +164,7 @@ namespace StasisGame.Systems
                                             if (ropeGrabComponent != null)
                                             {
                                                 RopePhysicsComponent previouslyGrabbedRope = _entityManager.getComponent(ropeGrabComponent.ropeEntityId, ComponentType.RopePhysics) as RopePhysicsComponent;
-                                                _ropeSystem.releaseRope(ropeGrabComponent, physicsComponent.body);
+                                                ropeSystem.releaseRope(ropeGrabComponent, physicsComponent.body);
 
                                                 if (previouslyGrabbedRope.destroyAfterRelease)
                                                     previouslyGrabbedRope.timeToLive = 100;
@@ -170,7 +173,7 @@ namespace StasisGame.Systems
                                             }
 
                                             newRopeGrabComponent = new RopeGrabComponent(ropeEntityId, ropePhysicsComponent.ropeNodeHead, 0f, ropePhysicsComponent.reverseClimbDirection);
-                                            _ropeSystem.grabRope(newRopeGrabComponent, physicsComponent.body);
+                                            ropeSystem.grabRope(newRopeGrabComponent, physicsComponent.body);
 
                                             _entityManager.addComponent(toolbarComponent.entityId, newRopeGrabComponent);
 

@@ -50,6 +50,7 @@ namespace StasisGame
         private EntityManager _entityManager;
         private WorldMapScreen _worldMapScreen;
         private PlayerSystem _playerSystem;
+        private EquipmentSystem _equipmentSystem;
 
         public SpriteBatch spriteBatch { get { return _spriteBatch; } }
         public GraphicsDeviceManager graphics { get { return _graphics; } }
@@ -121,8 +122,10 @@ namespace StasisGame
         private void initializePlayer()
         {
             _playerSystem = new PlayerSystem(_systemManager, _entityManager);
+            _equipmentSystem = new EquipmentSystem(_systemManager, _entityManager);
             _playerSystem.playerId = _entityManager.createEntity();
             _systemManager.add(_playerSystem, -1);
+            _systemManager.add(_equipmentSystem, -1);
         }
 
         private void initializePlayerInventory()
