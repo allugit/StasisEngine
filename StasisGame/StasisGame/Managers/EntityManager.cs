@@ -183,10 +183,9 @@ namespace StasisGame.Managers
         }
 
         // Add components to the entity player that are needed to play in a level
-        public void addLevelComponentsToPlayer(int playerId, XElement data)
+        public void addLevelComponentsToPlayer(PlayerSystem playerSystem)
         {
             World world = (_systemManager.getSystem(SystemType.Physics) as PhysicsSystem).world;
-            Vector2 position = Loader.loadVector2(data.Attribute("position"), Vector2.Zero);
             Body body;
             BodyDef bodyDef = new BodyDef();
             PolygonShape bodyShape = new PolygonShape();
@@ -194,10 +193,11 @@ namespace StasisGame.Managers
             CircleShape feetShape = new CircleShape();
             FixtureDef feetFixtureDef = new FixtureDef();
             Fixture feetFixture;
+            int playerId = playerSystem.playerId;
 
             bodyDef.bullet = true;
             bodyDef.fixedRotation = true;
-            bodyDef.position = position;
+            bodyDef.position = playerSystem.spawnPosition;
             bodyDef.type = BodyType.Dynamic;
             bodyDef.userData = playerId;
             bodyShape.SetAsBox(0.18f, 0.27f);

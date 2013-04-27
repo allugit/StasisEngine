@@ -16,16 +16,19 @@ namespace StasisGame
     public class Level
     {
         private LoderGame _game;
+        private string _uid;
         private EntityManager _entityManager;
         private RenderSystem _renderSystem;
         private SystemManager _systemManager;
 
         public EntityManager entityManager { get { return _entityManager; } }
         public SystemManager systemManager { get { return _systemManager; } }
+        public string uid { get { return _uid; } }
 
-        public Level(LoderGame game, string filePath)
+        public Level(LoderGame game, string levelUID)
         {
             _game = game;
+            _uid = levelUID;
             _systemManager = _game.systemManager;
             _entityManager = _game.entityManager;
 
@@ -36,7 +39,7 @@ namespace StasisGame
             Background background;
 
             // Load xml
-            using (Stream stream = TitleContainer.OpenStream(filePath))
+            using (Stream stream = TitleContainer.OpenStream(ResourceManager.levelPath + string.Format("\\{0}.xml", levelUID)))
             {
                 XDocument doc = XDocument.Load(stream);
                 data = doc.Element("Level");
@@ -94,9 +97,8 @@ namespace StasisGame
                             _systemManager.add(new CharacterMovementSystem(_systemManager, _entityManager), -1);
                             (_systemManager.getSystem(SystemType.Camera) as CameraSystem).enableManualMovement = false;
                         }
-                        //_systemManager.add(new PlayerSystem(_systemManager, _entityManager), -1);
+                        (_systemManager.getSystem(SystemType.Player) as PlayerSystem).spawnPosition = Loader.loadVector2(actorData.Attribute("position"), Vector2.Zero);
                         _systemManager.add(new EquipmentSystem(_systemManager, _entityManager), -1);
-                        //_entityManager.factory.createPlayer(actorData);
                         break;
 
                     case "Rope":

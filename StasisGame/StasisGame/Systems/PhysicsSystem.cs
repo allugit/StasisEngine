@@ -128,9 +128,11 @@ namespace StasisGame.Systems
             int playerId = (_systemManager.getSystem(SystemType.Player) as PlayerSystem).playerId;
 
             // Check for custom collision filters
-            if (fixtureA.IsIgnoredEntity(entityB))
+            bool fixtureAIgnoresEntityB = fixtureA.IsIgnoredEntity(entityB);
+            bool fixtureBIgnoresEntityA = fixtureB.IsIgnoredEntity(entityA);
+            if (fixtureAIgnoresEntityB)
                 contact.SetEnabled(false);
-            else if (fixtureB.IsIgnoredEntity(entityA))
+            else if (fixtureBIgnoresEntityA)
                 contact.SetEnabled(false);
 
             // Check for item pickup

@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using Microsoft.Xna.Framework;
+using Microsoft.Xna.Framework.Content;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 using StasisGame.Managers;
@@ -13,6 +14,7 @@ namespace StasisGame.UI
     {
         private LoderGame _game;
         private Level _level;
+        private ContentManager _content;
         private Texture2D _pixel;
         private SystemManager _systemManager;
         private EntityManager _entityManager;
@@ -22,6 +24,7 @@ namespace StasisGame.UI
         private InventoryDisplay _inventoryDisplay;
         private ToolbarDisplay _toolbarDisplay;
         private EquipmentSystem _equipmentSystem;
+        private SpriteFont _arial;
 
         public LevelScreen(LoderGame game, Level level)
             : base(ScreenType.Level)
@@ -31,10 +34,13 @@ namespace StasisGame.UI
             _systemManager = _level.systemManager;
             _entityManager = _level.entityManager;
             _spriteBatch = _game.spriteBatch;
+            _content = new ContentManager(_game.Services);
+            _content.RootDirectory = "Content";
             _equipmentSystem = _systemManager.getSystem(SystemType.Equipment) as EquipmentSystem;
             _playerId = (_systemManager.getSystem(SystemType.Player) as PlayerSystem).playerId;
             _pixel = new Texture2D(_game.GraphicsDevice, 1, 1);
             _pixel.SetData<Color>(new[] { Color.White });
+            _arial = _content.Load<SpriteFont>("arial");
 
             ToolbarComponent toolbarComponent = (ToolbarComponent)_entityManager.getComponent(_playerId, ComponentType.Toolbar);
 
@@ -44,6 +50,11 @@ namespace StasisGame.UI
             _toolbarDisplay.inFocus = true;
 
             _UIComponents.Add(new LargeHealthBar(_game.spriteBatch));
+        }
+
+        ~LevelScreen()
+        {
+            _content.Unload();
         }
 
         public override void update()
@@ -84,11 +95,18 @@ namespace StasisGame.UI
 
         public override void draw()
         {
+            int playerId = (_systemManager.getSystem(SystemType.Player) as PlayerSystem).playerId;
+            PhysicsComponent physicsComponent = (PhysicsComponent)_entityManager.getComponent(playerId, ComponentType.Physics);
+            string text = string.Format("Body count: {0}", physicsComponent.body.GetWorld().BodyCount);
+
             if (_displayInventory)
             {
                 _inventoryDisplay.draw();
             }
             _toolbarDisplay.draw();
+
+            _spriteBatch.DrawString(_arial, text, new Vector2(8, 8), Color.White, 0f, Vector2.Zero, 1f, SpriteEffects.None, 0f);
+            _spriteBatch.DrawString(_arial, text, new Vector2(9, 9), Color.Black, 0f, Vector2.Zero, 1f, SpriteEffects.None, 0.00001f);
 
             base.draw();
         }

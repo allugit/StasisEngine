@@ -49,6 +49,7 @@ namespace StasisGame
         private SystemManager _systemManager;
         private EntityManager _entityManager;
         private WorldMapScreen _worldMapScreen;
+        private PlayerSystem _playerSystem;
 
         public SpriteBatch spriteBatch { get { return _spriteBatch; } }
         public GraphicsDeviceManager graphics { get { return _graphics; } }
@@ -111,24 +112,37 @@ namespace StasisGame
                 switch (flag)
                 {
                     case "-l":
-                        quickLoadLevel(_args[1]);
+                        previewLevel(_args[1]);
                         break;
                 }
             }
         }
 
-        private void quickLoadLevel(string filePath)
+        private void initializePlayer()
         {
-            // Load player data
-            // ...
+            _playerSystem = new PlayerSystem(_systemManager, _entityManager);
+            _playerSystem.playerId = _entityManager.createEntity();
+            _systemManager.add(_playerSystem, -1);
+        }
 
-            // Character flags
-            // ...
+        private void initializePlayerInventory()
+        {
+            _entityManager.initializePlayerInventory(_playerSystem.playerId, DataManager.playerData.inventoryData);
+            _entityManager.initializePlayerToolbar(
+                _playerSystem.playerId,
+                (InventoryComponent)_entityManager.getComponent(_playerSystem.playerId, ComponentType.Inventory),
+                DataManager.playerData.toolbarData);
+        }
+
+        private void previewLevel(string levelUID)
+        {
+            initializePlayer();
+            DataManager.createTemporaryPlayerData(_systemManager);
+            initializePlayerInventory();
 
             // Load level
-            _gameState = GameState.Level;
-            _level = new Level(this, filePath);
-            _screenSystem.addScreen(new LevelScreen(this, _level));
+            loadLevel(levelUID);
+            _entityManager.addLevelComponentsToPlayer(_playerSystem);
         }
 
         public void newGame()
@@ -140,22 +154,18 @@ namespace StasisGame
 
         public void loadGame(int playerDataSlot)
         {
-            PlayerSystem playerSystem = new PlayerSystem(_systemManager, _entityManager);
-            int playerEntityId;
-
-            _screenSystem.removeScreen(_mainMenuScreen);
-            _systemManager.add(playerSystem, -1);
-
+            initializePlayer();
             DataManager.loadPlayerData(playerDataSlot);
-            playerEntityId = _entityManager.createEntity();
-            playerSystem.playerId = playerEntityId;
-            _entityManager.initializePlayerInventory(playerEntityId, DataManager.playerData.inventoryData);
-            _entityManager.initializePlayerToolbar(
-                playerEntityId,
-                (InventoryComponent)_entityManager.getComponent(playerEntityId, ComponentType.Inventory),
-                DataManager.playerData.toolbarData);
+            initializePlayerInventory();
 
             openWorldMap();
+        }
+
+        public void loadLevel(string levelUID)
+        {
+            _gameState = GameState.Level;
+            _level = new Level(this, levelUID);
+            _screenSystem.addScreen(new LevelScreen(this, _level));
         }
 
         public void openLoadGameMenu()
@@ -188,6 +198,12 @@ namespace StasisGame
             _screenSystem.addScreen(_worldMapScreen);
             _worldMapScreen.loadWorldMap(DataManager.playerData.getWorldData(DataManager.playerData.currentLocation.worldMapUID));
             _gameState = GameState.WorldMap;
+        }
+
+        public void closeWorldMap()
+        {
+            _screenSystem.removeScreen(_worldMapScreen);
+            _gameState = GameState.Level;
         }
 
         protected override void Update(GameTime gameTime)

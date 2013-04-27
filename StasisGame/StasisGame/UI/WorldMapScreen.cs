@@ -165,6 +165,15 @@ namespace StasisGame.UI
             if (_newKeyState.IsKeyDown(Keys.Down) || _newKeyState.IsKeyDown(Keys.S))
                 _targetScreenCenter += new Vector2(0, 7);
 
+            if (_newMouseState.LeftButton == ButtonState.Pressed && _oldMouseState.LeftButton == ButtonState.Released)
+            {
+                if (_selectedLevelIcon != null)
+                {
+                    _game.closeWorldMap();
+                    _game.loadLevel(_selectedLevelIcon.levelUID);
+                }
+            }
+
             //_levelSelectPosition += mouseDelta;
 
             //_targetScreenCenter = Vector2.Max(_topLeft, Vector2.Min(_bottomRight, _targetScreenCenter));

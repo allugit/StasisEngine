@@ -113,6 +113,12 @@ namespace StasisGame.Managers
             return unusedPlayerSlot;
         }
 
+        // Create temporary player data
+        public static void createTemporaryPlayerData(SystemManager systemManager)
+        {
+            _playerData = new PlayerData(systemManager, -1, "Test Character");
+        }
+
         // Load player saves
         public static List<XElement> loadPlayerSaves()
         {
