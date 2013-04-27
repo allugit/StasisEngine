@@ -96,12 +96,15 @@ namespace StasisGame.UI
 
             foreach (LevelIcon levelIcon in _worldMap.levelIcons)
             {
-                float distance = (mouseWorld - levelIcon.position).Length();
-
-                if (distance <= tolerance)
+                if (levelIcon.state != LevelIconState.Undiscovered)
                 {
-                    shortest = distance;
-                    result = levelIcon;
+                    float distance = (mouseWorld - levelIcon.position).Length();
+
+                    if (distance <= tolerance)
+                    {
+                        shortest = distance;
+                        result = levelIcon;
+                    }
                 }
             }
             return result;
@@ -200,7 +203,7 @@ namespace StasisGame.UI
                     for (float i = 0f; i < 1f; i += increment)
                     {
                         Vector2 point = Vector2.CatmullRom(worldPath.controlA.position, worldPath.pointA.position, worldPath.pointB.position, worldPath.controlB.position, i);
-                        _spriteBatch.Draw(_antiFogBrush, viewOffset + point, _antiFogBrush.Bounds, Color.White * 0.5f, 0f, _antiFogBrushOrigin, antiFogTextureScale, SpriteEffects.None, 0f);
+                        _spriteBatch.Draw(_antiFogBrush, viewOffset + point, _antiFogBrush.Bounds, Color.White, 0f, _antiFogBrushOrigin, antiFogTextureScale, SpriteEffects.None, 0f);
                     }
                 }
             }
@@ -208,7 +211,7 @@ namespace StasisGame.UI
             {
                 if (levelIcon.state != LevelIconState.Undiscovered)
                 {
-                    _spriteBatch.Draw(_antiFogBrush, viewOffset + levelIcon.position, _antiFogBrush.Bounds, Color.White * 0.5f, 0f, _antiFogBrushOrigin, antiFogTextureScale, SpriteEffects.None, 0f);
+                    _spriteBatch.Draw(_antiFogBrush, viewOffset + levelIcon.position, _antiFogBrush.Bounds, Color.White, 0f, _antiFogBrushOrigin, antiFogTextureScale, SpriteEffects.None, 0f);
                 }
             }
             _spriteBatch.End();
