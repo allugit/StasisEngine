@@ -142,7 +142,6 @@ namespace StasisGame
 
             // Load level
             loadLevel(levelUID);
-            _entityManager.addLevelComponentsToPlayer(_playerSystem);
         }
 
         public void newGame()
@@ -158,6 +157,7 @@ namespace StasisGame
             DataManager.loadPlayerData(playerDataSlot);
             initializePlayerInventory();
 
+            _screenSystem.removeScreen(_mainMenuScreen);
             openWorldMap();
         }
 
@@ -165,6 +165,7 @@ namespace StasisGame
         {
             _gameState = GameState.Level;
             _level = new Level(this, levelUID);
+            _entityManager.addLevelComponentsToPlayer(_playerSystem);
             _screenSystem.addScreen(new LevelScreen(this, _level));
         }
 
