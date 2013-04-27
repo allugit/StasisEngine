@@ -40,6 +40,7 @@ namespace StasisGame.UI
         private LevelIcon _selectedLevelIcon;
         private bool _allowNewLevelSelection = true;
         private SpriteFont _levelSelectTitleFont;
+        private SpriteFont _levelSelectDescriptionFont;
 
         public WorldMapScreen(LoderGame game) : base(ScreenType.WorldMap)
         {
@@ -60,6 +61,7 @@ namespace StasisGame.UI
             _levelSelectIconDeselectedColor = Color.White * 0.8f;
             _levelSelectIconColor = _levelSelectIconDeselectedColor;
             _levelSelectTitleFont = _content.Load<SpriteFont>("world_map\\level_select_title");
+            _levelSelectDescriptionFont = _content.Load<SpriteFont>("world_map\\level_select_description");
             _halfScreenSize = new Vector2(_spriteBatch.GraphicsDevice.Viewport.Width, _spriteBatch.GraphicsDevice.Viewport.Height) / 2f;
             _fogRT = new RenderTarget2D(_spriteBatch.GraphicsDevice, _spriteBatch.GraphicsDevice.Viewport.Width, _spriteBatch.GraphicsDevice.Viewport.Height);
             _antiFogRT = new RenderTarget2D(_spriteBatch.GraphicsDevice, _spriteBatch.GraphicsDevice.Viewport.Width, _spriteBatch.GraphicsDevice.Viewport.Height);
@@ -262,9 +264,11 @@ namespace StasisGame.UI
 
             // Draw title text
             if (_selectedLevelIcon != null)
-            {
-                _spriteBatch.DrawString(_levelSelectTitleFont, _selectedLevelIcon.levelUID, new Vector2(32, 32), Color.White);
-            }
+                _spriteBatch.DrawString(_levelSelectTitleFont, _selectedLevelIcon.title, new Vector2(32, 32), Color.White);
+
+            // Draw description text
+            if (_selectedLevelIcon != null)
+                _spriteBatch.DrawString(_levelSelectDescriptionFont, _selectedLevelIcon.description, new Vector2(32, 96), Color.LightGray);
 
             base.draw();
         }
