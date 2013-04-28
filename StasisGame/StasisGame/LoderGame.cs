@@ -48,6 +48,7 @@ namespace StasisGame
         private Level _level;
         private SystemManager _systemManager;
         private EntityManager _entityManager;
+        private ScriptManager _scriptManager;
         private WorldMapScreen _worldMapScreen;
         private PlayerSystem _playerSystem;
         private EquipmentSystem _equipmentSystem;
@@ -56,6 +57,7 @@ namespace StasisGame
         public GraphicsDeviceManager graphics { get { return _graphics; } }
         public SystemManager systemManager { get { return _systemManager; } }
         public EntityManager entityManager { get { return _entityManager; } }
+        public ScriptManager scriptManager { get { return _scriptManager; } }
 
         public LoderGame(string[] args)
         {
@@ -71,9 +73,9 @@ namespace StasisGame
         {
             _systemManager = new SystemManager();
             _entityManager = new EntityManager(_systemManager);
+            _scriptManager = new ScriptManager(_systemManager, _entityManager);
             _screenSystem = new ScreenSystem(_systemManager);
             _systemManager.add(_screenSystem, -1);
-
 
             DataManager.initialize(this, _systemManager);
             Components.Add(new GamerServicesComponent(this));
@@ -167,6 +169,7 @@ namespace StasisGame
         public void loadLevel(string levelUID)
         {
             _gameState = GameState.Level;
+            _scriptManager.loadLevelScript(levelUID);
             _level = new Level(this, levelUID);
             _entityManager.addLevelComponentsToPlayer(_playerSystem);
             _screenSystem.addScreen(new LevelScreen(this, _level));

@@ -182,15 +182,25 @@ namespace StasisEditor
             string itemSource = RESOURCE_SOURCE_PATH + "\\" + ResourceManager.itemPath;
             File.Copy(itemSource, itemDestination);
 
-            // Levels
+            // Levels (and level scripts)
             string levelDestination = RESOURCE_DESTINATION_PATH + "\\" + ResourceManager.levelPath;
             string levelSource = RESOURCE_SOURCE_PATH + "\\" + ResourceManager.levelPath;
             Directory.CreateDirectory(levelDestination);
             string[] levelPaths = Directory.GetFiles(levelSource, "*.xml");
             foreach (string levelPath in levelPaths)
             {
+                string scriptFileName = levelPath.Replace(".xml", ".cs");
+
                 File.Copy(levelPath, levelDestination + "\\" + Path.GetFileName(levelPath));
+                if (File.Exists(scriptFileName))
+                    File.Copy(scriptFileName, levelDestination + "\\" + Path.GetFileName(scriptFileName));
             }
+
+            // Global script
+            string globalScriptDestination = RESOURCE_DESTINATION_PATH + "\\data\\global_script.cs";
+            string globalScriptSource = RESOURCE_SOURCE_PATH + "\\data\\global_script.cs";
+            if (File.Exists(globalScriptSource))
+                File.Copy(globalScriptSource, globalScriptDestination);
 
             ResourceManager.rootDirectory = previousRootDirectory;
         }

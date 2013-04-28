@@ -20,6 +20,7 @@ namespace StasisGame
         private EntityManager _entityManager;
         private RenderSystem _renderSystem;
         private SystemManager _systemManager;
+        private ScriptManager _scriptManager;
 
         public EntityManager entityManager { get { return _entityManager; } }
         public SystemManager systemManager { get { return _systemManager; } }
@@ -31,6 +32,7 @@ namespace StasisGame
             _uid = levelUID;
             _systemManager = _game.systemManager;
             _entityManager = _game.entityManager;
+            _scriptManager = _game.scriptManager;
 
             XElement data = null;
             List<XElement> secondPassData = new List<XElement>();
@@ -170,6 +172,9 @@ namespace StasisGame
                         break;
                 }
             }
+
+            // Script hook
+            _scriptManager.onLevelStart(levelUID);
         }
 
         public void update(GameTime gameTime)

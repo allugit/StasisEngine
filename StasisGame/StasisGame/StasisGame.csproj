@@ -118,6 +118,7 @@
     <Compile Include="Level.cs" />
     <Compile Include="Managers\DataManager.cs" />
     <Compile Include="Managers\EntityManager.cs" />
+    <Compile Include="Managers\ScriptManager.cs" />
     <Compile Include="Managers\SystemManager.cs" />
     <Compile Include="EntityFactory.cs" />
     <Compile Include="MarkerCell.cs" />
@@ -128,6 +129,7 @@
     <Compile Include="Program.cs" />
     <Compile Include="LoderGame.cs" />
     <Compile Include="RenderablePrimitiveNode.cs" />
+    <Compile Include="ScriptBase.cs" />
     <Compile Include="Systems\CameraSystem.cs" />
     <Compile Include="Systems\CharacterMovementSystem.cs" />
     <Compile Include="Systems\CircuitSystem.cs" />
