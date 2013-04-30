@@ -10,6 +10,7 @@ namespace StasisGame.Systems
         private LoderGame _game;
         private SystemManager _systemManager;
         private EntityManager _entityManager;
+        private ScriptManager _scriptManager;
         private bool _paused;
         private bool _singleStep;
         private List<LevelGoalComponent> _registeredGoals;
@@ -26,8 +27,14 @@ namespace StasisGame.Systems
             _game = game;
             _systemManager = systemManager;
             _entityManager = entityManager;
+            _scriptManager = _game.scriptManager;
             _registeredGoals = new List<LevelGoalComponent>();
             _completedGoals = new List<LevelGoalComponent>();
+        }
+
+        public bool areAllGoalsComplete()
+        {
+            return _completedGoals.Count >= _registeredGoals.Count;
         }
 
         public void registerGoal(LevelGoalComponent goal)
@@ -47,11 +54,14 @@ namespace StasisGame.Systems
         public void update()
         {
             // Quick way to check for all goals being completed:
-            if (_completedGoals.Count >= _registeredGoals.Count)
+            if (areAllGoalsComplete())
             {
+                string levelUID = _game.level.uid;
+
                 Console.WriteLine("All goals complete!");
                 _game.exitLevel();
                 _game.openWorldMap();
+                _scriptManager.onReturnToWorldMap(levelUID, this);
             }
         }
     }

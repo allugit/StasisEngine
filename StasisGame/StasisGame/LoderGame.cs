@@ -43,21 +43,22 @@ namespace StasisGame
         private SpriteBatch _spriteBatch;
         private SpriteFont _arial;
         private GameState _gameState;
-        private MainMenuScreen _mainMenuScreen;
-        private ScreenSystem _screenSystem;
         private Level _level;
         private SystemManager _systemManager;
         private EntityManager _entityManager;
         private ScriptManager _scriptManager;
-        private WorldMapScreen _worldMapScreen;
         private PlayerSystem _playerSystem;
         private EquipmentSystem _equipmentSystem;
+        private ScreenSystem _screenSystem;
+        private MainMenuScreen _mainMenuScreen;
+        private WorldMapScreen _worldMapScreen;
 
         public SpriteBatch spriteBatch { get { return _spriteBatch; } }
         public GraphicsDeviceManager graphics { get { return _graphics; } }
         public SystemManager systemManager { get { return _systemManager; } }
         public EntityManager entityManager { get { return _entityManager; } }
         public ScriptManager scriptManager { get { return _scriptManager; } }
+        public Level level { get { return _level; } }
 
         public LoderGame(string[] args)
         {
@@ -213,11 +214,13 @@ namespace StasisGame
 
         public void openWorldMap()
         {
+            if (!_systemManager.exists(SystemType.WorldMap))
+                _systemManager.add(new WorldMapSystem(_systemManager, _entityManager), -1);
             if (_worldMapScreen == null)
-                _worldMapScreen = new WorldMapScreen(this);
+                _worldMapScreen = new WorldMapScreen(this, _systemManager);
 
             _screenSystem.addScreen(_worldMapScreen);
-            _worldMapScreen.loadWorldMap(DataManager.playerData.getWorldData(DataManager.playerData.currentLocation.worldMapUID));
+            (_systemManager.getSystem(SystemType.WorldMap) as WorldMapSystem).loadWorldMap(DataManager.playerData.getWorldData(DataManager.playerData.currentLocation.worldMapUID));
             _gameState = GameState.WorldMap;
         }
 

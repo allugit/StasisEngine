@@ -146,6 +146,7 @@
     <Compile Include="Systems\ScreenSystem.cs" />
     <Compile Include="Systems\SystemNode.cs" />
     <Compile Include="Systems\TreeSystem.cs" />
+    <Compile Include="Systems\WorldMapSystem.cs" />
     <Compile Include="Tree.cs" />
     <Compile Include="TrunkMetamerConstraint.cs" />
     <Compile Include="UI\InventoryDisplay.cs" />

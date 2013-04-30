@@ -1,7 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using StasisGame.Managers;
 using StasisGame.Systems;
 
@@ -28,6 +26,10 @@ namespace StasisGame
         }
 
         virtual public void onLevelEnd()
+        {
+        }
+
+        virtual public void onReturnToWorldMap(LevelGoalSystem levelGoalSystem)
         {
         }
     }

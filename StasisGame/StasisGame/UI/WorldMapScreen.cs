@@ -9,18 +9,19 @@ using StasisCore;
 using StasisCore.Models;
 using StasisGame.Managers;
 using StasisGame.Data;
+using StasisGame.Systems;
 
 namespace StasisGame.UI
 {
     public class WorldMapScreen : Screen
     {
         private LoderGame _game;
+        private SystemManager _systemManager;
         private SpriteBatch _spriteBatch;
         private float _scale;
         private Vector2 _currentScreenCenter;
         private Vector2 _targetScreenCenter;
-        private WorldMap _worldMap;
-        private WorldMapData _worldMapData;
+        private WorldMapSystem _worldMapSystem;
         private Vector2 _halfScreenSize;
         private Texture2D _pathTexture;
         private Vector2 _pathTextureOrigin;
@@ -42,12 +43,14 @@ namespace StasisGame.UI
         private SpriteFont _levelSelectTitleFont;
         private SpriteFont _levelSelectDescriptionFont;
 
-        public WorldMapScreen(LoderGame game) : base(ScreenType.WorldMap)
+        public WorldMapScreen(LoderGame game, SystemManager systemManager) : base(ScreenType.WorldMap)
         {
             _game = game;
+            _systemManager = systemManager;
             _spriteBatch = _game.spriteBatch;
             _scale = 1f;
-            
+            _worldMapSystem = (WorldMapSystem)_systemManager.getSystem(SystemType.WorldMap);
+
             _content = new ContentManager(game.Services);
             _content.RootDirectory = "Content";
             _fogEffect = _content.Load<Effect>("fog_effect");
@@ -72,31 +75,12 @@ namespace StasisGame.UI
             _content.Unload();
         }
 
-        public void loadWorldMap(WorldMapData worldMapData)
-        {
-            // Create world map
-            _worldMapData = worldMapData;
-            _worldMap = new WorldMap(ResourceManager.getResource(worldMapData.worldMapUID));
-
-            // Initialize states from stored world map data
-            foreach (LevelIconData levelIconData in _worldMapData.levelIconData)
-            {
-                LevelIcon levelIcon = _worldMap.getLevelIcon(levelIconData.id);
-                levelIcon.state = levelIconData.state;
-            }
-            foreach (WorldPathData worldPathData in _worldMapData.worldPathData)
-            {
-                WorldPath worldPath = _worldMap.getWorldPath(worldPathData.id);
-                worldPath.state = worldPathData.state;
-            }
-        }
-
         private LevelIcon hitTestLevelIcons(Vector2 mouseWorld, float tolerance)
         {
             float shortest = 9999999f;
             LevelIcon result = null;
 
-            foreach (LevelIcon levelIcon in _worldMap.levelIcons)
+            foreach (LevelIcon levelIcon in _worldMapSystem.worldMap.levelIcons)
             {
                 if (levelIcon.state != LevelIconState.Undiscovered)
                 {
@@ -197,7 +181,7 @@ namespace StasisGame.UI
             _spriteBatch.GraphicsDevice.SetRenderTarget(_antiFogRT);
             _spriteBatch.GraphicsDevice.Clear(Color.Transparent);
             _spriteBatch.Begin(SpriteSortMode.BackToFront, BlendState.AlphaBlend);
-            foreach (WorldPath worldPath in _worldMap.worldPaths)
+            foreach (WorldPath worldPath in _worldMapSystem.worldMap.worldPaths)
             {
                 if (worldPath.state == WorldPathState.Discovered)
                 {
@@ -209,7 +193,7 @@ namespace StasisGame.UI
                     }
                 }
             }
-            foreach (LevelIcon levelIcon in _worldMap.levelIcons)
+            foreach (LevelIcon levelIcon in _worldMapSystem.worldMap.levelIcons)
             {
                 if (levelIcon.state != LevelIconState.Undiscovered)
                 {
@@ -228,12 +212,13 @@ namespace StasisGame.UI
         public override void draw()
         {
             Vector2 viewOffset = -_currentScreenCenter + _halfScreenSize;
+            WorldMap worldMap = _worldMapSystem.worldMap;
 
             // World map texture
-            _spriteBatch.Draw(_worldMap.texture, viewOffset, _worldMap.texture.Bounds, Color.White, 0f, _worldMap.halfTextureSize, _scale, SpriteEffects.None, 1f);
+            _spriteBatch.Draw(worldMap.texture, viewOffset, worldMap.texture.Bounds, Color.White, 0f, worldMap.halfTextureSize, _scale, SpriteEffects.None, 1f);
             
             // World paths
-            foreach (WorldPath worldPath in _worldMap.worldPaths)
+            foreach (WorldPath worldPath in worldMap.worldPaths)
             {
                 if (worldPath.state == WorldPathState.Discovered)
                 {
@@ -247,7 +232,7 @@ namespace StasisGame.UI
             }
 
             // Level icons
-            foreach (LevelIcon levelIcon in _worldMap.levelIcons)
+            foreach (LevelIcon levelIcon in worldMap.levelIcons)
             {
                 if (levelIcon.state != LevelIconState.Undiscovered)
                 {

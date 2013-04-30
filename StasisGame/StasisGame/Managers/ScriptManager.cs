@@ -5,6 +5,7 @@ using System.CodeDom;
 using System.CodeDom.Compiler;
 using System.Reflection;
 using Microsoft.CSharp;
+using StasisGame.Systems;
 
 namespace StasisGame.Managers
 {
@@ -16,7 +17,9 @@ namespace StasisGame.Managers
         private CodeDomProvider _provider;
         private CompilerParameters _parameters;
         private string _sourcePrefix = @"
+using System;
 using StasisGame.Managers;
+using StasisGame.Systems;
 namespace StasisGame
 {
     public class Script : ScriptBase
@@ -71,7 +74,11 @@ namespace StasisGame
             CompilerResults results = _provider.CompileAssemblyFromSource(_parameters, source);
             if (results.Errors.Count > 0)
             {
-                Console.WriteLine("errors");
+                Console.WriteLine("Script errors:");
+                foreach (CompilerError error in results.Errors)
+                {
+                    Console.WriteLine("[{0}]: \t{1}", error.Line, error.ErrorText);
+                }
             }
             ScriptBase script = (ScriptBase)results.CompiledAssembly.CreateInstance("StasisGame.Script", true, BindingFlags.CreateInstance, null, new object[2] { _systemManager, _entityManager }, System.Globalization.CultureInfo.CurrentCulture, null);
             return script;
@@ -109,6 +116,15 @@ namespace StasisGame
 
             if (_scripts.TryGetValue(key, out script))
                 script.onLevelEnd();
+        }
+
+        // onReturnToWorldMap -- Hook called when returning to the world map after a level ends
+        public void onReturnToWorldMap(string key, LevelGoalSystem levelGoalSystem)
+        {
+            ScriptBase script = null;
+
+            if (_scripts.TryGetValue(key, out script))
+                script.onReturnToWorldMap(levelGoalSystem);
         }
     }
 }

@@ -29,6 +29,11 @@ namespace StasisGame.Managers
         {
         }
 
+        public bool exists(SystemType type)
+        {
+            return getSystem(type) != null;
+        }
+
         public ISystem getSystem(SystemType type)
         {
             SystemNode current = _head;
