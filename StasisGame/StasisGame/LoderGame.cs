@@ -175,6 +175,18 @@ namespace StasisGame
             _screenSystem.addScreen(new LevelScreen(this, _level));
         }
 
+        public void exitLevel()
+        {
+            List<int> entitiesToPreserve = new List<int>();
+
+            entitiesToPreserve.Add(_playerSystem.playerId);
+            _entityManager.removeLevelComponentsFromPlayer(_playerSystem.playerId);
+            _entityManager.killAllEntities(entitiesToPreserve);
+            _screenSystem.removeScreen(ScreenType.Level);
+            _level.removeSystems();
+            _level = null;
+        }
+
         public void openLoadGameMenu()
         {
             _screenSystem.removeScreen(_mainMenuScreen);
@@ -201,7 +213,9 @@ namespace StasisGame
 
         public void openWorldMap()
         {
-            _worldMapScreen = new WorldMapScreen(this);
+            if (_worldMapScreen == null)
+                _worldMapScreen = new WorldMapScreen(this);
+
             _screenSystem.addScreen(_worldMapScreen);
             _worldMapScreen.loadWorldMap(DataManager.playerData.getWorldData(DataManager.playerData.currentLocation.worldMapUID));
             _gameState = GameState.WorldMap;
@@ -255,8 +269,8 @@ namespace StasisGame
                     break;
 
                 case GameState.Level:
-                    _systemManager.process();
                     _level.update(gameTime);
+                    _systemManager.process();
                     break;
             }
 

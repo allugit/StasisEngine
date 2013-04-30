@@ -46,6 +46,13 @@ namespace StasisGame
             _actorIdToEntityId = new Dictionary<int, int>();
         }
 
+        public void reset()
+        {
+            _actorIdEntityIdGateComponentMap.Clear();
+            _circuitIdGateIdGateComponentMap.Clear();
+            _actorIdToEntityId.Clear();
+        }
+
         private Body matchBodyToEditorId(int editorId)
         {
             List<int> editorIdEntities = _entityManager.getEntitiesPosessing(ComponentType.EditorId);

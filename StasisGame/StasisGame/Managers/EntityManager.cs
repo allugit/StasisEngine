@@ -53,7 +53,22 @@ namespace StasisGame.Managers
         // Kill all entities
         public void killAllEntities()
         {
-            _entities.Clear();
+            killAllEntities(new List<int>());
+        }
+        public void killAllEntities(List<int> excludedIds)
+        {
+            List<int> entitiesToRemove = new List<int>();
+
+            foreach (KeyValuePair<int, List<IComponent>> pair in _entities)
+            {
+                if (!excludedIds.Contains(pair.Key))
+                    entitiesToRemove.Add(pair.Key);
+            }
+
+            foreach (int id in entitiesToRemove)
+            {
+                _entities.Remove(id);
+            }
         }
 
         // Add a component to an entity

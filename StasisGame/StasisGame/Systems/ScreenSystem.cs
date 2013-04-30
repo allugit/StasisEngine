@@ -16,6 +16,7 @@ namespace StasisGame.Systems
         public int defaultPriority { get { return 90; } }
         public bool paused { get { return _paused; } set { _paused = value; } }
         public bool singleStep { get { return _singleStep; } set { _singleStep = value; } }
+        public int count { get { return _screens.Count; } }
 
         public ScreenSystem(SystemManager systemManager)
         {

@@ -10,7 +10,7 @@ namespace StasisGame.Managers
 
         public SystemNode head { get { return _head; } set { _head = value; } }
 
-        private int count
+        public int count
         {
             get
             {
@@ -71,6 +71,11 @@ namespace StasisGame.Managers
                 int countAfter = count;
                 Debug.Assert(countAfter == countBefore + 1);
             }
+        }
+
+        public void remove(SystemType systemType)
+        {
+            remove(getSystem(systemType));
         }
 
         public void remove(ISystem system)

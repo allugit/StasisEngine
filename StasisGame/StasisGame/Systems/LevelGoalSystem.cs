@@ -7,6 +7,7 @@ namespace StasisGame.Systems
 {
     public class LevelGoalSystem : ISystem
     {
+        private LoderGame _game;
         private SystemManager _systemManager;
         private EntityManager _entityManager;
         private bool _paused;
@@ -20,8 +21,9 @@ namespace StasisGame.Systems
         public bool singleStep { get { return _singleStep; } set { _singleStep = value; } }
         public EntityManager entityManager { get { return _entityManager; } }
 
-        public LevelGoalSystem(SystemManager systemManager, EntityManager entityManager)
+        public LevelGoalSystem(LoderGame game, SystemManager systemManager, EntityManager entityManager)
         {
+            _game = game;
             _systemManager = systemManager;
             _entityManager = entityManager;
             _registeredGoals = new List<LevelGoalComponent>();
@@ -48,6 +50,8 @@ namespace StasisGame.Systems
             if (_completedGoals.Count >= _registeredGoals.Count)
             {
                 Console.WriteLine("All goals complete!");
+                _game.exitLevel();
+                _game.openWorldMap();
             }
         }
     }

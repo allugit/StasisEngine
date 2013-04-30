@@ -50,7 +50,7 @@ namespace StasisGame
             // Create systems
             _systemManager.add(new InputSystem(_systemManager, _entityManager), -1);
             _systemManager.add(new PhysicsSystem(_systemManager, _entityManager, data), -1);
-            _systemManager.add(new LevelGoalSystem(_systemManager, _entityManager), -1);
+            _systemManager.add(new LevelGoalSystem(_game, _systemManager, _entityManager), -1);
             _systemManager.add(new CameraSystem(_systemManager, _entityManager), -1);
             _systemManager.add(new EventSystem(_systemManager, _entityManager), -1);
             _renderSystem = new RenderSystem(_game, _systemManager, _entityManager);
@@ -173,8 +173,25 @@ namespace StasisGame
                 }
             }
 
+            // Reset factory
+            _entityManager.factory.reset();
+
             // Script hook
             _scriptManager.onLevelStart(levelUID);
+        }
+
+        public void removeSystems()
+        {
+            _systemManager.remove(SystemType.Input);
+            _systemManager.remove(SystemType.Physics);
+            _systemManager.remove(SystemType.LevelGoal);
+            _systemManager.remove(SystemType.Camera);
+            _systemManager.remove(SystemType.Event);
+            _systemManager.remove(SystemType.Render);
+            _systemManager.remove(SystemType.Rope);
+            _systemManager.remove(SystemType.Fluid);
+            _systemManager.remove(SystemType.Tree);
+            _systemManager.remove(SystemType.CharacterMovement);
         }
 
         public void update(GameTime gameTime)
