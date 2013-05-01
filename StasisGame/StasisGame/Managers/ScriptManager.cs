@@ -119,12 +119,12 @@ namespace StasisGame
         }
 
         // onReturnToWorldMap -- Hook called when returning to the world map after a level ends
-        public void onReturnToWorldMap(string key, LevelGoalSystem levelGoalSystem)
+        public void onReturnToWorldMap(string key, LevelSystem levelSystem)
         {
             ScriptBase script = null;
 
             if (_scripts.TryGetValue(key, out script))
-                script.onReturnToWorldMap(levelGoalSystem);
+                script.onReturnToWorldMap(levelSystem);
         }
     }
 }

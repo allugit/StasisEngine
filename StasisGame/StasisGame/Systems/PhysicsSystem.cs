@@ -183,7 +183,7 @@ namespace StasisGame.Systems
         public void BeginContact(Contact contact)
         {
             List<int> levelGoalEntities = _entityManager.getEntitiesPosessing(ComponentType.LevelGoal);
-            LevelGoalSystem levelGoalSystem = (LevelGoalSystem)_systemManager.getSystem(SystemType.LevelGoal);
+            LevelSystem levelSystem = (LevelSystem)_systemManager.getSystem(SystemType.Level);
 
             // See if player is touching a level goal
             if (levelGoalEntities.Count > 0)
@@ -194,13 +194,13 @@ namespace StasisGame.Systems
                 if (entityA == _playerSystem.playerId)
                 {
                     if (levelGoalEntities.Contains(entityB))
-                        levelGoalSystem.completeGoal((LevelGoalComponent)_entityManager.getComponent(entityB, ComponentType.LevelGoal));
+                        levelSystem.completeGoal((LevelGoalComponent)_entityManager.getComponent(entityB, ComponentType.LevelGoal));
                 }
                 else if (entityB == _playerSystem.playerId)
                 {
                     if (levelGoalEntities.Contains(entityA))
                     {
-                        levelGoalSystem.completeGoal((LevelGoalComponent)_entityManager.getComponent(entityA, ComponentType.LevelGoal));
+                        levelSystem.completeGoal((LevelGoalComponent)_entityManager.getComponent(entityA, ComponentType.LevelGoal));
                     }
                 }
             }

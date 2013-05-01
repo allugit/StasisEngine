@@ -1,3 +1,4 @@
+using System.Diagnostics;
 using System;
 using System.IO;
 using System.Collections.Generic;
@@ -43,12 +44,13 @@ namespace StasisGame
         private SpriteBatch _spriteBatch;
         private SpriteFont _arial;
         private GameState _gameState;
-        private Level _level;
         private SystemManager _systemManager;
         private EntityManager _entityManager;
         private ScriptManager _scriptManager;
         private PlayerSystem _playerSystem;
         private EquipmentSystem _equipmentSystem;
+        private WorldMapSystem _worldMapSystem;
+        private LevelSystem _levelSystem;
         private ScreenSystem _screenSystem;
         private MainMenuScreen _mainMenuScreen;
         private WorldMapScreen _worldMapScreen;
@@ -58,7 +60,6 @@ namespace StasisGame
         public SystemManager systemManager { get { return _systemManager; } }
         public EntityManager entityManager { get { return _entityManager; } }
         public ScriptManager scriptManager { get { return _scriptManager; } }
-        public Level level { get { return _level; } }
 
         public LoderGame(string[] args)
         {
@@ -122,13 +123,17 @@ namespace StasisGame
             }
         }
 
-        private void initializePlayer()
+        // initializePersistentSystems -- Certain systems (such as WorldMap, Level, Player, etc...) need to be active throughout the entire game
+        private void startPersistentSystems()
         {
             _playerSystem = new PlayerSystem(_systemManager, _entityManager);
             _equipmentSystem = new EquipmentSystem(_systemManager, _entityManager);
-            _playerSystem.playerId = _entityManager.createEntity();
+            _worldMapSystem = new WorldMapSystem(_systemManager, _entityManager);
+            _levelSystem = new LevelSystem(this, _systemManager, _entityManager);
             _systemManager.add(_playerSystem, -1);
             _systemManager.add(_equipmentSystem, -1);
+            _systemManager.add(_worldMapSystem, -1);
+            _systemManager.add(_levelSystem, -1);
         }
 
         private void initializePlayerInventory()
@@ -142,7 +147,8 @@ namespace StasisGame
 
         private void previewLevel(string levelUID)
         {
-            initializePlayer();
+            startPersistentSystems();
+            _playerSystem.playerId = _entityManager.createEntity();
             DataManager.createTemporaryPlayerData(_systemManager);
             initializePlayerInventory();
 
@@ -159,10 +165,10 @@ namespace StasisGame
 
         public void loadGame(int playerDataSlot)
         {
-            initializePlayer();
+            startPersistentSystems();
+            _playerSystem.playerId = _entityManager.createEntity();
             DataManager.loadPlayerData(playerDataSlot);
             initializePlayerInventory();
-
             _screenSystem.removeScreen(_mainMenuScreen);
             openWorldMap();
         }
@@ -171,21 +177,9 @@ namespace StasisGame
         {
             _gameState = GameState.Level;
             _scriptManager.loadLevelScript(levelUID);
-            _level = new Level(this, levelUID);
+            _levelSystem.load(levelUID);
             _entityManager.addLevelComponentsToPlayer(_playerSystem);
-            _screenSystem.addScreen(new LevelScreen(this, _level));
-        }
-
-        public void exitLevel()
-        {
-            List<int> entitiesToPreserve = new List<int>();
-
-            entitiesToPreserve.Add(_playerSystem.playerId);
-            _entityManager.removeLevelComponentsFromPlayer(_playerSystem.playerId);
-            _entityManager.killAllEntities(entitiesToPreserve);
-            _screenSystem.removeScreen(ScreenType.Level);
-            _level.removeSystems();
-            _level = null;
+            _screenSystem.addScreen(new LevelScreen(this, _systemManager, _entityManager));
         }
 
         public void openLoadGameMenu()
@@ -214,13 +208,12 @@ namespace StasisGame
 
         public void openWorldMap()
         {
-            if (!_systemManager.exists(SystemType.WorldMap))
-                _systemManager.add(new WorldMapSystem(_systemManager, _entityManager), -1);
-            if (_worldMapScreen == null)
-                _worldMapScreen = new WorldMapScreen(this, _systemManager);
+            WorldMapSystem worldMapSystem = (WorldMapSystem)_systemManager.getSystem(SystemType.WorldMap);
 
+            worldMapSystem.loadWorldMap(DataManager.playerData.getWorldData(DataManager.playerData.currentLocation.worldMapUID));
+            _worldMapScreen = _worldMapScreen ?? new WorldMapScreen(this, _systemManager);
             _screenSystem.addScreen(_worldMapScreen);
-            (_systemManager.getSystem(SystemType.WorldMap) as WorldMapSystem).loadWorldMap(DataManager.playerData.getWorldData(DataManager.playerData.currentLocation.worldMapUID));
+
             _gameState = GameState.WorldMap;
         }
 
@@ -272,7 +265,6 @@ namespace StasisGame
                     break;
 
                 case GameState.Level:
-                    _level.update(gameTime);
                     _systemManager.process();
                     break;
             }
@@ -306,8 +298,7 @@ namespace StasisGame
                     break;
 
                 case GameState.Level:
-                    _level.draw(gameTime);
-
+                    _levelSystem.draw();
                     _spriteBatch.Begin(SpriteSortMode.BackToFront, BlendState.AlphaBlend);
                     _screenSystem.draw();
                     _spriteBatch.End();

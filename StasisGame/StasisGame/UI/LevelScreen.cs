@@ -13,7 +13,7 @@ namespace StasisGame.UI
     public class LevelScreen : Screen
     {
         private LoderGame _game;
-        private Level _level;
+        private LevelSystem _levelSystem;
         private ContentManager _content;
         private Texture2D _pixel;
         private SystemManager _systemManager;
@@ -26,17 +26,17 @@ namespace StasisGame.UI
         private EquipmentSystem _equipmentSystem;
         private SpriteFont _arial;
 
-        public LevelScreen(LoderGame game, Level level)
+        public LevelScreen(LoderGame game, SystemManager systemManager, EntityManager entityManager)
             : base(ScreenType.Level)
         {
             _game = game;
-            _level = level;
-            _systemManager = _level.systemManager;
-            _entityManager = _level.entityManager;
+            _systemManager = systemManager;
+            _entityManager = entityManager;
+            _levelSystem = (LevelSystem)_systemManager.getSystem(SystemType.Level);
             _spriteBatch = _game.spriteBatch;
             _content = new ContentManager(_game.Services);
             _content.RootDirectory = "Content";
-            _equipmentSystem = _systemManager.getSystem(SystemType.Equipment) as EquipmentSystem;
+            _equipmentSystem = (EquipmentSystem)_systemManager.getSystem(SystemType.Equipment);
             _playerId = (_systemManager.getSystem(SystemType.Player) as PlayerSystem).playerId;
             _pixel = new Texture2D(_game.GraphicsDevice, 1, 1);
             _pixel.SetData<Color>(new[] { Color.White });

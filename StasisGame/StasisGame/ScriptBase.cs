@@ -29,7 +29,7 @@ namespace StasisGame
         {
         }
 
-        virtual public void onReturnToWorldMap(LevelGoalSystem levelGoalSystem)
+        virtual public void onReturnToWorldMap(LevelSystem levelGoalSystem)
         {
         }
     }

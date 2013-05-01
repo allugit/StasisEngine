@@ -20,7 +20,7 @@ namespace StasisGame.Systems
         Screen,
         Equipment,
         Rope,
-        LevelGoal,
+        Level,
         WorldMap
     };
 

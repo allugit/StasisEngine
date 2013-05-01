@@ -115,7 +115,7 @@
     <Compile Include="DistanceMetamerConstraint.cs" />
     <Compile Include="Data\GameSettings.cs" />
     <Compile Include="IRenderablePrimitive.cs" />
-    <Compile Include="Level.cs" />
+    <Compile Include="Systems\LevelSystem.cs" />
     <Compile Include="Managers\DataManager.cs" />
     <Compile Include="Managers\EntityManager.cs" />
     <Compile Include="Managers\ScriptManager.cs" />
@@ -138,7 +138,6 @@
     <Compile Include="Systems\InputSystem.cs" />
     <Compile Include="Systems\EquipmentSystem.cs" />
     <Compile Include="Systems\ISystem.cs" />
-    <Compile Include="Systems\LevelGoalSystem.cs" />
     <Compile Include="Systems\PlayerSystem.cs" />
     <Compile Include="Systems\RenderSystem.cs" />
     <Compile Include="Systems\PhysicsSystem.cs" />

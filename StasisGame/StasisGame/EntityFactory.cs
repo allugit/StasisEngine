@@ -911,7 +911,7 @@ namespace StasisGame
 
         public void createGoal(XElement data)
         {
-            LevelGoalSystem levelGoalSystem = _systemManager.getSystem(SystemType.LevelGoal) as LevelGoalSystem;
+            LevelSystem levelSystem = _systemManager.getSystem(SystemType.Level) as LevelSystem;
             LevelGoalComponent levelGoalComponent = new LevelGoalComponent();
             World world = (_systemManager.getSystem(SystemType.Physics) as PhysicsSystem).world;
             int entityId = _entityManager.createEntity();
@@ -969,7 +969,7 @@ namespace StasisGame
             foreach (FixtureDef fixtureDef in fixtureDefs)
                 body.CreateFixture(fixtureDef);
 
-            levelGoalSystem.registerGoal(levelGoalComponent);
+            levelSystem.registerGoal(levelGoalComponent);
             _entityManager.addComponent(entityId, new PhysicsComponent(body));
             _entityManager.addComponent(entityId, levelGoalComponent);
             _entityManager.addComponent(entityId, new WorldPositionComponent(body.GetPosition()));
