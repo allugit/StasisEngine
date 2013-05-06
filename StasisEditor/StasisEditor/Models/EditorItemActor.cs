@@ -100,7 +100,8 @@ namespace StasisEditor.Models
 
             if (selected)
             {
-                _position += worldDelta;
+                if (!_level.controller.ctrl)
+                    _position += worldDelta;
 
                 if (_level.controller.isKeyPressed(Keys.Escape))
                     deselect();
