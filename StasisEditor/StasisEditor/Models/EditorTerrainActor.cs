@@ -14,6 +14,7 @@ namespace StasisEditor.Models
     {
         private BodyType _bodyType;
         private bool _destructible;
+        private bool _wall;
         private float _chunkSpacingX;
         private float _chunkSpacingY;
         private int _destructibleSeed;
@@ -24,6 +25,7 @@ namespace StasisEditor.Models
 
         public BodyType bodyType { get { return _bodyType; } set { _bodyType = value; } }
         public bool destructible { get { return _destructible; } set { _destructible = value; } }
+        public bool wall { get { return _wall; } set { _wall = value; } }
         public float chunkSpacingX { get { return _chunkSpacingX; } set { _chunkSpacingX = value; } }
         public float chunkSpacingY { get { return _chunkSpacingY; } set { _chunkSpacingY = value; } }
         public int destructibleSeed { get { return _destructibleSeed; } set { _destructibleSeed = value; } }
@@ -46,6 +48,7 @@ namespace StasisEditor.Models
                 XElement d = base.data;
                 d.SetAttributeValue("body_type", _bodyType);
                 d.SetAttributeValue("destructible", _destructible);
+                d.SetAttributeValue("wall", _wall);
                 d.SetAttributeValue("chunk_spacing_x", _chunkSpacingX);
                 d.SetAttributeValue("chunk_spacing_y", _chunkSpacingY);
                 d.SetAttributeValue("destructible_seed", _destructibleSeed);
@@ -76,6 +79,7 @@ namespace StasisEditor.Models
         {
             _bodyType = (BodyType)Loader.loadEnum(typeof(BodyType), data.Attribute("body_type"), (int)BodyType.Static);
             _destructible = Loader.loadBool(data.Attribute("destructible"), false);
+            _wall = Loader.loadBool(data.Attribute("wall"), false);
             _chunkSpacingX = Loader.loadFloat(data.Attribute("chunk_spacing_x"), 1f);
             _chunkSpacingY = Loader.loadFloat(data.Attribute("chunk_spacing_y"), 1f);
             _destructibleSeed = Loader.loadInt(data.Attribute("destructible_seed"), 12345);

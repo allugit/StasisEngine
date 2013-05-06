@@ -578,6 +578,7 @@ namespace StasisGame
             World world = (_systemManager.getSystem(SystemType.Physics) as PhysicsSystem).world;
             int actorId = int.Parse(data.Attribute("id").Value);
             int entityId = _entityManager.createEntity(actorId);
+            bool wall = Loader.loadBool(data.Attribute("wall"), false);
             BodyDef bodyDef = new BodyDef();
             List<FixtureDef> fixtureDefs = new List<FixtureDef>();
             List<Vector2> points = new List<Vector2>();
@@ -622,13 +623,20 @@ namespace StasisGame
                 fixtureDef.restitution = Loader.loadFloat(data.Attribute("restitution"), 0f);
                 fixtureDef.shape = shape;
                 fixtureDef.filter.categoryBits = bodyType == BodyType.Dynamic ? (ushort)CollisionCategory.DynamicGeometry : (ushort)CollisionCategory.StaticGeometry;
-                fixtureDef.filter.maskBits =
-                    (ushort)CollisionCategory.DynamicGeometry |
-                    (ushort)CollisionCategory.Grenade |
-                    (ushort)CollisionCategory.Item |
-                    (ushort)CollisionCategory.Player |
-                    (ushort)CollisionCategory.Rope |
-                    (ushort)CollisionCategory.StaticGeometry;
+                if (wall)
+                {
+                    fixtureDef.filter.maskBits = 0;
+                }
+                else
+                {
+                    fixtureDef.filter.maskBits =
+                        (ushort)CollisionCategory.DynamicGeometry |
+                        (ushort)CollisionCategory.Grenade |
+                        (ushort)CollisionCategory.Item |
+                        (ushort)CollisionCategory.Player |
+                        (ushort)CollisionCategory.Rope |
+                        (ushort)CollisionCategory.StaticGeometry;
+                }
                 fixtureDefs.Add(fixtureDef);
             }
 
