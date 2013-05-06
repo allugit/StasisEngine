@@ -100,6 +100,15 @@ namespace StasisGame
                 _scripts["global"].doAction(action);
         }
 
+        // registerGoals -- Hook for registering goals for a specific level
+        public void registerGoals(string key, LevelSystem levelSystem)
+        {
+            ScriptBase script = null;
+
+            if (_scripts.TryGetValue(key, out script))
+                script.registerGoals(levelSystem);
+        }
+
         // onLevelStart -- Hook for the start of the level
         public void onLevelStart(string key)
         {

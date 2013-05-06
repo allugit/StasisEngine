@@ -28,7 +28,7 @@ namespace StasisGame.Components
         WorldPosition,
         IgnoreRopeRaycast,
         RopeGrab,
-        LevelGoal
+        RegionGoal
     };
 
     public interface IComponent

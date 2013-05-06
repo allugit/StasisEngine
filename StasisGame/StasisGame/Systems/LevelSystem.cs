@@ -25,8 +25,10 @@ namespace StasisGame.Systems
         private bool _isActive;
         private bool _paused;
         private bool _singleStep;
-        private List<LevelGoalComponent> _registeredGoals;
-        private List<LevelGoalComponent> _completedGoals;
+        private Dictionary<int, Goal> _regionGoals;
+        private Dictionary<GameEventType, Dictionary<int, Goal>> _eventGoals;
+        private List<Goal> _completedGoals;
+        private List<Goal> _requiredGoals;
 
         public int defaultPriority { get { return 30; } }
         public SystemType systemType { get { return SystemType.Level; } }
@@ -41,10 +43,13 @@ namespace StasisGame.Systems
             _systemManager = systemManager;
             _entityManager = entityManager;
             _scriptManager = _game.scriptManager;
-            _registeredGoals = new List<LevelGoalComponent>();
-            _completedGoals = new List<LevelGoalComponent>();
+            _regionGoals = new Dictionary<int, Goal>();
+            _eventGoals = new Dictionary<GameEventType, Dictionary<int, Goal>>();
+            _completedGoals = new List<Goal>();
+            _requiredGoals = new List<Goal>();
         }
 
+        // load -- Loads a level
         public void load(string levelUID)
         {
             _uid = levelUID;
@@ -147,7 +152,7 @@ namespace StasisGame.Systems
                         break;
 
                     case "Goal":
-                        _entityManager.factory.createGoal(actorData);
+                        _entityManager.factory.createRegionGoal(actorData);
                         break;
                 }
             }
@@ -192,10 +197,14 @@ namespace StasisGame.Systems
             // Reset factory
             _entityManager.factory.reset();
 
-            // Script hook
+            // Call registerGoals script hook for this level
+            _scriptManager.registerGoals(levelUID, this);
+
+            // Call onLevelStart script hook for this level
             _scriptManager.onLevelStart(levelUID);
         }
 
+        // unload -- Unloads a level
         public void unload()
         {
             List<int> entitiesToPreserve = new List<int>();
@@ -218,25 +227,60 @@ namespace StasisGame.Systems
             _systemManager.remove(SystemType.CharacterMovement);
         }
 
+        // areAllGoalsComplete -- Determines whether all the required goals are complete
         public bool areAllGoalsComplete()
         {
-            return _completedGoals.Count >= _registeredGoals.Count;
+            return false;
         }
 
-        public void registerGoal(LevelGoalComponent goal)
+        // registerRegionGoal -- Registers a region of space (a polygon defined in the editor) as a goal
+        public void registerRegionGoal(Goal goal, int regionEntityId)
         {
-            _registeredGoals.Add(goal);
+            _regionGoals.Add(regionEntityId, goal);
+
+            if (goal.required)
+                _requiredGoals.Add(goal);
         }
 
-        public void completeGoal(LevelGoalComponent goal)
+        // registerEventGoal -- Registers a specific event from a specific entity as a goal
+        public void registerEventGoal(Goal goal, GameEventType eventType, int entityId)
         {
-            if (!_completedGoals.Contains(goal))
+            if (!_eventGoals.ContainsKey(eventType))
+                _eventGoals.Add(eventType, new Dictionary<int, Goal>());
+
+            _eventGoals[eventType].Add(entityId, goal);
+
+            if (goal.required)
+                _requiredGoals.Add(goal);
+        }
+
+        // completeRegionGoal -- Handles completion of a region goal
+        public void completeRegionGoal(int regionEntityId)
+        {
+            Goal goal = _regionGoals[regionEntityId];
+            ScriptBase script = null;
+
+            _completedGoals.Add(goal);
+            if (_scriptManager.scripts.TryGetValue(_uid, out script))
             {
-                Console.WriteLine("Completed a goal: {0}", goal);
-                _completedGoals.Add(goal);
+                script.onGoalComplete(goal);
             }
         }
 
+        // completeEventGoal -- Handles completion of an event goal
+        public void completeEventGoal(GameEventType eventType, int entityId)
+        {
+            Goal goal = _eventGoals[eventType][entityId];
+            ScriptBase script = null;
+
+            _completedGoals.Add(goal);
+            if (_scriptManager.scripts.TryGetValue(_uid, out script))
+            {
+                script.onGoalComplete(goal);
+            }
+        }
+
+        // update
         public void update()
         {
             if (_isActive)
@@ -252,6 +296,7 @@ namespace StasisGame.Systems
             }
         }
 
+        // draw
         public void draw()
         {
             _renderSystem.draw();

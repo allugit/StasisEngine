@@ -909,10 +909,10 @@ namespace StasisGame
             addEntityToIgnored(entityB, entityA);
         }
 
-        public void createGoal(XElement data)
+        public void createRegionGoal(XElement data)
         {
             LevelSystem levelSystem = _systemManager.getSystem(SystemType.Level) as LevelSystem;
-            LevelGoalComponent levelGoalComponent = new LevelGoalComponent();
+            RegionGoalComponent regionGoalComponent = new RegionGoalComponent();
             World world = (_systemManager.getSystem(SystemType.Physics) as PhysicsSystem).world;
             int entityId = _entityManager.createEntity();
             int actorId = int.Parse(data.Attribute("id").Value);
@@ -969,9 +969,9 @@ namespace StasisGame
             foreach (FixtureDef fixtureDef in fixtureDefs)
                 body.CreateFixture(fixtureDef);
 
-            levelSystem.registerGoal(levelGoalComponent);
+            //levelSystem.registerRegionGoal(regionGoalComponent);
             _entityManager.addComponent(entityId, new PhysicsComponent(body));
-            _entityManager.addComponent(entityId, levelGoalComponent);
+            _entityManager.addComponent(entityId, regionGoalComponent);
             _entityManager.addComponent(entityId, new WorldPositionComponent(body.GetPosition()));
             _entityManager.addComponent(entityId, new IgnoreRopeRaycastComponent());
             _entityManager.addComponent(entityId, new EditorIdComponent(int.Parse(data.Attribute("id").Value)));

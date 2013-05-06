@@ -19,7 +19,7 @@ namespace StasisEditor.Models
 
         [Browsable(false)]
         public ActorType type { get { return _type; } set { _type = value; } }
-        [Browsable(false)]
+        [ReadOnly(true)]
         public int id { get { return _id; } set { _id = value; } }
         public float layerDepth { get { return _layerDepth; } set { _layerDepth = value; } }
         [Browsable(false)]

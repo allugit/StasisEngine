@@ -8,7 +8,8 @@ namespace StasisCore
         OnLowerLimitReached,
         EnableMotor,
         DisableMotor,
-        ReverseMotor
+        ReverseMotor,
+        OnItemPickedUp
     };
 
     public class GameEvent

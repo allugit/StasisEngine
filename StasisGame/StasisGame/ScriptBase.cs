@@ -21,6 +21,14 @@ namespace StasisGame
             return false;
         }
 
+        virtual public void registerGoals(LevelSystem levelSystem)
+        {
+        }
+
+        virtual public void onGoalComplete(Goal goal)
+        {
+        }
+
         virtual public void onLevelStart()
         {
         }
@@ -29,7 +37,7 @@ namespace StasisGame
         {
         }
 
-        virtual public void onReturnToWorldMap(LevelSystem levelGoalSystem)
+        virtual public void onReturnToWorldMap(LevelSystem levelSystem)
         {
         }
     }
