@@ -21,11 +21,11 @@ namespace StasisCore.Models
         protected WorldPathState _state;
 
         public int id { get { return _id; } }
-        public WorldPathPoint controlA { get { return _controlA; } }
-        public WorldPathPoint controlB { get { return _controlB; } }
-        public WorldPathPoint pointA { get { return _pointA; } }
-        public WorldPathPoint pointB { get { return _pointB; } }
-        public WorldPathState state { get { return _state; } set { _state = value; } }
+        virtual public WorldPathPoint controlA { get { return _controlA; } }
+        virtual public WorldPathPoint controlB { get { return _controlB; } }
+        virtual public WorldPathPoint pointA { get { return _pointA; } }
+        virtual public WorldPathPoint pointB { get { return _pointB; } }
+        virtual public WorldPathState state { get { return _state; } set { _state = value; } }
 
         public WorldPath()
         {

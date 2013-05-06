@@ -30,7 +30,7 @@ namespace StasisGame.Data
         {
             get
             {
-                PlayerSystem playerSystem = (PlayerSystem)_systemManager.getSystem(SystemType.Player);
+                WorldMapSystem worldMapSystem = (WorldMapSystem)_systemManager.getSystem(SystemType.WorldMap);
 
                 XElement d = new XElement("PlayerData",
                     new XAttribute("name", _playerName),

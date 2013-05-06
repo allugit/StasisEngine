@@ -19,6 +19,7 @@ namespace StasisGame.Managers
         private string _sourcePrefix = @"
 using System;
 using StasisCore;
+using StasisCore.Models;
 using StasisGame.Managers;
 using StasisGame.Systems;
 namespace StasisGame

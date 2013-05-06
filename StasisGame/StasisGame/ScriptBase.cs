@@ -25,7 +25,7 @@ namespace StasisGame
         {
         }
 
-        virtual public void onGoalComplete(LevelSystem levelSystem, Goal goal)
+        virtual public void onGoalComplete(WorldMapSystem worldMapSystem, LevelSystem levelSystem, Goal goal)
         {
         }
 

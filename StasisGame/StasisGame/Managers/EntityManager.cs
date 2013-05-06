@@ -190,8 +190,9 @@ namespace StasisGame.Managers
                     Texture2D inventoryTexture = ResourceManager.getTexture(itemResource.Attribute("inventory_texture_uid").Value);
                     int quantity = int.Parse(itemData.Attribute("quantity").Value);
                     bool inWorld = false;
-                    bool hasAiming = bool.Parse(itemResource.Attribute("adds_reticle").Value);
-                    int maxRange = int.Parse(itemResource.Attribute("range").Value);
+                    bool hasAiming = Loader.loadBool(itemResource.Attribute("adds_reticle"), false);
+                    int maxRange = Loader.loadInt(itemResource.Attribute("range"), 0);
+
                     ItemComponent itemComponent = new ItemComponent(itemUID, itemType, inventoryTexture, quantity, inWorld, hasAiming, maxRange);
                     inventoryComponent.addItem(itemComponent);
                 }

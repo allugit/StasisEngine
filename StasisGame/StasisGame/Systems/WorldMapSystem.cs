@@ -27,6 +27,7 @@ namespace StasisGame.Systems
             _entityManager = entityManager;
         }
 
+        // loadWorldMap -- Create a world map from an instance of WorldMapData
         public void loadWorldMap(WorldMapData worldMapData)
         {
             // Create world map
@@ -43,6 +44,26 @@ namespace StasisGame.Systems
                 WorldPath worldPath = _worldMap.getWorldPath(worldPathData.id);
                 worldPath.state = worldPathData.state;
             }
+        }
+
+        // setLevelIconState -- Sets the state of a level icon
+        public void setLevelIconState(int id, LevelIconState state)
+        {
+            LevelIcon levelIcon = _worldMap.getLevelIcon(id);
+            bool changed = levelIcon.state != state;
+
+            levelIcon.state = state;
+            // TODO: Trigger animation on screen if state was changed
+        }
+
+        // setWorldPathState -- Sets the state of a world icon
+        public void setWorldPathState(int id, WorldPathState state)
+        {
+            WorldPath worldPath = _worldMap.getWorldPath(id);
+            bool changed = worldPath.state != state;
+
+            worldPath.state = state;
+            // TODO: Trigger animation on screen if state was changed
         }
 
         public void update()

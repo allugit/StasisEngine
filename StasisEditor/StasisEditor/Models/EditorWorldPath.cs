@@ -11,6 +11,17 @@ namespace StasisEditor.Models
     public class EditorWorldPath : WorldPath
     {
         private EditorWorldMap _worldMap;
+
+        [Browsable(false)]
+        public override WorldPathPoint controlA { get { return base.controlA; } }
+        [Browsable(false)]
+        public override WorldPathPoint controlB { get { return base.controlB; } }
+        [Browsable(false)]
+        public override WorldPathPoint pointA { get { return base.pointA; } }
+        [Browsable(false)]
+        public override WorldPathPoint pointB { get { return base.pointB; } }
+        [Browsable(false)]
+        public override WorldPathState state { get { return base.state; } set { base.state = value; } }
         [Browsable(false)]
         public XElement data
         {

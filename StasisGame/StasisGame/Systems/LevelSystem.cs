@@ -19,9 +19,9 @@ namespace StasisGame.Systems
         private LoderGame _game;
         private string _uid;
         private EntityManager _entityManager;
-        private RenderSystem _renderSystem;
         private SystemManager _systemManager;
         private ScriptManager _scriptManager;
+        private RenderSystem _renderSystem;
         private bool _isActive;
         private bool _paused;
         private bool _singleStep;
@@ -215,6 +215,7 @@ namespace StasisGame.Systems
             ScreenSystem screenSystem = (ScreenSystem)_systemManager.getSystem(SystemType.Screen);
 
             _isActive = false;
+            _renderSystem = null;
             _regionGoals.Clear();
             _eventGoals.Clear();
             _completedGoals.Clear();
@@ -257,6 +258,7 @@ namespace StasisGame.Systems
         // completeRegionGoal -- Handles completion of a region goal
         public void completeRegionGoal(int regionEntityId)
         {
+            WorldMapSystem worldMapSystem = (WorldMapSystem)_systemManager.getSystem(SystemType.WorldMap);
             Goal goal = null;
             ScriptBase script = null;
 
@@ -267,7 +269,7 @@ namespace StasisGame.Systems
                     _completedGoals.Add(goal.id, goal);
                     if (_scriptManager.scripts.TryGetValue(_uid, out script))
                     {
-                        script.onGoalComplete(this, goal);
+                        script.onGoalComplete(worldMapSystem, this, goal);
                     }
                 }
             }
@@ -276,6 +278,7 @@ namespace StasisGame.Systems
         // tryCompleteEventGoal -- Tries to handle the completion of an event goal
         public void tryCompleteEventGoal(GameEvent e)
         {
+            WorldMapSystem worldMapSystem = (WorldMapSystem)_systemManager.getSystem(SystemType.WorldMap);
             Goal goal = null;
             ScriptBase script = null;
             Dictionary<int, Goal> entityGoalMap;
@@ -287,7 +290,7 @@ namespace StasisGame.Systems
                     _completedGoals.Add(goal.id, goal);
                     if (_scriptManager.scripts.TryGetValue(_uid, out script))
                     {
-                        script.onGoalComplete(this, goal);
+                        script.onGoalComplete(worldMapSystem, this, goal);
                     }
                 }
             }
