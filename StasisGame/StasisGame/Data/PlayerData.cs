@@ -16,34 +16,28 @@ namespace StasisGame.Data
         private int _playerSlot;
         private string _playerName;
         private CurrentLocation _currentLocation;
-        private List<WorldMapData> _worldMapData;
-        private XElement _inventoryData;
-        private XElement _toolbarData;
+        private XElement _loadedData;
 
         public int playerSlot { get { return _playerSlot; } set { _playerSlot = value; } }
         public string playerName { get { return _playerName; } set { _playerName = value; } }
         public CurrentLocation currentLocation { get { return _currentLocation; } }
-        public XElement inventoryData { get { return _inventoryData; } }
-        public XElement toolbarData { get { return _toolbarData; } }
+        public XElement inventoryData { get { return _loadedData.Element("Inventory"); } }
+        public XElement toolbarData { get { return _loadedData.Element("Toolbar"); } }
 
         public XElement data
         {
             get
             {
-                WorldMapSystem worldMapSystem = (WorldMapSystem)_systemManager.getSystem(SystemType.WorldMap);
-
-                XElement d = new XElement("PlayerData",
+                XElement playerData = new XElement("PlayerData",
                     new XAttribute("name", _playerName),
                     new XAttribute("slot", _playerSlot),
                     _currentLocation.data);
 
-                foreach (WorldMapData worldMapData in _worldMapData)
-                    d.Add(worldMapData.data);
+                appendInventoryData(playerData);
+                appendToolbarData(playerData);
+                appendWorldMapData(playerData);
 
-                appendInventoryData(d);
-                appendToolbarData(d);
-
-                return d;
+                return playerData;
             }
         }
 
@@ -54,9 +48,19 @@ namespace StasisGame.Data
             _playerSlot = playerSlot;
             _playerName = playerName;
             _currentLocation = new CurrentLocation("oria_world_map", Vector2.Zero);
-            _worldMapData = new List<WorldMapData>();
-            _worldMapData.Add(new WorldMapData("oria_world_map"));
-            _worldMapData[0].levelIconData.Add(new LevelIconData(0, LevelIconState.Finished));  // Assume (for now) the player starts at a level icon that has id=0
+
+            // Default world map states -- needs to be set because appendWorldMapData requires existing data, and the first level needs to be visible
+            _loadedData = new XElement("PlayerData");
+            _loadedData.Add(
+                new XElement("WorldMapData",
+                    new XAttribute("world_map_uid", "oria_world_map"),
+                    new XElement("LevelIconData",
+                        new XAttribute("id", 0),
+                        new XAttribute("state", LevelIconState.Finished))));
+
+            //_worldMapData = new List<WorldMapData>();
+            //_worldMapData.Add(new WorldMapData("oria_world_map"));
+            //_worldMapData[0].levelIconData.Add(new LevelIconData(0, LevelIconState.Finished));  // Assume (for now) the player starts at a level icon that has id=0
         }
 
         // Construct a new PlayerData using data loaded from file -- used when loading an existing player
@@ -65,28 +69,23 @@ namespace StasisGame.Data
             _systemManager = systemManager;
             _playerSlot = int.Parse(data.Attribute("slot").Value);
             _playerName = data.Attribute("name").Value;
-            _inventoryData = data.Element("Inventory");
-            _toolbarData = data.Element("Toolbar");
+            _loadedData = data;
             _currentLocation = new CurrentLocation(data.Element("CurrentLocation"));
-            _worldMapData = new List<WorldMapData>();
-
-            foreach (XElement childData in data.Elements("WorldMapData"))
-                _worldMapData.Add(new WorldMapData(childData));
         }
 
-        // Get player specific world data
-        public WorldMapData getWorldData(string worldMapUID)
+        // getWorldMapData -- Get state data for a specific world map
+        public XElement getWorldMapData(string uid)
         {
-            foreach (WorldMapData worldMapData in _worldMapData)
+            foreach (XElement data in _loadedData.Elements("WorldMapData"))
             {
-                if (worldMapData.worldMapUID == worldMapUID)
-                    return worldMapData;
+                if (data.Attribute("world_map_uid").Value == uid)
+                    return data;
             }
             return null;
         }
 
         // Helper function to construct inventory data from an inventory component
-        private void appendInventoryData(XElement d)
+        private void appendInventoryData(XElement playerData)
         {
             PlayerSystem playerSystem = (PlayerSystem)_systemManager.getSystem(SystemType.Player);
 
@@ -105,12 +104,12 @@ namespace StasisGame.Data
                             new XAttribute("quantity", slotItemPair.Value.quantity)));
                     }
                 }
-                d.Add(inventoryData);
+                playerData.Add(inventoryData);
             }
         }
 
         // Helper function to construct toolbar data from a toolbar component
-        private void appendToolbarData(XElement d)
+        private void appendToolbarData(XElement playerData)
         {
             PlayerSystem playerSystem = (PlayerSystem)_systemManager.getSystem(SystemType.Player);
 
@@ -134,8 +133,44 @@ namespace StasisGame.Data
                         }
                     }
                 }
-                d.Add(toolbarData);
+                playerData.Add(toolbarData);
             }
+        }
+
+        // appendWorldMapData -- Helper function to construct world map data
+        // This method uses world map data that was loaded as a baseline, and overwrites data for the currently loaded world map.
+        // PlayerData should be saved before a new world map is loaded, otherwise changes will be lost.
+        private void appendWorldMapData(XElement playerData)
+        {
+            WorldMapSystem worldMapSystem = (WorldMapSystem)_systemManager.getSystem(SystemType.WorldMap);
+            List<XElement> worldMapData = new List<XElement>(_loadedData.Elements("WorldMapData"));
+
+            if (worldMapSystem != null)
+            {
+                foreach (XElement element in worldMapData)
+                {
+                    if (element.Attribute("world_map_uid").Value == worldMapSystem.worldMap.uid)
+                    {
+                        List<XElement> levelIconData = new List<XElement>();
+                        List<XElement> worldPathData = new List<XElement>();
+
+                        foreach (LevelIcon levelIcon in worldMapSystem.worldMap.levelIcons)
+                        {
+                            levelIconData.Add(new XElement("LevelIconData", new XAttribute("id", levelIcon.id), new XAttribute("state", levelIcon.state)));
+                        }
+                        foreach (WorldPath worldPath in worldMapSystem.worldMap.worldPaths)
+                        {
+                            worldPathData.Add(new XElement("WorldPathData", new XAttribute("id", worldPath.id), new XAttribute("state", worldPath.state)));
+                        }
+
+                        element.RemoveNodes();
+                        element.Add(levelIconData);
+                        element.Add(worldPathData);
+                    }
+                }
+            }
+
+            playerData.Add(worldMapData);
         }
     }
 }

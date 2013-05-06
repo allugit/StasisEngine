@@ -208,8 +208,10 @@ namespace StasisGame
         public void openWorldMap()
         {
             WorldMapSystem worldMapSystem = (WorldMapSystem)_systemManager.getSystem(SystemType.WorldMap);
+            string currentWorldMapUID = DataManager.playerData.currentLocation.worldMapUID;
 
-            worldMapSystem.loadWorldMap(DataManager.playerData.getWorldData(DataManager.playerData.currentLocation.worldMapUID));
+            //worldMapSystem.loadWorldMap(DataManager.playerData.getWorldData(DataManager.playerData.currentLocation.worldMapUID));
+            worldMapSystem.loadWorldMap(currentWorldMapUID, DataManager.playerData.getWorldMapData(currentWorldMapUID));
             _worldMapScreen = _worldMapScreen ?? new WorldMapScreen(this, _systemManager);
             _screenSystem.addScreen(_worldMapScreen);
 

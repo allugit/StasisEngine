@@ -108,10 +108,7 @@
     <Compile Include="Components\RopeRenderComponent.cs" />
     <Compile Include="Components\WorldPositionComponent.cs" />
     <Compile Include="Data\CurrentLocation.cs" />
-    <Compile Include="Data\LevelIconData.cs" />
     <Compile Include="Data\PlayerData.cs" />
-    <Compile Include="Data\WorldMapData.cs" />
-    <Compile Include="Data\WorldPathData.cs" />
     <Compile Include="DistanceMetamerConstraint.cs" />
     <Compile Include="Data\GameSettings.cs" />
     <Compile Include="Goal.cs" />

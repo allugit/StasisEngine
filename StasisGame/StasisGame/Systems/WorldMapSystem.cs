@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Xml.Linq;
 using StasisCore;
 using StasisCore.Models;
 using StasisGame.Managers;
@@ -28,21 +29,23 @@ namespace StasisGame.Systems
         }
 
         // loadWorldMap -- Create a world map from an instance of WorldMapData
-        public void loadWorldMap(WorldMapData worldMapData)
+        public void loadWorldMap(string worldMapUID, XElement worldMapData)
         {
             // Create world map
-            _worldMap = new WorldMap(ResourceManager.getResource(worldMapData.worldMapUID));
+            _worldMap = new WorldMap(ResourceManager.getResource(worldMapUID));
 
             // Initialize states from stored world map data
-            foreach (LevelIconData levelIconData in worldMapData.levelIconData)
+            foreach (XElement levelIconData in worldMapData.Elements("LevelIconData"))
             {
-                LevelIcon levelIcon = _worldMap.getLevelIcon(levelIconData.id);
-                levelIcon.state = levelIconData.state;
+                int id = int.Parse(levelIconData.Attribute("id").Value);
+                LevelIcon levelIcon = _worldMap.getLevelIcon(id);
+                levelIcon.state = (LevelIconState)Enum.Parse(typeof(LevelIconState), levelIconData.Attribute("state").Value);
             }
-            foreach (WorldPathData worldPathData in worldMapData.worldPathData)
+            foreach (XElement worldPathData in worldMapData.Elements("WorldPathData"))
             {
-                WorldPath worldPath = _worldMap.getWorldPath(worldPathData.id);
-                worldPath.state = worldPathData.state;
+                int id = int.Parse(worldPathData.Attribute("id").Value);
+                WorldPath worldPath = _worldMap.getWorldPath(id);
+                worldPath.state = (WorldPathState)Enum.Parse(typeof(WorldPathState), worldPathData.Attribute("state").Value);
             }
         }
 

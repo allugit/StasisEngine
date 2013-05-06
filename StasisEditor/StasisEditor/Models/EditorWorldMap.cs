@@ -10,12 +10,6 @@ namespace StasisEditor.Models
 {
     public class EditorWorldMap : WorldMap
     {
-        private string _uid;
-        private string _textureUID;
-
-        public string uid { get { return _uid; } set { _uid = value; } }
-        public string textureUID { get { return _textureUID; } set { _textureUID = value; } }
-
         [Browsable(false)]
         public override Texture2D texture { get { return base.texture; } }
         [Browsable(false)]
