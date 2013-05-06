@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Xml.Linq;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
@@ -15,6 +16,7 @@ namespace StasisGame.Managers
         private SystemManager _systemManager;
         private Dictionary<int, List<IComponent>> _entities;
         private EntityFactory _factory;
+        private List<int> _reservedIds;
 
         public EntityFactory factory { get { return _factory; } }
 
@@ -23,7 +25,7 @@ namespace StasisGame.Managers
             get
             {
                 int i = 0;
-                while (_entities.ContainsKey(i))
+                while (_entities.ContainsKey(i) || _reservedIds.Contains(i))
                     i++;
                 return i;
             }
@@ -34,6 +36,7 @@ namespace StasisGame.Managers
             _systemManager = systemManager;
             _entities = new Dictionary<int, List<IComponent>>();
             _factory = new EntityFactory(_systemManager, this);
+            _reservedIds = new List<int>();
         }
 
         // Create an entity
@@ -42,6 +45,26 @@ namespace StasisGame.Managers
             int id = newId;
             _entities.Add(id, new List<IComponent>());
             return id;
+        }
+
+        // Create an entity with a specific id -- can use reserved ids
+        public int createEntity(int id)
+        {
+            _entities.Add(id, new List<IComponent>());
+            return id;
+        }
+
+        // Reserve entity id
+        public void reserveEntityId(int id)
+        {
+            Debug.Assert(!_reservedIds.Contains(id));
+            _reservedIds.Add(id);
+        }
+
+        // Clear reserved entity ids
+        public void clearReservedEntityIds()
+        {
+            _reservedIds.Clear();
         }
 
         // Kill an entity

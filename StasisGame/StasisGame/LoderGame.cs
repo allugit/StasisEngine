@@ -136,8 +136,9 @@ namespace StasisGame
             _systemManager.add(_levelSystem, -1);
         }
 
-        private void initializePlayerInventory()
+        private void initializePlayerEntity()
         {
+            _playerSystem.playerId = _entityManager.createEntity(9999);
             _entityManager.initializePlayerInventory(_playerSystem.playerId, DataManager.playerData.inventoryData);
             _entityManager.initializePlayerToolbar(
                 _playerSystem.playerId,
@@ -148,9 +149,8 @@ namespace StasisGame
         private void previewLevel(string levelUID)
         {
             startPersistentSystems();
-            _playerSystem.playerId = _entityManager.createEntity();
             DataManager.createTemporaryPlayerData(_systemManager);
-            initializePlayerInventory();
+            initializePlayerEntity();
 
             // Load level
             loadLevel(levelUID);
@@ -166,9 +166,8 @@ namespace StasisGame
         public void loadGame(int playerDataSlot)
         {
             startPersistentSystems();
-            _playerSystem.playerId = _entityManager.createEntity();
             DataManager.loadPlayerData(playerDataSlot);
-            initializePlayerInventory();
+            initializePlayerEntity();
             _screenSystem.removeScreen(_mainMenuScreen);
             openWorldMap();
         }

@@ -38,7 +38,7 @@ namespace StasisGame.Systems
             BodyDef groundBodyDef = new BodyDef();
             CircleShape circleShape = new CircleShape();
             FixtureDef fixtureDef = new FixtureDef();
-            int groundId = _entityManager.createEntity();
+            int groundId = _entityManager.createEntity(10000);
 
             // Create world
             _world = new World(Loader.loadVector2(data.Attribute("gravity"), new Vector2(0, 32)), true);

@@ -83,6 +83,10 @@ namespace StasisGame.Systems
             background.loadTextures();
             _renderSystem.setBackground(background);
 
+            // Reserve actor ids as entity ids
+            foreach (XElement actorData in data.Elements("Actor"))
+                _entityManager.reserveEntityId(int.Parse(actorData.Attribute("id").Value));
+
             // Create output gate entities
             _entityManager.factory.createOutputGates(data);
 
@@ -194,7 +198,8 @@ namespace StasisGame.Systems
 
             _isActive = true;
 
-            // Reset factory
+            // Reset entity manager and entity factory -- TODO: move this to unload() ?
+            _entityManager.clearReservedEntityIds();
             _entityManager.factory.reset();
 
             // Call registerGoals script hook for this level
@@ -257,13 +262,19 @@ namespace StasisGame.Systems
         // completeRegionGoal -- Handles completion of a region goal
         public void completeRegionGoal(int regionEntityId)
         {
-            Goal goal = _regionGoals[regionEntityId];
+            Goal goal = null;
             ScriptBase script = null;
 
-            _completedGoals.Add(goal);
-            if (_scriptManager.scripts.TryGetValue(_uid, out script))
+            if (_regionGoals.TryGetValue(regionEntityId, out goal))
             {
-                script.onGoalComplete(goal);
+                if (!_completedGoals.Contains(goal))
+                {
+                    _completedGoals.Add(goal);
+                    if (_scriptManager.scripts.TryGetValue(_uid, out script))
+                    {
+                        script.onGoalComplete(goal);
+                    }
+                }
             }
         }
 
