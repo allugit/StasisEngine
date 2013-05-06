@@ -215,6 +215,9 @@ namespace StasisGame.Systems
             ScreenSystem screenSystem = (ScreenSystem)_systemManager.getSystem(SystemType.Screen);
 
             _isActive = false;
+            _regionGoals.Clear();
+            _eventGoals.Clear();
+            _completedGoals.Clear();
             entitiesToPreserve.Add(playerSystem.playerId);
             _entityManager.removeLevelComponentsFromPlayer(playerSystem.playerId);
             _entityManager.killAllEntities(entitiesToPreserve);
