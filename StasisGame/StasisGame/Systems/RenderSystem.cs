@@ -92,8 +92,6 @@ namespace StasisGame.Systems
 
         public void addRenderablePrimitive(IRenderablePrimitive renderablePrimitive)
         {
-            float layerDepth = -renderablePrimitive.layerDepth;     // match sprite batch's layering order
-
             if (_headNode == null)
             {
                 _headNode = new RenderablePrimitiveNode(renderablePrimitive);
@@ -104,14 +102,17 @@ namespace StasisGame.Systems
 
                 while (current != null)
                 {
-                    // A layerDepth of 1 is at the background, and a layerDepth of 0 is at the foreground.
-                    if (layerDepth <= current.renderablePrimitive.layerDepth)
+                    if (renderablePrimitive.layerDepth >= current.renderablePrimitive.layerDepth)
                     {
-                        // Insert when the current node has a layerDepth > the renderablePrimitive's
-                        current.insert(new RenderablePrimitiveNode(renderablePrimitive));
+                        current.insertBefore(new RenderablePrimitiveNode(renderablePrimitive));
+                        _headNode = current.previous;
                         return;
                     }
-
+                    else if (renderablePrimitive.layerDepth < current.renderablePrimitive.layerDepth)
+                    {
+                        current.insertAfter(new RenderablePrimitiveNode(renderablePrimitive));
+                        return;
+                    }
                     current = current.next;
                 }
 

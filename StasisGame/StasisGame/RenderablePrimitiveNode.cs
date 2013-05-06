@@ -20,7 +20,8 @@ namespace StasisGame
             _renderablePrimitive = renderablePrimitive;
         }
 
-        public void insert(RenderablePrimitiveNode node)
+        // Inserts a node after this node
+        public void insertAfter(RenderablePrimitiveNode node)
         {
             if (_next != null)
             {
@@ -29,6 +30,18 @@ namespace StasisGame
             node.previous = this;
             node.next = _next;
             _next = node;
+        }
+
+        // Inserts a node before this node
+        public void insertBefore(RenderablePrimitiveNode node)
+        {
+            if (_previous != null)
+            {
+                _previous.next = node;
+            }
+            node.next = this;
+            node.previous = _previous;
+            _previous = node;
         }
 
         public void remove()
