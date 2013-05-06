@@ -123,6 +123,7 @@ namespace StasisGame.Systems
 
         public void PreSolve(Contact contact, ref Manifold manifold)
         {
+            EventSystem eventSystem = (EventSystem)_systemManager.getSystem(SystemType.Event);
             Fixture fixtureA = contact.GetFixtureA();
             Fixture fixtureB = contact.GetFixtureB();
             int entityA = (int)fixtureA.GetBody().GetUserData();
@@ -154,6 +155,7 @@ namespace StasisGame.Systems
                         itemComponent.inWorld = false;
                         _bodiesToRemove.Add(fixture.GetBody());
                         _entityManager.killEntity(itemEntityId);
+                        eventSystem.postEvent(new GameEvent(GameEventType.OnItemPickedUp, itemEntityId));
                     }
                 }
             }

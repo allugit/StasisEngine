@@ -18,6 +18,7 @@ namespace StasisGame.Managers
         private CompilerParameters _parameters;
         private string _sourcePrefix = @"
 using System;
+using StasisCore;
 using StasisGame.Managers;
 using StasisGame.Systems;
 namespace StasisGame
@@ -42,6 +43,7 @@ namespace StasisGame
             _parameters.GenerateExecutable = false;
             _parameters.GenerateInMemory = true;
             _parameters.ReferencedAssemblies.Add("StasisGame.exe");
+            _parameters.ReferencedAssemblies.Add("StasisCore.dll");
 
             loadGlobalScript();
             _scripts["global"].doAction("omg");

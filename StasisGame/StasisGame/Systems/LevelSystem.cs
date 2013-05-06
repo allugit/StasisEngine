@@ -278,16 +278,23 @@ namespace StasisGame.Systems
             }
         }
 
-        // completeEventGoal -- Handles completion of an event goal
-        public void completeEventGoal(GameEventType eventType, int entityId)
+        // tryCompleteEventGoal -- Tries to handle the completion of an event goal
+        public void tryCompleteEventGoal(GameEvent e)
         {
-            Goal goal = _eventGoals[eventType][entityId];
+            Goal goal = null;
             ScriptBase script = null;
+            Dictionary<int, Goal> entityGoalMap;
 
-            _completedGoals.Add(goal);
-            if (_scriptManager.scripts.TryGetValue(_uid, out script))
+            if (_eventGoals.TryGetValue(e.type, out entityGoalMap))
             {
-                script.onGoalComplete(goal);
+                if (entityGoalMap.TryGetValue(e.originEntityId, out goal))
+                {
+                    _completedGoals.Add(goal);
+                    if (_scriptManager.scripts.TryGetValue(_uid, out script))
+                    {
+                        script.onGoalComplete(goal);
+                    }
+                }
             }
         }
 
