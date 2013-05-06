@@ -27,8 +27,7 @@ namespace StasisGame.Systems
         private bool _singleStep;
         private Dictionary<int, Goal> _regionGoals;
         private Dictionary<GameEventType, Dictionary<int, Goal>> _eventGoals;
-        private List<Goal> _completedGoals;
-        private List<Goal> _requiredGoals;
+        private Dictionary<int, Goal> _completedGoals;
 
         public int defaultPriority { get { return 30; } }
         public SystemType systemType { get { return SystemType.Level; } }
@@ -45,8 +44,7 @@ namespace StasisGame.Systems
             _scriptManager = _game.scriptManager;
             _regionGoals = new Dictionary<int, Goal>();
             _eventGoals = new Dictionary<GameEventType, Dictionary<int, Goal>>();
-            _completedGoals = new List<Goal>();
-            _requiredGoals = new List<Goal>();
+            _completedGoals = new Dictionary<int, Goal>();
         }
 
         // load -- Loads a level
@@ -232,19 +230,16 @@ namespace StasisGame.Systems
             _systemManager.remove(SystemType.CharacterMovement);
         }
 
-        // areAllGoalsComplete -- Determines whether all the required goals are complete
-        public bool areAllGoalsComplete()
+        // isGoalComplete -- Checks if a goal with a specific id has been completed
+        public bool isGoalComplete(int goalId)
         {
-            return false;
+            return _completedGoals.ContainsKey(goalId);
         }
 
         // registerRegionGoal -- Registers a region of space (a polygon defined in the editor) as a goal
         public void registerRegionGoal(Goal goal, int regionEntityId)
         {
             _regionGoals.Add(regionEntityId, goal);
-
-            if (goal.required)
-                _requiredGoals.Add(goal);
         }
 
         // registerEventGoal -- Registers a specific event from a specific entity as a goal
@@ -254,9 +249,6 @@ namespace StasisGame.Systems
                 _eventGoals.Add(eventType, new Dictionary<int, Goal>());
 
             _eventGoals[eventType].Add(entityId, goal);
-
-            if (goal.required)
-                _requiredGoals.Add(goal);
         }
 
         // completeRegionGoal -- Handles completion of a region goal
@@ -267,12 +259,12 @@ namespace StasisGame.Systems
 
             if (_regionGoals.TryGetValue(regionEntityId, out goal))
             {
-                if (!_completedGoals.Contains(goal))
+                if (!_completedGoals.ContainsKey(goal.id))
                 {
-                    _completedGoals.Add(goal);
+                    _completedGoals.Add(goal.id, goal);
                     if (_scriptManager.scripts.TryGetValue(_uid, out script))
                     {
-                        script.onGoalComplete(goal);
+                        script.onGoalComplete(this, goal);
                     }
                 }
             }
@@ -289,29 +281,26 @@ namespace StasisGame.Systems
             {
                 if (entityGoalMap.TryGetValue(e.originEntityId, out goal))
                 {
-                    _completedGoals.Add(goal);
+                    _completedGoals.Add(goal.id, goal);
                     if (_scriptManager.scripts.TryGetValue(_uid, out script))
                     {
-                        script.onGoalComplete(goal);
+                        script.onGoalComplete(this, goal);
                     }
                 }
             }
         }
 
+        // endLevel
+        public void endLevel()
+        {
+            unload();
+            _game.openWorldMap();
+            _scriptManager.onReturnToWorldMap(_uid, this);
+        }
+
         // update
         public void update()
         {
-            if (_isActive)
-            {
-                if (areAllGoalsComplete())
-                {
-                    Console.WriteLine("All goals complete!");
-
-                    unload();
-                    _game.openWorldMap();
-                    _scriptManager.onReturnToWorldMap(_uid, this);
-                }
-            }
         }
 
         // draw
