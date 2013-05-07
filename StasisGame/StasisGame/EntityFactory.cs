@@ -16,12 +16,12 @@ namespace StasisGame
 {
     public class EntityFactory
     {
-        public struct RopeRaycastResult
+        public struct RopeAnchorResult
         {
             public Fixture fixture;
             public Vector2 worldPoint;
             public bool success;
-            public RopeRaycastResult(Fixture fixture, Vector2 worldPoint, bool success)
+            public RopeAnchorResult(Fixture fixture, Vector2 worldPoint, bool success)
             {
                 this.fixture = fixture;
                 this.worldPoint = worldPoint;
@@ -410,8 +410,8 @@ namespace StasisGame
             int entityId = -1;
             float segmentLength = 0.5f;
             float segmentHalfLength = segmentLength * 0.5f;
-            RopeRaycastResult abResult = new RopeRaycastResult();
-            RopeRaycastResult baResult = new RopeRaycastResult();
+            RopeAnchorResult abResult = new RopeAnchorResult();
+            RopeAnchorResult baResult = new RopeAnchorResult();
             Vector2 finalPointA = Vector2.Zero;
             Vector2 finalPointB = Vector2.Zero;
             Vector2 finalRelativeLine = Vector2.Zero;
@@ -424,6 +424,7 @@ namespace StasisGame
             RevoluteJointDef anchorADef = new RevoluteJointDef();
             RevoluteJointDef anchorBDef = new RevoluteJointDef();
             
+            // Raycast to find A to B result
             world.RayCast((fixture, point, normal, fraction) =>
                 {
                     int fixtureEntityId = (int)fixture.GetBody().GetUserData();
@@ -438,6 +439,7 @@ namespace StasisGame
                 initialPointA,
                 initialPointB);
 
+            // Raycast to find B to A result
             world.RayCast((fixture, point, normal, fraction) =>
                 {
                     int fixtureEntityId = (int)fixture.GetBody().GetUserData();
@@ -452,6 +454,38 @@ namespace StasisGame
                 abResult.success ? abResult.worldPoint : initialPointB,
                 initialPointA);
 
+            if (!abResult.success)
+            {
+                // If two successful results are necessary or if there are no successful results, test for a wall
+                if (doubleAnchor || !baResult.success)
+                {
+                    // Test for a wall at initalPointB
+                    Fixture wallFixture = null;
+                    if (testForWall(world, initialPointB, out wallFixture))
+                    {
+                        abResult.fixture = wallFixture;
+                        abResult.success = true;
+                        abResult.worldPoint = initialPointB;
+                    }
+                }
+            }
+            if (!baResult.success)
+            {
+                // If two successful results are necessary or if there are no successful results, test for a wall
+                if (doubleAnchor || !abResult.success)
+                {
+                    // Test for a wall at initialPointA
+                    Fixture wallFixture = null;
+                    if (testForWall(world, initialPointA, out wallFixture))
+                    {
+                        baResult.fixture = wallFixture;
+                        baResult.success = true;
+                        baResult.worldPoint = initialPointA;
+                    }
+                }
+            }
+
+            // Halt if there were no successful results
             if (!(abResult.success || baResult.success))
                 return -1;
 
@@ -573,12 +607,40 @@ namespace StasisGame
             return entityId;
         }
 
+        // testForWall -- Used by createRope to test points for wall entities
+        private bool testForWall(World world, Vector2 point, out Fixture wallFixture)
+        {
+            AABB aabb = new AABB();
+            bool result = false;
+            Fixture resultFixture = null;
+
+            aabb.lowerBound = point;
+            aabb.upperBound = point;
+            world.QueryAABB((fixtureProxy) =>
+                {
+                    int fixtureEntityId = (int)fixtureProxy.fixture.GetBody().GetUserData();
+                    WallComponent wallComponent = (WallComponent)_entityManager.getComponent(fixtureEntityId, ComponentType.Wall);
+
+                    if (wallComponent != null)
+                    {
+                        result = true;
+                        resultFixture = fixtureProxy.fixture;
+                        return false;
+                    }
+                    return true;
+                },
+                ref aabb);
+
+            wallFixture = resultFixture;    // have to assign wallFixture in this roundabout way because an out param cannot be assigned in a lambda statement
+            return result;
+        }
+
         public void createTerrain(XElement data)
         {
             World world = (_systemManager.getSystem(SystemType.Physics) as PhysicsSystem).world;
             int actorId = int.Parse(data.Attribute("id").Value);
             int entityId = _entityManager.createEntity(actorId);
-            bool wall = Loader.loadBool(data.Attribute("wall"), false);
+            bool isWall = Loader.loadBool(data.Attribute("wall"), false);
             BodyDef bodyDef = new BodyDef();
             List<FixtureDef> fixtureDefs = new List<FixtureDef>();
             List<Vector2> points = new List<Vector2>();
@@ -623,7 +685,7 @@ namespace StasisGame
                 fixtureDef.restitution = Loader.loadFloat(data.Attribute("restitution"), 0f);
                 fixtureDef.shape = shape;
                 fixtureDef.filter.categoryBits = bodyType == BodyType.Dynamic ? (ushort)CollisionCategory.DynamicGeometry : (ushort)CollisionCategory.StaticGeometry;
-                if (wall)
+                if (isWall)
                 {
                     fixtureDef.filter.maskBits = 0;
                 }
@@ -645,6 +707,11 @@ namespace StasisGame
             foreach (FixtureDef fixtureDef in fixtureDefs)
                 body.CreateFixture(fixtureDef);
 
+            if (isWall)
+            {
+                _entityManager.addComponent(entityId, new IgnoreRopeRaycastComponent());
+                _entityManager.addComponent(entityId, new WallComponent());
+            }
             _entityManager.addComponent(entityId, new PhysicsComponent(body));
             _entityManager.addComponent(entityId, new WorldPositionComponent(body.GetPosition()));
             _entityManager.addComponent(entityId, createBodyRenderComponent(data));
