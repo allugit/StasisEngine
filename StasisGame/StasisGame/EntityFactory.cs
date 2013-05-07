@@ -35,7 +35,6 @@ namespace StasisGame
                                                                                                             // key 2) output gate's entity id
         private Dictionary<int, Dictionary<int, GateOutputComponent>> _circuitIdGateIdGateComponentMap;     // key 1) circuit actor id
                                                                                                             // key 2) gate id
-        //private Dictionary<int, int> _actorIdToEntityId;
 
         public EntityFactory(SystemManager systemManager, EntityManager entityManager)
         {
@@ -43,14 +42,12 @@ namespace StasisGame
             _entityManager = entityManager;
             _actorIdEntityIdGateComponentMap = new Dictionary<int, Dictionary<int, GateOutputComponent>>();
             _circuitIdGateIdGateComponentMap = new Dictionary<int, Dictionary<int, GateOutputComponent>>();
-            //_actorIdToEntityId = new Dictionary<int, int>();
         }
 
         public void reset()
         {
             _actorIdEntityIdGateComponentMap.Clear();
             _circuitIdGateIdGateComponentMap.Clear();
-            //_actorIdToEntityId.Clear();
         }
 
         private Body matchBodyToEditorId(int editorId)
@@ -68,22 +65,11 @@ namespace StasisGame
             }
             return null;
         }
-        /*
-        private int matchEntityIdToEditorId(int editorId)
+
+        private void expandLevelBoundary(Vector2 point)
         {
-            List<int> editorIdEntities = _entityManager.getEntitiesPosessing(ComponentType.EditorId);
-
-            if (editorId == -1)
-                return -1;
-
-            for (int i = 0; i < editorIdEntities.Count; i++)
-            {
-                EditorIdComponent editorIdComponent = _entityManager.getComponent(editorIdEntities[i], ComponentType.EditorId) as EditorIdComponent;
-                if (editorIdComponent.id == editorId)
-                    return editorIdEntities[i];
-            }
-            return -1;
-        }*/
+            ((LevelSystem)_systemManager.getSystem(SystemType.Level)).expandBoundary(point);
+        }
 
         private BodyRenderComponent createBodyRenderComponent(XElement data)
         {
@@ -257,8 +243,7 @@ namespace StasisGame
             PolygonShape boxShape = new PolygonShape();
             FixtureDef boxFixtureDef = new FixtureDef();
             BodyType bodyType = (BodyType)Loader.loadEnum(typeof(BodyType), data.Attribute("body_type"), (int)BodyType.Static);
-
-            //_actorIdToEntityId.Add(actorId, entityId);
+            Transform xf;
 
             bodyDef.type = bodyType;
             bodyDef.position = Loader.loadVector2(data.Attribute("position"), Vector2.Zero);
@@ -281,10 +266,19 @@ namespace StasisGame
             body = world.CreateBody(bodyDef);
             body.CreateFixture(boxFixtureDef);
 
+            // Add components
             _entityManager.addComponent(entityId, new PhysicsComponent(body));
             _entityManager.addComponent(entityId, createBodyRenderComponent(data));
             _entityManager.addComponent(entityId, new EditorIdComponent(actorId));
             _entityManager.addComponent(entityId, new WorldPositionComponent(body.GetPosition()));
+
+            // Expand level boundary
+            body.GetTransform(out xf);
+            for (int i = 0; i < boxShape._vertexCount; i++)
+            {
+                Vector2 point = MathUtils.Multiply(ref xf, boxShape._vertices[i]);
+                expandLevelBoundary(point);
+            }
         }
 
         public void createCircle(XElement data)
@@ -297,8 +291,6 @@ namespace StasisGame
             FixtureDef circleFixtureDef = new FixtureDef();
             CircleShape circleShape = new CircleShape();
             BodyType bodyType = (BodyType)Loader.loadEnum(typeof(BodyType), data.Attribute("body_type"), (int)BodyType.Static);
-
-            //_actorIdToEntityId.Add(actorId, entityId);
 
             bodyDef.type = bodyType;
             bodyDef.position = Loader.loadVector2(data.Attribute("position"), Vector2.Zero);
@@ -320,10 +312,15 @@ namespace StasisGame
             body = world.CreateBody(bodyDef);
             body.CreateFixture(circleFixtureDef);
 
+            // Add components
             _entityManager.addComponent(entityId, new PhysicsComponent(body));
             _entityManager.addComponent(entityId, createBodyRenderComponent(data));
             _entityManager.addComponent(entityId, new EditorIdComponent(actorId));
             _entityManager.addComponent(entityId, new WorldPositionComponent(body.GetPosition()));
+
+            // Expand level boundary
+            expandLevelBoundary(body.GetPosition() + new Vector2(-circleShape._radius, -circleShape._radius));
+            expandLevelBoundary(body.GetPosition() + new Vector2(circleShape._radius, circleShape._radius));
         }
 
         public void createFluid(XElement data)
@@ -334,6 +331,10 @@ namespace StasisGame
             foreach (XElement pointData in data.Elements("Point"))
                 polygonPoints.Add(Loader.loadVector2(pointData, Vector2.Zero));
             fluidSystem.createFluidBody(polygonPoints);
+
+            // Expand level boundary
+            foreach (Vector2 point in polygonPoints)
+                expandLevelBoundary(point);
         }
 
         public void createWorldItem(XElement data)
@@ -707,6 +708,7 @@ namespace StasisGame
             foreach (FixtureDef fixtureDef in fixtureDefs)
                 body.CreateFixture(fixtureDef);
 
+            // Add components
             if (isWall)
             {
                 _entityManager.addComponent(entityId, new IgnoreRopeRaycastComponent());
@@ -717,6 +719,10 @@ namespace StasisGame
             _entityManager.addComponent(entityId, createBodyRenderComponent(data));
             _entityManager.addComponent(entityId, new IgnoreTreeCollisionComponent());
             _entityManager.addComponent(entityId, new EditorIdComponent(actorId));
+
+            // Expand level boundary
+            foreach (Vector2 point in points)
+                expandLevelBoundary(point);
         }
 
         public void createTree(XElement data)
@@ -755,7 +761,7 @@ namespace StasisGame
             }
             leafTextures.Add(renderSystem.materialRenderer.renderMaterial(leafMaterial, maxLeafPoints, 1f, true));
 
-            tree = new Tree(_systemManager.getSystem(SystemType.Tree) as TreeSystem, barkTexture, leafTextures, data);
+            tree = new Tree(_systemManager.getSystem(SystemType.Tree) as TreeSystem, barkTexture, leafTextures, data);  // also expands level boundary
 
             // Handle initial iterations
             while ((int)tree.age > tree.iterations)
@@ -771,6 +777,7 @@ namespace StasisGame
                 }
             }
 
+            // Add components
             _entityManager.addComponent(entityId, new TreeComponent(tree));
             _entityManager.addComponent(entityId, new EditorIdComponent(actorId));
             _entityManager.addComponent(entityId, new WorldPositionComponent(tree.position));
@@ -1052,12 +1059,16 @@ namespace StasisGame
             foreach (FixtureDef fixtureDef in fixtureDefs)
                 body.CreateFixture(fixtureDef);
 
-            //levelSystem.registerRegionGoal(regionGoalComponent);
+            // Add components
             _entityManager.addComponent(entityId, new PhysicsComponent(body));
             _entityManager.addComponent(entityId, regionGoalComponent);
             _entityManager.addComponent(entityId, new WorldPositionComponent(body.GetPosition()));
             _entityManager.addComponent(entityId, new IgnoreRopeRaycastComponent());
             _entityManager.addComponent(entityId, new EditorIdComponent(int.Parse(data.Attribute("id").Value)));
+
+            // Expand level boundary
+            foreach (Vector2 point in points)
+                levelSystem.expandBoundary(point);
         }
     }
 }

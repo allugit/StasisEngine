@@ -166,6 +166,9 @@ namespace StasisGame
 
             // Destroy markers in the occupied zone
             destroyMarkersInOccupiedZone();
+
+            // Expand level boundary
+            tree.treeSystem.levelSystem.expandBoundary(position);
         }
 
         // isBranchingPoint

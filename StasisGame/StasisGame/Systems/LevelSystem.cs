@@ -11,6 +11,7 @@ using StasisGame.Systems;
 using StasisGame.Managers;
 using StasisGame.Components;
 using StasisGame.UI;
+using Box2D.XNA;
 
 namespace StasisGame.Systems
 {
@@ -22,12 +23,15 @@ namespace StasisGame.Systems
         private SystemManager _systemManager;
         private ScriptManager _scriptManager;
         private RenderSystem _renderSystem;
+        private PlayerSystem _playerSystem;
         private bool _isActive;
         private bool _paused;
         private bool _singleStep;
         private Dictionary<int, Goal> _regionGoals;
         private Dictionary<GameEventType, Dictionary<int, Goal>> _eventGoals;
         private Dictionary<int, Goal> _completedGoals;
+        private AABB _levelBoundary;
+        private Vector2 _boundaryMargin;
 
         public int defaultPriority { get { return 30; } }
         public SystemType systemType { get { return SystemType.Level; } }
@@ -45,6 +49,14 @@ namespace StasisGame.Systems
             _regionGoals = new Dictionary<int, Goal>();
             _eventGoals = new Dictionary<GameEventType, Dictionary<int, Goal>>();
             _completedGoals = new Dictionary<int, Goal>();
+            _levelBoundary = new AABB();
+            _boundaryMargin = new Vector2(50f, 50f);
+        }
+
+        public void expandBoundary(Vector2 point)
+        {
+            _levelBoundary.lowerBound = Vector2.Min(point - _boundaryMargin, _levelBoundary.lowerBound);
+            _levelBoundary.upperBound = Vector2.Max(point + _boundaryMargin, _levelBoundary.upperBound);
         }
 
         // load -- Loads a level
@@ -73,6 +85,7 @@ namespace StasisGame.Systems
             _renderSystem = new RenderSystem(_game, _systemManager, _entityManager);
             _systemManager.add(new RopeSystem(_systemManager, _entityManager), -1);
             _systemManager.add(_renderSystem, -1);
+            _playerSystem = (PlayerSystem)_systemManager.getSystem(SystemType.Player);
 
             // Create background
             backgroundUID = Loader.loadString(data.Attribute("background_uid"), "default_background");
@@ -216,6 +229,7 @@ namespace StasisGame.Systems
 
             _isActive = false;
             _renderSystem = null;
+            _playerSystem = null;
             _regionGoals.Clear();
             _eventGoals.Clear();
             _completedGoals.Clear();
@@ -307,6 +321,22 @@ namespace StasisGame.Systems
         // update
         public void update()
         {
+            if (_isActive)
+            {
+                PhysicsComponent playerPhysicsComponent = (PhysicsComponent)_entityManager.getComponent(_playerSystem.playerId, ComponentType.Physics);
+
+                // Check player's position against the level boundary
+                if (playerPhysicsComponent != null)
+                {
+                    Vector2 position = playerPhysicsComponent.body.GetPosition();
+
+                    if (position.X < _levelBoundary.lowerBound.X || position.X > _levelBoundary.upperBound.X ||
+                        position.Y < _levelBoundary.lowerBound.Y || position.Y > _levelBoundary.upperBound.Y)
+                    {
+                        Console.WriteLine("Out of bounds");
+                    }
+                }
+            }
         }
 
         // draw

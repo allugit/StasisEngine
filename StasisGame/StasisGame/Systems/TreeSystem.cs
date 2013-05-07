@@ -30,6 +30,7 @@ namespace StasisGame.Systems
         public PhysicsSystem physicsSystem { get { return _physicsSystem; } }
         public bool paused { get { return _paused; } set { _paused = value; } }
         public bool singleStep { get { return _singleStep; } set { _singleStep = value; } }
+        public LevelSystem levelSystem { get { return (LevelSystem)_systemManager.getSystem(SystemType.Level); } }
 
         public TreeSystem(SystemManager systemManager, EntityManager entityManager)
         {
