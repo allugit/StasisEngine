@@ -92,9 +92,18 @@ namespace StasisGame.Systems
 
         public void addRenderablePrimitive(IRenderablePrimitive renderablePrimitive)
         {
+            RenderablePrimitiveNode node = new RenderablePrimitiveNode(renderablePrimitive);
+
             if (_headNode == null)
             {
-                _headNode = new RenderablePrimitiveNode(renderablePrimitive);
+                // This is the first node, so make it the head
+                _headNode = node;
+            }
+            else if (_headNode.renderablePrimitive.layerDepth < node.renderablePrimitive.layerDepth)
+            {
+                // The head node has a layer depth lower than the node being added, so move it down the list
+                node.next = _headNode;
+                _headNode = node;
             }
             else
             {
@@ -102,22 +111,19 @@ namespace StasisGame.Systems
 
                 while (current != null)
                 {
-                    if (renderablePrimitive.layerDepth >= current.renderablePrimitive.layerDepth)
+                    if (current.next == null)
                     {
-                        current.insertBefore(new RenderablePrimitiveNode(renderablePrimitive));
-                        _headNode = current.previous;
+                        current.next = node;
                         return;
                     }
-                    else if (renderablePrimitive.layerDepth < current.renderablePrimitive.layerDepth)
+                    else if (current.next.renderablePrimitive.layerDepth <= node.renderablePrimitive.layerDepth)
                     {
-                        current.insertAfter(new RenderablePrimitiveNode(renderablePrimitive));
+                        node.next = current.next;
+                        current.next = node;
                         return;
                     }
                     current = current.next;
                 }
-
-                // This should never be reached
-                System.Diagnostics.Debug.Assert(false);
             }
         }
 
