@@ -470,24 +470,21 @@ namespace StasisGame
                     }
                 }
             }
-            if (!baResult.success)
+            if (doubleAnchor && !baResult.success)
             {
-                // If two successful results are necessary or if there are no successful results, test for a wall
-                if (doubleAnchor || !abResult.success)
+                // Test for a wall at initialPointA
+                Fixture wallFixture = null;
+                if (testForWall(world, initialPointA, out wallFixture))
                 {
-                    // Test for a wall at initialPointA
-                    Fixture wallFixture = null;
-                    if (testForWall(world, initialPointA, out wallFixture))
-                    {
-                        baResult.fixture = wallFixture;
-                        baResult.success = true;
-                        baResult.worldPoint = initialPointA;
-                    }
+                    baResult.fixture = wallFixture;
+                    baResult.success = true;
+                    baResult.worldPoint = initialPointA;
                 }
             }
 
-            // Halt if there were no successful results
-            if (!(abResult.success || baResult.success))
+            // Halt if there were not a successful combination of results (single anchor needs 1 result, double anchor needs 2)
+            if ((doubleAnchor && !(abResult.success && baResult.success)) ||
+                (!doubleAnchor && !(abResult.success || baResult.success)))
                 return -1;
 
             finalPointA = baResult.success ? baResult.worldPoint : initialPointA;
@@ -594,7 +591,6 @@ namespace StasisGame
 
             if (actorId != -1)
             {
-                //_actorIdToEntityId.Add(actorId, entityId);
                 _entityManager.addComponent(entityId, new EditorIdComponent(actorId));
             }
 
@@ -619,14 +615,17 @@ namespace StasisGame
             aabb.upperBound = point;
             world.QueryAABB((fixtureProxy) =>
                 {
-                    int fixtureEntityId = (int)fixtureProxy.fixture.GetBody().GetUserData();
-                    WallComponent wallComponent = (WallComponent)_entityManager.getComponent(fixtureEntityId, ComponentType.Wall);
-
-                    if (wallComponent != null)
+                    if (fixtureProxy.fixture.TestPoint(point, 0f))
                     {
-                        result = true;
-                        resultFixture = fixtureProxy.fixture;
-                        return false;
+                        int fixtureEntityId = (int)fixtureProxy.fixture.GetBody().GetUserData();
+                        WallComponent wallComponent = (WallComponent)_entityManager.getComponent(fixtureEntityId, ComponentType.Wall);
+
+                        if (wallComponent != null)
+                        {
+                            result = true;
+                            resultFixture = fixtureProxy.fixture;
+                            return false;
+                        }
                     }
                     return true;
                 },
