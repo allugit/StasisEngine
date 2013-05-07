@@ -10,6 +10,7 @@ namespace StasisGame.Systems
 {
     public class PlayerSystem : ISystem
     {
+        public const int PLAYER_ID = 9999;
         private SystemManager _systemManager;
         private EntityManager _entityManager;
         private int _playerId;
@@ -31,6 +32,31 @@ namespace StasisGame.Systems
             _entityManager = entityManager;
         }
 
+        // createPlayer
+        public void createPlayer()
+        {
+            playerId = _entityManager.createEntity(PLAYER_ID);
+        }
+
+        // initializePlayerInventory -- Creates the player's inventory components
+        public void initializePlayerInventory()
+        {
+            _entityManager.initializePlayerInventory(_playerId, DataManager.playerData.inventoryData);
+            _entityManager.initializePlayerToolbar(
+                _playerId,
+                (InventoryComponent)_entityManager.getComponent(_playerId, ComponentType.Inventory),
+                DataManager.playerData.toolbarData);
+        }
+
+        // softKillPlayer -- Doesn't "kill" the player entity, just resets certain aspects of the entity to the last saved state
+        public void softKillPlayer()
+        {
+            _entityManager.removeComponent(_playerId, ComponentType.Inventory);
+            _entityManager.removeComponent(_playerId, ComponentType.Toolbar);
+            initializePlayerInventory();
+        }
+
+        // update
         public void update()
         {
             PhysicsComponent physicsComponent = (PhysicsComponent)_entityManager.getComponent(_playerId, ComponentType.Physics);

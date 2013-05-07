@@ -136,21 +136,13 @@ namespace StasisGame
             _systemManager.add(_levelSystem, -1);
         }
 
-        private void initializePlayerEntity()
-        {
-            _playerSystem.playerId = _entityManager.createEntity(9999);
-            _entityManager.initializePlayerInventory(_playerSystem.playerId, DataManager.playerData.inventoryData);
-            _entityManager.initializePlayerToolbar(
-                _playerSystem.playerId,
-                (InventoryComponent)_entityManager.getComponent(_playerSystem.playerId, ComponentType.Inventory),
-                DataManager.playerData.toolbarData);
-        }
-
         private void previewLevel(string levelUID)
         {
             startPersistentSystems();
+
             DataManager.createTemporaryPlayerData(_systemManager);
-            initializePlayerEntity();
+            _playerSystem.createPlayer();
+            _playerSystem.initializePlayerInventory();
 
             // Load level
             loadLevel(levelUID);
@@ -159,15 +151,19 @@ namespace StasisGame
         public void newGame()
         {
             _screenSystem.removeScreen(_mainMenuScreen);
-            // TODO: Destroy main menu screen?
             _gameState = GameState.CreatePlayer;
+
+            // TODO: Destroy main menu screen?
         }
 
         public void loadGame(int playerDataSlot)
         {
             startPersistentSystems();
+
             DataManager.loadPlayerData(playerDataSlot);
-            initializePlayerEntity();
+            _playerSystem.createPlayer();
+            _playerSystem.initializePlayerInventory();
+
             _screenSystem.removeScreen(_mainMenuScreen);
             openWorldMap();
         }
@@ -210,7 +206,6 @@ namespace StasisGame
             WorldMapSystem worldMapSystem = (WorldMapSystem)_systemManager.getSystem(SystemType.WorldMap);
             string currentWorldMapUID = DataManager.playerData.currentLocation.worldMapUID;
 
-            //worldMapSystem.loadWorldMap(DataManager.playerData.getWorldData(DataManager.playerData.currentLocation.worldMapUID));
             worldMapSystem.loadWorldMap(currentWorldMapUID, DataManager.playerData.getWorldMapData(currentWorldMapUID));
             _worldMapScreen = _worldMapScreen ?? new WorldMapScreen(this, _systemManager);
             _screenSystem.addScreen(_worldMapScreen);

@@ -333,7 +333,8 @@ namespace StasisGame.Systems
                     if (position.X < _levelBoundary.lowerBound.X || position.X > _levelBoundary.upperBound.X ||
                         position.Y < _levelBoundary.lowerBound.Y || position.Y > _levelBoundary.upperBound.Y)
                     {
-                        Console.WriteLine("Out of bounds");
+                        _playerSystem.softKillPlayer();
+                        endLevel();
                     }
                 }
             }
