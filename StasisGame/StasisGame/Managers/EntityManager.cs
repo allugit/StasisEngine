@@ -288,6 +288,7 @@ namespace StasisGame.Managers
             removeComponent(playerId, ComponentType.IgnoreTreeCollision);
             removeComponent(playerId, ComponentType.IgnoreRopeRaycast);
             removeComponent(playerId, ComponentType.WorldPosition);
+            removeComponent(playerId, ComponentType.RopeGrab);
         }
     }
 }
