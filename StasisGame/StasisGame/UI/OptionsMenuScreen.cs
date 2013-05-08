@@ -69,11 +69,12 @@ namespace StasisGame.UI
             _selectedDimensions = new DisplayDimensions(DataManager.gameSettings.screenWidth, DataManager.gameSettings.screenHeight);
             _displayDimensions.Add(_selectedDimensions);
 
+            /*
             foreach (DisplayMode displayMode in _game.GraphicsDevice.Adapter.SupportedDisplayModes)
             {
                 if (!_selectedDimensions.Equals(displayMode))
                     _displayDimensions.Add(new DisplayDimensions(displayMode.Width, displayMode.Height));
-            }
+            }*/
 
             TextureButton saveButton = new TextureButton(
                 _game.spriteBatch,

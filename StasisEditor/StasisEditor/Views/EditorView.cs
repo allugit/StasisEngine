@@ -36,26 +36,17 @@ namespace StasisEditor.Views
             _actorPropertiesViews = new List<ActorPropertiesView>();
         }
 
+        protected override void OnCreateControl()
+        {
+            base.OnCreateControl();
+
+            _controller.initialize();
+        }
+
         // setController
         public void setController(EditorController controller)
         {
             _controller = controller;
-        }
-
-        // addLevelView
-        public void addLevelView(LevelView levelView)
-        {
-            _levelView = levelView;
-            //mainSplit.Panel2.Controls.Add(levelView as Control);
-            levelTab.Controls.Add(levelView as Control);
-        }
-
-        // removeLevelView
-        public void removeLevelView()
-        {
-            mainSplit.Panel2.Controls.Remove(_levelView as Control);
-            _levelView.Dispose();
-            _levelView = null;
         }
 
         // addLevelSettings

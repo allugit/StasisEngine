@@ -4,6 +4,7 @@ using System.Drawing;
 using System.Windows.Forms;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
+using OpenTK;
 
 namespace StasisEditor.Views.Controls
 {
@@ -18,7 +19,7 @@ namespace StasisEditor.Views.Controls
     /// a Windows Form. Derived classes can override the Initialize and Draw
     /// methods to add their own drawing code.
     /// </summary>
-    abstract public class GraphicsDeviceControl : Control
+    abstract public class GraphicsDeviceControl : GLControl
     {
         #region Fields
 
@@ -83,9 +84,7 @@ namespace StasisEditor.Views.Controls
             // Don't initialize the graphics device if we are running in the designer.
             if (!DesignMode)
             {
-                graphicsDeviceService = GraphicsDeviceService.AddRef(Handle,
-                                                                     ClientSize.Width,
-                                                                     ClientSize.Height);
+                graphicsDeviceService = GraphicsDeviceService.AddRef(Handle, ClientSize.Width, ClientSize.Height);
 
                 // Register the service, so components like ContentManager can find it.
                 services.AddService<IGraphicsDeviceService>(graphicsDeviceService);
@@ -160,6 +159,14 @@ namespace StasisEditor.Views.Controls
                 return deviceResetError;
             }
 
+            GLControl control = GLControl.FromHandle(graphicsDeviceService.GraphicsDevice.PresentationParameters.DeviceWindowHandle) as GLControl;
+            if (control != null)
+            {
+                control.Context.MakeCurrent(WindowInfo);
+                graphicsDeviceService.GraphicsDevice.PresentationParameters.BackBufferHeight = ClientSize.Height;
+                graphicsDeviceService.GraphicsDevice.PresentationParameters.BackBufferWidth = ClientSize.Width;
+            }
+
             // Many GraphicsDeviceControl instances can be sharing the same
             // GraphicsDevice. The device backbuffer will be resized to fit the
             // largest of these controls. But what if we are currently drawing
@@ -190,12 +197,15 @@ namespace StasisEditor.Views.Controls
         /// </summary>
         void EndDraw()
         {
+            
             try
             {
+                SwapBuffers();
+                /*
                 Rectangle sourceRectangle = new Rectangle(0, 0, ClientSize.Width,
                                                                 ClientSize.Height);
 
-                GraphicsDevice.Present(sourceRectangle, null, this.Handle);
+                GraphicsDevice.Present(sourceRectangle, null, this.Handle);*/
             }
             catch
             {

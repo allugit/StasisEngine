@@ -64,11 +64,15 @@
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\..\..\Box2D.XNA\bin\x86\Release\Box2D.XNA.dll</HintPath>
     </Reference>
-    <Reference Include="Microsoft.Xna.Framework, Version=4.0.0.0, Culture=neutral, PublicKeyToken=842cf8be1de50553, processorArchitecture=x86" />
-    <Reference Include="Microsoft.Xna.Framework.Game, Version=4.0.0.0, Culture=neutral, PublicKeyToken=842cf8be1de50553, processorArchitecture=x86" />
-    <Reference Include="Microsoft.Xna.Framework.Graphics, Version=4.0.0.0, Culture=neutral, PublicKeyToken=842cf8be1de50553, processorArchitecture=x86" />
-    <Reference Include="Microsoft.Xna.Framework.GamerServices, Version=4.0.0.0, Culture=neutral, PublicKeyToken=842cf8be1de50553, processorArchitecture=x86" />
+    <Reference Include="MonoGame.Framework, Version=3.0.1.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\..\MonoGame\MonoGame.Framework\bin\WindowsGL\Debug\MonoGame.Framework.dll</HintPath>
+    </Reference>
     <Reference Include="mscorlib" />
+    <Reference Include="OpenTK, Version=1.1.0.0, Culture=neutral, PublicKeyToken=bad199fe84eb3df4, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\..\MonoGame\MonoGame.Framework\bin\WindowsGL\Debug\OpenTK.dll</HintPath>
+    </Reference>
     <Reference Include="Poly2Tri">
       <HintPath>..\..\..\Poly2Tri\poly2tri.cs\bin\Release\Poly2Tri.dll</HintPath>
     </Reference>
@@ -91,6 +95,18 @@
     <Compile Include="Controllers\MaterialController.cs" />
     <Compile Include="Controllers\WorldMapController.cs" />
     <Compile Include="EditorResourceManager.cs" />
+    <Compile Include="GLControl\CarbonGLControl.cs" />
+    <Compile Include="GLControl\DummyGLControl.cs" />
+    <Compile Include="GLControl\GLControl.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="GLControl\GLControl.designer.cs">
+      <DependentUpon>GLControl.cs</DependentUpon>
+    </Compile>
+    <Compile Include="GLControl\GLControlFactory.cs" />
+    <Compile Include="GLControl\IGLControl.cs" />
+    <Compile Include="GLControl\WinGLControl.cs" />
+    <Compile Include="GLControl\X11GLControl.cs" />
     <Compile Include="Models\CircuitConnection.cs" />
     <Compile Include="Models\CircuitInputConnection.cs" />
     <Compile Include="Models\CircuitOutputConnection.cs" />
@@ -163,10 +179,10 @@
       <DependentUpon>ActorToolbar.cs</DependentUpon>
     </Compile>
     <Compile Include="Views\Controls\BackgroundDisplay.cs">
-      <SubType>Component</SubType>
+      <SubType>UserControl</SubType>
     </Compile>
     <Compile Include="Views\Controls\CircuitDisplay.cs">
-      <SubType>Component</SubType>
+      <SubType>UserControl</SubType>
     </Compile>
     <Compile Include="Views\Controls\SelectItem.cs">
       <SubType>Form</SubType>
@@ -187,7 +203,7 @@
       <DependentUpon>EditBlueprintScrapShape.cs</DependentUpon>
     </Compile>
     <Compile Include="Views\Controls\EditBlueprintScrapShapeGraphics.cs">
-      <SubType>Component</SubType>
+      <SubType>UserControl</SubType>
     </Compile>
     <Compile Include="Views\Controls\EditBlueprintSocketsView.cs">
       <SubType>Form</SubType>
@@ -199,7 +215,7 @@
       <SubType>Component</SubType>
     </Compile>
     <Compile Include="Views\Controls\GraphicsDeviceControl.cs">
-      <SubType>Component</SubType>
+      <SubType>UserControl</SubType>
     </Compile>
     <Compile Include="Views\Controls\LayerNode.cs" />
     <Compile Include="Views\Controls\LayersTreeView.cs">
@@ -218,7 +234,7 @@
       <DependentUpon>MaterialPreview.cs</DependentUpon>
     </Compile>
     <Compile Include="Views\Controls\MaterialPreviewGraphics.cs">
-      <SubType>Component</SubType>
+      <SubType>UserControl</SubType>
     </Compile>
     <Compile Include="Views\Controls\PlantSelectBox.cs">
       <SubType>Form</SubType>
@@ -245,10 +261,10 @@
       <DependentUpon>ViewBlueprintAssociateScraps.cs</DependentUpon>
     </Compile>
     <Compile Include="Views\Controls\EditBlueprintSocketsGraphics.cs">
-      <SubType>Component</SubType>
+      <SubType>UserControl</SubType>
     </Compile>
     <Compile Include="Views\Controls\WorldMapDisplay.cs">
-      <SubType>Component</SubType>
+      <SubType>UserControl</SubType>
     </Compile>
     <Compile Include="Views\WorldMapView.cs">
       <SubType>UserControl</SubType>
@@ -258,7 +274,7 @@
     </Compile>
     <Compile Include="XNAColorEditor.cs" />
     <Compile Include="Views\LevelView.cs">
-      <SubType>Component</SubType>
+      <SubType>UserControl</SubType>
     </Compile>
     <Compile Include="Views\Controls\RefreshingListBox.cs">
       <SubType>Component</SubType>
@@ -342,6 +358,9 @@
     </BootstrapperPackage>
   </ItemGroup>
   <ItemGroup>
+    <EmbeddedResource Include="GLControl\GLControl.resx">
+      <DependentUpon>GLControl.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="Views\BackgroundView.resx">
       <DependentUpon>BackgroundView.cs</DependentUpon>
     </EmbeddedResource>

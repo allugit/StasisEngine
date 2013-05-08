@@ -64,10 +64,14 @@
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\..\..\Box2D.XNA\bin\x86\Release\Box2D.XNA.dll</HintPath>
     </Reference>
-    <Reference Include="Microsoft.Xna.Framework, Version=4.0.0.0, Culture=neutral, PublicKeyToken=842cf8be1de50553, processorArchitecture=x86" />
-    <Reference Include="Microsoft.Xna.Framework.Game, Version=4.0.0.0, Culture=neutral, PublicKeyToken=842cf8be1de50553, processorArchitecture=x86" />
-    <Reference Include="Microsoft.Xna.Framework.Graphics, Version=4.0.0.0, Culture=neutral, PublicKeyToken=842cf8be1de50553, processorArchitecture=x86" />
-    <Reference Include="Microsoft.Xna.Framework.GamerServices, Version=4.0.0.0, Culture=neutral, PublicKeyToken=842cf8be1de50553, processorArchitecture=x86" />
+    <Reference Include="EasyStorage, Version=2.0.0.0, Culture=neutral, processorArchitecture=x86">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\..\EasyStorage_GS4\EasyStorage\bin\x86\Release\EasyStorage.dll</HintPath>
+    </Reference>
+    <Reference Include="MonoGame.Framework, Version=3.0.1.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\..\MonoGame\MonoGame.Framework\bin\WindowsGL\Release\MonoGame.Framework.dll</HintPath>
+    </Reference>
     <Reference Include="mscorlib" />
     <Reference Include="Poly2Tri">
       <HintPath>..\..\..\Poly2Tri\poly2tri.cs\bin\Release\Poly2Tri.dll</HintPath>
@@ -169,10 +173,6 @@
     </Content>
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\..\EasyStorage\EasyStorage [Windows].csproj">
-      <Project>{A89EB1D5-B286-48EB-A864-315ABCDAA024}</Project>
-      <Name>EasyStorage [Windows]</Name>
-    </ProjectReference>
     <ProjectReference Include="..\..\StasisCore\StasisCore.csproj">
       <Project>{FF9881A5-29E0-4B52-8E75-42715D66842B}</Project>
       <Name>StasisCore</Name>

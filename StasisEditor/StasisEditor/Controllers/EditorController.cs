@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
 using Microsoft.Xna.Framework;
+using Microsoft.Xna.Framework.Graphics;
 using StasisEditor.Views;
 using StasisEditor.Views.Controls;
 using StasisEditor.Models;
@@ -39,6 +40,13 @@ namespace StasisEditor.Controllers
 
         public EditorController(EditorView view)
         {
+            // Initialize view
+            _editorView = view;
+            view.setController(this);
+        }
+
+        public void initialize()
+        {
             // Initialize graphics device service
             _graphicsDeviceService = GraphicsDeviceService.AddRef(view.Handle, view.Width, view.Height);
 
@@ -46,13 +54,9 @@ namespace StasisEditor.Controllers
             ResourceManager.initialize(_graphicsDeviceService.GraphicsDevice);
             ResourceManager.rootDirectory = EditorResourceManager.RESOURCE_SOURCE_PATH + "\\";
 
-            // Initialize view
-            _editorView = view;
-            view.setController(this);
-
             // Create controllers
-            _materialController = new MaterialController(this, _editorView.materialView);
             _levelController = new LevelController(this, _editorView.levelView);
+            _materialController = new MaterialController(this, _editorView.materialView);
             _blueprintController = new BlueprintController(this, _editorView.blueprintView);
             _circuitController = new CircuitController(this, _editorView.circuitsView);
             _backgroundController = new BackgroundController(this, _editorView.backgroundView);
