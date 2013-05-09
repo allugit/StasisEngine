@@ -43,19 +43,22 @@
     <Reference Include="Microsoft.Xna.Framework.Content.Pipeline.XImporter, Version=4.0.0.0, Culture=neutral, PublicKeyToken=842cf8be1de50553, processorArchitecture=MSIL" />
     <Reference Include="Microsoft.Xna.Framework.Content.Pipeline.AudioImporters, Version=4.0.0.0, Culture=neutral, PublicKeyToken=842cf8be1de50553, processorArchitecture=MSIL" />
     <Reference Include="Microsoft.Xna.Framework.Content.Pipeline.VideoImporters, Version=4.0.0.0, Culture=neutral, PublicKeyToken=842cf8be1de50553, processorArchitecture=MSIL" />
+    <Reference Include="MonoGameContentProcessors">
+      <HintPath>..\..\..\MonoGame\MonoGame.ContentPipeline\ContentProcessors\bin\Release\MonoGameContentProcessors.dll</HintPath>
+    </Reference>
   </ItemGroup>
   <ItemGroup>
     <Compile Include="arial.spritefont">
       <Name>arial</Name>
       <Importer>FontDescriptionImporter</Importer>
-      <Processor>FontDescriptionProcessor</Processor>
+      <Processor>MGSpriteFontDescriptionProcessor</Processor>
     </Compile>
   </ItemGroup>
   <ItemGroup>
     <Compile Include="main_menu\logo.png">
       <Name>logo</Name>
       <Importer>TextureImporter</Importer>
-      <Processor>TextureProcessor</Processor>
+      <Processor>MGTextureProcessor</Processor>
     </Compile>
   </ItemGroup>
   <ItemGroup>
@@ -84,159 +87,159 @@
     <Compile Include="fluid_particle.png">
       <Name>fluid_particle</Name>
       <Importer>TextureImporter</Importer>
-      <Processor>TextureProcessor</Processor>
+      <Processor>MGTextureProcessor</Processor>
     </Compile>
   </ItemGroup>
   <ItemGroup>
     <Compile Include="fluid_effect.fx">
       <Name>fluid_effect</Name>
       <Importer>EffectImporter</Importer>
-      <Processor>EffectProcessor</Processor>
+      <Processor>MGEffectProcessor</Processor>
     </Compile>
   </ItemGroup>
   <ItemGroup>
     <Compile Include="main_menu\bg.jpg">
       <Name>bg</Name>
       <Importer>TextureImporter</Importer>
-      <Processor>TextureProcessor</Processor>
+      <Processor>MGTextureProcessor</Processor>
     </Compile>
   </ItemGroup>
   <ItemGroup>
     <Compile Include="main_menu\exit_selected.png">
       <Name>exit_selected</Name>
       <Importer>TextureImporter</Importer>
-      <Processor>TextureProcessor</Processor>
+      <Processor>MGTextureProcessor</Processor>
     </Compile>
     <Compile Include="main_menu\exit_unselected.png">
       <Name>exit_unselected</Name>
       <Importer>TextureImporter</Importer>
-      <Processor>TextureProcessor</Processor>
+      <Processor>MGTextureProcessor</Processor>
     </Compile>
     <Compile Include="main_menu\load_game_selected.png">
       <Name>load_game_selected</Name>
       <Importer>TextureImporter</Importer>
-      <Processor>TextureProcessor</Processor>
+      <Processor>MGTextureProcessor</Processor>
     </Compile>
     <Compile Include="main_menu\load_game_unselected.png">
       <Name>load_game_unselected</Name>
       <Importer>TextureImporter</Importer>
-      <Processor>TextureProcessor</Processor>
+      <Processor>MGTextureProcessor</Processor>
     </Compile>
     <Compile Include="main_menu\new_game_selected.png">
       <Name>new_game_selected</Name>
       <Importer>TextureImporter</Importer>
-      <Processor>TextureProcessor</Processor>
+      <Processor>MGTextureProcessor</Processor>
     </Compile>
     <Compile Include="main_menu\new_game_unselected.png">
       <Name>new_game_unselected</Name>
       <Importer>TextureImporter</Importer>
-      <Processor>TextureProcessor</Processor>
+      <Processor>MGTextureProcessor</Processor>
     </Compile>
     <Compile Include="main_menu\options_selected.png">
       <Name>options_selected</Name>
       <Importer>TextureImporter</Importer>
-      <Processor>TextureProcessor</Processor>
+      <Processor>MGTextureProcessor</Processor>
     </Compile>
     <Compile Include="main_menu\options_unselected.png">
       <Name>options_unselected</Name>
       <Importer>TextureImporter</Importer>
-      <Processor>TextureProcessor</Processor>
+      <Processor>MGTextureProcessor</Processor>
     </Compile>
   </ItemGroup>
   <ItemGroup>
     <Compile Include="options_menu\options_container.png">
       <Name>options_container</Name>
       <Importer>TextureImporter</Importer>
-      <Processor>TextureProcessor</Processor>
+      <Processor>MGTextureProcessor</Processor>
     </Compile>
   </ItemGroup>
   <ItemGroup>
     <Compile Include="options_menu\save_selected.png">
       <Name>save_selected</Name>
       <Importer>TextureImporter</Importer>
-      <Processor>TextureProcessor</Processor>
+      <Processor>MGTextureProcessor</Processor>
     </Compile>
     <Compile Include="options_menu\save_unselected.png">
       <Name>save_unselected</Name>
       <Importer>TextureImporter</Importer>
-      <Processor>TextureProcessor</Processor>
+      <Processor>MGTextureProcessor</Processor>
     </Compile>
   </ItemGroup>
   <ItemGroup>
     <Compile Include="santa_barbara_normal.spritefont">
       <Name>santa_barbara_normal</Name>
       <Importer>FontDescriptionImporter</Importer>
-      <Processor>FontDescriptionProcessor</Processor>
+      <Processor>MGSpriteFontDescriptionProcessor</Processor>
     </Compile>
   </ItemGroup>
   <ItemGroup>
     <Compile Include="inventory_background.png">
       <Name>inventory_background</Name>
       <Importer>TextureImporter</Importer>
-      <Processor>TextureProcessor</Processor>
+      <Processor>MGTextureProcessor</Processor>
     </Compile>
   </ItemGroup>
   <ItemGroup>
     <Compile Include="reticle.png">
       <Name>reticle</Name>
       <Importer>TextureImporter</Importer>
-      <Processor>TextureProcessor</Processor>
+      <Processor>MGTextureProcessor</Processor>
     </Compile>
   </ItemGroup>
   <ItemGroup>
     <Compile Include="range_circle.png">
       <Name>range_circle</Name>
       <Importer>TextureImporter</Importer>
-      <Processor>TextureProcessor</Processor>
+      <Processor>MGTextureProcessor</Processor>
     </Compile>
   </ItemGroup>
   <ItemGroup>
     <Compile Include="world_map\anti_fog_brush.png">
       <Name>anti_fog_brush</Name>
       <Importer>TextureImporter</Importer>
-      <Processor>TextureProcessor</Processor>
+      <Processor>MGTextureProcessor</Processor>
     </Compile>
   </ItemGroup>
   <ItemGroup>
     <Compile Include="world_map\path.png">
       <Name>path</Name>
       <Importer>TextureImporter</Importer>
-      <Processor>TextureProcessor</Processor>
+      <Processor>MGTextureProcessor</Processor>
     </Compile>
   </ItemGroup>
   <ItemGroup>
     <Compile Include="load_game_menu\saves_container.png">
       <Name>saves_container</Name>
       <Importer>TextureImporter</Importer>
-      <Processor>TextureProcessor</Processor>
+      <Processor>MGTextureProcessor</Processor>
     </Compile>
   </ItemGroup>
   <ItemGroup>
     <Compile Include="fog_effect.fx">
       <Name>fog_effect</Name>
       <Importer>EffectImporter</Importer>
-      <Processor>EffectProcessor</Processor>
+      <Processor>MGEffectProcessor</Processor>
     </Compile>
   </ItemGroup>
   <ItemGroup>
     <Compile Include="level_select_icon.png">
       <Name>level_select_icon</Name>
       <Importer>TextureImporter</Importer>
-      <Processor>TextureProcessor</Processor>
+      <Processor>MGTextureProcessor</Processor>
     </Compile>
   </ItemGroup>
   <ItemGroup>
     <Compile Include="world_map\level_select_title.spritefont">
       <Name>level_select_title</Name>
       <Importer>FontDescriptionImporter</Importer>
-      <Processor>FontDescriptionProcessor</Processor>
+      <Processor>MGSpriteFontDescriptionProcessor</Processor>
     </Compile>
   </ItemGroup>
   <ItemGroup>
     <Compile Include="world_map\level_select_description.spritefont">
       <Name>level_select_description</Name>
       <Importer>FontDescriptionImporter</Importer>
-      <Processor>FontDescriptionProcessor</Processor>
+      <Processor>MGSpriteFontDescriptionProcessor</Processor>
     </Compile>
   </ItemGroup>
   <Import Project="$(MSBuildExtensionsPath)\Microsoft\XNA Game Studio\$(XnaFrameworkVersion)\Microsoft.Xna.GameStudio.ContentPipeline.targets" />

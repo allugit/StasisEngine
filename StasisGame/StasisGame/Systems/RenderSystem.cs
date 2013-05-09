@@ -22,7 +22,6 @@ namespace StasisGame.Systems
         private MaterialRenderer _materialRenderer;
         private float _scale = Settings.BASE_SCALE;
         private ContentManager _contentManager;
-        private ContentManager _coreContentManager;
         private GraphicsDevice _graphicsDevice;
         private SpriteBatch _spriteBatch;
         private Texture2D _pixel;
@@ -66,15 +65,13 @@ namespace StasisGame.Systems
             _fluidRenderTarget = new RenderTarget2D(_graphicsDevice, _graphicsDevice.Viewport.Width, _graphicsDevice.Viewport.Height);
             _renderedFluid = new RenderTarget2D(_graphicsDevice, _graphicsDevice.Viewport.Width, _graphicsDevice.Viewport.Height);
 
-            _contentManager = new ContentManager(game.Services, "Content");
+            _contentManager = new ContentManager(game.Services);
+            _contentManager.RootDirectory = "Content";
             _fluidEffect = _contentManager.Load<Effect>("fluid_effect");
             _fluidParticleTexture = _contentManager.Load<Texture2D>("fluid_particle");
             _reticle = _contentManager.Load<Texture2D>("reticle");
-            //_rangeCircle = _contentManager.Load<Texture2D>("range_circle");
-
-            _coreContentManager = new ContentManager(game.Services, "StasisCoreContent");
             _materialRenderer = new MaterialRenderer(game.GraphicsDevice, _contentManager, game.spriteBatch, 32, 32, 1234);
-            _primitivesEffect = _coreContentManager.Load<Effect>("effects\\primitives");
+            _primitivesEffect = _contentManager.Load<Effect>("effects/primitives");
             _pixel = new Texture2D(_graphicsDevice, 1, 1);
             _pixel.SetData<Color>(new [] { Color.White });
         }
@@ -82,7 +79,6 @@ namespace StasisGame.Systems
         ~RenderSystem()
         {
             _contentManager.Unload();
-            _coreContentManager.Unload();
         }
 
         public void setBackground(Background background)

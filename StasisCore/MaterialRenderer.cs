@@ -31,9 +31,9 @@ namespace StasisCore
             _spriteBatch = spriteBatch;
             
             // Load content
-            _primitivesEffect = _contentManager.Load<Effect>("../StasisCoreContent/effects/primitives");
-            _noiseEffect = _contentManager.Load<Effect>("../StasisCoreContent/effects/noise");
-            _textureEffect = _contentManager.Load<Effect>("../StasisCoreContent/effects/texture");
+            _primitivesEffect = _contentManager.Load<Effect>("effects/primitives");
+            _noiseEffect = _contentManager.Load<Effect>("effects/noise");
+            _textureEffect = _contentManager.Load<Effect>("effects/texture");
 
             // Create random generator
             _random = new Random(seed);
@@ -456,7 +456,7 @@ namespace StasisCore
             _graphicsDevice.Textures[1] = _perlinSource;
             _graphicsDevice.Textures[2] = _worleySource;
             _graphicsDevice.Clear(Color.Transparent);
-            _noiseEffect.Parameters["aspectRatio"].SetValue(aspectRatio);
+            //_noiseEffect.Parameters["aspectRatio"].SetValue(aspectRatio);
             _noiseEffect.Parameters["offset"].SetValue(position);
             _noiseEffect.Parameters["noiseScale"].SetValue(scale);
             _noiseEffect.Parameters["renderSize"].SetValue(new Vector2(current.Width, current.Height));

@@ -1,0 +1,1 @@
+D:\_C#\StasisEngine\StasisCoreMonoGameContent\StasisCoreMonoGameContentContent\obj\x86\Debug\ResolveAssemblyReference.cache

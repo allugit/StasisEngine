@@ -1,0 +1,7 @@
+D:\_C#\StasisEngine\StasisCoreMonoGameContent\StasisCoreMonoGameContent\bin\PSM\Content\effects\noise.xnb
+D:\_C#\StasisEngine\StasisCoreMonoGameContent\StasisCoreMonoGameContent\bin\PSM\Content\effects\primitives.xnb
+D:\_C#\StasisEngine\StasisCoreMonoGameContent\StasisCoreMonoGameContent\bin\PSM\Content\effects\texture.xnb
+D:\_C#\StasisEngine\StasisCoreMonoGameContent\StasisCoreMonoGameContent\bin\PSM\IgnoreMe.dll
+D:\_C#\StasisEngine\StasisCoreMonoGameContent\StasisCoreMonoGameContent\obj\PSM\ResolveAssemblyReference.cache
+D:\_C#\StasisEngine\StasisCoreMonoGameContent\StasisCoreMonoGameContent\obj\PSM\Microsoft.Xna.Framework.RuntimeProfile.txt
+D:\_C#\StasisEngine\StasisCoreMonoGameContent\StasisCoreMonoGameContent\obj\PSM\IgnoreMe.dll

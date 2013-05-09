@@ -22,29 +22,32 @@
     <Reference Include="Microsoft.Xna.Framework.Content.Pipeline.XImporter, Version=4.0.0.0, Culture=neutral, PublicKeyToken=842cf8be1de50553, processorArchitecture=MSIL" />
     <Reference Include="Microsoft.Xna.Framework.Content.Pipeline.AudioImporters, Version=4.0.0.0, Culture=neutral, PublicKeyToken=842cf8be1de50553, processorArchitecture=MSIL" />
     <Reference Include="Microsoft.Xna.Framework.Content.Pipeline.VideoImporters, Version=4.0.0.0, Culture=neutral, PublicKeyToken=842cf8be1de50553, processorArchitecture=MSIL" />
+    <Reference Include="MonoGameContentProcessors">
+      <HintPath>C:\Program Files (x86)\MSBuild\MonoGame\v3.0\MonoGameContentProcessors.dll</HintPath>
+    </Reference>
   </ItemGroup>
   <ItemGroup>
     <Compile Include="effects\primitives.fx">
       <Name>primitives</Name>
       <Importer>EffectImporter</Importer>
-      <Processor>EffectProcessor</Processor>
+      <Processor>MGEffectProcessor</Processor>
     </Compile>
     <Compile Include="effects\texture.fx">
       <Name>texture</Name>
       <Importer>EffectImporter</Importer>
-      <Processor>EffectProcessor</Processor>
+      <Processor>MGEffectProcessor</Processor>
     </Compile>
     <None Include="effects\normal_functions.fx">
       <Name>normal_functions</Name>
-      <Importer>PSImporter</Importer>
-      <Processor>PSProcessor</Processor>
+      <Importer>EffectImporter</Importer>
+      <Processor>MGEffectProcessor</Processor>
     </None>
   </ItemGroup>
   <ItemGroup>
     <Compile Include="effects\noise.fx">
       <Name>noise</Name>
-      <Importer>PSImporter</Importer>
-      <Processor>PSProcessor</Processor>
+      <Importer>EffectImporter</Importer>
+      <Processor>MGEffectProcessor</Processor>
     </Compile>
   </ItemGroup>
   <ItemGroup>

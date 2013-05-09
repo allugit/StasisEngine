@@ -60,7 +60,7 @@ namespace StasisEditor.Views
             _prismaticIcon = _contentManager.Load<Texture2D>("actor_icons\\prismatic");
             _font = _contentManager.Load<SpriteFont>("arial");
 
-            _coreContentManager = new ContentManager(Services, "StasisCoreContent");
+            _coreContentManager = new ContentManager(Services, "Content");
             _primitivesEffect = _coreContentManager.Load<Effect>("effects\\primitives");
 
             // Draw loop

@@ -177,8 +177,9 @@
       <Project>{FF9881A5-29E0-4B52-8E75-42715D66842B}</Project>
       <Name>StasisCore</Name>
     </ProjectReference>
-    <ProjectReference Include="..\StasisGameContent\StasisGameContent.contentproj">
-      <Name>StasisGameContent</Name>
+    <ProjectReference Include="..\..\StasisGameMGContent\StasisGameMGContentContent\StasisGameContent.contentproj">
+      <Project>{FC9CFC1E-DC80-4833-926C-A34EECDB741C}</Project>
+      <Name>StasisGameContent %28Content%29</Name>
       <XnaReferenceType>Content</XnaReferenceType>
     </ProjectReference>
   </ItemGroup>
@@ -212,9 +213,13 @@
   <ItemGroup />
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <Import Project="$(MSBuildExtensionsPath)\Microsoft\XNA Game Studio\Microsoft.Xna.GameStudio.targets" />
+  <Import Project="$(MSBuildExtensionsPath)\MonoGame\v3.0\MonoGame.ContentPipeline.targets" />
   <PropertyGroup>
-    <PreBuildEvent>
-    </PreBuildEvent>
+    <ProjectGuid>{E69DAE86-0C16-4192-A144-43D5E3F37790}</ProjectGuid>
+    <ProjectTypeGuids>{6D335F3A-9D43-41b4-9D22-F6F17C4BE596};{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</ProjectTypeGuids>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">x86</Platform>
+    <MonoGamePlatform>Windows</MonoGamePlatform>
   </PropertyGroup>
   <!--
       To modify your build process, add your task inside one of the targets below and uncomment it. 
