@@ -14,11 +14,11 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PSProcessorLib", "PSProcess
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "EasyStorage [Windows]", "EasyStorage\EasyStorage [Windows].csproj", "{A89EB1D5-B286-48EB-A864-315ABCDAA024}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "StasisCoreContent", "StasisCoreMonoGameContent\StasisCoreMonoGameContentContent\StasisCoreContent.contentproj", "{FC4766BC-746C-4E83-BEB7-A4CD67ECA007}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "StasisCoreContent", "StasisCoreContent\StasisCoreContent.contentproj", "{FC4766BC-746C-4E83-BEB7-A4CD67ECA007}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "StasisEditorContent", "StasisEditorContentMG\StasisEditorContentMGContent\StasisEditorContent.contentproj", "{B2E8F9EE-0E70-4EF2-B9EC-25F109CE873D}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "StasisEditorContent", "StasisEditor\StasisEditorContent\StasisEditorContent.contentproj", "{B2E8F9EE-0E70-4EF2-B9EC-25F109CE873D}"
 EndProject
-Project("{96E2B04D-8817-42C6-938A-82C39BA4D311}") = "StasisGameContent", "StasisGameMGContent\StasisGameMGContentContent\StasisGameContent.contentproj", "{FC9CFC1E-DC80-4833-926C-A34EECDB741C}"
+Project("{96E2B04D-8817-42C6-938A-82C39BA4D311}") = "StasisGameContent", "StasisGame\StasisGameContent\StasisGameContent.contentproj", "{FC9CFC1E-DC80-4833-926C-A34EECDB741C}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

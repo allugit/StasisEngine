@@ -325,7 +325,7 @@
       <Project>{FF9881A5-29E0-4B52-8E75-42715D66842B}</Project>
       <Name>StasisCore</Name>
     </ProjectReference>
-    <ProjectReference Include="..\..\StasisEditorContentMG\StasisEditorContentMGContent\StasisEditorContent.contentproj">
+    <ProjectReference Include="..\StasisEditorContent\StasisEditorContent.contentproj">
       <Project>{B2E8F9EE-0E70-4EF2-B9EC-25F109CE873D}</Project>
       <Name>StasisEditorContent %28Content%29</Name>
       <XnaReferenceType>Content</XnaReferenceType>

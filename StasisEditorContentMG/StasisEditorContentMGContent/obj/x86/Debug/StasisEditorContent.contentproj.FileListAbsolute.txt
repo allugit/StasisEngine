@@ -1,1 +1,0 @@
-D:\_C#\StasisEngine\StasisEditorContentMG\StasisEditorContentMGContent\obj\x86\Debug\ResolveAssemblyReference.cache

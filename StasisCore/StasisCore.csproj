@@ -101,7 +101,7 @@
     <Compile Include="TexturedVertexFormat.cs" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\StasisCoreMonoGameContent\StasisCoreMonoGameContentContent\StasisCoreContent.contentproj">
+    <ProjectReference Include="..\StasisCoreContent\StasisCoreContent.contentproj">
       <Project>{FC4766BC-746C-4E83-BEB7-A4CD67ECA007}</Project>
       <Name>StasisCoreContent %28Content%29</Name>
       <XnaReferenceType>Content</XnaReferenceType>

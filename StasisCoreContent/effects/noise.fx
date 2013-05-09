@@ -1,5 +1,5 @@
 float2 fbmOffset;
-float2 aspectRatio;
+//float2 aspectRatio;
 float2 offset;
 float noiseFrequency;
 float noiseGain;

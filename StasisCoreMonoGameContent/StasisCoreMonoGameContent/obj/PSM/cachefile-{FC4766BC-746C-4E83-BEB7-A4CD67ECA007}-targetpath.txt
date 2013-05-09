@@ -1,3 +1,0 @@
-Content\effects\noise.xnb
-Content\effects\primitives.xnb
-Content\effects\texture.xnb
