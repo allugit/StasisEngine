@@ -66,6 +66,7 @@
     <Compile Include="Models\BackgroundLayer.cs" />
     <Compile Include="BackgroundRenderer.cs" />
     <Compile Include="Models\LevelIcon.cs" />
+    <Compile Include="Models\MaterialWorleyLayer.cs" />
     <Compile Include="Models\WorldMap.cs" />
     <Compile Include="Models\WorldPath.cs" />
     <Compile Include="Models\WorldPathPoint.cs" />
@@ -86,7 +87,7 @@
     <Compile Include="Models\MaterialEdgeScatterLayer.cs" />
     <Compile Include="Models\MaterialGroupLayer.cs" />
     <Compile Include="Models\MaterialLayer.cs" />
-    <Compile Include="Models\MaterialNoiseLayer.cs" />
+    <Compile Include="Models\MaterialPerlinLayer.cs" />
     <Compile Include="Models\MaterialRadialScatterLayer.cs" />
     <Compile Include="Models\MaterialScatterLayer.cs" />
     <Compile Include="Models\MaterialTextureLayer.cs" />

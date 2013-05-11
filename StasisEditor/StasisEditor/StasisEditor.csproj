@@ -119,6 +119,7 @@
     <Compile Include="Models\EditorGoalActor.cs" />
     <Compile Include="Models\EditorItemActor.cs" />
     <Compile Include="Models\EditorLevelIcon.cs" />
+    <Compile Include="Models\EditorMaterialWorleyLayer.cs" />
     <Compile Include="Models\EditorPlayerSpawnActor.cs" />
     <Compile Include="Models\EditorPolygonActor.cs" />
     <Compile Include="Models\EditorPrismaticActor.cs" />
@@ -136,7 +137,7 @@
     <Compile Include="Models\EditorMaterialGroupLayer.cs" />
     <Compile Include="GraphicsDeviceService.cs" />
     <Compile Include="Models\EditorMaterialLayer.cs" />
-    <Compile Include="Models\EditorMaterialNoiseLayer.cs" />
+    <Compile Include="Models\EditorMaterialPerlinLayer.cs" />
     <Compile Include="Models\EditorMaterialRadialScatterLayer.cs" />
     <Compile Include="Models\EditorMaterialTextureLayer.cs" />
     <Compile Include="Models\EditorMaterialUniformScatterLayer.cs" />

@@ -9,7 +9,7 @@ namespace StasisEditor.Models
 {
     using UITypeEditor = System.Drawing.Design.UITypeEditor;
 
-    public class EditorMaterialNoiseLayer : MaterialNoiseLayer
+    public class EditorMaterialWorleyLayer : MaterialWorleyLayer
     {
         [EditorAttribute(typeof(XNAColorEditor), typeof(UITypeEditor))]
         public override Color colorLow { get { return base.colorLow; } set { base.colorLow = value; } }
@@ -26,19 +26,19 @@ namespace StasisEditor.Models
         [Browsable(false)]
         public override XElement data { get { return base.data; } }
 
-        public EditorMaterialNoiseLayer()
+        public EditorMaterialWorleyLayer()
             : base()
         {
         }
 
-        public EditorMaterialNoiseLayer(XElement data)
+        public EditorMaterialWorleyLayer(XElement data)
             : base(data)
         {
         }
 
         public override MaterialLayer clone()
         {
-            return new EditorMaterialNoiseLayer(data);
+            return new EditorMaterialWorleyLayer(data);
         }
     }
 }

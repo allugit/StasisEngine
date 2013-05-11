@@ -45,12 +45,6 @@
         Additive
     };
 
-    public enum NoiseType
-    {
-        Perlin,
-        Worley
-    };
-
     public enum WorleyFeatureType
     {
         F1,

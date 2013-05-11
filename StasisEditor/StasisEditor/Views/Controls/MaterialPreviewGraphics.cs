@@ -37,7 +37,7 @@ namespace StasisEditor.Views.Controls
             _spriteBatch = new SpriteBatch(GraphicsDevice);
             try
             {
-                _materialRenderer = new MaterialRenderer(GraphicsDevice, _contentManager, _spriteBatch, 32, 32, 1234);
+                _materialRenderer = new MaterialRenderer(GraphicsDevice, _contentManager, _spriteBatch);
             }
             catch (ContentLoadException e)
             {

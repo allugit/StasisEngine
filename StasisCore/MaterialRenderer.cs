@@ -224,8 +224,8 @@ namespace StasisCore
                     break;
 
                 case "perlin":
-                    MaterialNoiseLayer perlinLayer = layer as MaterialNoiseLayer;
-                    current = perlinPass(
+                    MaterialPerlinLayer perlinLayer = layer as MaterialPerlinLayer;
+                    Texture2D perlinTemporary = perlinPass(
                         current,
                         perlinLayer.seed,
                         perlinLayer.position,
@@ -239,11 +239,20 @@ namespace StasisCore
                         perlinLayer.colorHigh,
                         perlinLayer.iterations,
                         perlinLayer.invert);
+
+                    // TODO: Move this code inside perlinPass?
+                    if (perlinLayer.blendType == LayerBlendType.Overlay)
+                        current = texturePass(current, perlinTemporary, LayerBlendType.Overlay, 1f, 1f, Color.White);
+                    else if (perlinLayer.blendType == LayerBlendType.Additive)
+                        current = texturePass(current, perlinTemporary, LayerBlendType.Additive, 1f, 1f, Color.White);
+                    else
+                        current = perlinTemporary;
+
                     break;
 
                 case "worley":
-                    MaterialNoiseLayer worleyLayer = layer as MaterialNoiseLayer;
-                    current = worleyPass(
+                    MaterialWorleyLayer worleyLayer = layer as MaterialWorleyLayer;
+                    Texture2D worleyTemporary = worleyPass(
                         current,
                         worleyLayer.seed,
                         worleyLayer.position,
@@ -257,6 +266,15 @@ namespace StasisCore
                         worleyLayer.colorHigh,
                         worleyLayer.iterations,
                         worleyLayer.invert);
+
+                    // TODO: Move this code inside worleyPass?
+                    if (worleyLayer.blendType == LayerBlendType.Overlay)
+                        current = texturePass(current, worleyTemporary, LayerBlendType.Overlay, 1f, 1f, Color.White);
+                    else if (worleyLayer.blendType == LayerBlendType.Additive)
+                        current = texturePass(current, worleyTemporary, LayerBlendType.Additive, 1f, 1f, Color.White);
+                    else
+                        current = worleyTemporary;
+
                     break;
 
                 case "uniform_scatter":
@@ -417,10 +435,10 @@ namespace StasisCore
             float y = position.Y - Y;
 
             // Wrap the integer cells
-            int x0 = X % gridWidth;
-            int x1 = (X + 1) % gridWidth;
-            int y0 = Y % gridHeight;
-            int y1 = (Y + 1) % gridHeight;
+            int x0 = StasisMathHelper.mod(X, gridWidth);
+            int x1 = StasisMathHelper.mod(X + 1, gridWidth);
+            int y0 = StasisMathHelper.mod(Y, gridHeight);
+            int y1 = StasisMathHelper.mod(Y + 1, gridHeight);
 
             // Get gradients
             Vector2 g00 = grid[x0, y0];
@@ -535,13 +553,17 @@ namespace StasisCore
                     
                     // Change range of value to [0, 1] instead of [-1, 1]
                     value = (value + 1) / 2f;
+                    value = Math.Max(0, Math.Min(1, value));
 
                     // Multiply value
                     value *= multiplier;
 
-                    // TODO: Interpolate between color low/high
-                    // TODO: invert value
-                    data[i + j * output.Width] = new Color(value, value, value, 1);
+                    // Invert value if necessary
+                    if (invert)
+                        value = 1 - value;
+
+                    Color color = Color.Lerp(colorLow, colorHigh, value);
+                    data[i + j * output.Width] = color;
                 }
             }
 
@@ -677,9 +699,18 @@ namespace StasisCore
                         fbmOffset,
                         iterations);
 
-                    // TODO: Interpolate between color low/high
-                    // TODO: invert value
-                    data[i + j * output.Width] = new Color(value, value, value, 1);
+                    // Clamp values
+                    value = Math.Max(0, Math.Min(1, value));
+
+                    // Multiply value
+                    value *= multiplier;
+
+                    // Invert value if necessary
+                    if (invert)
+                        value = 1 - value;
+
+                    Color color = Color.Lerp(colorLow, colorHigh, value);
+                    data[i + j * output.Width] = color;
                 }
             }
 

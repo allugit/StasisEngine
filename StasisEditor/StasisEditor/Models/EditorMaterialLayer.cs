@@ -22,8 +22,11 @@ namespace StasisEditor.Models
                 case "texture":
                     return new EditorMaterialTextureLayer(data);
 
-                case "noise":
-                    return new EditorMaterialNoiseLayer(data);
+                case "perlin":
+                    return new EditorMaterialPerlinLayer(data);
+
+                case "worley":
+                    return new EditorMaterialWorleyLayer(data);
 
                 case "uniform_scatter":
                     return new EditorMaterialUniformScatterLayer(data);
@@ -34,6 +37,8 @@ namespace StasisEditor.Models
                 case "edge_scatter":
                     return new EditorMaterialEdgeScatterLayer(data);
             }
+
+            System.Diagnostics.Debug.Assert(false, "Layer wasn't created");
             return null;
         }
 
@@ -47,8 +52,11 @@ namespace StasisEditor.Models
                 case "texture":
                     return new EditorMaterialTextureLayer();
 
-                case "noise":
-                    return new EditorMaterialNoiseLayer();
+                case "perlin":
+                    return new EditorMaterialPerlinLayer();
+
+                case "worley":
+                    return new EditorMaterialWorleyLayer();
 
                 case "uniform_scatter":
                     return new EditorMaterialUniformScatterLayer();
@@ -59,6 +67,8 @@ namespace StasisEditor.Models
                 case "edge_scatter":
                     return new EditorMaterialEdgeScatterLayer();
             }
+
+            System.Diagnostics.Debug.Assert(false, "Layer wasn't created");
             return null;
         }
     }

@@ -198,21 +198,21 @@ namespace StasisEditor.Views.Controls
         void EndDraw()
         {
             
-            try
-            {
+            //try
+            //{
                 SwapBuffers();
                 /*
                 Rectangle sourceRectangle = new Rectangle(0, 0, ClientSize.Width,
                                                                 ClientSize.Height);
 
                 GraphicsDevice.Present(sourceRectangle, null, this.Handle);*/
-            }
-            catch
-            {
+            //}
+            //catch
+            //{
                 // Present might throw if the device became lost while we were
                 // drawing. The lost device will be handled by the next BeginDraw,
                 // so we just swallow the exception.
-            }
+            //}
         }
 
 

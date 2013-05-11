@@ -4,9 +4,8 @@ using Microsoft.Xna.Framework;
 
 namespace StasisCore.Models
 {
-    public class MaterialNoiseLayer : MaterialLayer
+    public class MaterialPerlinLayer : MaterialLayer
     {
-        private NoiseType _noiseType;
         private Vector2 _position;
         private float _scale;
         private float _frequency;
@@ -19,10 +18,8 @@ namespace StasisCore.Models
         private int _iterations;
         private LayerBlendType _blendType;
         private bool _invert;
-        private WorleyFeatureType _worleyFeature;
         private int _seed;
 
-        public NoiseType noiseType { get { return _noiseType; } set { _noiseType = value; } }
         public Vector2 position { get { return _position; } set { _position = value; } }
         public float scale { get { return _scale; } set { _scale = value; } }
         public float frequency { get { return _frequency; } set { _frequency = value; } }
@@ -35,7 +32,6 @@ namespace StasisCore.Models
         public int iterations { get { return _iterations; } set { _iterations = value; } }
         public LayerBlendType blendType { get { return _blendType; } set { _blendType = value; } }
         public bool invert { get { return _invert; } set { _invert = value; } }
-        public WorleyFeatureType worleyFeature { get { return _worleyFeature; } set { _worleyFeature = value; } }
         public int seed { get { return _seed; } set { _seed = value; } }
 
         public override XElement data
@@ -43,7 +39,6 @@ namespace StasisCore.Models
             get
             {
                 XElement d = base.data;
-                d.SetAttributeValue("noise_type", _noiseType.ToString().ToLower());
                 d.SetAttributeValue("position", _position);
                 d.SetAttributeValue("scale", _scale);
                 d.SetAttributeValue("frequency", _frequency);
@@ -56,17 +51,15 @@ namespace StasisCore.Models
                 d.SetAttributeValue("iterations", _iterations);
                 d.SetAttributeValue("blend_type", _blendType.ToString().ToLower());
                 d.SetAttributeValue("invert", _invert);
-                d.SetAttributeValue("worley_feature", _worleyFeature.ToString().ToLower());
                 d.SetAttributeValue("seed", _seed);
                 return d;
             }
         }
 
         // Create new
-        public MaterialNoiseLayer()
+        public MaterialPerlinLayer()
             : base("perlin", true)
         {
-            _noiseType = NoiseType.Perlin;
             _position = Vector2.Zero;
             _scale = 1f;
             _frequency = 1.2f;
@@ -79,14 +72,12 @@ namespace StasisCore.Models
             _iterations = 1;
             _blendType = LayerBlendType.Opaque;
             _invert = false;
-            _worleyFeature = WorleyFeatureType.F1;
             _seed = 12345;
         }
 
         // Create from xml
-        public MaterialNoiseLayer(XElement data) : base(data)
+        public MaterialPerlinLayer(XElement data) : base(data)
         {
-            _noiseType = (NoiseType)Loader.loadEnum(typeof(NoiseType), data.Attribute("noise_type"), (int)NoiseType.Perlin);
             _position = Loader.loadVector2(data.Attribute("position"), Vector2.Zero);
             _scale = Loader.loadFloat(data.Attribute("scale"), 1);
             _frequency = Loader.loadFloat(data.Attribute("frequency"), 1);
@@ -99,14 +90,13 @@ namespace StasisCore.Models
             _iterations = Loader.loadInt(data.Attribute("iterations"), 0);
             _blendType = (LayerBlendType)Loader.loadEnum(typeof(LayerBlendType), data.Attribute("blend_type"), (int)LayerBlendType.Opaque);
             _invert = Loader.loadBool(data.Attribute("invert"), false);
-            _worleyFeature = (WorleyFeatureType)Loader.loadEnum(typeof(WorleyFeatureType), data.Attribute("worley_feature"), (int)WorleyFeatureType.F1);
             _seed = Loader.loadInt(data.Attribute("seed"), 12345);
         }
 
         // Clone
         public override MaterialLayer clone()
         {
-            return new MaterialNoiseLayer(data);
+            return new MaterialPerlinLayer(data);
         }
     }
 }

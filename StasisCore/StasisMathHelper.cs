@@ -16,5 +16,11 @@ namespace StasisCore
             float range = newHigh - newLow;
             return (float)random.NextDouble() * range + newLow;
         }
+
+        public static int mod(int x, int modulus)
+        {
+            int result = x % modulus;
+            return result < 0 ? modulus + x : result;
+        }
     }
 }

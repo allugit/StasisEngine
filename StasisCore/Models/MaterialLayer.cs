@@ -57,8 +57,12 @@ namespace StasisCore.Models
                     layer = new MaterialTextureLayer(data);
                     break;
 
-                case "noise":
-                    layer = new MaterialNoiseLayer(data);
+                case "perlin":
+                    layer = new MaterialPerlinLayer(data);
+                    break;
+
+                case "worley":
+                    layer = new MaterialWorleyLayer(data);
                     break;
 
                 case "uniform_scatter":
@@ -73,6 +77,8 @@ namespace StasisCore.Models
                     layer = new MaterialEdgeScatterLayer(data);
                     break;
             }
+
+            System.Diagnostics.Debug.Assert(layer != null, "Layer wasn't created (is null)");
             return layer;
         }
 
@@ -90,8 +96,12 @@ namespace StasisCore.Models
                     layer = new MaterialTextureLayer();
                     break;
 
-                case "noise":
-                    layer = new MaterialNoiseLayer();
+                case "perlin":
+                    layer = new MaterialPerlinLayer();
+                    break;
+
+                case "worley":
+                    layer = new MaterialWorleyLayer();
                     break;
 
                 case "uniform_scatter":
@@ -106,6 +116,8 @@ namespace StasisCore.Models
                     layer = new MaterialEdgeScatterLayer();
                     break;
             }
+
+            System.Diagnostics.Debug.Assert(layer != null, "Layer wasn't created (is null)");
             return layer;
         }
     }
