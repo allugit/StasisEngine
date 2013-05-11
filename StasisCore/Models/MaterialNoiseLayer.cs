@@ -20,6 +20,7 @@ namespace StasisCore.Models
         private LayerBlendType _blendType;
         private bool _invert;
         private WorleyFeatureType _worleyFeature;
+        private int _seed;
 
         public NoiseType noiseType { get { return _noiseType; } set { _noiseType = value; } }
         public Vector2 position { get { return _position; } set { _position = value; } }
@@ -35,6 +36,7 @@ namespace StasisCore.Models
         public LayerBlendType blendType { get { return _blendType; } set { _blendType = value; } }
         public bool invert { get { return _invert; } set { _invert = value; } }
         public WorleyFeatureType worleyFeature { get { return _worleyFeature; } set { _worleyFeature = value; } }
+        public int seed { get { return _seed; } set { _seed = value; } }
 
         public override XElement data
         {
@@ -55,13 +57,14 @@ namespace StasisCore.Models
                 d.SetAttributeValue("blend_type", _blendType.ToString().ToLower());
                 d.SetAttributeValue("invert", _invert);
                 d.SetAttributeValue("worley_feature", _worleyFeature.ToString().ToLower());
+                d.SetAttributeValue("seed", _seed);
                 return d;
             }
         }
 
         // Create new
         public MaterialNoiseLayer()
-            : base("noise", true)
+            : base("perlin", true)
         {
             _noiseType = NoiseType.Perlin;
             _position = Vector2.Zero;
@@ -77,6 +80,7 @@ namespace StasisCore.Models
             _blendType = LayerBlendType.Opaque;
             _invert = false;
             _worleyFeature = WorleyFeatureType.F1;
+            _seed = 12345;
         }
 
         // Create from xml
@@ -96,6 +100,7 @@ namespace StasisCore.Models
             _blendType = (LayerBlendType)Loader.loadEnum(typeof(LayerBlendType), data.Attribute("blend_type"), (int)LayerBlendType.Opaque);
             _invert = Loader.loadBool(data.Attribute("invert"), false);
             _worleyFeature = (WorleyFeatureType)Loader.loadEnum(typeof(WorleyFeatureType), data.Attribute("worley_feature"), (int)WorleyFeatureType.F1);
+            _seed = Loader.loadInt(data.Attribute("seed"), 12345);
         }
 
         // Clone

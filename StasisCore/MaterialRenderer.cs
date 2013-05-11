@@ -14,49 +14,21 @@ namespace StasisCore
         private GraphicsDevice _graphicsDevice;
         private ContentManager _contentManager;
         private SpriteBatch _spriteBatch;
-        private Random _random;
-        private Texture2D _perlinSource;
-        private Texture2D _worleySource;
         private Texture2D pixel;
         private Effect _primitivesEffect;
-        private Effect _noiseEffect;
         private Effect _textureEffect;
 
         public Effect primitivesEffect { get { return _primitivesEffect; } }
 
-        public MaterialRenderer(GraphicsDevice graphicsDevice, ContentManager contentManager, SpriteBatch spriteBatch, int randomTextureWidth, int randomTextureHeight, int seed)
+        public MaterialRenderer(GraphicsDevice graphicsDevice, ContentManager contentManager, SpriteBatch spriteBatch)
         {
             _graphicsDevice = graphicsDevice;
             _contentManager = contentManager;
             _spriteBatch = spriteBatch;
-            
+
             // Load content
             _primitivesEffect = _contentManager.Load<Effect>("effects/primitives");
-            _noiseEffect = _contentManager.Load<Effect>("effects/noise");
             _textureEffect = _contentManager.Load<Effect>("effects/texture");
-
-            // Create random generator
-            _random = new Random(seed);
-
-            // Initialize random texture
-            Color[] _perlinSourceData = new Color[randomTextureWidth * randomTextureHeight];
-            for (int i = 0; i < randomTextureWidth; i++)
-            {
-                for (int j = 0; j < randomTextureHeight; j++)
-                    _perlinSourceData[i + j * randomTextureWidth] = new Color((float)_random.Next(3) / 2, (float)_random.Next(3) / 2, (float)_random.Next(3) / 2);
-            }
-            _perlinSource = new Texture2D(_graphicsDevice, randomTextureWidth, randomTextureHeight);
-            _perlinSource.SetData<Color>(_perlinSourceData);
-
-            // Initialize worley texture
-            Color[] data = new Color[randomTextureWidth * randomTextureHeight];
-            for (int i = 0; i < randomTextureWidth; i++)
-            {
-                for (int j = 0; j < randomTextureHeight; j++)
-                    data[i + j * randomTextureWidth] = new Color((float)_random.NextDouble(), (float)_random.NextDouble(), (float)_random.NextDouble(), (float)_random.NextDouble());
-            }
-            _worleySource = new Texture2D(_graphicsDevice, randomTextureWidth, randomTextureHeight);
-            _worleySource.SetData<Color>(data);
 
             // Initialize pixel texture
             pixel = new Texture2D(_graphicsDevice, 1, 1);
@@ -64,7 +36,7 @@ namespace StasisCore
         }
 
         // Trim transparent edges
-        private Texture2D trimTransparentEdges(Texture2D canvas)
+        public Texture2D trimTransparentEdges(Texture2D canvas)
         {
             Color[] data1d = new Color[canvas.Width * canvas.Height];
             Color[,] data2d = new Color[canvas.Width, canvas.Height];
@@ -80,22 +52,22 @@ namespace StasisCore
             int widthTrim;
             int heightTrim;
             Func<int, int> findTransparentColumnFromLeft = (end) =>
+            {
+                int lastTransparentColumn = 0;
+                for (int i = 0; i < end; i++)
                 {
-                    int lastTransparentColumn = 0;
-                    for (int i = 0; i < end; i++)
+                    for (int j = 0; j < canvas.Height; j++)
                     {
-                        for (int j = 0; j < canvas.Height; j++)
+                        if (data2d[i, j].A > 0)
                         {
-                            if (data2d[i, j].A > 0)
-                            {
-                                return lastTransparentColumn;
-                            }
+                            return lastTransparentColumn;
                         }
-                        lastTransparentColumn = i;
                     }
+                    lastTransparentColumn = i;
+                }
 
-                    return lastTransparentColumn;
-                };
+                return lastTransparentColumn;
+            };
             Func<int, int> findTransparentColumnFromRight = (end) =>
             {
                 int lastTransparentColumn = canvas.Width - 1;
@@ -251,24 +223,40 @@ namespace StasisCore
                         textureLayer.baseColor);
                     break;
 
-                case "noise":
-                    MaterialNoiseLayer noiseLayer = layer as MaterialNoiseLayer;
-                    current = noisePass(
+                case "perlin":
+                    MaterialNoiseLayer perlinLayer = layer as MaterialNoiseLayer;
+                    current = perlinPass(
                         current,
-                        noiseLayer.noiseType,
-                        noiseLayer.position,
-                        noiseLayer.scale,
-                        noiseLayer.frequency,
-                        noiseLayer.gain,
-                        noiseLayer.lacunarity,
-                        noiseLayer.multiplier,
-                        noiseLayer.fbmOffset,
-                        noiseLayer.colorLow,
-                        noiseLayer.colorHigh,
-                        noiseLayer.iterations,
-                        noiseLayer.blendType,
-                        noiseLayer.invert,
-                        noiseLayer.worleyFeature);
+                        perlinLayer.seed,
+                        perlinLayer.position,
+                        perlinLayer.scale,
+                        perlinLayer.frequency,
+                        perlinLayer.gain,
+                        perlinLayer.lacunarity,
+                        perlinLayer.multiplier,
+                        perlinLayer.fbmOffset,
+                        perlinLayer.colorLow,
+                        perlinLayer.colorHigh,
+                        perlinLayer.iterations,
+                        perlinLayer.invert);
+                    break;
+
+                case "worley":
+                    MaterialNoiseLayer worleyLayer = layer as MaterialNoiseLayer;
+                    current = worleyPass(
+                        current,
+                        worleyLayer.seed,
+                        worleyLayer.position,
+                        worleyLayer.scale,
+                        worleyLayer.frequency,
+                        worleyLayer.gain,
+                        worleyLayer.lacunarity,
+                        worleyLayer.multiplier,
+                        worleyLayer.fbmOffset,
+                        worleyLayer.colorLow,
+                        worleyLayer.colorHigh,
+                        worleyLayer.iterations,
+                        worleyLayer.invert);
                     break;
 
                 case "uniform_scatter":
@@ -309,7 +297,7 @@ namespace StasisCore
                         radialLayer.centerOffset,
                         radialLayer.baseColor,
                         radialLayer.randomRed,
-                        radialLayer.randomGreen, 
+                        radialLayer.randomGreen,
                         radialLayer.randomBlue,
                         radialLayer.randomAlpha);
                     break;
@@ -341,7 +329,7 @@ namespace StasisCore
         }
 
         // Create canvas
-        private Texture2D createCanvas(int width, int height)
+        public Texture2D createCanvas(int width, int height)
         {
             Texture2D canvas = new Texture2D(_graphicsDevice, width, height);
             Color[] data = new Color[width * height];
@@ -352,7 +340,7 @@ namespace StasisCore
         }
 
         // Texture pass
-        private Texture2D texturePass(Texture2D current, Texture2D texture, LayerBlendType blendType, float scale, float multiplier, Color baseColor)
+        public Texture2D texturePass(Texture2D current, Texture2D texture, LayerBlendType blendType, float scale, float multiplier, Color baseColor)
         {
             // Initialize render targets and textures
             RenderTarget2D renderTarget = new RenderTarget2D(_graphicsDevice, current.Width, current.Height);
@@ -408,9 +396,17 @@ namespace StasisCore
             return result;
         }
 
-        // Noise pass
-        private Texture2D noisePass(Texture2D current,
-            NoiseType noiseType,
+        // perlinWeight -- Weight function for interpolating
+        public float perlinWeight(float x)
+        {
+            return x * x * x * (x * (x * 6 - 15) + 10);
+        }
+
+        // perlinPass -- Renders a perlin texture using supplied properties
+        // reference: "Simplex Noise Demystified" http://webstaff.itn.liu.se/~stegu/simplexnoise/simplexnoise.pdf
+        public Texture2D perlinPass(
+            Texture2D current,
+            int seed,
             Vector2 position,
             float scale,
             float frequency,
@@ -421,71 +417,172 @@ namespace StasisCore
             Color colorLow,
             Color colorHigh,
             int iterations,
-            LayerBlendType blendType,
-            bool invert,
-            WorleyFeatureType worleyFeature)
+            bool invert)
         {
-            // Initialize vertex shader properties
-            Matrix projection = Matrix.CreateOrthographicOffCenter(0, current.Width, current.Height, 0, 0, 1);
-            Matrix halfPixelOffset = Matrix.CreateTranslation(-0.5f, -0.5f, 0);
-            Matrix matrixTransform = halfPixelOffset * projection;
-            _noiseEffect.Parameters["matrixTransform"].SetValue(matrixTransform);
-
-            // Initialize render target
-            RenderTarget2D renderTarget = new RenderTarget2D(_graphicsDevice, current.Width, current.Height);
-
-            // Aspect ratio
-            float shortest = Math.Min(current.Width, current.Height);
-            Vector2 aspectRatio = new Vector2(current.Width / shortest, current.Height / shortest);
-
-            // Set options based on noise type and blend type
-            Vector2 noiseSize = Vector2.Zero;
-            if (noiseType == NoiseType.Perlin)
-            {
-                _noiseEffect.CurrentTechnique = _noiseEffect.Techniques["perlin_noise"];
-                noiseSize = new Vector2(_perlinSource.Width, _perlinSource.Height);
-            }
-            else
-            {
-                _noiseEffect.CurrentTechnique = _noiseEffect.Techniques["worley_noise"];
-                noiseSize = new Vector2(_worleySource.Width, _worleySource.Height);
-            }
-
-            // Draw noise effect to render target
-            _graphicsDevice.SetRenderTarget(renderTarget);
-            _graphicsDevice.Textures[1] = _perlinSource;
-            _graphicsDevice.Textures[2] = _worleySource;
-            _graphicsDevice.Clear(Color.Transparent);
-            //_noiseEffect.Parameters["aspectRatio"].SetValue(aspectRatio);
-            _noiseEffect.Parameters["offset"].SetValue(position);
-            _noiseEffect.Parameters["noiseScale"].SetValue(scale);
-            _noiseEffect.Parameters["renderSize"].SetValue(new Vector2(current.Width, current.Height));
-            _noiseEffect.Parameters["noiseSize"].SetValue(noiseSize);
-            _noiseEffect.Parameters["noiseFrequency"].SetValue(frequency);
-            _noiseEffect.Parameters["noiseGain"].SetValue(gain);
-            _noiseEffect.Parameters["noiseLacunarity"].SetValue(lacunarity);
-            _noiseEffect.Parameters["multiplier"].SetValue(multiplier);
-            _noiseEffect.Parameters["fbmOffset"].SetValue(fbmOffset);
-            _noiseEffect.Parameters["noiseLowColor"].SetValue(colorLow.ToVector4());
-            _noiseEffect.Parameters["noiseHighColor"].SetValue(colorHigh.ToVector4());
-            _noiseEffect.Parameters["fbmIterations"].SetValue(iterations);
-            _noiseEffect.Parameters["blendType"].SetValue((int)blendType);
-            _noiseEffect.Parameters["invert"].SetValue(invert);
-            _noiseEffect.Parameters["worleyFeature"].SetValue((int)worleyFeature);
-            _spriteBatch.Begin();
-            _spriteBatch.Draw(current, current.Bounds, Color.White);
-            _spriteBatch.End();
-            _spriteBatch.Begin(SpriteSortMode.Immediate, null, null, null, null, _noiseEffect);
-            _spriteBatch.Draw(current, renderTarget.Bounds, Color.White);
-            _spriteBatch.End();
-            _graphicsDevice.SetRenderTarget(null);
-
-            // Store
-            Color[] data = new Color[current.Width * current.Height];
             Texture2D output = new Texture2D(_graphicsDevice, current.Width, current.Height);
-            renderTarget.GetData<Color>(data);
-            output.SetData<Color>(data);
+            Color[] data = new Color[output.Width * output.Height];
+            int gridWidth = 32;
+            int gridHeight = 32;
+            Vector2[,] grid = new Vector2[gridWidth, gridHeight];
+            Random rng = new Random(seed);
+            
+            // Create gradient grid
+            for (int i = 0; i < gridWidth; i++)
+            {
+                for (int j = 0; j < gridHeight; j++)
+                {
+                    grid[i, j] = new Vector2(
+                        StasisMathHelper.floatBetween(-1, 1, rng),
+                        StasisMathHelper.floatBetween(-1, 1, rng));
+                }
+            }
 
+            // Calculate values
+            for (int i = 0; i < output.Width; i++)
+            {
+                for (int j = 0; j < output.Height; j++)
+                {
+                    // Find unit grid cell containing point
+                    float fi = (float)i / (float)gridWidth;
+                    float fj = (float)j / (float)gridHeight;
+                    fi += position.X;
+                    fj += position.Y;
+
+                    int X = (int)Math.Floor(fi);
+                    int Y = (int)Math.Floor(fj);
+
+                    // Get relative xy coordinates of point within that cell
+                    float x = fi - X;
+                    float y = fj - Y;
+
+                    // Wrap the integer cells
+                    int x0 = X % gridWidth;
+                    int x1 = (X + 1) % gridWidth;
+                    int y0 = Y % gridHeight;
+                    int y1 = (Y + 1) % gridHeight;
+
+                    // Get gradients
+                    Vector2 g00 = grid[x0, y0];
+                    Vector2 g10 = grid[x1, y0];
+                    Vector2 g01 = grid[x0, y1];
+                    Vector2 g11 = grid[x1, y1];
+
+                    // Calculate noise contributions from each of the eight corners
+                    float n00 = Vector2.Dot(g00, new Vector2(x, y));
+                    float n10 = Vector2.Dot(g10, new Vector2(x - 1, y));
+                    float n01 = Vector2.Dot(g01, new Vector2(x, y - 1));
+                    float n11 = Vector2.Dot(g11, new Vector2(x - 1, y - 1));
+
+                    // Compute the fade curve value for each of x, y, z
+                    float u = perlinWeight(x);
+                    float v = perlinWeight(y);
+
+                    // Interpolate along x the contributions from each of the corners
+                    float nx00 = MathHelper.Lerp(n00, n10, u);
+                    float nx10 = MathHelper.Lerp(n01, n11, u);
+
+                    // Interpolate the results along y
+                    float value = MathHelper.Lerp(nx00, nx10, v);
+                    
+                    // Change range of value to [0, 1] instead of [-1, 1]
+                    value = (value + 1) / 2f;
+
+                    Color result = new Color(value, value, value, 1);
+
+                    data[i + j * output.Width] = result;
+                }
+            }
+
+            output.SetData<Color>(data);
+            return output;
+        }
+
+        // Worley noise pass
+        public Texture2D worleyPass(
+            Texture2D current,
+            int seed,
+            Vector2 position,
+            float scale,
+            float frequency,
+            float gain,
+            float lacunarity,
+            float multiplier,
+            Vector2 fbmOffset,
+            Color colorLow,
+            Color colorHigh,
+            int iterations,
+            bool invert)
+        {
+            Texture2D output = new Texture2D(_graphicsDevice, current.Width, current.Height);
+            Color[] data = new Color[output.Width * output.Height];
+            int gridWidth = 32;
+            int gridHeight = 32;
+            Vector2[,] grid = new Vector2[gridWidth, gridHeight];
+            Random rng = new Random(seed);
+
+            // Create gradient grid
+            for (int i = 0; i < gridWidth; i++)
+            {
+                for (int j = 0; j < gridHeight; j++)
+                {
+                    grid[i, j] = new Vector2(
+                        StasisMathHelper.floatBetween(-1, 1, rng),
+                        StasisMathHelper.floatBetween(-1, 1, rng));
+                }
+            }
+
+            for (int i = 0; i < output.Width; i++)
+            {
+                for (int j = 0; j < output.Height; j++)
+                {
+                    Vector2 p = new Vector2(i, j) / new Vector2(gridWidth, gridHeight);
+                    p += position;
+
+                    int xi = (int)Math.Floor(p.X);
+	                int yi = (int)Math.Floor(p.Y);
+
+	                float xf = p.X - (float)xi;
+	                float yf = p.Y - (float)yi;
+
+	                float distance1 = 9999999;
+	                float distance2 = 9999999;
+
+	                for (int y = -2; y <= 2; y++)
+	                {
+		                for (int x = -2; x <= 2; x++)
+		                {
+                            // Find feature point grid indices
+                            int fpx = (xi + x) % gridWidth;
+                            int fpy = (yi + y) % gridHeight;
+                            fpx = fpx < 0 ? fpx + gridWidth : fpx;
+                            fpy = fpy < 0 ? fpy + gridHeight : fpy;
+
+                            // Get feature point by getting gradient at grid cell and modify the coordinates
+                            Vector2 fp = grid[fpx, fpy];
+                            fp.X += (float)x - xf;
+                            fp.Y += (float)y - yf;
+
+                            // Calculate distances
+                            float distance = fp.LengthSquared();
+			                if (distance < distance1)
+			                {
+				                distance2 = distance1;
+				                distance1 = distance;
+			                }
+			                else if (distance < distance2)
+			                {
+				                distance2 = distance;
+			                }
+		                }
+	                }
+
+                    // Use shortest distance as value
+                    float value = (float)Math.Sqrt(distance1);
+                    data[i + j * output.Width] = new Color(value, value, value, 1);
+                }
+            }
+
+            output.SetData<Color>(data);
             return output;
         }
 
@@ -493,15 +590,17 @@ namespace StasisCore
         public Texture2D uniformScatterPass(
             Texture2D current,
             List<string> textureUIDs,
-            float horizontalSpacing, 
-            float verticalSpacing, 
-            float jitter, 
-            Color baseColor, 
-            int randomRed, 
-            int randomGreen, 
-            int randomBlue, 
+            float horizontalSpacing,
+            float verticalSpacing,
+            float jitter,
+            Color baseColor,
+            int randomRed,
+            int randomGreen,
+            int randomBlue,
             int randomAlpha)
         {
+            Random rng = new Random();
+
             // Initialize render targets and textures
             RenderTarget2D renderTarget = new RenderTarget2D(_graphicsDevice, current.Width, current.Height);
             Texture2D result = new Texture2D(_graphicsDevice, renderTarget.Width, renderTarget.Height);
@@ -528,9 +627,9 @@ namespace StasisCore
             {
                 for (float j = 0; j <= current.Height; j += verticalSpacing)
                 {
-                    Vector2 position = new Vector2(i, j) + new Vector2(StasisMathHelper.floatBetween(0, jitter, _random), StasisMathHelper.floatBetween(0, jitter, _random));
-                    float angle = StasisMathHelper.floatBetween(-3.14f, 3.14f, _random);
-                    Texture2D texture = textures[_random.Next(0, textures.Count)];
+                    Vector2 position = new Vector2(i, j) + new Vector2(StasisMathHelper.floatBetween(0, jitter, rng), StasisMathHelper.floatBetween(0, jitter, rng));
+                    float angle = StasisMathHelper.floatBetween(-3.14f, 3.14f, rng);
+                    Texture2D texture = textures[rng.Next(0, textures.Count)];
                     Color actualColor = getRandomColor(baseColor, randomRed, randomGreen, randomBlue, randomAlpha);
                     _spriteBatch.Draw(texture, position, texture.Bounds, actualColor, angle, new Vector2(texture.Width, texture.Height) / 2, 1f, SpriteEffects.None, 0);
                 }
@@ -555,25 +654,27 @@ namespace StasisCore
             List<string> textureUIDs,
             bool scaleWithGrowthFactor,
             float a,
-            float b, 
-            float intersections, 
-            float maxRadius, 
-            int arms, 
-            bool twinArms, 
+            float b,
+            float intersections,
+            float maxRadius,
+            int arms,
+            bool twinArms,
             bool flipArms,
             bool useAbsoluteTextureAngle,
             float absoluteTextureAngle,
             float relativeTextureAngle,
             float textureAngleJitter,
-            float jitter, 
+            float jitter,
             float centerJitter,
-            Vector2 centerOffset, 
-            Color baseColor, 
-            int randomRed, 
-            int randomGreen, 
-            int randomBlue, 
+            Vector2 centerOffset,
+            Color baseColor,
+            int randomRed,
+            int randomGreen,
+            int randomBlue,
             int randomAlpha)
         {
+            Random rng = new Random();
+
             // Initialize render targets and textures
             RenderTarget2D renderTarget = new RenderTarget2D(_graphicsDevice, current.Width, current.Height);
             Texture2D result = new Texture2D(_graphicsDevice, renderTarget.Width, renderTarget.Height);
@@ -606,7 +707,7 @@ namespace StasisCore
             _spriteBatch.Draw(current, current.Bounds, Color.White);
             float thetaIncrement = StasisMathHelper.pi * 2 / intersections;
             float armRotationIncrement = StasisMathHelper.pi * 2 / (float)arms;
-            Vector2 center = centerOffset + new Vector2(current.Width, current.Height) / 2 + new Vector2((float)(_random.NextDouble() * 2 - 1), (float)(_random.NextDouble() * 2 - 1)) * centerJitter;
+            Vector2 center = centerOffset + new Vector2(current.Width, current.Height) / 2 + new Vector2((float)(rng.NextDouble() * 2 - 1), (float)(rng.NextDouble() * 2 - 1)) * centerJitter;
             for (int i = 0; i < arms; i++)
             {
                 float theta = 0;
@@ -617,7 +718,7 @@ namespace StasisCore
                     if (r < maxRadius)
                     {
                         float modifiedTheta = (theta + armRotationIncrement * i) * (flipArms ? -1f : 1f);
-                        float randomAngleValue = textureAngleJitter == 0 ? 0 : StasisMathHelper.floatBetween(-textureAngleJitter, textureAngleJitter, _random);
+                        float randomAngleValue = textureAngleJitter == 0 ? 0 : StasisMathHelper.floatBetween(-textureAngleJitter, textureAngleJitter, rng);
                         float textureAngle;
                         if (useAbsoluteTextureAngle)
                         {
@@ -627,14 +728,14 @@ namespace StasisCore
                         {
                             textureAngle = relativeTextureAngle + modifiedTheta + randomAngleValue;
                         }
-                        Vector2 j = new Vector2((float)(_random.NextDouble() * 2 - 1) * jitter, (float)(_random.NextDouble() * 2 - 1) * jitter);
-                        Texture2D texture = textures[_random.Next(textures.Count)];
+                        Vector2 j = new Vector2((float)(rng.NextDouble() * 2 - 1) * jitter, (float)(rng.NextDouble() * 2 - 1) * jitter);
+                        Texture2D texture = textures[rng.Next(textures.Count)];
                         Color actualColor = getRandomColor(baseColor, randomRed, randomGreen, randomBlue, randomAlpha);
                         float textureScale = scaleWithGrowthFactor ? growthFactor : 1f;
                         _spriteBatch.Draw(texture, new Vector2(r * (float)Math.Cos(modifiedTheta), r * (float)Math.Sin(modifiedTheta)) + j + center, texture.Bounds, actualColor, textureAngle, new Vector2(texture.Width, texture.Height) / 2, textureScale, SpriteEffects.None, 0);
                         if (twinArms)
                         {
-                            j = new Vector2((float)(_random.NextDouble() * 2 - 1) * jitter, (float)(_random.NextDouble() * 2 - 1) * jitter);
+                            j = new Vector2((float)(rng.NextDouble() * 2 - 1) * jitter, (float)(rng.NextDouble() * 2 - 1) * jitter);
                             _spriteBatch.Draw(texture, new Vector2(r * (float)Math.Cos(-modifiedTheta), r * (float)Math.Sin(-modifiedTheta)) + j + center, texture.Bounds, actualColor, -textureAngle, new Vector2(texture.Width, texture.Height) / 2, textureScale, SpriteEffects.None, 0);
                         }
                     }
@@ -674,6 +775,8 @@ namespace StasisCore
             int randomBlue,
             int randomAlpha)
         {
+            Random rng = new Random();
+
             // Initialize render targets and textures
             RenderTarget2D renderTarget = new RenderTarget2D(_graphicsDevice, current.Width, current.Height);
             Texture2D result = new Texture2D(_graphicsDevice, renderTarget.Width, renderTarget.Height);
@@ -734,12 +837,12 @@ namespace StasisCore
                     {
                         float angle = 0;
                         if (useAbsoluteAngle)
-                            angle = absoluteAngle + StasisMathHelper.floatBetween(-angleJitter, angleJitter, _random);
+                            angle = absoluteAngle + StasisMathHelper.floatBetween(-angleJitter, angleJitter, rng);
                         else
-                            angle = (float)Math.Atan2(relative.Y, relative.X) + relativeAngle + StasisMathHelper.floatBetween(-angleJitter, angleJitter, _random);
-                        Vector2 j = new Vector2((float)_random.NextDouble() * 2 - 1, (float)_random.NextDouble() * 2 - 1) * jitter;
+                            angle = (float)Math.Atan2(relative.Y, relative.X) + relativeAngle + StasisMathHelper.floatBetween(-angleJitter, angleJitter, rng);
+                        Vector2 j = new Vector2((float)rng.NextDouble() * 2 - 1, (float)rng.NextDouble() * 2 - 1) * jitter;
                         Vector2 position = pointA + normal * currentPosition + j;
-                        Texture2D texture = textures[_random.Next(textures.Count)];
+                        Texture2D texture = textures[rng.Next(textures.Count)];
                         Color actualColor = getRandomColor(baseColor, randomRed, randomGreen, randomBlue, randomAlpha);
                         _spriteBatch.Draw(texture, (position - topLeft) * Settings.BASE_SCALE, texture.Bounds, actualColor, angle, new Vector2(texture.Width, texture.Height) / 2, 1f, SpriteEffects.None, 0);
                         currentPosition += spacing;
@@ -762,10 +865,11 @@ namespace StasisCore
         // Random color helper
         private Color getRandomColor(Color baseColor, int randomRed, int randomGreen, int randomBlue, int randomAlpha)
         {
-            int tintR = randomRed < 0 ? _random.Next(randomRed, 1) : _random.Next(randomRed + 1);
-            int tintG = randomGreen < 0 ? _random.Next(randomGreen, 1) : _random.Next(randomGreen + 1);
-            int tintB = randomBlue < 0 ? _random.Next(randomBlue, 1) : _random.Next(randomBlue + 1);
-            int tintA = randomAlpha < 0 ? _random.Next(randomAlpha, 1) : _random.Next(randomAlpha + 1);
+            Random rng = new Random();
+            int tintR = randomRed < 0 ? rng.Next(randomRed, 1) : rng.Next(randomRed + 1);
+            int tintG = randomGreen < 0 ? rng.Next(randomGreen, 1) : rng.Next(randomGreen + 1);
+            int tintB = randomBlue < 0 ? rng.Next(randomBlue, 1) : rng.Next(randomBlue + 1);
+            int tintA = randomAlpha < 0 ? rng.Next(randomAlpha, 1) : rng.Next(randomAlpha + 1);
             return new Color(
                 Math.Max(0, (int)baseColor.R + tintR),
                 Math.Max(0, (int)baseColor.G + tintG),

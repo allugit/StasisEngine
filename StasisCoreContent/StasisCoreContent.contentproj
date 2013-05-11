@@ -48,12 +48,6 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="effects\noise.fx">
-      <Name>noise</Name>
-      <Importer>EffectImporter</Importer>
-      <Processor>MGEffectProcessor</Processor>
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Compile>
     <None Include="effects\normal_functions.fx">
       <Name>normal_functions</Name>
       <Importer>EffectImporter</Importer>
