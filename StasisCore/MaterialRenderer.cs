@@ -402,6 +402,78 @@ namespace StasisCore
             return x * x * x * (x * (x * 6 - 15) + 10);
         }
 
+        // perlin -- Calculate perlin noise
+        private float perlin(
+            Vector2[,] grid,
+            int gridWidth,
+            int gridHeight,
+            Vector2 position)
+        {
+            int X = (int)Math.Floor(position.X);
+            int Y = (int)Math.Floor(position.Y);
+
+            // Get relative xy coordinates of point within that cell
+            float x = position.X - X;
+            float y = position.Y - Y;
+
+            // Wrap the integer cells
+            int x0 = X % gridWidth;
+            int x1 = (X + 1) % gridWidth;
+            int y0 = Y % gridHeight;
+            int y1 = (Y + 1) % gridHeight;
+
+            // Get gradients
+            Vector2 g00 = grid[x0, y0];
+            Vector2 g10 = grid[x1, y0];
+            Vector2 g01 = grid[x0, y1];
+            Vector2 g11 = grid[x1, y1];
+
+            // Calculate noise contributions from each of the eight corners
+            float n00 = Vector2.Dot(g00, new Vector2(x, y));
+            float n10 = Vector2.Dot(g10, new Vector2(x - 1, y));
+            float n01 = Vector2.Dot(g01, new Vector2(x, y - 1));
+            float n11 = Vector2.Dot(g11, new Vector2(x - 1, y - 1));
+
+            // Compute the fade curve value for each of x, y, z
+            float u = perlinWeight(x);
+            float v = perlinWeight(y);
+
+            // Interpolate along x the contributions from each of the corners
+            float nx00 = MathHelper.Lerp(n00, n10, u);
+            float nx10 = MathHelper.Lerp(n01, n11, u);
+
+            // Interpolate the results along y
+            float value = MathHelper.Lerp(nx00, nx10, v);
+
+            return value;
+        }
+
+        // fbmPerlin -- Fractional Brownian Motion using perlin
+        public float fbmPerlin(
+            Vector2[,] grid,
+            int gridWidth,
+            int gridHeight,
+            Vector2 position,
+            float scale,
+            float frequency,
+            float gain,
+            float lacunarity,
+            Vector2 fbmOffset,
+            int iterations)
+        {
+            float total = 0;
+            float amplitude = gain;
+
+            for (int i = 0; i < iterations; i++)
+            {
+                total += perlin(grid, gridWidth, gridHeight, position * frequency + total * fbmOffset) * amplitude;
+                frequency *= lacunarity;
+                amplitude *= gain;
+            }
+
+            return total;
+        }
+
         // perlinPass -- Renders a perlin texture using supplied properties
         // reference: "Simplex Noise Demystified" http://webstaff.itn.liu.se/~stegu/simplexnoise/simplexnoise.pdf
         public Texture2D perlinPass(
@@ -442,59 +514,114 @@ namespace StasisCore
             {
                 for (int j = 0; j < output.Height; j++)
                 {
-                    // Find unit grid cell containing point
-                    float fi = (float)i / (float)gridWidth;
-                    float fj = (float)j / (float)gridHeight;
-                    fi += position.X;
-                    fj += position.Y;
+                    // Position
+                    Vector2 p = new Vector2(
+                        (float)i / (float)gridWidth,
+                        (float)j / (float)gridHeight);
+                    p += position;
+                    p /= scale;
 
-                    int X = (int)Math.Floor(fi);
-                    int Y = (int)Math.Floor(fj);
-
-                    // Get relative xy coordinates of point within that cell
-                    float x = fi - X;
-                    float y = fj - Y;
-
-                    // Wrap the integer cells
-                    int x0 = X % gridWidth;
-                    int x1 = (X + 1) % gridWidth;
-                    int y0 = Y % gridHeight;
-                    int y1 = (Y + 1) % gridHeight;
-
-                    // Get gradients
-                    Vector2 g00 = grid[x0, y0];
-                    Vector2 g10 = grid[x1, y0];
-                    Vector2 g01 = grid[x0, y1];
-                    Vector2 g11 = grid[x1, y1];
-
-                    // Calculate noise contributions from each of the eight corners
-                    float n00 = Vector2.Dot(g00, new Vector2(x, y));
-                    float n10 = Vector2.Dot(g10, new Vector2(x - 1, y));
-                    float n01 = Vector2.Dot(g01, new Vector2(x, y - 1));
-                    float n11 = Vector2.Dot(g11, new Vector2(x - 1, y - 1));
-
-                    // Compute the fade curve value for each of x, y, z
-                    float u = perlinWeight(x);
-                    float v = perlinWeight(y);
-
-                    // Interpolate along x the contributions from each of the corners
-                    float nx00 = MathHelper.Lerp(n00, n10, u);
-                    float nx10 = MathHelper.Lerp(n01, n11, u);
-
-                    // Interpolate the results along y
-                    float value = MathHelper.Lerp(nx00, nx10, v);
+                    float value = fbmPerlin(
+                        grid,
+                        gridWidth,
+                        gridHeight,
+                        p,
+                        scale,
+                        frequency,
+                        gain,
+                        lacunarity,
+                        fbmOffset,
+                        iterations);
                     
                     // Change range of value to [0, 1] instead of [-1, 1]
                     value = (value + 1) / 2f;
 
-                    Color result = new Color(value, value, value, 1);
+                    // Multiply value
+                    value *= multiplier;
 
-                    data[i + j * output.Width] = result;
+                    // TODO: Interpolate between color low/high
+                    // TODO: invert value
+                    data[i + j * output.Width] = new Color(value, value, value, 1);
                 }
             }
 
             output.SetData<Color>(data);
             return output;
+        }
+
+        // worley -- Calculates a worley value
+        private float worley(
+            Vector2[,] grid,
+            int gridWidth,
+            int gridHeight,
+            Vector2 position)
+        {
+            int xi = (int)Math.Floor(position.X);
+            int yi = (int)Math.Floor(position.Y);
+
+            float xf = position.X - (float)xi;
+            float yf = position.Y - (float)yi;
+
+            float distance1 = 9999999;
+            float distance2 = 9999999;
+
+            for (int y = -2; y <= 2; y++)
+            {
+                for (int x = -2; x <= 2; x++)
+                {
+                    // Find feature point grid indices
+                    int fpx = (xi + x) % gridWidth;
+                    int fpy = (yi + y) % gridHeight;
+                    fpx = fpx < 0 ? fpx + gridWidth : fpx;
+                    fpy = fpy < 0 ? fpy + gridHeight : fpy;
+
+                    // Get feature point by getting gradient at grid cell and modify the coordinates
+                    Vector2 fp = grid[fpx, fpy];
+                    fp.X += (float)x - xf;
+                    fp.Y += (float)y - yf;
+
+                    // Calculate distances
+                    float distance = fp.LengthSquared();
+                    if (distance < distance1)
+                    {
+                        distance2 = distance1;
+                        distance1 = distance;
+                    }
+                    else if (distance < distance2)
+                    {
+                        distance2 = distance;
+                    }
+                }
+            }
+
+            // Use shortest distance as value
+            float value = (float)Math.Sqrt(distance1);
+            return value;
+        }
+
+        // fbmWorley -- Uses Fractional Brownian Motion to calculate worley noise
+        private float fbmWorley(
+            Vector2[,] grid,
+            int gridWidth,
+            int gridHeight,
+            Vector2 position,
+            float frequency,
+            float gain,
+            float lacunarity,
+            Vector2 fbmOffset,
+            int iterations)
+        {
+            float total = 0;
+	        float amplitude = gain;
+
+	        for (int i = 0; i < iterations; i++)
+	        {
+		        total += worley(grid, gridWidth, gridHeight, position * frequency + total * fbmOffset) * amplitude;
+		        frequency *= lacunarity;
+		        amplitude *= gain;
+	        }
+
+	        return total;
         }
 
         // Worley noise pass
@@ -537,47 +664,21 @@ namespace StasisCore
                 {
                     Vector2 p = new Vector2(i, j) / new Vector2(gridWidth, gridHeight);
                     p += position;
+                    p /= scale;
 
-                    int xi = (int)Math.Floor(p.X);
-	                int yi = (int)Math.Floor(p.Y);
+                    float value = fbmWorley(
+                        grid,
+                        gridWidth,
+                        gridHeight,
+                        p,
+                        frequency,
+                        gain,
+                        lacunarity,
+                        fbmOffset,
+                        iterations);
 
-	                float xf = p.X - (float)xi;
-	                float yf = p.Y - (float)yi;
-
-	                float distance1 = 9999999;
-	                float distance2 = 9999999;
-
-	                for (int y = -2; y <= 2; y++)
-	                {
-		                for (int x = -2; x <= 2; x++)
-		                {
-                            // Find feature point grid indices
-                            int fpx = (xi + x) % gridWidth;
-                            int fpy = (yi + y) % gridHeight;
-                            fpx = fpx < 0 ? fpx + gridWidth : fpx;
-                            fpy = fpy < 0 ? fpy + gridHeight : fpy;
-
-                            // Get feature point by getting gradient at grid cell and modify the coordinates
-                            Vector2 fp = grid[fpx, fpy];
-                            fp.X += (float)x - xf;
-                            fp.Y += (float)y - yf;
-
-                            // Calculate distances
-                            float distance = fp.LengthSquared();
-			                if (distance < distance1)
-			                {
-				                distance2 = distance1;
-				                distance1 = distance;
-			                }
-			                else if (distance < distance2)
-			                {
-				                distance2 = distance;
-			                }
-		                }
-	                }
-
-                    // Use shortest distance as value
-                    float value = (float)Math.Sqrt(distance1);
+                    // TODO: Interpolate between color low/high
+                    // TODO: invert value
                     data[i + j * output.Width] = new Color(value, value, value, 1);
                 }
             }
