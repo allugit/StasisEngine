@@ -33,6 +33,7 @@ namespace StasisEditor.Views.Controls
 
         protected override void Initialize()
         {
+            /*
             _contentManager = new ContentManager(Services, "Content");
             _spriteBatch = new SpriteBatch(GraphicsDevice);
             try
@@ -43,7 +44,7 @@ namespace StasisEditor.Views.Controls
             {
                 System.Windows.Forms.MessageBox.Show(e.Message);
             }
-
+            */
             ResizeRedraw = true;
         }
         public void setMaterial(Material material, List<Vector2> polygonPoints, float growthFactor)
@@ -107,6 +108,9 @@ namespace StasisEditor.Views.Controls
 
             try
             {
+                _contentManager = new ContentManager(Services, "Content");
+                _spriteBatch = new SpriteBatch(GraphicsDevice);
+                _materialRenderer = new MaterialRenderer(GraphicsDevice, _contentManager, _spriteBatch);
                 _texture = _materialRenderer.renderMaterial(material, polygonPoints, growthFactor, false);
                 Invalidate();
             }
