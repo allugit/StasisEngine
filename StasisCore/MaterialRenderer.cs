@@ -265,6 +265,7 @@ namespace StasisCore
                         worleyLayer.colorLow,
                         worleyLayer.colorHigh,
                         worleyLayer.iterations,
+                        worleyLayer.worleyFeature,
                         worleyLayer.invert);
 
                     // TODO: Move this code inside worleyPass?
@@ -421,6 +422,7 @@ namespace StasisCore
         }
 
         // perlin -- Calculate perlin noise
+        // reference: "Simplex Noise Demystified" http://webstaff.itn.liu.se/~stegu/simplexnoise/simplexnoise.pdf
         private float perlin(
             Vector2[,] grid,
             int gridWidth,
@@ -493,7 +495,6 @@ namespace StasisCore
         }
 
         // perlinPass -- Renders a perlin texture using supplied properties
-        // reference: "Simplex Noise Demystified" http://webstaff.itn.liu.se/~stegu/simplexnoise/simplexnoise.pdf
         public Texture2D perlinPass(
             Texture2D current,
             int seed,
@@ -576,7 +577,8 @@ namespace StasisCore
             Vector2[,] grid,
             int gridWidth,
             int gridHeight,
-            Vector2 position)
+            Vector2 position,
+            WorleyFeatureType worleyFeatureType)
         {
             int xi = (int)Math.Floor(position.X);
             int yi = (int)Math.Floor(position.Y);
@@ -616,8 +618,22 @@ namespace StasisCore
                 }
             }
 
-            // Use shortest distance as value
-            float value = (float)Math.Sqrt(distance1);
+            // Determine final value based on feature type
+            float value = 0;
+
+            if (worleyFeatureType == WorleyFeatureType.F1)
+            {
+                value = (float)Math.Sqrt(distance1);
+            }
+            else if (worleyFeatureType == WorleyFeatureType.F2)
+            {
+                value = (float)Math.Sqrt(distance2);
+            }
+            else if (worleyFeatureType == WorleyFeatureType.F2mF1)
+            {
+                value = (float)Math.Sqrt(distance2 - distance1);
+            }
+
             return value;
         }
 
@@ -631,14 +647,15 @@ namespace StasisCore
             float gain,
             float lacunarity,
             Vector2 fbmOffset,
-            int iterations)
+            int iterations,
+            WorleyFeatureType worleyFeatureType)
         {
             float total = 0;
 	        float amplitude = gain;
 
 	        for (int i = 0; i < iterations; i++)
 	        {
-		        total += worley(grid, gridWidth, gridHeight, position * frequency + total * fbmOffset) * amplitude;
+		        total += worley(grid, gridWidth, gridHeight, position * frequency + total * fbmOffset, worleyFeatureType) * amplitude;
 		        frequency *= lacunarity;
 		        amplitude *= gain;
 	        }
@@ -660,6 +677,7 @@ namespace StasisCore
             Color colorLow,
             Color colorHigh,
             int iterations,
+            WorleyFeatureType worleyFeatureType,
             bool invert)
         {
             Texture2D output = new Texture2D(_graphicsDevice, current.Width, current.Height);
@@ -697,7 +715,8 @@ namespace StasisCore
                         gain,
                         lacunarity,
                         fbmOffset,
-                        iterations);
+                        iterations,
+                        worleyFeatureType);
 
                     // Clamp values
                     value = Math.Max(0, Math.Min(1, value));
