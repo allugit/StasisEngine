@@ -218,7 +218,7 @@ namespace StasisEditor.Models
         public override void update()
         {
             Vector2 worldDelta = _level.controller.worldDeltaMouse;
-            float angleIncrement = _level.controller.shift ? 0.00005f : 0.0005f;
+            float angleIncrement = _level.controller.isKeyHeld(Keys.LeftShift) ? 0.00005f : 0.0005f;
 
             if (_actorA != null && !_level.containsActor(_actorA))
             {
@@ -233,7 +233,7 @@ namespace StasisEditor.Models
 
             if (selected)
             {
-                if (!_level.controller.ctrl)
+                if (!_level.controller.isKeyHeld(Keys.LeftControl))
                 {
                     if (_moveActor)
                         _position += worldDelta;

@@ -126,7 +126,7 @@ namespace StasisEditor.Models
                 {
                     if (results.Count == 1 && results[0] == this)
                     {
-                        if (_level.controller.shift)
+                        if (_level.controller.isKeyHeld(Keys.LeftShift))
                         {
                             EditorBoxActor copy = (EditorBoxActor)clone();
                             copy.select();
@@ -177,12 +177,12 @@ namespace StasisEditor.Models
         public override void update()
         {
             Vector2 deltaWorldMouse = _level.controller.worldMouse - _level.controller.oldWorldMouse;
-            float angleIncrement = _level.controller.shift ? 0.00005f : 0.0005f;
-            float sizeIncrement = _level.controller.shift ? 0.0001f : 0.001f;
+            float angleIncrement = _level.controller.isKeyHeld(Keys.LeftShift) ? 0.00005f : 0.0005f;
+            float sizeIncrement = _level.controller.isKeyHeld(Keys.LeftShift) ? 0.0001f : 0.001f;
 
             if (selected)
             {
-                if (!_level.controller.ctrl)
+                if (!_level.controller.isKeyHeld(Keys.LeftControl))
                     _position += deltaWorldMouse;
 
                 if (_level.controller.isKeyHeld(Keys.Q))

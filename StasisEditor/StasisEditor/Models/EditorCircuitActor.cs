@@ -267,7 +267,7 @@ namespace StasisEditor.Models
 
             if (selected)
             {
-                if (!_level.controller.ctrl)
+                if (!_level.controller.isKeyHeld(Keys.LeftControl))
                 {
                     if (_moveActor)
                         _position += worldDelta;

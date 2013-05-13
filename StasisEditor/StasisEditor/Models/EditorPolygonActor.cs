@@ -111,7 +111,7 @@ namespace StasisEditor.Models
         public override void handleSelectedClick(System.Windows.Forms.MouseButtons button)
         {
             // Continue drawing polygon if shift is held
-            if (_level.controller.shift && _selectedPoints.Count == 1)
+            if (_level.controller.isKeyHeld(Keys.LeftShift) && _selectedPoints.Count == 1)
             {
                 if (_selectedPoints[0] == _headPoint)
                 {
@@ -234,7 +234,7 @@ namespace StasisEditor.Models
 
             if (selected)
             {
-                if (!_level.controller.ctrl)
+                if (!_level.controller.isKeyHeld(Keys.LeftControl))
                 {
                     foreach (PointListNode node in _selectedPoints)
                         node.position += worldDelta;

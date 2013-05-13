@@ -14,7 +14,8 @@ using StasisCore;
 namespace StasisEditor.Controllers
 {
     using KeyboardState = Microsoft.Xna.Framework.Input.KeyboardState;
-    using Keys = Microsoft.Xna.Framework.Input.Keys;
+    using XKeys = Microsoft.Xna.Framework.Input.Keys;
+    using SKeys = System.Windows.Forms.Keys;
 
     public class LevelController : Controller
     {
@@ -27,16 +28,16 @@ namespace StasisEditor.Controllers
         private System.Drawing.Point _oldMouse;
         private Vector2 _screenCenter;
         private EditorActor _selectedActor;
-        private KeyboardState _keyState;
-        private KeyboardState _oldKeyState;
+        //private KeyboardState _keyState;
+        //private KeyboardState _oldKeyState;
+        private bool[] _keysPressed;
+        private bool[] _keysChecked;
         private bool _mouseOverView;
 
         public System.Drawing.Point mouse { get { return _mouse; } set { _oldMouse = _mouse; _mouse = value; } }
         public EditorLevel level { get { return _level; } set { _level = value; } }
         public LevelView view { get { return _levelView; } }
         public Vector2 screenCenter { get { return _screenCenter; } set { _screenCenter = value; } }
-        public bool shift { get { return _keyState.IsKeyDown(Keys.LeftShift) || _keyState.IsKeyDown(Keys.RightShift); } }
-        public bool ctrl { get { return _keyState.IsKeyDown(Keys.LeftControl) || _keyState.IsKeyDown(Keys.RightControl); } }
         public bool mouseOverView { get { return _mouseOverView; } set { _mouseOverView = value; } }
         public Vector2 worldOffset { get { return _screenCenter + (new Vector2(_levelView.Width, _levelView.Height) / 2) / _editorController.scale; } }
         public Vector2 worldMouse { get { return new Vector2(_mouse.X, _mouse.Y) / _editorController.scale - worldOffset; } }
@@ -52,20 +53,79 @@ namespace StasisEditor.Controllers
             _editorController = editorController;
             _levelView = levelView;
             _levelView.setController(this);
+            _keysPressed = new bool[255];
+            _keysChecked = new bool[255];
             Application.Idle += new EventHandler(update);
             Application.Idle += new EventHandler(draw);
+            _levelView.FindForm().KeyDown += new System.Windows.Forms.KeyEventHandler(Parent_KeyDown);
+            _levelView.FindForm().KeyUp += new System.Windows.Forms.KeyEventHandler(Parent_KeyUp);
+        }
+
+        // Key down
+        private void Parent_KeyDown(object sender, System.Windows.Forms.KeyEventArgs e)
+        {
+            if (e.Shift)
+            {
+                _keysPressed[(int)XKeys.LeftShift] = true;
+                _keysPressed[(int)XKeys.RightShift] = true;
+            }
+            
+            if (e.Control)
+            {
+                _keysPressed[(int)XKeys.LeftControl] = true;
+                _keysPressed[(int)XKeys.RightControl] = true;
+            }
+
+            if (e.KeyValue >= 0 && e.KeyValue < 255)
+            {
+                _keysPressed[e.KeyValue] = true;
+            }
+        }
+
+        // Key up
+        private void Parent_KeyUp(object sender, System.Windows.Forms.KeyEventArgs e)
+        {
+            if (!e.Shift)
+            {
+                _keysPressed[(int)XKeys.LeftShift] = false;
+                _keysPressed[(int)XKeys.RightShift] = false;
+                _keysChecked[(int)XKeys.LeftShift] = false;
+                _keysChecked[(int)XKeys.RightShift] = false;
+            }
+            
+            if (!e.Control)
+            {
+                _keysPressed[(int)XKeys.LeftControl] = false;
+                _keysPressed[(int)XKeys.RightControl] = false;
+                _keysChecked[(int)XKeys.LeftControl] = false;
+                _keysChecked[(int)XKeys.RightControl] = false;
+            }
+
+            if (e.KeyValue >= 0 && e.KeyValue < 255)
+            {
+                _keysPressed[e.KeyValue] = false;
+                _keysChecked[e.KeyValue] = false;
+            }
         }
 
         // Is key pressed
-        public bool isKeyPressed(Keys key)
+        public bool isKeyPressed(XKeys key)
         {
-            return _keyState.IsKeyDown(key) && _oldKeyState.IsKeyUp(key);
+            int keyCode = (int)key;
+            bool result = !_keysChecked[keyCode] && _keysPressed[keyCode];
+
+            if (_keysPressed[keyCode])
+            {
+                _keysChecked[keyCode] = true;
+            }
+
+            return result;
         }
 
         // Is key being held
-        public bool isKeyHeld(Keys key)
+        public bool isKeyHeld(XKeys key)
         {
-            return _keyState.IsKeyDown(key);
+            return _keysPressed[(int)key];
         }
 
         // Get actor by id
@@ -340,7 +400,7 @@ namespace StasisEditor.Controllers
         // Update
         private void update(object sender, EventArgs e)
         {
-            _keyState = Microsoft.Xna.Framework.Input.Keyboard.GetState();
+            //_keyState = Microsoft.Xna.Framework.Input.Keyboard.GetState();
 
             if (_level != null)
             {
@@ -349,7 +409,7 @@ namespace StasisEditor.Controllers
                     _mouse = _levelView.PointToClient(Cursor.Position);
                 }
 
-                if (ctrl)
+                if (isKeyHeld(XKeys.LeftControl))
                 {
                     _screenCenter += worldMouse - oldWorldMouse;
                 }
@@ -362,7 +422,7 @@ namespace StasisEditor.Controllers
                 }
             }
 
-            _oldKeyState = _keyState;
+            //_oldKeyState = _keyState;
         }
 
         // Draw

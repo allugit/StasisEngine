@@ -34,8 +34,6 @@ namespace StasisEditor.Views
             get { return _draw && _keysEnabled; }
             set { _draw = value; _keysEnabled = value; }
         }
-        public bool shift { get { return _controller.shift; } }
-        public bool ctrl { get { return _controller.ctrl; } }
         public SpriteBatch spriteBatch { get { return _spriteBatch; } }
 
         // setController

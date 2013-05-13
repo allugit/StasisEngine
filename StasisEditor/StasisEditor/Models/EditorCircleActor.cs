@@ -147,11 +147,11 @@ namespace StasisEditor.Models
         {
             Vector2 worldMouse = _level.controller.worldMouse;
             Vector2 worldDelta = worldMouse - _level.controller.oldWorldMouse;
-            float radiusIncrement = _level.controller.shift ? 0.00005f : 0.0005f;
+            float radiusIncrement = _level.controller.isKeyHeld(Keys.LeftShift) ? 0.00005f : 0.0005f;
 
             if (selected)
             {
-                if (!_level.controller.ctrl)
+                if (!_level.controller.isKeyHeld(Keys.LeftControl))
                     _position += worldDelta;
 
                 if (_level.controller.isKeyHeld(Keys.A) || _level.controller.isKeyHeld(Keys.W))
