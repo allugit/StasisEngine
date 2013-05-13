@@ -51,8 +51,14 @@ namespace StasisGame.Systems
         // softKillPlayer -- Doesn't "kill" the player entity, just resets certain aspects of the entity to the last saved state
         public void softKillPlayer()
         {
-            _entityManager.removeComponent(_playerId, ComponentType.Inventory);
-            _entityManager.removeComponent(_playerId, ComponentType.Toolbar);
+            List<IComponent> components = new List<IComponent>(_entityManager.getEntityComponents(_playerId));  // create a copy of the list since we'll need to modify the original
+
+            for (int i = 0; i < components.Count; i++)
+            {
+                // Exclude certain components here if they need to persist through death, otherwise remove them.
+                _entityManager.removeComponent(_playerId, components[i]);
+            }
+
             initializePlayerInventory();
         }
 
