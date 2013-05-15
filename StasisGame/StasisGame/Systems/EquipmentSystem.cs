@@ -26,12 +26,14 @@ namespace StasisGame.Systems
             _entityManager = entityManager;
         }
 
+        // assignItemToToolbar
         public void assignItemToToolbar(ItemComponent itemComponent, ToolbarComponent toolbarComponent, int toolbarSlot)
         {
             toolbarComponent.inventory[toolbarSlot] = itemComponent;
             selectToolbarSlot(toolbarComponent, toolbarComponent.selectedIndex);
         }
 
+        // selectToolbarSlot
         public void selectToolbarSlot(ToolbarComponent toolbarComponent, int slot)
         {
             ItemComponent itemComponent = toolbarComponent.selectedItem;
@@ -46,10 +48,11 @@ namespace StasisGame.Systems
             if (itemComponent != null && itemComponent.hasAiming)
             {
                 Console.WriteLine("Adding aim component");
-                _entityManager.addComponent(toolbarComponent.entityId, new AimComponent(0f, 10f));
+                _entityManager.addComponent(toolbarComponent.entityId, new AimComponent(new Vector2(10f, 0f), 0f, 10f));
             }
         }
 
+        // update
         public void update()
         {
             if (_singleStep || !_paused)
@@ -97,12 +100,15 @@ namespace StasisGame.Systems
                                     aim.Y *= -1;
                                     aimComponent.angle = (float)Math.Atan2(aim.Y, aim.X);
                                     aimComponent.length = aim.Length();
+                                    aimComponent.vector = aim;
                                 }
                                 else
                                 {
                                     Vector2 relative = (InputSystem.worldMouse - worldPosition);
                                     aimComponent.angle = (float)Math.Atan2(relative.Y, relative.X);
                                     aimComponent.length = Math.Min(relative.Length(), selectedItem.maxRange);
+                                    relative.Normalize();
+                                    aimComponent.vector = relative * aimComponent.length;
                                 }
                             }
                         }
@@ -124,6 +130,7 @@ namespace StasisGame.Systems
 
                             switch (selectedItem.itemType)
                             {
+                                // RopeGun
                                 case ItemType.RopeGun:
                                     if (selectedItem.primaryAction)
                                     {
@@ -176,30 +183,28 @@ namespace StasisGame.Systems
                                             ropeSystem.grabRope(newRopeGrabComponent, physicsComponent.body);
 
                                             _entityManager.addComponent(toolbarComponent.entityId, newRopeGrabComponent);
-
-                                            /*
-                                            // TEMPORARY -- Pause after rope creation
-                                            SystemNode node = _systemManager.head;
-                                            while (node != null)
-                                            {
-                                                if (node.system.systemType != SystemType.Render)
-                                                {
-                                                    node.system.paused = !node.system.paused;
-                                                }
-
-                                                node = node.next;
-                                            }
-                                            */
                                         }
                                     }
                                     break;
 
+                                // Blueprint
                                 case ItemType.Blueprint:
                                     Console.WriteLine("Blueprint");
                                     break;
 
+                                // BlueprintScrap
                                 case ItemType.BlueprintScrap:
                                     Console.WriteLine("Blueprint scrap");
+                                    break;
+
+                                // Dynamite
+                                case ItemType.Dynamite:
+                                    if (selectedItem.primaryAction)
+                                    {
+                                        AimComponent aimComponent = _entityManager.getComponent(toolbarEntities[i], ComponentType.Aim) as AimComponent;
+
+                                        _entityManager.factory.createDynamite(playerPhysicsComponent.body.GetPosition(), aimComponent.vector * 80f);
+                                    }
                                     break;
                             }
 

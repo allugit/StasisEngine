@@ -255,7 +255,6 @@ namespace StasisGame
             boxFixtureDef.filter.categoryBits = bodyType == BodyType.Dynamic ? (ushort)CollisionCategory.DynamicGeometry : (ushort)CollisionCategory.StaticGeometry;
             boxFixtureDef.filter.maskBits =
                 (ushort)CollisionCategory.DynamicGeometry |
-                (ushort)CollisionCategory.Grenade |
                 (ushort)CollisionCategory.Player |
                 (ushort)CollisionCategory.Rope |
                 (ushort)CollisionCategory.StaticGeometry |
@@ -301,7 +300,6 @@ namespace StasisGame
             circleFixtureDef.filter.categoryBits = bodyType == BodyType.Dynamic ? (ushort)CollisionCategory.DynamicGeometry : (ushort)CollisionCategory.StaticGeometry;
             circleFixtureDef.filter.maskBits =
                 (ushort)CollisionCategory.DynamicGeometry |
-                (ushort)CollisionCategory.Grenade |
                 (ushort)CollisionCategory.Player |
                 (ushort)CollisionCategory.Rope |
                 (ushort)CollisionCategory.StaticGeometry |
@@ -693,7 +691,6 @@ namespace StasisGame
                 {
                     fixtureDef.filter.maskBits =
                         (ushort)CollisionCategory.DynamicGeometry |
-                        (ushort)CollisionCategory.Grenade |
                         (ushort)CollisionCategory.Item |
                         (ushort)CollisionCategory.Player |
                         (ushort)CollisionCategory.Rope |
@@ -1068,6 +1065,41 @@ namespace StasisGame
             // Expand level boundary
             foreach (Vector2 point in points)
                 levelSystem.expandBoundary(point);
+        }
+
+        public int createDynamite(Vector2 position, Vector2 force)
+        {
+            World world = (_systemManager.getSystem(SystemType.Physics) as PhysicsSystem).world;
+            Texture2D worldTexture = ResourceManager.getTexture("dynamite");
+            int entityId = _entityManager.createEntity();
+            Body body = null;
+            BodyDef bodyDef = new BodyDef();
+            FixtureDef fixtureDef = new FixtureDef();
+            PolygonShape shape = new PolygonShape();
+
+            bodyDef.angularVelocity = 6f;
+            bodyDef.position = position;
+            bodyDef.type = BodyType.Dynamic;
+            bodyDef.userData = entityId;
+            shape.SetAsBox(0.19f, 0.4f);
+            fixtureDef.density = 1f;
+            fixtureDef.filter.categoryBits = (ushort)CollisionCategory.Item;
+            fixtureDef.filter.maskBits =
+                (ushort)CollisionCategory.DynamicGeometry |
+                (ushort)CollisionCategory.Rope |
+                (ushort)CollisionCategory.StaticGeometry;
+            fixtureDef.shape = shape;
+            body = world.CreateBody(bodyDef);
+            body.CreateFixture(fixtureDef);
+            body.ApplyForce(force, position);
+
+            // Add components
+            _entityManager.addComponent(entityId, new PhysicsComponent(body));
+            _entityManager.addComponent(entityId, new WorldItemRenderComponent(worldTexture));
+            _entityManager.addComponent(entityId, new IgnoreTreeCollisionComponent());
+            _entityManager.addComponent(entityId, new WorldPositionComponent(body.GetPosition()));
+
+            return entityId;
         }
     }
 }

@@ -8,7 +8,8 @@ namespace StasisGame.Components
     {
         Blueprint,
         BlueprintScrap,
-        RopeGun
+        RopeGun,
+        Dynamite
     };
 
     public class ItemComponent : IComponent
