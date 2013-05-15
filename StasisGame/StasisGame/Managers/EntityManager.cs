@@ -127,6 +127,25 @@ namespace StasisGame.Managers
             return null;
         }
 
+        // Tries to get a component from an entity, and returns true on success
+        public bool tryGetComponent(int id, ComponentType componentType, out IComponent component)
+        {
+            component = null;
+
+            if (_entities.ContainsKey(id))
+            {
+                foreach (IComponent c in _entities[id])
+                {
+                    if (c.componentType == componentType)
+                    {
+                        component = c;
+                        return true;
+                    }
+                }
+            }
+            return false;
+        }
+
         // Get all components of a certain type
         public List<T> getComponents<T>(ComponentType componentType) where T : IComponent
         {
@@ -253,7 +272,8 @@ namespace StasisGame.Managers
                 (ushort)CollisionCategory.DynamicGeometry |
                 (ushort)CollisionCategory.Item |
                 (ushort)CollisionCategory.Rope |
-                (ushort)CollisionCategory.StaticGeometry;
+                (ushort)CollisionCategory.StaticGeometry |
+                (ushort)CollisionCategory.Explosion;
 
             feetShape._radius = 0.18f;
             feetShape._p = new Vector2(0, 0.27f);

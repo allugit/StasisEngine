@@ -62,6 +62,7 @@ namespace StasisGame.Systems
 
         public void update()
         {
+            //Console.WriteLine("PhysicsSystem update started.");
             if (_singleStep || !_paused)
             {
                 EventSystem eventSystem = _systemManager.getSystem(SystemType.Event) as EventSystem;
@@ -119,6 +120,7 @@ namespace StasisGame.Systems
 
                 _singleStep = false;
             }
+            //Console.WriteLine("Physics engine update ended.");
         }
 
         public void PreSolve(Contact contact, ref Manifold manifold)
@@ -185,6 +187,7 @@ namespace StasisGame.Systems
         public void BeginContact(Contact contact)
         {
             List<int> levelGoalEntities = _entityManager.getEntitiesPosessing(ComponentType.RegionGoal);
+            List<int> explosionEntities = _entityManager.getEntitiesPosessing(ComponentType.Explosion);
             LevelSystem levelSystem = (LevelSystem)_systemManager.getSystem(SystemType.Level);
 
             // See if player is touching a level goal
@@ -202,6 +205,35 @@ namespace StasisGame.Systems
                 {
                     if (levelGoalEntities.Contains(entityA))
                         levelSystem.completeRegionGoal(entityA);
+                }
+            }
+
+            if (explosionEntities.Count > 0)
+            {
+                int entityA = (int)contact.GetFixtureA().GetBody().GetUserData();
+                int entityB = (int)contact.GetFixtureB().GetBody().GetUserData();
+                IComponent component = null;
+                ExplosionComponent explosionComponent = null;
+                Fixture targetFixture = null;
+                Vector2 relative;
+                Vector2 force;
+                float distanceSq;
+                WorldManifold worldManifold;
+
+                if (_entityManager.tryGetComponent(entityA, ComponentType.Explosion, out component))
+                    targetFixture = contact.GetFixtureB();
+                else if (_entityManager.tryGetComponent(entityB, ComponentType.Explosion, out component))
+                    targetFixture = contact.GetFixtureA();
+
+                if (targetFixture != null && component != null)
+                {
+                    contact.GetWorldManifold(out worldManifold);
+                    explosionComponent = (ExplosionComponent)component;
+                    relative = targetFixture.GetBody().GetPosition() - explosionComponent.position;
+                    distanceSq = relative.LengthSquared();
+                    relative.Normalize();
+                    force = relative * (explosionComponent.strength / Math.Max(distanceSq, 0.1f));
+                    targetFixture.GetBody().ApplyForce(force, worldManifold._points[0]);
                 }
             }
         }

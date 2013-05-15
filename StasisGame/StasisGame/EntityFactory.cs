@@ -363,7 +363,8 @@ namespace StasisGame
                 (ushort)CollisionCategory.DynamicGeometry |
                 (ushort)CollisionCategory.Player |
                 (ushort)CollisionCategory.Rope |
-                (ushort)CollisionCategory.StaticGeometry;
+                (ushort)CollisionCategory.StaticGeometry |
+                (ushort)CollisionCategory.Explosion;
             shape.SetAsBox(Loader.loadFloat(data.Attribute("half_width"), 0.25f), Loader.loadFloat(data.Attribute("half_height"), 0.25f));
             fixtureDef.shape = shape;
 
@@ -519,10 +520,11 @@ namespace StasisGame
                 fixtureDef.friction = 0.5f;
                 fixtureDef.restitution = 0f;
                 fixtureDef.filter.categoryBits = (ushort)CollisionCategory.Rope;
-                fixtureDef.filter.maskBits = 
+                fixtureDef.filter.maskBits =
                     (ushort)CollisionCategory.DynamicGeometry |
                     (ushort)CollisionCategory.Item |
-                    (ushort)CollisionCategory.StaticGeometry;
+                    (ushort)CollisionCategory.StaticGeometry |
+                    (ushort)CollisionCategory.Explosion;
                 if (doubleAnchor)
                     fixtureDef.filter.maskBits |= (ushort)CollisionCategory.Player;
                 fixtureDef.shape = shape;
@@ -1113,19 +1115,21 @@ namespace StasisGame
             CircleShape shape = new CircleShape();
 
             bodyDef.position = position;
-            bodyDef.type = BodyType.Static;
+            bodyDef.type = BodyType.Dynamic;
             bodyDef.userData = entityId;
             shape._radius = radius;
             fixtureDef.density = 1f;
             fixtureDef.shape = shape;
             fixtureDef.isSensor = true;
+            fixtureDef.filter.categoryBits = (ushort)CollisionCategory.Explosion;
+            fixtureDef.filter.maskBits = 0xffff;
             body = world.CreateBody(bodyDef);
             body.CreateFixture(fixtureDef);
 
             // Add components
             _entityManager.addComponent(entityId, new PhysicsComponent(body));
             _entityManager.addComponent(entityId, new WorldPositionComponent(body.GetPosition()));
-            _entityManager.addComponent(entityId, new ExplosionComponent(strength, radius));
+            _entityManager.addComponent(entityId, new ExplosionComponent(body.GetPosition(), strength, radius));
 
             return entityId;
         }

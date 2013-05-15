@@ -25,6 +25,7 @@ namespace StasisGame.Systems
         private GraphicsDevice _graphicsDevice;
         private SpriteBatch _spriteBatch;
         private Texture2D _pixel;
+        private Texture2D _circle;
         private Effect _primitivesEffect;
         private Matrix _viewMatrix;
         private Matrix _projectionMatrix;
@@ -74,6 +75,7 @@ namespace StasisGame.Systems
             _primitivesEffect = _contentManager.Load<Effect>("effects/primitives");
             _pixel = new Texture2D(_graphicsDevice, 1, 1);
             _pixel.SetData<Color>(new [] { Color.White });
+            _circle = _contentManager.Load<Texture2D>("circle");
         }
 
         ~RenderSystem()
@@ -155,6 +157,7 @@ namespace StasisGame.Systems
             List<int> characterMovementEntities = _entityManager.getEntitiesPosessing(ComponentType.CharacterMovement);
             List<int> treeEntities = _entityManager.getEntitiesPosessing(ComponentType.Tree);
             List<int> aimEntities = _entityManager.getEntitiesPosessing(ComponentType.Aim);
+            List<int> explosionEntities = _entityManager.getEntitiesPosessing(ComponentType.Explosion);
             List<RopeGrabComponent> ropeGrabComponents = _entityManager.getComponents<RopeGrabComponent>(ComponentType.RopeGrab);
             Vector2 screenCenter = _cameraSystem.screenCenter;
 
@@ -308,6 +311,13 @@ namespace StasisGame.Systems
 
                     _spriteBatch.Draw(_pixel, (pointA - screenCenter) * _scale + _halfScreen, new Rectangle(0, 0, (int)(relative.Length() * _scale), 2), Color.Green, angle, new Vector2(0, 1), 1f, SpriteEffects.None, 0f);
                 }
+            }
+
+            // Draw explosions
+            for (int i = 0; i < explosionEntities.Count; i++)
+            {
+                ExplosionComponent explosionComponent = (ExplosionComponent)_entityManager.getComponent(explosionEntities[i], ComponentType.Explosion);
+                _spriteBatch.Draw(_circle, (explosionComponent.position - screenCenter) * _scale + _halfScreen, _circle.Bounds, Color.Red, 0f, new Vector2(_circle.Width, _circle.Height) / 2f, ((explosionComponent.radius * _scale) / (_circle.Width / 2f)), SpriteEffects.None, 0f);
             }
 
             _spriteBatch.End();

@@ -34,6 +34,7 @@ namespace StasisGame.Systems
 
         public void update()
         {
+            //Console.WriteLine("DynamiteSystem update.");
             List<int> dynamiteEntities = _entityManager.getEntitiesPosessing(ComponentType.Dynamite);
             List<int> explosionEntities = _entityManager.getEntitiesPosessing(ComponentType.Explosion);
 

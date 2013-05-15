@@ -12,7 +12,8 @@
         StaticGeometry = 4,
         DynamicGeometry = 8,
         Wall = 16,
-        Item = 32
+        Item = 32,
+        Explosion = 64
     };
 
     public enum ActorType
