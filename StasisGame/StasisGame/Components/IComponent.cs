@@ -29,7 +29,9 @@ namespace StasisGame.Components
         IgnoreRopeRaycast,
         RopeGrab,
         RegionGoal,
-        Wall
+        Wall,
+        Dynamite,
+        Explosion
     };
 
     public interface IComponent

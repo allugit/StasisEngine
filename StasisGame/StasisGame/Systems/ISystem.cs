@@ -21,7 +21,8 @@ namespace StasisGame.Systems
         Equipment,
         Rope,
         Level,
-        WorldMap
+        WorldMap,
+        Dynamite
     };
 
     public interface ISystem

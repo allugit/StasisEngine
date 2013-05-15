@@ -1098,6 +1098,34 @@ namespace StasisGame
             _entityManager.addComponent(entityId, new WorldItemRenderComponent(worldTexture));
             _entityManager.addComponent(entityId, new IgnoreTreeCollisionComponent());
             _entityManager.addComponent(entityId, new WorldPositionComponent(body.GetPosition()));
+            _entityManager.addComponent(entityId, new DynamiteComponent(100f, 2f, 180));
+
+            return entityId;
+        }
+
+        public int createExplosion(Vector2 position, float strength, float radius)
+        {
+            World world = (_systemManager.getSystem(SystemType.Physics) as PhysicsSystem).world;
+            int entityId = _entityManager.createEntity();
+            Body body = null;
+            BodyDef bodyDef = new BodyDef();
+            FixtureDef fixtureDef = new FixtureDef();
+            CircleShape shape = new CircleShape();
+
+            bodyDef.position = position;
+            bodyDef.type = BodyType.Static;
+            bodyDef.userData = entityId;
+            shape._radius = radius;
+            fixtureDef.density = 1f;
+            fixtureDef.shape = shape;
+            fixtureDef.isSensor = true;
+            body = world.CreateBody(bodyDef);
+            body.CreateFixture(fixtureDef);
+
+            // Add components
+            _entityManager.addComponent(entityId, new PhysicsComponent(body));
+            _entityManager.addComponent(entityId, new WorldPositionComponent(body.GetPosition()));
+            _entityManager.addComponent(entityId, new ExplosionComponent(strength, radius));
 
             return entityId;
         }
