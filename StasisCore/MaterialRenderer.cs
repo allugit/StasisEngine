@@ -11,7 +11,7 @@ namespace StasisCore
 {
     public class MaterialRenderer
     {
-        public const int CHUNK_SIZE = 256;
+        public const int CHUNK_SIZE = 128;
         public const int MAX_TEXTURE_SIZE = 2048;
         private GraphicsDevice _graphicsDevice;
         private ContentManager _contentManager;
