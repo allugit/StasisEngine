@@ -285,16 +285,17 @@ namespace StasisGame.Systems
                 if (fixture.TestPoint(newPosition, 0.01f))
                 {
                     Body body = fixture.GetBody();
-                    //UserData data = body.GetUserData() as UserData;
-                    //Actor actor = data.parent as Actor;
-                    //Debug.Assert(actor != null);
-                    bool influenceActor = true;
+                    int entityId = (int)body.GetUserData();
+                    SkipFluidResolutionComponent skipFluidResolutionComponent = (SkipFluidResolutionComponent)_entityManager.getComponent(entityId, ComponentType.SkipFluidResolution);
+                    IgnoreParticleInfluenceComponent ignoreParticleInfluenceComponent = (IgnoreParticleInfluenceComponent)_entityManager.getComponent(entityId, ComponentType.IgnoreParticleInfluence);
 
-                    // Don't check for collisions against certain actors
+                    // Skip collision resolution for certain entities
                     //if (!(data.actorType == ActorType.WALL_GROUP || data.actorType == ActorType.GROUND ||
                     //    data.actorType == ActorType.GRENADE || data.actorType == ActorType.PLAYER ||
                     //    data.actorType == ActorType.ROPE_SEGMENT))
                     //{
+                    if (skipFluidResolutionComponent == null)
+                    {
                         // Continue with normal collisions
                         Vector2 closestPoint = Vector2.Zero;
                         Vector2 normal = Vector2.Zero;
@@ -364,7 +365,6 @@ namespace StasisGame.Systems
                             //averagedNormal.Normalize();
                             particle.position = closestPoint + 0.05f * normal;
                             particle.skipMovementUpdate = true;
-                            influenceActor = body.GetType() == BodyType.Dynamic;
                             //doAnotherCollisionCheck = true;
                         }
                         else if (fixture.GetShape().ShapeType == ShapeType.Circle)
@@ -378,7 +378,6 @@ namespace StasisGame.Systems
                             closestPoint = center + difference * (shape._radius / difference.Length());
                             particle.position = closestPoint + 0.05f * normal;
                             particle.skipMovementUpdate = true;
-                            influenceActor = body.GetType() == BodyType.Dynamic;
                         }
 
                         // Update velocity
@@ -393,15 +392,15 @@ namespace StasisGame.Systems
                             body.SetAngularVelocity(body.GetAngularVelocity() * 0.95f);
                             particle.velocity += bodyVelocity * 0.005f;
                         }
-                    //}
+                    }
 
-                    /*
+                    
                     // Add actor to list of actors being influenced by this particle
-                    if (influenceActor)
+                    if (ignoreParticleInfluenceComponent != null)
                     {
-                        particle.actorsToInfluence[particle.actorInfluenceCount] = actor;
+                        particle.entitiesToInfluence[particle.actorInfluenceCount] = (int)body.GetUserData();
                         particle.actorInfluenceCount++;
-                    }*/
+                    }
                 }
             }
 

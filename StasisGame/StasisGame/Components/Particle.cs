@@ -37,6 +37,7 @@ namespace StasisGame.Components
         public float p;
         public float pnear;
         //public Actor[] actorsToInfluence;
+        public int[] entitiesToInfluence;
         public int actorInfluenceCount;
         public Fixture[] fixturesToTest;
         public int numFixturesToTest;
@@ -61,7 +62,7 @@ namespace StasisGame.Components
             distances = new float[FluidSystem.MAX_NEIGHBORS];
             relativePosition = new Vector2[FluidSystem.MAX_NEIGHBORS];
             oneminusq = new float[FluidSystem.MAX_NEIGHBORS];
-            //actorsToInfluence = new Actor[MAX_INFLUENCES];
+            entitiesToInfluence = new int[MAX_INFLUENCES];
             fixturesToTest = new Fixture[MAX_FIXTURES_TO_TEST];
 
             collisionVertices = new Vector2[Settings.b2_maxPolygonVertices];

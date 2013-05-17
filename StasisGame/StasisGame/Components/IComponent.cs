@@ -31,7 +31,9 @@ namespace StasisGame.Components
         RegionGoal,
         Wall,
         Dynamite,
-        Explosion
+        Explosion,
+        SkipFluidResolution,
+        IgnoreParticleInfluence
     };
 
     public interface IComponent

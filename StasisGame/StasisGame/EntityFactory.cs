@@ -266,6 +266,8 @@ namespace StasisGame
             body.CreateFixture(boxFixtureDef);
 
             // Add components
+            if (bodyType == BodyType.Static)
+                _entityManager.addComponent(entityId, new IgnoreParticleInfluenceComponent());
             _entityManager.addComponent(entityId, new PhysicsComponent(body));
             _entityManager.addComponent(entityId, createBodyRenderComponent(data));
             _entityManager.addComponent(entityId, new EditorIdComponent(actorId));
@@ -311,6 +313,8 @@ namespace StasisGame
             body.CreateFixture(circleFixtureDef);
 
             // Add components
+            if (bodyType == BodyType.Static)
+                _entityManager.addComponent(entityId, new IgnoreParticleInfluenceComponent());
             _entityManager.addComponent(entityId, new PhysicsComponent(body));
             _entityManager.addComponent(entityId, createBodyRenderComponent(data));
             _entityManager.addComponent(entityId, new EditorIdComponent(actorId));
@@ -584,10 +588,12 @@ namespace StasisGame
             else
                 entityId = _entityManager.createEntity();
 
+            // Add components
             _entityManager.addComponent(entityId, new RopePhysicsComponent(head, destroyAfterRelease, reverseClimbDirection, doubleAnchor));
             _entityManager.addComponent(entityId, new RopeRenderComponent());
             _entityManager.addComponent(entityId, new IgnoreTreeCollisionComponent());
             _entityManager.addComponent(entityId, new IgnoreRopeRaycastComponent());
+            _entityManager.addComponent(entityId, new SkipFluidResolutionComponent());
 
             if (actorId != -1)
             {
@@ -711,7 +717,10 @@ namespace StasisGame
             {
                 _entityManager.addComponent(entityId, new IgnoreRopeRaycastComponent());
                 _entityManager.addComponent(entityId, new WallComponent());
+                _entityManager.addComponent(entityId, new SkipFluidResolutionComponent());
             }
+            if (bodyType == BodyType.Static)
+                _entityManager.addComponent(entityId, new IgnoreParticleInfluenceComponent());
             _entityManager.addComponent(entityId, new PhysicsComponent(body));
             _entityManager.addComponent(entityId, new WorldPositionComponent(body.GetPosition()));
             _entityManager.addComponent(entityId, createBodyRenderComponent(data));
@@ -739,8 +748,6 @@ namespace StasisGame
             float maxBaseHalfWidth = Loader.loadFloat(data.Attribute("max_base_half_width"), 0.5f);
             float internodeHalfLength = Loader.loadFloat(data.Attribute("internode_half_length"), 0.5f);
             float leafRange = 1f / 14f;  // 1f / numSizes
-
-            //_actorIdToEntityId.Add(actorId, entityId);
 
             // Bark texture
             barkPoints.Add(new Vector2(-maxBaseHalfWidth, -internodeHalfLength));
@@ -1018,8 +1025,6 @@ namespace StasisGame
             Vector2 center = Vector2.Zero;
             Body body = null;
 
-            //_actorIdToEntityId.Add(actorId, entityId);
-
             bodyDef.type = BodyType.Static;
             bodyDef.userData = entityId;
 
@@ -1069,6 +1074,8 @@ namespace StasisGame
             _entityManager.addComponent(entityId, new WorldPositionComponent(body.GetPosition()));
             _entityManager.addComponent(entityId, new IgnoreRopeRaycastComponent());
             _entityManager.addComponent(entityId, new EditorIdComponent(int.Parse(data.Attribute("id").Value)));
+            _entityManager.addComponent(entityId, new SkipFluidResolutionComponent());
+            _entityManager.addComponent(entityId, new IgnoreParticleInfluenceComponent());
 
             // Expand level boundary
             foreach (Vector2 point in points)
@@ -1102,6 +1109,7 @@ namespace StasisGame
             body.ApplyForce(force, position);
 
             // Add components
+            _entityManager.addComponent(entityId, new SkipFluidResolutionComponent());
             _entityManager.addComponent(entityId, new PhysicsComponent(body));
             _entityManager.addComponent(entityId, new WorldItemRenderComponent(worldTexture));
             _entityManager.addComponent(entityId, new IgnoreTreeCollisionComponent());
@@ -1136,6 +1144,7 @@ namespace StasisGame
             _entityManager.addComponent(entityId, new PhysicsComponent(body));
             _entityManager.addComponent(entityId, new WorldPositionComponent(body.GetPosition()));
             _entityManager.addComponent(entityId, new ExplosionComponent(body.GetPosition(), strength, radius));
+            _entityManager.addComponent(entityId, new IgnoreParticleInfluenceComponent());
 
             return entityId;
         }
