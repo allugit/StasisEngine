@@ -82,6 +82,7 @@ namespace StasisGame
         private int timeToLive = 360;
         private CustomVertexFormat[] _vertices;
         private Texture2D leafTexture;
+        private float _z;
 
         public CustomVertexFormat[] vertices { get { return _vertices; } }
 
@@ -169,6 +170,10 @@ namespace StasisGame
 
             // Expand level boundary
             tree.treeSystem.levelSystem.expandBoundary(position);
+
+            // Determine z-index
+            tree.metamerCount++;
+            _z = (float)tree.metamerCount / 100f;
         }
 
         // isBranchingPoint
@@ -1471,9 +1476,8 @@ namespace StasisGame
         // draw
         public void draw(RenderSystem renderSystem)
         {
-            //Console.WriteLine("fix this");
             if (leafTexture != null)
-                renderSystem.spriteBatch.Draw(leafTexture, (position - renderSystem.screenCenter) * renderSystem.scale + renderSystem.halfScreen, leafTexture.Bounds, textureColor, currentTextureAngle, new Vector2(leafTexture.Width, leafTexture.Height) / 2, 1, SpriteEffects.None, 0);
+                renderSystem.spriteBatch.Draw(leafTexture, (position - renderSystem.screenCenter) * renderSystem.scale + renderSystem.halfScreen, leafTexture.Bounds, textureColor, currentTextureAngle, new Vector2(leafTexture.Width, leafTexture.Height) / 2, 1, SpriteEffects.None, _z);
 
             if (mainMetamer != null)
                 mainMetamer.draw(renderSystem);

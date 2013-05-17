@@ -277,6 +277,7 @@ namespace StasisGame.Systems
                 _spriteBatch.Draw(_pixel, (physicsComponent.body.GetPosition() - screenCenter) * _scale + _halfScreen, source, Color.Yellow, angle, new Vector2(0, 1), 1f, SpriteEffects.None, 0);
             }
 
+            // Tree
             _primitivesEffect.Parameters["world"].SetValue(Matrix.Identity);
             for (int i = 0; i < treeEntities.Count; i++)
             {

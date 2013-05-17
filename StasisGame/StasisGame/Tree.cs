@@ -57,7 +57,7 @@ namespace StasisGame
         private Texture2D _barkTexture;
         private List<Texture2D> _leafTextures;
         private float _layerDepth;
-        //private Vector3 barkColor;
+        private int _metamerCount;  // not actively maintained, only used to determin z-index of leaf textures.
 
         public TreeSystem treeSystem { get { return _treeSystem; } }
         public float age { get { return _age; } }
@@ -96,6 +96,7 @@ namespace StasisGame
         public float layerDepth { get { return _layerDepth; } }
         public Matrix worldMatrix { get { return Matrix.Identity; } }
         public Texture2D texture { get { return _barkTexture; } }
+        public int metamerCount { get { return _metamerCount; } set { _metamerCount = value; } }
 
         // Constructor
         public Tree(TreeSystem treeSystem, Texture2D barkTexture, List<Texture2D> leafTextures, XElement data)
