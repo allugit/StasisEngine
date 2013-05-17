@@ -23,6 +23,8 @@ namespace StasisCore.Models
         protected float _centerJitter;
         protected Vector2 _centerOffset;
         protected Color _baseColor;
+        protected float _minTextureScale;
+        protected float _maxTextureScale;
         protected int _randomRed;
         protected int _randomGreen;
         protected int _randomBlue;
@@ -44,6 +46,8 @@ namespace StasisCore.Models
         public float centerJitter { get { return _centerJitter; } set { _centerJitter = value; } }
         public Vector2 centerOffset { get { return _centerOffset; } set { _centerOffset = value; } }
         virtual public Color baseColor { get { return _baseColor; } set { _baseColor = value; } }
+        public float minTextureSize { get { return _minTextureScale; } set { _minTextureScale = value; } }
+        public float maxTextureSize { get { return _maxTextureScale; } set { _maxTextureScale = value; } }
         public int randomRed { get { return _randomRed; } set { _randomRed = value; } }
         public int randomGreen { get { return _randomGreen; } set { _randomGreen = value; } }
         public int randomBlue { get { return _randomBlue; } set { _randomBlue = value; } }
@@ -68,6 +72,8 @@ namespace StasisCore.Models
                 d.SetAttributeValue("center_jitter", _centerJitter);
                 d.SetAttributeValue("center_offset", _centerOffset);
                 d.SetAttributeValue("base_color", _baseColor);
+                d.SetAttributeValue("min_texture_scale", _minTextureScale);
+                d.SetAttributeValue("max_texture_scale", _maxTextureScale);
                 d.SetAttributeValue("random_red", _randomRed);
                 d.SetAttributeValue("random_green", _randomGreen);
                 d.SetAttributeValue("random_blue", _randomBlue);
@@ -94,6 +100,8 @@ namespace StasisCore.Models
             _centerJitter = 0f;
             _centerOffset = Vector2.Zero;
             _baseColor = Color.White;
+            _minTextureScale = 1f;
+            _maxTextureScale = 1f;
         }
 
         public MaterialRadialScatterLayer(XElement data)
@@ -114,6 +122,8 @@ namespace StasisCore.Models
             _centerJitter = Loader.loadFloat(data.Attribute("center_jitter"), 0f);
             _centerOffset = Loader.loadVector2(data.Attribute("center_offset"), Vector2.Zero);
             _baseColor = Loader.loadColor(data.Attribute("base_color"), Color.White);
+            _minTextureScale = Loader.loadFloat(data.Attribute("min_texture_scale"), 1f);
+            _maxTextureScale = Loader.loadFloat(data.Attribute("max_texture_scale"), 1f);
             _randomRed = Loader.loadInt(data.Attribute("random_red"), 0);
             _randomGreen = Loader.loadInt(data.Attribute("random_green"), 0);
             _randomBlue = Loader.loadInt(data.Attribute("random_blue"), 0);

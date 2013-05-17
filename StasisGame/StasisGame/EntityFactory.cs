@@ -737,7 +737,7 @@ namespace StasisGame
             Tree tree;
             float maxBaseHalfWidth = Loader.loadFloat(data.Attribute("max_base_half_width"), 0.5f);
             float internodeHalfLength = Loader.loadFloat(data.Attribute("internode_half_length"), 0.5f);
-            float leafRange = 1f / 8f;  // 1f / numSizes
+            float leafRange = 1f / 14f;  // 1f / numSizes
 
             //_actorIdToEntityId.Add(actorId, entityId);
 

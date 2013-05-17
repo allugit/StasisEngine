@@ -317,6 +317,8 @@ namespace StasisCore
                         radialLayer.centerJitter,
                         radialLayer.centerOffset,
                         radialLayer.baseColor,
+                        radialLayer.minTextureSize,
+                        radialLayer.maxTextureSize,
                         radialLayer.randomRed,
                         radialLayer.randomGreen,
                         radialLayer.randomBlue,
@@ -833,6 +835,8 @@ namespace StasisCore
             float centerJitter,
             Vector2 centerOffset,
             Color baseColor,
+            float minTextureScale,
+            float maxTextureScale,
             int randomRed,
             int randomGreen,
             int randomBlue,
@@ -861,7 +865,7 @@ namespace StasisCore
             intersections *= growthFactor * growthFactor * growthFactor;
             arms = (int)Math.Ceiling(arms * growthFactor * growthFactor);
             maxRadius *= growthFactor;
-            //jitter *= growthFactor;
+            jitter *= Math.Max(growthFactor, 0.1f);
             centerJitter *= growthFactor;
             centerOffset *= growthFactor;
 
@@ -882,6 +886,7 @@ namespace StasisCore
                     r = a * (float)Math.Pow(StasisMathHelper.phi, b * (2f / StasisMathHelper.pi) * theta) * growthFactor;
                     if (r < maxRadius)
                     {
+                        float textureScale = StasisMathHelper.floatBetween(minTextureScale, maxTextureScale, rng);
                         float modifiedTheta = (theta + armRotationIncrement * i) * (flipArms ? -1f : 1f);
                         float randomAngleValue = textureAngleJitter == 0 ? 0 : StasisMathHelper.floatBetween(-textureAngleJitter, textureAngleJitter, rng);
                         float textureAngle;
@@ -896,7 +901,7 @@ namespace StasisCore
                         Vector2 j = new Vector2((float)(rng.NextDouble() * 2 - 1) * jitter, (float)(rng.NextDouble() * 2 - 1) * jitter);
                         Texture2D texture = textures[rng.Next(textures.Count)];
                         Color actualColor = getRandomColor(baseColor, randomRed, randomGreen, randomBlue, randomAlpha);
-                        float textureScale = scaleWithGrowthFactor ? growthFactor : 1f;
+                        //float textureScale = scaleWithGrowthFactor ? growthFactor : 1f;
                         _spriteBatch.Draw(texture, new Vector2(r * (float)Math.Cos(modifiedTheta), r * (float)Math.Sin(modifiedTheta)) + j + center, texture.Bounds, actualColor, textureAngle, new Vector2(texture.Width, texture.Height) / 2, textureScale, SpriteEffects.None, 0);
                         if (twinArms)
                         {
