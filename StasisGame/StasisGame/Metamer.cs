@@ -172,8 +172,7 @@ namespace StasisGame
             tree.treeSystem.levelSystem.expandBoundary(position);
 
             // Determine z-index
-            tree.metamerCount++;
-            _z = (float)tree.metamerCount / 100f;
+            _z = StasisMathHelper.floatBetween(0.1f, 0.15f, tree.random);
         }
 
         // isBranchingPoint
