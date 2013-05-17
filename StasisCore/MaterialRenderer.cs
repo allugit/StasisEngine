@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Diagnostics;
 using System.Collections.Generic;
+using System.Threading.Tasks;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Content;
 using Microsoft.Xna.Framework.Graphics;
@@ -10,6 +11,7 @@ namespace StasisCore
 {
     public class MaterialRenderer
     {
+        public const int CHUNK_SIZE = 256;
         public const int MAX_TEXTURE_SIZE = 2048;
         private GraphicsDevice _graphicsDevice;
         private ContentManager _contentManager;
@@ -516,6 +518,7 @@ namespace StasisCore
             int gridHeight = 32;
             Vector2[,] grid = new Vector2[gridWidth, gridHeight];
             Random rng = new Random(seed);
+            int chunkCount = (int)Math.Floor((float)output.Width / (float)CHUNK_SIZE) + 1;
             
             // Create gradient grid
             for (int i = 0; i < gridWidth; i++)
@@ -529,44 +532,49 @@ namespace StasisCore
             }
 
             // Calculate values
-            for (int i = 0; i < output.Width; i++)
+            Parallel.For(0, chunkCount, (count) =>
             {
-                for (int j = 0; j < output.Height; j++)
+                int startIndex = count * CHUNK_SIZE;
+                int endIndex = Math.Min((count + 1) * CHUNK_SIZE, output.Width);
+                for (int i = startIndex; i < endIndex; i++)
                 {
-                    // Position
-                    Vector2 p = new Vector2(
-                        (float)i / (float)gridWidth,
-                        (float)j / (float)gridHeight);
-                    p += position;
-                    p /= scale;
+                    for (int j = 0; j < output.Height; j++)
+                    {
+                        // Position
+                        Vector2 p = new Vector2(
+                            (float)i / (float)gridWidth,
+                            (float)j / (float)gridHeight);
+                        p += position;
+                        p /= scale;
 
-                    float value = fbmPerlin(
-                        grid,
-                        gridWidth,
-                        gridHeight,
-                        p,
-                        scale,
-                        frequency,
-                        gain,
-                        lacunarity,
-                        fbmOffset,
-                        iterations);
-                    
-                    // Change range of value to [0, 1] instead of [-1, 1]
-                    value = (value + 1) / 2f;
-                    value = Math.Max(0, Math.Min(1, value));
+                        float value = fbmPerlin(
+                            grid,
+                            gridWidth,
+                            gridHeight,
+                            p,
+                            scale,
+                            frequency,
+                            gain,
+                            lacunarity,
+                            fbmOffset,
+                            iterations);
 
-                    // Multiply value
-                    value *= multiplier;
+                        // Change range of value to [0, 1] instead of [-1, 1]
+                        value = (value + 1) / 2f;
+                        value = Math.Max(0, Math.Min(1, value));
 
-                    // Invert value if necessary
-                    if (invert)
-                        value = 1 - value;
+                        // Multiply value
+                        value *= multiplier;
 
-                    Color color = Color.Lerp(colorLow, colorHigh, value);
-                    data[i + j * output.Width] = color;
+                        // Invert value if necessary
+                        if (invert)
+                            value = 1 - value;
+
+                        Color color = Color.Lerp(colorLow, colorHigh, value);
+                        data[i + j * output.Width] = color;
+                    }
                 }
-            }
+            });
 
             output.SetData<Color>(data);
             return output;
@@ -686,6 +694,7 @@ namespace StasisCore
             int gridHeight = 32;
             Vector2[,] grid = new Vector2[gridWidth, gridHeight];
             Random rng = new Random(seed);
+            int chunkCount = (int)Math.Floor((float)output.Width / (float)CHUNK_SIZE) + 1;
 
             // Create gradient grid
             for (int i = 0; i < gridWidth; i++)
@@ -698,40 +707,45 @@ namespace StasisCore
                 }
             }
 
-            for (int i = 0; i < output.Width; i++)
+            Parallel.For(0, chunkCount, (count) =>
             {
-                for (int j = 0; j < output.Height; j++)
+                int startIndex = count * CHUNK_SIZE;
+                int endIndex = Math.Min((count + 1) * CHUNK_SIZE, output.Width);
+                for (int i = startIndex; i < endIndex; i++)
                 {
-                    Vector2 p = new Vector2(i, j) / new Vector2(gridWidth, gridHeight);
-                    p += position;
-                    p /= scale;
+                    for (int j = 0; j < output.Height; j++)
+                    {
+                        Vector2 p = new Vector2(i, j) / new Vector2(gridWidth, gridHeight);
+                        p += position;
+                        p /= scale;
 
-                    float value = fbmWorley(
-                        grid,
-                        gridWidth,
-                        gridHeight,
-                        p,
-                        frequency,
-                        gain,
-                        lacunarity,
-                        fbmOffset,
-                        iterations,
-                        worleyFeatureType);
+                        float value = fbmWorley(
+                            grid,
+                            gridWidth,
+                            gridHeight,
+                            p,
+                            frequency,
+                            gain,
+                            lacunarity,
+                            fbmOffset,
+                            iterations,
+                            worleyFeatureType);
 
-                    // Clamp values
-                    value = Math.Max(0, Math.Min(1, value));
+                        // Clamp values
+                        value = Math.Max(0, Math.Min(1, value));
 
-                    // Multiply value
-                    value *= multiplier;
+                        // Multiply value
+                        value *= multiplier;
 
-                    // Invert value if necessary
-                    if (invert)
-                        value = 1 - value;
+                        // Invert value if necessary
+                        if (invert)
+                            value = 1 - value;
 
-                    Color color = Color.Lerp(colorLow, colorHigh, value);
-                    data[i + j * output.Width] = color;
+                        Color color = Color.Lerp(colorLow, colorHigh, value);
+                        data[i + j * output.Width] = color;
+                    }
                 }
-            }
+            });
 
             output.SetData<Color>(data);
             return output;
