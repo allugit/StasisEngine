@@ -633,14 +633,15 @@ namespace StasisGame
             inverseMassSq = inverseMass * inverseMass;
 
             // Assign texture
-            //float ratio = (float)(Math.Max(count - tree.leafBaseOffset, 0) / (float)Math.Max(tree.longestPath - tree.leafBaseOffset, 1));
+            int variations = tree.leafTextures[0].Count;
             float ratio = (float)count / (float)tree.longestPath;
             ratio = Math.Max(ratio - tree.leafRatioOffset, 0) / Math.Max(1f - tree.leafRatioOffset, 0.001f);
             Debug.Assert(ratio >= 0 && ratio <= 1);
             if (ratio >= tree.minLeafRatioCutoff)
             {
+                int variationIndex = tree.random.Next(0, variations);
                 int textureIndex = (int)(ratio * (tree.leafTextures.Count - 1));
-                leafTexture = tree.leafTextures[textureIndex];
+                leafTexture = tree.leafTextures[textureIndex][variationIndex];
             }
             else
             {
@@ -648,10 +649,11 @@ namespace StasisGame
             }
 
             // Find texture shadow value
-            float shadowValue = 1f;
-            shadowValue = Math.Max(Math.Min(budQuality * ratio * 2, 1f), 0.5f);
+            float shadowValue = Math.Max(Math.Min(budQuality * ratio * 2, 1f), 0.5f);
             textureColor = new Color(new Vector3(shadowValue, shadowValue, shadowValue));
-            //textureColor = new Color(shadowValue * ((float)tree.material.colors[1].R / 255f), shadowValue * ((float)tree.material.colors[1].G / 255f), shadowValue * ((float)tree.material.colors[1].B / 255f));
+
+            // Modify z index based on shadow value
+            _z += shadowValue / 10f;
 
             return maxCount;
         }

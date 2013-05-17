@@ -55,7 +55,7 @@ namespace StasisGame
         private CustomVertexFormat[] _vertices;
         private int _primitiveCount;
         private Texture2D _barkTexture;
-        private List<Texture2D> _leafTextures;
+        private List<List<Texture2D>> _leafTextures;
         private float _layerDepth;
         private int _metamerCount;  // not actively maintained, only used to determin z-index of leaf textures.
 
@@ -88,7 +88,7 @@ namespace StasisGame
         public int numVertices { get { return _numVertices; } set { _numVertices = value; } }
         public int primitiveCount { get { return _primitiveCount; } set { _primitiveCount = value; } }
         public Texture2D barkTexture { get { return _barkTexture; } }
-        public List<Texture2D> leafTextures { get { return _leafTextures; } }
+        public List<List<Texture2D>> leafTextures { get { return _leafTextures; } }
         public Metamer rootMetamer { get { return _rootMetamer; } }
         public float minLeafRatioCutoff { get { return _minLeafRatioCutoff; } }
         public float leafRatioOffset { get { return _leafRatioOffset; } }
@@ -99,7 +99,7 @@ namespace StasisGame
         public int metamerCount { get { return _metamerCount; } set { _metamerCount = value; } }
 
         // Constructor
-        public Tree(TreeSystem treeSystem, Texture2D barkTexture, List<Texture2D> leafTextures, XElement data)
+        public Tree(TreeSystem treeSystem, Texture2D barkTexture, List<List<Texture2D>> leafTextures, XElement data)
         {
             _treeSystem = treeSystem;
             _leafTextures = leafTextures;

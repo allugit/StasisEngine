@@ -733,7 +733,8 @@ namespace StasisGame
             List<Vector2> barkPoints = new List<Vector2>();
             List<Vector2> maxLeafPoints = new List<Vector2>();
             Texture2D barkTexture;
-            List<Texture2D> leafTextures = new List<Texture2D>();
+            List<List<Texture2D>> leafTextures = new List<List<Texture2D>>();
+            int leafVariations = 3;
             Tree tree;
             float maxBaseHalfWidth = Loader.loadFloat(data.Attribute("max_base_half_width"), 0.5f);
             float internodeHalfLength = Loader.loadFloat(data.Attribute("internode_half_length"), 0.5f);
@@ -753,11 +754,16 @@ namespace StasisGame
             maxLeafPoints.Add(new Vector2(-256f, 256f) / renderSystem.scale);
             maxLeafPoints.Add(new Vector2(256f, 256f) / renderSystem.scale);
             maxLeafPoints.Add(new Vector2(256f, -256f) / renderSystem.scale);
-            for (float r = leafRange; r < 1f; r += leafRange)
+            for (int i = 0; i < leafVariations; i++)
             {
-                leafTextures.Add(renderSystem.materialRenderer.renderMaterial(leafMaterial, maxLeafPoints, r, true));
+                List<Texture2D> insideList = new List<Texture2D>();
+                leafTextures.Add(insideList);
+                for (float r = leafRange; r < 1f; r += leafRange)
+                {
+                    insideList.Add(renderSystem.materialRenderer.renderMaterial(leafMaterial, maxLeafPoints, r, true));
+                }
+                insideList.Add(renderSystem.materialRenderer.renderMaterial(leafMaterial, maxLeafPoints, 1f, true));
             }
-            leafTextures.Add(renderSystem.materialRenderer.renderMaterial(leafMaterial, maxLeafPoints, 1f, true));
 
             tree = new Tree(_systemManager.getSystem(SystemType.Tree) as TreeSystem, barkTexture, leafTextures, data);  // also expands level boundary
 
