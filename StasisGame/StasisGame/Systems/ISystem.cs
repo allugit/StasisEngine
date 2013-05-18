@@ -22,7 +22,7 @@ namespace StasisGame.Systems
         Rope,
         Level,
         WorldMap,
-        Dynamite
+        Explosion
     };
 
     public interface ISystem

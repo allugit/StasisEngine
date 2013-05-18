@@ -758,7 +758,7 @@ namespace StasisGame
                 fixtureDef.filter.categoryBits = bodyType == BodyType.Dynamic ? (ushort)CollisionCategory.DynamicGeometry : (ushort)CollisionCategory.StaticGeometry;
                 if (isWall)
                 {
-                    fixtureDef.filter.maskBits = 0;
+                    fixtureDef.filter.maskBits = (ushort)CollisionCategory.Explosion;
                 }
                 else
                 {
@@ -767,7 +767,8 @@ namespace StasisGame
                         (ushort)CollisionCategory.Item |
                         (ushort)CollisionCategory.Player |
                         (ushort)CollisionCategory.Rope |
-                        (ushort)CollisionCategory.StaticGeometry;
+                        (ushort)CollisionCategory.StaticGeometry |
+                        (ushort)CollisionCategory.Explosion;
                 }
                 fixtureDefs.Add(fixtureDef);
             }
@@ -785,7 +786,13 @@ namespace StasisGame
                 _entityManager.addComponent(entityId, new SkipFluidResolutionComponent());
             }
             if (bodyType == BodyType.Static)
+            {
                 _entityManager.addComponent(entityId, new IgnoreParticleInfluenceComponent());
+            }
+            if (isDestructible)
+            {
+                _entityManager.addComponent(entityId, new DestructibleGeometryComponent());
+            }
             _entityManager.addComponent(entityId, new PhysicsComponent(body));
             _entityManager.addComponent(entityId, new WorldPositionComponent(body.GetPosition()));
             _entityManager.addComponent(entityId, createBodyRenderComponent(data));
@@ -1212,6 +1219,11 @@ namespace StasisGame
             _entityManager.addComponent(entityId, new IgnoreParticleInfluenceComponent());
 
             return entityId;
+        }
+
+        public int createDebris(Fixture fixture, Vector2 force, int timeToLive)
+        {
+            throw new NotImplementedException();
         }
     }
 }

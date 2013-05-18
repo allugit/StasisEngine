@@ -84,7 +84,7 @@ namespace StasisGame.Systems
             _systemManager.add(new EventSystem(_systemManager, _entityManager), -1);
             _renderSystem = new RenderSystem(_game, _systemManager, _entityManager);
             _systemManager.add(new RopeSystem(_systemManager, _entityManager), -1);
-            _systemManager.add(new DynamiteSystem(_systemManager, _entityManager), -1);
+            _systemManager.add(new ExplosionSystem(_systemManager, _entityManager), -1);
             _systemManager.add(_renderSystem, -1);
             _playerSystem = (PlayerSystem)_systemManager.getSystem(SystemType.Player);
 
@@ -251,7 +251,7 @@ namespace StasisGame.Systems
             _systemManager.remove(SystemType.Fluid);
             _systemManager.remove(SystemType.Tree);
             _systemManager.remove(SystemType.CharacterMovement);
-            _systemManager.remove(SystemType.Dynamite);
+            _systemManager.remove(SystemType.Explosion);
         }
 
         // isGoalComplete -- Checks if a goal with a specific id has been completed

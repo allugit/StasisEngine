@@ -189,6 +189,7 @@ namespace StasisGame.Systems
             List<int> levelGoalEntities = _entityManager.getEntitiesPosessing(ComponentType.RegionGoal);
             List<int> explosionEntities = _entityManager.getEntitiesPosessing(ComponentType.Explosion);
             LevelSystem levelSystem = (LevelSystem)_systemManager.getSystem(SystemType.Level);
+            ExplosionSystem explosionSystem = (ExplosionSystem)_systemManager.getSystem(SystemType.Explosion);
 
             // See if player is touching a level goal
             if (levelGoalEntities.Count > 0)
@@ -228,13 +229,25 @@ namespace StasisGame.Systems
 
                 if (targetFixture != null && component != null)
                 {
+                    DestructibleGeometryComponent destructibleGeometryComponent = (DestructibleGeometryComponent)_entityManager.getComponent((int)targetFixture.GetBody().GetUserData(), ComponentType.DestructibleGeometry);
+
                     contact.GetWorldManifold(out worldManifold);
                     explosionComponent = (ExplosionComponent)component;
                     relative = targetFixture.GetBody().GetPosition() - explosionComponent.position;
                     distanceSq = relative.LengthSquared();
                     relative.Normalize();
                     force = relative * (explosionComponent.strength / Math.Max(distanceSq, 0.1f));
-                    targetFixture.GetBody().ApplyForce(force, worldManifold._points[0]);
+
+                    if (destructibleGeometryComponent != null)
+                    {
+                        // Break fixture off from body
+                        explosionSystem.breakFixture(targetFixture, force, 180);
+                    }
+                    else
+                    {
+                        // Apply generic explosion force
+                        targetFixture.GetBody().ApplyForce(force, worldManifold._points[0]);
+                    }
                 }
             }
         }

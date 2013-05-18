@@ -88,6 +88,7 @@
     <Compile Include="Components\CharacterMovementComponent.cs" />
     <Compile Include="Components\CharacterRenderComponent.cs" />
     <Compile Include="Components\CircuitComponent.cs" />
+    <Compile Include="Components\DestructibleGeometryComponent.cs" />
     <Compile Include="Components\EditorIdComponent.cs" />
     <Compile Include="Components\DynamiteComponent.cs" />
     <Compile Include="Components\ExplosionComponent.cs" />
@@ -122,7 +123,7 @@
     <Compile Include="Data\GameSettings.cs" />
     <Compile Include="Goal.cs" />
     <Compile Include="IRenderablePrimitive.cs" />
-    <Compile Include="Systems\DynamiteSystem.cs" />
+    <Compile Include="Systems\ExplosionSystem.cs" />
     <Compile Include="Systems\LevelSystem.cs" />
     <Compile Include="Managers\DataManager.cs" />
     <Compile Include="Managers\EntityManager.cs" />
