@@ -173,7 +173,7 @@ namespace StasisGame
             _gameState = GameState.Level;
             _scriptManager.loadLevelScript(levelUID);
             _levelSystem.load(levelUID);
-            _entityManager.addLevelComponentsToPlayer(_playerSystem);
+            _playerSystem.addLevelComponents();
             _screenSystem.addScreen(new LevelScreen(this, _systemManager, _entityManager));
         }
 

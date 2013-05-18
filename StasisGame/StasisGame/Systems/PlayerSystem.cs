@@ -1,7 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Xml.Linq;
 using Microsoft.Xna.Framework;
+using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
+using Box2D.XNA;
 using StasisGame.Components;
 using StasisGame.Managers;
 using StasisCore;
@@ -41,24 +44,138 @@ namespace StasisGame.Systems
         // initializePlayerInventory -- Creates the player's inventory components
         public void initializePlayerInventory()
         {
-            _entityManager.initializePlayerInventory(_playerId, DataManager.playerData.inventoryData);
-            _entityManager.initializePlayerToolbar(
-                _playerId,
-                (InventoryComponent)_entityManager.getComponent(_playerId, ComponentType.Inventory),
-                DataManager.playerData.toolbarData);
+            XElement inventoryData = DataManager.playerData.inventoryData;
+            XElement toolbarData = DataManager.playerData.toolbarData;
+            InventoryComponent inventoryComponent;
+
+            // Player inventory
+            if (inventoryData == null)
+            {
+                inventoryComponent = new InventoryComponent(32);
+                _entityManager.addComponent(playerId, inventoryComponent);
+            }
+            else
+            {
+                int slots = int.Parse(inventoryData.Attribute("slots").Value);
+                inventoryComponent = new InventoryComponent(slots);
+                foreach (XElement itemData in inventoryData.Elements("Item"))
+                {
+                    string itemUID = itemData.Attribute("item_uid").Value;
+                    XElement itemResource = ResourceManager.getResource(itemUID);
+                    ItemType itemType = (ItemType)Enum.Parse(typeof(ItemType), itemResource.Attribute("type").Value);
+                    Texture2D inventoryTexture = ResourceManager.getTexture(itemResource.Attribute("inventory_texture_uid").Value);
+                    int quantity = int.Parse(itemData.Attribute("quantity").Value);
+                    bool inWorld = false;
+                    bool hasAiming = Loader.loadBool(itemResource.Attribute("adds_reticle"), false);
+                    int maxRange = Loader.loadInt(itemResource.Attribute("range"), 0);
+
+                    ItemComponent itemComponent = new ItemComponent(itemUID, itemType, inventoryTexture, quantity, inWorld, hasAiming, maxRange);
+                    inventoryComponent.addItem(itemComponent);
+                }
+                _entityManager.addComponent(playerId, inventoryComponent);
+            }
+
+            // Player toolbar
+            if (toolbarData != null)
+            {
+                int slots = int.Parse(toolbarData.Attribute("slots").Value);
+                ToolbarComponent toolbarComponent = new ToolbarComponent(slots, playerId);
+                EquipmentSystem equipmentSystem = (EquipmentSystem)_systemManager.getSystem(SystemType.Equipment);
+
+                foreach (XElement slotData in toolbarData.Elements("Slot"))
+                {
+                    int slotId = int.Parse(slotData.Attribute("id").Value);
+                    int inventorySlot = int.Parse(slotData.Attribute("inventory_slot").Value);
+                    ItemComponent itemComponent = inventoryComponent.getItem(inventorySlot);
+                    //toolbarComponent.inventory[slotId] = itemComponent;
+                    equipmentSystem.assignItemToToolbar(itemComponent, toolbarComponent, slotId);
+                }
+                _entityManager.addComponent(playerId, toolbarComponent);
+            }
+            else
+            {
+                _entityManager.addComponent(playerId, new ToolbarComponent(4, playerId));
+            }
         }
 
-        // softKillPlayer -- Doesn't "kill" the player entity, just resets certain aspects of the entity to the last saved state
-        public void softKillPlayer()
+        // Add components to the entity player that are needed to play in a level
+        public void addLevelComponents()
+        {
+            World world = (_systemManager.getSystem(SystemType.Physics) as PhysicsSystem).world;
+            Body body;
+            BodyDef bodyDef = new BodyDef();
+            PolygonShape bodyShape = new PolygonShape();
+            FixtureDef bodyFixtureDef = new FixtureDef();
+            CircleShape feetShape = new CircleShape();
+            FixtureDef feetFixtureDef = new FixtureDef();
+            Fixture feetFixture;
+
+            bodyDef.bullet = true;
+            bodyDef.fixedRotation = true;
+            bodyDef.position = spawnPosition;
+            bodyDef.type = BodyType.Dynamic;
+            bodyDef.userData = playerId;
+            bodyShape.SetAsBox(0.18f, 0.27f);
+            bodyFixtureDef.density = 1f;
+            bodyFixtureDef.friction = 0f;
+            bodyFixtureDef.restitution = 0f;
+            bodyFixtureDef.shape = bodyShape;
+            bodyFixtureDef.filter.categoryBits = (ushort)CollisionCategory.Player;
+            bodyFixtureDef.filter.maskBits =
+                (ushort)CollisionCategory.DynamicGeometry |
+                (ushort)CollisionCategory.Item |
+                (ushort)CollisionCategory.Rope |
+                (ushort)CollisionCategory.StaticGeometry |
+                (ushort)CollisionCategory.Explosion;
+
+            feetShape._radius = 0.18f;
+            feetShape._p = new Vector2(0, 0.27f);
+            feetFixtureDef.density = 0.1f;
+            feetFixtureDef.friction = 0.1f;
+            feetFixtureDef.shape = feetShape;
+            feetFixtureDef.filter.categoryBits = bodyFixtureDef.filter.categoryBits;
+            feetFixtureDef.filter.maskBits = bodyFixtureDef.filter.maskBits;
+
+            body = world.CreateBody(bodyDef);
+            body.CreateFixture(bodyFixtureDef);
+            feetFixture = body.CreateFixture(feetFixtureDef);
+
+            _entityManager.addComponent(playerId, new PhysicsComponent(body));
+            _entityManager.addComponent(playerId, new InputComponent());
+            _entityManager.addComponent(playerId, new CharacterMovementComponent(feetFixture));
+            _entityManager.addComponent(playerId, new CharacterRenderComponent());
+            _entityManager.addComponent(playerId, new BodyFocusPointComponent(body, new Vector2(0, -7f), FocusType.Multiple));
+            _entityManager.addComponent(playerId, new IgnoreTreeCollisionComponent());
+            _entityManager.addComponent(playerId, new IgnoreRopeRaycastComponent());
+            _entityManager.addComponent(playerId, new SkipFluidResolutionComponent());
+            _entityManager.addComponent(playerId, new WorldPositionComponent(body.GetPosition()));
+        }
+
+        // removeLevelComponents -- Remove level components from the player
+        public void removeLevelComponents()
         {
             List<IComponent> components = new List<IComponent>(_entityManager.getEntityComponents(_playerId));  // create a copy of the list since we'll need to modify the original
 
             for (int i = 0; i < components.Count; i++)
             {
-                // Exclude certain components here if they need to persist through death, otherwise remove them.
+                IComponent component = components[i];
+
+                // Exclude certain components here if they need to persist through levels, otherwise remove them.
+                if (component.componentType == ComponentType.Inventory ||
+                    component.componentType == ComponentType.Toolbar)
+                {
+                    continue;
+                }
+
                 _entityManager.removeComponent(_playerId, components[i]);
             }
+        }
 
+        // softKillPlayer -- Doesn't "kill" the player entity, just resets certain aspects of the entity to the last saved state
+        public void softKillPlayer()
+        {
+            _entityManager.removeComponent(_playerId, ComponentType.Inventory);
+            _entityManager.removeComponent(_playerId, ComponentType.Toolbar);
             initializePlayerInventory();
         }
 

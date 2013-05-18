@@ -225,19 +225,23 @@ namespace StasisGame.Systems
         public void unload()
         {
             List<int> entitiesToPreserve = new List<int>();
-            PlayerSystem playerSystem = (PlayerSystem)_systemManager.getSystem(SystemType.Player);
             ScreenSystem screenSystem = (ScreenSystem)_systemManager.getSystem(SystemType.Screen);
 
             _isActive = false;
+
+            entitiesToPreserve.Add(_playerSystem.playerId);
+            _playerSystem.removeLevelComponents();
+            _entityManager.killAllEntities(entitiesToPreserve);
+
             _renderSystem = null;
             _playerSystem = null;
+
             _regionGoals.Clear();
             _eventGoals.Clear();
             _completedGoals.Clear();
-            entitiesToPreserve.Add(playerSystem.playerId);
-            _entityManager.removeLevelComponentsFromPlayer(playerSystem.playerId);
-            _entityManager.killAllEntities(entitiesToPreserve);
+
             screenSystem.removeScreen(ScreenType.Level);
+
             _systemManager.remove(SystemType.Input);
             _systemManager.remove(SystemType.Physics);
             _systemManager.remove(SystemType.Camera);
