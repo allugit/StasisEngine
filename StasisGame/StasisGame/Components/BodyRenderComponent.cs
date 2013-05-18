@@ -11,7 +11,7 @@ namespace StasisGame.Components
     {
         private Texture2D _texture;
         private CustomVertexFormat[] _vertices;
-        private List<RenderableFixture> _renderableFixtures;
+        private List<RenderableTriangle> _renderableFixtures;
         private Matrix _worldMatrix;
         private float _layerDepth;
 
@@ -21,14 +21,13 @@ namespace StasisGame.Components
         public int primitiveCount { get { return _renderableFixtures.Count; } }
         public float layerDepth { get { return _layerDepth; } }
         public CustomVertexFormat[] vertices { get { return _vertices; } }
-        public List<RenderableFixture> renderableFixtures { get { return _renderableFixtures; } }
+        public List<RenderableTriangle> renderableFixtures { get { return _renderableFixtures; } }
 
         //public BodyRenderComponent(Texture2D texture, CustomVertexFormat[] vertices, Matrix worldMatrix, int primitiveCount, float layerDepth)
-        public BodyRenderComponent(Texture2D texture, List<RenderableFixture> renderableFixtures, Matrix worldMatrix, float layerDepth)
+        public BodyRenderComponent(Texture2D texture, List<RenderableTriangle> renderableFixtures, float layerDepth)
         {
             _texture = texture;
             _renderableFixtures = renderableFixtures;
-            _worldMatrix = worldMatrix;
             _layerDepth = layerDepth;
             _vertices = new CustomVertexFormat[_renderableFixtures.Count * 3];
         }

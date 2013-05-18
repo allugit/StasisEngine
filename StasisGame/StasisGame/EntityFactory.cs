@@ -71,6 +71,7 @@ namespace StasisGame
             ((LevelSystem)_systemManager.getSystem(SystemType.Level)).expandBoundary(point);
         }
 
+        /*
         private BodyRenderComponent createBodyRenderComponent(XElement data)
         {
             RenderSystem renderSystem = (RenderSystem)_systemManager.getSystem(SystemType.Render);
@@ -194,7 +195,7 @@ namespace StasisGame
             }
 
             return new BodyRenderComponent(texture, vertices, Matrix.Identity, primitiveCount, layerDepth);
-        }
+        }*/
 
         public void createOutputGates(XElement data)
         {
@@ -233,17 +234,78 @@ namespace StasisGame
             }
         }
 
+        // createBoxTexture -- Creates a texture for boxes from a body and a material
+        private Texture2D createBoxTexture(Body body, XElement data)
+        {
+            RenderSystem renderSystem = (RenderSystem)_systemManager.getSystem(SystemType.Render);
+            Material material = new Material(ResourceManager.getResource(data.Attribute("material_uid").Value));
+            Matrix angleTransform = Matrix.CreateRotationZ(body.GetAngle());
+            List<Vector2> materialVertices = new List<Vector2>();
+            PolygonShape boxShape = body.GetFixtureList().GetShape() as PolygonShape;
+
+            for (int i = 0; i < 4; i++)
+                materialVertices.Add(Vector2.Transform(boxShape._vertices[i], angleTransform));
+
+            return renderSystem.materialRenderer.renderMaterial(material, materialVertices, 1f, false);
+        }
+
+        // createBoxRenderableTriangles -- Creates a list of renderable triangles for boxes
+        private List<RenderableTriangle> createBoxRenderableTriangles(Body body)
+        {
+            List<RenderableTriangle> renderableTriangles = new List<RenderableTriangle>();
+            PolygonShape polygonShape = body.GetFixtureList().GetShape() as PolygonShape;
+            Matrix transform = Matrix.CreateRotationZ(body.GetAngle());
+            List<Vector2> points = new List<Vector2>();
+            Vector2 topLeft;
+            Vector2 bottomRight;
+            List<PolygonPoint> P2TPoints = new List<PolygonPoint>();
+            Polygon polygon;
+
+            // Get rotated vertices
+            for (int i = 0; i < 4; i++)
+                points.Add(Vector2.Transform(polygonShape._vertices[i], transform));
+
+            // Find boundary
+            topLeft = points[0];
+            bottomRight = points[0];
+            for (int i = 0; i < 4; i++)
+            {
+                topLeft = Vector2.Min(topLeft, points[i]);
+                bottomRight = Vector2.Max(bottomRight, points[i]);
+            }
+
+            // Convert to Poly2Tri polygon
+            for (int i = 0; i < 4; i++)
+                P2TPoints.Add(new PolygonPoint(points[i].X, points[i].Y));
+            polygon = new Polygon(P2TPoints);
+            P2T.Triangulate(polygon);
+
+            // Create renderable triangles
+            foreach (DelaunayTriangle triangle in polygon.Triangles)
+            {
+                renderableTriangles.Add(new RenderableTriangle(triangle, topLeft, bottomRight, true, body.GetAngle()));
+            }
+
+            return renderableTriangles;
+        }
+
+        // createBox -- Creates a box from supplied data
         public void createBox(XElement data)
         {
             World world = (_systemManager.getSystem(SystemType.Physics) as PhysicsSystem).world;
             int actorId = int.Parse(data.Attribute("id").Value);
             int entityId = _entityManager.createEntity(actorId);
+            float layerDepth = Loader.loadFloat(data.Attribute("layer_depth"), 0.1f);
             Body body = null;
             BodyDef bodyDef = new BodyDef();
             PolygonShape boxShape = new PolygonShape();
             FixtureDef boxFixtureDef = new FixtureDef();
             BodyType bodyType = (BodyType)Loader.loadEnum(typeof(BodyType), data.Attribute("body_type"), (int)BodyType.Static);
             Transform xf;
+            BodyRenderComponent bodyRenderComponent;
+            Texture2D texture;
+            List<Vector2> materialVertices = new List<Vector2>();
+            List<RenderableTriangle> renderableTriangles;
 
             bodyDef.type = bodyType;
             bodyDef.position = Loader.loadVector2(data.Attribute("position"), Vector2.Zero);
@@ -265,11 +327,16 @@ namespace StasisGame
             body = world.CreateBody(bodyDef);
             body.CreateFixture(boxFixtureDef);
 
+            // Create body render component
+            texture = createBoxTexture(body, data);
+            renderableTriangles = createBoxRenderableTriangles(body);
+            bodyRenderComponent = new BodyRenderComponent(texture, renderableTriangles, layerDepth);
+
             // Add components
             if (bodyType == BodyType.Static)
                 _entityManager.addComponent(entityId, new IgnoreParticleInfluenceComponent());
+            _entityManager.addComponent(entityId, bodyRenderComponent);
             _entityManager.addComponent(entityId, new PhysicsComponent(body));
-            _entityManager.addComponent(entityId, createBodyRenderComponent(data));
             _entityManager.addComponent(entityId, new EditorIdComponent(actorId));
             _entityManager.addComponent(entityId, new WorldPositionComponent(body.GetPosition()));
 
@@ -282,6 +349,49 @@ namespace StasisGame
             }
         }
 
+        // createCircleTexture -- Creates a texture for a circle from a body and a material
+        private Texture2D createCircleTexture(Body body, XElement data)
+        {
+            RenderSystem renderSystem = (RenderSystem)_systemManager.getSystem(SystemType.Render);
+            List<Vector2> polygonPoints = new List<Vector2>();
+            float segments = 64f;
+            float increment = StasisMathHelper.pi2 / segments;
+            float radius = body.GetFixtureList().GetShape()._radius;
+            Material material = new Material(ResourceManager.getResource(data.Attribute("material_uid").Value));
+
+            for (float t = StasisMathHelper.pi; t > -StasisMathHelper.pi; t -= increment)
+                polygonPoints.Add(new Vector2((float)Math.Cos(t), (float)Math.Sin(t)) * radius);
+
+            return renderSystem.materialRenderer.renderMaterial(material, polygonPoints, 1f, false);
+        }
+
+        // createCircleRenderableTriangles -- Creates a list of renderable triangles from a circle
+        private List<RenderableTriangle> createCircleRenderableTriangles(Body body)
+        {
+            float segments = 64f;
+            float increment = StasisMathHelper.pi2 / segments;
+            float radius = body.GetFixtureList().GetShape()._radius;
+            List<PolygonPoint> polygonPoints = new List<PolygonPoint>();
+            Polygon polygon;
+            List<RenderableTriangle> renderableTriangles = new List<RenderableTriangle>();
+            Vector2 topLeft = new Vector2(-radius, -radius);
+            Vector2 bottomRight = new Vector2(radius, radius);
+
+            for (float t = StasisMathHelper.pi; t > -StasisMathHelper.pi; t -= increment)
+            {
+                Vector2 p = new Vector2((float)Math.Cos(t), (float)Math.Sin(t)) * radius;
+                polygonPoints.Add(new PolygonPoint(p.X, p.Y));
+            }
+            polygon = new Polygon(polygonPoints);
+            P2T.Triangulate(polygon);
+
+            for (int i = 0; i < polygon.Triangles.Count; i++)
+                renderableTriangles.Add(new RenderableTriangle(polygon.Triangles[i], topLeft, bottomRight));
+
+            return renderableTriangles;
+        }
+
+        // createCircle -- Creates a circle entity
         public void createCircle(XElement data)
         {
             World world = (_systemManager.getSystem(SystemType.Physics) as PhysicsSystem).world;
@@ -292,6 +402,10 @@ namespace StasisGame
             FixtureDef circleFixtureDef = new FixtureDef();
             CircleShape circleShape = new CircleShape();
             BodyType bodyType = (BodyType)Loader.loadEnum(typeof(BodyType), data.Attribute("body_type"), (int)BodyType.Static);
+            Texture2D texture;
+            float layerDepth = Loader.loadFloat(data.Attribute("layer_depth"), 0.1f);
+            BodyRenderComponent bodyRenderComponent;
+            List<RenderableTriangle> renderableTriangles = new List<RenderableTriangle>();
 
             bodyDef.type = bodyType;
             bodyDef.position = Loader.loadVector2(data.Attribute("position"), Vector2.Zero);
@@ -312,11 +426,16 @@ namespace StasisGame
             body = world.CreateBody(bodyDef);
             body.CreateFixture(circleFixtureDef);
 
+            // Create body render component
+            texture = createCircleTexture(body, data);
+            renderableTriangles = createCircleRenderableTriangles(body);
+            bodyRenderComponent = new BodyRenderComponent(texture, renderableTriangles, layerDepth);
+
             // Add components
             if (bodyType == BodyType.Static)
                 _entityManager.addComponent(entityId, new IgnoreParticleInfluenceComponent());
             _entityManager.addComponent(entityId, new PhysicsComponent(body));
-            _entityManager.addComponent(entityId, createBodyRenderComponent(data));
+            _entityManager.addComponent(entityId, bodyRenderComponent);
             _entityManager.addComponent(entityId, new EditorIdComponent(actorId));
             _entityManager.addComponent(entityId, new WorldPositionComponent(body.GetPosition()));
 
@@ -641,12 +760,46 @@ namespace StasisGame
             return result;
         }
 
+        // createTerrainTexture -- Creates a terrain texture
+        private Texture2D createTerrainTexture(List<Vector2> points, XElement data)
+        {
+            Material material = new Material(ResourceManager.getResource(data.Attribute("material_uid").Value));
+            RenderSystem renderSystem = (RenderSystem)_systemManager.getSystem(SystemType.Render);
+
+            return renderSystem.materialRenderer.renderMaterial(material, points, 1f, false);
+        }
+
+        // createTerrainRenderableTriangles -- Creates a list of renderable triangles from terrain fixtures
+        private List<RenderableTriangle> createTerrainRenderableTriangles(List<Vector2> points, Body body)
+        {
+            List<RenderableTriangle> renderableTriangles = new List<RenderableTriangle>();
+            Fixture current = body.GetFixtureList();
+            Vector2 topLeft = points[0];
+            Vector2 bottomRight = points[0];
+
+            for (int i = 0; i < points.Count; i++)
+            {
+                topLeft = Vector2.Min(topLeft, points[i]);
+                bottomRight = Vector2.Max(bottomRight, points[i]);
+            }
+
+            while (current != null)
+            {
+                renderableTriangles.Add(new RenderableTriangle(current, topLeft, bottomRight));
+                current = current.GetNext();
+            }
+
+            return renderableTriangles;
+        }
+
+        // createTerrain -- Creates a terrain entity
         public void createTerrain(XElement data)
         {
             World world = (_systemManager.getSystem(SystemType.Physics) as PhysicsSystem).world;
             int actorId = int.Parse(data.Attribute("id").Value);
             int entityId = _entityManager.createEntity(actorId);
             bool isWall = Loader.loadBool(data.Attribute("wall"), false);
+            float layerDepth = Loader.loadFloat(data.Attribute("layer_depth"), 0.1f);
             BodyDef bodyDef = new BodyDef();
             List<FixtureDef> fixtureDefs = new List<FixtureDef>();
             List<Vector2> points = new List<Vector2>();
@@ -660,6 +813,9 @@ namespace StasisGame
             float chunkSpacingY = Loader.loadFloat(data.Attribute("chunk_spacing_y"), 0.2f);
             float averageChunkSize = (chunkSpacingX + chunkSpacingY) / 2f;
             Random rng = new Random(Loader.loadInt(data.Attribute("destructible_seed"), 12345));
+            Texture2D texture;
+            List<RenderableTriangle> renderableTriangles;
+            BodyRenderComponent bodyRenderComponent;
 
             bodyDef.type = bodyType;
             bodyDef.userData = entityId;
@@ -778,6 +934,11 @@ namespace StasisGame
             foreach (FixtureDef fixtureDef in fixtureDefs)
                 body.CreateFixture(fixtureDef);
 
+            // Create body render component
+            texture = createTerrainTexture(points, data);
+            renderableTriangles = createTerrainRenderableTriangles(points, body);
+            bodyRenderComponent = new BodyRenderComponent(texture, renderableTriangles, layerDepth);
+
             // Add components
             if (isWall)
             {
@@ -795,7 +956,7 @@ namespace StasisGame
             }
             _entityManager.addComponent(entityId, new PhysicsComponent(body));
             _entityManager.addComponent(entityId, new WorldPositionComponent(body.GetPosition()));
-            _entityManager.addComponent(entityId, createBodyRenderComponent(data));
+            //_entityManager.addComponent(entityId, createBodyRenderComponent(data));
             _entityManager.addComponent(entityId, new IgnoreTreeCollisionComponent());
             _entityManager.addComponent(entityId, new EditorIdComponent(actorId));
 
