@@ -206,21 +206,30 @@ namespace StasisGame.Systems
 
             // Begin ordered drawing
             _spriteBatch.Begin(SpriteSortMode.BackToFront, BlendState.AlphaBlend);
-
-            // Draw primitives
             _halfScreen = new Vector2(_graphicsDevice.Viewport.Width, _graphicsDevice.Viewport.Height) / 2;
             _viewMatrix = Matrix.CreateTranslation(new Vector3(-screenCenter, 0)) * Matrix.CreateScale(new Vector3(_scale, -_scale, 1f));
             _projectionMatrix = Matrix.CreateOrthographic(_graphicsDevice.Viewport.Width, _graphicsDevice.Viewport.Height, 0, 1);
             _primitivesEffect.Parameters["view"].SetValue(_viewMatrix);
             _primitivesEffect.Parameters["projection"].SetValue(_projectionMatrix);
 
+            // Body render components
             for (int i = 0; i < bodyRenderEntities.Count; i++)
             {
                 int entityId = bodyRenderEntities[i];
                 BodyRenderComponent bodyRenderComponent = (BodyRenderComponent)_entityManager.getComponent(entityId, ComponentType.BodyRender);
                 PhysicsComponent physicsComponent = (PhysicsComponent)_entityManager.getComponent(entityId, ComponentType.Physics);
 
+                // Update world matrix
                 bodyRenderComponent.worldMatrix = Matrix.CreateRotationZ(physicsComponent.body.GetAngle()) * Matrix.CreateTranslation(new Vector3(physicsComponent.body.GetPosition(), 0));
+
+                // Update body's collection of vertices
+                int index = 0;
+                for (int j = 0; j < bodyRenderComponent.renderableFixtures.Count; j++)
+                {
+                    bodyRenderComponent.vertices[index++] = bodyRenderComponent.renderableFixtures[j].vertices[0];
+                    bodyRenderComponent.vertices[index++] = bodyRenderComponent.renderableFixtures[j].vertices[1];
+                    bodyRenderComponent.vertices[index++] = bodyRenderComponent.renderableFixtures[j].vertices[2];
+                }
 
                 addRenderablePrimitive(bodyRenderComponent);
             }

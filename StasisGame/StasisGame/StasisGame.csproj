@@ -123,6 +123,7 @@
     <Compile Include="Data\GameSettings.cs" />
     <Compile Include="Goal.cs" />
     <Compile Include="IRenderablePrimitive.cs" />
+    <Compile Include="RenderableFixture.cs" />
     <Compile Include="Systems\ExplosionSystem.cs" />
     <Compile Include="Systems\LevelSystem.cs" />
     <Compile Include="Managers\DataManager.cs" />
