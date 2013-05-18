@@ -655,24 +655,89 @@ namespace StasisGame
             Vector2 center = Vector2.Zero;
             Body body = null;
             BodyType bodyType = (BodyType)Loader.loadEnum(typeof(BodyType), data.Attribute("body_type"), (int)BodyType.Static);
-
-            //_actorIdToEntityId.Add(actorId, entityId);
+            bool isDestructible = Loader.loadBool(data.Attribute("destructible"), false);
+            float chunkSpacingX = Loader.loadFloat(data.Attribute("chunk_spacing_x"), 0.2f);
+            float chunkSpacingY = Loader.loadFloat(data.Attribute("chunk_spacing_y"), 0.2f);
+            float averageChunkSize = (chunkSpacingX + chunkSpacingY) / 2f;
+            Random rng = new Random(Loader.loadInt(data.Attribute("destructible_seed"), 12345));
 
             bodyDef.type = bodyType;
             bodyDef.userData = entityId;
 
+            // Load points
             foreach (XElement pointData in data.Elements("Point"))
                 points.Add(Loader.loadVector2(pointData, Vector2.Zero));
 
+            // Calculate center (average)
             foreach (Vector2 point in points)
                 center += point / points.Count;
 
-            foreach (Vector2 point in points)
-                P2TPoints.Add(new PolygonPoint(point.X - center.X, point.Y - center.Y));
+            // Adjust points to account for body position
+            for (int i = 0; i < points.Count; i++)
+                points[i] -= center;
 
+            // Convert edge points to PolygonPoints
+            for (int i = 0; i < points.Count; i++)
+            {
+                // Edge lines are broken into multiple smaller lines to prevent shards from forming
+                if (i > 0)
+                {
+                    float distance = Vector2.Distance(points[i], points[i - 1]);
+                    int lengthSegments = isDestructible ? (int)Math.Ceiling(distance / averageChunkSize) : 1;
+                    if (lengthSegments > 0)
+                    {
+                        for (int x = 0; x < lengthSegments - 1; x++)
+                        {
+                            float factor = ((float)x + 1f) / (float)lengthSegments;
+                            Vector2 lerp = Vector2.Lerp(points[i - 1], points[i], factor);
+                            P2TPoints.Add(new PolygonPoint(lerp.X, lerp.Y));
+                        }
+                    }
+                }
+                P2TPoints.Add(new PolygonPoint(points[i].X, points[i].Y));
+            }
+
+            // Close loop (line is also broken into multiple smaller segments)
+            float gapDistance = Vector2.Distance(points[0], points[points.Count - 1]);
+            int gapLengthSegments = isDestructible ? (int)Math.Ceiling(gapDistance / averageChunkSize) : 1;
+            if (gapLengthSegments > 0)
+            {
+                for (int x = 0; x < gapLengthSegments - 1; x++)
+                {
+                    float factor = ((float)x + 1f) / (float)gapLengthSegments;
+                    Vector2 lerp = Vector2.Lerp(points[points.Count - 1], points[0], factor);
+                    P2TPoints.Add(new PolygonPoint(lerp.X, lerp.Y));
+                }
+            }
+
+            // Create polygon
             polygon = new Polygon(P2TPoints);
+
+            // Create grid points
+            if (isDestructible)
+            {
+                float width = (float)polygon.BoundingBox.Width;
+                float height = (float)polygon.BoundingBox.Height;
+                List<TriangulationPoint> newPoints = new List<TriangulationPoint>();
+                for (float i = 0f; i < width; i += chunkSpacingX)
+                {
+                    for (float j = 0f; j < height; j += chunkSpacingY)
+                    {
+                        Vector2 jitter = new Vector2(
+                            StasisMathHelper.floatBetween(-chunkSpacingX, chunkSpacingX, rng),
+                            StasisMathHelper.floatBetween(-chunkSpacingY, chunkSpacingY, rng));
+                        PolygonPoint point = new PolygonPoint(polygon.BoundingBox.Left + i + jitter.X, polygon.BoundingBox.Bottom + j + jitter.Y);
+                        if (polygon.IsPointInside(point))
+                            newPoints.Add(point);
+                    }
+                }
+                polygon.AddSteinerPoints(newPoints);
+            }
+
+            // Triangulate polygon
             P2T.Triangulate(polygon);
 
+            // Create fixtures out of triangles
             foreach (DelaunayTriangle triangle in polygon.Triangles)
             {
                 FixtureDef fixtureDef = new FixtureDef();

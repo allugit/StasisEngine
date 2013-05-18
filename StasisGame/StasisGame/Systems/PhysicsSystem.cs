@@ -208,6 +208,7 @@ namespace StasisGame.Systems
                 }
             }
 
+            // Explosions
             if (explosionEntities.Count > 0)
             {
                 int entityA = (int)contact.GetFixtureA().GetBody().GetUserData();
