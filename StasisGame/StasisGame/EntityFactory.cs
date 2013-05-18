@@ -956,6 +956,7 @@ namespace StasisGame
             }
             _entityManager.addComponent(entityId, new PhysicsComponent(body));
             _entityManager.addComponent(entityId, new WorldPositionComponent(body.GetPosition()));
+            _entityManager.addComponent(entityId, bodyRenderComponent);
             //_entityManager.addComponent(entityId, createBodyRenderComponent(data));
             _entityManager.addComponent(entityId, new IgnoreTreeCollisionComponent());
             _entityManager.addComponent(entityId, new EditorIdComponent(actorId));

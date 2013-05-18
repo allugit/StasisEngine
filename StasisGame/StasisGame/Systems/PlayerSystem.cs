@@ -87,7 +87,7 @@ namespace StasisGame.Systems
                     int slotId = int.Parse(slotData.Attribute("id").Value);
                     int inventorySlot = int.Parse(slotData.Attribute("inventory_slot").Value);
                     ItemComponent itemComponent = inventoryComponent.getItem(inventorySlot);
-                    //toolbarComponent.inventory[slotId] = itemComponent;
+
                     equipmentSystem.assignItemToToolbar(itemComponent, toolbarComponent, slotId);
                 }
                 _entityManager.addComponent(playerId, toolbarComponent);

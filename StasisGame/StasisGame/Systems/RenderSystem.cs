@@ -52,6 +52,7 @@ namespace StasisGame.Systems
         public SpriteBatch spriteBatch { get { return _spriteBatch; } }
         public bool paused { get { return _paused; } set { _paused = value; } }
         public bool singleStep { get { return _singleStep; } set { _singleStep = value; } }
+        public Texture2D pixel { get { return _pixel; } }
 
         public RenderSystem(LoderGame game, SystemManager systemManager, EntityManager entityManager)
         {
