@@ -34,7 +34,8 @@ namespace StasisGame.Components
         Explosion,
         SkipFluidResolution,
         IgnoreParticleInfluence,
-        DestructibleGeometry
+        DestructibleGeometry,
+        Debris
     };
 
     public interface IComponent

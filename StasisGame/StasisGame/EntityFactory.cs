@@ -1433,6 +1433,7 @@ namespace StasisGame
             _entityManager.addComponent(entityId, new PhysicsComponent(body));
             _entityManager.addComponent(entityId, new WorldPositionComponent(body.GetPosition()));
             _entityManager.addComponent(entityId, new BodyRenderComponent(texture, renderableTriangles, layerDepth));
+            _entityManager.addComponent(entityId, new DebrisComponent(timeToLive));
 
             return entityId;
         }

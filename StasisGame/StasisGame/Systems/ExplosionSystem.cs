@@ -55,10 +55,20 @@ namespace StasisGame.Systems
             _debrisToCreate.Add(new DebrisProperties(fixture, force, timeToLive));
         }
 
+        // killDebris -- Handles removal of debris entities
+        public void killDebris(int entityId)
+        {
+            PhysicsComponent physicsComponent = (PhysicsComponent)_entityManager.getComponent(entityId, ComponentType.Physics);
+
+            physicsComponent.body.GetWorld().DestroyBody(physicsComponent.body);
+            _entityManager.killEntity(entityId);
+        }
+
         public void update()
         {
             List<int> dynamiteEntities = _entityManager.getEntitiesPosessing(ComponentType.Dynamite);
             List<int> explosionEntities = _entityManager.getEntitiesPosessing(ComponentType.Explosion);
+            List<int> debrisEntities = _entityManager.getEntitiesPosessing(ComponentType.Debris);
 
             // Dynamite entities
             for (int i = 0; i < dynamiteEntities.Count; i++)
@@ -107,6 +117,16 @@ namespace StasisGame.Systems
                 }
             }
             _debrisToCreate.Clear();
+
+            // Debris
+            for (int i = 0; i < debrisEntities.Count; i++)
+            {
+                DebrisComponent debrisComponent = (DebrisComponent)_entityManager.getComponent(debrisEntities[i], ComponentType.Debris);
+                debrisComponent.timeToLive--;
+
+                if (debrisComponent.timeToLive < 0)
+                    killDebris(debrisEntities[i]);
+            }
         }
     }
 }
