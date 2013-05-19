@@ -785,7 +785,10 @@ namespace StasisGame
 
             while (current != null)
             {
-                renderableTriangles.Add(new RenderableTriangle(current, topLeft, bottomRight));
+                RenderableTriangle renderableTriangle = new RenderableTriangle(current, topLeft, bottomRight);
+
+                renderableTriangle.fixture = current;
+                renderableTriangles.Add(renderableTriangle);
                 current = current.GetNext();
             }
 

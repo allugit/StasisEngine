@@ -10,6 +10,7 @@ namespace StasisGame
     public class RenderableTriangle
     {
         public CustomVertexFormat[] vertices;
+        public Fixture fixture;
 
         public RenderableTriangle(CustomVertexFormat v1, CustomVertexFormat v2, CustomVertexFormat v3)
         {

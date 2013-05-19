@@ -225,11 +225,11 @@ namespace StasisGame.Systems
 
                 // Update body's collection of vertices
                 int index = 0;
-                for (int j = 0; j < bodyRenderComponent.renderableFixtures.Count; j++)
+                for (int j = 0; j < bodyRenderComponent.renderableTriangles.Count; j++)
                 {
-                    bodyRenderComponent.vertices[index++] = bodyRenderComponent.renderableFixtures[j].vertices[0];
-                    bodyRenderComponent.vertices[index++] = bodyRenderComponent.renderableFixtures[j].vertices[1];
-                    bodyRenderComponent.vertices[index++] = bodyRenderComponent.renderableFixtures[j].vertices[2];
+                    bodyRenderComponent.vertices[index++] = bodyRenderComponent.renderableTriangles[j].vertices[0];
+                    bodyRenderComponent.vertices[index++] = bodyRenderComponent.renderableTriangles[j].vertices[1];
+                    bodyRenderComponent.vertices[index++] = bodyRenderComponent.renderableTriangles[j].vertices[2];
                 }
 
                 addRenderablePrimitive(bodyRenderComponent);

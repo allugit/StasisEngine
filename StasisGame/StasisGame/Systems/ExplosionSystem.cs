@@ -87,9 +87,22 @@ namespace StasisGame.Systems
 
                 if (fixture.GetShape() != null)
                 {
-                    int hostEntityId = (int)fixture.GetBody().GetUserData();
+                    int entityId = (int)fixture.GetBody().GetUserData();
+                    BodyRenderComponent bodyRenderComponent = (BodyRenderComponent)_entityManager.getComponent(entityId, ComponentType.BodyRender);
+                    RenderableTriangle triangleToRemove = null;
 
-                    _entityManager.factory.createDebris(fixture, _debrisToCreate[i].force, _debrisToCreate[i].timeToLive);
+                    for (int j = 0; j < bodyRenderComponent.renderableTriangles.Count; j++)
+                    {
+                        if (bodyRenderComponent.renderableTriangles[j].fixture == fixture)
+                        {
+                            triangleToRemove = bodyRenderComponent.renderableTriangles[j];
+                            break;
+                        }
+                    }
+                    if (triangleToRemove != null)
+                        bodyRenderComponent.renderableTriangles.Remove(triangleToRemove);
+
+                    //_entityManager.factory.createDebris(fixture, _debrisToCreate[i].force, _debrisToCreate[i].timeToLive);
                     fixture.GetBody().DestroyFixture(fixture);
                 }
             }
