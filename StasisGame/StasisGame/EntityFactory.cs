@@ -960,7 +960,6 @@ namespace StasisGame
             _entityManager.addComponent(entityId, new PhysicsComponent(body));
             _entityManager.addComponent(entityId, new WorldPositionComponent(body.GetPosition()));
             _entityManager.addComponent(entityId, bodyRenderComponent);
-            //_entityManager.addComponent(entityId, createBodyRenderComponent(data));
             _entityManager.addComponent(entityId, new IgnoreTreeCollisionComponent());
             _entityManager.addComponent(entityId, new EditorIdComponent(actorId));
 
@@ -1386,9 +1385,56 @@ namespace StasisGame
             return entityId;
         }
 
-        public int createDebris(Fixture fixture, Vector2 force, int timeToLive)
+        public int createDebris(Fixture fixture, Vector2 force, int timeToLive, RenderableTriangle renderableTriangle, Texture2D texture, float layerDepth)
         {
-            throw new NotImplementedException();
+            World world = (_systemManager.getSystem(SystemType.Physics) as PhysicsSystem).world;
+            int entityId = _entityManager.createEntity();
+            PolygonShape sourceShape = fixture.GetShape() as PolygonShape;
+            Body body;
+            BodyDef bodyDef = new BodyDef();
+            FixtureDef fixtureDef = new FixtureDef();
+            PolygonShape shape = new PolygonShape();
+            Vector2[] points = new Vector2[3];
+            Vector2 center = Vector2.Zero;
+            Filter filter;
+            List<RenderableTriangle> renderableTriangles = new List<RenderableTriangle>();
+
+            // Adjust fixture's points
+            for (int i = 0; i < 3; i++)
+                center += sourceShape._vertices[i] / 3;
+            for (int i = 0; i < 3; i++)
+                points[i] = sourceShape._vertices[i] - center;
+
+            // Create body
+            fixture.GetFilterData(out filter);
+            bodyDef.position = fixture.GetBody().GetPosition() + center;
+            bodyDef.type = BodyType.Dynamic;
+            bodyDef.userData = entityId;
+            shape.Set(points, 3);
+            fixtureDef.density = fixture.GetDensity();
+            fixtureDef.filter.categoryBits = filter.categoryBits;
+            fixtureDef.filter.maskBits = filter.maskBits;
+            fixtureDef.friction = fixture.GetFriction();
+            fixtureDef.restitution = fixture.GetRestitution();
+            fixtureDef.shape = shape;
+            body = world.CreateBody(bodyDef);
+            body.CreateFixture(fixtureDef);
+            body.ApplyForce(force, center);
+
+            // Adjust renderable triangle
+            for (int i = 0; i < 3; i++)
+            {
+                renderableTriangle.vertices[i].position.X -= center.X;
+                renderableTriangle.vertices[i].position.Y -= center.Y;
+            }
+            renderableTriangles.Add(renderableTriangle);
+
+            // Add components
+            _entityManager.addComponent(entityId, new PhysicsComponent(body));
+            _entityManager.addComponent(entityId, new WorldPositionComponent(body.GetPosition()));
+            _entityManager.addComponent(entityId, new BodyRenderComponent(texture, renderableTriangles, layerDepth));
+
+            return entityId;
         }
     }
 }

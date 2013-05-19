@@ -102,7 +102,7 @@ namespace StasisGame.Systems
                     if (triangleToRemove != null)
                         bodyRenderComponent.renderableTriangles.Remove(triangleToRemove);
 
-                    //_entityManager.factory.createDebris(fixture, _debrisToCreate[i].force, _debrisToCreate[i].timeToLive);
+                    _entityManager.factory.createDebris(fixture, _debrisToCreate[i].force, _debrisToCreate[i].timeToLive, triangleToRemove, bodyRenderComponent.texture, bodyRenderComponent.layerDepth);
                     fixture.GetBody().DestroyFixture(fixture);
                 }
             }

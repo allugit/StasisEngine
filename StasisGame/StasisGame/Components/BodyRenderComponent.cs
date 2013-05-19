@@ -23,11 +23,10 @@ namespace StasisGame.Components
         public CustomVertexFormat[] vertices { get { return _vertices; } }
         public List<RenderableTriangle> renderableTriangles { get { return _renderableTriangles; } }
 
-        //public BodyRenderComponent(Texture2D texture, CustomVertexFormat[] vertices, Matrix worldMatrix, int primitiveCount, float layerDepth)
-        public BodyRenderComponent(Texture2D texture, List<RenderableTriangle> renderableFixtures, float layerDepth)
+        public BodyRenderComponent(Texture2D texture, List<RenderableTriangle> renderableTriangle, float layerDepth)
         {
             _texture = texture;
-            _renderableTriangles = renderableFixtures;
+            _renderableTriangles = renderableTriangle;
             _layerDepth = layerDepth;
             _vertices = new CustomVertexFormat[_renderableTriangles.Count * 3];
         }
