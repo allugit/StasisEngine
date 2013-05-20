@@ -124,6 +124,9 @@ namespace StasisGame.Systems
                 DebrisComponent debrisComponent = (DebrisComponent)_entityManager.getComponent(debrisEntities[i], ComponentType.Debris);
                 debrisComponent.timeToLive--;
 
+                if (debrisComponent.restitutionCount < DebrisComponent.RESTITUTION_RESTORE_COUNT)
+                    debrisComponent.fixture.SetRestitution(debrisComponent.fixture.GetRestitution() + debrisComponent.restitutionIncrement);
+
                 if (debrisComponent.timeToLive < 0)
                     killDebris(debrisEntities[i]);
             }

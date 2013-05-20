@@ -1385,11 +1385,11 @@ namespace StasisGame
             return entityId;
         }
 
-        public int createDebris(Fixture fixture, Vector2 force, int timeToLive, RenderableTriangle renderableTriangle, Texture2D texture, float layerDepth)
+        public int createDebris(Fixture sourceFixture, Vector2 force, int timeToLive, RenderableTriangle renderableTriangle, Texture2D texture, float layerDepth)
         {
             World world = (_systemManager.getSystem(SystemType.Physics) as PhysicsSystem).world;
             int entityId = _entityManager.createEntity();
-            PolygonShape sourceShape = fixture.GetShape() as PolygonShape;
+            PolygonShape sourceShape = sourceFixture.GetShape() as PolygonShape;
             Body body;
             BodyDef bodyDef = new BodyDef();
             FixtureDef fixtureDef = new FixtureDef();
@@ -1398,6 +1398,8 @@ namespace StasisGame
             Vector2 center = Vector2.Zero;
             Filter filter;
             List<RenderableTriangle> renderableTriangles = new List<RenderableTriangle>();
+            float restitutionIncrement = -(2f - sourceFixture.GetRestitution()) / (float)DebrisComponent.RESTITUTION_RESTORE_COUNT;
+            Fixture fixture;
 
             // Adjust fixture's points
             for (int i = 0; i < 3; i++)
@@ -1406,19 +1408,19 @@ namespace StasisGame
                 points[i] = sourceShape._vertices[i] - center;
 
             // Create body
-            fixture.GetFilterData(out filter);
-            bodyDef.position = fixture.GetBody().GetPosition() + center;
+            sourceFixture.GetFilterData(out filter);
+            bodyDef.position = sourceFixture.GetBody().GetPosition() + center;
             bodyDef.type = BodyType.Dynamic;
             bodyDef.userData = entityId;
             shape.Set(points, 3);
-            fixtureDef.density = fixture.GetDensity();
+            fixtureDef.density = sourceFixture.GetDensity();
             fixtureDef.filter.categoryBits = filter.categoryBits;
             fixtureDef.filter.maskBits = filter.maskBits;
-            fixtureDef.friction = fixture.GetFriction();
-            fixtureDef.restitution = fixture.GetRestitution();
+            fixtureDef.friction = sourceFixture.GetFriction();
+            fixtureDef.restitution = 2f;
             fixtureDef.shape = shape;
             body = world.CreateBody(bodyDef);
-            body.CreateFixture(fixtureDef);
+            fixture = body.CreateFixture(fixtureDef);
             body.ApplyForce(force, center);
 
             // Adjust renderable triangle
@@ -1433,7 +1435,7 @@ namespace StasisGame
             _entityManager.addComponent(entityId, new PhysicsComponent(body));
             _entityManager.addComponent(entityId, new WorldPositionComponent(body.GetPosition()));
             _entityManager.addComponent(entityId, new BodyRenderComponent(texture, renderableTriangles, layerDepth));
-            _entityManager.addComponent(entityId, new DebrisComponent(timeToLive));
+            _entityManager.addComponent(entityId, new DebrisComponent(fixture, timeToLive, restitutionIncrement));
 
             return entityId;
         }
