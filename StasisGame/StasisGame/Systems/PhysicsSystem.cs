@@ -53,6 +53,7 @@ namespace StasisGame.Systems
             _groundBody = world.CreateBody(groundBodyDef);
             _groundBody.CreateFixture(fixtureDef);
             _entityManager.addComponent(groundId, new GroundBodyComponent(_groundBody));
+            _entityManager.addComponent(groundId, new SkipFluidResolutionComponent());
         }
 
         public void removeBody(Body body)

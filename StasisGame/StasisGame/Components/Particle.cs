@@ -10,7 +10,6 @@ namespace StasisGame.Components
     {
         public const int MAX_INFLUENCES = 100;
         public const int MAX_FIXTURES_TO_TEST = 20;
-        //private FluidSimulation simulation;
         public Vector2 position;
         public Vector2 velocity;
         public Vector2 oldPosition;
@@ -31,14 +30,12 @@ namespace StasisGame.Components
         public bool skipMovementUpdate;
         public Vector2[] collisionVertices;
         public Vector2[] collisionNormals;
-        //private bool neighborSearchDone;
         public Vector2[] relativePosition;
         public float[] oneminusq;
         public float p;
         public float pnear;
-        //public Actor[] actorsToInfluence;
         public int[] entitiesToInfluence;
-        public int actorInfluenceCount;
+        public int entityInfluenceCount;
         public Fixture[] fixturesToTest;
         public int numFixturesToTest;
 

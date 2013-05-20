@@ -125,7 +125,7 @@ namespace StasisGame.Systems
             findNeighbors(index);
 
             // Reset influences
-            liquid[index].actorInfluenceCount = 0;
+            liquid[index].entityInfluenceCount = 0;
 
             // Reset collision flags
             liquid[index].skipMovementUpdate = false;
@@ -286,8 +286,8 @@ namespace StasisGame.Systems
                 {
                     Body body = fixture.GetBody();
                     int entityId = (int)body.GetUserData();
-                    SkipFluidResolutionComponent skipFluidResolutionComponent = (SkipFluidResolutionComponent)_entityManager.getComponent(entityId, ComponentType.SkipFluidResolution);
-                    IgnoreParticleInfluenceComponent ignoreParticleInfluenceComponent = (IgnoreParticleInfluenceComponent)_entityManager.getComponent(entityId, ComponentType.IgnoreParticleInfluence);
+                    SkipFluidResolutionComponent skipFluidResolutionComponent = _entityManager.getComponent(entityId, ComponentType.SkipFluidResolution) as SkipFluidResolutionComponent;
+                    bool influenceEntity = _entityManager.getComponent(entityId, ComponentType.ParticleInfluenceType) != null;
 
                     // Skip collision resolution for certain entities
                     //if (!(data.actorType == ActorType.WALL_GROUP || data.actorType == ActorType.GROUND ||
@@ -396,10 +396,10 @@ namespace StasisGame.Systems
 
                     
                     // Add actor to list of actors being influenced by this particle
-                    if (ignoreParticleInfluenceComponent != null)
+                    if (influenceEntity)
                     {
-                        particle.entitiesToInfluence[particle.actorInfluenceCount] = (int)body.GetUserData();
-                        particle.actorInfluenceCount++;
+                        particle.entitiesToInfluence[particle.entityInfluenceCount] = (int)body.GetUserData();
+                        particle.entityInfluenceCount++;
                     }
                 }
             }
@@ -432,24 +432,6 @@ namespace StasisGame.Systems
             particle.alive = false;
             particle.onScreen = false;
             numActiveParticles--;
-        }
-
-        // resetLiquid
-        public void resetLiquid()
-        {
-            for (int i = 0; i < MAX_PARTICLES; i++)
-            {
-                liquid[i].position = LIQUID_ORIGIN;
-                liquid[i].oldPosition = LIQUID_ORIGIN;
-                liquid[i].velocity = Vector2.Zero;
-                liquid[i].oldVelocity = Vector2.Zero;
-                liquid[i].alive = false;
-                liquid[i].onScreen = false;
-                liquid[i].actorInfluenceCount = 0;
-                //liquid[i].update();
-                updateParticle(i);
-            }
-            numActiveParticles = 0;
         }
 
         // findNeighbors
@@ -488,16 +470,37 @@ namespace StasisGame.Systems
             }
         }
 
-        // update
+        // handleParticleInfluence -- Handles interaction between entities and particles
+        public void handleParticleInfluence(Particle particle)
+        {
+            for (int i = 0; i < particle.entityInfluenceCount; i++)
+            {
+                int entityId = particle.entitiesToInfluence[i];
+                ParticleInfluenceTypeComponent particleInfluenceTypeComponent = _entityManager.getComponent(entityId, ComponentType.ParticleInfluenceType) as ParticleInfluenceTypeComponent;
+
+                if (particleInfluenceTypeComponent.type == ParticleInfluenceType.Physical)
+                {
+                    PhysicsComponent physicsComponent = _entityManager.getComponent(entityId, ComponentType.Physics) as PhysicsComponent;
+                    
+                    physicsComponent.body.ApplyLinearImpulse(particle.oldPosition - particle.position, particle.oldPosition);
+                }
+                else if (particleInfluenceTypeComponent.type == ParticleInfluenceType.Dynamite)
+                {
+                }
+                else if (particleInfluenceTypeComponent.type == ParticleInfluenceType.Character)
+                {
+                }
+            }
+        }
+
+
+        // updateParticle
         public void updateParticle(int index)
         {
             Particle particle = liquid[index];
 
-            /*
             // Influence actors
-            for (int i = 0; i < actorInfluenceCount; i++)
-                actorsToInfluence[i].handleParticleInfluence(this);
-            */
+            handleParticleInfluence(particle);
 
             // Revert movement if off screen
             if (particle.position.X < simulationAABB.lowerBound.X ||
@@ -616,7 +619,6 @@ namespace StasisGame.Systems
             // Update particles
             for (int i = numActiveParticles - 1; i >= 0; i--)
                 updateParticle(activeParticles[i]);
-                //liquid[activeParticles[i]].update();
         }
     }
 }
