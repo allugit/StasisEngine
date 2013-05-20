@@ -50,22 +50,6 @@ namespace StasisGame
             _circuitIdGateIdGateComponentMap.Clear();
         }
 
-        private Body matchBodyToEditorId(int editorId)
-        {
-            List<int> editorIdEntities = _entityManager.getEntitiesPosessing(ComponentType.EditorId);
-
-            if (editorId == -1)
-                return _entityManager.getComponents<GroundBodyComponent>(ComponentType.GroundBody)[0].body;
-
-            for (int i = 0; i < editorIdEntities.Count; i++)
-            {
-                EditorIdComponent editorIdComponent = _entityManager.getComponent(editorIdEntities[i], ComponentType.EditorId) as EditorIdComponent;
-                if (editorIdComponent.id == editorId)
-                    return (_entityManager.getComponent(editorIdEntities[i], ComponentType.Physics) as PhysicsComponent).body;
-            }
-            return null;
-        }
-
         private void expandLevelBoundary(Vector2 point)
         {
             ((LevelSystem)_systemManager.getSystem(SystemType.Level)).expandBoundary(point);
@@ -211,7 +195,6 @@ namespace StasisGame
                 _entityManager.addComponent(entityId, new ParticleInfluenceTypeComponent(ParticleInfluenceType.Physical));
             _entityManager.addComponent(entityId, bodyRenderComponent);
             _entityManager.addComponent(entityId, new PhysicsComponent(body));
-            _entityManager.addComponent(entityId, new EditorIdComponent(actorId));
             _entityManager.addComponent(entityId, new WorldPositionComponent(body.GetPosition()));
 
             // Expand level boundary
@@ -310,7 +293,6 @@ namespace StasisGame
                 _entityManager.addComponent(entityId, new ParticleInfluenceTypeComponent(ParticleInfluenceType.Physical));
             _entityManager.addComponent(entityId, new PhysicsComponent(body));
             _entityManager.addComponent(entityId, bodyRenderComponent);
-            _entityManager.addComponent(entityId, new EditorIdComponent(actorId));
             _entityManager.addComponent(entityId, new WorldPositionComponent(body.GetPosition()));
 
             // Expand level boundary
@@ -380,7 +362,6 @@ namespace StasisGame
             _entityManager.addComponent(entityId, new PhysicsComponent(body));
             _entityManager.addComponent(entityId, new WorldItemRenderComponent(worldTexture));
             _entityManager.addComponent(entityId, new IgnoreTreeCollisionComponent());
-            _entityManager.addComponent(entityId, new EditorIdComponent(int.Parse(data.Attribute("id").Value)));
             _entityManager.addComponent(entityId, new WorldPositionComponent(body.GetPosition()));
         }
 
@@ -588,11 +569,6 @@ namespace StasisGame
             _entityManager.addComponent(entityId, new IgnoreRopeRaycastComponent());
             _entityManager.addComponent(entityId, new SkipFluidResolutionComponent());
             _entityManager.addComponent(entityId, new ParticleInfluenceTypeComponent(ParticleInfluenceType.Rope));
-
-            if (actorId != -1)
-            {
-                _entityManager.addComponent(entityId, new EditorIdComponent(actorId));
-            }
 
             RopeNode current = head;
             while (current != null)
@@ -834,7 +810,6 @@ namespace StasisGame
             _entityManager.addComponent(entityId, new WorldPositionComponent(body.GetPosition()));
             _entityManager.addComponent(entityId, bodyRenderComponent);
             _entityManager.addComponent(entityId, new IgnoreTreeCollisionComponent());
-            _entityManager.addComponent(entityId, new EditorIdComponent(actorId));
 
             // Expand level boundary
             foreach (Vector2 point in points)
@@ -899,7 +874,6 @@ namespace StasisGame
 
             // Add components
             _entityManager.addComponent(entityId, new TreeComponent(tree));
-            _entityManager.addComponent(entityId, new EditorIdComponent(actorId));
             _entityManager.addComponent(entityId, new WorldPositionComponent(tree.position));
         }
 
@@ -910,8 +884,6 @@ namespace StasisGame
             int actorId = int.Parse(data.Attribute("id").Value);
             int entityId;
             GroundBodyComponent groundBodyComponent = _entityManager.getComponents<GroundBodyComponent>(ComponentType.GroundBody)[0];
-            int editorIdA = int.Parse(data.Attribute("actor_a").Value);
-            int editorIdB = int.Parse(data.Attribute("actor_b").Value);
             Vector2 jointWorldPosition = Loader.loadVector2(data.Attribute("position"), Vector2.Zero);
             RevoluteJointDef jointDef = new RevoluteJointDef();
             Body bodyA = null;
@@ -923,12 +895,14 @@ namespace StasisGame
             float motorSpeed = float.Parse(data.Attribute("motor_speed").Value);
             bool enableMotor = bool.Parse(data.Attribute("enable_motor").Value);
             RevoluteComponent revoluteJointComponent;
+            PhysicsComponent physicsComponentA = _entityManager.getComponent(int.Parse(data.Attribute("actor_a").Value), ComponentType.Physics) as PhysicsComponent;
+            PhysicsComponent physicsComponentB = _entityManager.getComponent(int.Parse(data.Attribute("actor_b").Value), ComponentType.Physics) as PhysicsComponent;
 
-            if (editorIdA == -1 && editorIdB == -1)
+            if (physicsComponentA == null || physicsComponentB == null)
                 return;
 
-            bodyA = matchBodyToEditorId(editorIdA);
-            bodyB = matchBodyToEditorId(editorIdB);
+            bodyA = physicsComponentA.body;
+            bodyB = physicsComponentB.body;
 
             jointDef.bodyA = bodyA;
             jointDef.bodyB = bodyB;
@@ -946,7 +920,6 @@ namespace StasisGame
             entityId = _entityManager.createEntity(actorId);
             //_actorIdToEntityId.Add(actorId, entityId);
             _entityManager.addComponent(entityId, revoluteJointComponent);
-            _entityManager.addComponent(entityId, new EditorIdComponent(actorId));
 
             if (_actorIdEntityIdGateComponentMap.ContainsKey(actorId))
             {
@@ -967,8 +940,6 @@ namespace StasisGame
             int entityId;
             GroundBodyComponent groundBodyComponent = _entityManager.getComponents<GroundBodyComponent>(ComponentType.GroundBody)[0];
             PrismaticJointDef jointDef = new PrismaticJointDef();
-            int editorIdA = Loader.loadInt(data.Attribute("actor_a"), -1);
-            int editorIdB = Loader.loadInt(data.Attribute("actor_b"), -1);
             Vector2 jointWorldPosition = Loader.loadVector2(data.Attribute("position"), Vector2.Zero);
             Vector2 axis = Loader.loadVector2(data.Attribute("axis"), new Vector2(1, 0));
             float upperLimit = Loader.loadFloat(data.Attribute("upper_limit"), 0f);
@@ -981,12 +952,11 @@ namespace StasisGame
             Body bodyA = null;
             Body bodyB = null;
             PrismaticJointComponent prismaticJointComponent = null;
+            PhysicsComponent physicsComponentA = _entityManager.getComponent(int.Parse(data.Attribute("actor_a").Value), ComponentType.Physics) as PhysicsComponent;
+            PhysicsComponent physicsComponentB = _entityManager.getComponent(int.Parse(data.Attribute("actor_b").Value), ComponentType.Physics) as PhysicsComponent;
 
-            if (editorIdA == -1 && editorIdB == -1)
-                return;
-
-            bodyA = matchBodyToEditorId(editorIdA);
-            bodyB = matchBodyToEditorId(editorIdB);
+            bodyA = physicsComponentA.body;
+            bodyB = physicsComponentB.body;
 
             jointDef.Initialize(bodyA, bodyB, bodyA.GetWorldCenter(), axis);
             jointDef.lowerTranslation = lowerLimit;
@@ -997,10 +967,8 @@ namespace StasisGame
             jointDef.maxMotorForce = autoCalculateForce ? bodyA.GetMass() * world.Gravity.Length() + buttonForceDifference : maxMotorForce;
 
             entityId = _entityManager.createEntity(actorId);
-            //_actorIdToEntityId.Add(actorId, entityId);
             prismaticJointComponent = new PrismaticJointComponent((PrismaticJoint)world.CreateJoint(jointDef));
             _entityManager.addComponent(entityId, prismaticJointComponent);
-            _entityManager.addComponent(entityId, new EditorIdComponent(actorId));
 
             if (_actorIdEntityIdGateComponentMap.ContainsKey(actorId))
             {
@@ -1182,7 +1150,6 @@ namespace StasisGame
             _entityManager.addComponent(entityId, regionGoalComponent);
             _entityManager.addComponent(entityId, new WorldPositionComponent(body.GetPosition()));
             _entityManager.addComponent(entityId, new IgnoreRopeRaycastComponent());
-            _entityManager.addComponent(entityId, new EditorIdComponent(int.Parse(data.Attribute("id").Value)));
             _entityManager.addComponent(entityId, new SkipFluidResolutionComponent());
 
             // Expand level boundary
