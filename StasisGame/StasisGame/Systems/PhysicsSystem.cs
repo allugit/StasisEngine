@@ -62,7 +62,6 @@ namespace StasisGame.Systems
 
         public void update()
         {
-            //Console.WriteLine("PhysicsSystem update started.");
             if (_singleStep || !_paused)
             {
                 EventSystem eventSystem = _systemManager.getSystem(SystemType.Event) as EventSystem;
@@ -120,7 +119,6 @@ namespace StasisGame.Systems
 
                 _singleStep = false;
             }
-            //Console.WriteLine("Physics engine update ended.");
         }
 
         public void PreSolve(Contact contact, ref Manifold manifold)
