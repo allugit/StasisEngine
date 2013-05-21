@@ -33,10 +33,9 @@ namespace StasisGame.Components
         Dynamite,
         Explosion,
         SkipFluidResolution,
-        IgnoreParticleInfluence,
         DestructibleGeometry,
         Debris,
-        ParticleInfluenceType
+        ParticleInfluence
     };
 
     public interface IComponent

@@ -149,7 +149,7 @@ namespace StasisGame.Systems
             _entityManager.addComponent(playerId, new IgnoreRopeRaycastComponent());
             _entityManager.addComponent(playerId, new WorldPositionComponent(body.GetPosition()));
             _entityManager.addComponent(playerId, new SkipFluidResolutionComponent());
-            _entityManager.addComponent(playerId, new ParticleInfluenceTypeComponent(ParticleInfluenceType.Character));
+            _entityManager.addComponent(playerId, new ParticleInfluenceComponent(ParticleInfluenceType.Character));
         }
 
         // removeLevelComponents -- Remove level components from the player

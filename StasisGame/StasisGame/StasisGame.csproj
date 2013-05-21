@@ -93,7 +93,7 @@
     <Compile Include="Components\DynamiteComponent.cs" />
     <Compile Include="Components\ExplosionComponent.cs" />
     <Compile Include="Components\GateOutputComponent.cs" />
-    <Compile Include="Components\ParticleInfluenceTypeComponent.cs" />
+    <Compile Include="Components\ParticleInfluenceComponent.cs" />
     <Compile Include="Components\RegionGoalComponent.cs" />
     <Compile Include="Components\RopeGrabComponent.cs" />
     <Compile Include="Components\GroundBodyComponent.cs" />

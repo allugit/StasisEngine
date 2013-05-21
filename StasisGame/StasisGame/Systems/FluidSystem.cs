@@ -287,7 +287,7 @@ namespace StasisGame.Systems
                     Body body = fixture.GetBody();
                     int entityId = (int)body.GetUserData();
                     SkipFluidResolutionComponent skipFluidResolutionComponent = _entityManager.getComponent(entityId, ComponentType.SkipFluidResolution) as SkipFluidResolutionComponent;
-                    bool influenceEntity = _entityManager.getComponent(entityId, ComponentType.ParticleInfluenceType) != null;
+                    bool influenceEntity = _entityManager.getComponent(entityId, ComponentType.ParticleInfluence) != null;
 
                     // Skip collision resolution for certain entities
                     //if (!(data.actorType == ActorType.WALL_GROUP || data.actorType == ActorType.GROUND ||
@@ -476,34 +476,35 @@ namespace StasisGame.Systems
             for (int i = 0; i < particle.entityInfluenceCount; i++)
             {
                 int entityId = particle.entitiesToInfluence[i];
-                ParticleInfluenceTypeComponent particleInfluenceTypeComponent = _entityManager.getComponent(entityId, ComponentType.ParticleInfluenceType) as ParticleInfluenceTypeComponent;
+                ParticleInfluenceComponent particleInfluenceComponent = _entityManager.getComponent(entityId, ComponentType.ParticleInfluence) as ParticleInfluenceComponent;
 
-                if (particleInfluenceTypeComponent.type == ParticleInfluenceType.Physical)
+                particleInfluenceComponent.particleCount++;
+                if (particleInfluenceComponent.type == ParticleInfluenceType.Physical)
                 {
-                    // Physical body influences -- these usually resolve collisions, so body-to-particle influences are already handled
+                    // Physical body influences -- body-to-particle influences are usually already handled by resolveCollisions()
                     PhysicsComponent physicsComponent = _entityManager.getComponent(entityId, ComponentType.Physics) as PhysicsComponent;
                     
                     physicsComponent.body.ApplyLinearImpulse(particle.oldPosition - particle.position, particle.oldPosition);
                 }
-                else if (particleInfluenceTypeComponent.type == ParticleInfluenceType.Dynamite)
+                else if (particleInfluenceComponent.type == ParticleInfluenceType.Dynamite)
                 {
                     // Dynamite influence
                     PhysicsComponent physicsComponent = _entityManager.getComponent(entityId, ComponentType.Physics) as PhysicsComponent;
                     Vector2 bodyVelocity = physicsComponent.body.GetLinearVelocity();
 
-                    physicsComponent.body.SetLinearVelocity(bodyVelocity * 0.98f);
-                    particle.velocity += bodyVelocity * 0.0035f;
+                    physicsComponent.body.SetLinearVelocity(bodyVelocity * 0.98f + particle.velocity);
+                    particle.velocity += bodyVelocity * 0.003f;
                 }
-                else if (particleInfluenceTypeComponent.type == ParticleInfluenceType.Character)
+                else if (particleInfluenceComponent.type == ParticleInfluenceType.Character)
                 {
                     // Character influence
                     PhysicsComponent physicsComponent = _entityManager.getComponent(entityId, ComponentType.Physics) as PhysicsComponent;
                     Vector2 bodyVelocity = physicsComponent.body.GetLinearVelocity();
 
-                    physicsComponent.body.SetLinearVelocity(bodyVelocity * 0.98f + particle.velocity * 0.4f);
-                    particle.velocity += bodyVelocity * 0.0035f;
+                    physicsComponent.body.SetLinearVelocity(bodyVelocity * 0.95f + particle.velocity);
+                    particle.velocity += bodyVelocity * 0.003f;
                 }
-                else if (particleInfluenceTypeComponent.type == ParticleInfluenceType.Explosion)
+                else if (particleInfluenceComponent.type == ParticleInfluenceType.Explosion)
                 {
                     ExplosionComponent explosionComponent = _entityManager.getComponent(entityId, ComponentType.Explosion) as ExplosionComponent;
                     Vector2 relative;
@@ -579,17 +580,20 @@ namespace StasisGame.Systems
         // Update
         public void update()
         {
+            List<ParticleInfluenceComponent> particleInfluenceComponents = _entityManager.getComponents<ParticleInfluenceComponent>(ComponentType.ParticleInfluence);
+
+            // Reset particle influence components
+            for (int i = 0; i < particleInfluenceComponents.Count; i++)
+                particleInfluenceComponents[i].particleCount = 0;
+
             // Update simulation AABB
-            //if (!GameEnvironment.paused)
-            //{
-                Vector2 screenCenter = _renderSystem.screenCenter;
-                float width = (_renderSystem.screenWidth / _renderSystem.scale) * 0.75f;
-                float height = (_renderSystem.screenHeight / _renderSystem.scale);
-                simulationAABB.lowerBound.X = screenCenter.X - width;
-                simulationAABB.upperBound.X = screenCenter.X + width;
-                simulationAABB.lowerBound.Y = screenCenter.Y - height;
-                simulationAABB.upperBound.Y = screenCenter.Y + height;
-            //}
+            Vector2 screenCenter = _renderSystem.screenCenter;
+            float width = (_renderSystem.screenWidth / _renderSystem.scale) * 0.75f;
+            float height = (_renderSystem.screenHeight / _renderSystem.scale);
+            simulationAABB.lowerBound.X = screenCenter.X - width;
+            simulationAABB.upperBound.X = screenCenter.X + width;
+            simulationAABB.lowerBound.Y = screenCenter.Y - height;
+            simulationAABB.upperBound.Y = screenCenter.Y + height;
 
             // Flag active particles
             flagActive();

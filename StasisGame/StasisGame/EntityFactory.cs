@@ -192,7 +192,7 @@ namespace StasisGame
 
             // Add components
             if (bodyType != BodyType.Static)
-                _entityManager.addComponent(entityId, new ParticleInfluenceTypeComponent(ParticleInfluenceType.Physical));
+                _entityManager.addComponent(entityId, new ParticleInfluenceComponent(ParticleInfluenceType.Physical));
             _entityManager.addComponent(entityId, bodyRenderComponent);
             _entityManager.addComponent(entityId, new PhysicsComponent(body));
             _entityManager.addComponent(entityId, new WorldPositionComponent(body.GetPosition()));
@@ -290,7 +290,7 @@ namespace StasisGame
 
             // Add components
             if (bodyType != BodyType.Static)
-                _entityManager.addComponent(entityId, new ParticleInfluenceTypeComponent(ParticleInfluenceType.Physical));
+                _entityManager.addComponent(entityId, new ParticleInfluenceComponent(ParticleInfluenceType.Physical));
             _entityManager.addComponent(entityId, new PhysicsComponent(body));
             _entityManager.addComponent(entityId, bodyRenderComponent);
             _entityManager.addComponent(entityId, new WorldPositionComponent(body.GetPosition()));
@@ -568,7 +568,7 @@ namespace StasisGame
             _entityManager.addComponent(entityId, new IgnoreTreeCollisionComponent());
             _entityManager.addComponent(entityId, new IgnoreRopeRaycastComponent());
             _entityManager.addComponent(entityId, new SkipFluidResolutionComponent());
-            _entityManager.addComponent(entityId, new ParticleInfluenceTypeComponent(ParticleInfluenceType.Rope));
+            _entityManager.addComponent(entityId, new ParticleInfluenceComponent(ParticleInfluenceType.Rope));
 
             RopeNode current = head;
             while (current != null)
@@ -802,7 +802,7 @@ namespace StasisGame
             }
 
             if (bodyType != BodyType.Static)
-                _entityManager.addComponent(entityId, new ParticleInfluenceTypeComponent(ParticleInfluenceType.Physical));
+                _entityManager.addComponent(entityId, new ParticleInfluenceComponent(ParticleInfluenceType.Physical));
 
             if (isDestructible)
                 _entityManager.addComponent(entityId, new DestructibleGeometryComponent());
@@ -1190,7 +1190,7 @@ namespace StasisGame
             _entityManager.addComponent(entityId, new IgnoreTreeCollisionComponent());
             _entityManager.addComponent(entityId, new WorldPositionComponent(body.GetPosition()));
             _entityManager.addComponent(entityId, new DynamiteComponent(100f, 2f, 180));
-            _entityManager.addComponent(entityId, new ParticleInfluenceTypeComponent(ParticleInfluenceType.Dynamite));
+            _entityManager.addComponent(entityId, new ParticleInfluenceComponent(ParticleInfluenceType.Dynamite));
 
             return entityId;
         }
@@ -1221,7 +1221,7 @@ namespace StasisGame
             _entityManager.addComponent(entityId, new WorldPositionComponent(body.GetPosition()));
             _entityManager.addComponent(entityId, new ExplosionComponent(body.GetPosition(), strength, radius));
             _entityManager.addComponent(entityId, new SkipFluidResolutionComponent());
-            _entityManager.addComponent(entityId, new ParticleInfluenceTypeComponent(ParticleInfluenceType.Explosion));
+            _entityManager.addComponent(entityId, new ParticleInfluenceComponent(ParticleInfluenceType.Explosion));
 
             return entityId;
         }
@@ -1273,7 +1273,7 @@ namespace StasisGame
             renderableTriangles.Add(renderableTriangle);
 
             // Add components
-            _entityManager.addComponent(entityId, new ParticleInfluenceTypeComponent(ParticleInfluenceType.Physical));
+            _entityManager.addComponent(entityId, new ParticleInfluenceComponent(ParticleInfluenceType.Physical));
             _entityManager.addComponent(entityId, new PhysicsComponent(body));
             _entityManager.addComponent(entityId, new WorldPositionComponent(body.GetPosition()));
             _entityManager.addComponent(entityId, new BodyRenderComponent(texture, renderableTriangles, layerDepth));

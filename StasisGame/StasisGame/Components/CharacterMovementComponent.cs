@@ -25,6 +25,7 @@ namespace StasisGame.Components
         private float _climbAmount;
         private bool _doRopeGrab;
         private bool _allowRopeGrab = true;
+        private bool _inFluid;
 
         public ComponentType componentType { get { return ComponentType.CharacterMovement; } }
         public float movementAngle { get { return _movementAngle; } }
@@ -45,6 +46,7 @@ namespace StasisGame.Components
         public float climbAmount { get { return _climbAmount; } set { _climbAmount = value; } }
         public bool doRopeGrab { get { return _doRopeGrab; } set { _doRopeGrab = value; } }
         public bool allowRopeGrab { get { return _allowRopeGrab; } set { _allowRopeGrab = value; } }
+        public bool inFluid { get { return _inFluid; } set { _inFluid = value; } }
 
         public CharacterMovementComponent(Fixture feetFixture)
         {

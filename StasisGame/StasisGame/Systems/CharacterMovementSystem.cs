@@ -97,9 +97,10 @@ namespace StasisGame.Systems
 
             for (int i = 0; i < characterEntities.Count; i++)
             {
-                PhysicsComponent physicsComponent = (PhysicsComponent)_entityManager.getComponent(characterEntities[i], ComponentType.Physics);
-                CharacterMovementComponent characterMovementComponent = (CharacterMovementComponent)_entityManager.getComponent(characterEntities[i], ComponentType.CharacterMovement);
-                RopeGrabComponent ropeGrabComponent = (RopeGrabComponent)_entityManager.getComponent(characterEntities[i], ComponentType.RopeGrab);
+                PhysicsComponent physicsComponent = _entityManager.getComponent(characterEntities[i], ComponentType.Physics) as PhysicsComponent;
+                ParticleInfluenceComponent particleInfluenceComponent = _entityManager.getComponent(characterEntities[i], ComponentType.ParticleInfluence) as ParticleInfluenceComponent;
+                CharacterMovementComponent characterMovementComponent = _entityManager.getComponent(characterEntities[i], ComponentType.CharacterMovement) as CharacterMovementComponent;
+                RopeGrabComponent ropeGrabComponent = _entityManager.getComponent(characterEntities[i], ComponentType.RopeGrab) as RopeGrabComponent;
                 Body body = physicsComponent.body;
                 Vector2 averageNormal = Vector2.Zero;
                 float modifier = characterMovementComponent.walkSpeedModifier;
@@ -109,6 +110,10 @@ namespace StasisGame.Systems
                 Vector2 characterVelocity = physicsComponent.body.GetLinearVelocity();
                 float characterSpeed = characterVelocity.Length();
                 float characterHorizontalSpeed = Math.Abs(characterVelocity.X);
+
+                // Handle fluid properties
+                characterMovementComponent.inFluid = particleInfluenceComponent.particleCount > 2;
+                characterMovementComponent.alreadyJumped = characterMovementComponent.inFluid ? false : characterMovementComponent.alreadyJumped;
 
                 characterMovementComponent.calculateMovementAngle();
 
@@ -131,6 +136,10 @@ namespace StasisGame.Systems
                     if (applyForce)
                     {
                         Vector2 movement = new Vector2((float)Math.Cos(characterMovementComponent.movementAngle), (float)Math.Sin(characterMovementComponent.movementAngle));
+
+                        if (characterMovementComponent.inFluid)
+                            modifier *= 0.66f;
+
                         movement *= characterMovementComponent.walkLeft ? -1 : 1;
                         movement *= WALK_FORCE * modifier;
                         body.ApplyForce(movement, body.GetPosition());
@@ -186,6 +195,9 @@ namespace StasisGame.Systems
                 // Jump
                 if (characterMovementComponent.jump)
                 {
+                    float jumpForce = characterMovementComponent.inFluid ? JUMP_FORCE * 0.66f : JUMP_FORCE;
+
+                    // While holding rope
                     if (ropeGrabComponent != null)
                     {
                         RopePhysicsComponent ropePhysicsComponent = _entityManager.getComponent(ropeGrabComponent.ropeEntityId, ComponentType.RopePhysics) as RopePhysicsComponent;
@@ -197,13 +209,12 @@ namespace StasisGame.Systems
                         _entityManager.removeComponent(characterEntities[i], ropeGrabComponent);
                         ropeGrabComponent = null;
 
-                        body.SetLinearVelocity(new Vector2(body.GetLinearVelocity().X, body.GetLinearVelocity().Y - JUMP_FORCE / 1.66f));
+                        body.SetLinearVelocity(new Vector2(body.GetLinearVelocity().X, body.GetLinearVelocity().Y - jumpForce * 0.66f));
                     }
-
-                    if (!characterMovementComponent.alreadyJumped && (characterMovementComponent.allowLeftMovement || characterMovementComponent.allowRightMovement))
+                    else if (!characterMovementComponent.alreadyJumped && (characterMovementComponent.allowLeftMovement || characterMovementComponent.allowRightMovement))
                     {
                         characterMovementComponent.alreadyJumped = true;
-                        body.SetLinearVelocity(new Vector2(body.GetLinearVelocity().X, -JUMP_FORCE));
+                        body.SetLinearVelocity(new Vector2(body.GetLinearVelocity().X, -jumpForce));
                     }
                 }
 
