@@ -506,6 +506,7 @@ namespace StasisGame
                 if (doubleAnchor)
                     fixtureDef.filter.maskBits |= (ushort)CollisionCategory.Player;
                 fixtureDef.shape = shape;
+                fixtureDef.userData = i;
 
                 body = world.CreateBody(bodyDef);
                 body.CreateFixture(fixtureDef);

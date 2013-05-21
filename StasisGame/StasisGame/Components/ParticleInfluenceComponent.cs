@@ -3,9 +3,9 @@
     public enum ParticleInfluenceType
     {
         Physical,
-        Rope,
         Character,
         Dynamite,
+        Rope,
         Explosion
     }
 

@@ -287,56 +287,14 @@ namespace StasisGame.Systems
                     Body body = fixture.GetBody();
                     int entityId = (int)body.GetUserData();
                     SkipFluidResolutionComponent skipFluidResolutionComponent = _entityManager.getComponent(entityId, ComponentType.SkipFluidResolution) as SkipFluidResolutionComponent;
-                    bool influenceEntity = _entityManager.getComponent(entityId, ComponentType.ParticleInfluence) != null;
+                    ParticleInfluenceComponent particleInfluenceComponent = _entityManager.getComponent(entityId, ComponentType.ParticleInfluence) as ParticleInfluenceComponent;
+                    bool influenceEntity = particleInfluenceComponent != null;
 
-                    // Skip collision resolution for certain entities
-                    //if (!(data.actorType == ActorType.WALL_GROUP || data.actorType == ActorType.GROUND ||
-                    //    data.actorType == ActorType.GRENADE || data.actorType == ActorType.PLAYER ||
-                    //    data.actorType == ActorType.ROPE_SEGMENT))
-                    //{
                     if (skipFluidResolutionComponent == null)
                     {
-                        // Continue with normal collisions
                         Vector2 closestPoint = Vector2.Zero;
                         Vector2 normal = Vector2.Zero;
-                        //if (data.actorType == ActorType.GRAVITY_WELL)
-                        //{
-                            /*
-                            // Gravity well
-                            GravityWellActor gravityWellActor = actor as GravityWellActor;
-                            Vector2 delta = gravityWellActor.body.GetPosition() - particle.position;
-                            float distanceSq = delta.LengthSquared();
-                            if (distanceSq != 0)
-                            {
-                                float scale = (gravityWellActor.radiusSq - distanceSq) / distanceSq;
-                                scale = Math.Min(scale, gravityWellActor.strength);
-                                Vector2 force = delta * gravityWellActor.strength * scale;
 
-                                // Well force
-                                particle.velocity += force * gravityWellActor.fluidForceScale;
-                            }
-                            influenceActor = false;
-                            */
-                        //}
-                        //else if (data.actorType == ActorType.EXPLOSION)
-                        //{
-                            /*
-                            // Explosion
-                            ExplosionActor explosionActor = actor as ExplosionActor;
-                            Vector2 delta = particle.position - explosionActor.body.GetPosition();
-                            float distanceSq = delta.LengthSquared();
-                            if (distanceSq != 0)
-                            {
-                                float scale = (explosionActor.radiusSq - distanceSq) / distanceSq;
-                                Vector2 force = delta * Math.Min(explosionActor.strength * scale, explosionActor.strength);
-
-                                // Explosion force
-                                particle.velocity += force * explosionActor.fluidForceScale;
-                            }
-                            influenceActor = false;
-                            */
-                        //}
-                        //else if (fixture.GetShape().ShapeType == ShapeType.Polygon)
                         if (fixture.GetShape().ShapeType == ShapeType.Polygon)
                         {
                             // Polygons
@@ -365,7 +323,6 @@ namespace StasisGame.Systems
                             //averagedNormal.Normalize();
                             particle.position = closestPoint + 0.05f * normal;
                             particle.skipMovementUpdate = true;
-                            //doAnotherCollisionCheck = true;
                         }
                         else if (fixture.GetShape().ShapeType == ShapeType.Circle)
                         {
@@ -394,12 +351,23 @@ namespace StasisGame.Systems
                         }
                     }
 
-                    
-                    // Add actor to list of actors being influenced by this particle
+                    // Particle influences
                     if (influenceEntity)
                     {
-                        particle.entitiesToInfluence[particle.entityInfluenceCount] = (int)body.GetUserData();
-                        particle.entityInfluenceCount++;
+                        if (particleInfluenceComponent.type == ParticleInfluenceType.Rope)
+                        {
+                            // Handle rope particle-to-body influences here, since trying to find the correct body through the list of rope nodes would be a pain
+                            Vector2 bodyVelocity = body.GetLinearVelocity();
+
+                            body.SetLinearVelocity(bodyVelocity * 0.99f + particle.velocity * 1.5f);
+                            particle.velocity += bodyVelocity * 0.003f;
+                        }
+                        else
+                        {
+                            // Add entityId to list of entities being influenced by this particle
+                            particle.entitiesToInfluence[particle.entityInfluenceCount] = (int)body.GetUserData();
+                            particle.entityInfluenceCount++;
+                        }
                     }
                 }
             }
@@ -514,7 +482,7 @@ namespace StasisGame.Systems
                     relative = particle.position - explosionComponent.position;
                     distanceSq = relative.LengthSquared();
                     relative.Normalize();
-                    force = relative * (explosionComponent.strength / Math.Max(distanceSq, 0.1f));
+                    force = relative * (explosionComponent.strength / Math.Max(distanceSq, 0.2f));
                     particle.velocity += force * 0.0035f;
                 }
             }
