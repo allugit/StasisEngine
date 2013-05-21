@@ -213,9 +213,8 @@ namespace StasisGame.Systems
                         }
                     }
                 }
-
-                _singleStep = false;
             }
+            _singleStep = false;
         }
     }
 }

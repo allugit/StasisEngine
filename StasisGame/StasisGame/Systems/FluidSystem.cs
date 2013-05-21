@@ -549,75 +549,79 @@ namespace StasisGame.Systems
         // Update
         public void update()
         {
-            List<ParticleInfluenceComponent> particleInfluenceComponents = _entityManager.getComponents<ParticleInfluenceComponent>(ComponentType.ParticleInfluence);
+            if (!_paused || _singleStep)
+            {
+                List<ParticleInfluenceComponent> particleInfluenceComponents = _entityManager.getComponents<ParticleInfluenceComponent>(ComponentType.ParticleInfluence);
 
-            // Reset particle influence components
-            for (int i = 0; i < particleInfluenceComponents.Count; i++)
-                particleInfluenceComponents[i].particleCount = 0;
+                // Reset particle influence components
+                for (int i = 0; i < particleInfluenceComponents.Count; i++)
+                    particleInfluenceComponents[i].particleCount = 0;
 
-            // Update simulation AABB
-            Vector2 screenCenter = _renderSystem.screenCenter;
-            float width = (_renderSystem.screenWidth / _renderSystem.scale) * 0.75f;
-            float height = (_renderSystem.screenHeight / _renderSystem.scale);
-            simulationAABB.lowerBound.X = screenCenter.X - width;
-            simulationAABB.upperBound.X = screenCenter.X + width;
-            simulationAABB.lowerBound.Y = screenCenter.Y - height;
-            simulationAABB.upperBound.Y = screenCenter.Y + height;
+                // Update simulation AABB
+                Vector2 screenCenter = _renderSystem.screenCenter;
+                float width = (_renderSystem.screenWidth / _renderSystem.scale) * 0.75f;
+                float height = (_renderSystem.screenHeight / _renderSystem.scale);
+                simulationAABB.lowerBound.X = screenCenter.X - width;
+                simulationAABB.upperBound.X = screenCenter.X + width;
+                simulationAABB.lowerBound.Y = screenCenter.Y - height;
+                simulationAABB.upperBound.Y = screenCenter.Y + height;
 
-            // Flag active particles
-            flagActive();
+                // Flag active particles
+                flagActive();
 
-            // Prepare simulation
-            Parallel.For(0, numActiveParticles, i => { prepareSimulation(activeParticles[i]); });
+                // Prepare simulation
+                Parallel.For(0, numActiveParticles, i => { prepareSimulation(activeParticles[i]); });
 
-            // Prepare collisions
-            prepareCollisions();
+                // Prepare collisions
+                prepareCollisions();
 
-            // Calculate liquid forces
-            Parallel.For(0, numActiveParticles, i => { calculateForces(activeParticles[i]); });
+                // Calculate liquid forces
+                Parallel.For(0, numActiveParticles, i => { calculateForces(activeParticles[i]); });
 
-            // Apply liquid forces
-            Parallel.For(
-                0,
-                numActiveParticles,
-                () => new Vector2[MAX_PARTICLES],
-                (i, state, accumulatedDelta) => applyForces(activeParticles[i], accumulatedDelta),
-                (accumulatedDelta) =>
-                {
-                    lock (applyForcesLock)
+                // Apply liquid forces
+                Parallel.For(
+                    0,
+                    numActiveParticles,
+                    () => new Vector2[MAX_PARTICLES],
+                    (i, state, accumulatedDelta) => applyForces(activeParticles[i], accumulatedDelta),
+                    (accumulatedDelta) =>
                     {
-                        for (int i = numActiveParticles - 1; i >= 0; i--)
+                        lock (applyForcesLock)
                         {
-                            simDelta[activeParticles[i]] += accumulatedDelta[activeParticles[i]];
-                            liquid[activeParticles[i]].delta = simDelta[activeParticles[i]] / MULTIPLIER;
+                            for (int i = numActiveParticles - 1; i >= 0; i--)
+                            {
+                                simDelta[activeParticles[i]] += accumulatedDelta[activeParticles[i]];
+                                liquid[activeParticles[i]].delta = simDelta[activeParticles[i]] / MULTIPLIER;
+                            }
                         }
                     }
-                }
-            );
+                );
 
-            // Resolve collisions
-            Parallel.For(0, numActiveParticles, i => resolveCollision(i));
+                // Resolve collisions
+                Parallel.For(0, numActiveParticles, i => resolveCollision(i));
 
-            // Move particles
-            Parallel.For(0, numActiveParticles, i =>
-            {
-                // Move particle
-                Particle particle = liquid[activeParticles[i]];
-
-                if (!particle.skipMovementUpdate)
+                // Move particles
+                Parallel.For(0, numActiveParticles, i =>
                 {
-                    // Update velocity
-                    particle.velocity += particle.delta + liquidGravity;
+                    // Move particle
+                    Particle particle = liquid[activeParticles[i]];
 
-                    // Update position
-                    particle.position += particle.delta;
-                    particle.position += particle.velocity;
-                }
-            });
+                    if (!particle.skipMovementUpdate)
+                    {
+                        // Update velocity
+                        particle.velocity += particle.delta + liquidGravity;
 
-            // Update particles
-            for (int i = numActiveParticles - 1; i >= 0; i--)
-                updateParticle(activeParticles[i]);
+                        // Update position
+                        particle.position += particle.delta;
+                        particle.position += particle.velocity;
+                    }
+                });
+
+                // Update particles
+                for (int i = numActiveParticles - 1; i >= 0; i--)
+                    updateParticle(activeParticles[i]);
+            }
+            _singleStep = false;
         }
     }
 }

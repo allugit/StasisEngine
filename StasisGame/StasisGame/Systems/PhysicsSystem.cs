@@ -117,9 +117,8 @@ namespace StasisGame.Systems
 
                     worldPositionComponent.position = physicsComponent.body.GetPosition();
                 }
-
-                _singleStep = false;
             }
+            _singleStep = false;
         }
 
         public void PreSolve(Contact contact, ref Manifold manifold)

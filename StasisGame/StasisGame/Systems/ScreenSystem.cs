@@ -50,10 +50,14 @@ namespace StasisGame.Systems
 
         public void update()
         {
-            for (int i = 0; i < _screens.Count; i++)
+            if (!_paused || _singleStep)
             {
-                _screens[i].update();
+                for (int i = 0; i < _screens.Count; i++)
+                {
+                    _screens[i].update();
+                }
             }
+            _singleStep = false;
         }
 
         public void draw()

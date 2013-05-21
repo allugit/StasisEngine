@@ -27,28 +27,32 @@ namespace StasisGame.Systems
 
         public void update()
         {
-            EventSystem eventSystem = _systemManager.getSystem(SystemType.Event) as EventSystem;
-            List<int> circuitEntities = _entityManager.getEntitiesPosessing(ComponentType.Circuit);
-
-            for (int i = 0; i < circuitEntities.Count; i++)
+            if (!_paused || _singleStep)
             {
-                CircuitComponent circuitComponent = _entityManager.getComponent(circuitEntities[i], ComponentType.Circuit) as CircuitComponent;
+                EventSystem eventSystem = _systemManager.getSystem(SystemType.Event) as EventSystem;
+                List<int> circuitEntities = _entityManager.getEntitiesPosessing(ComponentType.Circuit);
 
-                foreach (Gate gate in circuitComponent.circuit.gates)
+                for (int i = 0; i < circuitEntities.Count; i++)
                 {
-                    if (gate.type == "output")
+                    CircuitComponent circuitComponent = _entityManager.getComponent(circuitEntities[i], ComponentType.Circuit) as CircuitComponent;
+
+                    foreach (Gate gate in circuitComponent.circuit.gates)
                     {
-                        OutputGate outputGate = gate as OutputGate;
-                        if (outputGate.postEvent)
+                        if (gate.type == "output")
                         {
-                            GateOutputComponent outputComponent = _entityManager.getComponent(outputGate.entityId, ComponentType.GateOutput) as GateOutputComponent;
-                            GameEventType eventType = outputGate.state ? outputComponent.onEnabledEvent : outputComponent.onDisabledEvent;
-                            eventSystem.postEvent(new GameEvent(eventType, outputGate.entityId));
+                            OutputGate outputGate = gate as OutputGate;
+                            if (outputGate.postEvent)
+                            {
+                                GateOutputComponent outputComponent = _entityManager.getComponent(outputGate.entityId, ComponentType.GateOutput) as GateOutputComponent;
+                                GameEventType eventType = outputGate.state ? outputComponent.onEnabledEvent : outputComponent.onDisabledEvent;
+                                eventSystem.postEvent(new GameEvent(eventType, outputGate.entityId));
+                            }
+                            outputGate.postEvent = false;
                         }
-                        outputGate.postEvent = false;
                     }
                 }
             }
+            _singleStep = false;
         }
     }
 }

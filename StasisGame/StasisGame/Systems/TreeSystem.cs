@@ -80,25 +80,28 @@ namespace StasisGame.Systems
 
         public void update()
         {
-            List<int> treeEntities = _entityManager.getEntitiesPosessing(ComponentType.Tree);
-
-            // Update treeAABB
-            Vector2 screenCenter = _renderSystem.screenCenter;
-            float halfWidth = ((float)_renderSystem.screenWidth / _renderSystem.scale) / 2f;
-            float halfHeight = ((float)_renderSystem.screenHeight / _renderSystem.scale) / 2f;
-            treeAABB.lowerBound.X = screenCenter.X - halfWidth;
-            treeAABB.upperBound.X = screenCenter.X + halfWidth;
-            treeAABB.lowerBound.Y = screenCenter.Y - halfHeight;
-            treeAABB.upperBound.Y = screenCenter.Y + halfHeight;
-
-            prepareCollisions();
-
-            for (int i = 0; i < treeEntities.Count; i++)
+            if (!_paused || _singleStep)
             {
-                TreeComponent treeComponent = (TreeComponent)_entityManager.getComponent(treeEntities[i], ComponentType.Tree);
-                treeComponent.tree.update();
-            }
+                List<int> treeEntities = _entityManager.getEntitiesPosessing(ComponentType.Tree);
 
+                // Update treeAABB
+                Vector2 screenCenter = _renderSystem.screenCenter;
+                float halfWidth = ((float)_renderSystem.screenWidth / _renderSystem.scale) / 2f;
+                float halfHeight = ((float)_renderSystem.screenHeight / _renderSystem.scale) / 2f;
+                treeAABB.lowerBound.X = screenCenter.X - halfWidth;
+                treeAABB.upperBound.X = screenCenter.X + halfWidth;
+                treeAABB.lowerBound.Y = screenCenter.Y - halfHeight;
+                treeAABB.upperBound.Y = screenCenter.Y + halfHeight;
+
+                prepareCollisions();
+
+                for (int i = 0; i < treeEntities.Count; i++)
+                {
+                    TreeComponent treeComponent = (TreeComponent)_entityManager.getComponent(treeEntities[i], ComponentType.Tree);
+                    treeComponent.tree.update();
+                }
+            }
+            _singleStep = false;
         }
 
         // prepareCollisions

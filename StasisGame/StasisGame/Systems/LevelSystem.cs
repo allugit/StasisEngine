@@ -327,23 +327,27 @@ namespace StasisGame.Systems
         // update
         public void update()
         {
-            if (_isActive)
+            if (!_paused || _singleStep)
             {
-                PhysicsComponent playerPhysicsComponent = (PhysicsComponent)_entityManager.getComponent(_playerSystem.playerId, ComponentType.Physics);
-
-                // Check player's position against the level boundary
-                if (playerPhysicsComponent != null)
+                if (_isActive)
                 {
-                    Vector2 position = playerPhysicsComponent.body.GetPosition();
+                    PhysicsComponent playerPhysicsComponent = (PhysicsComponent)_entityManager.getComponent(_playerSystem.playerId, ComponentType.Physics);
 
-                    if (position.X < _levelBoundary.lowerBound.X || position.X > _levelBoundary.upperBound.X ||
-                        position.Y < _levelBoundary.lowerBound.Y || position.Y > _levelBoundary.upperBound.Y)
+                    // Check player's position against the level boundary
+                    if (playerPhysicsComponent != null)
                     {
-                        _playerSystem.softKillPlayer();
-                        endLevel();
+                        Vector2 position = playerPhysicsComponent.body.GetPosition();
+
+                        if (position.X < _levelBoundary.lowerBound.X || position.X > _levelBoundary.upperBound.X ||
+                            position.Y < _levelBoundary.lowerBound.Y || position.Y > _levelBoundary.upperBound.Y)
+                        {
+                            _playerSystem.softKillPlayer();
+                            endLevel();
+                        }
                     }
                 }
             }
+            _singleStep = false;
         }
 
         // draw

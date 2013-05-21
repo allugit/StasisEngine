@@ -66,70 +66,74 @@ namespace StasisGame.Systems
 
         public void update()
         {
-            List<int> dynamiteEntities = _entityManager.getEntitiesPosessing(ComponentType.Dynamite);
-            List<int> explosionEntities = _entityManager.getEntitiesPosessing(ComponentType.Explosion);
-            List<int> debrisEntities = _entityManager.getEntitiesPosessing(ComponentType.Debris);
-
-            // Dynamite entities
-            for (int i = 0; i < dynamiteEntities.Count; i++)
+            if (!_paused || _singleStep)
             {
-                DynamiteComponent dynamiteComponent = (DynamiteComponent)_entityManager.getComponent(dynamiteEntities[i], ComponentType.Dynamite);
+                List<int> dynamiteEntities = _entityManager.getEntitiesPosessing(ComponentType.Dynamite);
+                List<int> explosionEntities = _entityManager.getEntitiesPosessing(ComponentType.Explosion);
+                List<int> debrisEntities = _entityManager.getEntitiesPosessing(ComponentType.Debris);
 
-                if (dynamiteComponent.timeToLive > 0)
-                    dynamiteComponent.timeToLive--;
-                else
-                    explodeDynamite(dynamiteEntities[i], dynamiteComponent);
-            }
-
-            // Explosion entities -- Explosion contact logic is handled by the PhysicsSystem's contact listeners. This just removes them, since they only should exist for 1 frame
-            for (int i = 0; i < explosionEntities.Count; i++)
-            {
-                PhysicsComponent physicsComponent = (PhysicsComponent)_entityManager.getComponent(explosionEntities[i], ComponentType.Physics);
-
-                physicsComponent.body.GetWorld().DestroyBody(physicsComponent.body);
-                _entityManager.killEntity(explosionEntities[i]);
-            }
-
-            // Break fixtures and create debris
-            for (int i = 0; i < _debrisToCreate.Count; i++)
-            {
-                Fixture fixture = _debrisToCreate[i].fixture;
-
-                if (fixture.GetShape() != null)
+                // Dynamite entities
+                for (int i = 0; i < dynamiteEntities.Count; i++)
                 {
-                    int entityId = (int)fixture.GetBody().GetUserData();
-                    BodyRenderComponent bodyRenderComponent = (BodyRenderComponent)_entityManager.getComponent(entityId, ComponentType.BodyRender);
-                    RenderableTriangle triangleToRemove = null;
+                    DynamiteComponent dynamiteComponent = (DynamiteComponent)_entityManager.getComponent(dynamiteEntities[i], ComponentType.Dynamite);
 
-                    for (int j = 0; j < bodyRenderComponent.renderableTriangles.Count; j++)
+                    if (dynamiteComponent.timeToLive > 0)
+                        dynamiteComponent.timeToLive--;
+                    else
+                        explodeDynamite(dynamiteEntities[i], dynamiteComponent);
+                }
+
+                // Explosion entities -- Explosion contact logic is handled by the PhysicsSystem's contact listeners. This just removes them, since they only should exist for 1 frame
+                for (int i = 0; i < explosionEntities.Count; i++)
+                {
+                    PhysicsComponent physicsComponent = (PhysicsComponent)_entityManager.getComponent(explosionEntities[i], ComponentType.Physics);
+
+                    physicsComponent.body.GetWorld().DestroyBody(physicsComponent.body);
+                    _entityManager.killEntity(explosionEntities[i]);
+                }
+
+                // Break fixtures and create debris
+                for (int i = 0; i < _debrisToCreate.Count; i++)
+                {
+                    Fixture fixture = _debrisToCreate[i].fixture;
+
+                    if (fixture.GetShape() != null)
                     {
-                        if (bodyRenderComponent.renderableTriangles[j].fixture == fixture)
-                        {
-                            triangleToRemove = bodyRenderComponent.renderableTriangles[j];
-                            break;
-                        }
-                    }
-                    if (triangleToRemove != null)
-                        bodyRenderComponent.renderableTriangles.Remove(triangleToRemove);
+                        int entityId = (int)fixture.GetBody().GetUserData();
+                        BodyRenderComponent bodyRenderComponent = (BodyRenderComponent)_entityManager.getComponent(entityId, ComponentType.BodyRender);
+                        RenderableTriangle triangleToRemove = null;
 
-                    _entityManager.factory.createDebris(fixture, _debrisToCreate[i].force, _debrisToCreate[i].timeToLive, triangleToRemove, bodyRenderComponent.texture, bodyRenderComponent.layerDepth);
-                    fixture.GetBody().DestroyFixture(fixture);
+                        for (int j = 0; j < bodyRenderComponent.renderableTriangles.Count; j++)
+                        {
+                            if (bodyRenderComponent.renderableTriangles[j].fixture == fixture)
+                            {
+                                triangleToRemove = bodyRenderComponent.renderableTriangles[j];
+                                break;
+                            }
+                        }
+                        if (triangleToRemove != null)
+                            bodyRenderComponent.renderableTriangles.Remove(triangleToRemove);
+
+                        _entityManager.factory.createDebris(fixture, _debrisToCreate[i].force, _debrisToCreate[i].timeToLive, triangleToRemove, bodyRenderComponent.texture, bodyRenderComponent.layerDepth);
+                        fixture.GetBody().DestroyFixture(fixture);
+                    }
+                }
+                _debrisToCreate.Clear();
+
+                // Debris
+                for (int i = 0; i < debrisEntities.Count; i++)
+                {
+                    DebrisComponent debrisComponent = (DebrisComponent)_entityManager.getComponent(debrisEntities[i], ComponentType.Debris);
+                    debrisComponent.timeToLive--;
+
+                    if (debrisComponent.restitutionCount < DebrisComponent.RESTITUTION_RESTORE_COUNT)
+                        debrisComponent.fixture.SetRestitution(debrisComponent.fixture.GetRestitution() + debrisComponent.restitutionIncrement);
+
+                    if (debrisComponent.timeToLive < 0)
+                        killDebris(debrisEntities[i]);
                 }
             }
-            _debrisToCreate.Clear();
-
-            // Debris
-            for (int i = 0; i < debrisEntities.Count; i++)
-            {
-                DebrisComponent debrisComponent = (DebrisComponent)_entityManager.getComponent(debrisEntities[i], ComponentType.Debris);
-                debrisComponent.timeToLive--;
-
-                if (debrisComponent.restitutionCount < DebrisComponent.RESTITUTION_RESTORE_COUNT)
-                    debrisComponent.fixture.SetRestitution(debrisComponent.fixture.GetRestitution() + debrisComponent.restitutionIncrement);
-
-                if (debrisComponent.timeToLive < 0)
-                    killDebris(debrisEntities[i]);
-            }
+            _singleStep = false;
         }
     }
 }
