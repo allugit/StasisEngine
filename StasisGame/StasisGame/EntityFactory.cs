@@ -1214,6 +1214,7 @@ namespace StasisGame
             _entityManager.addComponent(entityId, new PhysicsComponent(body));
             _entityManager.addComponent(entityId, new WorldItemRenderComponent(worldTexture));
             _entityManager.addComponent(entityId, new IgnoreTreeCollisionComponent());
+            _entityManager.addComponent(entityId, new IgnoreRopeRaycastComponent());
             _entityManager.addComponent(entityId, new WorldPositionComponent(body.GetPosition()));
             _entityManager.addComponent(entityId, new DynamiteComponent(100f, 2f, 180));
             _entityManager.addComponent(entityId, new ParticleInfluenceComponent(ParticleInfluenceType.Dynamite));
@@ -1247,6 +1248,7 @@ namespace StasisGame
             _entityManager.addComponent(entityId, new WorldPositionComponent(body.GetPosition()));
             _entityManager.addComponent(entityId, new ExplosionComponent(body.GetPosition(), strength, radius));
             _entityManager.addComponent(entityId, new SkipFluidResolutionComponent());
+            _entityManager.addComponent(entityId, new IgnoreRopeRaycastComponent());
             _entityManager.addComponent(entityId, new ParticleInfluenceComponent(ParticleInfluenceType.Explosion));
 
             return entityId;

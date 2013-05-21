@@ -43,10 +43,13 @@ namespace StasisGame.Systems
         // explodeDynamite -- Creates an explosion entity and kills the dynamite entity
         public void explodeDynamite(int entityId, DynamiteComponent dynamiteComponent)
         {
-            WorldPositionComponent worldPositionComponent = (WorldPositionComponent)_entityManager.getComponent(entityId, ComponentType.WorldPosition);
+            //WorldPositionComponent worldPositionComponent = (WorldPositionComponent)_entityManager.getComponent(entityId, ComponentType.WorldPosition);
+            PhysicsComponent physicsComponent = _entityManager.getComponent(entityId, ComponentType.Physics) as PhysicsComponent;
+            Vector2 position = physicsComponent.body.GetPosition();
 
+            physicsComponent.body.GetWorld().DestroyBody(physicsComponent.body);
             _entityManager.killEntity(entityId);
-            _entityManager.factory.createExplosion(worldPositionComponent.position, dynamiteComponent.strength, dynamiteComponent.radius);
+            _entityManager.factory.createExplosion(position, dynamiteComponent.strength, dynamiteComponent.radius);
         }
 
         // breakFixture -- Breaks off a fixture from a body and create debris
