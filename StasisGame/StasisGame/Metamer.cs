@@ -118,7 +118,7 @@ namespace StasisGame
             bodyDef.type = BodyType.Dynamic;
             bodyDef.angle = currentAngle;
             bodyDef.bullet = true;
-            //bodyDef.userData = new UserData(UserDataType.ACTOR, this);
+            bodyDef.userData = tree.entityId;
             shape = new CircleShape();
             fixtureDef = new FixtureDef();
             fixtureDef.density = 1.4f;

@@ -45,6 +45,39 @@ namespace StasisGame.Systems
         public int getPlantGridX(float x) { return (int)Math.Floor(x / PLANT_CELL_SIZE); }
         public int getPlantGridY(float y) { return (int)Math.Floor(y / PLANT_CELL_SIZE); }
 
+        public Metamer findMetamer(Vector2 position)
+        {
+            Dictionary<int, List<Metamer>> gridX;
+            List<Metamer> gridY;
+            int i = getPlantGridX(position.X);
+            int j = getPlantGridY(position.Y);
+            int padding = 2;
+            float shortestDistanceSq = 99999f;
+            Metamer result = null;
+            for (int x = i - padding; x < i + padding; x++)
+            {
+                for (int y = j - padding; y < j + padding; y++)
+                {
+                    if (metamerGrid.TryGetValue(x, out gridX) && gridX.TryGetValue(y, out gridY))
+                    {
+                        for (int n = 0; n < gridY.Count; n++)
+                        {
+                            if (gridY[n].isBranchingPoint() || gridY[n].isTail)
+                            {
+                                float distanceSq = (gridY[n].position - position).LengthSquared();
+                                if (distanceSq < shortestDistanceSq)
+                                {
+                                    shortestDistanceSq = distanceSq;
+                                    result = gridY[n];
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+            return result;
+        }
+
         public void update()
         {
             List<int> treeEntities = _entityManager.getEntitiesPosessing(ComponentType.Tree);

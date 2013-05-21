@@ -94,6 +94,7 @@ namespace StasisGame.Systems
             RopePhysicsComponent ropePhysicsComponent = (RopePhysicsComponent)_entityManager.getComponent(entityId, ComponentType.RopePhysics);
             List<int> ropeGrabEntities = _entityManager.getEntitiesPosessing(ComponentType.RopeGrab);
 
+            // Detach any rope grab components from this rope
             for (int i = 0; i < ropeGrabEntities.Count; i++)
             {
                 RopeGrabComponent ropeGrabComponent = (RopeGrabComponent)_entityManager.getComponent(ropeGrabEntities[i], ComponentType.RopeGrab);
@@ -110,6 +111,24 @@ namespace StasisGame.Systems
 
                 while (current != null)
                 {
+                    if (current.anchorJoint != null)
+                    {
+                        int entityIdA = (int)current.anchorJoint.GetBodyA().GetUserData();
+                        int entityIdB = (int)current.anchorJoint.GetBodyB().GetUserData();
+                        TreeComponent treeComponentA = _entityManager.getComponent(entityIdA, ComponentType.Tree) as TreeComponent;
+                        TreeComponent treeComponentB = _entityManager.getComponent(entityIdB, ComponentType.Tree) as TreeComponent;
+
+                        if (treeComponentA != null)
+                        {
+                            current.anchorJoint.GetBodyA().GetWorld().DestroyBody(current.anchorJoint.GetBodyA());
+                        }
+                        else if (treeComponentB != null)
+                        {
+                            current.anchorJoint.GetBodyB().GetWorld().DestroyBody(current.anchorJoint.GetBodyB());
+                        }
+                    }
+
+                    // Destroy body
                     current.body.GetWorld().DestroyBody(current.body);
                     current = current.next;
                 }

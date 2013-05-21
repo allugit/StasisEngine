@@ -57,7 +57,7 @@ namespace StasisGame
         private Texture2D _barkTexture;
         private List<List<Texture2D>> _leafTextures;
         private float _layerDepth;
-        private int _metamerCount;  // not actively maintained, only used to determin z-index of leaf textures.
+        private int _entityId;
 
         public TreeSystem treeSystem { get { return _treeSystem; } }
         public float age { get { return _age; } }
@@ -96,7 +96,7 @@ namespace StasisGame
         public float layerDepth { get { return _layerDepth; } }
         public Matrix worldMatrix { get { return Matrix.Identity; } }
         public Texture2D texture { get { return _barkTexture; } }
-        public int metamerCount { get { return _metamerCount; } set { _metamerCount = value; } }
+        public int entityId { get { return _entityId; } }
 
         // Constructor
         public Tree(TreeSystem treeSystem, Texture2D barkTexture, List<List<Texture2D>> leafTextures, XElement data)
@@ -125,6 +125,7 @@ namespace StasisGame
             _leafRatioOffset = Loader.loadFloat(data.Attribute("leaf_ratio_offset"), 0f);
             _position = Loader.loadVector2(data.Attribute("position"), Vector2.Zero);
             _layerDepth = Loader.loadFloat(data.Attribute("layer_depth"), 0.1f);
+            _entityId = int.Parse(data.Attribute("id").Value);
 
             _vertices = new CustomVertexFormat[MAX_VERTICES];
             for (int i = 0; i < MAX_VERTICES; i++)

@@ -384,6 +384,7 @@ namespace StasisGame
         }
         public int createRope(bool doubleAnchor, bool destroyAfterRelease, Vector2 initialPointA, Vector2 initialPointB, int actorId)
         {
+            TreeSystem treeSystem = _systemManager.getSystem(SystemType.Tree) as TreeSystem;
             World world = (_systemManager.getSystem(SystemType.Physics) as PhysicsSystem).world;
             int entityId = -1;
             float segmentLength = 0.5f;
@@ -408,6 +409,8 @@ namespace StasisGame
                     int fixtureEntityId = (int)fixture.GetBody().GetUserData();
                     if (_entityManager.getComponent(fixtureEntityId, ComponentType.IgnoreRopeRaycast) != null)
                         return -1;
+                    else if (_entityManager.getComponent(fixtureEntityId, ComponentType.Tree) != null)
+                        return -1;  // the only bodies that exist on a tree are already supporting a rope, and will be destroyed along with the rope that created it
 
                     abResult.fixture = fixture;
                     abResult.worldPoint = point;
@@ -423,6 +426,8 @@ namespace StasisGame
                     int fixtureEntityId = (int)fixture.GetBody().GetUserData();
                     if (_entityManager.getComponent(fixtureEntityId, ComponentType.IgnoreRopeRaycast) != null)
                         return -1;
+                    else if (_entityManager.getComponent(fixtureEntityId, ComponentType.Tree) != null)
+                        return -1;  // the only bodies that exist on a tree are already supporting a rope, and will be destroyed along with the rope that created it
 
                     baResult.fixture = fixture;
                     baResult.worldPoint = point;
@@ -434,13 +439,23 @@ namespace StasisGame
 
             if (!abResult.success)
             {
-                // If two successful results are necessary or if there are no successful results, test for a wall
+                // If two successful results are necessary or if there are no successful results, test for metamers/walls
                 if (doubleAnchor || !baResult.success)
                 {
-                    // Test for a wall at initalPointB
+                    Metamer metamer = treeSystem.findMetamer(initialPointB);
                     Fixture wallFixture = null;
-                    if (testForWall(world, initialPointB, out wallFixture))
+
+                    if (metamer != null)
                     {
+                        // Metamer found at initialPointB
+                        metamer.createLimbBody();
+                        abResult.fixture = metamer.body.GetFixtureList();
+                        abResult.success = true;
+                        abResult.worldPoint = initialPointB;
+                    }
+                    else if (testForWall(world, initialPointB, out wallFixture))
+                    {
+                        // Test for a wall at initalPointB
                         abResult.fixture = wallFixture;
                         abResult.success = true;
                         abResult.worldPoint = initialPointB;
@@ -449,10 +464,20 @@ namespace StasisGame
             }
             if (doubleAnchor && !baResult.success)
             {
-                // Test for a wall at initialPointA
+                Metamer metamer = treeSystem.findMetamer(initialPointA);
                 Fixture wallFixture = null;
-                if (testForWall(world, initialPointA, out wallFixture))
+
+                if (metamer != null)
                 {
+                    // Metamer found at initialPointA
+                    metamer.createLimbBody();
+                    baResult.fixture = metamer.body.GetFixtureList();
+                    baResult.success = true;
+                    baResult.worldPoint = initialPointA;
+                }
+                else if (testForWall(world, initialPointA, out wallFixture))
+                {
+                    // Test for a wall at initialPointA
                     baResult.fixture = wallFixture;
                     baResult.success = true;
                     baResult.worldPoint = initialPointA;
