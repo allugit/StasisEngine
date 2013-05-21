@@ -359,7 +359,7 @@ namespace StasisGame.Systems
                             // Handle rope particle-to-body influences here, since trying to find the correct body through the list of rope nodes would be a pain
                             Vector2 bodyVelocity = body.GetLinearVelocity();
 
-                            body.SetLinearVelocity(bodyVelocity * 0.99f + particle.velocity * 1.5f);
+                            body.SetLinearVelocity(bodyVelocity * 0.98f + particle.velocity * 1.5f);
                             particle.velocity += bodyVelocity * 0.003f;
                         }
                         else
