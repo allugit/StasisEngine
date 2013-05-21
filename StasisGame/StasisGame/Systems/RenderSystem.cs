@@ -174,7 +174,7 @@ namespace StasisGame.Systems
                 {
                     // Current particle
                     Particle particle = fluidSystem.liquid[fluidSystem.activeParticles[i]];
-                    Color color = new Color(1, particle.velocity.X, particle.velocity.Y);
+                    Color color = new Color(1, particle.velocity.X < 0 ? -particle.velocity.X : particle.velocity.X, particle.velocity.Y < 0 ? -particle.velocity.Y : particle.velocity.Y);
                     spriteBatch.Draw(_fluidParticleTexture, (particle.position - _cameraSystem.screenCenter) * scale + _halfScreen, _fluidParticleTexture.Bounds, color, 0, new Vector2(12, 12), 1, SpriteEffects.None, 0);
                 }
                 spriteBatch.End();
