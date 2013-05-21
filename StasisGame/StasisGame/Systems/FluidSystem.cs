@@ -461,6 +461,7 @@ namespace StasisGame.Systems
                     Vector2 bodyVelocity = physicsComponent.body.GetLinearVelocity();
 
                     physicsComponent.body.SetLinearVelocity(bodyVelocity * 0.98f + particle.velocity);
+                    physicsComponent.body.SetAngularVelocity(physicsComponent.body.GetAngularVelocity() * 0.98f);
                     particle.velocity += bodyVelocity * 0.003f;
                 }
                 else if (particleInfluenceComponent.type == ParticleInfluenceType.Character)
