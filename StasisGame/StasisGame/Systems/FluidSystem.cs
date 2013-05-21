@@ -480,15 +480,41 @@ namespace StasisGame.Systems
 
                 if (particleInfluenceTypeComponent.type == ParticleInfluenceType.Physical)
                 {
+                    // Physical body influences -- these usually resolve collisions, so body-to-particle influences are already handled
                     PhysicsComponent physicsComponent = _entityManager.getComponent(entityId, ComponentType.Physics) as PhysicsComponent;
                     
                     physicsComponent.body.ApplyLinearImpulse(particle.oldPosition - particle.position, particle.oldPosition);
                 }
                 else if (particleInfluenceTypeComponent.type == ParticleInfluenceType.Dynamite)
                 {
+                    // Dynamite influence
+                    PhysicsComponent physicsComponent = _entityManager.getComponent(entityId, ComponentType.Physics) as PhysicsComponent;
+                    Vector2 bodyVelocity = physicsComponent.body.GetLinearVelocity();
+
+                    physicsComponent.body.SetLinearVelocity(bodyVelocity * 0.98f);
+                    particle.velocity += bodyVelocity * 0.0035f;
                 }
                 else if (particleInfluenceTypeComponent.type == ParticleInfluenceType.Character)
                 {
+                    // Character influence
+                    PhysicsComponent physicsComponent = _entityManager.getComponent(entityId, ComponentType.Physics) as PhysicsComponent;
+                    Vector2 bodyVelocity = physicsComponent.body.GetLinearVelocity();
+
+                    physicsComponent.body.SetLinearVelocity(bodyVelocity * 0.98f + particle.velocity * 0.4f);
+                    particle.velocity += bodyVelocity * 0.0035f;
+                }
+                else if (particleInfluenceTypeComponent.type == ParticleInfluenceType.Explosion)
+                {
+                    ExplosionComponent explosionComponent = _entityManager.getComponent(entityId, ComponentType.Explosion) as ExplosionComponent;
+                    Vector2 relative;
+                    float distanceSq;
+                    Vector2 force;
+
+                    relative = particle.position - explosionComponent.position;
+                    distanceSq = relative.LengthSquared();
+                    relative.Normalize();
+                    force = relative * (explosionComponent.strength / Math.Max(distanceSq, 0.1f));
+                    particle.velocity += force * 0.0035f;
                 }
             }
         }

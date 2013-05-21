@@ -1239,7 +1239,7 @@ namespace StasisGame
             Vector2 center = Vector2.Zero;
             Filter filter;
             List<RenderableTriangle> renderableTriangles = new List<RenderableTriangle>();
-            float restitutionIncrement = -(2f - sourceFixture.GetRestitution()) / (float)DebrisComponent.RESTITUTION_RESTORE_COUNT;
+            float restitutionIncrement = -(1.5f - sourceFixture.GetRestitution()) / (float)DebrisComponent.RESTITUTION_RESTORE_COUNT;
             Fixture fixture;
 
             // Adjust fixture's points
@@ -1258,7 +1258,7 @@ namespace StasisGame
             fixtureDef.filter.categoryBits = filter.categoryBits;
             fixtureDef.filter.maskBits = filter.maskBits;
             fixtureDef.friction = sourceFixture.GetFriction();
-            fixtureDef.restitution = 2f;
+            fixtureDef.restitution = 1.5f;
             fixtureDef.shape = shape;
             body = world.CreateBody(bodyDef);
             fixture = body.CreateFixture(fixtureDef);
