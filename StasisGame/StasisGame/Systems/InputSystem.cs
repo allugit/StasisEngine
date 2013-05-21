@@ -39,6 +39,7 @@ namespace StasisGame.Systems
             RenderSystem renderSystem = (RenderSystem)_systemManager.getSystem(SystemType.Render);
             bool togglePause = newKeyState.IsKeyDown(Keys.F3) && oldKeyState.IsKeyUp(Keys.F3);
             bool toggleSingleStep = newKeyState.IsKeyDown(Keys.F2) && oldKeyState.IsKeyUp(Keys.F2);
+            bool toggleDebug = newKeyState.IsKeyDown(Keys.F1) && oldKeyState.IsKeyUp(Keys.F1);
 
             oldKeyState = newKeyState;
             oldMouseState = newMouseState;
@@ -67,6 +68,9 @@ namespace StasisGame.Systems
                     node = node.next;
                 }
             }
+
+            if (toggleDebug)
+                LoderGame.debug = !LoderGame.debug;
 
             for (int i = 0; i < inputComponents.Count; i++)
             {

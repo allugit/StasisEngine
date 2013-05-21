@@ -55,6 +55,7 @@ namespace StasisGame
         private MainMenuScreen _mainMenuScreen;
         private WorldMapScreen _worldMapScreen;
 
+        public static bool debug;
         public SpriteBatch spriteBatch { get { return _spriteBatch; } }
         public GraphicsDeviceManager graphics { get { return _graphics; } }
         public SystemManager systemManager { get { return _systemManager; } }

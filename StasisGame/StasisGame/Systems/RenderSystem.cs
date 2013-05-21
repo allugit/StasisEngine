@@ -332,6 +332,21 @@ namespace StasisGame.Systems
             }
 
             _spriteBatch.End();
+
+            // Particle debug
+            if (LoderGame.debug)
+            {
+                _spriteBatch.Begin();
+                int limit = fluidSystem.numActiveParticles;
+                for (int i = 0; i < limit; i++)
+                {
+                    // Current particle
+                    Particle particle = fluidSystem.liquid[fluidSystem.activeParticles[i]];
+                    //Color color = new Color(1, particle.velocity.X < 0 ? -particle.velocity.X : particle.velocity.X, particle.velocity.Y < 0 ? -particle.velocity.Y : particle.velocity.Y);
+                    spriteBatch.Draw(_pixel, (particle.position - _cameraSystem.screenCenter) * scale + _halfScreen, new Rectangle(0, 0, 2, 2), Color.White, 0, new Vector2(1, 1), 1, SpriteEffects.None, 0);
+                }
+                _spriteBatch.End();
+            }
         }
     }
 }
