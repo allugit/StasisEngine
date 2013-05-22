@@ -1,7 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
 using Microsoft.Xna.Framework;
-using Box2D.XNA;
+using FarseerPhysics.Common;
+using FarseerPhysics.Collision;
+using FarseerPhysics.Dynamics;
 using StasisGame.Managers;
 using StasisGame.Components;
 
@@ -88,10 +90,10 @@ namespace StasisGame.Systems
                 Vector2 screenCenter = _renderSystem.screenCenter;
                 float halfWidth = ((float)_renderSystem.screenWidth / _renderSystem.scale) / 2f;
                 float halfHeight = ((float)_renderSystem.screenHeight / _renderSystem.scale) / 2f;
-                treeAABB.lowerBound.X = screenCenter.X - halfWidth;
-                treeAABB.upperBound.X = screenCenter.X + halfWidth;
-                treeAABB.lowerBound.Y = screenCenter.Y - halfHeight;
-                treeAABB.upperBound.Y = screenCenter.Y + halfHeight;
+                treeAABB.LowerBound.X = screenCenter.X - halfWidth;
+                treeAABB.UpperBound.X = screenCenter.X + halfWidth;
+                treeAABB.LowerBound.Y = screenCenter.Y - halfHeight;
+                treeAABB.UpperBound.Y = screenCenter.Y + halfHeight;
 
                 prepareCollisions();
 
@@ -111,10 +113,10 @@ namespace StasisGame.Systems
             List<Metamer> gridY;
 
             // Query the world using the screen's AABB
-            _physicsSystem.world.QueryAABB((FixtureProxy fixtureProxy) =>
+            _physicsSystem.world.QueryAABB((Fixture fixture) =>
             {
                 // Skip certain collisions
-                int entityId = (int)fixtureProxy.fixture.GetBody().GetUserData();
+                int entityId = (int)fixture.Body.UserData;
                 if (_entityManager.getComponent(entityId, ComponentType.IgnoreTreeCollision) != null)
                     return true;
                 /*
@@ -125,11 +127,14 @@ namespace StasisGame.Systems
                     data.actorType == ActorType.GRAVITY_WELL || data.actorType == ActorType.EDGE_GROUP)
                     return true;
                 */
-
-                int Ax = getPlantGridX(fixtureProxy.aabb.lowerBound.X);
-                int Ay = getPlantGridY(fixtureProxy.aabb.lowerBound.Y);
-                int Bx = getPlantGridX(fixtureProxy.aabb.upperBound.X) + 1;
-                int By = getPlantGridY(fixtureProxy.aabb.upperBound.Y) + 1;
+                AABB aabb;
+                Transform transform;
+                fixture.Body.GetTransform(out transform);
+                fixture.Shape.ComputeAABB(out aabb, ref transform, 0);
+                int Ax = getPlantGridX(aabb.LowerBound.X);
+                int Ay = getPlantGridY(aabb.LowerBound.Y);
+                int Bx = getPlantGridX(aabb.UpperBound.X) + 1;
+                int By = getPlantGridY(aabb.UpperBound.Y) + 1;
                 for (int i = Ax; i < Bx; i++)
                 {
                     for (int j = Ay; j < By; j++)
@@ -141,7 +146,7 @@ namespace StasisGame.Systems
                                 Metamer metamer = gridY[n];
                                 if (metamer.numFixturesToTest < Metamer.MAX_FIXTURES_TO_TEST)
                                 {
-                                    metamer.fixturesToTest[metamer.numFixturesToTest] = fixtureProxy.fixture;
+                                    metamer.fixturesToTest[metamer.numFixturesToTest] = fixture;
                                     metamer.numFixturesToTest++;
                                 }
                             }

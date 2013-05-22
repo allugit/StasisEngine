@@ -3,7 +3,13 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
-using Box2D.XNA;
+using FarseerPhysics.Collision;
+using FarseerPhysics.Collision.Shapes;
+using FarseerPhysics.Common;
+using FarseerPhysics.Dynamics;
+using FarseerPhysics.Dynamics.Contacts;
+using FarseerPhysics.Dynamics.Joints;
+using FarseerPhysics.Factories;
 using StasisGame.Systems;
 using StasisCore;
 
@@ -68,11 +74,11 @@ namespace StasisGame
         private Vector2[] collisionVertices;
         private Vector2[] collisionNormals;
         //private float trunkBodyThreshold = 0.5f;
-        private MouseJoint mouseJoint;
+        private FixedMouseJoint mouseJoint;
         private float textureWidth;
-        private BodyDef bodyDef;
-        private FixtureDef fixtureDef;
-        private CircleShape shape;
+        //private BodyDef bodyDef;
+        //private FixtureDef fixtureDef;
+        //private CircleShape shape;
         public List<MetamerConstraint> constraints;
         public List<MetamerConstraint> relatedConstraints;
         private MetamerConstraint internodeConstraint;
@@ -106,26 +112,26 @@ namespace StasisGame
             localGridHalfHeight = (int)Math.Floor(tree.perceptionRadius / TreeSystem.PLANT_CELL_SIZE) + 2;
             currentAngle = axis;
             currentTextureAngle = axis;
-            collisionVertices = new Vector2[Box2D.XNA.Settings.b2_maxPolygonVertices];
-            collisionNormals = new Vector2[Box2D.XNA.Settings.b2_maxPolygonVertices];
+            collisionVertices = new Vector2[FarseerPhysics.Settings.MaxPolygonVertices];
+            collisionNormals = new Vector2[FarseerPhysics.Settings.MaxPolygonVertices];
             //vertices = new CustomVertexFormat[2];
             constraints = new List<MetamerConstraint>();
             relatedConstraints = new List<MetamerConstraint>();
             _vertices = new CustomVertexFormat[2];
 
             // Create definitions
-            bodyDef = new BodyDef();
-            bodyDef.type = BodyType.Dynamic;
-            bodyDef.angle = currentAngle;
-            bodyDef.bullet = true;
-            bodyDef.userData = tree.entityId;
-            shape = new CircleShape();
-            fixtureDef = new FixtureDef();
-            fixtureDef.density = 1.4f;
-            fixtureDef.friction = 1f;
-            fixtureDef.restitution = 0.1f;
-            fixtureDef.shape = shape;
-            fixtureDef.filter.groupIndex = -8;
+            //bodyDef = new BodyDef();
+            //bodyDef.type = BodyType.Dynamic;
+            //bodyDef.angle = currentAngle;
+            //bodyDef.bullet = true;
+            //bodyDef.userData = tree.entityId;
+            //shape = new CircleShape();
+            //fixtureDef = new FixtureDef();
+            //fixtureDef.density = 1.4f;
+            //fixtureDef.friction = 1f;
+            //fixtureDef.restitution = 0.1f;
+            //fixtureDef.shape = shape;
+            //fixtureDef.filter.groupIndex = -8;
 
             // Mass
             mass = 1f;
@@ -191,23 +197,35 @@ namespace StasisGame
         // createLimbBody
         public void createLimbBody()
         {
-            shape._radius = 0.5f;
-            fixtureDef.density = 0.5f;
-            fixtureDef.isSensor = true;
-            bodyDef.position = position;
-            bodyDef.linearDamping = 0.5f;
+            Fixture fixture;
+
+            body = BodyFactory.CreateBody(tree.treeSystem.physicsSystem.world, position, tree.entityId);
+            body.LinearDamping = 0.5f;
+            fixture = body.CreateFixture(new CircleShape(0.5f, 0.5f));
+            fixture.IsSensor = true;
+
+            mouseJoint = new FixedMouseJoint(body, body.Position);
+            mouseJoint.MaxForce = 4000f;
+
+            tree.treeSystem.physicsSystem.world.AddJoint(mouseJoint);
+
+            //shape._radius = 0.5f;
+            //fixtureDef.density = 0.5f;
+            //fixtureDef.isSensor = true;
+            //bodyDef.position = position;
+            //bodyDef.linearDamping = 0.5f;
             //(bodyDef.userData as UserData).allowGrenadeAttachment = false;
-            body = tree.treeSystem.physicsSystem.world.CreateBody(bodyDef);
-            body.CreateFixture(fixtureDef);
+            //body = tree.treeSystem.physicsSystem.world.CreateBody(bodyDef);
+            //body.CreateFixture(fixtureDef);
 
             // Create mouse joint
-            MouseJointDef jointDef = new MouseJointDef();
-            jointDef.bodyA = tree.treeSystem.physicsSystem.groundBody;
-            jointDef.bodyB = body;
-            jointDef.collideConnected = false;
-            jointDef.maxForce = 4000f;
-            jointDef.target = body.GetPosition();
-            mouseJoint = tree.treeSystem.physicsSystem.world.CreateJoint(jointDef) as MouseJoint;
+            //MouseJointDef jointDef = new MouseJointDef();
+            //jointDef.bodyA = tree.treeSystem.physicsSystem.groundBody;
+            //jointDef.bodyB = body;
+            //jointDef.collideConnected = false;
+            //jointDef.maxForce = 4000f;
+            //jointDef.target = body.GetPosition();
+            //mouseJoint = tree.treeSystem.physicsSystem.world.CreateJoint(jointDef) as MouseJoint;
         }
 
         /*
@@ -300,16 +318,16 @@ namespace StasisGame
                                     Vector2 random = new Vector2(gridX + i, gridY + j) * TreeSystem.PLANT_CELL_SIZE + new Vector2((float)tree.random.NextDouble(), (float)tree.random.NextDouble()) * TreeSystem.PLANT_CELL_SIZE;
 
                                     // Query the world before adding marker
-                                    aabb.lowerBound = random;
-                                    aabb.upperBound = random;
+                                    aabb.LowerBound = random;
+                                    aabb.UpperBound = random;
                                     bool placeMarker = true;
-                                    tree.treeSystem.physicsSystem.world.QueryAABB((FixtureProxy fixtureProxy) =>
+                                    tree.treeSystem.physicsSystem.world.QueryAABB((Fixture fixture) =>
                                     {
                                         //UserData data = fixtureProxy.fixture.GetBody().GetUserData() as UserData;
                                         //if (data.actorType == ActorType.WALL_GROUP || data.actorType == ActorType.GROUND)
                                         //    return true;
 
-                                        if (fixtureProxy.fixture.TestPoint(random, tree.internodeLength))
+                                        if (fixture.TestPoint(ref random, tree.internodeLength))
                                         {
                                             placeMarker = false;
                                             return false;
@@ -673,10 +691,11 @@ namespace StasisGame
             if (body != null && mouseJoint != null)
             {
                 // Set joint target
-                mouseJoint.SetTarget(position);
+                //mouseJoint.SetTarget(position);
+                mouseJoint.WorldAnchorB = position;
 
                 // Distance between body and metamer position
-                Vector2 delta = (body.GetPosition() - position);
+                Vector2 delta = (body.Position - position);
 
                 // Calculate forces for different types of limbs
                 if (isTrunk)
@@ -918,11 +937,11 @@ namespace StasisGame
                 for (int i = 0; i < numFixturesToTest; i++)
                 {
                     Fixture fixture = fixturesToTest[i];
-                    if (fixture.GetShape() == null)     // fixtures can be destroyed before they're tested
+                    if (fixture.Shape == null)     // fixtures can be destroyed before they're tested
                         continue;
 
-                    Body fixtureBody = fixture.GetBody();
-                    if (fixture.TestPoint(position, 0.1f))
+                    Body fixtureBody = fixture.Body;
+                    if (fixture.TestPoint(ref position, 0.1f))
                     {
                         // Hit
                         //UserData data = fixtureBody.GetUserData() as UserData;
@@ -938,21 +957,21 @@ namespace StasisGame
                             // Continue with normal collisions
                             Vector2 closestPoint = Vector2.Zero;
                             Vector2 normal = Vector2.Zero;
-                            if (fixture.GetShape().ShapeType == ShapeType.Polygon)
+                            if (fixture.ShapeType == ShapeType.Polygon)
                             {
                                 // Polygons
-                                PolygonShape shape = fixture.GetShape() as PolygonShape;
+                                PolygonShape shape = fixture.Shape as PolygonShape;
                                 fixtureBody.GetTransform(out collisionXF);
 
-                                for (int v = 0; v < shape.GetVertexCount(); v++)
+                                for (int v = 0; v < shape.Vertices.Count; v++)
                                 {
-                                    collisionVertices[v] = MathUtils.Multiply(ref collisionXF, shape.GetVertex(v));
-                                    collisionNormals[v] = MathUtils.Multiply(ref collisionXF.R, shape.GetNormal(v));
+                                    collisionVertices[v] = MathUtils.Multiply(ref collisionXF, shape.Vertices[v]);
+                                    collisionNormals[v] = MathUtils.Multiply(ref collisionXF.R, shape.Vertices[v]);
                                 }
 
                                 // Find closest edge
                                 float shortestDistance = 9999999f;
-                                for (int v = 0; v < shape.GetVertexCount(); v++)
+                                for (int v = 0; v < shape.Vertices.Count; v++)
                                 {
                                     float distance = Vector2.Dot(collisionNormals[v], collisionVertices[v] - position);
                                     if (distance < shortestDistance)
@@ -964,7 +983,7 @@ namespace StasisGame
                                 }
 
                                 // Move metamer
-                                if (fixtureBody.GetType() == BodyType.Static)
+                                if (fixtureBody.BodyType == BodyType.Static)
                                     position = closestPoint + 0.15f * normal;
                                 else
                                 {
@@ -973,18 +992,18 @@ namespace StasisGame
                                 }
                             //}
                             //else if (fixture.GetShape().ShapeType == ShapeType.Circle)
-                            if (fixture.GetShape().ShapeType == ShapeType.Circle)
+                            if (fixture.ShapeType == ShapeType.Circle)
                             {
                                 // Circles
-                                CircleShape circleShape = fixture.GetShape() as CircleShape;
-                                Vector2 center = circleShape._p + fixtureBody.GetPosition();
+                                CircleShape circleShape = fixture.Shape as CircleShape;
+                                Vector2 center = circleShape.Position + fixtureBody.Position;
                                 Vector2 difference = position - center;
                                 normal = difference;
                                 normal.Normalize();
-                                closestPoint = center + difference * (circleShape._radius / difference.Length());
+                                closestPoint = center + difference * (circleShape.Radius / difference.Length());
 
                                 // Move metamer
-                                if (fixtureBody.GetType() == BodyType.Static)
+                                if (fixtureBody.BodyType == BodyType.Static)
                                     position = closestPoint + 0.15f * normal;
                                 else
                                 {
@@ -994,11 +1013,11 @@ namespace StasisGame
                             }
 
                             // Handle fast moving bodies
-                            if (fixtureBody.GetLinearVelocity().LengthSquared() > 100f)
+                            if (fixtureBody.LinearVelocity.LengthSquared() > 100f)
                             {
                                 Vector2 bodyVelocity = fixtureBody.GetLinearVelocityFromWorldPoint(oldPosition);
-                                fixtureBody.SetLinearVelocity(fixtureBody.GetLinearVelocity() * 0.999f);
-                                fixtureBody.SetAngularVelocity(fixtureBody.GetAngularVelocity() * 0.98f);
+                                fixtureBody.LinearVelocity = fixtureBody.LinearVelocity * 0.999f;
+                                fixtureBody.AngularVelocity = fixtureBody.AngularVelocity  * 0.98f;
                                 externalForce += bodyVelocity * 0.005f;
                             }
                         }
@@ -1027,6 +1046,7 @@ namespace StasisGame
         }
 
         // handleImpact
+        /*
         public void handleImpact(Contact contact, ContactImpulse impulse)
         {
             if (!doBreak && !isBroken)
@@ -1037,7 +1057,7 @@ namespace StasisGame
                         doBreak = true;
                 }
             }
-        }
+        }*/
 
         /*
         // handleParticleInfluences
@@ -1083,7 +1103,7 @@ namespace StasisGame
             // Destroy trunk bodies
             if (isTrunk && body != null)
             {
-                tree.treeSystem.physicsSystem.world.DestroyBody(body);
+                tree.treeSystem.physicsSystem.world.RemoveBody(body);
                 body = null;
                 mouseJoint = null;
             }

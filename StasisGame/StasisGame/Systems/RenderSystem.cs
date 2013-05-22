@@ -3,7 +3,9 @@ using System.Collections.Generic;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Content;
-using Box2D.XNA;
+using FarseerPhysics.Collision.Shapes;
+using FarseerPhysics.Dynamics;
+using FarseerPhysics.Dynamics.Joints;
 using StasisCore;
 using StasisCore.Models;
 using StasisGame.Managers;
@@ -221,7 +223,7 @@ namespace StasisGame.Systems
                 PhysicsComponent physicsComponent = (PhysicsComponent)_entityManager.getComponent(entityId, ComponentType.Physics);
 
                 // Update world matrix
-                bodyRenderComponent.worldMatrix = Matrix.CreateRotationZ(physicsComponent.body.GetAngle()) * Matrix.CreateTranslation(new Vector3(physicsComponent.body.GetPosition(), 0));
+                bodyRenderComponent.worldMatrix = Matrix.CreateRotationZ(physicsComponent.body.Rotation) * Matrix.CreateTranslation(new Vector3(physicsComponent.body.Position, 0));
 
                 // Update body's collection of vertices
                 int index = 0;
@@ -251,7 +253,7 @@ namespace StasisGame.Systems
                     else if (current == tail)
                         color = Color.Black;
 
-                    _spriteBatch.Draw(_pixel, (current.body.GetPosition() - screenCenter) * _scale + _halfScreen, new Rectangle(0, 0, 16, 4), color, current.body.GetAngle(), new Vector2(8, 2), 1f, SpriteEffects.None, 0.1f);
+                    _spriteBatch.Draw(_pixel, (current.body.Position - screenCenter) * _scale + _halfScreen, new Rectangle(0, 0, 16, 4), color, current.body.Rotation, new Vector2(8, 2), 1f, SpriteEffects.None, 0.1f);
                     current = current.next;
                 }
             }
@@ -261,19 +263,19 @@ namespace StasisGame.Systems
                 PhysicsComponent physicsComponent = (PhysicsComponent)_entityManager.getComponent(worldItemRenderEntities[i], ComponentType.Physics);
                 WorldItemRenderComponent renderComponent = (WorldItemRenderComponent)_entityManager.getComponent(worldItemRenderEntities[i], ComponentType.WorldItemRender);
 
-                _spriteBatch.Draw(renderComponent.worldTexture, (physicsComponent.body.GetPosition() - screenCenter) * _scale + _halfScreen, renderComponent.worldTexture.Bounds, Color.White, physicsComponent.body.GetAngle(), new Vector2(renderComponent.worldTexture.Width, renderComponent.worldTexture.Height) / 2f, 1f, SpriteEffects.None, 0);
+                _spriteBatch.Draw(renderComponent.worldTexture, (physicsComponent.body.Position - screenCenter) * _scale + _halfScreen, renderComponent.worldTexture.Bounds, Color.White, physicsComponent.body.Rotation, new Vector2(renderComponent.worldTexture.Width, renderComponent.worldTexture.Height) / 2f, 1f, SpriteEffects.None, 0);
             }
 
             for (int i = 0; i < characterRenderEntities.Count; i++)
             {
                 PhysicsComponent physicsComponent = (PhysicsComponent)_entityManager.getComponent(characterRenderEntities[i], ComponentType.Physics);
-                PolygonShape bodyShape = physicsComponent.body.GetFixtureList().GetNext().GetShape() as PolygonShape;
-                float shapeWidth = bodyShape._vertices[2].X - bodyShape._vertices[0].X;
-                float shapeHeight = bodyShape._vertices[3].Y - bodyShape._vertices[0].Y;
+                PolygonShape bodyShape = physicsComponent.body.FixtureList[0].Shape as PolygonShape;
+                float shapeWidth = bodyShape.Vertices[2].X - bodyShape.Vertices[0].X;
+                float shapeHeight = bodyShape.Vertices[3].Y - bodyShape.Vertices[0].Y;
                 Rectangle source = new Rectangle(0, 0, (int)(shapeWidth * _scale), (int)(shapeHeight * _scale));
                 Vector2 origin = new Vector2(source.Width / 2f, source.Height / 2f);
 
-                _spriteBatch.Draw(_pixel, (physicsComponent.body.GetPosition() - screenCenter) * _scale + _halfScreen, source, Color.White, 0, origin, 1f, SpriteEffects.None, 0.1f);
+                _spriteBatch.Draw(_pixel, (physicsComponent.body.Position - screenCenter) * _scale + _halfScreen, source, Color.White, 0, origin, 1f, SpriteEffects.None, 0.1f);
             }
 
             for (int i = 0; i < characterMovementEntities.Count; i++)
@@ -284,7 +286,7 @@ namespace StasisGame.Systems
                 Rectangle source = new Rectangle(0, 0, (int)(movementNormal.Length() * _scale), 2);
                 float angle = characterMovementComponent.movementAngle;
 
-                _spriteBatch.Draw(_pixel, (physicsComponent.body.GetPosition() - screenCenter) * _scale + _halfScreen, source, Color.Yellow, angle, new Vector2(0, 1), 1f, SpriteEffects.None, 0);
+                _spriteBatch.Draw(_pixel, (physicsComponent.body.Position - screenCenter) * _scale + _halfScreen, source, Color.Yellow, angle, new Vector2(0, 1), 1f, SpriteEffects.None, 0);
             }
 
             // Tree
@@ -315,8 +317,8 @@ namespace StasisGame.Systems
             {
                 foreach (KeyValuePair<Body, RevoluteJoint> pair in ropeGrabComponents[i].joints)
                 {
-                    Vector2 pointA = pair.Value.GetBodyA().GetPosition();
-                    Vector2 pointB = pair.Value.GetBodyB().GetPosition();
+                    Vector2 pointA = pair.Value.BodyA.Position;
+                    Vector2 pointB = pair.Value.BodyB.Position;
                     Vector2 relative = pointB - pointA;
                     float angle = (float)Math.Atan2(relative.Y, relative.X);
 

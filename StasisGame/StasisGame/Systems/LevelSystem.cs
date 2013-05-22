@@ -5,13 +5,13 @@ using System.Linq;
 using System.Xml.Linq;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
+using FarseerPhysics.Collision;
 using StasisCore;
 using StasisCore.Models;
 using StasisGame.Systems;
 using StasisGame.Managers;
 using StasisGame.Components;
 using StasisGame.UI;
-using Box2D.XNA;
 
 namespace StasisGame.Systems
 {
@@ -55,8 +55,8 @@ namespace StasisGame.Systems
 
         public void expandBoundary(Vector2 point)
         {
-            _levelBoundary.lowerBound = Vector2.Min(point - _boundaryMargin, _levelBoundary.lowerBound);
-            _levelBoundary.upperBound = Vector2.Max(point + _boundaryMargin, _levelBoundary.upperBound);
+            _levelBoundary.LowerBound = Vector2.Min(point - _boundaryMargin, _levelBoundary.LowerBound);
+            _levelBoundary.UpperBound = Vector2.Max(point + _boundaryMargin, _levelBoundary.UpperBound);
         }
 
         // load -- Loads a level
@@ -336,10 +336,10 @@ namespace StasisGame.Systems
                     // Check player's position against the level boundary
                     if (playerPhysicsComponent != null)
                     {
-                        Vector2 position = playerPhysicsComponent.body.GetPosition();
+                        Vector2 position = playerPhysicsComponent.body.Position;
 
-                        if (position.X < _levelBoundary.lowerBound.X || position.X > _levelBoundary.upperBound.X ||
-                            position.Y < _levelBoundary.lowerBound.Y || position.Y > _levelBoundary.upperBound.Y)
+                        if (position.X < _levelBoundary.LowerBound.X || position.X > _levelBoundary.UpperBound.X ||
+                            position.Y < _levelBoundary.LowerBound.Y || position.Y > _levelBoundary.UpperBound.Y)
                         {
                             _playerSystem.softKillPlayer();
                             endLevel();

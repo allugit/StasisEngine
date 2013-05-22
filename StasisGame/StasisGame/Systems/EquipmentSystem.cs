@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Input;
-using Box2D.XNA;
 using StasisGame.Components;
 using StasisGame.Managers;
 
@@ -145,7 +144,7 @@ namespace StasisGame.Systems
                                             RopePhysicsComponent ropePhysicsComponent = _entityManager.getComponent(ropeEntityId, ComponentType.RopePhysics) as RopePhysicsComponent;
                                             PhysicsComponent physicsComponent = _entityManager.getComponent(toolbarEntities[i], ComponentType.Physics) as PhysicsComponent;
                                             RopeGrabComponent newRopeGrabComponent = null;
-                                            Vector2 initialVelocity = physicsComponent.body.GetLinearVelocity();
+                                            Vector2 initialVelocity = physicsComponent.body.LinearVelocity;
                                             RopeNode currentNode = null;
                                             int ropeSegmentCount;
 
@@ -161,7 +160,7 @@ namespace StasisGame.Systems
                                             {
                                                 float weight = (float)count / (float)ropeSegmentCount;
 
-                                                currentNode.body.SetLinearVelocity(currentNode.body.GetLinearVelocity() + initialVelocity * weight);
+                                                currentNode.body.LinearVelocity = currentNode.body.LinearVelocity + initialVelocity * weight;
 
                                                 count--;
                                                 currentNode = currentNode.next;
@@ -203,7 +202,7 @@ namespace StasisGame.Systems
                                     {
                                         AimComponent aimComponent = _entityManager.getComponent(toolbarEntities[i], ComponentType.Aim) as AimComponent;
 
-                                        _entityManager.factory.createDynamite(playerPhysicsComponent.body.GetPosition(), aimComponent.vector * 80f);
+                                        _entityManager.factory.createDynamite(playerPhysicsComponent.body.Position, aimComponent.vector * 80f);
                                     }
                                     break;
                             }

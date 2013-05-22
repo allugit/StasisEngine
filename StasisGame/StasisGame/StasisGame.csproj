@@ -60,13 +60,12 @@
     <XnaCompressContent>true</XnaCompressContent>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="Box2D.XNA, Version=1.0.0.0, Culture=neutral, processorArchitecture=x86">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\..\Box2D.XNA\bin\x86\Release\Box2D.XNA.dll</HintPath>
-    </Reference>
     <Reference Include="EasyStorage, Version=2.0.0.0, Culture=neutral, processorArchitecture=x86">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\..\..\EasyStorage_GS4\EasyStorage\bin\x86\Release\EasyStorage.dll</HintPath>
+    </Reference>
+    <Reference Include="FarseerPhysicsXNA">
+      <HintPath>..\..\..\Farseer Physics Engine 3.3.1 Samples XNA\Farseer Physics Engine 3.3 XNA\bin\x86\Release\FarseerPhysicsXNA.dll</HintPath>
     </Reference>
     <Reference Include="MonoGame.Framework, Version=3.0.1.0, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>

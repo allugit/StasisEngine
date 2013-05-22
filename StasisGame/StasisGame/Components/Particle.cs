@@ -1,7 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
 using Microsoft.Xna.Framework;
-using Box2D.XNA;
+using FarseerPhysics.Common;
+using FarseerPhysics.Collision;
+using FarseerPhysics.Dynamics;
+using FarseerPhysics;
 using StasisGame.Systems;
 
 namespace StasisGame.Components
@@ -62,8 +65,8 @@ namespace StasisGame.Components
             entitiesToInfluence = new int[MAX_INFLUENCES];
             fixturesToTest = new Fixture[MAX_FIXTURES_TO_TEST];
 
-            collisionVertices = new Vector2[Settings.b2_maxPolygonVertices];
-            collisionNormals = new Vector2[Settings.b2_maxPolygonVertices];
+            collisionVertices = new Vector2[Settings.MaxPolygonVertices];
+            collisionNormals = new Vector2[Settings.MaxPolygonVertices];
 
             int i = fluidSystem.getFluidGridX(position.X);
             int j = fluidSystem.getFluidGridY(position.Y);

@@ -2,7 +2,8 @@
 using System.Collections.Generic;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Input;
-using Box2D.XNA;
+using FarseerPhysics.Collision;
+using FarseerPhysics.Dynamics;
 using StasisGame.Managers;
 using StasisGame.Components;
 
@@ -39,16 +40,16 @@ namespace StasisGame.Systems
             RopeNode ropeNode = null;
             int nodeCount = 0;
 
-            region.lowerBound = physicsComponent.body.GetPosition() - new Vector2(margin, margin);
-            region.upperBound = physicsComponent.body.GetPosition() + new Vector2(margin, margin);
+            region.LowerBound = physicsComponent.body.Position - new Vector2(margin, margin);
+            region.UpperBound = physicsComponent.body.Position + new Vector2(margin, margin);
 
             if (physicsComponent == null)
                 return;
 
             // Query the world for a body, and check to see if it's a rope
-            physicsComponent.body.GetWorld().QueryAABB((fixtureProxy) =>
+            physicsComponent.body.World.QueryAABB((fixture) =>
                 {
-                    int ropeEntityId = (int)fixtureProxy.fixture.GetBody().GetUserData();
+                    int ropeEntityId = (int)fixture.Body.UserData;
                     RopePhysicsComponent ropePhysicsComponent = (RopePhysicsComponent)_entityManager.getComponent(ropeEntityId, ComponentType.RopePhysics);
 
                     if (ropePhysicsComponent != null && !ropePhysicsComponent.doubleAnchor)
@@ -60,7 +61,7 @@ namespace StasisGame.Systems
 
                         while (current != null)
                         {
-                            if (current.body == fixtureProxy.fixture.GetBody())
+                            if (current.body == fixture.Body)
                             {
                                 ropeNode = current;
                                 break;
@@ -109,7 +110,7 @@ namespace StasisGame.Systems
                     bool applyForce =
                         (characterMovementComponent.walkLeft && characterMovementComponent.allowLeftMovement) ||
                         (characterMovementComponent.walkRight && characterMovementComponent.allowRightMovement);
-                    Vector2 characterVelocity = physicsComponent.body.GetLinearVelocity();
+                    Vector2 characterVelocity = physicsComponent.body.LinearVelocity;
                     float characterSpeed = characterVelocity.Length();
                     float characterHorizontalSpeed = Math.Abs(characterVelocity.X);
 
@@ -127,7 +128,7 @@ namespace StasisGame.Systems
                     if (characterMovementComponent.onSurface)
                     {
                         // Check speed limit
-                        if (Math.Abs(body.GetLinearVelocity().Length()) > MAX_WALK_SPEED)
+                        if (Math.Abs(body.LinearVelocity.Length()) > MAX_WALK_SPEED)
                             applyForce = false;
 
                         // Pull harder if grabbing
@@ -144,18 +145,18 @@ namespace StasisGame.Systems
 
                             movement *= characterMovementComponent.walkLeft ? -1 : 1;
                             movement *= WALK_FORCE * modifier;
-                            body.ApplyForce(movement, body.GetPosition());
+                            body.ApplyForce(movement, body.Position);
                         }
 
                         // Fake friction when not moving
-                        if ((body.GetLinearVelocity().X > 0 && characterMovementComponent.walkLeft) ||
-                            (body.GetLinearVelocity().X < 0 && characterMovementComponent.walkRight) ||
+                        if ((body.LinearVelocity.X > 0 && characterMovementComponent.walkLeft) ||
+                            (body.LinearVelocity.X < 0 && characterMovementComponent.walkRight) ||
                             (!characterMovementComponent.walkLeft && !characterMovementComponent.walkRight) &&
                             !characterMovementComponent.jump)
                         {
                             // All conditions necessary for damping have been met
-                            if (Math.Abs(body.GetLinearVelocity().Y) < 1 || Math.Abs(body.GetLinearVelocity().Length()) < 10)
-                                body.ApplyForce(new Vector2(-body.GetLinearVelocity().X * 10, -body.GetLinearVelocity().Y * 5), body.GetPosition());
+                            if (Math.Abs(body.LinearVelocity.Y) < 1 || Math.Abs(body.LinearVelocity.Length()) < 10)
+                                body.ApplyForce(new Vector2(-body.LinearVelocity.X * 10, -body.LinearVelocity.Y * 5), body.Position);
                         }
                     }
                     else
@@ -167,7 +168,7 @@ namespace StasisGame.Systems
                                 // Swing
                                 float swingForce = (characterMovementComponent.walkLeft ? -WALK_FORCE : WALK_FORCE) / 2f;
                                 Vector2 movement = new Vector2((float)Math.Cos(characterMovementComponent.movementAngle), (float)Math.Sin(characterMovementComponent.movementAngle));
-                                physicsComponent.body.ApplyForce(movement * swingForce, body.GetPosition());
+                                physicsComponent.body.ApplyForce(movement * swingForce, body.Position);
                             }
                             else
                             {
@@ -175,11 +176,11 @@ namespace StasisGame.Systems
                                 float airWalkForce = (characterMovementComponent.walkLeft ? -WALK_FORCE : WALK_FORCE) / 4;
 
                                 // Check speed limit
-                                if (Math.Abs(body.GetLinearVelocity().X) > MAX_WALK_SPEED / 2)
+                                if (Math.Abs(body.LinearVelocity.X) > MAX_WALK_SPEED / 2)
                                 {
-                                    if (body.GetLinearVelocity().X < -MAX_WALK_SPEED / 2 && airWalkForce < 0)
+                                    if (body.LinearVelocity.X < -MAX_WALK_SPEED / 2 && airWalkForce < 0)
                                         applyForce = false;
-                                    else if (body.GetLinearVelocity().X > MAX_WALK_SPEED / 2 && airWalkForce > 0)
+                                    else if (body.LinearVelocity.X > MAX_WALK_SPEED / 2 && airWalkForce > 0)
                                         applyForce = false;
                                 }
 
@@ -188,7 +189,7 @@ namespace StasisGame.Systems
                                 {
                                     Vector2 movement = new Vector2((float)Math.Cos(characterMovementComponent.movementAngle), (float)Math.Sin(characterMovementComponent.movementAngle));
                                     movement *= airWalkForce;
-                                    body.ApplyForce(movement, body.GetPosition());
+                                    body.ApplyForce(movement, body.Position);
                                 }
                             }
                         }
@@ -211,12 +212,12 @@ namespace StasisGame.Systems
                             _entityManager.removeComponent(characterEntities[i], ropeGrabComponent);
                             ropeGrabComponent = null;
 
-                            body.SetLinearVelocity(new Vector2(body.GetLinearVelocity().X, body.GetLinearVelocity().Y - jumpForce * 0.66f));
+                            body.LinearVelocity = new Vector2(body.LinearVelocity.X, body.LinearVelocity.Y - jumpForce * 0.66f);
                         }
                         else if (!characterMovementComponent.alreadyJumped && (characterMovementComponent.allowLeftMovement || characterMovementComponent.allowRightMovement))
                         {
                             characterMovementComponent.alreadyJumped = true;
-                            body.SetLinearVelocity(new Vector2(body.GetLinearVelocity().X, -jumpForce));
+                            body.LinearVelocity = new Vector2(body.LinearVelocity.X, -jumpForce);
                         }
                     }
 

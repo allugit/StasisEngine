@@ -1,5 +1,5 @@
 ﻿using System;
-using Box2D.XNA;
+using FarseerPhysics.Dynamics.Joints;
 using StasisCore;
 
 namespace StasisGame.Components
@@ -21,15 +21,15 @@ namespace StasisGame.Components
             switch (e.type)
             {
                 case GameEventType.EnableMotor:
-                    _revoluteJoint.EnableMotor(true);
+                    _revoluteJoint.MotorEnabled = true;
                     break;
 
                 case GameEventType.DisableMotor:
-                    _revoluteJoint.EnableMotor(false);
+                    _revoluteJoint.MotorEnabled = false;
                     break;
 
                 case GameEventType.ReverseMotor:
-                    _revoluteJoint.SetMotorSpeed(-_revoluteJoint.GetMotorSpeed());
+                    _revoluteJoint.MotorSpeed = -_revoluteJoint.MotorSpeed;
                     break;
             }
         }

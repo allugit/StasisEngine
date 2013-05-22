@@ -1,7 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
 using Microsoft.Xna.Framework;
-using Box2D.XNA;
+using FarseerPhysics.Dynamics;
+using FarseerPhysics.Collision.Shapes;
 using Poly2Tri;
 using StasisCore;
 
@@ -48,12 +49,12 @@ namespace StasisGame
 
         public RenderableTriangle(Fixture triangleFixture, Vector2 topLeft, Vector2 bottomRight)
         {
-            PolygonShape polygonShape = triangleFixture.GetShape() as PolygonShape;
+            PolygonShape polygonShape = triangleFixture.Shape as PolygonShape;
 
             vertices = new CustomVertexFormat[3];
             for (int i = 0; i < 3; i++)
             {
-                Vector2 p = polygonShape._vertices[i];
+                Vector2 p = polygonShape.Vertices[i];
                 vertices[i] = new CustomVertexFormat(
                     new Vector3(p, 0),
                     (p - topLeft) / (bottomRight - topLeft),

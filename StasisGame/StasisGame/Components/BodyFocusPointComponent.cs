@@ -1,7 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
 using Microsoft.Xna.Framework;
-using Box2D.XNA;
+using FarseerPhysics.Dynamics;
+using FarseerPhysics.Common;
 using StasisGame.Systems;
 
 namespace StasisGame.Components

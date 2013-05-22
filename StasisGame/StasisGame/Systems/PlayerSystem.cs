@@ -4,7 +4,9 @@ using System.Xml.Linq;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
-using Box2D.XNA;
+using FarseerPhysics.Collision.Shapes;
+using FarseerPhysics.Dynamics;
+using FarseerPhysics.Factories;
 using StasisGame.Components;
 using StasisGame.Managers;
 using StasisCore;
@@ -103,14 +105,40 @@ namespace StasisGame.Systems
         {
             World world = (_systemManager.getSystem(SystemType.Physics) as PhysicsSystem).world;
             Body body;
-            BodyDef bodyDef = new BodyDef();
-            PolygonShape bodyShape = new PolygonShape();
-            FixtureDef bodyFixtureDef = new FixtureDef();
-            CircleShape feetShape = new CircleShape();
-            FixtureDef feetFixtureDef = new FixtureDef();
+            //BodyDef bodyDef = new BodyDef();
+            //PolygonShape bodyShape = new PolygonShape();
+            //FixtureDef bodyFixtureDef = new FixtureDef();
+            //CircleShape feetShape = new CircleShape();
+            //FixtureDef feetFixtureDef = new FixtureDef();
+            Fixture fixture;
             Fixture feetFixture;
+            PolygonShape polygonShape = new PolygonShape(1f);
+            CircleShape feetShape = new CircleShape(0.18f, 0.1f);
 
-            bodyDef.bullet = true;
+            body = BodyFactory.CreateBody(world, _spawnPosition, _playerId);
+            body.IsBullet = true;
+            body.FixedRotation = true;
+            body.BodyType = BodyType.Dynamic;
+            polygonShape.SetAsBox(0.18f, 0.27f);
+            fixture = body.CreateFixture(polygonShape);
+            fixture.Friction = 0f;
+            fixture.Restitution = 0f;
+            fixture.CollisionCategories = (Category)CollisionCategory.Player;
+            fixture.CollidesWith = 
+                (Category)CollisionCategory.DynamicGeometry |
+                (Category)CollisionCategory.Item |
+                (Category)CollisionCategory.Rope |
+                (Category)CollisionCategory.StaticGeometry |
+                (Category)CollisionCategory.Explosion;
+
+            feetShape.Position = new Vector2(0, 0.27f);
+            feetShape.Density = 0.1f;
+            feetFixture = body.CreateFixture(feetShape);
+            feetFixture.Friction = 0.1f;
+            feetFixture.CollisionCategories = fixture.CollisionCategories;
+            feetFixture.CollidesWith = fixture.CollidesWith;
+
+            /*bodyDef.bullet = true;
             bodyDef.fixedRotation = true;
             bodyDef.position = spawnPosition;
             bodyDef.type = BodyType.Dynamic;
@@ -138,7 +166,7 @@ namespace StasisGame.Systems
 
             body = world.CreateBody(bodyDef);
             body.CreateFixture(bodyFixtureDef);
-            feetFixture = body.CreateFixture(feetFixtureDef);
+            feetFixture = body.CreateFixture(feetFixtureDef);*/
 
             _entityManager.addComponent(playerId, new PhysicsComponent(body));
             _entityManager.addComponent(playerId, new InputComponent());
@@ -147,7 +175,7 @@ namespace StasisGame.Systems
             _entityManager.addComponent(playerId, new BodyFocusPointComponent(body, new Vector2(0, -7f), FocusType.Multiple));
             _entityManager.addComponent(playerId, new IgnoreTreeCollisionComponent());
             _entityManager.addComponent(playerId, new IgnoreRopeRaycastComponent());
-            _entityManager.addComponent(playerId, new WorldPositionComponent(body.GetPosition()));
+            _entityManager.addComponent(playerId, new WorldPositionComponent(body.Position));
             _entityManager.addComponent(playerId, new SkipFluidResolutionComponent());
             _entityManager.addComponent(playerId, new ParticleInfluenceComponent(ParticleInfluenceType.Character));
         }

@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Xml.Linq;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
-using Box2D.XNA;
+using FarseerPhysics.Collision;
 using StasisGame.Systems;
 using StasisCore;
 
@@ -133,8 +133,8 @@ namespace StasisGame
             _random = new Random(_seed);
             _internodeLengthSq = _internodeLength * _internodeLength;
             _aabb = new AABB();
-            _aabb.lowerBound = _position;
-            _aabb.upperBound = _position;
+            _aabb.LowerBound = _position;
+            _aabb.UpperBound = _position;
 
             // Calculate root position
             float rootAngle = _angle + (StasisMathHelper.pi);
@@ -152,8 +152,8 @@ namespace StasisGame
         // expandAABB
         public void expandAABB(Vector2 point)
         {
-            _aabb.lowerBound = Vector2.Min(point - _aabbMargin, _aabb.lowerBound);
-            _aabb.upperBound = Vector2.Max(point + _aabbMargin, _aabb.upperBound);
+            _aabb.LowerBound = Vector2.Min(point - _aabbMargin, _aabb.LowerBound);
+            _aabb.UpperBound = Vector2.Max(point + _aabbMargin, _aabb.UpperBound);
         }
 
         // iterate

@@ -1,7 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
 using Microsoft.Xna.Framework;
-using Box2D.XNA;
+using FarseerPhysics.Dynamics;
+using FarseerPhysics.Dynamics.Joints;
+using FarseerPhysics.Factories;
 using StasisGame.Managers;
 using StasisGame.Components;
 
@@ -32,23 +34,23 @@ namespace StasisGame.Systems
             float fraction = ropeGrabComponent.distance - (float)index;
             RopeNode node = ropeGrabComponent.ropeNode.getByIndex(index);
             float lengthPosition = -(node.halfLength * 2 * fraction - node.halfLength);
-            RevoluteJoint joint = null;
-            RevoluteJointDef jointDef = new RevoluteJointDef();
+            RevoluteJoint joint;
 
             ropeGrabComponent.ropeNode = node;
             bodyToAttach.Position = node.body.GetWorldPoint(new Vector2(lengthPosition, 0));
-            jointDef.bodyA = bodyToAttach;
-            jointDef.bodyB = node.body;
-            jointDef.localAnchorA = Vector2.Zero;
-            jointDef.localAnchorB = node.body.GetLocalPoint(bodyToAttach.GetPosition());
-            joint = bodyToAttach.GetWorld().CreateJoint(jointDef) as RevoluteJoint;
+            //jointDef.bodyA = bodyToAttach;
+            //jointDef.bodyB = node.body;
+            //jointDef.localAnchorA = Vector2.Zero;
+            //jointDef.localAnchorB = node.body.GetLocalPoint(bodyToAttach.GetPosition());
+            //joint = bodyToAttach.GetWorld().CreateJoint(jointDef) as RevoluteJoint;
+            joint = JointFactory.CreateRevoluteJoint(bodyToAttach.World, bodyToAttach, node.body, node.body.GetLocalPoint(bodyToAttach.Position));
             ropeGrabComponent.joints.Add(bodyToAttach, joint);
         }
 
         public void releaseRope(RopeGrabComponent ropeGrabComponent, Body bodyToDetach)
         {
             RevoluteJoint joint = ropeGrabComponent.joints[bodyToDetach];
-            bodyToDetach.GetWorld().DestroyJoint(joint);
+            bodyToDetach.World.RemoveJoint(joint);
             ropeGrabComponent.joints.Remove(bodyToDetach);
         }
 
@@ -84,7 +86,7 @@ namespace StasisGame.Systems
         {
             foreach (RevoluteJoint joint in ropeGrabComponent.joints.Values)
             {
-                joint.GetBodyA().GetWorld().DestroyJoint(joint);
+                joint.BodyA.World.RemoveJoint(joint);
             }
             ropeGrabComponent.joints.Clear();
         }
@@ -113,23 +115,23 @@ namespace StasisGame.Systems
                 {
                     if (current.anchorJoint != null)
                     {
-                        int entityIdA = (int)current.anchorJoint.GetBodyA().GetUserData();
-                        int entityIdB = (int)current.anchorJoint.GetBodyB().GetUserData();
+                        int entityIdA = (int)current.anchorJoint.BodyA.UserData;
+                        int entityIdB = (int)current.anchorJoint.BodyB.UserData;
                         TreeComponent treeComponentA = _entityManager.getComponent(entityIdA, ComponentType.Tree) as TreeComponent;
                         TreeComponent treeComponentB = _entityManager.getComponent(entityIdB, ComponentType.Tree) as TreeComponent;
 
                         if (treeComponentA != null)
                         {
-                            current.anchorJoint.GetBodyA().GetWorld().DestroyBody(current.anchorJoint.GetBodyA());
+                            current.anchorJoint.BodyA.World.RemoveBody(current.anchorJoint.BodyA);
                         }
                         else if (treeComponentB != null)
                         {
-                            current.anchorJoint.GetBodyB().GetWorld().DestroyBody(current.anchorJoint.GetBodyB());
+                            current.anchorJoint.BodyB.World.RemoveBody(current.anchorJoint.BodyB);
                         }
                     }
 
                     // Destroy body
-                    current.body.GetWorld().DestroyBody(current.body);
+                    current.body.World.RemoveBody(current.body);
                     current = current.next;
                 }
                 _entityManager.killEntity(entityId);
@@ -172,13 +174,13 @@ namespace StasisGame.Systems
                                 // Check anchor joint
                                 if (current.anchorJoint != null)
                                 {
-                                    distance = current.anchorJoint.GetBodyA().GetWorldPoint(current.anchorJoint._localAnchor1) -
-                                        current.anchorJoint.GetBodyB().GetWorldPoint(current.anchorJoint._localAnchor2);
+                                    distance = current.anchorJoint.BodyA.GetWorldPoint(current.anchorJoint.LocalAnchorA) -
+                                        current.anchorJoint.BodyB.GetWorldPoint(current.anchorJoint.LocalAnchorB);
                                     if (distance.Length() > 0.8f || current.anchorJoint.GetReactionForce(60f).Length() > 400f)
                                     {
                                         int ttl = ropePhysicsComponent.timeToLive;
                                         ropePhysicsComponent.timeToLive = (ttl > -1 && ttl < ROPE_TIME_TO_LIVE) ? ttl : ROPE_TIME_TO_LIVE;
-                                        current.body.GetWorld().DestroyJoint(current.anchorJoint);
+                                        current.body.World.RemoveJoint(current.anchorJoint);
                                         current.anchorJoint = null;
                                     }
                                 }
@@ -188,26 +190,26 @@ namespace StasisGame.Systems
                                 // Check anchor joint
                                 if (current.anchorJoint != null)
                                 {
-                                    distance = current.anchorJoint.GetBodyA().GetWorldPoint(current.anchorJoint._localAnchor1) -
-                                        current.anchorJoint.GetBodyB().GetWorldPoint(current.anchorJoint._localAnchor2);
+                                    distance = current.anchorJoint.BodyA.GetWorldPoint(current.anchorJoint.LocalAnchorA) -
+                                        current.anchorJoint.BodyB.GetWorldPoint(current.anchorJoint.LocalAnchorB);
                                     if (distance.Length() > 0.8f || current.anchorJoint.GetReactionForce(60f).Length() > 400f)
                                     {
                                         int ttl = ropePhysicsComponent.timeToLive;
                                         ropePhysicsComponent.timeToLive = (ttl > -1 && ttl < ROPE_TIME_TO_LIVE) ? ttl : ROPE_TIME_TO_LIVE;
-                                        current.body.GetWorld().DestroyJoint(current.anchorJoint);
+                                        current.body.World.RemoveJoint(current.anchorJoint);
                                         current.anchorJoint = null;
                                     }
                                 }
                             }
 
                             // Check other joints
-                            distance = current.joint.GetBodyA().GetWorldPoint(current.joint._localAnchor1) -
-                                        current.joint.GetBodyB().GetWorldPoint(current.joint._localAnchor2);
+                            distance = current.joint.BodyA.GetWorldPoint(current.joint.LocalAnchorA) -
+                                        current.joint.BodyB.GetWorldPoint(current.joint.LocalAnchorB);
                             if (distance.Length() > 1.2f || current.joint.GetReactionForce(60f).Length() > 300f)
                             {
                                 int ttl = ropePhysicsComponent.timeToLive;
                                 ropePhysicsComponent.timeToLive = (ttl > -1 && ttl < ROPE_TIME_TO_LIVE) ? ttl : ROPE_TIME_TO_LIVE;
-                                current.body.GetWorld().DestroyJoint(current.joint);
+                                current.body.World.RemoveJoint(current.joint);
                                 current.joint = null;
                             }
                         }

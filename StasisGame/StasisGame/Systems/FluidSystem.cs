@@ -2,7 +2,11 @@
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using Microsoft.Xna.Framework;
-using Box2D.XNA;
+using FarseerPhysics;
+using FarseerPhysics.Collision;
+using FarseerPhysics.Collision.Shapes;
+using FarseerPhysics.Common;
+using FarseerPhysics.Dynamics;
 using Poly2Tri;
 using StasisGame.Managers;
 using StasisGame.Components;
@@ -163,7 +167,7 @@ namespace StasisGame.Systems
                 if (vlensqr < IDEAL_RADIUS_SQ)
                 {
                     particle.distances[a] = (float)Math.Sqrt(vlensqr);
-                    if (particle.distances[a] < Settings.b2_epsilon) particle.distances[a] = IDEAL_RADIUS - .01f;
+                    if (particle.distances[a] < Settings.Epsilon) particle.distances[a] = IDEAL_RADIUS - .01f;
                     particle.oneminusq[a] = 1.0f - particle.distances[a] / IDEAL_RADIUS;
                     float oneminusqSq = particle.oneminusq[a] * particle.oneminusq[a];
                     particle.p = (particle.p + oneminusqSq);
@@ -218,10 +222,10 @@ namespace StasisGame.Systems
                 if (particle.alive)
                 {
                     particle.onScreen =
-                        particle.position.X > simulationAABB.lowerBound.X &&
-                        particle.position.X < simulationAABB.upperBound.X &&
-                        particle.position.Y > simulationAABB.lowerBound.Y &&
-                        particle.position.Y < simulationAABB.upperBound.Y;
+                        particle.position.X > simulationAABB.LowerBound.X &&
+                        particle.position.X < simulationAABB.UpperBound.X &&
+                        particle.position.Y > simulationAABB.LowerBound.Y &&
+                        particle.position.Y < simulationAABB.UpperBound.Y;
                     if (particle.isActive())
                     {
                         activeParticles[numActiveParticles] = i;
@@ -235,18 +239,21 @@ namespace StasisGame.Systems
         private void prepareCollisions()
         {
             // Query the world using the screen's AABB
-            _physicsSystem.world.QueryAABB((FixtureProxy fixtureProxy) =>
+            _physicsSystem.world.QueryAABB((Fixture fixture) =>
             {
                 // Skip certain collisions
                 //UserData data = fixtureProxy.fixture.GetBody().GetUserData() as UserData;
                 //if (data.actorType == ActorType.WALL_GROUP || data.actorType == ActorType.GROUND)
                 //    return true;
 
-                AABB aabb = fixtureProxy.aabb;
-                int Ax = getFluidGridX(aabb.lowerBound.X);
-                int Ay = getFluidGridY(aabb.lowerBound.Y);
-                int Bx = getFluidGridX(aabb.upperBound.X) + 1;
-                int By = getFluidGridY(aabb.upperBound.Y) + 1;
+                AABB aabb;
+                Transform transform;
+                fixture.Body.GetTransform(out transform);
+                fixture.Shape.ComputeAABB(out aabb, ref transform, 0);
+                int Ax = getFluidGridX(aabb.LowerBound.X);
+                int Ay = getFluidGridY(aabb.LowerBound.Y);
+                int Bx = getFluidGridX(aabb.UpperBound.X) + 1;
+                int By = getFluidGridY(aabb.UpperBound.Y) + 1;
                 for (int i = Ax; i < Bx; i++)
                 {
                     for (int j = Ay; j < By; j++)
@@ -258,7 +265,7 @@ namespace StasisGame.Systems
                                 Particle particle = liquid[collisionGridY[n]];
                                 if (particle.numFixturesToTest < Particle.MAX_FIXTURES_TO_TEST)
                                 {
-                                    particle.fixturesToTest[particle.numFixturesToTest] = fixtureProxy.fixture;
+                                    particle.fixturesToTest[particle.numFixturesToTest] = fixture;
                                     particle.numFixturesToTest++;
                                 }
                             }
@@ -278,14 +285,14 @@ namespace StasisGame.Systems
             for (int i = 0; i < particle.numFixturesToTest; i++)
             {
                 Fixture fixture = particle.fixturesToTest[i];
-                if (fixture.GetShape() == null)     // fixtures can be destroyed before they're tested
+                if (fixture.Shape == null)     // fixtures can be destroyed before they're tested
                     continue;
 
                 Vector2 newPosition = particle.position + particle.velocity + particle.delta;
-                if (fixture.TestPoint(newPosition, 0.01f))
+                if (fixture.TestPoint(ref newPosition, 0.01f))
                 {
-                    Body body = fixture.GetBody();
-                    int entityId = (int)body.GetUserData();
+                    Body body = fixture.Body;
+                    int entityId = (int)body.UserData;
                     SkipFluidResolutionComponent skipFluidResolutionComponent = _entityManager.getComponent(entityId, ComponentType.SkipFluidResolution) as SkipFluidResolutionComponent;
                     ParticleInfluenceComponent particleInfluenceComponent = _entityManager.getComponent(entityId, ComponentType.ParticleInfluence) as ParticleInfluenceComponent;
                     bool influenceEntity = particleInfluenceComponent != null;
@@ -295,21 +302,21 @@ namespace StasisGame.Systems
                         Vector2 closestPoint = Vector2.Zero;
                         Vector2 normal = Vector2.Zero;
 
-                        if (fixture.GetShape().ShapeType == ShapeType.Polygon)
+                        if (fixture.ShapeType == ShapeType.Polygon)
                         {
                             // Polygons
-                            PolygonShape shape = fixture.GetShape() as PolygonShape;
+                            PolygonShape shape = fixture.Shape as PolygonShape;
                             body.GetTransform(out particle.collisionXF);
 
-                            for (int v = 0; v < shape.GetVertexCount(); v++)
+                            for (int v = 0; v < shape.Vertices.Count; v++)
                             {
-                                particle.collisionVertices[v] = MathUtils.Multiply(ref particle.collisionXF, shape.GetVertex(v));
-                                particle.collisionNormals[v] = MathUtils.Multiply(ref particle.collisionXF.R, shape.GetNormal(v));
+                                particle.collisionVertices[v] = MathUtils.Multiply(ref particle.collisionXF, shape.Vertices[v]);
+                                particle.collisionNormals[v] = MathUtils.Multiply(ref particle.collisionXF.R, shape.Normals[v]);
                             }
 
                             // Find closest edge
                             float shortestDistance = 9999999f;
-                            for (int v = 0; v < shape.GetVertexCount(); v++)
+                            for (int v = 0; v < shape.Vertices.Count; v++)
                             {
                                 float distance = Vector2.Dot(particle.collisionNormals[v], particle.collisionVertices[v] - particle.position);
                                 if (distance < shortestDistance)
@@ -324,15 +331,15 @@ namespace StasisGame.Systems
                             particle.position = closestPoint + 0.05f * normal;
                             particle.skipMovementUpdate = true;
                         }
-                        else if (fixture.GetShape().ShapeType == ShapeType.Circle)
+                        else if (fixture.ShapeType == ShapeType.Circle)
                         {
                             // Circles
-                            CircleShape shape = fixture.GetShape() as CircleShape;
-                            Vector2 center = shape._p + body.GetPosition();
+                            CircleShape shape = fixture.Shape as CircleShape;
+                            Vector2 center = shape.Position + body.Position;
                             Vector2 difference = particle.position - center;
                             normal = difference;
                             normal.Normalize();
-                            closestPoint = center + difference * (shape._radius / difference.Length());
+                            closestPoint = center + difference * (shape.Radius / difference.Length());
                             particle.position = closestPoint + 0.05f * normal;
                             particle.skipMovementUpdate = true;
                         }
@@ -342,11 +349,11 @@ namespace StasisGame.Systems
                         particle.velocity = (particle.velocity - 1.2f * Vector2.Dot(particle.velocity, normal) * normal) * 0.85f;
 
                         // Handle fast moving bodies
-                        if (body.GetLinearVelocity().LengthSquared() > 50f)
+                        if (body.LinearVelocity.LengthSquared() > 50f)
                         {
                             Vector2 bodyVelocity = body.GetLinearVelocityFromWorldPoint(particle.oldPosition);
-                            body.SetLinearVelocity(body.GetLinearVelocity() * 0.995f);
-                            body.SetAngularVelocity(body.GetAngularVelocity() * 0.95f);
+                            body.LinearVelocity = body.LinearVelocity * 0.995f;
+                            body.AngularVelocity = body.AngularVelocity * 0.95f;
                             particle.velocity += bodyVelocity * 0.005f;
                         }
                     }
@@ -357,15 +364,15 @@ namespace StasisGame.Systems
                         if (particleInfluenceComponent.type == ParticleInfluenceType.Rope)
                         {
                             // Handle rope particle-to-body influences here, since trying to find the correct body through the list of rope nodes would be a pain
-                            Vector2 bodyVelocity = body.GetLinearVelocity();
+                            Vector2 bodyVelocity = body.LinearVelocity;
 
-                            body.SetLinearVelocity(bodyVelocity * 0.98f + particle.velocity * 1.5f);
+                            body.LinearVelocity = bodyVelocity * 0.98f + particle.velocity * 1.5f;
                             particle.velocity += bodyVelocity * 0.003f;
                         }
                         else
                         {
                             // Add entityId to list of entities being influenced by this particle
-                            particle.entitiesToInfluence[particle.entityInfluenceCount] = (int)body.GetUserData();
+                            particle.entitiesToInfluence[particle.entityInfluenceCount] = (int)body.UserData;
                             particle.entityInfluenceCount++;
                         }
                     }
@@ -458,19 +465,19 @@ namespace StasisGame.Systems
                 {
                     // Dynamite influence
                     PhysicsComponent physicsComponent = _entityManager.getComponent(entityId, ComponentType.Physics) as PhysicsComponent;
-                    Vector2 bodyVelocity = physicsComponent.body.GetLinearVelocity();
+                    Vector2 bodyVelocity = physicsComponent.body.LinearVelocity;
 
-                    physicsComponent.body.SetLinearVelocity(bodyVelocity * 0.98f + particle.velocity);
-                    physicsComponent.body.SetAngularVelocity(physicsComponent.body.GetAngularVelocity() * 0.98f);
+                    physicsComponent.body.LinearVelocity = bodyVelocity * 0.98f + particle.velocity;
+                    physicsComponent.body.AngularVelocity = physicsComponent.body.AngularVelocity * 0.98f;
                     particle.velocity += bodyVelocity * 0.003f;
                 }
                 else if (particleInfluenceComponent.type == ParticleInfluenceType.Character)
                 {
                     // Character influence
                     PhysicsComponent physicsComponent = _entityManager.getComponent(entityId, ComponentType.Physics) as PhysicsComponent;
-                    Vector2 bodyVelocity = physicsComponent.body.GetLinearVelocity();
+                    Vector2 bodyVelocity = physicsComponent.body.LinearVelocity;
 
-                    physicsComponent.body.SetLinearVelocity(bodyVelocity * 0.95f + particle.velocity);
+                    physicsComponent.body.LinearVelocity = bodyVelocity * 0.95f + particle.velocity;
                     particle.velocity += bodyVelocity * 0.003f;
                 }
                 else if (particleInfluenceComponent.type == ParticleInfluenceType.Explosion)
@@ -499,10 +506,10 @@ namespace StasisGame.Systems
             handleParticleInfluence(particle);
 
             // Revert movement if off screen
-            if (particle.position.X < simulationAABB.lowerBound.X ||
-                particle.position.X > simulationAABB.upperBound.X ||
-                particle.position.Y < simulationAABB.lowerBound.Y ||
-                particle.position.Y > simulationAABB.upperBound.Y)
+            if (particle.position.X < simulationAABB.LowerBound.X ||
+                particle.position.X > simulationAABB.UpperBound.X ||
+                particle.position.Y < simulationAABB.LowerBound.Y ||
+                particle.position.Y > simulationAABB.UpperBound.Y)
             {
                 particle.position = particle.oldPosition;
                 particle.velocity = Vector2.Zero;
@@ -561,10 +568,10 @@ namespace StasisGame.Systems
                 Vector2 screenCenter = _renderSystem.screenCenter;
                 float width = (_renderSystem.screenWidth / _renderSystem.scale) * 0.75f;
                 float height = (_renderSystem.screenHeight / _renderSystem.scale);
-                simulationAABB.lowerBound.X = screenCenter.X - width;
-                simulationAABB.upperBound.X = screenCenter.X + width;
-                simulationAABB.lowerBound.Y = screenCenter.Y - height;
-                simulationAABB.upperBound.Y = screenCenter.Y + height;
+                simulationAABB.LowerBound.X = screenCenter.X - width;
+                simulationAABB.UpperBound.X = screenCenter.X + width;
+                simulationAABB.LowerBound.Y = screenCenter.Y - height;
+                simulationAABB.UpperBound.Y = screenCenter.Y + height;
 
                 // Flag active particles
                 flagActive();

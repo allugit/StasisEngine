@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using Microsoft.Xna.Framework;
-using Box2D.XNA;
+using FarseerPhysics.Dynamics;
 using StasisGame.Managers;
 using StasisGame.Components;
 
@@ -45,9 +45,9 @@ namespace StasisGame.Systems
         {
             //WorldPositionComponent worldPositionComponent = (WorldPositionComponent)_entityManager.getComponent(entityId, ComponentType.WorldPosition);
             PhysicsComponent physicsComponent = _entityManager.getComponent(entityId, ComponentType.Physics) as PhysicsComponent;
-            Vector2 position = physicsComponent.body.GetPosition();
+            Vector2 position = physicsComponent.body.Position;
 
-            physicsComponent.body.GetWorld().DestroyBody(physicsComponent.body);
+            physicsComponent.body.World.RemoveBody(physicsComponent.body);
             _entityManager.killEntity(entityId);
             _entityManager.factory.createExplosion(position, dynamiteComponent.strength, dynamiteComponent.radius);
         }
@@ -63,7 +63,7 @@ namespace StasisGame.Systems
         {
             PhysicsComponent physicsComponent = (PhysicsComponent)_entityManager.getComponent(entityId, ComponentType.Physics);
 
-            physicsComponent.body.GetWorld().DestroyBody(physicsComponent.body);
+            physicsComponent.body.World.RemoveBody(physicsComponent.body);
             _entityManager.killEntity(entityId);
         }
 
@@ -91,7 +91,7 @@ namespace StasisGame.Systems
                 {
                     PhysicsComponent physicsComponent = (PhysicsComponent)_entityManager.getComponent(explosionEntities[i], ComponentType.Physics);
 
-                    physicsComponent.body.GetWorld().DestroyBody(physicsComponent.body);
+                    physicsComponent.body.World.RemoveBody(physicsComponent.body);
                     _entityManager.killEntity(explosionEntities[i]);
                 }
 
@@ -100,9 +100,9 @@ namespace StasisGame.Systems
                 {
                     Fixture fixture = _debrisToCreate[i].fixture;
 
-                    if (fixture.GetShape() != null)
+                    if (fixture.Shape != null)
                     {
-                        int entityId = (int)fixture.GetBody().GetUserData();
+                        int entityId = (int)fixture.Body.UserData;
                         BodyRenderComponent bodyRenderComponent = (BodyRenderComponent)_entityManager.getComponent(entityId, ComponentType.BodyRender);
                         RenderableTriangle triangleToRemove = null;
 
@@ -118,7 +118,7 @@ namespace StasisGame.Systems
                             bodyRenderComponent.renderableTriangles.Remove(triangleToRemove);
 
                         _entityManager.factory.createDebris(fixture, _debrisToCreate[i].force, _debrisToCreate[i].timeToLive, triangleToRemove, bodyRenderComponent.texture, bodyRenderComponent.layerDepth);
-                        fixture.GetBody().DestroyFixture(fixture);
+                        fixture.Body.DestroyFixture(fixture);
                     }
                 }
                 _debrisToCreate.Clear();
@@ -130,7 +130,7 @@ namespace StasisGame.Systems
                     debrisComponent.timeToLive--;
 
                     if (debrisComponent.restitutionCount < DebrisComponent.RESTITUTION_RESTORE_COUNT)
-                        debrisComponent.fixture.SetRestitution(debrisComponent.fixture.GetRestitution() + debrisComponent.restitutionIncrement);
+                        debrisComponent.fixture.Restitution = debrisComponent.fixture.Restitution + debrisComponent.restitutionIncrement;
 
                     if (debrisComponent.timeToLive < 0)
                         killDebris(debrisEntities[i]);

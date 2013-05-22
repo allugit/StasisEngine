@@ -4,7 +4,12 @@ using System.Linq;
 using System.Xml.Linq;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
-using Box2D.XNA;
+using FarseerPhysics.Common;
+using FarseerPhysics.Dynamics;
+using FarseerPhysics.Dynamics.Joints;
+using FarseerPhysics.Factories;
+using FarseerPhysics.Collision;
+using FarseerPhysics.Collision.Shapes;
 using StasisCore;
 using StasisCore.Models;
 using StasisGame.Systems;
@@ -92,17 +97,43 @@ namespace StasisGame
             }
         }
 
+        // createGroundBody -- Creates a body that is used throughout the game as an anchor for joints (TODO: Might not be necessary with Farseer)
+        public Body createGroundBody(World world)
+        {
+            int groundId = _entityManager.createEntity(10000);
+            Body groundBody = BodyFactory.CreateBody(world, groundId);
+            Fixture fixture;
+
+            groundBody.BodyType = BodyType.Static;
+            fixture = groundBody.CreateFixture(new CircleShape(0.1f, 1f));
+            fixture.IsSensor = true;
+            //groundBodyDef.type = BodyType.Static;
+            //groundBodyDef.userData = groundId;
+            //circleShape.Radius = 0.1f;
+            //fixtureDef.isSensor = true;
+            //fixtureDef.shape = circleShape;
+            //_groundBody = world.CreateBody(groundBodyDef);
+            //_groundBody.CreateFixture(fixtureDef);
+
+            _entityManager.addComponent(groundId, new GroundBodyComponent(groundBody));
+            _entityManager.addComponent(groundId, new IgnoreRopeRaycastComponent());
+            _entityManager.addComponent(groundId, new IgnoreTreeCollisionComponent());
+            _entityManager.addComponent(groundId, new SkipFluidResolutionComponent());
+
+            return groundBody;
+        }
+
         // createBoxTexture -- Creates a texture for boxes from a body and a material
         private Texture2D createBoxTexture(Body body, XElement data)
         {
             RenderSystem renderSystem = (RenderSystem)_systemManager.getSystem(SystemType.Render);
             Material material = new Material(ResourceManager.getResource(data.Attribute("material_uid").Value));
-            Matrix angleTransform = Matrix.CreateRotationZ(body.GetAngle());
+            Matrix angleTransform = Matrix.CreateRotationZ(body.Rotation);
             List<Vector2> materialVertices = new List<Vector2>();
-            PolygonShape boxShape = body.GetFixtureList().GetShape() as PolygonShape;
+            PolygonShape boxShape = body.FixtureList[0].Shape as PolygonShape;
 
             for (int i = 0; i < 4; i++)
-                materialVertices.Add(Vector2.Transform(boxShape._vertices[i], angleTransform));
+                materialVertices.Add(Vector2.Transform(boxShape.Vertices[i], angleTransform));
 
             return renderSystem.materialRenderer.renderMaterial(material, materialVertices, 1f, false);
         }
@@ -111,8 +142,8 @@ namespace StasisGame
         private List<RenderableTriangle> createBoxRenderableTriangles(Body body)
         {
             List<RenderableTriangle> renderableTriangles = new List<RenderableTriangle>();
-            PolygonShape polygonShape = body.GetFixtureList().GetShape() as PolygonShape;
-            Matrix transform = Matrix.CreateRotationZ(body.GetAngle());
+            PolygonShape polygonShape = body.FixtureList[0].Shape as PolygonShape;
+            Matrix transform = Matrix.CreateRotationZ(body.Rotation);
             List<Vector2> points = new List<Vector2>();
             Vector2 topLeft;
             Vector2 bottomRight;
@@ -121,7 +152,7 @@ namespace StasisGame
 
             // Get rotated vertices
             for (int i = 0; i < 4; i++)
-                points.Add(Vector2.Transform(polygonShape._vertices[i], transform));
+                points.Add(Vector2.Transform(polygonShape.Vertices[i], transform));
 
             // Find boundary
             topLeft = points[0];
@@ -141,7 +172,7 @@ namespace StasisGame
             // Create renderable triangles
             foreach (DelaunayTriangle triangle in polygon.Triangles)
             {
-                renderableTriangles.Add(new RenderableTriangle(triangle, topLeft, bottomRight, true, body.GetAngle()));
+                renderableTriangles.Add(new RenderableTriangle(triangle, topLeft, bottomRight, true, body.Rotation));
             }
 
             return renderableTriangles;
@@ -154,10 +185,12 @@ namespace StasisGame
             int actorId = int.Parse(data.Attribute("id").Value);
             int entityId = _entityManager.createEntity(actorId);
             float layerDepth = Loader.loadFloat(data.Attribute("layer_depth"), 0.1f);
-            Body body = null;
-            BodyDef bodyDef = new BodyDef();
-            PolygonShape boxShape = new PolygonShape();
-            FixtureDef boxFixtureDef = new FixtureDef();
+            Body body;
+            Fixture fixture;
+            //BodyDef bodyDef = new BodyDef();
+            float density = Loader.loadFloat(data.Attribute("density"), 1f);
+            PolygonShape boxShape = new PolygonShape(density);
+            //FixtureDef boxFixtureDef = new FixtureDef();
             BodyType bodyType = (BodyType)Loader.loadEnum(typeof(BodyType), data.Attribute("body_type"), (int)BodyType.Static);
             Transform xf;
             BodyRenderComponent bodyRenderComponent;
@@ -165,6 +198,21 @@ namespace StasisGame
             List<Vector2> materialVertices = new List<Vector2>();
             List<RenderableTriangle> renderableTriangles;
 
+            body = new Body(world, entityId);
+            body.BodyType = bodyType;
+            body.Position = Loader.loadVector2(data.Attribute("position"), Vector2.Zero);
+            boxShape.SetAsBox(Loader.loadFloat(data.Attribute("half_width"), 1f), Loader.loadFloat(data.Attribute("half_height"), 1f));
+            fixture = body.CreateFixture(boxShape);
+            fixture.Friction = Loader.loadFloat(data.Attribute("friction"), 1f);
+            fixture.Restitution = Loader.loadFloat(data.Attribute("restitution"), 1f);
+            fixture.CollisionCategories = bodyType == BodyType.Dynamic ? (Category)CollisionCategory.DynamicGeometry : (Category)CollisionCategory.StaticGeometry;
+            fixture.CollidesWith =
+                (Category)CollisionCategory.DynamicGeometry |
+                (Category)CollisionCategory.Player |
+                (Category)CollisionCategory.Rope |
+                (Category)CollisionCategory.StaticGeometry |
+                (Category)CollisionCategory.Item;
+            /*
             bodyDef.type = bodyType;
             bodyDef.position = Loader.loadVector2(data.Attribute("position"), Vector2.Zero);
             bodyDef.angle = Loader.loadFloat(data.Attribute("angle"), 0f);
@@ -181,9 +229,8 @@ namespace StasisGame
                 (ushort)CollisionCategory.Item;
             boxShape.SetAsBox(Loader.loadFloat(data.Attribute("half_width"), 1f), Loader.loadFloat(data.Attribute("half_height"), 1f));
             boxFixtureDef.shape = boxShape;
-
             body = world.CreateBody(bodyDef);
-            body.CreateFixture(boxFixtureDef);
+            body.CreateFixture(boxFixtureDef);*/
 
             // Create body render component
             texture = createBoxTexture(body, data);
@@ -195,13 +242,13 @@ namespace StasisGame
                 _entityManager.addComponent(entityId, new ParticleInfluenceComponent(ParticleInfluenceType.Physical));
             _entityManager.addComponent(entityId, bodyRenderComponent);
             _entityManager.addComponent(entityId, new PhysicsComponent(body));
-            _entityManager.addComponent(entityId, new WorldPositionComponent(body.GetPosition()));
+            _entityManager.addComponent(entityId, new WorldPositionComponent(body.Position));
 
             // Expand level boundary
             body.GetTransform(out xf);
-            for (int i = 0; i < boxShape._vertexCount; i++)
+            for (int i = 0; i < boxShape.Vertices.Count; i++)
             {
-                Vector2 point = MathUtils.Multiply(ref xf, boxShape._vertices[i]);
+                Vector2 point = MathUtils.Multiply(ref xf, boxShape.Vertices[i]);
                 expandLevelBoundary(point);
             }
         }
@@ -213,7 +260,7 @@ namespace StasisGame
             List<Vector2> polygonPoints = new List<Vector2>();
             float segments = 64f;
             float increment = StasisMathHelper.pi2 / segments;
-            float radius = body.GetFixtureList().GetShape()._radius;
+            float radius = body.FixtureList[0].Shape.Radius;
             Material material = new Material(ResourceManager.getResource(data.Attribute("material_uid").Value));
 
             for (float t = StasisMathHelper.pi; t > -StasisMathHelper.pi; t -= increment)
@@ -227,7 +274,7 @@ namespace StasisGame
         {
             float segments = 64f;
             float increment = StasisMathHelper.pi2 / segments;
-            float radius = body.GetFixtureList().GetShape()._radius;
+            float radius = body.FixtureList[0].Shape.Radius;
             List<PolygonPoint> polygonPoints = new List<PolygonPoint>();
             Polygon polygon;
             List<RenderableTriangle> renderableTriangles = new List<RenderableTriangle>();
@@ -254,34 +301,48 @@ namespace StasisGame
             World world = (_systemManager.getSystem(SystemType.Physics) as PhysicsSystem).world;
             int actorId = int.Parse(data.Attribute("id").Value);
             int entityId = _entityManager.createEntity(actorId);
-            Body body = null;
-            BodyDef bodyDef = new BodyDef();
-            FixtureDef circleFixtureDef = new FixtureDef();
-            CircleShape circleShape = new CircleShape();
+            Body body;
+            Fixture fixture;
+            //BodyDef bodyDef = new BodyDef();
+            //FixtureDef circleFixtureDef = new FixtureDef();
+            CircleShape circleShape = new CircleShape(Loader.loadFloat(data.Attribute("radius"), 1f), Loader.loadFloat(data.Attribute("density"), 1f));
             BodyType bodyType = (BodyType)Loader.loadEnum(typeof(BodyType), data.Attribute("body_type"), (int)BodyType.Static);
             Texture2D texture;
             float layerDepth = Loader.loadFloat(data.Attribute("layer_depth"), 0.1f);
             BodyRenderComponent bodyRenderComponent;
             List<RenderableTriangle> renderableTriangles = new List<RenderableTriangle>();
 
-            bodyDef.type = bodyType;
-            bodyDef.position = Loader.loadVector2(data.Attribute("position"), Vector2.Zero);
-            bodyDef.userData = entityId;
-            circleFixtureDef.density = Loader.loadFloat(data.Attribute("density"), 1f);
-            circleFixtureDef.friction = Loader.loadFloat(data.Attribute("friction"), 1f);
-            circleFixtureDef.restitution = Loader.loadFloat(data.Attribute("restitution"), 1f);
-            circleFixtureDef.filter.categoryBits = bodyType == BodyType.Dynamic ? (ushort)CollisionCategory.DynamicGeometry : (ushort)CollisionCategory.StaticGeometry;
-            circleFixtureDef.filter.maskBits =
-                (ushort)CollisionCategory.DynamicGeometry |
-                (ushort)CollisionCategory.Player |
-                (ushort)CollisionCategory.Rope |
-                (ushort)CollisionCategory.StaticGeometry |
-                (ushort)CollisionCategory.Item;
-            circleShape._radius = Loader.loadFloat(data.Attribute("radius"), 1f);
-            circleFixtureDef.shape = circleShape;
+            body = BodyFactory.CreateBody(world, Loader.loadVector2(data.Attribute("position"), Vector2.Zero), entityId);
+            body.BodyType = bodyType;
+            body.CollisionCategories = bodyType == BodyType.Dynamic ? (Category)CollisionCategory.DynamicGeometry : (Category)CollisionCategory.StaticGeometry;
+            body.CollidesWith =
+                (Category)CollisionCategory.DynamicGeometry |
+                (Category)CollisionCategory.Player |
+                (Category)CollisionCategory.Rope |
+                (Category)CollisionCategory.StaticGeometry |
+                (Category)CollisionCategory.Item;
+            fixture = body.CreateFixture(circleShape);
+            fixture.Friction = Loader.loadFloat(data.Attribute("friction"), 1f);
+            fixture.Restitution = Loader.loadFloat(data.Attribute("restitution"), 1f);
 
-            body = world.CreateBody(bodyDef);
-            body.CreateFixture(circleFixtureDef);
+            //bodyDef.type = bodyType;
+            //bodyDef.position = Loader.loadVector2(data.Attribute("position"), Vector2.Zero);
+            //bodyDef.userData = entityId;
+            //circleFixtureDef.density = Loader.loadFloat(data.Attribute("density"), 1f);
+            //circleFixtureDef.friction = Loader.loadFloat(data.Attribute("friction"), 1f);
+            //circleFixtureDef.restitution = Loader.loadFloat(data.Attribute("restitution"), 1f);
+            //circleFixtureDef.filter.categoryBits = bodyType == BodyType.Dynamic ? (ushort)CollisionCategory.DynamicGeometry : (ushort)CollisionCategory.StaticGeometry;
+            //circleFixtureDef.filter.maskBits =
+            //    (ushort)CollisionCategory.DynamicGeometry |
+            //    (ushort)CollisionCategory.Player |
+            //    (ushort)CollisionCategory.Rope |
+            //    (ushort)CollisionCategory.StaticGeometry |
+            //    (ushort)CollisionCategory.Item;
+            //circleShape.Radius = Loader.loadFloat(data.Attribute("radius"), 1f);
+            //circleFixtureDef.shape = circleShape;
+
+            //body = world.CreateBody(bodyDef);
+            //body.CreateFixture(circleFixtureDef);
 
             // Create body render component
             texture = createCircleTexture(body, data);
@@ -293,11 +354,11 @@ namespace StasisGame
                 _entityManager.addComponent(entityId, new ParticleInfluenceComponent(ParticleInfluenceType.Physical));
             _entityManager.addComponent(entityId, new PhysicsComponent(body));
             _entityManager.addComponent(entityId, bodyRenderComponent);
-            _entityManager.addComponent(entityId, new WorldPositionComponent(body.GetPosition()));
+            _entityManager.addComponent(entityId, new WorldPositionComponent(body.Position));
 
             // Expand level boundary
-            expandLevelBoundary(body.GetPosition() + new Vector2(-circleShape._radius, -circleShape._radius));
-            expandLevelBoundary(body.GetPosition() + new Vector2(circleShape._radius, circleShape._radius));
+            expandLevelBoundary(body.Position + new Vector2(-circleShape.Radius, -circleShape.Radius));
+            expandLevelBoundary(body.Position + new Vector2(circleShape.Radius, circleShape.Radius));
         }
 
         public void createFluid(XElement data)
@@ -320,35 +381,47 @@ namespace StasisGame
             int actorId = int.Parse(data.Attribute("id").Value);
             int entityId = _entityManager.createEntity(actorId);
             string itemUID = data.Attribute("item_uid").Value;
-            Body body = null;
-            BodyDef bodyDef = new BodyDef();
-            PolygonShape shape = new PolygonShape();
-            FixtureDef fixtureDef = new FixtureDef();
+            Body body;
+            Fixture fixture;
+            PolygonShape shape = new PolygonShape(Loader.loadFloat(data.Attribute("density"), 1f));
             XElement itemData = ResourceManager.getResource(itemUID);
             Texture2D worldTexture = ResourceManager.getTexture(Loader.loadString(itemData.Attribute("world_texture_uid"), "default_item"));
             Texture2D inventoryTexture = ResourceManager.getTexture(Loader.loadString(itemData.Attribute("inventory_texture_uid"), "default_item"));
 
-            //_actorIdToEntityId.Add(actorId, entityId);
-
-            bodyDef.type = (BodyType)Loader.loadEnum(typeof(BodyType), data.Attribute("body_type"), (int)BodyType.Dynamic);
-            bodyDef.position = Loader.loadVector2(data.Attribute("position"), Vector2.Zero);
-            bodyDef.angle = Loader.loadFloat(data.Attribute("angle"), 0f);
-            bodyDef.userData = entityId;
-            fixtureDef.density = Loader.loadFloat(data.Attribute("density"), 1f);
-            fixtureDef.friction = Loader.loadFloat(data.Attribute("friction"), 1f);
-            fixtureDef.restitution = Loader.loadFloat(data.Attribute("restitution"), 0f);
-            fixtureDef.filter.categoryBits = (ushort)CollisionCategory.Item;
-            fixtureDef.filter.maskBits =
-                (ushort)CollisionCategory.DynamicGeometry |
-                (ushort)CollisionCategory.Player |
-                (ushort)CollisionCategory.Rope |
-                (ushort)CollisionCategory.StaticGeometry |
-                (ushort)CollisionCategory.Explosion;
+            body = BodyFactory.CreateBody(world, Loader.loadVector2(data.Attribute("position"), Vector2.Zero), entityId);
+            body.BodyType = (BodyType)Loader.loadEnum(typeof(BodyType), data.Attribute("body_type"), (int)BodyType.Dynamic);
+            body.Rotation = Loader.loadFloat(data.Attribute("angle"), 0f);
             shape.SetAsBox(Loader.loadFloat(data.Attribute("half_width"), 0.25f), Loader.loadFloat(data.Attribute("half_height"), 0.25f));
-            fixtureDef.shape = shape;
+            fixture = body.CreateFixture(shape);
+            fixture.Friction = Loader.loadFloat(data.Attribute("friction"), 1f);
+            fixture.Restitution = Loader.loadFloat(data.Attribute("restitution"), 0f);
+            fixture.CollisionCategories = (Category)CollisionCategory.Item;
+            fixture.CollidesWith =
+                (Category)CollisionCategory.DynamicGeometry |
+                (Category)CollisionCategory.Player |
+                (Category)CollisionCategory.Rope |
+                (Category)CollisionCategory.StaticGeometry |
+                (Category)CollisionCategory.Explosion;
 
-            body = world.CreateBody(bodyDef);
-            body.CreateFixture(fixtureDef);
+            //bodyDef.type = (BodyType)Loader.loadEnum(typeof(BodyType), data.Attribute("body_type"), (int)BodyType.Dynamic);
+            //bodyDef.position = Loader.loadVector2(data.Attribute("position"), Vector2.Zero);
+            //bodyDef.angle = Loader.loadFloat(data.Attribute("angle"), 0f);
+            //bodyDef.userData = entityId;
+            //fixtureDef.density = Loader.loadFloat(data.Attribute("density"), 1f);
+            //fixtureDef.friction = Loader.loadFloat(data.Attribute("friction"), 1f);
+            //fixtureDef.restitution = Loader.loadFloat(data.Attribute("restitution"), 0f);
+            //fixtureDef.filter.categoryBits = (ushort)CollisionCategory.Item;
+            //fixtureDef.filter.maskBits =
+            //    (ushort)CollisionCategory.DynamicGeometry |
+            //    (ushort)CollisionCategory.Player |
+            //    (ushort)CollisionCategory.Rope |
+            //    (ushort)CollisionCategory.StaticGeometry |
+            //    (ushort)CollisionCategory.Explosion;
+            //shape.SetAsBox(Loader.loadFloat(data.Attribute("half_width"), 0.25f), Loader.loadFloat(data.Attribute("half_height"), 0.25f));
+            //fixtureDef.shape = shape;
+
+            //body = world.CreateBody(bodyDef);
+            //body.CreateFixture(fixtureDef);
 
             _entityManager.addComponent(entityId, new ItemComponent(
                 itemUID,
@@ -362,7 +435,7 @@ namespace StasisGame
             _entityManager.addComponent(entityId, new PhysicsComponent(body));
             _entityManager.addComponent(entityId, new WorldItemRenderComponent(worldTexture));
             _entityManager.addComponent(entityId, new IgnoreTreeCollisionComponent());
-            _entityManager.addComponent(entityId, new WorldPositionComponent(body.GetPosition()));
+            _entityManager.addComponent(entityId, new WorldPositionComponent(body.Position));
         }
 
         // Process of creating a rope
@@ -400,13 +473,13 @@ namespace StasisGame
             int ropeNodeLimit;
             RopeNode head = null;
             RopeNode lastNode = null;
-            RevoluteJointDef anchorADef = new RevoluteJointDef();
-            RevoluteJointDef anchorBDef = new RevoluteJointDef();
+            //RevoluteJointDef anchorADef = new RevoluteJointDef();
+            //RevoluteJointDef anchorBDef = new RevoluteJointDef();
             
             // Raycast to find A to B result
             world.RayCast((fixture, point, normal, fraction) =>
                 {
-                    int fixtureEntityId = (int)fixture.GetBody().GetUserData();
+                    int fixtureEntityId = (int)fixture.Body.UserData;
                     if (_entityManager.getComponent(fixtureEntityId, ComponentType.IgnoreRopeRaycast) != null)
                         return -1;
                     else if (_entityManager.getComponent(fixtureEntityId, ComponentType.Tree) != null)
@@ -423,7 +496,7 @@ namespace StasisGame
             // Raycast to find B to A result
             world.RayCast((fixture, point, normal, fraction) =>
                 {
-                    int fixtureEntityId = (int)fixture.GetBody().GetUserData();
+                    int fixtureEntityId = (int)fixture.Body.UserData;
                     if (_entityManager.getComponent(fixtureEntityId, ComponentType.IgnoreRopeRaycast) != null)
                         return -1;
                     else if (_entityManager.getComponent(fixtureEntityId, ComponentType.Tree) != null)
@@ -449,7 +522,7 @@ namespace StasisGame
                     {
                         // Metamer found at initialPointB
                         metamer.createLimbBody();
-                        abResult.fixture = metamer.body.GetFixtureList();
+                        abResult.fixture = metamer.body.FixtureList[0];
                         abResult.success = true;
                         abResult.worldPoint = initialPointB;
                     }
@@ -471,7 +544,7 @@ namespace StasisGame
                 {
                     // Metamer found at initialPointA
                     metamer.createLimbBody();
-                    baResult.fixture = metamer.body.GetFixtureList();
+                    baResult.fixture = metamer.body.FixtureList[0];
                     baResult.success = true;
                     baResult.worldPoint = initialPointA;
                 }
@@ -505,44 +578,41 @@ namespace StasisGame
             ropeNodeLimit = (int)Math.Ceiling(finalLength / segmentLength);
             for (int i = 0; i < ropeNodeLimit; i++)
             {
-                BodyDef bodyDef = new BodyDef();
-                PolygonShape shape = new PolygonShape();
-                FixtureDef fixtureDef = new FixtureDef();
-                Body body;
+                PolygonShape shape = new PolygonShape(0.5f);
+                Body body = BodyFactory.CreateBody(world, entityId);
+                Fixture fixture;
                 RopeNode ropeNode;
-                RevoluteJointDef jointDef = new RevoluteJointDef();
                 RevoluteJoint joint = null;
 
-                bodyDef.angle = angle + StasisMathHelper.pi; // Adding pi fixes a problem where rope segments are created backwards, and then snap into the correct positions
-                bodyDef.position = finalPointA + ropeNormal * (segmentHalfLength + i * segmentLength);
-                bodyDef.type = BodyType.Dynamic;
+                body.Rotation = angle + StasisMathHelper.pi; // Adding pi fixes a problem where rope segments are created backwards, and then snap into the correct positions
+                body.Position = finalPointA + ropeNormal * (segmentHalfLength + i * segmentLength);
+                body.BodyType = BodyType.Dynamic;
 
                 shape.SetAsBox(segmentHalfLength, 0.15f);
 
-                fixtureDef.density = 0.5f;
-                fixtureDef.friction = 0.5f;
-                fixtureDef.restitution = 0f;
-                fixtureDef.filter.categoryBits = (ushort)CollisionCategory.Rope;
-                fixtureDef.filter.maskBits =
-                    (ushort)CollisionCategory.DynamicGeometry |
-                    (ushort)CollisionCategory.Item |
-                    (ushort)CollisionCategory.StaticGeometry |
-                    (ushort)CollisionCategory.Explosion;
+                fixture = body.CreateFixture(shape);
+                fixture.Friction = 0.5f;
+                fixture.Restitution = 0f;
+                fixture.CollisionCategories = (Category)CollisionCategory.Rope;
+                fixture.CollidesWith =
+                    (Category)CollisionCategory.DynamicGeometry |
+                    (Category)CollisionCategory.Item |
+                    (Category)CollisionCategory.StaticGeometry |
+                    (Category)CollisionCategory.Explosion;
                 if (doubleAnchor)
-                    fixtureDef.filter.maskBits |= (ushort)CollisionCategory.Player;
-                fixtureDef.shape = shape;
-                fixtureDef.userData = i;
-
-                body = world.CreateBody(bodyDef);
-                body.CreateFixture(fixtureDef);
+                    fixture.CollidesWith |= (Category)CollisionCategory.Player;
+                fixture.UserData = i;
 
                 if (lastNode != null)
                 {
+                    joint = JointFactory.CreateRevoluteJoint(world, lastNode.body, body, new Vector2(-segmentHalfLength, 0), new Vector2(segmentHalfLength, 0));
+                    /*
                     jointDef.bodyA = lastNode.body;
                     jointDef.bodyB = body;
                     jointDef.localAnchorA = new Vector2(-segmentHalfLength, 0);
                     jointDef.localAnchorB = new Vector2(segmentHalfLength, 0);
                     joint = (RevoluteJoint)world.CreateJoint(jointDef);
+                    */
                 }
 
                 ropeNode = new RopeNode(body, joint, segmentHalfLength);
@@ -559,11 +629,14 @@ namespace StasisGame
 
             if (baResult.success)
             {
+                head.anchorJoint = JointFactory.CreateRevoluteJoint(world, baResult.fixture.Body, head.body, baResult.fixture.Body.GetLocalPoint(baResult.worldPoint), new Vector2(segmentHalfLength, 0));
+                /*
                 anchorADef.bodyA = baResult.fixture.GetBody();
                 anchorADef.bodyB = head.body;
                 anchorADef.localAnchorA = baResult.fixture.GetBody().GetLocalPoint(baResult.worldPoint);
                 anchorADef.localAnchorB = new Vector2(segmentHalfLength, 0);
                 head.anchorJoint = (RevoluteJoint)world.CreateJoint(anchorADef);
+                */
                 resultHandled = true;
                 reverseClimbDirection = !doubleAnchor;
             }
@@ -573,11 +646,14 @@ namespace StasisGame
             {
                 if (abResult.success)
                 {
+                    lastNode.anchorJoint = JointFactory.CreateRevoluteJoint(world, lastNode.body, abResult.fixture.Body, new Vector2(-segmentHalfLength, 0), abResult.fixture.Body.GetLocalPoint(abResult.worldPoint));
+                    /*
                     anchorBDef.bodyA = lastNode.body;
                     anchorBDef.bodyB = abResult.fixture.GetBody();
                     anchorBDef.localAnchorA = new Vector2(-segmentHalfLength, 0);
                     anchorBDef.localAnchorB = abResult.fixture.GetBody().GetLocalPoint(abResult.worldPoint);
                     lastNode.anchorJoint = (RevoluteJoint)world.CreateJoint(anchorBDef);
+                    */
                 }
             }
 
@@ -596,12 +672,13 @@ namespace StasisGame
             _entityManager.addComponent(entityId, new SkipFluidResolutionComponent());
             _entityManager.addComponent(entityId, new ParticleInfluenceComponent(ParticleInfluenceType.Rope));
 
+            /*
             RopeNode current = head;
             while (current != null)
             {
-                current.body.SetUserData(entityId);
+                current.body.UserData = entityId;
                 current = current.next;
-            }
+            }*/
 
             return entityId;
         }
@@ -613,19 +690,19 @@ namespace StasisGame
             bool result = false;
             Fixture resultFixture = null;
 
-            aabb.lowerBound = point;
-            aabb.upperBound = point;
-            world.QueryAABB((fixtureProxy) =>
+            aabb.LowerBound = point;
+            aabb.UpperBound = point;
+            world.QueryAABB((fixture) =>
                 {
-                    if (fixtureProxy.fixture.TestPoint(point, 0f))
+                    if (fixture.TestPoint(ref point, 0f))
                     {
-                        int fixtureEntityId = (int)fixtureProxy.fixture.GetBody().GetUserData();
+                        int fixtureEntityId = (int)fixture.Body.UserData;
                         WallComponent wallComponent = (WallComponent)_entityManager.getComponent(fixtureEntityId, ComponentType.Wall);
 
                         if (wallComponent != null)
                         {
                             result = true;
-                            resultFixture = fixtureProxy.fixture;
+                            resultFixture = fixture;
                             return false;
                         }
                     }
@@ -650,7 +727,6 @@ namespace StasisGame
         private List<RenderableTriangle> createTerrainRenderableTriangles(List<Vector2> points, Body body)
         {
             List<RenderableTriangle> renderableTriangles = new List<RenderableTriangle>();
-            Fixture current = body.GetFixtureList();
             Vector2 topLeft = points[0];
             Vector2 bottomRight = points[0];
 
@@ -660,13 +736,13 @@ namespace StasisGame
                 bottomRight = Vector2.Max(bottomRight, points[i]);
             }
 
-            while (current != null)
+            for (int i = 0; i < body.FixtureList.Count; i++)
             {
-                RenderableTriangle renderableTriangle = new RenderableTriangle(current, topLeft, bottomRight);
+                Fixture fixture = body.FixtureList[i];
+                RenderableTriangle renderableTriangle = new RenderableTriangle(fixture, topLeft, bottomRight);
 
-                renderableTriangle.fixture = current;
+                renderableTriangle.fixture = fixture;
                 renderableTriangles.Add(renderableTriangle);
-                current = current.GetNext();
             }
 
             return renderableTriangles;
@@ -680,15 +756,16 @@ namespace StasisGame
             int entityId = _entityManager.createEntity(actorId);
             bool isWall = Loader.loadBool(data.Attribute("wall"), false);
             float layerDepth = Loader.loadFloat(data.Attribute("layer_depth"), 0.1f);
-            BodyDef bodyDef = new BodyDef();
-            List<FixtureDef> fixtureDefs = new List<FixtureDef>();
+            //BodyDef bodyDef = new BodyDef();
+            //List<FixtureDef> fixtureDefs = new List<FixtureDef>();
             List<Vector2> points = new List<Vector2>();
             List<PolygonPoint> P2TPoints = new List<PolygonPoint>();
             Polygon polygon;
             Vector2 center = Vector2.Zero;
-            Body body = null;
+            Body body = BodyFactory.CreateBody(world, entityId);
             BodyType bodyType = (BodyType)Loader.loadEnum(typeof(BodyType), data.Attribute("body_type"), (int)BodyType.Static);
             bool isDestructible = Loader.loadBool(data.Attribute("destructible"), false);
+            float density = Loader.loadFloat(data.Attribute("density"), 1f);
             float chunkSpacingX = Loader.loadFloat(data.Attribute("chunk_spacing_x"), 0.2f);
             float chunkSpacingY = Loader.loadFloat(data.Attribute("chunk_spacing_y"), 0.2f);
             float averageChunkSize = (chunkSpacingX + chunkSpacingY) / 2f;
@@ -697,8 +774,8 @@ namespace StasisGame
             List<RenderableTriangle> renderableTriangles;
             BodyRenderComponent bodyRenderComponent;
 
-            bodyDef.type = bodyType;
-            bodyDef.userData = entityId;
+            body.BodyType = bodyType;
+            body.UserData = entityId;
 
             // Load points
             foreach (XElement pointData in data.Elements("Point"))
@@ -776,43 +853,44 @@ namespace StasisGame
             // Create fixtures out of triangles
             foreach (DelaunayTriangle triangle in polygon.Triangles)
             {
-                FixtureDef fixtureDef = new FixtureDef();
-                PolygonShape shape = new PolygonShape();
-                Vector2[] vertices = new Vector2[3];
+                //FixtureDef fixtureDef = new FixtureDef();
+                PolygonShape shape = new PolygonShape(density);
+                Vertices vertices = new Vertices(3);
+                Fixture fixture;
                 TriangulationPoint trianglePoint;
 
-                vertices[0] = new Vector2(triangle.Points[0].Xf, triangle.Points[0].Yf);
+                vertices.Add(new Vector2(triangle.Points[0].Xf, triangle.Points[0].Yf));
                 trianglePoint = triangle.PointCCWFrom(triangle.Points[0]);
-                vertices[1] = new Vector2(trianglePoint.Xf, trianglePoint.Yf);
+                vertices.Add(new Vector2(trianglePoint.Xf, trianglePoint.Yf));
                 trianglePoint = triangle.PointCCWFrom(trianglePoint);
-                vertices[2] = new Vector2(trianglePoint.Xf, trianglePoint.Yf);
-                shape.Set(vertices, 3);
-                fixtureDef.density = Loader.loadFloat(data.Attribute("density"), 1f);
-                fixtureDef.friction = Loader.loadFloat(data.Attribute("friction"), 1f);
-                fixtureDef.restitution = Loader.loadFloat(data.Attribute("restitution"), 0f);
-                fixtureDef.shape = shape;
-                fixtureDef.filter.categoryBits = bodyType == BodyType.Dynamic ? (ushort)CollisionCategory.DynamicGeometry : (ushort)CollisionCategory.StaticGeometry;
+                vertices.Add(new Vector2(trianglePoint.Xf, trianglePoint.Yf));
+                shape.Set(vertices);
+                fixture = body.CreateFixture(shape);
+                fixture.Friction = Loader.loadFloat(data.Attribute("friction"), 1f);
+                fixture.Restitution = Loader.loadFloat(data.Attribute("restitution"), 0f);
+                fixture.CollisionCategories = bodyType == BodyType.Dynamic ? (Category)CollisionCategory.DynamicGeometry : (Category)CollisionCategory.StaticGeometry;
                 if (isWall)
                 {
-                    fixtureDef.filter.maskBits = (ushort)CollisionCategory.Explosion;
+                    fixture.CollidesWith = (Category)CollisionCategory.Explosion;
                 }
                 else
                 {
-                    fixtureDef.filter.maskBits =
-                        (ushort)CollisionCategory.DynamicGeometry |
-                        (ushort)CollisionCategory.Item |
-                        (ushort)CollisionCategory.Player |
-                        (ushort)CollisionCategory.Rope |
-                        (ushort)CollisionCategory.StaticGeometry |
-                        (ushort)CollisionCategory.Explosion;
+                    fixture.CollidesWith =
+                        (Category)CollisionCategory.DynamicGeometry |
+                        (Category)CollisionCategory.Item |
+                        (Category)CollisionCategory.Player |
+                        (Category)CollisionCategory.Rope |
+                        (Category)CollisionCategory.StaticGeometry |
+                        (Category)CollisionCategory.Explosion;
                 }
-                fixtureDefs.Add(fixtureDef);
+                //fixtureDefs.Add(fixtureDef);
             }
 
-            bodyDef.position = center;
-            body = world.CreateBody(bodyDef);
-            foreach (FixtureDef fixtureDef in fixtureDefs)
-                body.CreateFixture(fixtureDef);
+            //bodyDef.position = center;
+            //body = world.CreateBody(bodyDef);
+            body.Position = center;
+            //foreach (FixtureDef fixtureDef in fixtureDefs)
+            //    body.CreateFixture(fixtureDef);
 
             // Create body render component
             texture = createTerrainTexture(points, data);
@@ -833,7 +911,7 @@ namespace StasisGame
             if (isDestructible)
                 _entityManager.addComponent(entityId, new DestructibleGeometryComponent());
             _entityManager.addComponent(entityId, new PhysicsComponent(body));
-            _entityManager.addComponent(entityId, new WorldPositionComponent(body.GetPosition()));
+            _entityManager.addComponent(entityId, new WorldPositionComponent(body.Position));
             _entityManager.addComponent(entityId, bodyRenderComponent);
             _entityManager.addComponent(entityId, new IgnoreTreeCollisionComponent());
 
@@ -911,7 +989,7 @@ namespace StasisGame
             int entityId;
             GroundBodyComponent groundBodyComponent = _entityManager.getComponents<GroundBodyComponent>(ComponentType.GroundBody)[0];
             Vector2 jointWorldPosition = Loader.loadVector2(data.Attribute("position"), Vector2.Zero);
-            RevoluteJointDef jointDef = new RevoluteJointDef();
+            //RevoluteJointDef jointDef = new RevoluteJointDef();
             Body bodyA = null;
             Body bodyB = null;
             float lowerLimit = float.Parse(data.Attribute("lower_angle").Value);
@@ -920,6 +998,7 @@ namespace StasisGame
             float maxMotorTorque = float.Parse(data.Attribute("max_motor_torque").Value);
             float motorSpeed = float.Parse(data.Attribute("motor_speed").Value);
             bool enableMotor = bool.Parse(data.Attribute("enable_motor").Value);
+            RevoluteJoint joint;
             RevoluteComponent revoluteJointComponent;
             PhysicsComponent physicsComponentA = _entityManager.getComponent(int.Parse(data.Attribute("actor_a").Value), ComponentType.Physics) as PhysicsComponent;
             PhysicsComponent physicsComponentB = _entityManager.getComponent(int.Parse(data.Attribute("actor_b").Value), ComponentType.Physics) as PhysicsComponent;
@@ -930,6 +1009,7 @@ namespace StasisGame
             bodyA = physicsComponentA.body;
             bodyB = physicsComponentB.body;
 
+            /*
             jointDef.bodyA = bodyA;
             jointDef.bodyB = bodyB;
             jointDef.collideConnected = false;
@@ -941,10 +1021,18 @@ namespace StasisGame
             jointDef.upperAngle = upperLimit;
             jointDef.maxMotorTorque = maxMotorTorque;
             jointDef.motorSpeed = motorSpeed;
-            revoluteJointComponent = new RevoluteComponent((RevoluteJoint)world.CreateJoint(jointDef));
+            */
+            joint = JointFactory.CreateRevoluteJoint(world, bodyA, bodyB, bodyA.GetLocalPoint(jointWorldPosition), bodyB.GetLocalPoint(jointWorldPosition));
+            joint.CollideConnected = false;
+            joint.LimitEnabled = enableLimit;
+            joint.MotorEnabled = enableMotor;
+            joint.LowerLimit = lowerLimit;
+            joint.UpperLimit = upperLimit;
+            joint.MaxMotorTorque = maxMotorTorque;
+            joint.MotorSpeed = motorSpeed;
+            revoluteJointComponent = new RevoluteComponent(joint);
 
             entityId = _entityManager.createEntity(actorId);
-            //_actorIdToEntityId.Add(actorId, entityId);
             _entityManager.addComponent(entityId, revoluteJointComponent);
 
             if (_actorIdEntityIdGateComponentMap.ContainsKey(actorId))
@@ -965,7 +1053,7 @@ namespace StasisGame
             int actorId = int.Parse(data.Attribute("id").Value);
             int entityId;
             GroundBodyComponent groundBodyComponent = _entityManager.getComponents<GroundBodyComponent>(ComponentType.GroundBody)[0];
-            PrismaticJointDef jointDef = new PrismaticJointDef();
+            //PrismaticJointDef jointDef = new PrismaticJointDef();
             Vector2 jointWorldPosition = Loader.loadVector2(data.Attribute("position"), Vector2.Zero);
             Vector2 axis = Loader.loadVector2(data.Attribute("axis"), new Vector2(1, 0));
             float upperLimit = Loader.loadFloat(data.Attribute("upper_limit"), 0f);
@@ -977,13 +1065,15 @@ namespace StasisGame
             float maxMotorForce = Loader.loadFloat(data.Attribute("max_motor_force"), 0f);
             Body bodyA = null;
             Body bodyB = null;
-            PrismaticJointComponent prismaticJointComponent = null;
+            PrismaticJointComponent prismaticJointComponent;
+            PrismaticJoint joint;
             PhysicsComponent physicsComponentA = _entityManager.getComponent(int.Parse(data.Attribute("actor_a").Value), ComponentType.Physics) as PhysicsComponent;
             PhysicsComponent physicsComponentB = _entityManager.getComponent(int.Parse(data.Attribute("actor_b").Value), ComponentType.Physics) as PhysicsComponent;
 
             bodyA = physicsComponentA.body;
             bodyB = physicsComponentB.body;
 
+            /*
             jointDef.Initialize(bodyA, bodyB, bodyA.GetWorldCenter(), axis);
             jointDef.lowerTranslation = lowerLimit;
             jointDef.upperTranslation = upperLimit;
@@ -991,9 +1081,17 @@ namespace StasisGame
             jointDef.enableMotor = motorEnabled;
             jointDef.motorSpeed = motorSpeed;
             jointDef.maxMotorForce = autoCalculateForce ? bodyA.GetMass() * world.Gravity.Length() + buttonForceDifference : maxMotorForce;
+            */
+            joint = JointFactory.CreatePrismaticJoint(bodyA, bodyB, bodyA.WorldCenter, axis);
+            joint.LowerLimit = lowerLimit;
+            joint.UpperLimit = upperLimit;
+            joint.LimitEnabled = lowerLimit != 0 || upperLimit != 0;
+            joint.MotorEnabled = motorEnabled;
+            joint.MotorSpeed = motorSpeed;
+            joint.MaxMotorForce = autoCalculateForce ? bodyA.Mass * world.Gravity.Length() + buttonForceDifference : maxMotorForce;
 
             entityId = _entityManager.createEntity(actorId);
-            prismaticJointComponent = new PrismaticJointComponent((PrismaticJoint)world.CreateJoint(jointDef));
+            prismaticJointComponent = new PrismaticJointComponent(joint);
             _entityManager.addComponent(entityId, prismaticJointComponent);
 
             if (_actorIdEntityIdGateComponentMap.ContainsKey(actorId))
@@ -1080,12 +1178,12 @@ namespace StasisGame
                         {
                             case ComponentType.Physics:
                                 PhysicsComponent physicsComponent = component as PhysicsComponent;
-                                Fixture currentPhysicsFixture = physicsComponent.body.GetFixtureList();
-                                while (currentPhysicsFixture != null)
+                                //Fixture currentPhysicsFixture = physicsComponent.body.FixtureList[0];
+                                for (int i = 0; i < physicsComponent.body.FixtureList.Count; i++)
                                 {
-                                    if (!currentPhysicsFixture.IsIgnoredEntity(ignored))
-                                        currentPhysicsFixture.AddIgnoredEntity(ignored);
-                                    currentPhysicsFixture = currentPhysicsFixture.GetNext();
+                                    Fixture fixture = physicsComponent.body.FixtureList[i];
+                                    if (!fixture.IsIgnoredEntity(ignored))
+                                        fixture.AddIgnoredEntity(ignored);
                                 }
                                 break;
 
@@ -1100,8 +1198,8 @@ namespace StasisGame
                                 RopeNode currentRopeNode = ropePhysicsComponent.ropeNodeHead;
                                 while (currentRopeNode != null)
                                 {
-                                    if (!currentRopeNode.body.GetFixtureList().IsIgnoredEntity(ignored))
-                                        currentRopeNode.body.GetFixtureList().AddIgnoredEntity(ignored);
+                                    if (!currentRopeNode.body.FixtureList[0].IsIgnoredEntity(ignored))
+                                        currentRopeNode.body.FixtureList[0].AddIgnoredEntity(ignored);
                                     currentRopeNode = currentRopeNode.next;
                                 }
                                 break;
@@ -1120,16 +1218,15 @@ namespace StasisGame
             World world = (_systemManager.getSystem(SystemType.Physics) as PhysicsSystem).world;
             int actorId = int.Parse(data.Attribute("id").Value);
             int entityId = _entityManager.createEntity(actorId);
-            BodyDef bodyDef = new BodyDef();
-            List<FixtureDef> fixtureDefs = new List<FixtureDef>();
+            //BodyDef bodyDef = new BodyDef();
+            //List<FixtureDef> fixtureDefs = new List<FixtureDef>();
             List<Vector2> points = new List<Vector2>();
             List<PolygonPoint> P2TPoints = new List<PolygonPoint>();
             Polygon polygon;
             Vector2 center = Vector2.Zero;
-            Body body = null;
+            Body body = BodyFactory.CreateBody(world, entityId);
 
-            bodyDef.type = BodyType.Static;
-            bodyDef.userData = entityId;
+            body.BodyType = BodyType.Static;
 
             foreach (XElement pointData in data.Elements("Point"))
                 points.Add(Loader.loadVector2(pointData, Vector2.Zero));
@@ -1145,36 +1242,35 @@ namespace StasisGame
 
             foreach (DelaunayTriangle triangle in polygon.Triangles)
             {
-                FixtureDef fixtureDef = new FixtureDef();
-                PolygonShape shape = new PolygonShape();
-                Vector2[] vertices = new Vector2[3];
+                //FixtureDef fixtureDef = new FixtureDef();
+                PolygonShape shape = new PolygonShape(1f);
+                Vertices vertices = new Vertices(3);
+                Fixture fixture;
                 TriangulationPoint trianglePoint;
 
-                vertices[0] = new Vector2(triangle.Points[0].Xf, triangle.Points[0].Yf);
+                vertices.Add(new Vector2(triangle.Points[0].Xf, triangle.Points[0].Yf));
                 trianglePoint = triangle.PointCCWFrom(triangle.Points[0]);
-                vertices[1] = new Vector2(trianglePoint.Xf, trianglePoint.Yf);
+                vertices.Add(new Vector2(trianglePoint.Xf, trianglePoint.Yf));
                 trianglePoint = triangle.PointCCWFrom(trianglePoint);
-                vertices[2] = new Vector2(trianglePoint.Xf, trianglePoint.Yf);
-                shape.Set(vertices, 3);
-                fixtureDef.density = 1f;
-                fixtureDef.friction = 0f;
-                fixtureDef.restitution = 0f;
-                fixtureDef.isSensor = true;
-                fixtureDef.shape = shape;
-                fixtureDef.filter.categoryBits = (ushort)CollisionCategory.StaticGeometry;
-                fixtureDef.filter.maskBits = (ushort)CollisionCategory.Player;
-                fixtureDefs.Add(fixtureDef);
+                vertices.Add(new Vector2(trianglePoint.Xf, trianglePoint.Yf));
+                shape.Set(vertices);
+                fixture = body.CreateFixture(shape);
+                fixture.Friction = 0f;
+                fixture.Restitution = 0f;
+                fixture.IsSensor = true;
+                fixture.CollisionCategories = (Category)CollisionCategory.StaticGeometry;
+                fixture.CollidesWith = (Category)CollisionCategory.Player;
             }
 
-            bodyDef.position = center;
-            body = world.CreateBody(bodyDef);
-            foreach (FixtureDef fixtureDef in fixtureDefs)
-                body.CreateFixture(fixtureDef);
+            body.Position = center;
+            //body = world.CreateBody(bodyDef);
+            //foreach (FixtureDef fixtureDef in fixtureDefs)
+            //    body.CreateFixture(fixtureDef);
 
             // Add components
             _entityManager.addComponent(entityId, new PhysicsComponent(body));
             _entityManager.addComponent(entityId, regionGoalComponent);
-            _entityManager.addComponent(entityId, new WorldPositionComponent(body.GetPosition()));
+            _entityManager.addComponent(entityId, new WorldPositionComponent(body.Position));
             _entityManager.addComponent(entityId, new IgnoreRopeRaycastComponent());
             _entityManager.addComponent(entityId, new SkipFluidResolutionComponent());
 
@@ -1188,25 +1284,21 @@ namespace StasisGame
             World world = (_systemManager.getSystem(SystemType.Physics) as PhysicsSystem).world;
             Texture2D worldTexture = ResourceManager.getTexture("dynamite");
             int entityId = _entityManager.createEntity();
-            Body body = null;
-            BodyDef bodyDef = new BodyDef();
-            FixtureDef fixtureDef = new FixtureDef();
-            PolygonShape shape = new PolygonShape();
+            Body body = BodyFactory.CreateBody(world, entityId);
+            PolygonShape shape = new PolygonShape(1f);
+            Fixture fixture;
 
-            bodyDef.angularVelocity = 6f;
-            bodyDef.position = position;
-            bodyDef.type = BodyType.Dynamic;
-            bodyDef.userData = entityId;
+            body.AngularVelocity = 6f;
+            body.Position = position;
+            body.BodyType = BodyType.Dynamic;
+            body.UserData = entityId;
             shape.SetAsBox(0.19f, 0.4f);
-            fixtureDef.density = 1f;
-            fixtureDef.filter.categoryBits = (ushort)CollisionCategory.Item;
-            fixtureDef.filter.maskBits =
-                (ushort)CollisionCategory.DynamicGeometry |
-                (ushort)CollisionCategory.Rope |
-                (ushort)CollisionCategory.StaticGeometry;
-            fixtureDef.shape = shape;
-            body = world.CreateBody(bodyDef);
-            body.CreateFixture(fixtureDef);
+            fixture = body.CreateFixture(shape);
+            fixture.CollisionCategories = (Category)CollisionCategory.Item;
+            fixture.CollidesWith =
+                (Category)CollisionCategory.DynamicGeometry |
+                (Category)CollisionCategory.Rope |
+                (Category)CollisionCategory.StaticGeometry;
             body.ApplyForce(force, position);
 
             // Add components
@@ -1215,7 +1307,7 @@ namespace StasisGame
             _entityManager.addComponent(entityId, new WorldItemRenderComponent(worldTexture));
             _entityManager.addComponent(entityId, new IgnoreTreeCollisionComponent());
             _entityManager.addComponent(entityId, new IgnoreRopeRaycastComponent());
-            _entityManager.addComponent(entityId, new WorldPositionComponent(body.GetPosition()));
+            _entityManager.addComponent(entityId, new WorldPositionComponent(body.Position));
             _entityManager.addComponent(entityId, new DynamiteComponent(100f, 2f, 180));
             _entityManager.addComponent(entityId, new ParticleInfluenceComponent(ParticleInfluenceType.Dynamite));
 
@@ -1226,27 +1318,21 @@ namespace StasisGame
         {
             World world = (_systemManager.getSystem(SystemType.Physics) as PhysicsSystem).world;
             int entityId = _entityManager.createEntity();
-            Body body = null;
-            BodyDef bodyDef = new BodyDef();
-            FixtureDef fixtureDef = new FixtureDef();
-            CircleShape shape = new CircleShape();
+            Body body = BodyFactory.CreateBody(world, entityId);
+            CircleShape shape = new CircleShape(radius, 1f);
+            Fixture fixture = body.CreateFixture(shape);
 
-            bodyDef.position = position;
-            bodyDef.type = BodyType.Dynamic;
-            bodyDef.userData = entityId;
-            shape._radius = radius;
-            fixtureDef.density = 1f;
-            fixtureDef.shape = shape;
-            fixtureDef.isSensor = true;
-            fixtureDef.filter.categoryBits = (ushort)CollisionCategory.Explosion;
-            fixtureDef.filter.maskBits = 0xffff;
-            body = world.CreateBody(bodyDef);
-            body.CreateFixture(fixtureDef);
+            body.Position = position;
+            body.BodyType = BodyType.Dynamic;
+            body.UserData = entityId;
+            fixture.IsSensor = true;
+            fixture.CollisionCategories = (Category)CollisionCategory.Explosion;
+            fixture.CollidesWith = Category.All;
 
             // Add components
             _entityManager.addComponent(entityId, new PhysicsComponent(body));
-            _entityManager.addComponent(entityId, new WorldPositionComponent(body.GetPosition()));
-            _entityManager.addComponent(entityId, new ExplosionComponent(body.GetPosition(), strength, radius));
+            _entityManager.addComponent(entityId, new WorldPositionComponent(body.Position));
+            _entityManager.addComponent(entityId, new ExplosionComponent(body.Position, strength, radius));
             _entityManager.addComponent(entityId, new SkipFluidResolutionComponent());
             _entityManager.addComponent(entityId, new IgnoreRopeRaycastComponent());
             _entityManager.addComponent(entityId, new ParticleInfluenceComponent(ParticleInfluenceType.Explosion));
@@ -1258,38 +1344,31 @@ namespace StasisGame
         {
             World world = (_systemManager.getSystem(SystemType.Physics) as PhysicsSystem).world;
             int entityId = _entityManager.createEntity();
-            PolygonShape sourceShape = sourceFixture.GetShape() as PolygonShape;
-            Body body;
-            BodyDef bodyDef = new BodyDef();
-            FixtureDef fixtureDef = new FixtureDef();
-            PolygonShape shape = new PolygonShape();
-            Vector2[] points = new Vector2[3];
+            PolygonShape sourceShape = sourceFixture.Shape as PolygonShape;
+            Body body = BodyFactory.CreateBody(world, entityId);
+            PolygonShape shape = new PolygonShape(sourceShape.Density);
+            Vertices points = new Vertices(3);
             Vector2 center = Vector2.Zero;
-            Filter filter;
             List<RenderableTriangle> renderableTriangles = new List<RenderableTriangle>();
-            float restitutionIncrement = -(1.5f - sourceFixture.GetRestitution()) / (float)DebrisComponent.RESTITUTION_RESTORE_COUNT;
+            float restitutionIncrement = -(1.5f - sourceFixture.Restitution) / (float)DebrisComponent.RESTITUTION_RESTORE_COUNT;
             Fixture fixture;
 
             // Adjust fixture's points
             for (int i = 0; i < 3; i++)
-                center += sourceShape._vertices[i] / 3;
+                center += sourceShape.Vertices[i] / 3;
             for (int i = 0; i < 3; i++)
-                points[i] = sourceShape._vertices[i] - center;
+                points[i] = sourceShape.Vertices[i] - center;
 
             // Create body
-            sourceFixture.GetFilterData(out filter);
-            bodyDef.position = sourceFixture.GetBody().GetPosition() + center;
-            bodyDef.type = BodyType.Dynamic;
-            bodyDef.userData = entityId;
-            shape.Set(points, 3);
-            fixtureDef.density = sourceFixture.GetDensity();
-            fixtureDef.filter.categoryBits = filter.categoryBits;
-            fixtureDef.filter.maskBits = filter.maskBits;
-            fixtureDef.friction = sourceFixture.GetFriction();
-            fixtureDef.restitution = 1.5f;
-            fixtureDef.shape = shape;
-            body = world.CreateBody(bodyDef);
-            fixture = body.CreateFixture(fixtureDef);
+            body.Position = sourceFixture.Body.Position + center;
+            body.BodyType = BodyType.Dynamic;
+            body.UserData = entityId;
+            shape.Set(points);
+            fixture = body.CreateFixture(shape);
+            fixture.CollisionCategories = sourceFixture.CollisionCategories;
+            fixture.CollidesWith = sourceFixture.CollisionCategories;
+            fixture.Friction = sourceFixture.Friction;
+            fixture.Restitution = 1.5f;
             body.ApplyForce(force, center);
 
             // Adjust renderable triangle
@@ -1303,7 +1382,7 @@ namespace StasisGame
             // Add components
             _entityManager.addComponent(entityId, new ParticleInfluenceComponent(ParticleInfluenceType.Physical));
             _entityManager.addComponent(entityId, new PhysicsComponent(body));
-            _entityManager.addComponent(entityId, new WorldPositionComponent(body.GetPosition()));
+            _entityManager.addComponent(entityId, new WorldPositionComponent(body.Position));
             _entityManager.addComponent(entityId, new BodyRenderComponent(texture, renderableTriangles, layerDepth));
             _entityManager.addComponent(entityId, new DebrisComponent(fixture, timeToLive, restitutionIncrement));
 

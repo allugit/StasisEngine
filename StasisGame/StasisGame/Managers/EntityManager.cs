@@ -7,7 +7,6 @@ using Microsoft.Xna.Framework.Graphics;
 using StasisGame.Components;
 using StasisGame.Systems;
 using StasisCore;
-using Box2D.XNA;
 
 namespace StasisGame.Managers
 {

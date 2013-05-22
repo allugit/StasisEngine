@@ -1,5 +1,5 @@
 ﻿using System;
-using Box2D.XNA;
+using FarseerPhysics.Dynamics;
 
 namespace StasisGame.Components
 {
