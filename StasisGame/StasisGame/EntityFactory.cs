@@ -579,7 +579,7 @@ namespace StasisGame
             for (int i = 0; i < ropeNodeLimit; i++)
             {
                 PolygonShape shape = new PolygonShape(0.5f);
-                Body body = BodyFactory.CreateBody(world, entityId);
+                Body body = BodyFactory.CreateBody(world);
                 Fixture fixture;
                 RopeNode ropeNode;
                 RevoluteJoint joint = null;
@@ -672,13 +672,12 @@ namespace StasisGame
             _entityManager.addComponent(entityId, new SkipFluidResolutionComponent());
             _entityManager.addComponent(entityId, new ParticleInfluenceComponent(ParticleInfluenceType.Rope));
 
-            /*
             RopeNode current = head;
             while (current != null)
             {
                 current.body.UserData = entityId;
                 current = current.next;
-            }*/
+            }
 
             return entityId;
         }
