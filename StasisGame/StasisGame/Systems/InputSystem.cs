@@ -26,6 +26,7 @@ namespace StasisGame.Systems
         public SystemType systemType { get { return SystemType.Input; } }
         public bool paused { get { return _paused; } set { _paused = value; } }
         public bool singleStep { get { return _singleStep; } set { _singleStep = value; } }
+        public static bool usingGamepad { get { return DataManager.gameSettings.controllerType == ControllerType.Gamepad && newGamepadState.IsConnected; } }
 
         public InputSystem(SystemManager systemManager, EntityManager entityManager)
         {
@@ -35,7 +36,6 @@ namespace StasisGame.Systems
 
         public void update()
         {
-            List<InputComponent> inputComponents = _entityManager.getComponents<InputComponent>(ComponentType.Input);
             RenderSystem renderSystem = (RenderSystem)_systemManager.getSystem(SystemType.Render);
             bool togglePause = newKeyState.IsKeyDown(Keys.F3) && oldKeyState.IsKeyUp(Keys.F3);
             bool toggleSingleStep = newKeyState.IsKeyDown(Keys.F2) && oldKeyState.IsKeyUp(Keys.F2);
@@ -71,16 +71,6 @@ namespace StasisGame.Systems
 
             if (toggleDebug)
                 LoderGame.debug = !LoderGame.debug;
-
-            for (int i = 0; i < inputComponents.Count; i++)
-            {
-                inputComponents[i].newKeyState = newKeyState;
-                inputComponents[i].newMouseState = newMouseState;
-                inputComponents[i].newGamepadState = newGamepadState;
-                inputComponents[i].oldKeyState = oldKeyState;
-                inputComponents[i].oldMouseState = oldMouseState;
-                inputComponents[i].oldGamepadState = oldGamepadState;
-            }
         }
     }
 }

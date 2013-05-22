@@ -99,7 +99,6 @@
     <Compile Include="Components\IComponent.cs" />
     <Compile Include="Components\IgnoreRopeRaycastComponent.cs" />
     <Compile Include="Components\IgnoreTreeCollisionComponent.cs" />
-    <Compile Include="Components\InputComponent.cs" />
     <Compile Include="Components\InventoryComponent.cs" />
     <Compile Include="Components\ItemComponent.cs" />
     <Compile Include="Components\PrismaticJointComponent.cs" />

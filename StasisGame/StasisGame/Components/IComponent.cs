@@ -10,7 +10,6 @@ namespace StasisGame.Components
         RopeRender,
         WorldItemRender,
         Item,
-        Input,
         CharacterRender,
         CharacterMovement,
         BodyFocusPoint,

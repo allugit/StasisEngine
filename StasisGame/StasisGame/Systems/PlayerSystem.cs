@@ -169,7 +169,6 @@ namespace StasisGame.Systems
             feetFixture = body.CreateFixture(feetFixtureDef);*/
 
             _entityManager.addComponent(playerId, new PhysicsComponent(body));
-            _entityManager.addComponent(playerId, new InputComponent());
             _entityManager.addComponent(playerId, new CharacterMovementComponent(feetFixture));
             _entityManager.addComponent(playerId, new CharacterRenderComponent());
             _entityManager.addComponent(playerId, new BodyFocusPointComponent(body, new Vector2(0, -7f), FocusType.Multiple));
@@ -217,28 +216,27 @@ namespace StasisGame.Systems
 
                 if (physicsComponent != null)   // If there is a physics component, then we're in a level.
                 {
-                    InputComponent inputComponent = _entityManager.getComponent(_playerId, ComponentType.Input) as InputComponent;
                     CharacterMovementComponent characterMovementComponent = _entityManager.getComponent(_playerId, ComponentType.CharacterMovement) as CharacterMovementComponent;
                     RopeGrabComponent ropeGrabComponent = _entityManager.getComponent(_playerId, ComponentType.RopeGrab) as RopeGrabComponent;
 
-                    if (inputComponent.usingGamepad)
+                    if (InputSystem.usingGamepad)
                     {
-                        if (inputComponent.newGamepadState.ThumbSticks.Left.X < 0)
+                        if (InputSystem.newGamepadState.ThumbSticks.Left.X < 0)
                         {
-                            characterMovementComponent.walkSpeedModifier = Math.Abs(inputComponent.newGamepadState.ThumbSticks.Left.X);
+                            characterMovementComponent.walkSpeedModifier = Math.Abs(InputSystem.newGamepadState.ThumbSticks.Left.X);
                             characterMovementComponent.walkLeft = true;
                         }
-                        else if (inputComponent.newGamepadState.DPad.Left == ButtonState.Pressed)
+                        else if (InputSystem.newGamepadState.DPad.Left == ButtonState.Pressed)
                             characterMovementComponent.walkLeft = true;
                         else
                             characterMovementComponent.walkLeft = false;
 
-                        if (inputComponent.newGamepadState.ThumbSticks.Left.X > 0)
+                        if (InputSystem.newGamepadState.ThumbSticks.Left.X > 0)
                         {
-                            characterMovementComponent.walkSpeedModifier = inputComponent.newGamepadState.ThumbSticks.Left.X;
+                            characterMovementComponent.walkSpeedModifier = InputSystem.newGamepadState.ThumbSticks.Left.X;
                             characterMovementComponent.walkRight = true;
                         }
-                        else if (inputComponent.newGamepadState.DPad.Right == ButtonState.Pressed)
+                        else if (InputSystem.newGamepadState.DPad.Right == ButtonState.Pressed)
                             characterMovementComponent.walkRight = true;
                         else
                             characterMovementComponent.walkRight = false;
@@ -246,30 +244,30 @@ namespace StasisGame.Systems
                         characterMovementComponent.climbAmount = 0f;
                         characterMovementComponent.climbDown = false;
                         characterMovementComponent.climbUp = false;
-                        if (inputComponent.newGamepadState.ThumbSticks.Left.Y > 0)
+                        if (InputSystem.newGamepadState.ThumbSticks.Left.Y > 0)
                         {
                             characterMovementComponent.climbUp = true;
-                            characterMovementComponent.climbAmount = Math.Abs(inputComponent.newGamepadState.ThumbSticks.Left.Y);
+                            characterMovementComponent.climbAmount = Math.Abs(InputSystem.newGamepadState.ThumbSticks.Left.Y);
                         }
-                        else if (inputComponent.newGamepadState.ThumbSticks.Left.Y < 0)
+                        else if (InputSystem.newGamepadState.ThumbSticks.Left.Y < 0)
                         {
                             characterMovementComponent.climbDown = true;
-                            characterMovementComponent.climbAmount = Math.Abs(inputComponent.newGamepadState.ThumbSticks.Left.Y);
+                            characterMovementComponent.climbAmount = Math.Abs(InputSystem.newGamepadState.ThumbSticks.Left.Y);
                         }
 
-                        characterMovementComponent.jump = inputComponent.newGamepadState.Buttons.A == ButtonState.Pressed;
+                        characterMovementComponent.jump = InputSystem.newGamepadState.Buttons.A == ButtonState.Pressed;
                     }
                     else
                     {
                         characterMovementComponent.walkSpeedModifier = 1f;
-                        characterMovementComponent.walkLeft = inputComponent.newKeyState.IsKeyDown(Keys.A) || inputComponent.newKeyState.IsKeyDown(Keys.Left);
-                        characterMovementComponent.walkRight = inputComponent.newKeyState.IsKeyDown(Keys.D) || inputComponent.newKeyState.IsKeyDown(Keys.Right);
-                        characterMovementComponent.jump = inputComponent.newKeyState.IsKeyDown(Keys.Space);
-                        characterMovementComponent.climbUp = inputComponent.newKeyState.IsKeyDown(Keys.W);
-                        characterMovementComponent.climbDown = inputComponent.newKeyState.IsKeyDown(Keys.S);
+                        characterMovementComponent.walkLeft = InputSystem.newKeyState.IsKeyDown(Keys.A) || InputSystem.newKeyState.IsKeyDown(Keys.Left);
+                        characterMovementComponent.walkRight = InputSystem.newKeyState.IsKeyDown(Keys.D) || InputSystem.newKeyState.IsKeyDown(Keys.Right);
+                        characterMovementComponent.jump = InputSystem.newKeyState.IsKeyDown(Keys.Space);
+                        characterMovementComponent.climbUp = InputSystem.newKeyState.IsKeyDown(Keys.W);
+                        characterMovementComponent.climbDown = InputSystem.newKeyState.IsKeyDown(Keys.S);
                         characterMovementComponent.climbAmount = 1f;
-                        characterMovementComponent.doRopeGrab = inputComponent.newKeyState.IsKeyDown(Keys.E);
-                        characterMovementComponent.allowRopeGrab = characterMovementComponent.allowRopeGrab ? true : (inputComponent.newKeyState.IsKeyUp(Keys.E) && inputComponent.oldKeyState.IsKeyDown(Keys.E));
+                        characterMovementComponent.doRopeGrab = InputSystem.newKeyState.IsKeyDown(Keys.E);
+                        characterMovementComponent.allowRopeGrab = characterMovementComponent.allowRopeGrab ? true : (InputSystem.newKeyState.IsKeyUp(Keys.E) && InputSystem.oldKeyState.IsKeyDown(Keys.E));
 
                     }
                 }
