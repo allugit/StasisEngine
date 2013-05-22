@@ -205,13 +205,13 @@ namespace StasisGame
             fixture = body.CreateFixture(boxShape);
             fixture.Friction = Loader.loadFloat(data.Attribute("friction"), 1f);
             fixture.Restitution = Loader.loadFloat(data.Attribute("restitution"), 1f);
-            fixture.CollisionCategories = bodyType == BodyType.Dynamic ? (Category)CollisionCategory.DynamicGeometry : (Category)CollisionCategory.StaticGeometry;
+            fixture.CollisionCategories = bodyType == BodyType.Dynamic ? (ushort)CollisionCategory.DynamicGeometry : (ushort)CollisionCategory.StaticGeometry;
             fixture.CollidesWith =
-                (Category)CollisionCategory.DynamicGeometry |
-                (Category)CollisionCategory.Player |
-                (Category)CollisionCategory.Rope |
-                (Category)CollisionCategory.StaticGeometry |
-                (Category)CollisionCategory.Item;
+                (ushort)CollisionCategory.DynamicGeometry |
+                (ushort)CollisionCategory.Player |
+                (ushort)CollisionCategory.Rope |
+                (ushort)CollisionCategory.StaticGeometry |
+                (ushort)CollisionCategory.Item;
             /*
             bodyDef.type = bodyType;
             bodyDef.position = Loader.loadVector2(data.Attribute("position"), Vector2.Zero);
@@ -314,16 +314,16 @@ namespace StasisGame
 
             body = BodyFactory.CreateBody(world, Loader.loadVector2(data.Attribute("position"), Vector2.Zero), entityId);
             body.BodyType = bodyType;
-            body.CollisionCategories = bodyType == BodyType.Dynamic ? (Category)CollisionCategory.DynamicGeometry : (Category)CollisionCategory.StaticGeometry;
-            body.CollidesWith =
-                (Category)CollisionCategory.DynamicGeometry |
-                (Category)CollisionCategory.Player |
-                (Category)CollisionCategory.Rope |
-                (Category)CollisionCategory.StaticGeometry |
-                (Category)CollisionCategory.Item;
             fixture = body.CreateFixture(circleShape);
             fixture.Friction = Loader.loadFloat(data.Attribute("friction"), 1f);
             fixture.Restitution = Loader.loadFloat(data.Attribute("restitution"), 1f);
+            fixture.CollisionCategories = bodyType == BodyType.Dynamic ? (ushort)CollisionCategory.DynamicGeometry : (ushort)CollisionCategory.StaticGeometry;
+            fixture.CollidesWith =
+                (ushort)CollisionCategory.DynamicGeometry |
+                (ushort)CollisionCategory.Player |
+                (ushort)CollisionCategory.Rope |
+                (ushort)CollisionCategory.StaticGeometry |
+                (ushort)CollisionCategory.Item;
 
             //bodyDef.type = bodyType;
             //bodyDef.position = Loader.loadVector2(data.Attribute("position"), Vector2.Zero);
@@ -395,13 +395,13 @@ namespace StasisGame
             fixture = body.CreateFixture(shape);
             fixture.Friction = Loader.loadFloat(data.Attribute("friction"), 1f);
             fixture.Restitution = Loader.loadFloat(data.Attribute("restitution"), 0f);
-            fixture.CollisionCategories = (Category)CollisionCategory.Item;
+            fixture.CollisionCategories = (ushort)CollisionCategory.Item;
             fixture.CollidesWith =
-                (Category)CollisionCategory.DynamicGeometry |
-                (Category)CollisionCategory.Player |
-                (Category)CollisionCategory.Rope |
-                (Category)CollisionCategory.StaticGeometry |
-                (Category)CollisionCategory.Explosion;
+                (ushort)CollisionCategory.DynamicGeometry |
+                (ushort)CollisionCategory.Player |
+                (ushort)CollisionCategory.Rope |
+                (ushort)CollisionCategory.StaticGeometry |
+                (ushort)CollisionCategory.Explosion;
 
             //bodyDef.type = (BodyType)Loader.loadEnum(typeof(BodyType), data.Attribute("body_type"), (int)BodyType.Dynamic);
             //bodyDef.position = Loader.loadVector2(data.Attribute("position"), Vector2.Zero);
@@ -593,14 +593,14 @@ namespace StasisGame
                 fixture = body.CreateFixture(shape);
                 fixture.Friction = 0.5f;
                 fixture.Restitution = 0f;
-                fixture.CollisionCategories = (Category)CollisionCategory.Rope;
+                fixture.CollisionCategories = (ushort)CollisionCategory.Rope;
                 fixture.CollidesWith =
-                    (Category)CollisionCategory.DynamicGeometry |
-                    (Category)CollisionCategory.Item |
-                    (Category)CollisionCategory.StaticGeometry |
-                    (Category)CollisionCategory.Explosion;
+                    (ushort)CollisionCategory.DynamicGeometry |
+                    (ushort)CollisionCategory.Item |
+                    (ushort)CollisionCategory.StaticGeometry |
+                    (ushort)CollisionCategory.Explosion;
                 if (doubleAnchor)
-                    fixture.CollidesWith |= (Category)CollisionCategory.Player;
+                    fixture.CollidesWith |= (ushort)CollisionCategory.Player;
                 fixture.UserData = i;
 
                 if (lastNode != null)
@@ -867,20 +867,20 @@ namespace StasisGame
                 fixture = body.CreateFixture(shape);
                 fixture.Friction = Loader.loadFloat(data.Attribute("friction"), 1f);
                 fixture.Restitution = Loader.loadFloat(data.Attribute("restitution"), 0f);
-                fixture.CollisionCategories = bodyType == BodyType.Dynamic ? (Category)CollisionCategory.DynamicGeometry : (Category)CollisionCategory.StaticGeometry;
+                fixture.CollisionCategories = bodyType == BodyType.Dynamic ? (ushort)CollisionCategory.DynamicGeometry : (ushort)CollisionCategory.StaticGeometry;
                 if (isWall)
                 {
-                    fixture.CollidesWith = (Category)CollisionCategory.Explosion;
+                    fixture.CollidesWith = (ushort)CollisionCategory.Explosion;
                 }
                 else
                 {
                     fixture.CollidesWith =
-                        (Category)CollisionCategory.DynamicGeometry |
-                        (Category)CollisionCategory.Item |
-                        (Category)CollisionCategory.Player |
-                        (Category)CollisionCategory.Rope |
-                        (Category)CollisionCategory.StaticGeometry |
-                        (Category)CollisionCategory.Explosion;
+                        (ushort)CollisionCategory.DynamicGeometry |
+                        (ushort)CollisionCategory.Item |
+                        (ushort)CollisionCategory.Player |
+                        (ushort)CollisionCategory.Rope |
+                        (ushort)CollisionCategory.StaticGeometry |
+                        (ushort)CollisionCategory.Explosion;
                 }
                 //fixtureDefs.Add(fixtureDef);
             }
@@ -1257,8 +1257,8 @@ namespace StasisGame
                 fixture.Friction = 0f;
                 fixture.Restitution = 0f;
                 fixture.IsSensor = true;
-                fixture.CollisionCategories = (Category)CollisionCategory.StaticGeometry;
-                fixture.CollidesWith = (Category)CollisionCategory.Player;
+                fixture.CollisionCategories = (ushort)CollisionCategory.StaticGeometry;
+                fixture.CollidesWith = (ushort)CollisionCategory.Player;
             }
 
             body.Position = center;
@@ -1293,11 +1293,11 @@ namespace StasisGame
             body.UserData = entityId;
             shape.SetAsBox(0.19f, 0.4f);
             fixture = body.CreateFixture(shape);
-            fixture.CollisionCategories = (Category)CollisionCategory.Item;
+            fixture.CollisionCategories = (ushort)CollisionCategory.Item;
             fixture.CollidesWith =
-                (Category)CollisionCategory.DynamicGeometry |
-                (Category)CollisionCategory.Rope |
-                (Category)CollisionCategory.StaticGeometry;
+                (ushort)CollisionCategory.DynamicGeometry |
+                (ushort)CollisionCategory.Rope |
+                (ushort)CollisionCategory.StaticGeometry;
             body.ApplyForce(force, position);
 
             // Add components
@@ -1325,8 +1325,8 @@ namespace StasisGame
             body.BodyType = BodyType.Dynamic;
             body.UserData = entityId;
             fixture.IsSensor = true;
-            fixture.CollisionCategories = (Category)CollisionCategory.Explosion;
-            fixture.CollidesWith = Category.All;
+            fixture.CollisionCategories = (ushort)CollisionCategory.Explosion;
+            fixture.CollidesWith = 0xFFFF;
 
             // Add components
             _entityManager.addComponent(entityId, new PhysicsComponent(body));

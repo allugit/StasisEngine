@@ -123,13 +123,13 @@ namespace StasisGame.Systems
             fixture = body.CreateFixture(polygonShape);
             fixture.Friction = 0f;
             fixture.Restitution = 0f;
-            fixture.CollisionCategories = (Category)CollisionCategory.Player;
+            fixture.CollisionCategories = (ushort)CollisionCategory.Player;
             fixture.CollidesWith = 
-                (Category)CollisionCategory.DynamicGeometry |
-                (Category)CollisionCategory.Item |
-                (Category)CollisionCategory.Rope |
-                (Category)CollisionCategory.StaticGeometry |
-                (Category)CollisionCategory.Explosion;
+                (ushort)CollisionCategory.DynamicGeometry |
+                (ushort)CollisionCategory.Item |
+                (ushort)CollisionCategory.Rope |
+                (ushort)CollisionCategory.StaticGeometry |
+                (ushort)CollisionCategory.Explosion;
 
             feetShape.Position = new Vector2(0, 0.27f);
             feetShape.Density = 0.1f;
