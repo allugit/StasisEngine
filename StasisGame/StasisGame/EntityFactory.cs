@@ -1356,7 +1356,7 @@ namespace StasisGame
             for (int i = 0; i < 3; i++)
                 center += sourceShape.Vertices[i] / 3;
             for (int i = 0; i < 3; i++)
-                points[i] = sourceShape.Vertices[i] - center;
+                points.Add(sourceShape.Vertices[i] - center);
 
             // Create body
             body.Position = sourceFixture.Body.Position + center;
