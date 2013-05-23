@@ -82,10 +82,12 @@ namespace StasisGame.Systems
             _systemManager.add(new PhysicsSystem(_systemManager, _entityManager, data), -1);
             _systemManager.add(new CameraSystem(_systemManager, _entityManager), -1);
             _systemManager.add(new EventSystem(_systemManager, _entityManager), -1);
-            _renderSystem = new RenderSystem(_game, _systemManager, _entityManager);
             _systemManager.add(new RopeSystem(_systemManager, _entityManager), -1);
             _systemManager.add(new ExplosionSystem(_systemManager, _entityManager), -1);
+            _renderSystem = new RenderSystem(_game, _systemManager, _entityManager);
             _systemManager.add(_renderSystem, -1);
+            _systemManager.add(new TreeSystem(_systemManager, _entityManager), -1);
+            _systemManager.add(new FluidSystem(_systemManager, _entityManager), -1);
             _playerSystem = (PlayerSystem)_systemManager.getSystem(SystemType.Player);
 
             // Create background
@@ -120,8 +122,6 @@ namespace StasisGame.Systems
                         break;
 
                     case "Fluid":
-                        if (_systemManager.getSystem(SystemType.Fluid) == null)
-                            _systemManager.add(new FluidSystem(_systemManager, _entityManager), -1);
                         secondPassData.Add(actorData);
                         break;
 
@@ -148,10 +148,6 @@ namespace StasisGame.Systems
                         break;
 
                     case "Tree":
-                        if (_systemManager.getSystem(SystemType.Tree) == null)
-                        {
-                            _systemManager.add(new TreeSystem(_systemManager, _entityManager), -1);
-                        }
                         _entityManager.factory.createTree(actorData);
                         break;
 
