@@ -1368,7 +1368,7 @@ namespace StasisGame
             fixture.CollidesWith = sourceFixture.CollidesWith;
             fixture.Friction = sourceFixture.Friction;
             fixture.Restitution = 1.5f;
-            body.ApplyForce(force, center);
+            body.ApplyForce(ref force, ref center);
 
             // Adjust renderable triangle
             for (int i = 0; i < 3; i++)
