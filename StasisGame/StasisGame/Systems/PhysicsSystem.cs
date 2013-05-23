@@ -228,9 +228,6 @@ namespace StasisGame.Systems
                 IComponent component = null;
                 ExplosionComponent explosionComponent = null;
                 Fixture targetFixture = null;
-                Vector2 relative;
-                Vector2 force;
-                float distanceSq;
                 FixedArray2<Vector2> points;
 
                 if (_entityManager.tryGetComponent(entityA, ComponentType.Explosion, out component))
@@ -242,14 +239,16 @@ namespace StasisGame.Systems
                 {
                     DestructibleGeometryComponent destructibleGeometryComponent = (DestructibleGeometryComponent)_entityManager.getComponent((int)targetFixture.Body.UserData, ComponentType.DestructibleGeometry);
                     Vector2 contactNormal;
+                    Vector2 relative;
+                    Vector2 force;
+                    float distance;
 
                     //contact.GetWorldManifold(out worldManifold);
                     contact.GetWorldManifold(out contactNormal, out points);
                     explosionComponent = (ExplosionComponent)component;
-                    relative = targetFixture.Body.Position - explosionComponent.position;
-                    distanceSq = relative.LengthSquared();
-                    relative.Normalize();
-                    force = relative * (explosionComponent.strength / Math.Max(distanceSq, 0.1f));
+                    relative = explosionComponent.position - targetFixture.Body.Position;
+                    distance = Math.Max(relative.Length(), 0.1f);
+                    force = relative * (1 / distance) * explosionComponent.strength;
 
                     if (destructibleGeometryComponent != null)
                     {

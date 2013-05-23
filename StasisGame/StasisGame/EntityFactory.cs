@@ -1307,7 +1307,7 @@ namespace StasisGame
             _entityManager.addComponent(entityId, new IgnoreTreeCollisionComponent());
             _entityManager.addComponent(entityId, new IgnoreRopeRaycastComponent());
             _entityManager.addComponent(entityId, new WorldPositionComponent(body.Position));
-            _entityManager.addComponent(entityId, new DynamiteComponent(100f, 2f, 180));
+            _entityManager.addComponent(entityId, new DynamiteComponent(400f, 2f, 180));
             _entityManager.addComponent(entityId, new ParticleInfluenceComponent(ParticleInfluenceType.Dynamite));
 
             return entityId;
@@ -1349,7 +1349,7 @@ namespace StasisGame
             Vertices points = new Vertices(3);
             Vector2 center = Vector2.Zero;
             List<RenderableTriangle> renderableTriangles = new List<RenderableTriangle>();
-            float restitutionIncrement = -(1.5f - sourceFixture.Restitution) / (float)DebrisComponent.RESTITUTION_RESTORE_COUNT;
+            float restitutionIncrement = -(1f - sourceFixture.Restitution) / (float)DebrisComponent.RESTITUTION_RESTORE_COUNT;
             Fixture fixture;
 
             // Adjust fixture's points
@@ -1367,7 +1367,7 @@ namespace StasisGame
             fixture.CollisionCategories = sourceFixture.CollisionCategories;
             fixture.CollidesWith = sourceFixture.CollidesWith;
             fixture.Friction = sourceFixture.Friction;
-            fixture.Restitution = 1.5f;
+            fixture.Restitution = 1f;
             body.ApplyForce(ref force, ref center);
 
             // Adjust renderable triangle
