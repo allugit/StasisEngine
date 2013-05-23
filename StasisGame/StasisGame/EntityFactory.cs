@@ -1365,7 +1365,7 @@ namespace StasisGame
             shape.Set(points);
             fixture = body.CreateFixture(shape);
             fixture.CollisionCategories = sourceFixture.CollisionCategories;
-            fixture.CollidesWith = sourceFixture.CollisionCategories;
+            fixture.CollidesWith = sourceFixture.CollidesWith;
             fixture.Friction = sourceFixture.Friction;
             fixture.Restitution = 1.5f;
             body.ApplyForce(force, center);
