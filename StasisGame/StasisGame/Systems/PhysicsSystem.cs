@@ -246,7 +246,7 @@ namespace StasisGame.Systems
                     //contact.GetWorldManifold(out worldManifold);
                     contact.GetWorldManifold(out contactNormal, out points);
                     explosionComponent = (ExplosionComponent)component;
-                    relative = explosionComponent.position - targetFixture.Body.Position;
+                    relative = (targetFixture.Shape.Center + targetFixture.Body.Position) - explosionComponent.position;
                     distance = Math.Max(relative.Length(), 0.1f);
                     force = relative * (1 / distance) * explosionComponent.strength;
 
@@ -254,11 +254,13 @@ namespace StasisGame.Systems
                     {
                         // Break fixture off from body
                         explosionSystem.breakFixture(targetFixture, force, 180);
+                        return false;
                     }
                     else
                     {
                         // Apply generic explosion force
                         targetFixture.Body.ApplyForce(force, points[0]);
+                        return false;
                     }
                 }
             }

@@ -755,8 +755,6 @@ namespace StasisGame
             int entityId = _entityManager.createEntity(actorId);
             bool isWall = Loader.loadBool(data.Attribute("wall"), false);
             float layerDepth = Loader.loadFloat(data.Attribute("layer_depth"), 0.1f);
-            //BodyDef bodyDef = new BodyDef();
-            //List<FixtureDef> fixtureDefs = new List<FixtureDef>();
             List<Vector2> points = new List<Vector2>();
             List<PolygonPoint> P2TPoints = new List<PolygonPoint>();
             Polygon polygon;
@@ -852,7 +850,6 @@ namespace StasisGame
             // Create fixtures out of triangles
             foreach (DelaunayTriangle triangle in polygon.Triangles)
             {
-                //FixtureDef fixtureDef = new FixtureDef();
                 PolygonShape shape = new PolygonShape(density);
                 Vertices vertices = new Vertices(3);
                 Fixture fixture;
@@ -882,14 +879,8 @@ namespace StasisGame
                         (ushort)CollisionCategory.StaticGeometry |
                         (ushort)CollisionCategory.Explosion;
                 }
-                //fixtureDefs.Add(fixtureDef);
             }
-
-            //bodyDef.position = center;
-            //body = world.CreateBody(bodyDef);
             body.Position = center;
-            //foreach (FixtureDef fixtureDef in fixtureDefs)
-            //    body.CreateFixture(fixtureDef);
 
             // Create body render component
             texture = createTerrainTexture(points, data);
@@ -1348,6 +1339,7 @@ namespace StasisGame
             PolygonShape shape = new PolygonShape(sourceShape.Density);
             Vertices points = new Vertices(3);
             Vector2 center = Vector2.Zero;
+            Vector2 position;
             List<RenderableTriangle> renderableTriangles = new List<RenderableTriangle>();
             float restitutionIncrement = -(1f - sourceFixture.Restitution) / (float)DebrisComponent.RESTITUTION_RESTORE_COUNT;
             Fixture fixture;
@@ -1359,7 +1351,8 @@ namespace StasisGame
                 points.Add(sourceShape.Vertices[i] - center);
 
             // Create body
-            body.Position = sourceFixture.Body.Position + center;
+            position = sourceFixture.Body.Position + center;
+            body.Position = position;
             body.BodyType = BodyType.Dynamic;
             body.UserData = entityId;
             shape.Set(points);
@@ -1368,7 +1361,7 @@ namespace StasisGame
             fixture.CollidesWith = sourceFixture.CollidesWith;
             fixture.Friction = sourceFixture.Friction;
             fixture.Restitution = 1f;
-            body.ApplyForce(ref force, ref center);
+            body.ApplyForce(ref force, ref position);
 
             // Adjust renderable triangle
             for (int i = 0; i < 3; i++)
