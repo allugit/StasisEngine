@@ -1169,7 +1169,7 @@ namespace StasisGame
 
                             case ComponentType.RopePhysics:
                                 RopePhysicsComponent ropePhysicsComponent = component as RopePhysicsComponent;
-                                RopeNode currentRopeNode = ropePhysicsComponent.ropeNodeHead;
+                                RopeNode currentRopeNode = ropePhysicsComponent.segmentHeads[0];
                                 while (currentRopeNode != null)
                                 {
                                     if (!currentRopeNode.body.FixtureList[0].IsIgnoredEntity(ignored))

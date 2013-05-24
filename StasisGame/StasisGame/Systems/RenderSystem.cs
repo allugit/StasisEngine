@@ -17,6 +17,8 @@ namespace StasisGame.Systems
 
     public class RenderSystem : ISystem
     {
+        public const int ROPE_INTERPOLATION_COUNT = 4;
+        public const float ROPE_INTERPOLATION_INCREMENT = 1f / (float)ROPE_INTERPOLATION_COUNT;
         private LoderGame _game;
         private SystemManager _systemManager;
         private EntityManager _entityManager;
@@ -248,18 +250,45 @@ namespace StasisGame.Systems
                     RopeNode current = ropePhysicsComponent.segmentHeads[j];
                     RopeNode head = current;
                     RopeNode tail = head.tail;
-                    //Color color = Color.Red;
+                    Vector2 position;
                     while (current != null)
                     {
-                        /*
-                        color = Color.Red;
-                        if (current == head)
-                            color = Color.White;
-                        else if (current == tail)
-                            color = Color.Black;
-                        */
+                        float mu = 0f;
+                        for (int k = 0; k < ROPE_INTERPOLATION_COUNT; k++)
+                        {
+                            Vector2 a;
+                            Vector2 b = current.body.GetWorldPoint(new Vector2(current.halfLength, 0));
+                            Vector2 c = current.body.GetWorldPoint(new Vector2(-current.halfLength, 0));
+                            Vector2 d;
 
-                        _spriteBatch.Draw(_pixel, (current.body.Position - screenCenter) * _scale + _halfScreen, new Rectangle(0, 0, 16, 4), Color.Tan, current.body.Rotation, new Vector2(8, 2), 1f, SpriteEffects.None, 0.1f);
+                            // Determine a's position
+                            if (current.previous == null)
+                            {
+                                // Linearly interpolate
+                                a = b + (b - c);
+                            }
+                            else
+                            {
+                                a = current.previous.body.Position;
+                            }
+
+                            // Determine d's position
+                            if (current.next == null)
+                            {
+                                d = c + (c - b);
+                            }
+                            else
+                            {
+                                d = current.next.body.Position;
+                            }
+
+                            StasisMathHelper.interpolate(ref a, ref b, ref c, ref d, mu, out position);
+                            _spriteBatch.Draw(_pixel, (position - screenCenter) * _scale + _halfScreen, new Rectangle(0, 0, 2, 2), Color.Red, current.body.Rotation, new Vector2(1, 1), 1f, SpriteEffects.None, 0.1f);
+                            //_spriteBatch.Draw(_pixel, (position - screenCenter) * _scale + _halfScreen, new Rectangle(0, 0, 16, 4), Color.Tan, current.body.Rotation, new Vector2(8, 2), 1f, SpriteEffects.None, 0.1f);
+
+                            mu += ROPE_INTERPOLATION_INCREMENT;
+                        }
+
                         current = current.next;
                     }
                 }

@@ -51,23 +51,27 @@ namespace StasisGame.Systems
                 {
                     int ropeEntityId = (int)fixture.Body.UserData;
                     RopePhysicsComponent ropePhysicsComponent = (RopePhysicsComponent)_entityManager.getComponent(ropeEntityId, ComponentType.RopePhysics);
+                    RopeGrabComponent ropeGrabComponent = null;
 
                     if (ropePhysicsComponent != null && !ropePhysicsComponent.doubleAnchor)
                     {
-                        RopeNode current = ropePhysicsComponent.ropeNodeHead;
-                        RopeGrabComponent ropeGrabComponent = null;
 
-                        characterMovementComponent.allowRopeGrab = false;
-
-                        while (current != null)
+                        for (int i = 0; i < ropePhysicsComponent.segmentHeads.Count; i++)
                         {
-                            if (current.body == fixture.Body)
+                            RopeNode current = ropePhysicsComponent.segmentHeads[i];
+
+                            characterMovementComponent.allowRopeGrab = false;
+
+                            while (current != null)
                             {
-                                ropeNode = current;
-                                break;
+                                if (current.body == fixture.Body)
+                                {
+                                    ropeNode = current;
+                                    break;
+                                }
+                                nodeCount++;
+                                current = current.next;
                             }
-                            nodeCount++;
-                            current = current.next;
                         }
 
                         if (existingRopeGrabComponent != null)
