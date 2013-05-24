@@ -763,8 +763,10 @@ namespace StasisGame
             BodyType bodyType = (BodyType)Loader.loadEnum(typeof(BodyType), data.Attribute("body_type"), (int)BodyType.Static);
             bool isDestructible = Loader.loadBool(data.Attribute("destructible"), false);
             float density = Loader.loadFloat(data.Attribute("density"), 1f);
-            float chunkSpacingX = Loader.loadFloat(data.Attribute("chunk_spacing_x"), 0.2f);
-            float chunkSpacingY = Loader.loadFloat(data.Attribute("chunk_spacing_y"), 0.2f);
+            float chunkSpacingX = Loader.loadFloat(data.Attribute("chunk_spacing_x"), 0.5f);
+            float chunkSpacingY = Loader.loadFloat(data.Attribute("chunk_spacing_y"), 0.5f);
+            float chunkJitterX = Loader.loadFloat(data.Attribute("chunk_jitter_x"), 0.2f);
+            float chunkJitterY = Loader.loadFloat(data.Attribute("chunk_jitter_y"), 0.2f);
             float averageChunkSize = (chunkSpacingX + chunkSpacingY) / 2f;
             Random rng = new Random(Loader.loadInt(data.Attribute("destructible_seed"), 12345));
             Texture2D texture;
@@ -834,8 +836,8 @@ namespace StasisGame
                     for (float j = 0f; j < height; j += chunkSpacingY)
                     {
                         Vector2 jitter = new Vector2(
-                            StasisMathHelper.floatBetween(-chunkSpacingX, chunkSpacingX, rng),
-                            StasisMathHelper.floatBetween(-chunkSpacingY, chunkSpacingY, rng));
+                            StasisMathHelper.floatBetween(-chunkJitterX, chunkJitterX, rng),
+                            StasisMathHelper.floatBetween(-chunkJitterY, chunkJitterY, rng));
                         PolygonPoint point = new PolygonPoint(polygon.BoundingBox.Left + i + jitter.X, polygon.BoundingBox.Bottom + j + jitter.Y);
                         if (polygon.IsPointInside(point))
                             newPoints.Add(point);

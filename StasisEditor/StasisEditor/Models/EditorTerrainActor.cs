@@ -17,6 +17,8 @@ namespace StasisEditor.Models
         private bool _wall;
         private float _chunkSpacingX;
         private float _chunkSpacingY;
+        private float _chunkJitterX;
+        private float _chunkJitterY;
         private int _destructibleSeed;
         private float _density;
         private float _friction;
@@ -28,6 +30,8 @@ namespace StasisEditor.Models
         public bool wall { get { return _wall; } set { _wall = value; } }
         public float chunkSpacingX { get { return _chunkSpacingX; } set { _chunkSpacingX = value; } }
         public float chunkSpacingY { get { return _chunkSpacingY; } set { _chunkSpacingY = value; } }
+        public float chunkJitterX { get { return _chunkJitterX; } set { _chunkJitterX = value; } }
+        public float chunkJitterY { get { return _chunkJitterY; } set { _chunkJitterY = value; } }
         public int destructibleSeed { get { return _destructibleSeed; } set { _destructibleSeed = value; } }
         public float density { get { return _density; } set { _density = value; } }
         public float friction { get { return _friction; } set { _friction = value; } }
@@ -51,6 +55,8 @@ namespace StasisEditor.Models
                 d.SetAttributeValue("wall", _wall);
                 d.SetAttributeValue("chunk_spacing_x", _chunkSpacingX);
                 d.SetAttributeValue("chunk_spacing_y", _chunkSpacingY);
+                d.SetAttributeValue("chunk_jitter_x", _chunkJitterX);
+                d.SetAttributeValue("chunk_jitter_y", _chunkJitterY);
                 d.SetAttributeValue("destructible_seed", _destructibleSeed);
                 d.SetAttributeValue("density", _density);
                 d.SetAttributeValue("friction", _friction);
@@ -67,6 +73,8 @@ namespace StasisEditor.Models
             _destructible = false;
             _chunkSpacingX = 1f;
             _chunkSpacingY = 1f;
+            _chunkJitterX = 0.2f;
+            _chunkJitterY = 0.2f;
             _destructibleSeed = 12345;
             _density = 0.5f;
             _friction = 1f;
@@ -82,6 +90,8 @@ namespace StasisEditor.Models
             _wall = Loader.loadBool(data.Attribute("wall"), false);
             _chunkSpacingX = Loader.loadFloat(data.Attribute("chunk_spacing_x"), 1f);
             _chunkSpacingY = Loader.loadFloat(data.Attribute("chunk_spacing_y"), 1f);
+            _chunkJitterX = Loader.loadFloat(data.Attribute("chunk_jitter_x"), 0.2f);
+            _chunkJitterY = Loader.loadFloat(data.Attribute("chunk_jitter_y"), 0.2f);
             _destructibleSeed = Loader.loadInt(data.Attribute("destructible_seed"), 12345);
             _density = Loader.loadFloat(data.Attribute("density"), 0.5f);
             _friction = Loader.loadFloat(data.Attribute("friction"), 1f);
