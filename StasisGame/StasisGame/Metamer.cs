@@ -200,6 +200,8 @@ namespace StasisGame
             Fixture fixture;
 
             body = BodyFactory.CreateBody(tree.treeSystem.physicsSystem.world, position, tree.entityId);
+            body.BodyType = BodyType.Dynamic;
+            body.FixedRotation = true;
             body.LinearDamping = 0.5f;
             fixture = body.CreateFixture(new CircleShape(0.5f, 0.5f));
             fixture.IsSensor = true;
