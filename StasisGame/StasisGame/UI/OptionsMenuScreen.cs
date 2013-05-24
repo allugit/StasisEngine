@@ -5,10 +5,13 @@ using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Content;
 using Microsoft.Xna.Framework.Input;
 using Microsoft.Xna.Framework.Graphics;
+using OpenTK;
 using StasisGame.Managers;
 
 namespace StasisGame.UI
 {
+    using Vector2 = Microsoft.Xna.Framework.Vector2;
+
     public class DisplayDimensions
     {
         public int width;
@@ -26,9 +29,9 @@ namespace StasisGame.UI
                 DisplayDimensions o = (DisplayDimensions)obj;
                 return o.width == width && o.height == height;
             }
-            else if (obj.GetType() == typeof(DisplayMode))
+            else if (obj.GetType() == typeof(DisplayResolution))
             {
-                DisplayMode o = (DisplayMode)obj;
+                DisplayResolution o = (DisplayResolution)obj;
                 return o.Width == width && o.Height == height;
             }
 
@@ -69,12 +72,27 @@ namespace StasisGame.UI
             _selectedDimensions = new DisplayDimensions(DataManager.gameSettings.screenWidth, DataManager.gameSettings.screenHeight);
             _displayDimensions.Add(_selectedDimensions);
 
-            /*
-            foreach (DisplayMode displayMode in _game.GraphicsDevice.Adapter.SupportedDisplayModes)
+            DisplayDevice currentDisplayDevice = DisplayDevice.GetDisplay(DisplayIndex.Primary);
+
+            foreach (DisplayResolution displayResolution in currentDisplayDevice.AvailableResolutions)
             {
-                if (!_selectedDimensions.Equals(displayMode))
-                    _displayDimensions.Add(new DisplayDimensions(displayMode.Width, displayMode.Height));
-            }*/
+                bool skipResolution = false;
+                
+                foreach (DisplayDimensions displayDimensions in _displayDimensions)
+                {
+                    // Check to see if a resolution with the same dimensions were already added.
+                    if (displayDimensions.Equals(displayResolution))
+                    {
+                        skipResolution = true;
+                        break;
+                    }
+                }
+
+                if (skipResolution)
+                    continue;
+
+                _displayDimensions.Add(new DisplayDimensions(displayResolution.Width, displayResolution.Height));
+            }
 
             TextureButton saveButton = new TextureButton(
                 _game.spriteBatch,
