@@ -230,7 +230,6 @@ namespace StasisGame.Systems
             _entityManager.killAllEntities(entitiesToPreserve);
 
             _renderSystem = null;
-            _playerSystem = null;
 
             _regionGoals.Clear();
             _eventGoals.Clear();
@@ -337,8 +336,8 @@ namespace StasisGame.Systems
                         if (position.X < _levelBoundary.LowerBound.X || position.X > _levelBoundary.UpperBound.X ||
                             position.Y < _levelBoundary.LowerBound.Y || position.Y > _levelBoundary.UpperBound.Y)
                         {
-                            _playerSystem.softKillPlayer();
                             endLevel();
+                            _playerSystem.reloadInventory();
                         }
                     }
                 }

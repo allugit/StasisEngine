@@ -143,7 +143,7 @@ namespace StasisGame
 
             DataManager.createTemporaryPlayerData(_systemManager);
             _playerSystem.createPlayer();
-            _playerSystem.initializePlayerInventory();
+            _playerSystem.initializeInventory();
 
             // Load level
             loadLevel(levelUID);
@@ -163,7 +163,7 @@ namespace StasisGame
 
             DataManager.loadPlayerData(playerDataSlot);
             _playerSystem.createPlayer();
-            _playerSystem.initializePlayerInventory();
+            _playerSystem.initializeInventory();
 
             _screenSystem.removeScreen(_mainMenuScreen);
             openWorldMap();

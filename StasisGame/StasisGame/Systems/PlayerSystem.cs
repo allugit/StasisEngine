@@ -44,7 +44,7 @@ namespace StasisGame.Systems
         }
 
         // initializePlayerInventory -- Creates the player's inventory components
-        public void initializePlayerInventory()
+        public void initializeInventory()
         {
             XElement inventoryData = DataManager.playerData.inventoryData;
             XElement toolbarData = DataManager.playerData.toolbarData;
@@ -199,12 +199,11 @@ namespace StasisGame.Systems
             }
         }
 
-        // softKillPlayer -- Doesn't "kill" the player entity, just resets certain aspects of the entity to the last saved state
-        public void softKillPlayer()
+        public void reloadInventory()
         {
             _entityManager.removeComponent(_playerId, ComponentType.Inventory);
             _entityManager.removeComponent(_playerId, ComponentType.Toolbar);
-            initializePlayerInventory();
+            initializeInventory();
         }
 
         // update
