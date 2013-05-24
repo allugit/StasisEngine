@@ -243,10 +243,9 @@ namespace StasisGame.Systems
             for (int i = 0; i < ropeRenderEntities.Count; i++)
             {
                 int entityId = ropeRenderEntities[i];
-                RopePhysicsComponent ropePhysicsComponent = _entityManager.getComponent(entityId, ComponentType.RopePhysics) as RopePhysicsComponent;
-                RopeRenderComponent ropeRenderComponent = _entityManager.getComponent(entityId, ComponentType.RopeRender) as RopeRenderComponent;
+                RopeComponent ropeComponent = _entityManager.getComponent(entityId, ComponentType.Rope) as RopeComponent;
                 Vector2 ropeTextureCenter = new Vector2(ropeRenderComponent.texture.Width, ropeRenderComponent.texture.Height) / 2f;
-                RopeNode current = ropePhysicsComponent.ropeNodeHead;
+                RopeNode current = ropeComponent.ropeNodeHead;
                 RopeNode head = current;
                 RopeNode tail = head.tail;
                 Vector2 position;

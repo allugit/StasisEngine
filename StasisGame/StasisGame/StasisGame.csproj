@@ -116,8 +116,7 @@
     <Compile Include="Components\PhysicsComponent.cs" />
     <Compile Include="Components\BodyRenderComponent.cs" />
     <Compile Include="Components\RopeNode.cs" />
-    <Compile Include="Components\RopePhysicsComponent.cs" />
-    <Compile Include="Components\RopeRenderComponent.cs" />
+    <Compile Include="Components\RopeComponent.cs" />
     <Compile Include="Components\WorldPositionComponent.cs" />
     <Compile Include="Data\CurrentLocation.cs" />
     <Compile Include="Data\PlayerData.cs" />

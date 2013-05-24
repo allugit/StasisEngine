@@ -38,6 +38,12 @@
         Tree
     };
 
+    public enum RopeTextureStyle
+    {
+        Random,
+        Sequential
+    };
+
     public enum LayerBlendType
     {
         Opaque,

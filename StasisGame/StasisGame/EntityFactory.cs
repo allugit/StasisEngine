@@ -474,7 +474,7 @@ namespace StasisGame
             int ropeNodeLimit;
             RopeNode head = null;
             RopeNode lastNode = null;
-            RopePhysicsComponent ropePhysicsComponent;
+            RopeComponent ropeComponent;
             RopeNode current;
             
             // Raycast to find A to B result
@@ -645,9 +645,8 @@ namespace StasisGame
                 entityId = _entityManager.createEntity();
 
             // Add components
-            ropePhysicsComponent = new RopePhysicsComponent(head, destroyAfterRelease, reverseClimbDirection, doubleAnchor);
-            _entityManager.addComponent(entityId, ropePhysicsComponent);
-            _entityManager.addComponent(entityId, new RopeRenderComponent(texture));
+            ropeComponent = new RopeComponent(head, destroyAfterRelease, reverseClimbDirection, doubleAnchor);
+            _entityManager.addComponent(entityId, ropeComponent);
             _entityManager.addComponent(entityId, new IgnoreTreeCollisionComponent());
             _entityManager.addComponent(entityId, new IgnoreRopeRaycastComponent());
             _entityManager.addComponent(entityId, new SkipFluidResolutionComponent());
@@ -658,7 +657,7 @@ namespace StasisGame
             while (current != null)
             {
                 current.body.UserData = entityId;
-                current.ropePhysicsComponent = ropePhysicsComponent;
+                current.ropeComponent = ropeComponent;
                 current = current.next;
             }
 
@@ -669,12 +668,10 @@ namespace StasisGame
         public int recreateRope(RopeNode head, Texture2D texture)
         {
             int entityId = _entityManager.createEntity();
-            RopePhysicsComponent ropePhysicsComponent = new RopePhysicsComponent(head, head.ropePhysicsComponent.destroyAfterRelease, head.ropePhysicsComponent.reverseClimbDirection, head.ropePhysicsComponent.doubleAnchor);
-            RopeRenderComponent ropeRenderComponent = new RopeRenderComponent(texture);
+            RopeComponent ropeComponent = new RopeComponent(head, head.ropeComponent.destroyAfterRelease, head.ropeComponent.reverseClimbDirection, head.ropeComponent.doubleAnchor);
 
             // Add components
-            _entityManager.addComponent(entityId, ropePhysicsComponent);
-            _entityManager.addComponent(entityId, ropeRenderComponent);
+            _entityManager.addComponent(entityId, ropeComponent);
             _entityManager.addComponent(entityId, new IgnoreTreeCollisionComponent());
             _entityManager.addComponent(entityId, new IgnoreRopeRaycastComponent());
             _entityManager.addComponent(entityId, new SkipFluidResolutionComponent());
@@ -1186,9 +1183,9 @@ namespace StasisGame
                                     characterMovementComponent.feetFixture.AddIgnoredEntity(ignored);
                                 break;
 
-                            case ComponentType.RopePhysics:
-                                RopePhysicsComponent ropePhysicsComponent = component as RopePhysicsComponent;
-                                RopeNode currentRopeNode = ropePhysicsComponent.ropeNodeHead;
+                            case ComponentType.Rope:
+                                RopeComponent ropeComponent = component as RopeComponent;
+                                RopeNode currentRopeNode = ropeComponent.ropeNodeHead;
                                 while (currentRopeNode != null)
                                 {
                                     if (!currentRopeNode.body.FixtureList[0].IsIgnoredEntity(ignored))

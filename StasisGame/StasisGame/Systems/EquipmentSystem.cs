@@ -147,7 +147,7 @@ namespace StasisGame.Systems
                                         if (ropeEntityId != -1)
                                         {
                                             RopeGrabComponent ropeGrabComponent = _entityManager.getComponent(toolbarComponent.entityId, ComponentType.RopeGrab) as RopeGrabComponent;
-                                            RopePhysicsComponent ropePhysicsComponent = _entityManager.getComponent(ropeEntityId, ComponentType.RopePhysics) as RopePhysicsComponent;
+                                            RopeComponent ropeComponent = _entityManager.getComponent(ropeEntityId, ComponentType.Rope) as RopeComponent;
                                             PhysicsComponent physicsComponent = _entityManager.getComponent(toolbarEntities[i], ComponentType.Physics) as PhysicsComponent;
                                             RopeGrabComponent newRopeGrabComponent = null;
                                             Vector2 initialVelocity = physicsComponent.body.LinearVelocity;
@@ -158,7 +158,7 @@ namespace StasisGame.Systems
                                                 break;
 
                                             // Handle initial velocity
-                                            currentNode = ropePhysicsComponent.ropeNodeHead;
+                                            currentNode = ropeComponent.ropeNodeHead;
                                             ropeSegmentCount = currentNode.count;
                                             System.Diagnostics.Debug.Assert(ropeSegmentCount != 0);
                                             int count = ropeSegmentCount;
@@ -175,7 +175,7 @@ namespace StasisGame.Systems
                                             // Handle previous grabs
                                             if (ropeGrabComponent != null)
                                             {
-                                                RopePhysicsComponent previouslyGrabbedRope = _entityManager.getComponent(ropeGrabComponent.ropeEntityId, ComponentType.RopePhysics) as RopePhysicsComponent;
+                                                RopeComponent previouslyGrabbedRope = _entityManager.getComponent(ropeGrabComponent.ropeEntityId, ComponentType.Rope) as RopeComponent;
                                                 ropeSystem.releaseRope(ropeGrabComponent, physicsComponent.body);
 
                                                 if (previouslyGrabbedRope.destroyAfterRelease)
@@ -184,7 +184,7 @@ namespace StasisGame.Systems
                                                 ropeGrabComponent = null;
                                             }
 
-                                            newRopeGrabComponent = new RopeGrabComponent(ropeEntityId, ropePhysicsComponent.ropeNodeHead, 0f, ropePhysicsComponent.reverseClimbDirection);
+                                            newRopeGrabComponent = new RopeGrabComponent(ropeEntityId, ropeComponent.ropeNodeHead, 0f, ropeComponent.reverseClimbDirection);
                                             ropeSystem.grabRope(newRopeGrabComponent, physicsComponent.body);
 
                                             _entityManager.addComponent(toolbarComponent.entityId, newRopeGrabComponent);

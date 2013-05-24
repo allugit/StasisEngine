@@ -88,7 +88,7 @@ namespace StasisGame.Systems
 
         public void killRope(int entityId)
         {
-            RopePhysicsComponent ropePhysicsComponent = (RopePhysicsComponent)_entityManager.getComponent(entityId, ComponentType.RopePhysics);
+            RopeComponent ropeComponent = (RopeComponent)_entityManager.getComponent(entityId, ComponentType.Rope);
             List<int> ropeGrabEntities = _entityManager.getEntitiesPosessing(ComponentType.RopeGrab);
 
             // Detach any rope grab components from this rope
@@ -102,9 +102,9 @@ namespace StasisGame.Systems
                 }
             }
 
-            if (ropePhysicsComponent != null)
+            if (ropeComponent != null)
             {
-                RopeNode current = ropePhysicsComponent.ropeNodeHead;
+                RopeNode current = ropeComponent.ropeNodeHead;
                 while (current != null)
                 {
                     if (current.anchorJoint != null)
@@ -135,44 +135,26 @@ namespace StasisGame.Systems
         public void breakAnchor(RopeNode ropeNode)
         {
             bool markedForDestruction = false;
-            int ttl = ropeNode.ropePhysicsComponent.timeToLive;
 
             // Destroy joint
             ropeNode.body.World.RemoveJoint(ropeNode.anchorJoint);
             ropeNode.anchorJoint = null;
 
-            /*
-            if (ropeNode.ropePhysicsComponent.doubleAnchor)
-            {
-                // Mark for destruction if other anchor is broken
-                if (ropeNode == ropeNode.head && ropeNode.tail.anchorJoint == null)
-                    markedForDestruction = true;
-                else if (ropeNode == ropeNode.tail && ropeNode.head.anchorJoint == null)
-                    markedForDestruction = true;
-            }
-            else
-            {
-                // Mark for destruction
-                markedForDestruction = true;
-            }*/
-
             // Start rope's time to live timer if markedForDestruction is true
             if (markedForDestruction)
-                ropeNode.ropePhysicsComponent.startTTLCountdown();
+                ropeNode.ropeComponent.startTTLCountdown();
         }
 
         // breakJoint -- Breaks the link between two nodes and determines whether or not to keep them alive, or kill them
         public void breakJoint(int entityId, RopeNode ropeNode)
         {
-            RopeRenderComponent ropeRenderComponent = _entityManager.getComponent(entityId, ComponentType.RopeRender) as RopeRenderComponent;
-
             // Disconnect linked rope nodes
             if (ropeNode.previous != null)
                 ropeNode.previous.next = null;
             ropeNode.previous = null;
 
             // Recreate disconnected segment as its own entity
-            _entityManager.factory.recreateRope(ropeNode, ropeRenderComponent.texture);
+            _entityManager.factory.recreateRope(ropeNode);
 
             // Destroy joint
             ropeNode.body.World.RemoveJoint(ropeNode.joint);
@@ -183,33 +165,33 @@ namespace StasisGame.Systems
         {
             if (!_paused || _singleStep)
             {
-                List<int> ropePhysicsEntities = _entityManager.getEntitiesPosessing(ComponentType.RopePhysics);
+                List<int> ropeEntities = _entityManager.getEntitiesPosessing(ComponentType.Rope);
 
-                for (int i = 0; i < ropePhysicsEntities.Count; i++)
+                for (int i = 0; i < ropeEntities.Count; i++)
                 {
-                    RopePhysicsComponent ropePhysicsComponent = _entityManager.getComponent(ropePhysicsEntities[i], ComponentType.RopePhysics) as RopePhysicsComponent;
-                    RopeGrabComponent ropeGrabComponent = _entityManager.getComponent(ropePhysicsEntities[i], ComponentType.RopeGrab) as RopeGrabComponent;
-                    RopeNode head = ropePhysicsComponent.ropeNodeHead;
+                    RopeComponent ropeComponent = _entityManager.getComponent(ropeEntities[i], ComponentType.Rope) as RopeComponent;
+                    RopeGrabComponent ropeGrabComponent = _entityManager.getComponent(ropeEntities[i], ComponentType.RopeGrab) as RopeGrabComponent;
+                    RopeNode head = ropeComponent.ropeNodeHead;
                     RopeNode current = head;
                     RopeNode tail = head.tail;
 
                     // Check segment length
                     if (head.count < 3 && ropeGrabComponent == null)
-                        ropePhysicsComponent.startTTLCountdown();
+                        ropeComponent.startTTLCountdown();
 
                     // Check anchors
                     if (head.anchorJoint == null && tail.anchorJoint == null)
-                        ropePhysicsComponent.startTTLCountdown();
+                        ropeComponent.startTTLCountdown();
 
                     // Check time to live
-                    if (ropePhysicsComponent.timeToLive == 0)
+                    if (ropeComponent.timeToLive == 0)
                     {
-                        killRope(ropePhysicsEntities[i]);
-                        ropePhysicsComponent.timeToLive--;
+                        killRope(ropeEntities[i]);
+                        ropeComponent.timeToLive--;
                     }
-                    else if (ropePhysicsComponent.timeToLive > -1)
+                    else if (ropeComponent.timeToLive > -1)
                     {
-                        ropePhysicsComponent.timeToLive--;
+                        ropeComponent.timeToLive--;
                     }
 
                     while (current != null)
@@ -237,7 +219,7 @@ namespace StasisGame.Systems
                                         current.joint.BodyB.GetWorldPoint(current.joint.LocalAnchorB);
                             if (relative.Length() > 1.2f || current.joint.GetReactionForce(60f).Length() > 300f)
                             {
-                                breakJoint(ropePhysicsEntities[i], current);
+                                breakJoint(ropeEntities[i], current);
                             }
                         }
                         current = current.next;
