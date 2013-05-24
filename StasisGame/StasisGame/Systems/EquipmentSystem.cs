@@ -156,7 +156,7 @@ namespace StasisGame.Systems
                                                 break;
 
                                             // Handle initial velocity
-                                            currentNode = ropePhysicsComponent.segmentHeads[0];
+                                            currentNode = ropePhysicsComponent.ropeNodeHead;
                                             ropeSegmentCount = currentNode.count;
                                             System.Diagnostics.Debug.Assert(ropeSegmentCount != 0);
                                             int count = ropeSegmentCount;
@@ -182,7 +182,7 @@ namespace StasisGame.Systems
                                                 ropeGrabComponent = null;
                                             }
 
-                                            newRopeGrabComponent = new RopeGrabComponent(ropeEntityId, ropePhysicsComponent.segmentHeads[0], 0f, ropePhysicsComponent.reverseClimbDirection);
+                                            newRopeGrabComponent = new RopeGrabComponent(ropeEntityId, ropePhysicsComponent.ropeNodeHead, 0f, ropePhysicsComponent.reverseClimbDirection);
                                             ropeSystem.grabRope(newRopeGrabComponent, physicsComponent.body);
 
                                             _entityManager.addComponent(toolbarComponent.entityId, newRopeGrabComponent);

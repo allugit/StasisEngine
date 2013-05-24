@@ -246,54 +246,49 @@ namespace StasisGame.Systems
                 RopePhysicsComponent ropePhysicsComponent = _entityManager.getComponent(entityId, ComponentType.RopePhysics) as RopePhysicsComponent;
                 RopeRenderComponent ropeRenderComponent = _entityManager.getComponent(entityId, ComponentType.RopeRender) as RopeRenderComponent;
                 Vector2 ropeTextureCenter = new Vector2(ropeRenderComponent.texture.Width, ropeRenderComponent.texture.Height) / 2f;
+                RopeNode current = ropePhysicsComponent.ropeNodeHead;
+                RopeNode head = current;
+                RopeNode tail = head.tail;
+                Vector2 position;
 
-                for (int j = 0; j < ropePhysicsComponent.segmentHeads.Count; j++)
+                while (current != null)
                 {
-                    RopeNode current = ropePhysicsComponent.segmentHeads[j];
-                    RopeNode head = current;
-                    RopeNode tail = head.tail;
-                    Vector2 position;
-                    while (current != null)
+                    float mu = 0f;
+                    for (int k = 0; k < ROPE_INTERPOLATION_COUNT; k++)
                     {
-                        float mu = 0f;
-                        for (int k = 0; k < ROPE_INTERPOLATION_COUNT; k++)
+                        Vector2 a;
+                        Vector2 b = current.body.GetWorldPoint(new Vector2(current.halfLength, 0));
+                        Vector2 c = current.body.GetWorldPoint(new Vector2(-current.halfLength, 0));
+                        Vector2 d;
+
+                        // Determine a's position
+                        if (current.previous == null)
                         {
-                            Vector2 a;
-                            Vector2 b = current.body.GetWorldPoint(new Vector2(current.halfLength, 0));
-                            Vector2 c = current.body.GetWorldPoint(new Vector2(-current.halfLength, 0));
-                            Vector2 d;
-
-                            // Determine a's position
-                            if (current.previous == null)
-                            {
-                                // Linearly interpolate
-                                a = b + (b - c);
-                            }
-                            else
-                            {
-                                a = current.previous.body.Position;
-                            }
-
-                            // Determine d's position
-                            if (current.next == null)
-                            {
-                                d = c + (c - b);
-                            }
-                            else
-                            {
-                                d = current.next.body.Position;
-                            }
-
-                            StasisMathHelper.interpolate(ref a, ref b, ref c, ref d, mu, out position);
-                            _spriteBatch.Draw(ropeRenderComponent.texture, (position - screenCenter) * _scale + _halfScreen, ropeRenderComponent.texture.Bounds, Color.White, current.body.Rotation, ropeTextureCenter, 1f, SpriteEffects.None, 0.1f);
-                            //_spriteBatch.Draw(_pixel, (position - screenCenter) * _scale + _halfScreen, new Rectangle(0, 0, 16, 4), Color.Tan, current.body.Rotation, new Vector2(8, 2), 1f, SpriteEffects.None, 0.1f);
-
-                            mu += ROPE_INTERPOLATION_INCREMENT;
+                            // Linearly interpolate
+                            a = b + (b - c);
                         }
-                        //_spriteBatch.Draw(_pixel, (current.body.Position - screenCenter) * _scale + _halfScreen, new Rectangle(0, 0, 16, 4), Color.Tan, current.body.Rotation, new Vector2(8, 2), 1f, SpriteEffects.None, 0.101f);
+                        else
+                        {
+                            a = current.previous.body.Position;
+                        }
 
-                        current = current.next;
+                        // Determine d's position
+                        if (current.next == null)
+                        {
+                            d = c + (c - b);
+                        }
+                        else
+                        {
+                            d = current.next.body.Position;
+                        }
+
+                        StasisMathHelper.interpolate(ref a, ref b, ref c, ref d, mu, out position);
+                        _spriteBatch.Draw(ropeRenderComponent.texture, (position - screenCenter) * _scale + _halfScreen, ropeRenderComponent.texture.Bounds, Color.White, current.body.Rotation, ropeTextureCenter, 1f, SpriteEffects.None, 0.1f);
+
+                        mu += ROPE_INTERPOLATION_INCREMENT;
                     }
+
+                    current = current.next;
                 }
             }
 

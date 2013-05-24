@@ -55,23 +55,19 @@ namespace StasisGame.Systems
 
                     if (ropePhysicsComponent != null && !ropePhysicsComponent.doubleAnchor)
                     {
+                        RopeNode current = ropePhysicsComponent.ropeNodeHead;
 
-                        for (int i = 0; i < ropePhysicsComponent.segmentHeads.Count; i++)
+                        characterMovementComponent.allowRopeGrab = false;
+
+                        while (current != null)
                         {
-                            RopeNode current = ropePhysicsComponent.segmentHeads[i];
-
-                            characterMovementComponent.allowRopeGrab = false;
-
-                            while (current != null)
+                            if (current.body == fixture.Body)
                             {
-                                if (current.body == fixture.Body)
-                                {
-                                    ropeNode = current;
-                                    break;
-                                }
-                                nodeCount++;
-                                current = current.next;
+                                ropeNode = current;
+                                break;
                             }
+                            nodeCount++;
+                            current = current.next;
                         }
 
                         if (existingRopeGrabComponent != null)

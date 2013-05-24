@@ -104,32 +104,29 @@ namespace StasisGame.Systems
 
             if (ropePhysicsComponent != null)
             {
-                for (int i = 0; i < ropePhysicsComponent.segmentHeads.Count; i++)
+                RopeNode current = ropePhysicsComponent.ropeNodeHead;
+                while (current != null)
                 {
-                    RopeNode current = ropePhysicsComponent.segmentHeads[i];
-                    while (current != null)
+                    if (current.anchorJoint != null)
                     {
-                        if (current.anchorJoint != null)
+                        int entityIdA = (int)current.anchorJoint.BodyA.UserData;
+                        int entityIdB = (int)current.anchorJoint.BodyB.UserData;
+                        TreeComponent treeComponentA = _entityManager.getComponent(entityIdA, ComponentType.Tree) as TreeComponent;
+                        TreeComponent treeComponentB = _entityManager.getComponent(entityIdB, ComponentType.Tree) as TreeComponent;
+
+                        if (treeComponentA != null)
                         {
-                            int entityIdA = (int)current.anchorJoint.BodyA.UserData;
-                            int entityIdB = (int)current.anchorJoint.BodyB.UserData;
-                            TreeComponent treeComponentA = _entityManager.getComponent(entityIdA, ComponentType.Tree) as TreeComponent;
-                            TreeComponent treeComponentB = _entityManager.getComponent(entityIdB, ComponentType.Tree) as TreeComponent;
-
-                            if (treeComponentA != null)
-                            {
-                                current.anchorJoint.BodyA.World.RemoveBody(current.anchorJoint.BodyA);
-                            }
-                            else if (treeComponentB != null)
-                            {
-                                current.anchorJoint.BodyB.World.RemoveBody(current.anchorJoint.BodyB);
-                            }
+                            current.anchorJoint.BodyA.World.RemoveBody(current.anchorJoint.BodyA);
                         }
-
-                        // Destroy body
-                        current.body.World.RemoveBody(current.body);
-                        current = current.next;
+                        else if (treeComponentB != null)
+                        {
+                            current.anchorJoint.BodyB.World.RemoveBody(current.anchorJoint.BodyB);
+                        }
                     }
+
+                    // Destroy body
+                    current.body.World.RemoveBody(current.body);
+                    current = current.next;
                 }
                 _entityManager.killEntity(entityId);
             }
@@ -192,62 +189,58 @@ namespace StasisGame.Systems
                 {
                     RopePhysicsComponent ropePhysicsComponent = _entityManager.getComponent(ropePhysicsEntities[i], ComponentType.RopePhysics) as RopePhysicsComponent;
                     RopeGrabComponent ropeGrabComponent = _entityManager.getComponent(ropePhysicsEntities[i], ComponentType.RopeGrab) as RopeGrabComponent;
+                    RopeNode head = ropePhysicsComponent.ropeNodeHead;
+                    RopeNode current = head;
+                    RopeNode tail = head.tail;
 
-                    for (int j = 0; j < ropePhysicsComponent.segmentHeads.Count; j++)
+                    // Check segment length
+                    if (head.count < 3 && ropeGrabComponent == null)
+                        ropePhysicsComponent.startTTLCountdown();
+
+                    // Check anchors
+                    if (head.anchorJoint == null && tail.anchorJoint == null)
+                        ropePhysicsComponent.startTTLCountdown();
+
+                    // Check time to live
+                    if (ropePhysicsComponent.timeToLive == 0)
                     {
-                        RopeNode head = ropePhysicsComponent.segmentHeads[j];
-                        RopeNode current = head;
-                        RopeNode tail = head.tail;
+                        killRope(ropePhysicsEntities[i]);
+                        ropePhysicsComponent.timeToLive--;
+                    }
+                    else if (ropePhysicsComponent.timeToLive > -1)
+                    {
+                        ropePhysicsComponent.timeToLive--;
+                    }
 
-                        // Check segment length
-                        if (head.count < 3 && ropeGrabComponent == null)
-                            ropePhysicsComponent.startTTLCountdown();
-
-                        // Check anchors
-                        if (head.anchorJoint == null && tail.anchorJoint == null)
-                            ropePhysicsComponent.startTTLCountdown();
-
-                        // Check time to live
-                        if (ropePhysicsComponent.timeToLive == 0)
+                    while (current != null)
+                    {
+                        // Check tensions
+                        if (current.joint != null)
                         {
-                            killRope(ropePhysicsEntities[i]);
-                            ropePhysicsComponent.timeToLive--;
-                        }
-                        else if (ropePhysicsComponent.timeToLive > -1)
-                        {
-                            ropePhysicsComponent.timeToLive--;
-                        }
-
-                        while (current != null)
-                        {
-                            // Check tensions
-                            if (current.joint != null)
+                            Vector2 relative;
+                            if (current == head || current == tail)
                             {
-                                Vector2 relative;
-                                if (current == head || current == tail)
+                                // Check anchor joint
+                                if (current.anchorJoint != null)
                                 {
-                                    // Check anchor joint
-                                    if (current.anchorJoint != null)
+                                    relative = current.anchorJoint.BodyA.GetWorldPoint(current.anchorJoint.LocalAnchorA) -
+                                        current.anchorJoint.BodyB.GetWorldPoint(current.anchorJoint.LocalAnchorB);
+                                    if (relative.Length() > 0.8f || current.anchorJoint.GetReactionForce(60f).Length() > 400f)
                                     {
-                                        relative = current.anchorJoint.BodyA.GetWorldPoint(current.anchorJoint.LocalAnchorA) -
-                                            current.anchorJoint.BodyB.GetWorldPoint(current.anchorJoint.LocalAnchorB);
-                                        if (relative.Length() > 0.8f || current.anchorJoint.GetReactionForce(60f).Length() > 400f)
-                                        {
-                                            breakAnchor(current);
-                                        }
+                                        breakAnchor(current);
                                     }
                                 }
-
-                                // Check other joints
-                                relative = current.joint.BodyA.GetWorldPoint(current.joint.LocalAnchorA) -
-                                            current.joint.BodyB.GetWorldPoint(current.joint.LocalAnchorB);
-                                if (relative.Length() > 1.2f || current.joint.GetReactionForce(60f).Length() > 300f)
-                                {
-                                    breakJoint(ropePhysicsEntities[i], current);
-                                }
                             }
-                            current = current.next;
+
+                            // Check other joints
+                            relative = current.joint.BodyA.GetWorldPoint(current.joint.LocalAnchorA) -
+                                        current.joint.BodyB.GetWorldPoint(current.joint.LocalAnchorB);
+                            if (relative.Length() > 1.2f || current.joint.GetReactionForce(60f).Length() > 300f)
+                            {
+                                breakJoint(ropePhysicsEntities[i], current);
+                            }
                         }
+                        current = current.next;
                     }
                 }
             }
