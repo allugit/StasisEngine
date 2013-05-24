@@ -243,7 +243,9 @@ namespace StasisGame.Systems
             for (int i = 0; i < ropeRenderEntities.Count; i++)
             {
                 int entityId = ropeRenderEntities[i];
-                RopePhysicsComponent ropePhysicsComponent = (RopePhysicsComponent)_entityManager.getComponent(entityId, ComponentType.RopePhysics);
+                RopePhysicsComponent ropePhysicsComponent = _entityManager.getComponent(entityId, ComponentType.RopePhysics) as RopePhysicsComponent;
+                RopeRenderComponent ropeRenderComponent = _entityManager.getComponent(entityId, ComponentType.RopeRender) as RopeRenderComponent;
+                Vector2 ropeTextureCenter = new Vector2(ropeRenderComponent.texture.Width, ropeRenderComponent.texture.Height) / 2f;
 
                 for (int j = 0; j < ropePhysicsComponent.segmentHeads.Count; j++)
                 {
@@ -283,7 +285,7 @@ namespace StasisGame.Systems
                             }
 
                             StasisMathHelper.interpolate(ref a, ref b, ref c, ref d, mu, out position);
-                            _spriteBatch.Draw(_pixel, (position - screenCenter) * _scale + _halfScreen, new Rectangle(0, 0, 4, 4), Color.Red, current.body.Rotation, new Vector2(2, 2), 1f, SpriteEffects.None, 0.1f);
+                            _spriteBatch.Draw(ropeRenderComponent.texture, (position - screenCenter) * _scale + _halfScreen, ropeRenderComponent.texture.Bounds, Color.White, current.body.Rotation, ropeTextureCenter, 1f, SpriteEffects.None, 0.1f);
                             //_spriteBatch.Draw(_pixel, (position - screenCenter) * _scale + _halfScreen, new Rectangle(0, 0, 16, 4), Color.Tan, current.body.Rotation, new Vector2(8, 2), 1f, SpriteEffects.None, 0.1f);
 
                             mu += ROPE_INTERPOLATION_INCREMENT;

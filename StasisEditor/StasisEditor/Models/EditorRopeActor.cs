@@ -11,11 +11,13 @@ namespace StasisEditor.Models
     public class EditorRopeActor : EditorActor, IActorComponent
     {
         private bool _doubleAnchor;
+        private string _ropeTextureUID;
         private PointListNode _nodeA;
         private PointListNode _nodeB;
         private List<PointListNode> _selectedPoints;
 
         public bool doubleAnchor { get { return _doubleAnchor; } set { _doubleAnchor = value; } }
+        public string ropeTextureUID { get { return _ropeTextureUID; } set { _ropeTextureUID = value; } }
         [Browsable(false)]
         public override Vector2 circuitConnectionPosition { get { return (_nodeA.position + _nodeB.position) / 2; } }
         [Browsable(false)]
@@ -27,6 +29,7 @@ namespace StasisEditor.Models
                 d.SetAttributeValue("double_anchor", _doubleAnchor);
                 d.SetAttributeValue("point_a", _nodeA.position);
                 d.SetAttributeValue("point_b", _nodeB.position);
+                d.SetAttributeValue("rope_texture_uid", _ropeTextureUID);
                 return d;
             }
         }
@@ -40,6 +43,7 @@ namespace StasisEditor.Models
             _selectedPoints = new List<PointListNode>();
             _selectedPoints.Add(_nodeA);
             _selectedPoints.Add(_nodeB);
+            _ropeTextureUID = "default_rope";
             _layerDepth = 0.1f;
         }
 
@@ -49,6 +53,7 @@ namespace StasisEditor.Models
             _doubleAnchor = Loader.loadBool(data.Attribute("double_anchor"), false);
             _nodeA = new PointListNode(Loader.loadVector2(data.Attribute("point_a"), Vector2.Zero));
             _nodeB = new PointListNode(Loader.loadVector2(data.Attribute("point_b"), Vector2.Zero));
+            _ropeTextureUID = Loader.loadString(data.Attribute("rope_texture_uid"), "default_rope");
             _selectedPoints = new List<PointListNode>();
         }
 

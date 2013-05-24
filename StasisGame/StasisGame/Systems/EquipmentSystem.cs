@@ -1,9 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
 using Microsoft.Xna.Framework;
+using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 using StasisGame.Components;
 using StasisGame.Managers;
+using StasisCore;
 
 namespace StasisGame.Systems
 {
@@ -13,6 +15,7 @@ namespace StasisGame.Systems
         private EntityManager _entityManager;
         private bool _paused;
         private bool _singleStep;
+        private Texture2D _ropeTexture;
 
         public SystemType systemType { get { return SystemType.Equipment; } }
         public int defaultPriority { get { return 10; } }
@@ -23,6 +26,7 @@ namespace StasisGame.Systems
         {
             _systemManager = systemManager;
             _entityManager = entityManager;
+            _ropeTexture = ResourceManager.getTexture("default_rope");
         }
 
         // assignItemToToolbar
@@ -136,7 +140,7 @@ namespace StasisGame.Systems
                                         AimComponent aimComponent = _entityManager.getComponent(toolbarEntities[i], ComponentType.Aim) as AimComponent;
                                         Vector2 initialPointA = (_entityManager.getComponent(toolbarEntities[i], ComponentType.WorldPosition) as WorldPositionComponent).position;
                                         Vector2 initialPointB = initialPointA + new Vector2((float)Math.Cos(aimComponent.angle), (float)Math.Sin(aimComponent.angle)) * aimComponent.length;
-                                        int ropeEntityId = _entityManager.factory.createRope(false, true, initialPointA, initialPointB, -1);
+                                        int ropeEntityId = _entityManager.factory.createRope(_ropeTexture, false, true, initialPointA, initialPointB, -1);
 
                                         if (ropeEntityId != -1)
                                         {

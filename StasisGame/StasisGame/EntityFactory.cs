@@ -449,13 +449,14 @@ namespace StasisGame
         public int createRope(XElement data)
         {
             return createRope(
+                ResourceManager.getTexture(Loader.loadString(data.Attribute("rope_texture_uid"), "default_rope")),
                 Loader.loadBool(data.Attribute("double_anchor"), false),
                 false,
                 Loader.loadVector2(data.Attribute("point_a"), Vector2.Zero),
                 Loader.loadVector2(data.Attribute("point_b"), Vector2.Zero),
                 Loader.loadInt(data.Attribute("id"), -1));
         }
-        public int createRope(bool doubleAnchor, bool destroyAfterRelease, Vector2 initialPointA, Vector2 initialPointB, int actorId)
+        public int createRope(Texture2D texture, bool doubleAnchor, bool destroyAfterRelease, Vector2 initialPointA, Vector2 initialPointB, int actorId)
         {
             TreeSystem treeSystem = _systemManager.getSystem(SystemType.Tree) as TreeSystem;
             World world = (_systemManager.getSystem(SystemType.Physics) as PhysicsSystem).world;
@@ -646,7 +647,7 @@ namespace StasisGame
             // Add components
             ropePhysicsComponent = new RopePhysicsComponent(head, destroyAfterRelease, reverseClimbDirection, doubleAnchor);
             _entityManager.addComponent(entityId, ropePhysicsComponent);
-            _entityManager.addComponent(entityId, new RopeRenderComponent());
+            _entityManager.addComponent(entityId, new RopeRenderComponent(texture));
             _entityManager.addComponent(entityId, new IgnoreTreeCollisionComponent());
             _entityManager.addComponent(entityId, new IgnoreRopeRaycastComponent());
             _entityManager.addComponent(entityId, new SkipFluidResolutionComponent());
