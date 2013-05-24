@@ -138,6 +138,42 @@ namespace StasisGame.Systems
             }
         }
 
+        public void breakAnchor(RopeNode ropeNode)
+        {
+            bool markedForDestruction = false;
+            int ttl = ropeNode.ropePhysicsComponent.timeToLive;
+
+            // Destroy joint
+            ropeNode.body.World.RemoveJoint(ropeNode.anchorJoint);
+            ropeNode.anchorJoint = null;
+
+            if (ropeNode.ropePhysicsComponent.doubleAnchor)
+            {
+                // Mark for destruction if other anchor is broken
+                if (ropeNode == ropeNode.head && ropeNode.tail.anchorJoint == null)
+                    markedForDestruction = true;
+                else if (ropeNode == ropeNode.tail && ropeNode.head.anchorJoint == null)
+                    markedForDestruction = true;
+            }
+            else
+            {
+                // Mark for destruction
+                markedForDestruction = true;
+            }
+
+            // Start rope's time to live timer if markedForDestruction is true
+            if (markedForDestruction)
+                ropeNode.ropePhysicsComponent.timeToLive = (ttl > -1 && ttl < ROPE_TIME_TO_LIVE) ? ttl : ROPE_TIME_TO_LIVE;
+        }
+
+        public void breakJoint(RopeNode ropeNode)
+        {
+            int ttl = ropeNode.ropePhysicsComponent.timeToLive;
+            ropeNode.ropePhysicsComponent.timeToLive = (ttl > -1 && ttl < ROPE_TIME_TO_LIVE) ? ttl : ROPE_TIME_TO_LIVE;
+            ropeNode.body.World.RemoveJoint(ropeNode.joint);
+            ropeNode.joint = null;
+        }
+
         public void update()
         {
             if (!_paused || _singleStep)
@@ -178,10 +214,7 @@ namespace StasisGame.Systems
                                         current.anchorJoint.BodyB.GetWorldPoint(current.anchorJoint.LocalAnchorB);
                                     if (relative.Length() > 0.8f || current.anchorJoint.GetReactionForce(60f).Length() > 400f)
                                     {
-                                        int ttl = ropePhysicsComponent.timeToLive;
-                                        ropePhysicsComponent.timeToLive = (ttl > -1 && ttl < ROPE_TIME_TO_LIVE) ? ttl : ROPE_TIME_TO_LIVE;
-                                        current.body.World.RemoveJoint(current.anchorJoint);
-                                        current.anchorJoint = null;
+                                        breakAnchor(current);
                                     }
                                 }
                             }
@@ -191,10 +224,7 @@ namespace StasisGame.Systems
                                         current.joint.BodyB.GetWorldPoint(current.joint.LocalAnchorB);
                             if (relative.Length() > 1.2f || current.joint.GetReactionForce(60f).Length() > 300f)
                             {
-                                int ttl = ropePhysicsComponent.timeToLive;
-                                ropePhysicsComponent.timeToLive = (ttl > -1 && ttl < ROPE_TIME_TO_LIVE) ? ttl : ROPE_TIME_TO_LIVE;
-                                current.body.World.RemoveJoint(current.joint);
-                                current.joint = null;
+                                breakJoint(current);
                             }
                         }
                         current = current.next;

@@ -237,6 +237,7 @@ namespace StasisGame.Systems
                 addRenderablePrimitive(bodyRenderComponent);
             }
 
+            // Rope rendering
             for (int i = 0; i < ropeRenderEntities.Count; i++)
             {
                 int entityId = ropeRenderEntities[i];

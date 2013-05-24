@@ -473,8 +473,8 @@ namespace StasisGame
             int ropeNodeLimit;
             RopeNode head = null;
             RopeNode lastNode = null;
-            //RevoluteJointDef anchorADef = new RevoluteJointDef();
-            //RevoluteJointDef anchorBDef = new RevoluteJointDef();
+            RopePhysicsComponent ropePhysicsComponent;
+            RopeNode current;
             
             // Raycast to find A to B result
             world.RayCast((fixture, point, normal, fraction) =>
@@ -606,13 +606,6 @@ namespace StasisGame
                 if (lastNode != null)
                 {
                     joint = JointFactory.CreateRevoluteJoint(world, lastNode.body, body, new Vector2(-segmentHalfLength, 0), new Vector2(segmentHalfLength, 0));
-                    /*
-                    jointDef.bodyA = lastNode.body;
-                    jointDef.bodyB = body;
-                    jointDef.localAnchorA = new Vector2(-segmentHalfLength, 0);
-                    jointDef.localAnchorB = new Vector2(segmentHalfLength, 0);
-                    joint = (RevoluteJoint)world.CreateJoint(jointDef);
-                    */
                 }
 
                 ropeNode = new RopeNode(body, joint, segmentHalfLength);
@@ -630,13 +623,6 @@ namespace StasisGame
             if (baResult.success)
             {
                 head.anchorJoint = JointFactory.CreateRevoluteJoint(world, baResult.fixture.Body, head.body, baResult.fixture.Body.GetLocalPoint(baResult.worldPoint), new Vector2(segmentHalfLength, 0));
-                /*
-                anchorADef.bodyA = baResult.fixture.GetBody();
-                anchorADef.bodyB = head.body;
-                anchorADef.localAnchorA = baResult.fixture.GetBody().GetLocalPoint(baResult.worldPoint);
-                anchorADef.localAnchorB = new Vector2(segmentHalfLength, 0);
-                head.anchorJoint = (RevoluteJoint)world.CreateJoint(anchorADef);
-                */
                 resultHandled = true;
                 reverseClimbDirection = !doubleAnchor;
             }
@@ -647,13 +633,6 @@ namespace StasisGame
                 if (abResult.success)
                 {
                     lastNode.anchorJoint = JointFactory.CreateRevoluteJoint(world, lastNode.body, abResult.fixture.Body, new Vector2(-segmentHalfLength, 0), abResult.fixture.Body.GetLocalPoint(abResult.worldPoint));
-                    /*
-                    anchorBDef.bodyA = lastNode.body;
-                    anchorBDef.bodyB = abResult.fixture.GetBody();
-                    anchorBDef.localAnchorA = new Vector2(-segmentHalfLength, 0);
-                    anchorBDef.localAnchorB = abResult.fixture.GetBody().GetLocalPoint(abResult.worldPoint);
-                    lastNode.anchorJoint = (RevoluteJoint)world.CreateJoint(anchorBDef);
-                    */
                 }
             }
 
@@ -665,17 +644,20 @@ namespace StasisGame
                 entityId = _entityManager.createEntity();
 
             // Add components
-            _entityManager.addComponent(entityId, new RopePhysicsComponent(head, destroyAfterRelease, reverseClimbDirection, doubleAnchor));
+            ropePhysicsComponent = new RopePhysicsComponent(head, destroyAfterRelease, reverseClimbDirection, doubleAnchor);
+            _entityManager.addComponent(entityId, ropePhysicsComponent);
             _entityManager.addComponent(entityId, new RopeRenderComponent());
             _entityManager.addComponent(entityId, new IgnoreTreeCollisionComponent());
             _entityManager.addComponent(entityId, new IgnoreRopeRaycastComponent());
             _entityManager.addComponent(entityId, new SkipFluidResolutionComponent());
             _entityManager.addComponent(entityId, new ParticleInfluenceComponent(ParticleInfluenceType.Rope));
 
-            RopeNode current = head;
+            // Finish setting up rope node properties
+            current = head;
             while (current != null)
             {
                 current.body.UserData = entityId;
+                current.ropePhysicsComponent = ropePhysicsComponent;
                 current = current.next;
             }
 

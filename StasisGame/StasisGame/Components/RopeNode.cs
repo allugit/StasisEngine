@@ -8,6 +8,7 @@ namespace StasisGame.Components
 {
     public class RopeNode
     {
+        private RopePhysicsComponent _ropePhysicsComponent;
         private RopeNode _next;
         private RopeNode _previous;
         private Body _body;
@@ -15,6 +16,7 @@ namespace StasisGame.Components
         private RevoluteJoint _anchorJoint;
         private float _halfLength;
 
+        public RopePhysicsComponent ropePhysicsComponent { get { return _ropePhysicsComponent; } set { _ropePhysicsComponent = value; } }
         public RopeNode next { get { return _next; } set { _next = value; } }
         public RopeNode previous { get { return _previous; } set { _previous = value; } }
         public RevoluteJoint joint { get { return _joint; } set { _joint = value; } }
