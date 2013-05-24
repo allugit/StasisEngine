@@ -11,6 +11,7 @@ namespace StasisGame.Components
         private bool _destroyAfterRelease;
         private bool _reverseClimbDirection;
         private bool _doubleAnchor;
+        private int _interpolationCount;
 
         public ComponentType componentType { get { return ComponentType.Rope; } }
         public RopeNode ropeNodeHead { get { return _ropeNodeHead; } }
@@ -18,10 +19,12 @@ namespace StasisGame.Components
         public bool destroyAfterRelease { get { return _destroyAfterRelease; } set { _destroyAfterRelease = value; } }
         public bool reverseClimbDirection { get { return _reverseClimbDirection; } set { _reverseClimbDirection = value; } }
         public bool doubleAnchor { get { return _doubleAnchor; } set { _doubleAnchor = value; } }
+        public int interpolationCount { get { return _interpolationCount; } }
 
-        public RopeComponent(RopeNode ropeNodeHead, bool destroyAfterRelease, bool reverseClimbDirection, bool doubleAnchor)
+        public RopeComponent(RopeNode ropeNodeHead, int interpolationCount, bool destroyAfterRelease, bool reverseClimbDirection, bool doubleAnchor)
         {
             _ropeNodeHead = ropeNodeHead;
+            _interpolationCount = interpolationCount;
             _destroyAfterRelease = destroyAfterRelease;
             _reverseClimbDirection = reverseClimbDirection;
             _doubleAnchor = doubleAnchor;

@@ -13,19 +13,12 @@ namespace StasisEditor.Models
     public class EditorRopeActor : EditorActor, IActorComponent
     {
         private bool _doubleAnchor;
-        private List<string> _textureUIDs;
-        private int _interpolationCount;
-        private RopeTextureStyle _ropeTextureStyle;
+        private string _ropeMaterialUID;
         private PointListNode _nodeA;
         private PointListNode _nodeB;
         private List<PointListNode> _selectedPoints;
 
-        public bool doubleAnchor { get { return _doubleAnchor; } set { _doubleAnchor = value; } }
-        public int interpolationCount { get { return _interpolationCount; } set { _interpolationCount = value; } }
-        public RopeTextureStyle ropeTextureStyle { get { return _ropeTextureStyle; } set { _ropeTextureStyle = value; } }
-        [Editor(@"System.Windows.Forms.Design.StringCollectionEditor, System.Design, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a",
-            typeof(UITypeEditor))]
-        public List<string> textureUIDs { get { return _textureUIDs; } }
+        public string ropeMaterialUID { get { return _ropeMaterialUID; } set { _ropeMaterialUID = value; } }
         [Browsable(false)]
         public override Vector2 circuitConnectionPosition { get { return (_nodeA.position + _nodeB.position) / 2; } }
         [Browsable(false)]
@@ -35,12 +28,9 @@ namespace StasisEditor.Models
             {
                 XElement d = base.data;
                 d.SetAttributeValue("double_anchor", _doubleAnchor);
+                d.SetAttributeValue("rope_material_uid", _ropeMaterialUID);
                 d.SetAttributeValue("point_a", _nodeA.position);
                 d.SetAttributeValue("point_b", _nodeB.position);
-                d.SetAttributeValue("interpolation_count", _interpolationCount);
-                d.SetAttributeValue("rope_texture_style", _ropeTextureStyle);
-                foreach (string textureUID in _textureUIDs)
-                    d.Add(new XElement("Texture", new XAttribute("uid", textureUID)));
                 return d;
             }
         }
@@ -50,14 +40,12 @@ namespace StasisEditor.Models
         {
             Vector2 worldMouse = _level.controller.worldMouse;
 
-            _interpolationCount = 3;
-            _textureUIDs = new List<string>(new[] { "default_rope" });
-            _ropeTextureStyle = RopeTextureStyle.Random;
             _nodeA = new PointListNode(worldMouse + new Vector2(0f, -0.5f));
             _nodeB = new PointListNode(worldMouse + new Vector2(0f, 0.5f));
             _selectedPoints = new List<PointListNode>();
             _selectedPoints.Add(_nodeA);
             _selectedPoints.Add(_nodeB);
+            _ropeMaterialUID = "default_rope_material";
             _layerDepth = 0.1f;
         }
 
@@ -65,13 +53,9 @@ namespace StasisEditor.Models
             : base(level, data)
         {
             _doubleAnchor = Loader.loadBool(data.Attribute("double_anchor"), false);
-            _interpolationCount = Loader.loadInt(data.Attribute("interpolation_count"), 3);
-            _ropeTextureStyle = (RopeTextureStyle)Loader.loadEnum(typeof(RopeTextureStyle), data.Attribute("rope_texture_style"), (int)RopeTextureStyle.Random);
+            _ropeMaterialUID = Loader.loadString(data.Attribute("rope_material_uid"), "default_rope_material");
             _nodeA = new PointListNode(Loader.loadVector2(data.Attribute("point_a"), Vector2.Zero));
             _nodeB = new PointListNode(Loader.loadVector2(data.Attribute("point_b"), Vector2.Zero));
-            _textureUIDs = new List<string>();
-            foreach (XElement textureData in data.Elements("Texture"))
-                _textureUIDs.Add(Loader.loadString(data.Attribute("uid"), "default_rope"));
             _selectedPoints = new List<PointListNode>();
         }
 

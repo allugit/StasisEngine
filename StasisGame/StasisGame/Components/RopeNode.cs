@@ -1,11 +1,24 @@
 ﻿using System;
 using System.Collections.Generic;
 using Microsoft.Xna.Framework;
+using Microsoft.Xna.Framework.Graphics;
 using FarseerPhysics.Dynamics;
 using FarseerPhysics.Dynamics.Joints;
+using StasisCore.Models;
 
 namespace StasisGame.Components
 {
+    public struct RopeNodeTexture
+    {
+        public Texture2D texture;
+        public Vector2 center;
+        public RopeNodeTexture(Texture2D texture, Vector2 center)
+        {
+            this.texture = texture;
+            this.center = center;
+        }
+    };
+
     public class RopeNode
     {
         private RopeComponent _ropeComponent;
@@ -15,6 +28,7 @@ namespace StasisGame.Components
         private RevoluteJoint _joint;
         private RevoluteJoint _anchorJoint;
         private float _halfLength;
+        private RopeNodeTexture[] _ropeNodeTextures;
 
         public RopeComponent ropeComponent { get { return _ropeComponent; } set { _ropeComponent = value; } }
         public RopeNode next { get { return _next; } set { _next = value; } }
@@ -23,6 +37,7 @@ namespace StasisGame.Components
         public RevoluteJoint anchorJoint { get { return _anchorJoint; } set { _anchorJoint = value; } }
         public Body body { get { return _body; } }
         public float halfLength { get { return _halfLength; } }
+        public RopeNodeTexture[] ropeNodeTextures { get { return _ropeNodeTextures; } }
         public RopeNode head
         {
             get
@@ -58,8 +73,9 @@ namespace StasisGame.Components
             }
         }
 
-        public RopeNode(Body body, RevoluteJoint joint, float halfLength)
+        public RopeNode(RopeNodeTexture[] ropeNodeTextures, Body body, RevoluteJoint joint, float halfLength)
         {
+            _ropeNodeTextures = ropeNodeTextures;
             _body = body;
             _joint = joint;
             _halfLength = halfLength;

@@ -67,6 +67,8 @@
     <Compile Include="BackgroundRenderer.cs" />
     <Compile Include="Models\LevelIcon.cs" />
     <Compile Include="Models\MaterialWorleyLayer.cs" />
+    <Compile Include="Models\RopeMaterial.cs" />
+    <Compile Include="Models\RopeMaterialTexture.cs" />
     <Compile Include="Models\WorldMap.cs" />
     <Compile Include="Models\WorldPath.cs" />
     <Compile Include="Models\WorldPathPoint.cs" />

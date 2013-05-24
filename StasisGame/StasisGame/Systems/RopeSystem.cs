@@ -154,7 +154,7 @@ namespace StasisGame.Systems
             ropeNode.previous = null;
 
             // Recreate disconnected segment as its own entity
-            _entityManager.factory.recreateRope(ropeNode);
+            _entityManager.factory.recreateRope(ropeNode, ropeNode.ropeComponent.interpolationCount);
 
             // Destroy joint
             ropeNode.body.World.RemoveJoint(ropeNode.joint);

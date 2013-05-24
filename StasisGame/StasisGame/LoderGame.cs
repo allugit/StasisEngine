@@ -98,6 +98,7 @@ namespace StasisGame
             ResourceManager.loadAllMaterials(TitleContainer.OpenStream(ResourceManager.materialPath));
             ResourceManager.loadAllBackgrounds(TitleContainer.OpenStream(ResourceManager.backgroundPath));
             ResourceManager.loadAllWorldMaps(TitleContainer.OpenStream(ResourceManager.worldMapPath));
+            ResourceManager.loadAllRopeMaterials(TitleContainer.OpenStream(ResourceManager.ropeMaterialPath));
 
             _spriteBatch = new SpriteBatch(GraphicsDevice);
             _arial = Content.Load<SpriteFont>("arial");

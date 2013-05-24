@@ -36,6 +36,7 @@ namespace StasisGame
 
         private SystemManager _systemManager;
         private EntityManager _entityManager;
+        private Random _ropeTextureRNG;
         private Dictionary<int, Dictionary<int, GateOutputComponent>> _actorIdEntityIdGateComponentMap;     // key 1) actor id needing to be listened to
                                                                                                             // key 2) output gate's entity id
         private Dictionary<int, Dictionary<int, GateOutputComponent>> _circuitIdGateIdGateComponentMap;     // key 1) circuit actor id
@@ -45,6 +46,7 @@ namespace StasisGame
         {
             _systemManager = systemManager;
             _entityManager = entityManager;
+            _ropeTextureRNG = new Random();
             _actorIdEntityIdGateComponentMap = new Dictionary<int, Dictionary<int, GateOutputComponent>>();
             _circuitIdGateIdGateComponentMap = new Dictionary<int, Dictionary<int, GateOutputComponent>>();
         }
@@ -448,15 +450,19 @@ namespace StasisGame
         // 7) Create entity with rope component
         public int createRope(XElement data)
         {
+            RopeMaterial ropeMaterial = new RopeMaterial(ResourceManager.getResource(data.Attribute("rope_material_uid").Value));
+
             return createRope(
-                ResourceManager.getTexture(Loader.loadString(data.Attribute("rope_texture_uid"), "default_rope")),
+                ropeMaterial.textures,
+                ropeMaterial.interpolationCount,
+                ropeMaterial.ropeTextureStyle,
                 Loader.loadBool(data.Attribute("double_anchor"), false),
                 false,
                 Loader.loadVector2(data.Attribute("point_a"), Vector2.Zero),
                 Loader.loadVector2(data.Attribute("point_b"), Vector2.Zero),
                 Loader.loadInt(data.Attribute("id"), -1));
         }
-        public int createRope(Texture2D texture, bool doubleAnchor, bool destroyAfterRelease, Vector2 initialPointA, Vector2 initialPointB, int actorId)
+        public int createRope(List<RopeMaterialTexture> textures, int interpolationCount, RopeTextureStyle ropeTextureStyle, bool doubleAnchor, bool destroyAfterRelease, Vector2 initialPointA, Vector2 initialPointB, int actorId)
         {
             TreeSystem treeSystem = _systemManager.getSystem(SystemType.Tree) as TreeSystem;
             World world = (_systemManager.getSystem(SystemType.Physics) as PhysicsSystem).world;
@@ -476,6 +482,7 @@ namespace StasisGame
             RopeNode lastNode = null;
             RopeComponent ropeComponent;
             RopeNode current;
+            RopeNodeTexture[] ropeNodeTextures = new RopeNodeTexture[interpolationCount];
             
             // Raycast to find A to B result
             world.RayCast((fixture, point, normal, fraction) =>
@@ -577,6 +584,8 @@ namespace StasisGame
             ropeNormal = finalRelativeLine;
             ropeNormal.Normalize();
             ropeNodeLimit = (int)Math.Ceiling(finalLength / segmentLength);
+
+            // Create nodes
             for (int i = 0; i < ropeNodeLimit; i++)
             {
                 PolygonShape shape = new PolygonShape(0.5f);
@@ -585,12 +594,11 @@ namespace StasisGame
                 RopeNode ropeNode;
                 RevoluteJoint joint = null;
 
+                // Create body
                 body.Rotation = angle + StasisMathHelper.pi; // Adding pi fixes a problem where rope segments are created backwards, and then snap into the correct positions
                 body.Position = finalPointA + ropeNormal * (segmentHalfLength + i * segmentLength);
                 body.BodyType = BodyType.Dynamic;
-
                 shape.SetAsBox(segmentHalfLength, 0.15f);
-
                 fixture = body.CreateFixture(shape);
                 fixture.Friction = 0.5f;
                 fixture.Restitution = 0f;
@@ -604,13 +612,32 @@ namespace StasisGame
                     fixture.CollidesWith |= (ushort)CollisionCategory.Player;
                 fixture.UserData = i;
 
+                // Create joints
                 if (lastNode != null)
-                {
                     joint = JointFactory.CreateRevoluteJoint(world, lastNode.body, body, new Vector2(-segmentHalfLength, 0), new Vector2(segmentHalfLength, 0));
+
+                // Initialize rope node textures
+                if (ropeTextureStyle == RopeTextureStyle.Random)
+                {
+                    for (int j = 0; j < interpolationCount; j++)
+                    {
+                        RopeMaterialTexture randomRopeMaterialTexture = textures[_ropeTextureRNG.Next(textures.Count)];
+                        ropeNodeTextures[j] = new RopeNodeTexture(randomRopeMaterialTexture.texture, randomRopeMaterialTexture.center);
+                    }
+                }
+                else if (ropeTextureStyle == RopeTextureStyle.Sequential)
+                {
+                    for (int j = 0; j < interpolationCount; j++)
+                    {
+                        RopeMaterialTexture sequentialRopeMaterialTexture = textures[Math.Min(j, textures.Count - 1)];
+                        ropeNodeTextures[j] = new RopeNodeTexture(sequentialRopeMaterialTexture.texture, sequentialRopeMaterialTexture.center);
+                    }
                 }
 
-                ropeNode = new RopeNode(body, joint, segmentHalfLength);
+                // Create node
+                ropeNode = new RopeNode(ropeNodeTextures, body, joint, segmentHalfLength);
 
+                // Store references to head and tail nodes, and insert the node into the linked list
                 if (head == null)
                     head = ropeNode;
                 if (!(lastNode == null))
@@ -645,7 +672,7 @@ namespace StasisGame
                 entityId = _entityManager.createEntity();
 
             // Add components
-            ropeComponent = new RopeComponent(head, destroyAfterRelease, reverseClimbDirection, doubleAnchor);
+            ropeComponent = new RopeComponent(head, interpolationCount, destroyAfterRelease, reverseClimbDirection, doubleAnchor);
             _entityManager.addComponent(entityId, ropeComponent);
             _entityManager.addComponent(entityId, new IgnoreTreeCollisionComponent());
             _entityManager.addComponent(entityId, new IgnoreRopeRaycastComponent());
@@ -665,10 +692,10 @@ namespace StasisGame
         }
 
         // recreateRope -- Creates a new rope entity from an existing segment of rope nodes
-        public int recreateRope(RopeNode head, Texture2D texture)
+        public int recreateRope(RopeNode head, int interpolationCount)
         {
             int entityId = _entityManager.createEntity();
-            RopeComponent ropeComponent = new RopeComponent(head, head.ropeComponent.destroyAfterRelease, head.ropeComponent.reverseClimbDirection, head.ropeComponent.doubleAnchor);
+            RopeComponent ropeComponent = new RopeComponent(head, interpolationCount, head.ropeComponent.destroyAfterRelease, head.ropeComponent.reverseClimbDirection, head.ropeComponent.doubleAnchor);
 
             // Add components
             _entityManager.addComponent(entityId, ropeComponent);

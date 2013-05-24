@@ -27,6 +27,7 @@ namespace StasisCore
         private static Dictionary<string, XElement> _circuitResources;
         private static Dictionary<string, XElement> _backgroundResources;
         private static Dictionary<string, XElement> _worldMapResources;
+        private static Dictionary<string, XElement> _ropeMaterialResources;
         private static Dictionary<string, Texture2D> _cachedTextures;
         private static List<Dictionary<string, XElement>> _resources;
         public static string rootDirectory = "";
@@ -41,6 +42,7 @@ namespace StasisCore
         public static string circuitPath { get { return rootDirectory + @"data\circuits.xml"; } }
         public static string backgroundPath { get { return rootDirectory + @"data\backgrounds.xml"; } }
         public static string worldMapPath { get { return rootDirectory + @"data\world_maps.xml"; } }
+        public static string ropeMaterialPath { get { return rootDirectory + @"data\rope_materials.xml"; } }
         public static GraphicsDevice graphicsDevice { get { return _graphicsDevice; } }
 
         public static List<XElement> materialResources
@@ -143,6 +145,16 @@ namespace StasisCore
                 return resources;
             }
         }
+        public static List<XElement> ropeMaterialResources
+        {
+            get
+            {
+                List<XElement> resources = new List<XElement>();
+                foreach (XElement resource in _ropeMaterialResources.Values)
+                    resources.Add(resource);
+                return resources;
+            }
+        }
 
         // Initialize -- Called once when the application starts
         public static void initialize(GraphicsDevice graphicsDevice)
@@ -158,6 +170,7 @@ namespace StasisCore
             _circuitResources = new Dictionary<string, XElement>();
             _backgroundResources = new Dictionary<string, XElement>();
             _worldMapResources = new Dictionary<string, XElement>();
+            _ropeMaterialResources = new Dictionary<string, XElement>();
             _cachedTextures = new Dictionary<string, Texture2D>();
 
             // Store all resource dictionaries in a list
@@ -172,6 +185,7 @@ namespace StasisCore
             _resources.Add(_circuitResources);
             _resources.Add(_backgroundResources);
             _resources.Add(_worldMapResources);
+            _resources.Add(_ropeMaterialResources);
         }
 
         // Checks to see if a resource has been loaded
@@ -386,6 +400,18 @@ namespace StasisCore
             }
 
             stream.Close();
+        }
+
+        // Load all rope materials
+        public static void loadAllRopeMaterials(Stream stream)
+        {
+            _ropeMaterialResources.Clear();
+
+            XElement data = XElement.Load(stream);
+            foreach (XElement ropeMaterialData in data.Elements("RopeMaterial"))
+            {
+                _ropeMaterialResources[ropeMaterialData.Attribute("uid").Value] = ropeMaterialData;
+            }
         }
     }
 }

@@ -6,6 +6,7 @@ using Microsoft.Xna.Framework.Input;
 using StasisGame.Components;
 using StasisGame.Managers;
 using StasisCore;
+using StasisCore.Models;
 
 namespace StasisGame.Systems
 {
@@ -15,7 +16,7 @@ namespace StasisGame.Systems
         private EntityManager _entityManager;
         private bool _paused;
         private bool _singleStep;
-        private Texture2D _ropeTexture;
+        private RopeMaterial _defaultRopeMaterial;
 
         public SystemType systemType { get { return SystemType.Equipment; } }
         public int defaultPriority { get { return 10; } }
@@ -26,7 +27,7 @@ namespace StasisGame.Systems
         {
             _systemManager = systemManager;
             _entityManager = entityManager;
-            _ropeTexture = ResourceManager.getTexture("default_rope");
+            _defaultRopeMaterial = new RopeMaterial(ResourceManager.getResource("default_rope_material"));
         }
 
         // assignItemToToolbar
@@ -142,7 +143,7 @@ namespace StasisGame.Systems
                                         AimComponent aimComponent = _entityManager.getComponent(toolbarEntities[i], ComponentType.Aim) as AimComponent;
                                         Vector2 initialPointA = (_entityManager.getComponent(toolbarEntities[i], ComponentType.WorldPosition) as WorldPositionComponent).position;
                                         Vector2 initialPointB = initialPointA + new Vector2((float)Math.Cos(aimComponent.angle), (float)Math.Sin(aimComponent.angle)) * aimComponent.length;
-                                        int ropeEntityId = _entityManager.factory.createRope(_ropeTexture, false, true, initialPointA, initialPointB, -1);
+                                        int ropeEntityId = _entityManager.factory.createRope(_defaultRopeMaterial.textures, _defaultRopeMaterial.interpolationCount, _defaultRopeMaterial.ropeTextureStyle, false, true, initialPointA, initialPointB, -1);
 
                                         if (ropeEntityId != -1)
                                         {

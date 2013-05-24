@@ -109,6 +109,17 @@ namespace StasisEditor
                             return true;
                     }
                 }
+
+                // Check rope materials
+                using (FileStream fs = new FileStream(ResourceManager.ropeMaterialPath, FileMode.Open))
+                {
+                    XElement data = XElement.Load(fs);
+                    foreach (XElement ropeMaterialData in data.Elements("RopeMaterial"))
+                    {
+                        if (ropeMaterialData.Attribute("uid").Value == uid)
+                            return true;
+                    }
+                }
             }
             catch (XmlException e)
             {
@@ -166,6 +177,11 @@ namespace StasisEditor
             string worldMapDestination = RESOURCE_DESTINATION_PATH + "\\" + ResourceManager.worldMapPath;
             string worldMapSource = RESOURCE_SOURCE_PATH + "\\" + ResourceManager.worldMapPath;
             File.Copy(worldMapSource, worldMapDestination);
+
+            // Rope materials
+            string ropeMaterialDestination = RESOURCE_DESTINATION_PATH + "\\" + ResourceManager.ropeMaterialPath;
+            string ropeMaterialSource = RESOURCE_SOURCE_PATH + "\\" + ResourceManager.ropeMaterialPath;
+            File.Copy(ropeMaterialSource, ropeMaterialDestination);
 
             // Characters
             string characterDestination = RESOURCE_DESTINATION_PATH + "\\" + ResourceManager.characterPath;
@@ -309,8 +325,28 @@ namespace StasisEditor
             XDocument doc = new XDocument(data);
             doc.Save(ResourceManager.worldMapPath);
 
-            // Reload background
+            // Reload world maps
             ResourceManager.loadAllWorldMaps(new FileStream(ResourceManager.worldMapPath, FileMode.Open));
+        }
+
+        // Save rope material resources
+        public static void saveRopeMaterialResources(XElement data, bool backup)
+        {
+            // Backup rope materials
+            if (backup)
+            {
+                string backupFile = ResourceManager.ropeMaterialPath + ".bak";
+                if (File.Exists(backupFile))
+                    File.Delete(backupFile);
+                File.Move(ResourceManager.ropeMaterialPath, backupFile);
+            }
+
+            // Save rope materials
+            XDocument doc = new XDocument(data);
+            doc.Save(ResourceManager.ropeMaterialPath);
+
+            // Reload rope materials
+            ResourceManager.loadAllRopeMaterials(new FileStream(ResourceManager.ropeMaterialPath, FileMode.Open));
         }
     }
 }

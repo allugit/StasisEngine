@@ -17,8 +17,6 @@ namespace StasisGame.Systems
 
     public class RenderSystem : ISystem
     {
-        public const int ROPE_INTERPOLATION_COUNT = 3;
-        public const float ROPE_INTERPOLATION_INCREMENT = 1f / (float)ROPE_INTERPOLATION_COUNT;
         private LoderGame _game;
         private SystemManager _systemManager;
         private EntityManager _entityManager;
@@ -156,7 +154,7 @@ namespace StasisGame.Systems
         {
             FluidSystem fluidSystem = (FluidSystem)_systemManager.getSystem(SystemType.Fluid);
             List<int> bodyRenderEntities = _entityManager.getEntitiesPosessing(ComponentType.BodyRender);
-            List<int> ropeRenderEntities = _entityManager.getEntitiesPosessing(ComponentType.RopeRender);
+            List<int> ropeEntities = _entityManager.getEntitiesPosessing(ComponentType.Rope);
             List<int> worldItemRenderEntities = _entityManager.getEntitiesPosessing(ComponentType.WorldItemRender);
             List<int> characterRenderEntities = _entityManager.getEntitiesPosessing(ComponentType.CharacterRender);
             List<int> characterMovementEntities = _entityManager.getEntitiesPosessing(ComponentType.CharacterMovement);
@@ -240,21 +238,22 @@ namespace StasisGame.Systems
             }
 
             // Rope rendering
-            for (int i = 0; i < ropeRenderEntities.Count; i++)
+            for (int i = 0; i < ropeEntities.Count; i++)
             {
-                int entityId = ropeRenderEntities[i];
+                int entityId = ropeEntities[i];
                 RopeComponent ropeComponent = _entityManager.getComponent(entityId, ComponentType.Rope) as RopeComponent;
-                Vector2 ropeTextureCenter = new Vector2(ropeRenderComponent.texture.Width, ropeRenderComponent.texture.Height) / 2f;
                 RopeNode current = ropeComponent.ropeNodeHead;
                 RopeNode head = current;
                 RopeNode tail = head.tail;
                 Vector2 position;
+                float muIncrement = 1f / (float)ropeComponent.interpolationCount;
 
                 while (current != null)
                 {
                     float mu = 0f;
-                    for (int k = 0; k < ROPE_INTERPOLATION_COUNT; k++)
+                    for (int j = 0; j < ropeComponent.interpolationCount; j++)
                     {
+                        Texture2D texture = current.ropeNodeTextures[j].texture;
                         Vector2 a;
                         Vector2 b = current.body.GetWorldPoint(new Vector2(current.halfLength, 0));
                         Vector2 c = current.body.GetWorldPoint(new Vector2(-current.halfLength, 0));
@@ -282,9 +281,9 @@ namespace StasisGame.Systems
                         }
 
                         StasisMathHelper.interpolate(ref a, ref b, ref c, ref d, mu, out position);
-                        _spriteBatch.Draw(ropeRenderComponent.texture, (position - screenCenter) * _scale + _halfScreen, ropeRenderComponent.texture.Bounds, Color.White, current.body.Rotation, ropeTextureCenter, 1f, SpriteEffects.None, 0.1f);
+                        _spriteBatch.Draw(texture, (position - screenCenter) * _scale + _halfScreen, texture.Bounds, Color.White, current.body.Rotation, current.ropeNodeTextures[j].center, 1f, SpriteEffects.None, 0.1f);
 
-                        mu += ROPE_INTERPOLATION_INCREMENT;
+                        mu += muIncrement;
                     }
 
                     current = current.next;
