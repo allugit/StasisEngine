@@ -1,4 +1,5 @@
 ﻿using System;
+using Microsoft.Xna.Framework;
 
 namespace StasisCore
 {
@@ -21,6 +22,22 @@ namespace StasisCore
         {
             int result = x % modulus;
             return result < 0 ? modulus + x : result;
+        }
+
+        public static void interpolate(ref Vector2 a, ref Vector2 b, ref Vector2 c, ref Vector2 d, float mu, out Vector2 result)
+        {
+            float mu2 = mu * mu;
+            float a0 = d.Y - c.Y - a.Y + b.Y;
+            float a1 = a.Y - b.Y - a0;
+            float a2 = c.Y - a.Y;
+            float a3 = b.Y;
+            result.Y = a0 * mu * mu2 + a1 * mu2 + a2 * mu + a3;
+
+            a0 = d.X - c.X - a.X + b.X;
+            a1 = a.X - b.X - a0;
+            a2 = c.X - a.X;
+            a3 = b.X;
+            result.X = a0 * mu * mu2 + a1 * mu2 + a2 * mu + a3;
         }
     }
 }

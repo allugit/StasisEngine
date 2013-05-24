@@ -168,31 +168,15 @@ namespace StasisGame.Systems
                         // Check tensions
                         if (current.joint != null)
                         {
-                            Vector2 distance;
-                            if (current == head)
+                            Vector2 relative;
+                            if (current == head || current == tail)
                             {
                                 // Check anchor joint
                                 if (current.anchorJoint != null)
                                 {
-                                    distance = current.anchorJoint.BodyA.GetWorldPoint(current.anchorJoint.LocalAnchorA) -
+                                    relative = current.anchorJoint.BodyA.GetWorldPoint(current.anchorJoint.LocalAnchorA) -
                                         current.anchorJoint.BodyB.GetWorldPoint(current.anchorJoint.LocalAnchorB);
-                                    if (distance.Length() > 0.8f || current.anchorJoint.GetReactionForce(60f).Length() > 400f)
-                                    {
-                                        int ttl = ropePhysicsComponent.timeToLive;
-                                        ropePhysicsComponent.timeToLive = (ttl > -1 && ttl < ROPE_TIME_TO_LIVE) ? ttl : ROPE_TIME_TO_LIVE;
-                                        current.body.World.RemoveJoint(current.anchorJoint);
-                                        current.anchorJoint = null;
-                                    }
-                                }
-                            }
-                            else if (current == tail)
-                            {
-                                // Check anchor joint
-                                if (current.anchorJoint != null)
-                                {
-                                    distance = current.anchorJoint.BodyA.GetWorldPoint(current.anchorJoint.LocalAnchorA) -
-                                        current.anchorJoint.BodyB.GetWorldPoint(current.anchorJoint.LocalAnchorB);
-                                    if (distance.Length() > 0.8f || current.anchorJoint.GetReactionForce(60f).Length() > 400f)
+                                    if (relative.Length() > 0.8f || current.anchorJoint.GetReactionForce(60f).Length() > 400f)
                                     {
                                         int ttl = ropePhysicsComponent.timeToLive;
                                         ropePhysicsComponent.timeToLive = (ttl > -1 && ttl < ROPE_TIME_TO_LIVE) ? ttl : ROPE_TIME_TO_LIVE;
@@ -203,9 +187,9 @@ namespace StasisGame.Systems
                             }
 
                             // Check other joints
-                            distance = current.joint.BodyA.GetWorldPoint(current.joint.LocalAnchorA) -
+                            relative = current.joint.BodyA.GetWorldPoint(current.joint.LocalAnchorA) -
                                         current.joint.BodyB.GetWorldPoint(current.joint.LocalAnchorB);
-                            if (distance.Length() > 1.2f || current.joint.GetReactionForce(60f).Length() > 300f)
+                            if (relative.Length() > 1.2f || current.joint.GetReactionForce(60f).Length() > 300f)
                             {
                                 int ttl = ropePhysicsComponent.timeToLive;
                                 ropePhysicsComponent.timeToLive = (ttl > -1 && ttl < ROPE_TIME_TO_LIVE) ? ttl : ROPE_TIME_TO_LIVE;
