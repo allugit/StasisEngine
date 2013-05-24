@@ -17,7 +17,7 @@ namespace StasisGame.Systems
 
     public class RenderSystem : ISystem
     {
-        public const int ROPE_INTERPOLATION_COUNT = 4;
+        public const int ROPE_INTERPOLATION_COUNT = 3;
         public const float ROPE_INTERPOLATION_INCREMENT = 1f / (float)ROPE_INTERPOLATION_COUNT;
         private LoderGame _game;
         private SystemManager _systemManager;
@@ -269,7 +269,7 @@ namespace StasisGame.Systems
                         }
                         else
                         {
-                            a = current.previous.body.Position;
+                            a = current.previous.body.GetWorldPoint(new Vector2(current.halfLength, 0));
                         }
 
                         // Determine d's position
@@ -279,7 +279,7 @@ namespace StasisGame.Systems
                         }
                         else
                         {
-                            d = current.next.body.Position;
+                            d = current.next.body.GetWorldPoint(new Vector2(-current.halfLength, 0));
                         }
 
                         StasisMathHelper.interpolate(ref a, ref b, ref c, ref d, mu, out position);
