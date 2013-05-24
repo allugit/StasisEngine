@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using StasisGame.Systems;
 
 namespace StasisGame.Components
 {
@@ -25,6 +26,11 @@ namespace StasisGame.Components
             _doubleAnchor = doubleAnchor;
             _segmentHeads = new List<RopeNode>();
             _segmentHeads.Add(ropeNodeHead);
+        }
+
+        public void startTTLCountdown()
+        {
+            _timeToLive = (_timeToLive > -1 && _timeToLive < RopeSystem.ROPE_TIME_TO_LIVE) ? _timeToLive : RopeSystem.ROPE_TIME_TO_LIVE;
         }
     }
 }

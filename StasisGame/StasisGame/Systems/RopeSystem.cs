@@ -38,11 +38,6 @@ namespace StasisGame.Systems
 
             ropeGrabComponent.ropeNode = node;
             bodyToAttach.Position = node.body.GetWorldPoint(new Vector2(lengthPosition, 0));
-            //jointDef.bodyA = bodyToAttach;
-            //jointDef.bodyB = node.body;
-            //jointDef.localAnchorA = Vector2.Zero;
-            //jointDef.localAnchorB = node.body.GetLocalPoint(bodyToAttach.GetPosition());
-            //joint = bodyToAttach.GetWorld().CreateJoint(jointDef) as RevoluteJoint;
             joint = JointFactory.CreateRevoluteJoint(bodyToAttach.World, bodyToAttach, node.body, node.body.GetLocalPoint(bodyToAttach.Position));
             ropeGrabComponent.joints.Add(bodyToAttach, joint);
         }
@@ -149,6 +144,7 @@ namespace StasisGame.Systems
             ropeNode.body.World.RemoveJoint(ropeNode.anchorJoint);
             ropeNode.anchorJoint = null;
 
+            /*
             if (ropeNode.ropePhysicsComponent.doubleAnchor)
             {
                 // Mark for destruction if other anchor is broken
@@ -161,26 +157,27 @@ namespace StasisGame.Systems
             {
                 // Mark for destruction
                 markedForDestruction = true;
-            }
+            }*/
 
             // Start rope's time to live timer if markedForDestruction is true
             if (markedForDestruction)
-                ropeNode.ropePhysicsComponent.timeToLive = (ttl > -1 && ttl < ROPE_TIME_TO_LIVE) ? ttl : ROPE_TIME_TO_LIVE;
+                ropeNode.ropePhysicsComponent.startTTLCountdown();
         }
 
-        public void breakJoint(RopeNode ropeNode)
+        // breakJoint -- Breaks the link between two nodes and determines whether or not to keep them alive, or kill them
+        public void breakJoint(int entityId, RopeNode ropeNode)
         {
-            //int ttl = ropeNode.ropePhysicsComponent.timeToLive;
-            //ropeNode.ropePhysicsComponent.timeToLive = (ttl > -1 && ttl < ROPE_TIME_TO_LIVE) ? ttl : ROPE_TIME_TO_LIVE;
+            RopeRenderComponent ropeRenderComponent = _entityManager.getComponent(entityId, ComponentType.RopeRender) as RopeRenderComponent;
 
             // Disconnect linked rope nodes
             if (ropeNode.previous != null)
                 ropeNode.previous.next = null;
             ropeNode.previous = null;
 
-            // Add rope node to list of segment heads
-            ropeNode.ropePhysicsComponent.segmentHeads.Add(ropeNode);
+            // Recreate disconnected segment as its own entity
+            _entityManager.factory.recreateRope(ropeNode, ropeRenderComponent.texture);
 
+            // Destroy joint
             ropeNode.body.World.RemoveJoint(ropeNode.joint);
             ropeNode.joint = null;
         }
@@ -193,14 +190,22 @@ namespace StasisGame.Systems
 
                 for (int i = 0; i < ropePhysicsEntities.Count; i++)
                 {
-                    RopePhysicsComponent ropePhysicsComponent = (RopePhysicsComponent)_entityManager.getComponent(ropePhysicsEntities[i], ComponentType.RopePhysics);
-                    RopeGrabComponent ropeGrabComponent = (RopeGrabComponent)_entityManager.getComponent(ropePhysicsEntities[i], ComponentType.RopeGrab);
+                    RopePhysicsComponent ropePhysicsComponent = _entityManager.getComponent(ropePhysicsEntities[i], ComponentType.RopePhysics) as RopePhysicsComponent;
+                    RopeGrabComponent ropeGrabComponent = _entityManager.getComponent(ropePhysicsEntities[i], ComponentType.RopeGrab) as RopeGrabComponent;
 
                     for (int j = 0; j < ropePhysicsComponent.segmentHeads.Count; j++)
                     {
                         RopeNode head = ropePhysicsComponent.segmentHeads[j];
                         RopeNode current = head;
                         RopeNode tail = head.tail;
+
+                        // Check segment length
+                        if (head.count < 3 && ropeGrabComponent == null)
+                            ropePhysicsComponent.startTTLCountdown();
+
+                        // Check anchors
+                        if (head.anchorJoint == null && tail.anchorJoint == null)
+                            ropePhysicsComponent.startTTLCountdown();
 
                         // Check time to live
                         if (ropePhysicsComponent.timeToLive == 0)
@@ -238,7 +243,7 @@ namespace StasisGame.Systems
                                             current.joint.BodyB.GetWorldPoint(current.joint.LocalAnchorB);
                                 if (relative.Length() > 1.2f || current.joint.GetReactionForce(60f).Length() > 300f)
                                 {
-                                    breakJoint(current);
+                                    breakJoint(ropePhysicsEntities[i], current);
                                 }
                             }
                             current = current.next;

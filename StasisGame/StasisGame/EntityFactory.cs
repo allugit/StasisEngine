@@ -665,6 +665,24 @@ namespace StasisGame
             return entityId;
         }
 
+        // recreateRope -- Creates a new rope entity from an existing segment of rope nodes
+        public int recreateRope(RopeNode head, Texture2D texture)
+        {
+            int entityId = _entityManager.createEntity();
+            RopePhysicsComponent ropePhysicsComponent = new RopePhysicsComponent(head, head.ropePhysicsComponent.destroyAfterRelease, head.ropePhysicsComponent.reverseClimbDirection, head.ropePhysicsComponent.doubleAnchor);
+            RopeRenderComponent ropeRenderComponent = new RopeRenderComponent(texture);
+
+            // Add components
+            _entityManager.addComponent(entityId, ropePhysicsComponent);
+            _entityManager.addComponent(entityId, ropeRenderComponent);
+            _entityManager.addComponent(entityId, new IgnoreTreeCollisionComponent());
+            _entityManager.addComponent(entityId, new IgnoreRopeRaycastComponent());
+            _entityManager.addComponent(entityId, new SkipFluidResolutionComponent());
+            _entityManager.addComponent(entityId, new ParticleInfluenceComponent(ParticleInfluenceType.Rope));
+
+            return entityId;
+        }
+
         // testForWall -- Used by createRope to test points for wall entities
         private bool testForWall(World world, Vector2 point, out Fixture wallFixture)
         {
