@@ -242,20 +242,26 @@ namespace StasisGame.Systems
             {
                 int entityId = ropeRenderEntities[i];
                 RopePhysicsComponent ropePhysicsComponent = (RopePhysicsComponent)_entityManager.getComponent(entityId, ComponentType.RopePhysics);
-                RopeNode current = ropePhysicsComponent.ropeNodeHead.head;
-                RopeNode head = current;
-                RopeNode tail = head.tail;
-                Color color = Color.Red;
-                while (current != null)
-                {
-                    color = Color.Red;
-                    if (current == head)
-                        color = Color.White;
-                    else if (current == tail)
-                        color = Color.Black;
 
-                    _spriteBatch.Draw(_pixel, (current.body.Position - screenCenter) * _scale + _halfScreen, new Rectangle(0, 0, 16, 4), color, current.body.Rotation, new Vector2(8, 2), 1f, SpriteEffects.None, 0.1f);
-                    current = current.next;
+                for (int j = 0; j < ropePhysicsComponent.segmentHeads.Count; j++)
+                {
+                    RopeNode current = ropePhysicsComponent.segmentHeads[j];
+                    RopeNode head = current;
+                    RopeNode tail = head.tail;
+                    //Color color = Color.Red;
+                    while (current != null)
+                    {
+                        /*
+                        color = Color.Red;
+                        if (current == head)
+                            color = Color.White;
+                        else if (current == tail)
+                            color = Color.Black;
+                        */
+
+                        _spriteBatch.Draw(_pixel, (current.body.Position - screenCenter) * _scale + _halfScreen, new Rectangle(0, 0, 16, 4), Color.Tan, current.body.Rotation, new Vector2(8, 2), 1f, SpriteEffects.None, 0.1f);
+                        current = current.next;
+                    }
                 }
             }
 
