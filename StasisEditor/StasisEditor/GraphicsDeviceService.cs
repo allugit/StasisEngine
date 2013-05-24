@@ -52,10 +52,14 @@ namespace StasisEditor
 
         public void CreateDevice(IntPtr windowHandle, int width, int height)
         {
-            graphicsDevice = new GraphicsDevice();
-            graphicsDevice.PresentationParameters.DeviceWindowHandle = windowHandle;
-            graphicsDevice.PresentationParameters.BackBufferWidth = Math.Max(width, 1);
-            graphicsDevice.PresentationParameters.BackBufferHeight = Math.Max(height, 1);
+            PresentationParameters pp = new PresentationParameters();
+            pp.BackBufferWidth = Math.Max(width, 1);
+            pp.BackBufferWidth = Math.Max(height, 1);
+            pp.DepthStencilFormat = DepthFormat.Depth24;
+            pp.DeviceWindowHandle = windowHandle;
+            pp.IsFullScreen = false;
+
+            graphicsDevice = new GraphicsDevice(GraphicsAdapter.DefaultAdapter, GraphicsProfile.HiDef, pp);
 
             if (DeviceCreated != null)
                 DeviceCreated(this, EventArgs.Empty);
