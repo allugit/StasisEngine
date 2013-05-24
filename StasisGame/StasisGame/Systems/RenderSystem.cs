@@ -283,11 +283,12 @@ namespace StasisGame.Systems
                             }
 
                             StasisMathHelper.interpolate(ref a, ref b, ref c, ref d, mu, out position);
-                            _spriteBatch.Draw(_pixel, (position - screenCenter) * _scale + _halfScreen, new Rectangle(0, 0, 2, 2), Color.Red, current.body.Rotation, new Vector2(1, 1), 1f, SpriteEffects.None, 0.1f);
+                            _spriteBatch.Draw(_pixel, (position - screenCenter) * _scale + _halfScreen, new Rectangle(0, 0, 4, 4), Color.Red, current.body.Rotation, new Vector2(2, 2), 1f, SpriteEffects.None, 0.1f);
                             //_spriteBatch.Draw(_pixel, (position - screenCenter) * _scale + _halfScreen, new Rectangle(0, 0, 16, 4), Color.Tan, current.body.Rotation, new Vector2(8, 2), 1f, SpriteEffects.None, 0.1f);
 
                             mu += ROPE_INTERPOLATION_INCREMENT;
                         }
+                        //_spriteBatch.Draw(_pixel, (current.body.Position - screenCenter) * _scale + _halfScreen, new Rectangle(0, 0, 16, 4), Color.Tan, current.body.Rotation, new Vector2(8, 2), 1f, SpriteEffects.None, 0.101f);
 
                         current = current.next;
                     }

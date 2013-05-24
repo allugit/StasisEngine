@@ -170,8 +170,17 @@ namespace StasisGame.Systems
 
         public void breakJoint(RopeNode ropeNode)
         {
-            int ttl = ropeNode.ropePhysicsComponent.timeToLive;
-            ropeNode.ropePhysicsComponent.timeToLive = (ttl > -1 && ttl < ROPE_TIME_TO_LIVE) ? ttl : ROPE_TIME_TO_LIVE;
+            //int ttl = ropeNode.ropePhysicsComponent.timeToLive;
+            //ropeNode.ropePhysicsComponent.timeToLive = (ttl > -1 && ttl < ROPE_TIME_TO_LIVE) ? ttl : ROPE_TIME_TO_LIVE;
+
+            // Disconnect linked rope nodes
+            if (ropeNode.previous != null)
+                ropeNode.previous.next = null;
+            ropeNode.previous = null;
+
+            // Add rope node to list of segment heads
+            ropeNode.ropePhysicsComponent.segmentHeads.Add(ropeNode);
+
             ropeNode.body.World.RemoveJoint(ropeNode.joint);
             ropeNode.joint = null;
         }
