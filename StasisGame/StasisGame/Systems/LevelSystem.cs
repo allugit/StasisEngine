@@ -25,6 +25,7 @@ namespace StasisGame.Systems
         private RenderSystem _renderSystem;
         private PlayerSystem _playerSystem;
         private bool _isActive;
+        private bool _isAcceptingInput;
         private bool _paused;
         private bool _singleStep;
         private Dictionary<int, Goal> _regionGoals;
@@ -39,6 +40,7 @@ namespace StasisGame.Systems
         public bool singleStep { get { return _singleStep; } set { _singleStep = value; } }
         public string uid { get { return _uid; } }
         public bool isActive { get { return _isActive; } }
+        public bool isAcceptingInput { get { return _isAcceptingInput; } }
 
         public LevelSystem(LoderGame game, SystemManager systemManager, EntityManager entityManager)
         {
@@ -327,6 +329,9 @@ namespace StasisGame.Systems
                 if (_isActive)
                 {
                     PhysicsComponent playerPhysicsComponent = (PhysicsComponent)_entityManager.getComponent(_playerSystem.playerId, ComponentType.Physics);
+
+                    // Lets other systems know we're ready for input
+                    _isAcceptingInput = true;
 
                     // Check player's position against the level boundary
                     if (playerPhysicsComponent != null)
