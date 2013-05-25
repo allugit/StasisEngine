@@ -12,10 +12,12 @@ namespace StasisGame.Components
     {
         public Texture2D texture;
         public Vector2 center;
-        public RopeNodeTexture(Texture2D texture, Vector2 center)
+        public float angleOffset;
+        public RopeNodeTexture(Texture2D texture, Vector2 center, float angleOffset)
         {
             this.texture = texture;
             this.center = center;
+            this.angleOffset = angleOffset;
         }
     };
 

@@ -622,7 +622,7 @@ namespace StasisGame
                     for (int j = 0; j < interpolationCount; j++)
                     {
                         RopeMaterialTexture randomRopeMaterialTexture = textures[_ropeTextureRNG.Next(textures.Count)];
-                        ropeNodeTextures[j] = new RopeNodeTexture(randomRopeMaterialTexture.texture, randomRopeMaterialTexture.center);
+                        ropeNodeTextures[j] = new RopeNodeTexture(randomRopeMaterialTexture.texture, randomRopeMaterialTexture.center, randomRopeMaterialTexture.angleOffset);
                     }
                 }
                 else if (ropeTextureStyle == RopeTextureStyle.Sequential)
@@ -630,7 +630,7 @@ namespace StasisGame
                     for (int j = 0; j < interpolationCount; j++)
                     {
                         RopeMaterialTexture sequentialRopeMaterialTexture = textures[Math.Min(j, textures.Count - 1)];
-                        ropeNodeTextures[j] = new RopeNodeTexture(sequentialRopeMaterialTexture.texture, sequentialRopeMaterialTexture.center);
+                        ropeNodeTextures[j] = new RopeNodeTexture(sequentialRopeMaterialTexture.texture, sequentialRopeMaterialTexture.center, sequentialRopeMaterialTexture.angleOffset);
                     }
                 }
 

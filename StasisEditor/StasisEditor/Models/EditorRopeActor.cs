@@ -18,6 +18,7 @@ namespace StasisEditor.Models
         private PointListNode _nodeB;
         private List<PointListNode> _selectedPoints;
 
+        public bool doubleAnchor { get { return _doubleAnchor; } set { _doubleAnchor = value; } }
         public string ropeMaterialUID { get { return _ropeMaterialUID; } set { _ropeMaterialUID = value; } }
         [Browsable(false)]
         public override Vector2 circuitConnectionPosition { get { return (_nodeA.position + _nodeB.position) / 2; } }

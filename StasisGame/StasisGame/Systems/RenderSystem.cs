@@ -261,27 +261,18 @@ namespace StasisGame.Systems
 
                         // Determine a's position
                         if (current.previous == null)
-                        {
-                            // Linearly interpolate
                             a = b + (b - c);
-                        }
                         else
-                        {
                             a = current.previous.body.GetWorldPoint(new Vector2(current.halfLength, 0));
-                        }
 
                         // Determine d's position
                         if (current.next == null)
-                        {
                             d = c + (c - b);
-                        }
                         else
-                        {
                             d = current.next.body.GetWorldPoint(new Vector2(-current.halfLength, 0));
-                        }
 
                         StasisMathHelper.interpolate(ref a, ref b, ref c, ref d, mu, out position);
-                        _spriteBatch.Draw(texture, (position - screenCenter) * _scale + _halfScreen, texture.Bounds, Color.White, current.body.Rotation, current.ropeNodeTextures[j].center, 1f, SpriteEffects.None, 0.1f);
+                        _spriteBatch.Draw(texture, (position - screenCenter) * _scale + _halfScreen, texture.Bounds, Color.White, current.body.Rotation + current.ropeNodeTextures[j].angleOffset, current.ropeNodeTextures[j].center, 1f, SpriteEffects.None, 0.1f);
 
                         mu += muIncrement;
                     }
