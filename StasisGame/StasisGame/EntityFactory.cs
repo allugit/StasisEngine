@@ -483,6 +483,8 @@ namespace StasisGame
             RopeComponent ropeComponent;
             RopeNode current;
             RopeNodeTexture[] ropeNodeTextures = new RopeNodeTexture[interpolationCount];
+            bool resultHandled = false;
+            bool reverseClimbDirection = false;
             
             // Raycast to find A to B result
             world.RayCast((fixture, point, normal, fraction) =>
@@ -518,7 +520,28 @@ namespace StasisGame
                 abResult.success ? abResult.worldPoint : initialPointB,
                 initialPointA);
 
-            if (!abResult.success)
+            if (!baResult.success)
+            {
+                Metamer metamer = treeSystem.findMetamer(initialPointA);
+                Fixture wallFixture = null;
+
+                if (metamer != null)
+                {
+                    // Metamer found at initialPointA
+                    metamer.createLimbBody();
+                    baResult.fixture = metamer.body.FixtureList[0];
+                    baResult.success = true;
+                    baResult.worldPoint = initialPointA;
+                }
+                else if (testForWall(world, initialPointA, out wallFixture))
+                {
+                    // Test for a wall at initialPointA
+                    baResult.fixture = wallFixture;
+                    baResult.success = true;
+                    baResult.worldPoint = initialPointA;
+                }
+            }
+            if (doubleAnchor && !abResult.success)
             {
                 // If two successful results are necessary or if there are no successful results, test for metamers/walls
                 if (doubleAnchor || !baResult.success)
@@ -541,27 +564,6 @@ namespace StasisGame
                         abResult.success = true;
                         abResult.worldPoint = initialPointB;
                     }
-                }
-            }
-            if (doubleAnchor && !baResult.success)
-            {
-                Metamer metamer = treeSystem.findMetamer(initialPointA);
-                Fixture wallFixture = null;
-
-                if (metamer != null)
-                {
-                    // Metamer found at initialPointA
-                    metamer.createLimbBody();
-                    baResult.fixture = metamer.body.FixtureList[0];
-                    baResult.success = true;
-                    baResult.worldPoint = initialPointA;
-                }
-                else if (testForWall(world, initialPointA, out wallFixture))
-                {
-                    // Test for a wall at initialPointA
-                    baResult.fixture = wallFixture;
-                    baResult.success = true;
-                    baResult.worldPoint = initialPointA;
                 }
             }
 
@@ -644,9 +646,6 @@ namespace StasisGame
                     lastNode.insert(ropeNode);
                 lastNode = ropeNode;
             }
-
-            bool resultHandled = false;
-            bool reverseClimbDirection = false;
 
             if (baResult.success)
             {
