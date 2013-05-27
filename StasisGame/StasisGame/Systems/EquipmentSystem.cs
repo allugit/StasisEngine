@@ -143,7 +143,7 @@ namespace StasisGame.Systems
                                         AimComponent aimComponent = _entityManager.getComponent(toolbarEntities[i], ComponentType.Aim) as AimComponent;
                                         Vector2 initialPointA = (_entityManager.getComponent(toolbarEntities[i], ComponentType.WorldPosition) as WorldPositionComponent).position;
                                         Vector2 initialPointB = initialPointA + new Vector2((float)Math.Cos(aimComponent.angle), (float)Math.Sin(aimComponent.angle)) * aimComponent.length;
-                                        int ropeEntityId = _entityManager.factory.createRope(_defaultRopeMaterial.textures, _defaultRopeMaterial.interpolationCount, _defaultRopeMaterial.ropeTextureStyle, false, true, initialPointB, initialPointA, -1);
+                                        int ropeEntityId = _entityManager.factory.createSingleAnchorRope(initialPointA, initialPointB, _defaultRopeMaterial, true);
 
                                         if (ropeEntityId != -1)
                                         {
@@ -185,9 +185,8 @@ namespace StasisGame.Systems
                                                 ropeGrabComponent = null;
                                             }
 
-                                            newRopeGrabComponent = new RopeGrabComponent(ropeEntityId, ropeComponent.ropeNodeHead, ((float)ropeComponent.ropeNodeHead.count) - 0.1f, ropeComponent.reverseClimbDirection);
+                                            newRopeGrabComponent = new RopeGrabComponent(ropeEntityId, ropeComponent.ropeNodeHead, 0f, ropeComponent.reverseClimbDirection);
                                             ropeSystem.grabRope(newRopeGrabComponent, physicsComponent.body);
-
                                             _entityManager.addComponent(toolbarComponent.entityId, newRopeGrabComponent);
                                         }
                                     }

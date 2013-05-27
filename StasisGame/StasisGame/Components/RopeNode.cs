@@ -39,7 +39,7 @@ namespace StasisGame.Components
         public RevoluteJoint anchorJoint { get { return _anchorJoint; } set { _anchorJoint = value; } }
         public Body body { get { return _body; } }
         public float halfLength { get { return _halfLength; } }
-        public RopeNodeTexture[] ropeNodeTextures { get { return _ropeNodeTextures; } }
+        public RopeNodeTexture[] ropeNodeTextures { get { return _ropeNodeTextures; } set { _ropeNodeTextures = value; } }
         public RopeNode head
         {
             get
@@ -75,7 +75,7 @@ namespace StasisGame.Components
             }
         }
 
-        public RopeNode(RopeNodeTexture[] ropeNodeTextures, Body body, RevoluteJoint joint, float halfLength)
+        public RopeNode(Body body, RevoluteJoint joint, float halfLength)
         {
             _ropeNodeTextures = ropeNodeTextures;
             _body = body;

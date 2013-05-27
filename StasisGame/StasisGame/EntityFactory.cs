@@ -21,6 +21,20 @@ namespace StasisGame
 {
     public class EntityFactory
     {
+        // RopeTarget -- Structure used in rope creation
+        private struct RopeTarget
+        {
+            public Fixture fixture;
+            public Vector2 localPoint;
+            public bool success;
+            public RopeTarget(Fixture fixture, Vector2 localPoint, bool success)
+            {
+                this.fixture = fixture;
+                this.localPoint = localPoint;
+                this.success = success;
+            }
+        };
+
         private SystemManager _systemManager;
         private EntityManager _entityManager;
         private Random _ropeTextureRNG;
@@ -373,6 +387,7 @@ namespace StasisGame
         // 5) Ensure total length between point A and B is longer than 1 rope segment
         // 6) Create rope
         // 7) Create entity with rope component
+        /*
         public int createRope(XElement data)
         {
             RopeMaterial ropeMaterial = new RopeMaterial(ResourceManager.getResource(data.Attribute("rope_material_uid").Value));
@@ -613,7 +628,241 @@ namespace StasisGame
             }
 
             return entityId;
+        }*/
+
+        // findRopeTarget -- Tries to find a rope target by raycasting
+        private RopeTarget findRopeTarget(Vector2 a, Vector2 b)
+        {
+            World world = (_systemManager.getSystem(SystemType.Physics) as PhysicsSystem).world;
+            RopeTarget ropeTarget = new RopeTarget();
+
+            world.RayCast((fixture, point, normal, fraction) =>
+                {
+                    int fixtureEntityId = (int)fixture.Body.UserData;
+                    if (_entityManager.getComponent(fixtureEntityId, ComponentType.IgnoreRopeRaycast) != null)
+                        return -1;
+                    else if (_entityManager.getComponent(fixtureEntityId, ComponentType.Tree) != null)
+                        return -1;  // the only bodies that exist on a tree are already supporting a rope, and will be destroyed along with the rope that created it
+
+                    ropeTarget.fixture = fixture;
+                    ropeTarget.localPoint = fixture.Body.GetLocalPoint(ref point);
+                    ropeTarget.success = true;
+                    return fraction;
+                },
+                a,
+                b);
+            return ropeTarget;
         }
+
+        // findWall -- Tries to find a wall rope target using QueryAABB
+        private Fixture findWall(Vector2 position)
+        {
+            World world = (_systemManager.getSystem(SystemType.Physics) as PhysicsSystem).world;
+            AABB aabb = new AABB();
+            Fixture wallFixture = null;
+
+            aabb.LowerBound = position;
+            aabb.UpperBound = position;
+            world.QueryAABB((fixture) =>
+                {
+                    if (fixture.TestPoint(ref position, 0f))
+                    {
+                        int fixtureEntityId = (int)fixture.Body.UserData;
+                        WallComponent wallComponent = (WallComponent)_entityManager.getComponent(fixtureEntityId, ComponentType.Wall);
+
+                        if (wallComponent != null)
+                        {
+                            wallFixture = fixture;
+                            return false;   // Don't need to find all wall fixtures, one is enough.
+                        }
+                    }
+                    return true;
+                },
+                ref aabb);
+            return wallFixture;
+        }
+
+        // createRopeNodes -- Creates a linked list of physical bodies and joints that make up the rope
+        private RopeNode createRopeNodes(Vector2 a, Vector2 b, bool collidesWithPlayer)
+        {
+            World world = (_systemManager.getSystem(SystemType.Physics) as PhysicsSystem).world;
+            Vector2 relative = b - a;
+            Vector2 ropeNormal = Vector2.Normalize(relative);
+            float angle = (float)Math.Atan2(relative.Y, relative.X);
+            float segmentLength = 0.5f;
+            float segmentHalfLength = segmentLength * 0.5f;
+            int ropeNodeLimit = (int)Math.Ceiling(relative.Length() / segmentLength);
+            RopeNode head = null;
+            RopeNode previousNode = null;
+
+            for (int i = 0; i < ropeNodeLimit; i++)
+            {
+                PolygonShape shape = new PolygonShape(0.5f);
+                Body body = BodyFactory.CreateBody(world);
+                Fixture fixture;
+                RopeNode ropeNode;
+                RevoluteJoint joint = null;
+
+                // Create body
+                body.Rotation = angle + StasisMathHelper.pi; // Adding pi fixes a problem where rope segments are created backwards, and then snap into the correct positions
+                body.Position = a + ropeNormal * (segmentHalfLength + i * segmentLength);
+                body.BodyType = BodyType.Dynamic;
+                shape.SetAsBox(segmentHalfLength, 0.15f);
+                fixture = body.CreateFixture(shape);
+                fixture.Friction = 0.5f;
+                fixture.Restitution = 0f;
+                fixture.CollisionCategories = (ushort)CollisionCategory.Rope;
+                fixture.CollidesWith =
+                    (ushort)CollisionCategory.DynamicGeometry |
+                    (ushort)CollisionCategory.Item |
+                    (ushort)CollisionCategory.StaticGeometry |
+                    (ushort)CollisionCategory.Explosion;
+                if (collidesWithPlayer)
+                    fixture.CollidesWith |= (ushort)CollisionCategory.Player;
+                fixture.UserData = i;
+
+                // Create joints
+                if (previousNode != null)
+                    joint = JointFactory.CreateRevoluteJoint(world, previousNode.body, body, new Vector2(-segmentHalfLength, 0), new Vector2(segmentHalfLength, 0));
+
+                // Create node
+                ropeNode = new RopeNode(body, joint, segmentHalfLength);
+
+                // Store references to head and tail nodes, and insert the node into the linked list
+                if (head == null)
+                    head = ropeNode;
+                if (!(previousNode == null))
+                    previousNode.insert(ropeNode);
+                previousNode = ropeNode;
+            }
+            return head;
+        }
+
+        // createAnchor -- Creates a revolute joint between a node and its anchoring fixture
+        // TODO: Move this to RopeSystem, since player will be able to pick ropes up and attach them to things?
+        private void createAnchor(RopeNode ropeNode, Fixture fixture, Vector2 fixtureLocalAnchor)
+        {
+            World world = (_systemManager.getSystem(SystemType.Physics) as PhysicsSystem).world;
+
+            ropeNode.anchorJoint = JointFactory.CreateRevoluteJoint(world, ropeNode.body, fixture.Body, new Vector2(-ropeNode.halfLength, 0), fixtureLocalAnchor);
+        }
+
+        // initializeRopeMaterial -- Loops through the rope nodes and initializes all of the information required to render the rope nodes
+        private void initializeRopeMaterial(RopeNode head, RopeMaterial ropeMaterial)
+        {
+            RopeNode currentNode = head;
+
+            while (currentNode != null)
+            {
+                currentNode.ropeNodeTextures = new RopeNodeTexture[ropeMaterial.interpolationCount];
+
+                if (ropeMaterial.ropeTextureStyle == RopeTextureStyle.Random)
+                {
+                    for (int j = 0; j < ropeMaterial.interpolationCount; j++)
+                    {
+                        RopeMaterialTexture randomRopeMaterialTexture = ropeMaterial.textures[_ropeTextureRNG.Next(ropeMaterial.textures.Count)];
+                        currentNode.ropeNodeTextures[j] = new RopeNodeTexture(randomRopeMaterialTexture.texture, randomRopeMaterialTexture.center, randomRopeMaterialTexture.angleOffset);
+                    }
+                }
+                else if (ropeMaterial.ropeTextureStyle == RopeTextureStyle.Sequential)
+                {
+                    for (int j = 0; j < ropeMaterial.interpolationCount; j++)
+                    {
+                        RopeMaterialTexture sequentialRopeMaterialTexture = ropeMaterial.textures[Math.Min(j, ropeMaterial.textures.Count - 1)];
+                        currentNode.ropeNodeTextures[j] = new RopeNodeTexture(sequentialRopeMaterialTexture.texture, sequentialRopeMaterialTexture.center, sequentialRopeMaterialTexture.angleOffset);
+                    }
+                }
+
+                currentNode = currentNode.next;
+            }
+        }
+
+        // finalizeRopeNodes -- Give rope nodes a reference to a ropeComponent and their bodies an entityId
+        private void finalizeRopeNodes(RopeNode head, int entityId, RopeComponent ropeComponent)
+        {
+            RopeNode current = head;
+            while (current != null)
+            {
+                current.body.UserData = entityId;
+                current.ropeComponent = ropeComponent;
+                current = current.next;
+            }
+        }
+
+        // createSingleAnchorRope -- Creates a rope with one anchor
+        public int createSingleAnchorRope(Vector2 a, Vector2 b, RopeMaterial ropeMaterial, bool destroyAfterRelease, int entityId = -1)
+        {
+            /*
+             * - Raycast from A to B
+             *   - If valid fixture found, store result
+             *   - Otherwise, test metamers
+             *     - If metamer found, create limb body and store result
+             *     - Otherwise, test walls
+             *       - If wall found, store result
+             *       - Otherwise, abort rope creation
+             *   - If found a valid rope target, create rope
+             *   - Otherwise, abort creation
+             */
+            RopeComponent ropeComponent;
+            RopeTarget ropeTarget = findRopeTarget(a, b);
+            RopeNode head;
+
+            if (!ropeTarget.success)
+            {
+                // Test for metamers
+                TreeSystem treeSystem = (_systemManager.getSystem(SystemType.Tree) as TreeSystem);
+                Metamer metamer = treeSystem.findMetamer(b);
+
+                if (metamer != null)
+                {
+                    // Create limb body
+                    metamer.createLimbBody();
+
+                    // Store result
+                    ropeTarget.fixture = metamer.body.FixtureList[0];
+                    ropeTarget.localPoint = Vector2.Zero;
+                    ropeTarget.success = true;
+                }
+                else
+                {
+                    // Test for walls
+                    Fixture fixture = findWall(b);
+
+                    if (fixture != null)
+                    {
+                        // Store results
+                        ropeTarget.fixture = fixture;
+                        ropeTarget.localPoint = fixture.Body.GetLocalPoint(ref b);
+                        ropeTarget.success = true;
+                    }
+                }
+            }
+
+            // Abort creation if no valid targets found
+            if (!ropeTarget.success)
+                return -1;
+
+            // Create rope
+            head = createRopeNodes(a, ropeTarget.fixture.Body.GetWorldPoint(ref ropeTarget.localPoint), false);
+            createAnchor(head.tail, ropeTarget.fixture, ropeTarget.localPoint);
+            initializeRopeMaterial(head, ropeMaterial);
+            entityId = entityId == -1 ? _entityManager.createEntity() : _entityManager.createEntity(entityId);
+
+            // Add components
+            ropeComponent = new RopeComponent(head, ropeMaterial.interpolationCount, destroyAfterRelease, false, false);
+            _entityManager.addComponent(entityId, ropeComponent);
+            _entityManager.addComponent(entityId, new IgnoreTreeCollisionComponent());
+            _entityManager.addComponent(entityId, new IgnoreRopeRaycastComponent());
+            _entityManager.addComponent(entityId, new SkipFluidResolutionComponent());
+            _entityManager.addComponent(entityId, new ParticleInfluenceComponent(ParticleInfluenceType.Rope));
+
+            // Finalize rope properties by giving bodies an entityId and a reference to the ropeComponent
+            finalizeRopeNodes(head, entityId, ropeComponent);
+
+            return entityId;
+        }
+
+        // createDoubleAnchorRope -- Creates a rope with two anchors
 
         // recreateRope -- Creates a new rope entity from an existing segment of rope nodes
         public int recreateRope(RopeNode head, int interpolationCount)
@@ -632,6 +881,7 @@ namespace StasisGame
         }
 
         // testForWall -- Used by createRope to test points for wall entities
+        /*
         private bool testForWall(World world, Vector2 point, out Fixture wallFixture)
         {
             AABB aabb = new AABB();
@@ -660,7 +910,7 @@ namespace StasisGame
 
             wallFixture = resultFixture;    // have to assign wallFixture in this roundabout way because an out param cannot be assigned in a lambda statement
             return result;
-        }
+        }*/
 
         // createTerrainTexture -- Creates a terrain texture
         private Texture2D createTerrainTexture(List<Vector2> points, XElement data)

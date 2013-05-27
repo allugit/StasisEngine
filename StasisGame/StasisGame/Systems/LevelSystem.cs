@@ -189,7 +189,7 @@ namespace StasisGame.Systems
                         break;
 
                     case "Rope":
-                        _entityManager.factory.createRope(actorData);
+                        //_entityManager.factory.createRope(actorData);
                         break;
 
                     case "Revolute":
