@@ -5,7 +5,6 @@ using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Content;
 using Microsoft.Xna.Framework.Input;
 using Microsoft.Xna.Framework.Graphics;
-using OpenTK;
 using StasisGame.Managers;
 
 namespace StasisGame.UI
@@ -29,11 +28,12 @@ namespace StasisGame.UI
                 DisplayDimensions o = (DisplayDimensions)obj;
                 return o.width == width && o.height == height;
             }
+                /*
             else if (obj.GetType() == typeof(DisplayResolution))
             {
                 DisplayResolution o = (DisplayResolution)obj;
                 return o.Width == width && o.Height == height;
-            }
+            }*/
 
             return base.Equals(obj);
         }
@@ -72,8 +72,8 @@ namespace StasisGame.UI
             _selectedDimensions = new DisplayDimensions(DataManager.gameSettings.screenWidth, DataManager.gameSettings.screenHeight);
             _displayDimensions.Add(_selectedDimensions);
 
-            DisplayDevice currentDisplayDevice = DisplayDevice.GetDisplay(DisplayIndex.Primary);
-
+            //DisplayDevice currentDisplayDevice = DisplayDevice.GetDisplay(DisplayIndex.Primary);
+            /*
             foreach (DisplayResolution displayResolution in currentDisplayDevice.AvailableResolutions)
             {
                 bool skipResolution = false;
@@ -92,7 +92,7 @@ namespace StasisGame.UI
                     continue;
 
                 _displayDimensions.Add(new DisplayDimensions(displayResolution.Width, displayResolution.Height));
-            }
+            }*/
 
             TextureButton saveButton = new TextureButton(
                 _game.spriteBatch,

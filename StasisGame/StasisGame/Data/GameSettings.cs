@@ -4,7 +4,6 @@ using System.Xml.Linq;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
-using OpenTK;
 using StasisCore;
 
 namespace StasisGame.Data
@@ -42,6 +41,7 @@ namespace StasisGame.Data
             int screenHeight = 512;
             int maxScreenWidth = game.GraphicsDevice.DisplayMode.Width - 100;
             int maxScreenHeight = game.GraphicsDevice.DisplayMode.Height - 100;
+            /*
             DisplayDevice currentDisplayDevice = DisplayDevice.GetDisplay(DisplayIndex.Primary);
             List<DisplayResolution> availableResolutions = currentDisplayDevice.AvailableResolutions as List<DisplayResolution>;
 
@@ -54,7 +54,7 @@ namespace StasisGame.Data
                     screenHeight = displayResolution.Height;
                 }
             }
-
+            */
             _screenWidth = screenWidth;
             _screenHeight = screenHeight;
             _fullscreen = false;
