@@ -21,19 +21,6 @@ namespace StasisGame
 {
     public class EntityFactory
     {
-        public struct RopeAnchorResult
-        {
-            public Fixture fixture;
-            public Vector2 worldPoint;
-            public bool success;
-            public RopeAnchorResult(Fixture fixture, Vector2 worldPoint, bool success)
-            {
-                this.fixture = fixture;
-                this.worldPoint = worldPoint;
-                this.success = success;
-            }
-        };
-
         private SystemManager _systemManager;
         private EntityManager _entityManager;
         private Random _ropeTextureRNG;
@@ -42,6 +29,7 @@ namespace StasisGame
         private Dictionary<int, Dictionary<int, GateOutputComponent>> _circuitIdGateIdGateComponentMap;     // key 1) circuit actor id
                                                                                                             // key 2) gate id
 
+        // Constructor
         public EntityFactory(SystemManager systemManager, EntityManager entityManager)
         {
             _systemManager = systemManager;
@@ -51,17 +39,20 @@ namespace StasisGame
             _circuitIdGateIdGateComponentMap = new Dictionary<int, Dictionary<int, GateOutputComponent>>();
         }
 
+        // reset -- Clears information used to create entities from the level's xml data. Used between level loads.
         public void reset()
         {
             _actorIdEntityIdGateComponentMap.Clear();
             _circuitIdGateIdGateComponentMap.Clear();
         }
 
+        // expandLevelBoundary
         private void expandLevelBoundary(Vector2 point)
         {
             ((LevelSystem)_systemManager.getSystem(SystemType.Level)).expandBoundary(point);
         }
 
+        // createOutputGate
         public void createOutputGates(XElement data)
         {
             _actorIdEntityIdGateComponentMap.Clear();
@@ -109,13 +100,6 @@ namespace StasisGame
             groundBody.BodyType = BodyType.Static;
             fixture = groundBody.CreateFixture(new CircleShape(0.1f, 1f));
             fixture.IsSensor = true;
-            //groundBodyDef.type = BodyType.Static;
-            //groundBodyDef.userData = groundId;
-            //circleShape.Radius = 0.1f;
-            //fixtureDef.isSensor = true;
-            //fixtureDef.shape = circleShape;
-            //_groundBody = world.CreateBody(groundBodyDef);
-            //_groundBody.CreateFixture(fixtureDef);
 
             _entityManager.addComponent(groundId, new GroundBodyComponent(groundBody));
             _entityManager.addComponent(groundId, new IgnoreRopeRaycastComponent());
@@ -189,10 +173,8 @@ namespace StasisGame
             float layerDepth = Loader.loadFloat(data.Attribute("layer_depth"), 0.1f);
             Body body;
             Fixture fixture;
-            //BodyDef bodyDef = new BodyDef();
             float density = Loader.loadFloat(data.Attribute("density"), 1f);
             PolygonShape boxShape = new PolygonShape(density);
-            //FixtureDef boxFixtureDef = new FixtureDef();
             BodyType bodyType = (BodyType)Loader.loadEnum(typeof(BodyType), data.Attribute("body_type"), (int)BodyType.Static);
             Transform xf;
             BodyRenderComponent bodyRenderComponent;
@@ -214,25 +196,6 @@ namespace StasisGame
                 (ushort)CollisionCategory.Rope |
                 (ushort)CollisionCategory.StaticGeometry |
                 (ushort)CollisionCategory.Item;
-            /*
-            bodyDef.type = bodyType;
-            bodyDef.position = Loader.loadVector2(data.Attribute("position"), Vector2.Zero);
-            bodyDef.angle = Loader.loadFloat(data.Attribute("angle"), 0f);
-            bodyDef.userData = entityId;
-            boxFixtureDef.density = Loader.loadFloat(data.Attribute("density"), 1f);
-            boxFixtureDef.friction = Loader.loadFloat(data.Attribute("friction"), 1f);
-            boxFixtureDef.restitution = Loader.loadFloat(data.Attribute("restitution"), 1f);
-            boxFixtureDef.filter.categoryBits = bodyType == BodyType.Dynamic ? (ushort)CollisionCategory.DynamicGeometry : (ushort)CollisionCategory.StaticGeometry;
-            boxFixtureDef.filter.maskBits =
-                (ushort)CollisionCategory.DynamicGeometry |
-                (ushort)CollisionCategory.Player |
-                (ushort)CollisionCategory.Rope |
-                (ushort)CollisionCategory.StaticGeometry |
-                (ushort)CollisionCategory.Item;
-            boxShape.SetAsBox(Loader.loadFloat(data.Attribute("half_width"), 1f), Loader.loadFloat(data.Attribute("half_height"), 1f));
-            boxFixtureDef.shape = boxShape;
-            body = world.CreateBody(bodyDef);
-            body.CreateFixture(boxFixtureDef);*/
 
             // Create body render component
             texture = createBoxTexture(body, data);
@@ -327,25 +290,6 @@ namespace StasisGame
                 (ushort)CollisionCategory.StaticGeometry |
                 (ushort)CollisionCategory.Item;
 
-            //bodyDef.type = bodyType;
-            //bodyDef.position = Loader.loadVector2(data.Attribute("position"), Vector2.Zero);
-            //bodyDef.userData = entityId;
-            //circleFixtureDef.density = Loader.loadFloat(data.Attribute("density"), 1f);
-            //circleFixtureDef.friction = Loader.loadFloat(data.Attribute("friction"), 1f);
-            //circleFixtureDef.restitution = Loader.loadFloat(data.Attribute("restitution"), 1f);
-            //circleFixtureDef.filter.categoryBits = bodyType == BodyType.Dynamic ? (ushort)CollisionCategory.DynamicGeometry : (ushort)CollisionCategory.StaticGeometry;
-            //circleFixtureDef.filter.maskBits =
-            //    (ushort)CollisionCategory.DynamicGeometry |
-            //    (ushort)CollisionCategory.Player |
-            //    (ushort)CollisionCategory.Rope |
-            //    (ushort)CollisionCategory.StaticGeometry |
-            //    (ushort)CollisionCategory.Item;
-            //circleShape.Radius = Loader.loadFloat(data.Attribute("radius"), 1f);
-            //circleFixtureDef.shape = circleShape;
-
-            //body = world.CreateBody(bodyDef);
-            //body.CreateFixture(circleFixtureDef);
-
             // Create body render component
             texture = createCircleTexture(body, data);
             renderableTriangles = createCircleRenderableTriangles(body);
@@ -377,6 +321,7 @@ namespace StasisGame
                 expandLevelBoundary(point);
         }
 
+        // createWorldItem -- Create an item that exists in the world (as opposed to an item in the inventory)
         public void createWorldItem(XElement data)
         {
             World world = (_systemManager.getSystem(SystemType.Physics) as PhysicsSystem).world;
@@ -405,26 +350,7 @@ namespace StasisGame
                 (ushort)CollisionCategory.StaticGeometry |
                 (ushort)CollisionCategory.Explosion;
 
-            //bodyDef.type = (BodyType)Loader.loadEnum(typeof(BodyType), data.Attribute("body_type"), (int)BodyType.Dynamic);
-            //bodyDef.position = Loader.loadVector2(data.Attribute("position"), Vector2.Zero);
-            //bodyDef.angle = Loader.loadFloat(data.Attribute("angle"), 0f);
-            //bodyDef.userData = entityId;
-            //fixtureDef.density = Loader.loadFloat(data.Attribute("density"), 1f);
-            //fixtureDef.friction = Loader.loadFloat(data.Attribute("friction"), 1f);
-            //fixtureDef.restitution = Loader.loadFloat(data.Attribute("restitution"), 0f);
-            //fixtureDef.filter.categoryBits = (ushort)CollisionCategory.Item;
-            //fixtureDef.filter.maskBits =
-            //    (ushort)CollisionCategory.DynamicGeometry |
-            //    (ushort)CollisionCategory.Player |
-            //    (ushort)CollisionCategory.Rope |
-            //    (ushort)CollisionCategory.StaticGeometry |
-            //    (ushort)CollisionCategory.Explosion;
-            //shape.SetAsBox(Loader.loadFloat(data.Attribute("half_width"), 0.25f), Loader.loadFloat(data.Attribute("half_height"), 0.25f));
-            //fixtureDef.shape = shape;
-
-            //body = world.CreateBody(bodyDef);
-            //body.CreateFixture(fixtureDef);
-
+            // Add components
             _entityManager.addComponent(entityId, new ItemComponent(
                 itemUID,
                 (ItemType)Loader.loadEnum(typeof(ItemType), itemData.Attribute("type"), 0),
@@ -433,7 +359,6 @@ namespace StasisGame
                 true,
                 Loader.loadBool(itemData.Attribute("adds_reticle"), false),
                 Loader.loadFloat(itemData.Attribute("range"), 1f)));
-
             _entityManager.addComponent(entityId, new PhysicsComponent(body));
             _entityManager.addComponent(entityId, new WorldItemRenderComponent(worldTexture));
             _entityManager.addComponent(entityId, new IgnoreTreeCollisionComponent());
@@ -997,6 +922,7 @@ namespace StasisGame
             _entityManager.addComponent(entityId, new WorldPositionComponent(tree.position));
         }
 
+        // createRevoluteJoint
         public void createRevoluteJoint(XElement data)
         {
             EventSystem eventSystem = _systemManager.getSystem(SystemType.Event) as EventSystem;
@@ -1025,19 +951,6 @@ namespace StasisGame
             bodyA = physicsComponentA.body;
             bodyB = physicsComponentB.body;
 
-            /*
-            jointDef.bodyA = bodyA;
-            jointDef.bodyB = bodyB;
-            jointDef.collideConnected = false;
-            jointDef.localAnchorA = bodyA.GetLocalPoint(jointWorldPosition);
-            jointDef.localAnchorB = bodyB.GetLocalPoint(jointWorldPosition);
-            jointDef.enableLimit = enableLimit;
-            jointDef.enableMotor = enableMotor;
-            jointDef.lowerAngle = lowerLimit;
-            jointDef.upperAngle = upperLimit;
-            jointDef.maxMotorTorque = maxMotorTorque;
-            jointDef.motorSpeed = motorSpeed;
-            */
             joint = JointFactory.CreateRevoluteJoint(world, bodyA, bodyB, bodyA.GetLocalPoint(jointWorldPosition), bodyB.GetLocalPoint(jointWorldPosition));
             joint.CollideConnected = false;
             joint.LimitEnabled = enableLimit;
@@ -1047,10 +960,12 @@ namespace StasisGame
             joint.MaxMotorTorque = maxMotorTorque;
             joint.MotorSpeed = motorSpeed;
             revoluteJointComponent = new RevoluteComponent(joint);
-
             entityId = _entityManager.createEntity(actorId);
+
+            // Add components
             _entityManager.addComponent(entityId, revoluteJointComponent);
 
+            // Connect to circuit gate if necessary
             if (_actorIdEntityIdGateComponentMap.ContainsKey(actorId))
             {
                 foreach (int gateEntityId in _actorIdEntityIdGateComponentMap[actorId].Keys)
@@ -1062,6 +977,7 @@ namespace StasisGame
             }
         }
 
+        // createPrismaticJoint
         public void createPrismaticJoint(XElement data)
         {
             EventSystem eventSystem = _systemManager.getSystem(SystemType.Event) as EventSystem;
@@ -1069,7 +985,6 @@ namespace StasisGame
             int actorId = int.Parse(data.Attribute("id").Value);
             int entityId;
             GroundBodyComponent groundBodyComponent = _entityManager.getComponents<GroundBodyComponent>(ComponentType.GroundBody)[0];
-            //PrismaticJointDef jointDef = new PrismaticJointDef();
             Vector2 jointWorldPosition = Loader.loadVector2(data.Attribute("position"), Vector2.Zero);
             Vector2 axis = Loader.loadVector2(data.Attribute("axis"), new Vector2(1, 0));
             float upperLimit = Loader.loadFloat(data.Attribute("upper_limit"), 0f);
@@ -1089,15 +1004,6 @@ namespace StasisGame
             bodyA = physicsComponentA.body;
             bodyB = physicsComponentB.body;
 
-            /*
-            jointDef.Initialize(bodyA, bodyB, bodyA.GetWorldCenter(), axis);
-            jointDef.lowerTranslation = lowerLimit;
-            jointDef.upperTranslation = upperLimit;
-            jointDef.enableLimit = lowerLimit != 0 || upperLimit != 0;
-            jointDef.enableMotor = motorEnabled;
-            jointDef.motorSpeed = motorSpeed;
-            jointDef.maxMotorForce = autoCalculateForce ? bodyA.GetMass() * world.Gravity.Length() + buttonForceDifference : maxMotorForce;
-            */
             joint = JointFactory.CreatePrismaticJoint(bodyA, bodyB, bodyA.WorldCenter, axis);
             joint.LowerLimit = lowerLimit;
             joint.UpperLimit = upperLimit;
@@ -1108,8 +1014,11 @@ namespace StasisGame
 
             entityId = _entityManager.createEntity(actorId);
             prismaticJointComponent = new PrismaticJointComponent(joint);
+
+            // Add components
             _entityManager.addComponent(entityId, prismaticJointComponent);
 
+            // Connect to circuit gate if necessary
             if (_actorIdEntityIdGateComponentMap.ContainsKey(actorId))
             {
                 foreach (int gateEntityId in _actorIdEntityIdGateComponentMap[actorId].Keys)
@@ -1121,6 +1030,7 @@ namespace StasisGame
             }
         }
 
+        // Create circuit
         public void createCircuit(XElement data)
         {
             EventSystem eventSystem = _systemManager.getSystem(SystemType.Event) as EventSystem;
@@ -1140,7 +1050,6 @@ namespace StasisGame
                     return null;
                 };
 
-            //_actorIdToEntityId.Add(actorId, entityId);
             _entityManager.addComponent(entityId, circuitComponent);
 
             foreach (Gate gate in circuit.gates)
@@ -1176,12 +1085,11 @@ namespace StasisGame
             circuit.updateOutput();
         }
 
+        // Create collision filter -- Allows pairs of entities' bodies to ignore each other
         public void createCollisionFilter(XElement data)
         {
             int actorA = int.Parse(data.Attribute("actor_a").Value);
             int actorB = int.Parse(data.Attribute("actor_b").Value);
-            //int entityA = _actorIdToEntityId[actorA];
-            //int entityB = _actorIdToEntityId[actorB];
             int entityA = actorA;
             int entityB = actorB;
             Action<int, int> addEntityToIgnored = (ignored, ignorer) =>
@@ -1227,6 +1135,7 @@ namespace StasisGame
             addEntityToIgnored(entityB, entityA);
         }
 
+        // createRegionGoal -- Creates a polygon that triggers an event when the player touches it
         public void createRegionGoal(XElement data)
         {
             LevelSystem levelSystem = _systemManager.getSystem(SystemType.Level) as LevelSystem;
@@ -1234,8 +1143,6 @@ namespace StasisGame
             World world = (_systemManager.getSystem(SystemType.Physics) as PhysicsSystem).world;
             int actorId = int.Parse(data.Attribute("id").Value);
             int entityId = _entityManager.createEntity(actorId);
-            //BodyDef bodyDef = new BodyDef();
-            //List<FixtureDef> fixtureDefs = new List<FixtureDef>();
             List<Vector2> points = new List<Vector2>();
             List<PolygonPoint> P2TPoints = new List<PolygonPoint>();
             Polygon polygon;
@@ -1258,7 +1165,6 @@ namespace StasisGame
 
             foreach (DelaunayTriangle triangle in polygon.Triangles)
             {
-                //FixtureDef fixtureDef = new FixtureDef();
                 PolygonShape shape = new PolygonShape(1f);
                 Vertices vertices = new Vertices(3);
                 Fixture fixture;
@@ -1279,9 +1185,6 @@ namespace StasisGame
             }
 
             body.Position = center;
-            //body = world.CreateBody(bodyDef);
-            //foreach (FixtureDef fixtureDef in fixtureDefs)
-            //    body.CreateFixture(fixtureDef);
 
             // Add components
             _entityManager.addComponent(entityId, new PhysicsComponent(body));
@@ -1295,6 +1198,7 @@ namespace StasisGame
                 levelSystem.expandBoundary(point);
         }
 
+        // createDynamite
         public int createDynamite(Vector2 position, Vector2 force)
         {
             World world = (_systemManager.getSystem(SystemType.Physics) as PhysicsSystem).world;
@@ -1304,7 +1208,7 @@ namespace StasisGame
             PolygonShape shape = new PolygonShape(1f);
             Fixture fixture;
 
-            body.AngularVelocity = 6f;
+            body.AngularVelocity = 60f;
             body.Position = position;
             body.BodyType = BodyType.Dynamic;
             body.UserData = entityId;
@@ -1330,6 +1234,7 @@ namespace StasisGame
             return entityId;
         }
 
+        // createExplosion
         public int createExplosion(Vector2 position, float strength, float radius)
         {
             World world = (_systemManager.getSystem(SystemType.Physics) as PhysicsSystem).world;
@@ -1356,6 +1261,7 @@ namespace StasisGame
             return entityId;
         }
 
+        // createDebris
         public int createDebris(Fixture sourceFixture, Vector2 force, int timeToLive, RenderableTriangle renderableTriangle, Texture2D texture, float layerDepth)
         {
             World world = (_systemManager.getSystem(SystemType.Physics) as PhysicsSystem).world;
