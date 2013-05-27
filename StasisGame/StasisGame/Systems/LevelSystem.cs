@@ -138,7 +138,6 @@ namespace StasisGame.Systems
                             (_systemManager.getSystem(SystemType.Camera) as CameraSystem).enableManualMovement = false;
                         }
                         (_systemManager.getSystem(SystemType.Player) as PlayerSystem).spawnPosition = Loader.loadVector2(actorData.Attribute("position"), Vector2.Zero);
-                        //_systemManager.add(new EquipmentSystem(_systemManager, _entityManager), -1);
                         break;
 
                     case "Rope":
@@ -189,7 +188,7 @@ namespace StasisGame.Systems
                         break;
 
                     case "Rope":
-                        //_entityManager.factory.createRope(actorData);
+                        _entityManager.factory.createRope(actorData);
                         break;
 
                     case "Revolute":
