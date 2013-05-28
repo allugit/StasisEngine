@@ -245,13 +245,13 @@ namespace StasisEditor.Views
         }
 
         // Render polygon
-        public Texture2D renderPolygon(CustomVertexFormat[] _vertices, int primitiveCount)
+        public Texture2D renderPolygon(VertexPositionTexture[] _vertices, int primitiveCount)
         {
-            Vector2 topLeft = new Vector2(_vertices[0].position.X, _vertices[0].position.Y);
+            Vector2 topLeft = new Vector2(_vertices[0].Position.X, _vertices[0].Position.Y);
             Vector2 bottomRight = topLeft;
             for (int i = 0; i < primitiveCount * 3; i++)
             {
-                Vector2 vertex = new Vector2(_vertices[i].position.X, _vertices[i].position.Y);
+                Vector2 vertex = new Vector2(_vertices[i].Position.X, _vertices[i].Position.Y);
                 topLeft = Vector2.Min(topLeft, vertex);
                 bottomRight = Vector2.Max(bottomRight, vertex);
             }
@@ -271,7 +271,7 @@ namespace StasisEditor.Views
             _primitivesEffect.Parameters["view"].SetValue(viewMatrix);
             _primitivesEffect.Parameters["projection"].SetValue(projectionMatrix);
             _primitivesEffect.CurrentTechnique.Passes["primitives"].Apply();
-            GraphicsDevice.DrawUserPrimitives(PrimitiveType.TriangleList, _vertices, 0, primitiveCount, CustomVertexFormat.VertexDeclaration);
+            GraphicsDevice.DrawUserPrimitives(PrimitiveType.TriangleList, _vertices, 0, primitiveCount, VertexPositionTexture.VertexDeclaration);
             GraphicsDevice.SetRenderTarget(null);
 
             Texture2D texture = new Texture2D(GraphicsDevice, width, height);

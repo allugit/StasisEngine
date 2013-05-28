@@ -137,7 +137,7 @@ namespace StasisGame.Systems
                 _graphicsDevice.Textures[0] = current.renderablePrimitive.texture;
                 _primitivesEffect.Parameters["world"].SetValue(current.renderablePrimitive.worldMatrix);
                 _primitivesEffect.CurrentTechnique.Passes["textured_primitives"].Apply();
-                _graphicsDevice.DrawUserPrimitives(PrimitiveType.TriangleList, current.renderablePrimitive.vertices, 0, current.renderablePrimitive.primitiveCount, CustomVertexFormat.VertexDeclaration);
+                _graphicsDevice.DrawUserPrimitives(PrimitiveType.TriangleList, current.renderablePrimitive.vertices, 0, current.renderablePrimitive.primitiveCount, VertexPositionTexture.VertexDeclaration);
                 //_graphicsDevice.DrawUserPrimitives<CustomVertexFormat>(PrimitiveType.TriangleList, current.renderablePrimitive.vertices, 0, current.renderablePrimitive.primitiveCount);
 
                 current = current.next;

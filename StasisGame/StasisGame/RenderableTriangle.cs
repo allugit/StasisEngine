@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using Microsoft.Xna.Framework;
+using Microsoft.Xna.Framework.Graphics;
 using FarseerPhysics.Dynamics;
 using FarseerPhysics.Collision.Shapes;
 using Poly2Tri;
@@ -10,12 +11,12 @@ namespace StasisGame
 {
     public class RenderableTriangle
     {
-        public CustomVertexFormat[] vertices;
+        public VertexPositionTexture[] vertices;
         public Fixture fixture;
 
-        public RenderableTriangle(CustomVertexFormat v1, CustomVertexFormat v2, CustomVertexFormat v3)
+        public RenderableTriangle(VertexPositionTexture v1, VertexPositionTexture v2, VertexPositionTexture v3)
         {
-            vertices = new CustomVertexFormat[3] { v1, v2, v3 };
+            vertices = new VertexPositionTexture[3] { v1, v2, v3 };
         }
 
         public RenderableTriangle(DelaunayTriangle triangle, Vector2 topLeft, Vector2 bottomRight, bool fixVerticeRotation = false, float angleCorrection = 0f)
@@ -32,33 +33,29 @@ namespace StasisGame
                 p3 = Vector2.Transform(p3, Matrix.CreateRotationZ(-angleCorrection));
             }
 
-            vertices = new CustomVertexFormat[3];
-            vertices[0] = new CustomVertexFormat(
+            vertices = new VertexPositionTexture[3];
+            vertices[0] = new VertexPositionTexture(
                 new Vector3(p1, 0),
-                (p1 - topLeft) / (bottomRight - topLeft),
-                Vector3.One);
-            vertices[1] = new CustomVertexFormat(
+                (p1 - topLeft) / (bottomRight - topLeft));
+            vertices[1] = new VertexPositionTexture(
                 new Vector3(p2, 0),
-                (p2 - topLeft) / (bottomRight - topLeft),
-                Vector3.One);
-            vertices[2] = new CustomVertexFormat(
+                (p2 - topLeft) / (bottomRight - topLeft));
+            vertices[2] = new VertexPositionTexture(
                 new Vector3(p3, 0),
-                (p3 - topLeft) / (bottomRight - topLeft),
-                Vector3.One);
+                (p3 - topLeft) / (bottomRight - topLeft));
         }
 
         public RenderableTriangle(Fixture triangleFixture, Vector2 topLeft, Vector2 bottomRight)
         {
             PolygonShape polygonShape = triangleFixture.Shape as PolygonShape;
 
-            vertices = new CustomVertexFormat[3];
+            vertices = new VertexPositionTexture[3];
             for (int i = 0; i < 3; i++)
             {
                 Vector2 p = polygonShape.Vertices[i];
-                vertices[i] = new CustomVertexFormat(
+                vertices[i] = new VertexPositionTexture(
                     new Vector3(p, 0),
-                    (p - topLeft) / (bottomRight - topLeft),
-                    Vector3.One);
+                    (p - topLeft) / (bottomRight - topLeft));
             }
         }
     }

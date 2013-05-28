@@ -1434,8 +1434,8 @@ namespace StasisGame
             // Adjust renderable triangle
             for (int i = 0; i < 3; i++)
             {
-                renderableTriangle.vertices[i].position.X -= center.X;
-                renderableTriangle.vertices[i].position.Y -= center.Y;
+                renderableTriangle.vertices[i].Position.X -= center.X;
+                renderableTriangle.vertices[i].Position.Y -= center.Y;
             }
             renderableTriangles.Add(renderableTriangle);
 

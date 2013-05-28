@@ -16,7 +16,7 @@ namespace StasisEditor.Views.Controls
         private ContentManager _contentManager;
         private SpriteBatch _spriteBatch;
         private Texture2D _texture;
-        private CustomVertexFormat[] _vertices;
+        private VertexPositionTexture[] _vertices;
         private int _primitiveCount;
         private int _vertexCount;
         private Matrix _viewMatrix;
@@ -63,7 +63,7 @@ namespace StasisEditor.Views.Controls
                 polygonPoints.Add(new Vector2(-scaledHalfWidth, scaledHalfHeight));
             }
 
-            _vertices = new CustomVertexFormat[5000];
+            _vertices = new VertexPositionTexture[5000];
             _vertexCount = 0;
 
             List<PolygonPoint> P2TPoints = new List<PolygonPoint>();
@@ -92,18 +92,15 @@ namespace StasisEditor.Views.Controls
                 Vector2 p2 = new Vector2(triangle.Points[1].Xf, triangle.Points[1].Yf);
                 Vector2 p3 = new Vector2(triangle.Points[2].Xf, triangle.Points[2].Yf);
 
-                _vertices[_vertexCount++] = new CustomVertexFormat(
+                _vertices[_vertexCount++] = new VertexPositionTexture(
                     new Vector3(p1, 0),
-                    (p1 - topLeft) / (bottomRight - topLeft),
-                    Vector3.One);
-                _vertices[_vertexCount++] = new CustomVertexFormat(
+                    (p1 - topLeft) / (bottomRight - topLeft));
+                _vertices[_vertexCount++] = new VertexPositionTexture(
                     new Vector3(p2, 0),
-                    (p2 - topLeft) / (bottomRight - topLeft),
-                    Vector3.One);
-                _vertices[_vertexCount++] = new CustomVertexFormat(
+                    (p2 - topLeft) / (bottomRight - topLeft));
+                _vertices[_vertexCount++] = new VertexPositionTexture(
                     new Vector3(p3, 0),
-                    (p3 - topLeft) / (bottomRight - topLeft),
-                    Vector3.One);
+                    (p3 - topLeft) / (bottomRight - topLeft));
             }
 
             try
@@ -148,7 +145,7 @@ namespace StasisEditor.Views.Controls
                 primitivesEffect.Parameters["view"].SetValue(_viewMatrix);
                 primitivesEffect.Parameters["projection"].SetValue(_projectionMatrix);
                 primitivesEffect.CurrentTechnique.Passes["textured_primitives"].Apply();
-                GraphicsDevice.DrawUserPrimitives(PrimitiveType.TriangleList, _vertices, 0, _primitiveCount, CustomVertexFormat.VertexDeclaration);
+                GraphicsDevice.DrawUserPrimitives(PrimitiveType.TriangleList, _vertices, 0, _primitiveCount, VertexPositionTexture.VertexDeclaration);
             }
         }
 

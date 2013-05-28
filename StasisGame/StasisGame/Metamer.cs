@@ -86,11 +86,11 @@ namespace StasisGame
         private float currentTextureAngle;
         private Color textureColor = Color.White;
         private int timeToLive = 360;
-        private CustomVertexFormat[] _vertices;
+        private VertexPositionTexture[] _vertices;
         private Texture2D leafTexture;
         private float _z;
 
-        public CustomVertexFormat[] vertices { get { return _vertices; } }
+        public VertexPositionTexture[] vertices { get { return _vertices; } }
 
         public Metamer(Tree tree, Metamer previousMetamer, BudType activeBud, BudState terminalBudState, BudState lateralBudState, float axis, bool placeBudOnLeft)
         {
@@ -117,7 +117,7 @@ namespace StasisGame
             //vertices = new CustomVertexFormat[2];
             constraints = new List<MetamerConstraint>();
             relatedConstraints = new List<MetamerConstraint>();
-            _vertices = new CustomVertexFormat[2];
+            _vertices = new VertexPositionTexture[2];
 
             // Create definitions
             //bodyDef = new BodyDef();
@@ -1181,8 +1181,8 @@ namespace StasisGame
                 normal = new Vector2((float)Math.Cos(perpAngle), (float)Math.Sin(perpAngle));
             }
 
-            _vertices[0].position = new Vector3(position + -normal * width * 0.5f, 0);
-            _vertices[1].position = new Vector3(position + normal * width * 0.5f, 0);
+            _vertices[0].Position = new Vector3(position + -normal * width * 0.5f, 0);
+            _vertices[1].Position = new Vector3(position + normal * width * 0.5f, 0);
 
             if (!(isRoot || isBroken))
             {
@@ -1195,48 +1195,48 @@ namespace StasisGame
                 // 3   6----5       6 = previousMetamer.vertices[0]
                 int count = tree.numVertices;
                 // 1
-                tree.vertices[count].position = _vertices[0].position;
+                tree.vertices[count].Position = _vertices[0].Position;
                 //tree.vertices[count].texCoord = new Vector2(0, 0);
-                tree.vertices[count].texCoord.X = 0f;
-                tree.vertices[count].texCoord.Y = 0f;
+                tree.vertices[count].TextureCoordinate.X = 0f;
+                tree.vertices[count].TextureCoordinate.Y = 0f;
                 //tree.vertices[count].color = tree.barkColor;
                 //tree.vertices[count].color = new Vector3(1, 1, 1);
                 count++;
                 // 2
-                tree.vertices[count].position = _vertices[1].position;
+                tree.vertices[count].Position = _vertices[1].Position;
                 //tree.vertices[count].texCoord = new Vector2(textureWidth, 0);
-                tree.vertices[count].texCoord.X = textureWidth;
-                tree.vertices[count].texCoord.Y = 0f;
+                tree.vertices[count].TextureCoordinate.X = textureWidth;
+                tree.vertices[count].TextureCoordinate.Y = 0f;
                 //tree.vertices[count].color = tree.barkColor;
                 //tree.vertices[count].color = new Vector3(1, 1, 1);
                 count++;
                 // 3
-                tree.vertices[count].position = previousMetamer.vertices[0].position;
+                tree.vertices[count].Position = previousMetamer.vertices[0].Position;
                 //tree.vertices[count].texCoord = new Vector2(0, 1);
-                tree.vertices[count].texCoord.X = 0f;
-                tree.vertices[count].texCoord.Y = 1f;
+                tree.vertices[count].TextureCoordinate.X = 0f;
+                tree.vertices[count].TextureCoordinate.Y = 1f;
                 //tree.vertices[count].color = tree.barkColor;
                 //tree.vertices[count].color = new Vector3(1, 1, 1);
                 count++;
                 // 4
-                tree.vertices[count].position = vertices[1].position;
-                tree.vertices[count].texCoord = new Vector2(textureWidth, 0);
+                tree.vertices[count].Position = vertices[1].Position;
+                tree.vertices[count].TextureCoordinate = new Vector2(textureWidth, 0);
                 //tree.vertices[count].color = tree.barkColor;
                 //tree.vertices[count].color = new Vector3(1, 1, 1);
                 count++;
                 // 5
-                tree.vertices[count].position = previousMetamer.vertices[1].position;
+                tree.vertices[count].Position = previousMetamer.vertices[1].Position;
                 //tree.vertices[count].texCoord = new Vector2(previousMetamer.textureWidth, 1);
-                tree.vertices[count].texCoord.X = previousMetamer.textureWidth;
-                tree.vertices[count].texCoord.Y = 1f;
+                tree.vertices[count].TextureCoordinate.X = previousMetamer.textureWidth;
+                tree.vertices[count].TextureCoordinate.Y = 1f;
                 //tree.vertices[count].color = tree.barkColor;
                 //tree.vertices[count].color = new Vector3(1, 1, 1);
                 count++;
                 // 6
-                tree.vertices[count].position = previousMetamer.vertices[0].position;
+                tree.vertices[count].Position = previousMetamer.vertices[0].Position;
                 //tree.vertices[count].texCoord = new Vector2(0, 1);
-                tree.vertices[count].texCoord.X = 0f;
-                tree.vertices[count].texCoord.Y = 1f;
+                tree.vertices[count].TextureCoordinate.X = 0f;
+                tree.vertices[count].TextureCoordinate.Y = 1f;
                 //tree.vertices[count].color = tree.barkColor;
                 //tree.vertices[count].color = new Vector3(1, 1, 1);
                 tree.numVertices += 6;

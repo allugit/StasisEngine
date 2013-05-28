@@ -2,20 +2,17 @@ sampler textureSampler : register(s0);
 float4x4 world;
 float4x4 view;
 float4x4 projection;
-float4x4 texCoordTransform;
 
 struct VSInput
 {
     float4 position : POSITION0;
 	float2 texCoord : TEXCOORD0;
-	float3 color : COLOR0;
 };
 
 struct VSOutput
 {
     float4 position : POSITION0;
 	float2 texCoord : TEXCOORD0;
-	float3 color : COLOR0;
 };
 
 ///////////////////////////////////////////////
@@ -29,8 +26,6 @@ VSOutput VSDrawPrimitives(VSInput input)
     float4 viewPosition = mul(worldPosition, view);
     output.position = mul(viewPosition, projection);
 	output.texCoord = input.texCoord;
-	output.color = input.color;
-	//output.texCoord = mul(input.texCoord, texCoordTransform);
 
     return output;
 }
@@ -40,9 +35,7 @@ VSOutput VSDrawPrimitives(VSInput input)
 ///////////////////////////////////////////////
 float4 PSDrawPrimitives(VSOutput input) : COLOR0
 {
-	float4 color = float4(1, 1, 1, 1);
-	color.rgb *= input.color;
-	return color;
+	return float4(1, 1, 1, 1);
 }
 
 ///////////////////////////////////////////////
@@ -50,9 +43,7 @@ float4 PSDrawPrimitives(VSOutput input) : COLOR0
 ///////////////////////////////////////////////
 float4 PSDrawTexturedPrimitives(VSOutput input) : COLOR0
 {
-	float4 tex = tex2D(textureSampler, input.texCoord);
-	tex.rgb *= input.color;
-	return tex;
+	return tex2D(textureSampler, input.texCoord);
 }
 
 //////////////////////////////////////////////

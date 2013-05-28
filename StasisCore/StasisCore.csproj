@@ -73,7 +73,6 @@
     <Compile Include="Models\WorldPath.cs" />
     <Compile Include="Models\WorldPathPoint.cs" />
     <Compile Include="ResourceManager.cs" />
-    <Compile Include="CustomVertexFormat.cs" />
     <Compile Include="IEventHandler.cs" />
     <Compile Include="Models\GameEvent.cs" />
     <Compile Include="Models\InputGate.cs" />
