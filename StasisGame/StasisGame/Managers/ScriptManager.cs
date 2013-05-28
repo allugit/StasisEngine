@@ -15,7 +15,6 @@ namespace StasisGame.Managers
         private EntityManager _entityManager;
         private Dictionary<string, ScriptBase> _scripts;
         private CodeDomProvider _provider;
-        private CompilerParameters _parameters;
         private string _sourcePrefix = @"
 using System;
 using StasisCore;
@@ -40,11 +39,6 @@ namespace StasisGame
             _entityManager = entityManager;
             _scripts = new Dictionary<string, ScriptBase>();
             _provider = new CSharpCodeProvider();
-            _parameters = new CompilerParameters();
-            _parameters.GenerateExecutable = false;
-            _parameters.GenerateInMemory = true;
-            _parameters.ReferencedAssemblies.Add("StasisGame.exe");
-            _parameters.ReferencedAssemblies.Add("StasisCore.dll");
 
             loadGlobalScript();
             _scripts["global"].doAction("omg");
@@ -74,7 +68,14 @@ namespace StasisGame
         // compileAndCreateScript -- Takes source code in the form of a string and returns a ScriptBase instance
         private ScriptBase compileAndCreateScript(string source)
         {
-            CompilerResults results = _provider.CompileAssemblyFromSource(_parameters, source);
+            CompilerResults results;
+            CompilerParameters parameters = new CompilerParameters();
+
+            parameters.GenerateExecutable = false;
+            parameters.GenerateInMemory = true;
+            parameters.ReferencedAssemblies.Add("StasisGame.exe");
+            parameters.ReferencedAssemblies.Add("StasisCore.dll");
+            results = _provider.CompileAssemblyFromSource(parameters, source);
             if (results.Errors.Count > 0)
             {
                 Console.WriteLine("Script errors:");
