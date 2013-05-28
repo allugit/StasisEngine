@@ -32,17 +32,17 @@ namespace StasisCore
         private static List<Dictionary<string, XElement>> _resources;
         public static string rootDirectory = "";
 
-        public static string texturePath { get { return rootDirectory + @"data\textures"; } }
-        public static string levelPath { get { return rootDirectory + @"data\levels"; } }
-        public static string materialPath { get { return rootDirectory + @"data\materials.xml"; } }
-        public static string itemPath { get { return rootDirectory + @"data\items.xml"; } }
-        public static string blueprintPath { get { return rootDirectory + @"data\blueprints.xml"; } }
-        public static string characterPath { get { return rootDirectory + @"data\characters.xml"; } }
-        public static string dialoguePath { get { return rootDirectory + @"data\dialogues.xml"; } }
-        public static string circuitPath { get { return rootDirectory + @"data\circuits.xml"; } }
-        public static string backgroundPath { get { return rootDirectory + @"data\backgrounds.xml"; } }
-        public static string worldMapPath { get { return rootDirectory + @"data\world_maps.xml"; } }
-        public static string ropeMaterialPath { get { return rootDirectory + @"data\rope_materials.xml"; } }
+        public static string texturePath { get { return rootDirectory + @"data/textures"; } }
+        public static string levelPath { get { return rootDirectory + @"data/levels"; } }
+        public static string materialPath { get { return rootDirectory + @"data/materials.xml"; } }
+        public static string itemPath { get { return rootDirectory + @"data/items.xml"; } }
+        public static string blueprintPath { get { return rootDirectory + @"data/blueprints.xml"; } }
+        public static string characterPath { get { return rootDirectory + @"data/characters.xml"; } }
+        public static string dialoguePath { get { return rootDirectory + @"data/dialogues.xml"; } }
+        public static string circuitPath { get { return rootDirectory + @"data/circuits.xml"; } }
+        public static string backgroundPath { get { return rootDirectory + @"data/backgrounds.xml"; } }
+        public static string worldMapPath { get { return rootDirectory + @"data/world_maps.xml"; } }
+        public static string ropeMaterialPath { get { return rootDirectory + @"data/rope_materials.xml"; } }
         public static GraphicsDevice graphicsDevice { get { return _graphicsDevice; } }
 
         public static List<XElement> materialResources

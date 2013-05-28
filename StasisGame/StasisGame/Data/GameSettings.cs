@@ -38,7 +38,7 @@ namespace StasisGame.Data
         {
             // Find suitable screen size
             int screenWidth = 1024;
-            int screenHeight = 512;
+            int screenHeight = 768;
             int maxScreenWidth = game.GraphicsDevice.DisplayMode.Width - 100;
             int maxScreenHeight = game.GraphicsDevice.DisplayMode.Height - 100;
             /*

@@ -53,7 +53,7 @@ namespace StasisGame
         // loadGlobalScript -- Loads a global script (called by constructor, which is called just after SystemManager and EntityManager are created)
         private void loadGlobalScript()
         {
-            string source = string.Format("{0}{1}{2}", _sourcePrefix, File.ReadAllText("data\\global_script.cs"), _sourcePostfix);
+            string source = string.Format("{0}{1}{2}", _sourcePrefix, File.ReadAllText("data/global_script.cs"), _sourcePostfix);
             ScriptBase script = compileAndCreateScript(source);
             _scripts.Add("global", script);
         }
@@ -61,7 +61,7 @@ namespace StasisGame
         // loadLevelScript -- Loads a level script (called every time a level is loaded)
         public void loadLevelScript(string levelUID)
         {
-            string fileName = string.Format("data\\levels\\{0}.cs", levelUID);
+            string fileName = string.Format("data/levels/{0}.cs", levelUID);
 
             if (!_scripts.ContainsKey(levelUID) && File.Exists(fileName))
             {
