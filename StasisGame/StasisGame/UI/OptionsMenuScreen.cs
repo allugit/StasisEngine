@@ -6,6 +6,7 @@ using Microsoft.Xna.Framework.Content;
 using Microsoft.Xna.Framework.Input;
 using Microsoft.Xna.Framework.Graphics;
 using StasisGame.Managers;
+using StasisGame.Systems;
 
 namespace StasisGame.UI
 {
@@ -325,7 +326,7 @@ namespace StasisGame.UI
             }
 
             // Gamepad input
-            if (_newGamepadState.IsConnected)
+            if (InputSystem.usingGamepad)
             {
                 bool movingUp = (_oldGamepadState.ThumbSticks.Left.Y < 0.25f && _newGamepadState.ThumbSticks.Left.Y > 0.25f) ||
                     (_oldGamepadState.DPad.Up == ButtonState.Released && _newGamepadState.DPad.Up == ButtonState.Pressed);

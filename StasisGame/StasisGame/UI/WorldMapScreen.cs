@@ -136,7 +136,7 @@ namespace StasisGame.UI
                 _levelSelectPosition += mouseDelta;
             }
 
-            if (_newGamepadState.IsConnected)
+            if (InputSystem.usingGamepad)
             {
                 _targetScreenCenter += _newGamepadState.ThumbSticks.Left * 7 * new Vector2(1, -1);
                 _targetScreenCenter += _newGamepadState.ThumbSticks.Right * 7 * new Vector2(1, -1);

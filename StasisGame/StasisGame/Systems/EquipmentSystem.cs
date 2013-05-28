@@ -80,8 +80,8 @@ namespace StasisGame.Systems
                     {
                         bool mouseLeftDown = InputSystem.newMouseState.LeftButton == ButtonState.Pressed && InputSystem.oldMouseState.LeftButton == ButtonState.Released;
                         bool mouseRightDown = InputSystem.newMouseState.RightButton == ButtonState.Pressed && InputSystem.oldMouseState.RightButton == ButtonState.Released;
-                        bool leftTriggerDown = InputSystem.newGamepadState.IsConnected && InputSystem.newGamepadState.Triggers.Left > 0.5f && InputSystem.oldGamepadState.Triggers.Left <= 0.5f;
-                        bool rightTriggerDown = InputSystem.newGamepadState.IsConnected && InputSystem.newGamepadState.Triggers.Right > 0.5f && InputSystem.oldGamepadState.Triggers.Right <= 0.5f;
+                        bool leftTriggerDown = InputSystem.usingGamepad && InputSystem.newGamepadState.Triggers.Left > 0.5f && InputSystem.oldGamepadState.Triggers.Left <= 0.5f;
+                        bool rightTriggerDown = InputSystem.usingGamepad && InputSystem.newGamepadState.Triggers.Right > 0.5f && InputSystem.oldGamepadState.Triggers.Right <= 0.5f;
                         AimComponent aimComponent = _entityManager.getComponent(playerId, ComponentType.Aim) as AimComponent;
 
                         if (mouseLeftDown || leftTriggerDown)
@@ -100,7 +100,7 @@ namespace StasisGame.Systems
                             if (worldPositionComponent != null)
                             {
                                 Vector2 worldPosition = worldPositionComponent.position;
-                                if (InputSystem.newGamepadState.IsConnected)
+                                if (InputSystem.usingGamepad)
                                 {
                                     Vector2 aim = InputSystem.newGamepadState.ThumbSticks.Left * selectedItem.maxRange;
                                     aim.Y *= -1;

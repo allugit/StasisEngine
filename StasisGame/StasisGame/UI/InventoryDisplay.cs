@@ -58,7 +58,7 @@ namespace StasisGame.UI
                 bool mouseMoved = _newMouseState.X - _oldMouseState.X != 0 || _newMouseState.Y - _oldMouseState.Y != 0;
 
                 // Gamepad input
-                if (_newGamepadState.IsConnected)
+                if (InputSystem.usingGamepad)
                 {
                     bool movingDown = (_oldGamepadState.ThumbSticks.Right.Y < 0.15f && _newGamepadState.ThumbSticks.Right.Y > 0.15f);
                     bool movingUp = (_oldGamepadState.ThumbSticks.Right.Y > -0.15f && _newGamepadState.ThumbSticks.Right.Y < -0.15f);
