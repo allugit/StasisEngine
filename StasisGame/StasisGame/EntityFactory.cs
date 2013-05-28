@@ -755,6 +755,10 @@ namespace StasisGame
         {
             int entityId = _entityManager.createEntity();
             RopeComponent ropeComponent = new RopeComponent(head, interpolationCount, head.ropeComponent.destroyAfterRelease, head.ropeComponent.reverseClimbDirection, head.ropeComponent.doubleAnchor);
+            RopeNode current = head;
+
+            // Update rope nodes settings
+            finalizeRopeNodes(head, entityId, ropeComponent);
 
             // Add components
             _entityManager.addComponent(entityId, ropeComponent);
@@ -765,38 +769,6 @@ namespace StasisGame
 
             return entityId;
         }
-
-        // testForWall -- Used by createRope to test points for wall entities
-        /*
-        private bool testForWall(World world, Vector2 point, out Fixture wallFixture)
-        {
-            AABB aabb = new AABB();
-            bool result = false;
-            Fixture resultFixture = null;
-
-            aabb.LowerBound = point;
-            aabb.UpperBound = point;
-            world.QueryAABB((fixture) =>
-                {
-                    if (fixture.TestPoint(ref point, 0f))
-                    {
-                        int fixtureEntityId = (int)fixture.Body.UserData;
-                        WallComponent wallComponent = (WallComponent)_entityManager.getComponent(fixtureEntityId, ComponentType.Wall);
-
-                        if (wallComponent != null)
-                        {
-                            result = true;
-                            resultFixture = fixture;
-                            return false;
-                        }
-                    }
-                    return true;
-                },
-                ref aabb);
-
-            wallFixture = resultFixture;    // have to assign wallFixture in this roundabout way because an out param cannot be assigned in a lambda statement
-            return result;
-        }*/
 
         // createTerrainTexture -- Creates a terrain texture
         private Texture2D createTerrainTexture(List<Vector2> points, XElement data)
