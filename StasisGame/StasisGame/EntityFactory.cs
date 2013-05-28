@@ -444,6 +444,9 @@ namespace StasisGame
             RopeNode head = null;
             RopeNode previousNode = null;
 
+            if (ropeNodeLimit == 0)
+                return null;
+
             for (int i = 0; i < ropeNodeLimit; i++)
             {
                 PolygonShape shape = new PolygonShape(0.5f);
@@ -611,6 +614,8 @@ namespace StasisGame
 
             // Create rope
             head = createRopeNodes(a, ropeTarget.fixture.Body.GetWorldPoint(ref ropeTarget.localPoint), false);
+            if (head == null)
+                return -1;
             tail = head.tail;
             createAnchor(tail, new Vector2(-tail.halfLength, 0), ropeTarget.fixture, ropeTarget.localPoint);
             initializeRopeMaterial(head, ropeMaterial);
@@ -730,6 +735,8 @@ namespace StasisGame
                 ropeTargetA.fixture.Body.GetWorldPoint(ref ropeTargetA.localPoint),
                 ropeTargetB.fixture.Body.GetWorldPoint(ref ropeTargetB.localPoint),
                 true);
+            if (head == null)
+                return -1;
             tail = head.tail;
             createAnchor(head, new Vector2(head.halfLength, 0), ropeTargetA.fixture, ropeTargetA.localPoint);
             createAnchor(tail, new Vector2(-tail.halfLength, 0), ropeTargetB.fixture, ropeTargetB.localPoint);
