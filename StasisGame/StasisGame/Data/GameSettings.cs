@@ -67,7 +67,7 @@ namespace StasisGame.Data
             _screenWidth = Loader.loadInt(data.Element("ScreenWidth"), 800);
             _screenHeight = Loader.loadInt(data.Element("ScreenHeight"), 600);
             _fullscreen = Loader.loadBool(data.Element("Fullscreen"), false);
-            _controllerType = (ControllerType)Loader.loadEnum(typeof(ControllerType), data.Element("ControllerType"), (int)ControllerType.Gamepad);
+            _controllerType = (ControllerType)Loader.loadEnum(typeof(ControllerType), data.Element("ControllerType"), (int)ControllerType.KeyboardAndMouse);
         }
     }
 }
