@@ -17,13 +17,15 @@ namespace StasisCore.Models
         protected float _relativeAngle;
         protected float _angleJitter;
         protected float _jitter;
+        protected float _scale;
+        protected float _scaleJitter;
         protected Color _baseColor;
         protected int _randomRed;
         protected int _randomGreen;
         protected int _randomBlue;
         protected int _randomAlpha;
 
-        public Vector2 direction { get { return _direction; } set { _direction = value; } }
+        virtual public Vector2 direction { get { return _direction; } set { _direction = value; } }
         public float threshold { get { return _threshold; } set { _threshold = value; } }
         public bool hardCutoff { get { return _hardCutoff; } set { _hardCutoff = value; } }
         public float spacing { get { return _spacing; } set { _spacing = value; } }
@@ -32,6 +34,8 @@ namespace StasisCore.Models
         public float relativeAngle { get { return _relativeAngle; } set { _relativeAngle = value; } }
         public float angleJitter { get { return _angleJitter; } set { _angleJitter = value; } }
         public float jitter { get { return _jitter; } set { _jitter = value; } }
+        public float scale { get { return _scale; } set { _scale = value; } }
+        public float scaleJitter { get { return _scaleJitter; } set { _scaleJitter = value; } }
         virtual public Color baseColor { get { return _baseColor; } set { _baseColor = value; } }
         public int randomRed { get { return _randomRed; } set { _randomRed = value; } }
         public int randomGreen { get { return _randomGreen; } set { _randomGreen = value; } }
@@ -51,6 +55,8 @@ namespace StasisCore.Models
                 d.SetAttributeValue("relative_angle", _relativeAngle);
                 d.SetAttributeValue("angle_jitter", _angleJitter);
                 d.SetAttributeValue("jitter", _jitter);
+                d.SetAttributeValue("scale", _scale);
+                d.SetAttributeValue("scale_jitter", _scaleJitter);
                 d.SetAttributeValue("base_color", _baseColor);
                 d.SetAttributeValue("random_red", _randomRed);
                 d.SetAttributeValue("random_green", _randomGreen);
@@ -73,6 +79,8 @@ namespace StasisCore.Models
             _relativeAngle = 0f;
             _angleJitter = 0f;
             _jitter = 0f;
+            _scale = 1f;
+            _scaleJitter = 0f;
         }
 
         public MaterialEdgeScatterLayer(XElement data)
@@ -87,6 +95,8 @@ namespace StasisCore.Models
             _relativeAngle = Loader.loadFloat(data.Attribute("relative_angle"), 0f);
             _angleJitter = Loader.loadFloat(data.Attribute("angle_jitter"), 0f);
             _jitter = Loader.loadFloat(data.Attribute("jitter"), 0f);
+            _scale = Loader.loadFloat(data.Attribute("scale"), 1f);
+            _scaleJitter = Loader.loadFloat(data.Attribute("scale_jitter"), 0f);
             _baseColor = Loader.loadColor(data.Attribute("base_color"), Color.White);
             _randomRed = Loader.loadInt(data.Attribute("random_red"), 0);
             _randomGreen = Loader.loadInt(data.Attribute("random_green"), 0);

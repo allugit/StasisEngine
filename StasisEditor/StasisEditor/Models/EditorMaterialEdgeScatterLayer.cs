@@ -11,6 +11,9 @@ namespace StasisEditor.Models
 
     public class EditorMaterialEdgeScatterLayer : MaterialEdgeScatterLayer
     {
+        [EditorAttribute(typeof(Vector2Editor), typeof(UITypeEditor))]
+        public override Vector2 direction { get { return base.direction; } set { base.direction = value; } }
+
         [Editor(@"System.Windows.Forms.Design.StringCollectionEditor, System.Design, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a",
             typeof(UITypeEditor))]
         public override List<string> textureUIDs { get { return base.textureUIDs; } }

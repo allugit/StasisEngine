@@ -340,6 +340,8 @@ namespace StasisCore
                         edgeLayer.relativeAngle,
                         edgeLayer.angleJitter,
                         edgeLayer.jitter,
+                        edgeLayer.scale,
+                        edgeLayer.scaleJitter,
                         edgeLayer.baseColor,
                         edgeLayer.randomRed,
                         edgeLayer.randomGreen,
@@ -797,7 +799,7 @@ namespace StasisCore
                     Vector2 position = new Vector2(i, j) + new Vector2(StasisMathHelper.floatBetween(0, jitter, rng), StasisMathHelper.floatBetween(0, jitter, rng));
                     float angle = StasisMathHelper.floatBetween(-3.14f, 3.14f, rng);
                     Texture2D texture = textures[rng.Next(0, textures.Count)];
-                    Color actualColor = getRandomColor(baseColor, randomRed, randomGreen, randomBlue, randomAlpha);
+                    Color actualColor = getRandomColor(baseColor, randomRed, randomGreen, randomBlue, randomAlpha, rng);
                     _spriteBatch.Draw(texture, position, texture.Bounds, actualColor, angle, new Vector2(texture.Width, texture.Height) / 2, 1f, SpriteEffects.None, 0);
                 }
             }
@@ -900,7 +902,7 @@ namespace StasisCore
                         }
                         Vector2 j = new Vector2((float)(rng.NextDouble() * 2 - 1) * jitter, (float)(rng.NextDouble() * 2 - 1) * jitter);
                         Texture2D texture = textures[rng.Next(textures.Count)];
-                        Color actualColor = getRandomColor(baseColor, randomRed, randomGreen, randomBlue, randomAlpha);
+                        Color actualColor = getRandomColor(baseColor, randomRed, randomGreen, randomBlue, randomAlpha, rng);
                         //float textureScale = scaleWithGrowthFactor ? growthFactor : 1f;
                         _spriteBatch.Draw(texture, new Vector2(r * (float)Math.Cos(modifiedTheta), r * (float)Math.Sin(modifiedTheta)) + j + center, texture.Bounds, actualColor, textureAngle, new Vector2(texture.Width, texture.Height) / 2, textureScale, SpriteEffects.None, 0);
                         if (twinArms)
@@ -939,6 +941,8 @@ namespace StasisCore
             float relativeAngle,
             float angleJitter,
             float jitter,
+            float scale,
+            float scaleJitter,
             Color baseColor,
             int randomRed,
             int randomGreen,
@@ -1006,15 +1010,17 @@ namespace StasisCore
                     while (currentPosition < relativeLength)
                     {
                         float angle = 0;
+                        Vector2 j = new Vector2((float)rng.NextDouble() * 2 - 1, (float)rng.NextDouble() * 2 - 1) * jitter;
+                        Vector2 position = pointA + normal * currentPosition + j;
+                        Texture2D texture = textures[rng.Next(textures.Count)];
+                        Color actualColor = getRandomColor(baseColor, randomRed, randomGreen, randomBlue, randomAlpha, rng);
+                        float textureScale = StasisMathHelper.floatBetween(scale - scaleJitter, scale + scaleJitter, rng);
+
                         if (useAbsoluteAngle)
                             angle = absoluteAngle + StasisMathHelper.floatBetween(-angleJitter, angleJitter, rng);
                         else
                             angle = (float)Math.Atan2(relative.Y, relative.X) + relativeAngle + StasisMathHelper.floatBetween(-angleJitter, angleJitter, rng);
-                        Vector2 j = new Vector2((float)rng.NextDouble() * 2 - 1, (float)rng.NextDouble() * 2 - 1) * jitter;
-                        Vector2 position = pointA + normal * currentPosition + j;
-                        Texture2D texture = textures[rng.Next(textures.Count)];
-                        Color actualColor = getRandomColor(baseColor, randomRed, randomGreen, randomBlue, randomAlpha);
-                        _spriteBatch.Draw(texture, (position - topLeft) * Settings.BASE_SCALE, texture.Bounds, actualColor, angle, new Vector2(texture.Width, texture.Height) / 2, 1f, SpriteEffects.None, 0);
+                        _spriteBatch.Draw(texture, (position - topLeft) * Settings.BASE_SCALE, texture.Bounds, actualColor, angle, new Vector2(texture.Width, texture.Height) / 2, textureScale, SpriteEffects.None, 0);
                         currentPosition += spacing;
                     }
                 }
@@ -1033,9 +1039,8 @@ namespace StasisCore
         }
 
         // Random color helper
-        private Color getRandomColor(Color baseColor, int randomRed, int randomGreen, int randomBlue, int randomAlpha)
+        private Color getRandomColor(Color baseColor, int randomRed, int randomGreen, int randomBlue, int randomAlpha, Random rng)
         {
-            Random rng = new Random();
             int tintR = randomRed < 0 ? rng.Next(randomRed, 1) : rng.Next(randomRed + 1);
             int tintG = randomGreen < 0 ? rng.Next(randomGreen, 1) : rng.Next(randomGreen + 1);
             int tintB = randomBlue < 0 ? rng.Next(randomBlue, 1) : rng.Next(randomBlue + 1);
