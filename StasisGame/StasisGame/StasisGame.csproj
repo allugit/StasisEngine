@@ -88,6 +88,7 @@
     <Compile Include="Components\CharacterRenderComponent.cs" />
     <Compile Include="Components\CircuitComponent.cs" />
     <Compile Include="Components\DebrisComponent.cs" />
+    <Compile Include="Components\DecalRenderComponent.cs" />
     <Compile Include="Components\DestructibleGeometryComponent.cs" />
     <Compile Include="Components\DynamiteComponent.cs" />
     <Compile Include="Components\ExplosionComponent.cs" />

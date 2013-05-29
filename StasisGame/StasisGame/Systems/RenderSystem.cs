@@ -161,6 +161,7 @@ namespace StasisGame.Systems
             List<int> treeEntities = _entityManager.getEntitiesPosessing(ComponentType.Tree);
             List<int> aimEntities = _entityManager.getEntitiesPosessing(ComponentType.Aim);
             List<int> explosionEntities = _entityManager.getEntitiesPosessing(ComponentType.Explosion);
+            List<int> decalRenderEntities = _entityManager.getEntitiesPosessing(ComponentType.DecalRender);
             List<RopeGrabComponent> ropeGrabComponents = _entityManager.getComponents<RopeGrabComponent>(ComponentType.RopeGrab);
             Vector2 screenCenter = _cameraSystem.screenCenter;
 
@@ -215,7 +216,7 @@ namespace StasisGame.Systems
             _primitivesEffect.Parameters["view"].SetValue(_viewMatrix);
             _primitivesEffect.Parameters["projection"].SetValue(_projectionMatrix);
 
-            // Body render components
+            // Body rendering
             for (int i = 0; i < bodyRenderEntities.Count; i++)
             {
                 int entityId = bodyRenderEntities[i];
@@ -235,6 +236,14 @@ namespace StasisGame.Systems
                 }
 
                 addRenderablePrimitive(bodyRenderComponent);
+            }
+
+            // Decal rendering
+            for (int i = 0; i < decalRenderEntities.Count; i++)
+            {
+                DecalRenderComponent decalRenderComponent = _entityManager.getComponent(decalRenderEntities[i], ComponentType.DecalRender) as DecalRenderComponent;
+
+                _spriteBatch.Draw(decalRenderComponent.texture, (decalRenderComponent.position - screenCenter) * _scale + _halfScreen, decalRenderComponent.texture.Bounds, Color.White, decalRenderComponent.angle, decalRenderComponent.origin, 1f, SpriteEffects.None, decalRenderComponent.layerDepth);
             }
 
             // Rope rendering
@@ -281,6 +290,7 @@ namespace StasisGame.Systems
                 }
             }
 
+            // World item rendering
             for (int i = 0; i < worldItemRenderEntities.Count; i++)
             {
                 PhysicsComponent physicsComponent = (PhysicsComponent)_entityManager.getComponent(worldItemRenderEntities[i], ComponentType.Physics);
@@ -289,6 +299,7 @@ namespace StasisGame.Systems
                 _spriteBatch.Draw(renderComponent.worldTexture, (physicsComponent.body.Position - screenCenter) * _scale + _halfScreen, renderComponent.worldTexture.Bounds, Color.White, physicsComponent.body.Rotation, new Vector2(renderComponent.worldTexture.Width, renderComponent.worldTexture.Height) / 2f, 1f, SpriteEffects.None, 0);
             }
 
+            // Character rendering
             for (int i = 0; i < characterRenderEntities.Count; i++)
             {
                 PhysicsComponent physicsComponent = (PhysicsComponent)_entityManager.getComponent(characterRenderEntities[i], ComponentType.Physics);
@@ -298,7 +309,7 @@ namespace StasisGame.Systems
                 Rectangle source = new Rectangle(0, 0, (int)(shapeWidth * _scale), (int)(shapeHeight * _scale));
                 Vector2 origin = new Vector2(source.Width / 2f, source.Height / 2f);
 
-                _spriteBatch.Draw(_pixel, (physicsComponent.body.Position - screenCenter) * _scale + _halfScreen, source, Color.White, 0, origin, 1f, SpriteEffects.None, 0.1f);
+                _spriteBatch.Draw(_pixel, (physicsComponent.body.Position - screenCenter) * _scale + _halfScreen, source, Color.White, 0, origin, 1f, SpriteEffects.None, 0.05f);
             }
 
             for (int i = 0; i < characterMovementEntities.Count; i++)

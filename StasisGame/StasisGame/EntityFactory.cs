@@ -1427,5 +1427,17 @@ namespace StasisGame
 
             return entityId;
         }
+
+        // createBlacksmithHut
+        public int createBlacksmithHut(Vector2 position, float angle)
+        {
+            int entityId = _entityManager.createEntity();
+            Texture2D texture = ResourceManager.getTexture("blacksmith_hut");
+            Vector2 origin = new Vector2(texture.Width, texture.Height) / 2f;
+
+            _entityManager.addComponent(entityId, new DecalRenderComponent(texture, position, origin, angle, 0.11f));
+
+            return entityId;
+        }
     }
 }

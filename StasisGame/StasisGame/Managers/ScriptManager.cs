@@ -21,6 +21,7 @@ using StasisCore;
 using StasisCore.Models;
 using StasisGame.Managers;
 using StasisGame.Systems;
+using Microsoft.Xna.Framework;
 namespace StasisGame
 {
     public class Script : ScriptBase
@@ -73,6 +74,7 @@ namespace StasisGame
 
             parameters.GenerateExecutable = false;
             parameters.GenerateInMemory = true;
+            parameters.ReferencedAssemblies.Add("MonoGame.Framework.dll");
             parameters.ReferencedAssemblies.Add("StasisGame.exe");
             parameters.ReferencedAssemblies.Add("StasisCore.dll");
             results = _provider.CompileAssemblyFromSource(parameters, source);
