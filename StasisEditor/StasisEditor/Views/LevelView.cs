@@ -160,7 +160,9 @@ namespace StasisEditor.Views
             float scale = _controller.scale;
             Vector2 worldOffset = _controller.worldOffset;
             Vector2 worldMouse = _controller.worldMouse;
+            string text = String.Format("X: {0}\nY: {1}", worldMouse.X, worldMouse.Y);
 
+            // Draw dot
             _spriteBatch.Draw(
                 _pixel,
                 (worldMouse + worldOffset) * scale,
@@ -170,6 +172,9 @@ namespace StasisEditor.Views
                 Microsoft.Xna.Framework.Graphics.SpriteEffects.None,
                 0);
 
+            // Draw position as string
+            _spriteBatch.DrawString(_font, text, (worldMouse + worldOffset) * scale + new Vector2(17, 17), Color.Black, 0f, Vector2.Zero, 1f, SpriteEffects.None, 0.0000000001f);
+            _spriteBatch.DrawString(_font, text, (worldMouse + worldOffset) * scale + new Vector2(16, 16), Color.White, 0f, Vector2.Zero, 1f, SpriteEffects.None, 0);
         }
 
         // drawBox
