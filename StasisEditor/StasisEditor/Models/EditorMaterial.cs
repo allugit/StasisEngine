@@ -24,6 +24,11 @@ namespace StasisEditor.Models
         {
         }
 
+        public override void createRootLayer()
+        {
+            _rootLayer = new EditorMaterialGroupLayer();
+        }
+
         protected override void loadRootLayer(XElement data)
         {
             _rootLayer = EditorMaterialLayer.load(data.Element("Layer")) as EditorMaterialGroupLayer;
