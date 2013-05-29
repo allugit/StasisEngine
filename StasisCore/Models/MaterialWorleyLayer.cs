@@ -21,13 +21,13 @@ namespace StasisCore.Models
         private WorleyFeatureType _worleyFeature;
         private int _seed;
 
-        public Vector2 position { get { return _position; } set { _position = value; } }
+        virtual public Vector2 position { get { return _position; } set { _position = value; } }
         public float scale { get { return _scale; } set { _scale = value; } }
         public float frequency { get { return _frequency; } set { _frequency = value; } }
         public float gain { get { return _gain; } set { _gain = value; } }
         public float lacunarity { get { return _lacunarity; } set { _lacunarity = value; } }
         public float multiplier { get { return _multiplier; } set { _multiplier = value; } }
-        public Vector2 fbmOffset { get { return _fbmOffset; } set { _fbmOffset = value; } }
+        virtual public Vector2 fbmOffset { get { return _fbmOffset; } set { _fbmOffset = value; } }
         virtual public Color colorLow { get { return _colorLow; } set { _colorLow = value; } }
         virtual public Color colorHigh { get { return _colorHigh; } set { _colorHigh = value; } }
         public int iterations { get { return _iterations; } set { _iterations = value; } }

@@ -599,9 +599,9 @@ namespace StasisCore
             float distance1 = 9999999;
             float distance2 = 9999999;
 
-            for (int y = -1; y < 2; y++)
+            for (int y = -2; y < 3; y++)
             {
-                for (int x = -1; x < 2; x++)
+                for (int x = -2; x < 3; x++)
                 {
                     // Find feature point grid indices
                     int fpx = (xi + x) % gridWidth;

@@ -149,6 +149,7 @@
     <Compile Include="Models\IWorldControl.cs" />
     <Compile Include="Models\PointListNode.cs" />
     <Compile Include="ServiceContainer.cs" />
+    <Compile Include="Vector2Editor.cs" />
     <Compile Include="Views\BackgroundView.cs">
       <SubType>UserControl</SubType>
     </Compile>
@@ -254,6 +255,12 @@
     </Compile>
     <Compile Include="Views\Controls\SelectGateType.Designer.cs">
       <DependentUpon>SelectGateType.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Views\Controls\Vector2EditorForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Views\Controls\Vector2EditorForm.Designer.cs">
+      <DependentUpon>Vector2EditorForm.cs</DependentUpon>
     </Compile>
     <Compile Include="Views\Controls\ViewBlueprintAssociateScraps.cs">
       <SubType>UserControl</SubType>
@@ -404,6 +411,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Views\Controls\SelectGateType.resx">
       <DependentUpon>SelectGateType.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Views\Controls\Vector2EditorForm.resx">
+      <DependentUpon>Vector2EditorForm.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Views\Controls\ViewBlueprintAssociateScraps.resx">
       <DependentUpon>ViewBlueprintAssociateScraps.cs</DependentUpon>

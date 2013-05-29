@@ -11,6 +11,12 @@ namespace StasisEditor.Models
 
     public class EditorMaterialWorleyLayer : MaterialWorleyLayer
     {
+        [EditorAttribute(typeof(Vector2Editor), typeof(UITypeEditor))]
+        public override Vector2 position { get { return base.position; } set { base.position = value; } }
+
+        [EditorAttribute(typeof(Vector2Editor), typeof(UITypeEditor))]
+        public override Vector2 fbmOffset { get { return base.fbmOffset; } set { base.fbmOffset = value; } }
+
         [EditorAttribute(typeof(XNAColorEditor), typeof(UITypeEditor))]
         public override Color colorLow { get { return base.colorLow; } set { base.colorLow = value; } }
 
