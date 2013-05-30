@@ -7,7 +7,6 @@ namespace StasisGame.Components
         Physics,
         PrimitivesRender,
         Rope,
-        WorldItemRender,
         Item,
         CharacterRender,
         CharacterMovement,
@@ -33,8 +32,7 @@ namespace StasisGame.Components
         SkipFluidResolution,
         DestructibleGeometry,
         Debris,
-        ParticleInfluence,
-        DecalRender
+        ParticleInfluence
     };
 
     public interface IComponent
