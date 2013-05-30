@@ -195,13 +195,11 @@ namespace StasisGame.Systems
             FluidSystem fluidSystem = (FluidSystem)_systemManager.getSystem(SystemType.Fluid);
             List<int> primitiveRenderEntities = _entityManager.getEntitiesPosessing(ComponentType.PrimitivesRender);
             List<int> ropeEntities = _entityManager.getEntitiesPosessing(ComponentType.Rope);
-            List<int> worldItemRenderEntities = _entityManager.getEntitiesPosessing(ComponentType.WorldItemRender);
             List<int> characterRenderEntities = _entityManager.getEntitiesPosessing(ComponentType.CharacterRender);
             List<int> characterMovementEntities = _entityManager.getEntitiesPosessing(ComponentType.CharacterMovement);
             List<int> treeEntities = _entityManager.getEntitiesPosessing(ComponentType.Tree);
             List<int> aimEntities = _entityManager.getEntitiesPosessing(ComponentType.Aim);
             List<int> explosionEntities = _entityManager.getEntitiesPosessing(ComponentType.Explosion);
-            List<int> decalRenderEntities = _entityManager.getEntitiesPosessing(ComponentType.DecalRender);
             List<RopeGrabComponent> ropeGrabComponents = _entityManager.getComponents<RopeGrabComponent>(ComponentType.RopeGrab);
             Vector2 screenCenter = _cameraSystem.screenCenter;
 
@@ -286,15 +284,6 @@ namespace StasisGame.Systems
                 }
             }
 
-            /*
-            // Decal rendering
-            for (int i = 0; i < decalRenderEntities.Count; i++)
-            {
-                DecalRenderComponent decalRenderComponent = _entityManager.getComponent(decalRenderEntities[i], ComponentType.DecalRender) as DecalRenderComponent;
-
-                _spriteBatch.Draw(decalRenderComponent.texture, (decalRenderComponent.position - screenCenter) * _scale + _halfScreen, decalRenderComponent.texture.Bounds, Color.White, decalRenderComponent.angle, decalRenderComponent.origin, 1f, SpriteEffects.None, decalRenderComponent.layerDepth);
-            }*/
-
             // Rope rendering
             for (int i = 0; i < ropeEntities.Count; i++)
             {
@@ -338,16 +327,6 @@ namespace StasisGame.Systems
                     current = current.next;
                 }
             }
-
-            /*
-            // World item rendering
-            for (int i = 0; i < worldItemRenderEntities.Count; i++)
-            {
-                PhysicsComponent physicsComponent = (PhysicsComponent)_entityManager.getComponent(worldItemRenderEntities[i], ComponentType.Physics);
-                WorldItemRenderComponent renderComponent = (WorldItemRenderComponent)_entityManager.getComponent(worldItemRenderEntities[i], ComponentType.WorldItemRender);
-
-                _spriteBatch.Draw(renderComponent.worldTexture, (physicsComponent.body.Position - screenCenter) * _scale + _halfScreen, renderComponent.worldTexture.Bounds, Color.White, physicsComponent.body.Rotation, new Vector2(renderComponent.worldTexture.Width, renderComponent.worldTexture.Height) / 2f, 1f, SpriteEffects.None, 0);
-            }*/
 
             // Character rendering
             for (int i = 0; i < characterRenderEntities.Count; i++)
@@ -428,7 +407,6 @@ namespace StasisGame.Systems
                 {
                     // Current particle
                     Particle particle = fluidSystem.liquid[fluidSystem.activeParticles[i]];
-                    //Color color = new Color(1, particle.velocity.X < 0 ? -particle.velocity.X : particle.velocity.X, particle.velocity.Y < 0 ? -particle.velocity.Y : particle.velocity.Y);
                     spriteBatch.Draw(_pixel, (particle.position - _cameraSystem.screenCenter) * scale + _halfScreen, new Rectangle(0, 0, 2, 2), Color.White, 0, new Vector2(1, 1), 1, SpriteEffects.None, 0);
                 }
                 _spriteBatch.End();
