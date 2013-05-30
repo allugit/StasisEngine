@@ -2,12 +2,10 @@
 using System.Collections.Generic;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
-using StasisCore;
-using StasisCore.Models;
 
-namespace StasisGame.Components
+namespace StasisGame
 {
-    public class BodyRenderComponent : IComponent, IRenderablePrimitive
+    public class PrimitiveRenderObject : IRenderablePrimitive
     {
         private Texture2D _texture;
         private VertexPositionTexture[] _vertices;
@@ -15,7 +13,6 @@ namespace StasisGame.Components
         private Matrix _worldMatrix;
         private float _layerDepth;
 
-        public ComponentType componentType { get { return ComponentType.BodyRender; } }
         public Texture2D texture { get { return _texture; } }
         public Matrix worldMatrix { get { return _worldMatrix; } set { _worldMatrix = value; } }
         public int primitiveCount { get { return _renderableTriangles.Count; } }
@@ -23,12 +20,12 @@ namespace StasisGame.Components
         public VertexPositionTexture[] vertices { get { return _vertices; } }
         public List<RenderableTriangle> renderableTriangles { get { return _renderableTriangles; } }
 
-        public BodyRenderComponent(Texture2D texture, List<RenderableTriangle> renderableTriangle, float layerDepth)
+        public PrimitiveRenderObject(Texture2D texture, List<RenderableTriangle> renderableTriangle, float layerDepth)
         {
+            _vertices = new VertexPositionTexture[renderableTriangle.Count * 3];
             _texture = texture;
             _renderableTriangles = renderableTriangle;
             _layerDepth = layerDepth;
-            _vertices = new VertexPositionTexture[_renderableTriangles.Count * 3];
         }
     }
 }

@@ -103,21 +103,22 @@ namespace StasisGame.Systems
                     if (fixture.Shape != null)
                     {
                         int entityId = (int)fixture.Body.UserData;
-                        BodyRenderComponent bodyRenderComponent = (BodyRenderComponent)_entityManager.getComponent(entityId, ComponentType.BodyRender);
+                        PrimitivesRenderComponent primitiveRenderComponent = (PrimitivesRenderComponent)_entityManager.getComponent(entityId, ComponentType.PrimitivesRender);
+                        PrimitiveRenderObject primitiveRenderObject = primitiveRenderComponent.primitiveRenderObjects[0];
                         RenderableTriangle triangleToRemove = null;
 
-                        for (int j = 0; j < bodyRenderComponent.renderableTriangles.Count; j++)
+                        for (int j = 0; j < primitiveRenderObject.renderableTriangles.Count; j++)
                         {
-                            if (bodyRenderComponent.renderableTriangles[j].fixture == fixture)
+                            if (primitiveRenderObject.renderableTriangles[j].fixture == fixture)
                             {
-                                triangleToRemove = bodyRenderComponent.renderableTriangles[j];
+                                triangleToRemove = primitiveRenderObject.renderableTriangles[j];
                                 break;
                             }
                         }
                         if (triangleToRemove != null)
-                            bodyRenderComponent.renderableTriangles.Remove(triangleToRemove);
+                            primitiveRenderObject.renderableTriangles.Remove(triangleToRemove);
 
-                        _entityManager.factory.createDebris(fixture, _debrisToCreate[i].force, _debrisToCreate[i].timeToLive, triangleToRemove, bodyRenderComponent.texture, bodyRenderComponent.layerDepth);
+                        _entityManager.factory.createDebris(fixture, _debrisToCreate[i].force, _debrisToCreate[i].timeToLive, triangleToRemove, primitiveRenderObject.texture, primitiveRenderObject.layerDepth);
                         fixture.Body.DestroyFixture(fixture);
                     }
                 }

@@ -5,7 +5,7 @@ namespace StasisGame.Components
     public enum ComponentType
     {
         Physics,
-        BodyRender,
+        PrimitivesRender,
         Rope,
         WorldItemRender,
         Item,

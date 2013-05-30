@@ -86,11 +86,44 @@ namespace StasisGame.Systems
             _contentManager.Unload();
         }
 
+        // Set the background to render
         public void setBackground(Background background)
         {
             _backgroundRenderer.background = background;
         }
 
+        // createSpriteRenderObject -- Creates a primitive render object that can be used in place of sprite batch
+        public PrimitiveRenderObject createSpritePrimitiveComponent(Texture2D texture, Vector2 position, Vector2 origin, float angle, float scale, float layerDepth)
+        {
+            // a-----------d
+            // |         / |
+            // |     /     |
+            // | /         |
+            // b-----------c
+            Vector3 a = Vector3.Zero;
+            Vector3 b = new Vector3(0, texture.Height, layerDepth);
+            Vector3 c = new Vector3(texture.Width, texture.Height, layerDepth);
+            Vector3 d = new Vector3(texture.Width, 0, layerDepth);
+            Matrix worldMatrix = Matrix.CreateTranslation(new Vector3(origin, 0)) * Matrix.CreateRotationZ(angle) * Matrix.CreateScale(scale);
+            List<RenderableTriangle> renderableTriangles = new List<RenderableTriangle>();
+
+            renderableTriangles.Add(
+                new RenderableTriangle(
+                    new VertexPositionTexture(a, Vector2.Zero),
+                    new VertexPositionTexture(b, new Vector2(0, 1)),
+                    new VertexPositionTexture(d, new Vector2(1, 0))));
+
+            renderableTriangles.Add(
+                new RenderableTriangle(
+                    new VertexPositionTexture(b, new Vector2(0, 1)),
+                    new VertexPositionTexture(c, new Vector2(1, 1)),
+                    new VertexPositionTexture(d, new Vector2(1, 0))));
+
+            return new PrimitiveRenderObject(texture, renderableTriangles, layerDepth);
+        }
+
+        // Add a renderable primitive to the draw list
+        // TODO: This creates a lot of garbage... should consider refactoring.
         public void addRenderablePrimitive(IRenderablePrimitive renderablePrimitive)
         {
             RenderablePrimitiveNode node = new RenderablePrimitiveNode(renderablePrimitive);
@@ -128,6 +161,7 @@ namespace StasisGame.Systems
             }
         }
 
+        // drawRenderablePrimitives -- Draws the primitives
         public void drawRenderablePrimitives()
         {
             RenderablePrimitiveNode current = _headNode;
@@ -146,14 +180,16 @@ namespace StasisGame.Systems
             _headNode = null;
         }
 
+        // update
         public void update()
         {
         }
 
+        // draw
         public void draw()
         {
             FluidSystem fluidSystem = (FluidSystem)_systemManager.getSystem(SystemType.Fluid);
-            List<int> bodyRenderEntities = _entityManager.getEntitiesPosessing(ComponentType.BodyRender);
+            List<int> primitiveRenderEntities = _entityManager.getEntitiesPosessing(ComponentType.PrimitivesRender);
             List<int> ropeEntities = _entityManager.getEntitiesPosessing(ComponentType.Rope);
             List<int> worldItemRenderEntities = _entityManager.getEntitiesPosessing(ComponentType.WorldItemRender);
             List<int> characterRenderEntities = _entityManager.getEntitiesPosessing(ComponentType.CharacterRender);
@@ -217,25 +253,33 @@ namespace StasisGame.Systems
             _primitivesEffect.Parameters["projection"].SetValue(_projectionMatrix);
 
             // Body rendering
-            for (int i = 0; i < bodyRenderEntities.Count; i++)
+            for (int i = 0; i < primitiveRenderEntities.Count; i++)
             {
-                int entityId = bodyRenderEntities[i];
-                BodyRenderComponent bodyRenderComponent = (BodyRenderComponent)_entityManager.getComponent(entityId, ComponentType.BodyRender);
-                PhysicsComponent physicsComponent = (PhysicsComponent)_entityManager.getComponent(entityId, ComponentType.Physics);
+                int entityId = primitiveRenderEntities[i];
+                PrimitivesRenderComponent primitiveRenderComponent = (PrimitivesRenderComponent)_entityManager.getComponent(entityId, ComponentType.PrimitivesRender);
 
-                // Update world matrix
-                bodyRenderComponent.worldMatrix = Matrix.CreateRotationZ(physicsComponent.body.Rotation) * Matrix.CreateTranslation(new Vector3(physicsComponent.body.Position, 0));
-
-                // Update body's collection of vertices
-                int index = 0;
-                for (int j = 0; j < bodyRenderComponent.renderableTriangles.Count; j++)
+                for (int j = 0; j < primitiveRenderComponent.primitiveRenderObjects.Count; j++)
                 {
-                    bodyRenderComponent.vertices[index++] = bodyRenderComponent.renderableTriangles[j].vertices[0];
-                    bodyRenderComponent.vertices[index++] = bodyRenderComponent.renderableTriangles[j].vertices[1];
-                    bodyRenderComponent.vertices[index++] = bodyRenderComponent.renderableTriangles[j].vertices[2];
-                }
+                    PrimitiveRenderObject primitiveRenderObject = primitiveRenderComponent.primitiveRenderObjects[j];
+                    PhysicsComponent physicsComponent = (PhysicsComponent)_entityManager.getComponent(entityId, ComponentType.Physics);
 
-                addRenderablePrimitive(bodyRenderComponent);
+                    if (physicsComponent != null)
+                    {
+                        // Update world matrix
+                        primitiveRenderObject.worldMatrix = Matrix.CreateRotationZ(physicsComponent.body.Rotation) * Matrix.CreateTranslation(new Vector3(physicsComponent.body.Position, 0));
+
+                        // Update vertices
+                        int index = 0;
+                        for (int k = 0; k < primitiveRenderObject.renderableTriangles.Count; k++)
+                        {
+                            primitiveRenderObject.vertices[index++] = primitiveRenderObject.renderableTriangles[k].vertices[0];
+                            primitiveRenderObject.vertices[index++] = primitiveRenderObject.renderableTriangles[k].vertices[1];
+                            primitiveRenderObject.vertices[index++] = primitiveRenderObject.renderableTriangles[k].vertices[2];
+                        }
+                    }
+
+                    addRenderablePrimitive(primitiveRenderObject);
+                }
             }
 
             // Decal rendering

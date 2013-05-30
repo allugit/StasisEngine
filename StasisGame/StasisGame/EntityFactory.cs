@@ -191,7 +191,7 @@ namespace StasisGame
             PolygonShape boxShape = new PolygonShape(density);
             BodyType bodyType = (BodyType)Loader.loadEnum(typeof(BodyType), data.Attribute("body_type"), (int)BodyType.Static);
             Transform xf;
-            BodyRenderComponent bodyRenderComponent;
+            PrimitivesRenderComponent bodyRenderComponent;
             Texture2D texture;
             List<Vector2> materialVertices = new List<Vector2>();
             List<RenderableTriangle> renderableTriangles;
@@ -211,10 +211,10 @@ namespace StasisGame
                 (ushort)CollisionCategory.StaticGeometry |
                 (ushort)CollisionCategory.Item;
 
-            // Create body render component
+            // Create render component
             texture = createBoxTexture(body, data);
             renderableTriangles = createBoxRenderableTriangles(body);
-            bodyRenderComponent = new BodyRenderComponent(texture, renderableTriangles, layerDepth);
+            bodyRenderComponent = new PrimitivesRenderComponent(new PrimitiveRenderObject(texture, renderableTriangles, layerDepth));
 
             // Add components
             if (bodyType != BodyType.Static)
@@ -288,7 +288,7 @@ namespace StasisGame
             BodyType bodyType = (BodyType)Loader.loadEnum(typeof(BodyType), data.Attribute("body_type"), (int)BodyType.Static);
             Texture2D texture;
             float layerDepth = Loader.loadFloat(data.Attribute("layer_depth"), 0.1f);
-            BodyRenderComponent bodyRenderComponent;
+            PrimitivesRenderComponent bodyRenderComponent;
             List<RenderableTriangle> renderableTriangles = new List<RenderableTriangle>();
 
             body = BodyFactory.CreateBody(world, Loader.loadVector2(data.Attribute("position"), Vector2.Zero), entityId);
@@ -307,7 +307,7 @@ namespace StasisGame
             // Create body render component
             texture = createCircleTexture(body, data);
             renderableTriangles = createCircleRenderableTriangles(body);
-            bodyRenderComponent = new BodyRenderComponent(texture, renderableTriangles, layerDepth);
+            bodyRenderComponent = new PrimitivesRenderComponent(new PrimitiveRenderObject(texture, renderableTriangles, layerDepth));
 
             // Add components
             if (bodyType != BodyType.Static)
@@ -840,7 +840,7 @@ namespace StasisGame
             Random rng = new Random(Loader.loadInt(data.Attribute("destructible_seed"), 12345));
             Texture2D texture;
             List<RenderableTriangle> renderableTriangles;
-            BodyRenderComponent bodyRenderComponent;
+            PrimitivesRenderComponent bodyRenderComponent;
 
             body.BodyType = bodyType;
             body.UserData = entityId;
@@ -953,10 +953,10 @@ namespace StasisGame
             }
             body.Position = center;
 
-            // Create body render component
+            // Create render component
             texture = createTerrainTexture(points, data);
             renderableTriangles = createTerrainRenderableTriangles(points, body);
-            bodyRenderComponent = new BodyRenderComponent(texture, renderableTriangles, layerDepth);
+            bodyRenderComponent = new PrimitivesRenderComponent(new PrimitiveRenderObject(texture, renderableTriangles, layerDepth));
 
             // Add components
             if (isWall)
@@ -1427,7 +1427,7 @@ namespace StasisGame
             _entityManager.addComponent(entityId, new ParticleInfluenceComponent(ParticleInfluenceType.Physical));
             _entityManager.addComponent(entityId, new PhysicsComponent(body));
             _entityManager.addComponent(entityId, new WorldPositionComponent(body.Position));
-            _entityManager.addComponent(entityId, new BodyRenderComponent(texture, renderableTriangles, layerDepth));
+            _entityManager.addComponent(entityId, new PrimitivesRenderComponent(new PrimitiveRenderObject(texture, renderableTriangles, layerDepth)));
             _entityManager.addComponent(entityId, new DebrisComponent(fixture, timeToLive, restitutionIncrement));
 
             return entityId;

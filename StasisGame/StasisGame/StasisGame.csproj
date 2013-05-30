@@ -111,7 +111,7 @@
     <Compile Include="Components\WorldItemRenderComponent.cs" />
     <Compile Include="Components\Particle.cs" />
     <Compile Include="Components\PhysicsComponent.cs" />
-    <Compile Include="Components\BodyRenderComponent.cs" />
+    <Compile Include="Components\PrimitiveRenderComponent.cs" />
     <Compile Include="Components\RopeNode.cs" />
     <Compile Include="Components\RopeComponent.cs" />
     <Compile Include="Components\WorldPositionComponent.cs" />
@@ -121,6 +121,7 @@
     <Compile Include="Data\GameSettings.cs" />
     <Compile Include="Goal.cs" />
     <Compile Include="IRenderablePrimitive.cs" />
+    <Compile Include="PrimitiveRenderObject.cs" />
     <Compile Include="RenderableTriangle.cs" />
     <Compile Include="Systems\ExplosionSystem.cs" />
     <Compile Include="Systems\LevelSystem.cs" />
