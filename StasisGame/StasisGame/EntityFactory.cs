@@ -1440,11 +1440,13 @@ namespace StasisGame
         // createBlacksmithHut
         public int createBlacksmithHut(Vector2 position, float angle)
         {
+            RenderSystem renderSystem = _systemManager.getSystem(SystemType.Render) as RenderSystem;
             int entityId = _entityManager.createEntity();
             Texture2D texture = ResourceManager.getTexture("blacksmith_hut");
             Vector2 origin = new Vector2(texture.Width, texture.Height) / 2f;
 
-            _entityManager.addComponent(entityId, new DecalRenderComponent(texture, position, origin, angle, 0.11f));
+            //_entityManager.addComponent(entityId, new DecalRenderComponent(texture, position, origin, angle, 0.11f));
+            _entityManager.addComponent(entityId, new PrimitivesRenderComponent(renderSystem.createSpritePrimitiveObject(texture, position, new Vector2(texture.Width / 2f, texture.Height), angle, 1f, 0.11f)));
 
             return entityId;
         }

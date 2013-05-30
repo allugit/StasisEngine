@@ -121,7 +121,8 @@ namespace StasisGame.Systems
                     new VertexPositionTexture(c, new Vector2(1, 1))));
 
             primitiveRenderObject = new PrimitiveRenderObject(texture, renderableTriangles, layerDepth);
-            primitiveRenderObject.origin = -origin / gameScale;
+            primitiveRenderObject.originMatrix = Matrix.CreateTranslation(new Vector3(-origin / gameScale, 0));
+            primitiveRenderObject.worldMatrix = primitiveRenderObject.originMatrix * Matrix.CreateRotationZ(angle) * Matrix.CreateTranslation(new Vector3(position, 0));
             return primitiveRenderObject;
         }
 
@@ -269,29 +270,30 @@ namespace StasisGame.Systems
                     if (physicsComponent != null)
                     {
                         // Update world matrix
-                        primitiveRenderObject.worldMatrix = Matrix.CreateTranslation(new Vector3(primitiveRenderObject.origin, 0)) * Matrix.CreateRotationZ(physicsComponent.body.Rotation) * Matrix.CreateTranslation(new Vector3(physicsComponent.body.Position, 0));
+                        primitiveRenderObject.worldMatrix = primitiveRenderObject.originMatrix * Matrix.CreateRotationZ(physicsComponent.body.Rotation) * Matrix.CreateTranslation(new Vector3(physicsComponent.body.Position, 0));
+                    }
 
-                        // Update vertices
-                        int index = 0;
-                        for (int k = 0; k < primitiveRenderObject.renderableTriangles.Count; k++)
-                        {
-                            primitiveRenderObject.vertices[index++] = primitiveRenderObject.renderableTriangles[k].vertices[0];
-                            primitiveRenderObject.vertices[index++] = primitiveRenderObject.renderableTriangles[k].vertices[1];
-                            primitiveRenderObject.vertices[index++] = primitiveRenderObject.renderableTriangles[k].vertices[2];
-                        }
+                    // Update vertices
+                    int index = 0;
+                    for (int k = 0; k < primitiveRenderObject.renderableTriangles.Count; k++)
+                    {
+                        primitiveRenderObject.vertices[index++] = primitiveRenderObject.renderableTriangles[k].vertices[0];
+                        primitiveRenderObject.vertices[index++] = primitiveRenderObject.renderableTriangles[k].vertices[1];
+                        primitiveRenderObject.vertices[index++] = primitiveRenderObject.renderableTriangles[k].vertices[2];
                     }
 
                     addRenderablePrimitive(primitiveRenderObject);
                 }
             }
 
+            /*
             // Decal rendering
             for (int i = 0; i < decalRenderEntities.Count; i++)
             {
                 DecalRenderComponent decalRenderComponent = _entityManager.getComponent(decalRenderEntities[i], ComponentType.DecalRender) as DecalRenderComponent;
 
                 _spriteBatch.Draw(decalRenderComponent.texture, (decalRenderComponent.position - screenCenter) * _scale + _halfScreen, decalRenderComponent.texture.Bounds, Color.White, decalRenderComponent.angle, decalRenderComponent.origin, 1f, SpriteEffects.None, decalRenderComponent.layerDepth);
-            }
+            }*/
 
             // Rope rendering
             for (int i = 0; i < ropeEntities.Count; i++)
