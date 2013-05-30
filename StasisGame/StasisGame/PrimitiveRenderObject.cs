@@ -11,10 +11,12 @@ namespace StasisGame
         private VertexPositionTexture[] _vertices;
         private List<RenderableTriangle> _renderableTriangles;
         private Matrix _worldMatrix;
+        private Vector2 _origin;
         private float _layerDepth;
 
         public Texture2D texture { get { return _texture; } }
         public Matrix worldMatrix { get { return _worldMatrix; } set { _worldMatrix = value; } }
+        public Vector2 origin { get { return _origin; } set { _origin = value; } }
         public int primitiveCount { get { return _renderableTriangles.Count; } }
         public float layerDepth { get { return _layerDepth; } }
         public VertexPositionTexture[] vertices { get { return _vertices; } }

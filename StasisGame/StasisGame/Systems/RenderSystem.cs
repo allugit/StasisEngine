@@ -93,33 +93,36 @@ namespace StasisGame.Systems
         }
 
         // createSpriteRenderObject -- Creates a primitive render object that can be used in place of sprite batch
-        public PrimitiveRenderObject createSpritePrimitiveComponent(Texture2D texture, Vector2 position, Vector2 origin, float angle, float scale, float layerDepth)
+        public PrimitiveRenderObject createSpritePrimitiveObject(Texture2D texture, Vector2 position, Vector2 origin, float angle, float scale, float layerDepth)
         {
             // a-----------d
             // |         / |
             // |     /     |
             // | /         |
             // b-----------c
+            float gameScale = Settings.BASE_SCALE;
             Vector3 a = Vector3.Zero;
-            Vector3 b = new Vector3(0, texture.Height, layerDepth);
-            Vector3 c = new Vector3(texture.Width, texture.Height, layerDepth);
-            Vector3 d = new Vector3(texture.Width, 0, layerDepth);
-            Matrix worldMatrix = Matrix.CreateTranslation(new Vector3(origin, 0)) * Matrix.CreateRotationZ(angle) * Matrix.CreateScale(scale);
+            Vector3 b = new Vector3(0, (float)texture.Height / gameScale, layerDepth);
+            Vector3 c = new Vector3((float)texture.Width / gameScale, (float)texture.Height / gameScale, layerDepth);
+            Vector3 d = new Vector3((float)texture.Width / gameScale, 0, layerDepth);
             List<RenderableTriangle> renderableTriangles = new List<RenderableTriangle>();
+            PrimitiveRenderObject primitiveRenderObject;
 
             renderableTriangles.Add(
                 new RenderableTriangle(
                     new VertexPositionTexture(a, Vector2.Zero),
-                    new VertexPositionTexture(b, new Vector2(0, 1)),
-                    new VertexPositionTexture(d, new Vector2(1, 0))));
+                    new VertexPositionTexture(d, new Vector2(1, 0)),
+                    new VertexPositionTexture(b, new Vector2(0, 1))));
 
             renderableTriangles.Add(
                 new RenderableTriangle(
                     new VertexPositionTexture(b, new Vector2(0, 1)),
-                    new VertexPositionTexture(c, new Vector2(1, 1)),
-                    new VertexPositionTexture(d, new Vector2(1, 0))));
+                    new VertexPositionTexture(d, new Vector2(1, 0)),
+                    new VertexPositionTexture(c, new Vector2(1, 1))));
 
-            return new PrimitiveRenderObject(texture, renderableTriangles, layerDepth);
+            primitiveRenderObject = new PrimitiveRenderObject(texture, renderableTriangles, layerDepth);
+            primitiveRenderObject.origin = -origin / gameScale;
+            return primitiveRenderObject;
         }
 
         // Add a renderable primitive to the draw list
@@ -266,7 +269,7 @@ namespace StasisGame.Systems
                     if (physicsComponent != null)
                     {
                         // Update world matrix
-                        primitiveRenderObject.worldMatrix = Matrix.CreateRotationZ(physicsComponent.body.Rotation) * Matrix.CreateTranslation(new Vector3(physicsComponent.body.Position, 0));
+                        primitiveRenderObject.worldMatrix = Matrix.CreateTranslation(new Vector3(primitiveRenderObject.origin, 0)) * Matrix.CreateRotationZ(physicsComponent.body.Rotation) * Matrix.CreateTranslation(new Vector3(physicsComponent.body.Position, 0));
 
                         // Update vertices
                         int index = 0;
@@ -334,6 +337,7 @@ namespace StasisGame.Systems
                 }
             }
 
+            /*
             // World item rendering
             for (int i = 0; i < worldItemRenderEntities.Count; i++)
             {
@@ -341,7 +345,7 @@ namespace StasisGame.Systems
                 WorldItemRenderComponent renderComponent = (WorldItemRenderComponent)_entityManager.getComponent(worldItemRenderEntities[i], ComponentType.WorldItemRender);
 
                 _spriteBatch.Draw(renderComponent.worldTexture, (physicsComponent.body.Position - screenCenter) * _scale + _halfScreen, renderComponent.worldTexture.Bounds, Color.White, physicsComponent.body.Rotation, new Vector2(renderComponent.worldTexture.Width, renderComponent.worldTexture.Height) / 2f, 1f, SpriteEffects.None, 0);
-            }
+            }*/
 
             // Character rendering
             for (int i = 0; i < characterRenderEntities.Count; i++)

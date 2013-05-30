@@ -339,6 +339,7 @@ namespace StasisGame
         public void createWorldItem(XElement data)
         {
             World world = (_systemManager.getSystem(SystemType.Physics) as PhysicsSystem).world;
+            RenderSystem renderSystem = _systemManager.getSystem(SystemType.Render) as RenderSystem;
             int actorId = int.Parse(data.Attribute("id").Value);
             int entityId = _entityManager.createEntity(actorId);
             string itemUID = data.Attribute("item_uid").Value;
@@ -348,6 +349,7 @@ namespace StasisGame
             XElement itemData = ResourceManager.getResource(itemUID);
             Texture2D worldTexture = ResourceManager.getTexture(Loader.loadString(itemData.Attribute("world_texture_uid"), "default_item"));
             Texture2D inventoryTexture = ResourceManager.getTexture(Loader.loadString(itemData.Attribute("inventory_texture_uid"), "default_item"));
+            float layerDepth = Loader.loadFloat(data.Attribute("layer_depth"), 0.1f);
 
             body = BodyFactory.CreateBody(world, Loader.loadVector2(data.Attribute("position"), Vector2.Zero), entityId);
             body.BodyType = (BodyType)Loader.loadEnum(typeof(BodyType), data.Attribute("body_type"), (int)BodyType.Dynamic);
@@ -374,7 +376,7 @@ namespace StasisGame
                 Loader.loadBool(itemData.Attribute("adds_reticle"), false),
                 Loader.loadFloat(itemData.Attribute("range"), 1f)));
             _entityManager.addComponent(entityId, new PhysicsComponent(body));
-            _entityManager.addComponent(entityId, new WorldItemRenderComponent(worldTexture));
+            _entityManager.addComponent(entityId, new PrimitivesRenderComponent(renderSystem.createSpritePrimitiveObject(worldTexture, body.Position, new Vector2(worldTexture.Width, worldTexture.Height) / 2f, body.Rotation, 1f, layerDepth)));
             _entityManager.addComponent(entityId, new IgnoreTreeCollisionComponent());
             _entityManager.addComponent(entityId, new WorldPositionComponent(body.Position));
         }
@@ -1322,11 +1324,13 @@ namespace StasisGame
         public int createDynamite(Vector2 position, Vector2 force)
         {
             World world = (_systemManager.getSystem(SystemType.Physics) as PhysicsSystem).world;
+            RenderSystem renderSystem = _systemManager.getSystem(SystemType.Render) as RenderSystem;
             Texture2D worldTexture = ResourceManager.getTexture("dynamite");
             int entityId = _entityManager.createEntity();
             Body body = BodyFactory.CreateBody(world, entityId);
             PolygonShape shape = new PolygonShape(1f);
             Fixture fixture;
+            float layerDepth = 0.1f;
 
             body.AngularVelocity = 60f;
             body.Position = position;
@@ -1344,7 +1348,7 @@ namespace StasisGame
             // Add components
             _entityManager.addComponent(entityId, new SkipFluidResolutionComponent());
             _entityManager.addComponent(entityId, new PhysicsComponent(body));
-            _entityManager.addComponent(entityId, new WorldItemRenderComponent(worldTexture));
+            _entityManager.addComponent(entityId, new PrimitivesRenderComponent(renderSystem.createSpritePrimitiveObject(worldTexture, position, new Vector2(worldTexture.Width, worldTexture.Height) / 2f, body.Rotation, 1f, layerDepth)));
             _entityManager.addComponent(entityId, new IgnoreTreeCollisionComponent());
             _entityManager.addComponent(entityId, new IgnoreRopeRaycastComponent());
             _entityManager.addComponent(entityId, new WorldPositionComponent(body.Position));

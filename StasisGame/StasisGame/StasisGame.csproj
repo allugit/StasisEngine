@@ -108,10 +108,9 @@
     <Compile Include="Components\ToolbarComponent.cs" />
     <Compile Include="Components\TreeComponent.cs" />
     <Compile Include="Components\WallComponent.cs" />
-    <Compile Include="Components\WorldItemRenderComponent.cs" />
     <Compile Include="Components\Particle.cs" />
     <Compile Include="Components\PhysicsComponent.cs" />
-    <Compile Include="Components\PrimitiveRenderComponent.cs" />
+    <Compile Include="Components\PrimitivesRenderComponent.cs" />
     <Compile Include="Components\RopeNode.cs" />
     <Compile Include="Components\RopeComponent.cs" />
     <Compile Include="Components\WorldPositionComponent.cs" />
