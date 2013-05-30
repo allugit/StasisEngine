@@ -384,6 +384,7 @@ namespace StasisGame
         {
             World world = (_systemManager.getSystem(SystemType.Physics) as PhysicsSystem).world;
             RopeTarget ropeTarget = new RopeTarget();
+            float lowestFraction = 999999f;
 
             world.RayCast((fixture, point, normal, fraction) =>
                 {
@@ -393,9 +394,13 @@ namespace StasisGame
                     else if (_entityManager.getComponent(fixtureEntityId, ComponentType.Tree) != null)
                         return -1;  // the only bodies that exist on a tree are already supporting a rope, and will be destroyed along with the rope that created it
 
-                    ropeTarget.fixture = fixture;
-                    ropeTarget.localPoint = fixture.Body.GetLocalPoint(ref point);
-                    ropeTarget.success = true;
+                    if (fraction < lowestFraction)
+                    {
+                        lowestFraction = fraction;
+                        ropeTarget.fixture = fixture;
+                        ropeTarget.localPoint = fixture.Body.GetLocalPoint(ref point);
+                        ropeTarget.success = true;
+                    }
                     return fraction;
                 },
                 a,
