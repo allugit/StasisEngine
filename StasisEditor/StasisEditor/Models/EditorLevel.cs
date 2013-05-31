@@ -121,6 +121,10 @@ namespace StasisEditor.Models
                     case "Goal":
                         addActor(new EditorGoalActor(this, actorData), true);
                         break;
+
+                    case "Decal":
+                        addActor(new EditorDecalActor(this, actorData));
+                        break;
                 }
             }
 
