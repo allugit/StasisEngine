@@ -21,6 +21,7 @@ namespace StasisEditor.Views
         private Texture2D _circuitIcon;
         private Texture2D _revoluteIcon;
         private Texture2D _prismaticIcon;
+        private Texture2D _decalIcon;
         private SpriteBatch _spriteBatch;
         private Texture2D _pixel;
         private Texture2D _circle;
@@ -56,6 +57,7 @@ namespace StasisEditor.Views
             _circuitIcon = _contentManager.Load<Texture2D>("actor_icons\\circuit");
             _revoluteIcon = _contentManager.Load<Texture2D>("actor_icons\\revolute");
             _prismaticIcon = _contentManager.Load<Texture2D>("actor_icons\\prismatic");
+            _decalIcon = _contentManager.Load<Texture2D>("actor_icons\\decal");
             _font = _contentManager.Load<SpriteFont>("arial");
 
             _coreContentManager = new ContentManager(Services, "Content");
@@ -234,6 +236,10 @@ namespace StasisEditor.Views
 
                 case ActorType.Prismatic:
                     texture = _prismaticIcon;
+                    break;
+
+                case ActorType.Decal:
+                    texture = _decalIcon;
                     break;
             }
 

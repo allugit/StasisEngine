@@ -30,7 +30,8 @@
         Revolute,
         Prismatic,
         CollisionFilter,
-        Goal
+        Goal,
+        Decal
     };
 
     public enum PlantType

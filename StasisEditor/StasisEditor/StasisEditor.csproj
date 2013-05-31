@@ -115,6 +115,7 @@
     <Compile Include="Models\EditorCircleActor.cs" />
     <Compile Include="Models\EditorCircuitActor.cs" />
     <Compile Include="Models\EditorCollisionFilterActor.cs" />
+    <Compile Include="Models\EditorDecalActor.cs" />
     <Compile Include="Models\EditorFluidActor.cs" />
     <Compile Include="Models\EditorGoalActor.cs" />
     <Compile Include="Models\EditorItemActor.cs" />
@@ -302,6 +303,7 @@
       <XnaPlatformSpecific>true</XnaPlatformSpecific>
     </Content>
     <Content Include="Resources\circuits.png" />
+    <None Include="Resources\decals.png" />
     <None Include="Resources\collision_filter.png" />
     <None Include="Resources\prismatic.png" />
     <None Include="Resources\revolute.png" />

@@ -43,14 +43,15 @@
             this.prismaticButton = new System.Windows.Forms.ToolStripButton();
             this.collisionFilterButton = new System.Windows.Forms.ToolStripButton();
             this.goalButton = new System.Windows.Forms.ToolStripButton();
+            this.decalsButton = new System.Windows.Forms.ToolStripButton();
             this.anchorToolStrip.SuspendLayout();
             this.SuspendLayout();
             // 
             // anchorToolStrip
             // 
-            this.anchorToolStrip.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom)
-                        | System.Windows.Forms.AnchorStyles.Left)
-                        | System.Windows.Forms.AnchorStyles.Right)));
+            this.anchorToolStrip.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
             this.anchorToolStrip.AutoSize = false;
             this.anchorToolStrip.Dock = System.Windows.Forms.DockStyle.None;
             this.anchorToolStrip.GripStyle = System.Windows.Forms.ToolStripGripStyle.Hidden;
@@ -68,7 +69,8 @@
             this.revoluteButton,
             this.prismaticButton,
             this.collisionFilterButton,
-            this.goalButton});
+            this.goalButton,
+            this.decalsButton});
             this.anchorToolStrip.LayoutStyle = System.Windows.Forms.ToolStripLayoutStyle.Flow;
             this.anchorToolStrip.Location = new System.Drawing.Point(0, 0);
             this.anchorToolStrip.Name = "anchorToolStrip";
@@ -208,6 +210,16 @@
             this.goalButton.Size = new System.Drawing.Size(26, 26);
             this.goalButton.Text = "Goal";
             // 
+            // decalsButton
+            // 
+            this.decalsButton.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
+            this.decalsButton.Image = ((System.Drawing.Image)(resources.GetObject("decalsButton.Image")));
+            this.decalsButton.ImageTransparentColor = System.Drawing.Color.Magenta;
+            this.decalsButton.Margin = new System.Windows.Forms.Padding(0);
+            this.decalsButton.Name = "decalsButton";
+            this.decalsButton.Size = new System.Drawing.Size(26, 26);
+            this.decalsButton.Text = "Decal";
+            // 
             // ActorToolbar
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -237,5 +249,6 @@
         private System.Windows.Forms.ToolStripButton revoluteButton;
         private System.Windows.Forms.ToolStripButton prismaticButton;
         private System.Windows.Forms.ToolStripButton collisionFilterButton;
+        private System.Windows.Forms.ToolStripButton decalsButton;
     }
 }
