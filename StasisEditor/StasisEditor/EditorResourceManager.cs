@@ -5,14 +5,12 @@ using System.Xml.Linq;
 using System.Xml;
 using StasisCore;
 using StasisCore.Models;
+using StasisEditor.Controllers;
 
 namespace StasisEditor
 {
     public class EditorResourceManager
     {
-        public const string RESOURCE_SOURCE_PATH = @"D:\StasisResources";
-        public const string RESOURCE_DESTINATION_PATH = @"D:\_C#\StasisEngine\StasisGame\StasisGame\bin\x86\Debug";
-
         // Checks to see if a resource exists
         public static bool exists(string uid)
         {
@@ -139,85 +137,92 @@ namespace StasisEditor
             string previousRootDirectory = ResourceManager.rootDirectory;
             ResourceManager.rootDirectory = "";
 
-            if (Directory.Exists(RESOURCE_DESTINATION_PATH + "\\data"))
-                Directory.Delete(RESOURCE_DESTINATION_PATH + "\\data", true);
-            Directory.CreateDirectory(RESOURCE_DESTINATION_PATH + "\\data");
-
-            // Textures
-            string textureDestination = RESOURCE_DESTINATION_PATH + "\\" + ResourceManager.texturePath;
-            string textureSource = RESOURCE_SOURCE_PATH + "\\" + ResourceManager.texturePath;
-            Directory.CreateDirectory(textureDestination);
-            string[] texturePaths = Directory.GetFiles(textureSource);
-            foreach (string texturePath in texturePaths)
+            for (int i = 0; i < 2; i++)
             {
-                File.Copy(texturePath, textureDestination + "\\" + Path.GetFileName(texturePath));
+                string resourceDestinationPath = i == 0 ? EditorController.debugGamePath : EditorController.releaseGamePath;
+
+                if (!Directory.Exists(resourceDestinationPath))
+                    continue;
+
+                if (Directory.Exists(resourceDestinationPath + "\\data"))
+                    Directory.Delete(resourceDestinationPath + "\\data", true);
+                Directory.CreateDirectory(resourceDestinationPath + "\\data");
+
+                // Textures
+                string textureDestination = resourceDestinationPath + "\\" + ResourceManager.texturePath;
+                string textureSource = EditorController.resourcesSourcePath + "\\" + ResourceManager.texturePath;
+                Directory.CreateDirectory(textureDestination);
+                string[] texturePaths = Directory.GetFiles(textureSource);
+                foreach (string texturePath in texturePaths)
+                {
+                    File.Copy(texturePath, textureDestination + "\\" + Path.GetFileName(texturePath));
+                }
+
+                // Materials
+                string materialDestination = resourceDestinationPath + "\\" + ResourceManager.materialPath;
+                string materialSource = EditorController.resourcesSourcePath + "\\" + ResourceManager.materialPath;
+                File.Copy(materialSource, materialDestination);
+
+                // Blueprints
+                string blueprintDestination = resourceDestinationPath + "\\" + ResourceManager.blueprintPath;
+                string blueprintSource = EditorController.resourcesSourcePath + "\\" + ResourceManager.blueprintPath;
+                File.Copy(blueprintSource, blueprintDestination);
+
+                // Circuits
+                string circuitDestination = resourceDestinationPath + "\\" + ResourceManager.circuitPath;
+                string circuitSource = EditorController.resourcesSourcePath + "\\" + ResourceManager.circuitPath;
+                File.Copy(circuitSource, circuitDestination);
+
+                // Backgrounds
+                string backgroundDestination = resourceDestinationPath + "\\" + ResourceManager.backgroundPath;
+                string backgroundSource = EditorController.resourcesSourcePath + "\\" + ResourceManager.backgroundPath;
+                File.Copy(backgroundSource, backgroundDestination);
+
+                // World maps
+                string worldMapDestination = resourceDestinationPath + "\\" + ResourceManager.worldMapPath;
+                string worldMapSource = EditorController.resourcesSourcePath + "\\" + ResourceManager.worldMapPath;
+                File.Copy(worldMapSource, worldMapDestination);
+
+                // Rope materials
+                string ropeMaterialDestination = resourceDestinationPath + "\\" + ResourceManager.ropeMaterialPath;
+                string ropeMaterialSource = EditorController.resourcesSourcePath + "\\" + ResourceManager.ropeMaterialPath;
+                File.Copy(ropeMaterialSource, ropeMaterialDestination);
+
+                // Characters
+                string characterDestination = resourceDestinationPath + "\\" + ResourceManager.characterPath;
+                string characterSource = EditorController.resourcesSourcePath + "\\" + ResourceManager.characterPath;
+                File.Copy(characterSource, characterDestination);
+
+                // Dialogue
+                string dialogueDestination = resourceDestinationPath + "\\" + ResourceManager.dialoguePath;
+                string dialogueSource = EditorController.resourcesSourcePath + "\\" + ResourceManager.dialoguePath;
+                File.Copy(dialogueSource, dialogueDestination);
+
+                // Items
+                string itemDestination = resourceDestinationPath + "\\" + ResourceManager.itemPath;
+                string itemSource = EditorController.resourcesSourcePath + "\\" + ResourceManager.itemPath;
+                File.Copy(itemSource, itemDestination);
+
+                // Levels (and level scripts)
+                string levelDestination = resourceDestinationPath + "\\" + ResourceManager.levelPath;
+                string levelSource = EditorController.resourcesSourcePath + "\\" + ResourceManager.levelPath;
+                Directory.CreateDirectory(levelDestination);
+                string[] levelPaths = Directory.GetFiles(levelSource, "*.xml");
+                foreach (string levelPath in levelPaths)
+                {
+                    string scriptFileName = levelPath.Replace(".xml", ".cs");
+
+                    File.Copy(levelPath, levelDestination + "\\" + Path.GetFileName(levelPath));
+                    if (File.Exists(scriptFileName))
+                        File.Copy(scriptFileName, levelDestination + "\\" + Path.GetFileName(scriptFileName));
+                }
+
+                // Global script
+                string globalScriptDestination = resourceDestinationPath + "\\data\\global_script.cs";
+                string globalScriptSource = EditorController.resourcesSourcePath + "\\data\\global_script.cs";
+                if (File.Exists(globalScriptSource))
+                    File.Copy(globalScriptSource, globalScriptDestination);
             }
-
-            // Materials
-            string materialDestination = RESOURCE_DESTINATION_PATH + "\\" + ResourceManager.materialPath;
-            string materialSource = RESOURCE_SOURCE_PATH + "\\" + ResourceManager.materialPath;
-            File.Copy(materialSource, materialDestination);
-
-            // Blueprints
-            string blueprintDestination = RESOURCE_DESTINATION_PATH + "\\" + ResourceManager.blueprintPath;
-            string blueprintSource = RESOURCE_SOURCE_PATH + "\\" + ResourceManager.blueprintPath;
-            File.Copy(blueprintSource, blueprintDestination);
-
-            // Circuits
-            string circuitDestination = RESOURCE_DESTINATION_PATH + "\\" + ResourceManager.circuitPath;
-            string circuitSource = RESOURCE_SOURCE_PATH + "\\" + ResourceManager.circuitPath;
-            File.Copy(circuitSource, circuitDestination);
-
-            // Backgrounds
-            string backgroundDestination = RESOURCE_DESTINATION_PATH + "\\" + ResourceManager.backgroundPath;
-            string backgroundSource = RESOURCE_SOURCE_PATH + "\\" + ResourceManager.backgroundPath;
-            File.Copy(backgroundSource, backgroundDestination);
-
-            // World maps
-            string worldMapDestination = RESOURCE_DESTINATION_PATH + "\\" + ResourceManager.worldMapPath;
-            string worldMapSource = RESOURCE_SOURCE_PATH + "\\" + ResourceManager.worldMapPath;
-            File.Copy(worldMapSource, worldMapDestination);
-
-            // Rope materials
-            string ropeMaterialDestination = RESOURCE_DESTINATION_PATH + "\\" + ResourceManager.ropeMaterialPath;
-            string ropeMaterialSource = RESOURCE_SOURCE_PATH + "\\" + ResourceManager.ropeMaterialPath;
-            File.Copy(ropeMaterialSource, ropeMaterialDestination);
-
-            // Characters
-            string characterDestination = RESOURCE_DESTINATION_PATH + "\\" + ResourceManager.characterPath;
-            string characterSource = RESOURCE_SOURCE_PATH + "\\" + ResourceManager.characterPath;
-            File.Copy(characterSource, characterDestination);
-
-            // Dialogue
-            string dialogueDestination = RESOURCE_DESTINATION_PATH + "\\" + ResourceManager.dialoguePath;
-            string dialogueSource = RESOURCE_SOURCE_PATH + "\\" + ResourceManager.dialoguePath;
-            File.Copy(dialogueSource, dialogueDestination);
-
-            // Items
-            string itemDestination = RESOURCE_DESTINATION_PATH + "\\" + ResourceManager.itemPath;
-            string itemSource = RESOURCE_SOURCE_PATH + "\\" + ResourceManager.itemPath;
-            File.Copy(itemSource, itemDestination);
-
-            // Levels (and level scripts)
-            string levelDestination = RESOURCE_DESTINATION_PATH + "\\" + ResourceManager.levelPath;
-            string levelSource = RESOURCE_SOURCE_PATH + "\\" + ResourceManager.levelPath;
-            Directory.CreateDirectory(levelDestination);
-            string[] levelPaths = Directory.GetFiles(levelSource, "*.xml");
-            foreach (string levelPath in levelPaths)
-            {
-                string scriptFileName = levelPath.Replace(".xml", ".cs");
-
-                File.Copy(levelPath, levelDestination + "\\" + Path.GetFileName(levelPath));
-                if (File.Exists(scriptFileName))
-                    File.Copy(scriptFileName, levelDestination + "\\" + Path.GetFileName(scriptFileName));
-            }
-
-            // Global script
-            string globalScriptDestination = RESOURCE_DESTINATION_PATH + "\\data\\global_script.cs";
-            string globalScriptSource = RESOURCE_SOURCE_PATH + "\\data\\global_script.cs";
-            if (File.Exists(globalScriptSource))
-                File.Copy(globalScriptSource, globalScriptDestination);
-
             ResourceManager.rootDirectory = previousRootDirectory;
         }
 

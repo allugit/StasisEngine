@@ -3,6 +3,8 @@ using System.Diagnostics;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
+using System.IO;
+using System.Xml.Linq;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using StasisEditor.Views;
@@ -14,7 +16,9 @@ namespace StasisEditor.Controllers
 {
     public class EditorController : Controller
     {
-        public const string GAME_PATH = @"D:\_C#\StasisEngine\StasisGame\StasisGame\bin\x86\Debug";
+        public static string debugGamePath;
+        public static string releaseGamePath;
+        public static string resourcesSourcePath;
         public const float ORIGINAL_SCALE = 35f;
         private MaterialController _materialController;
         private LevelController _levelController;
@@ -43,6 +47,9 @@ namespace StasisEditor.Controllers
             // Initialize view
             _editorView = view;
             view.setController(this);
+
+            // Initialize settings
+            initializeSettings();
         }
 
         public void initialize()
@@ -52,7 +59,7 @@ namespace StasisEditor.Controllers
 
             // Initialize core resource controller
             ResourceManager.initialize(_graphicsDeviceService.GraphicsDevice);
-            ResourceManager.rootDirectory = EditorResourceManager.RESOURCE_SOURCE_PATH + "\\";
+            ResourceManager.rootDirectory = resourcesSourcePath + "\\";
 
             // Create controllers
             _levelController = new LevelController(this, _editorView.levelView);
@@ -61,6 +68,32 @@ namespace StasisEditor.Controllers
             _circuitController = new CircuitController(this, _editorView.circuitsView);
             _backgroundController = new BackgroundController(this, _editorView.backgroundView);
             _worldMapController = new WorldMapController(this, _editorView.worldMapView);
+        }
+
+        public void initializeSettings()
+        {
+            if (!File.Exists("settings.xml"))
+            {
+                EditPathsForm editPathsForm = new EditPathsForm();
+                if (editPathsForm.ShowDialog() == System.Windows.Forms.DialogResult.OK)
+                {
+                    editPathsForm.saveSettings();
+                }
+            }
+
+            if (File.Exists("settings.xml"))
+            {
+                XDocument doc = XDocument.Load("settings.xml");
+                XElement settings = doc.Element("Settings");
+
+                debugGamePath = settings.Attribute("game_debug_path").Value;
+                releaseGamePath = settings.Attribute("game_release_path").Value;
+                resourcesSourcePath = settings.Attribute("resources_source_path").Value;
+            }
+            else
+            {
+                initializeSettings();
+            }
         }
 
         // setActorToolbarEnabled
@@ -134,12 +167,14 @@ namespace StasisEditor.Controllers
         // runGame
         public void runGame()
         {
+            /*
             string levelFileName = _levelController.level.name + ".xml";
             string levelPath = "data\\levels\\" + levelFileName;
             //System.Diagnostics.Process.Start(EditorController.GAME_PATH, String.Format("-l {0}", levelPath));
             ProcessStartInfo startInfo = new ProcessStartInfo(GAME_PATH + "\\StasisGame.exe", "-l " + levelPath);
             startInfo.WorkingDirectory = GAME_PATH;
             System.Diagnostics.Process.Start(startInfo);
+            */
         }
 
         // exit

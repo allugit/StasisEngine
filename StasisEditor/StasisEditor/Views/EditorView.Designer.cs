@@ -41,6 +41,8 @@
             this.menuLevelPreview = new System.Windows.Forms.MenuItem();
             this.menuItem2 = new System.Windows.Forms.MenuItem();
             this.menuLevelClose = new System.Windows.Forms.MenuItem();
+            this.optionsMenu = new System.Windows.Forms.MenuItem();
+            this.editPathsMenuItem = new System.Windows.Forms.MenuItem();
             this.mainSplit = new System.Windows.Forms.SplitContainer();
             this.editorTabControl = new System.Windows.Forms.TabControl();
             this.levelTab = new System.Windows.Forms.TabPage();
@@ -71,7 +73,8 @@
             // 
             this.mainMenu1.MenuItems.AddRange(new System.Windows.Forms.MenuItem[] {
             this.menuFile,
-            this.menuLevel});
+            this.menuLevel,
+            this.optionsMenu});
             // 
             // menuFile
             // 
@@ -149,11 +152,24 @@
             this.menuLevelClose.Text = "Close";
             this.menuLevelClose.Click += new System.EventHandler(this.menuLevelClose_Click);
             // 
+            // optionsMenu
+            // 
+            this.optionsMenu.Index = 2;
+            this.optionsMenu.MenuItems.AddRange(new System.Windows.Forms.MenuItem[] {
+            this.editPathsMenuItem});
+            this.optionsMenu.Text = "Options";
+            // 
+            // editPathsMenuItem
+            // 
+            this.editPathsMenuItem.Index = 0;
+            this.editPathsMenuItem.Text = "Edit Paths";
+            this.editPathsMenuItem.Click += new System.EventHandler(this.editPathsMenuItem_Click);
+            // 
             // mainSplit
             // 
-            this.mainSplit.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom)
-                        | System.Windows.Forms.AnchorStyles.Left)
-                        | System.Windows.Forms.AnchorStyles.Right)));
+            this.mainSplit.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
             this.mainSplit.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
             this.mainSplit.FixedPanel = System.Windows.Forms.FixedPanel.Panel1;
             this.mainSplit.Location = new System.Drawing.Point(0, 0);
@@ -203,12 +219,14 @@
             // levelView1
             // 
             this.levelView1.active = true;
+            this.levelView1.BackColor = System.Drawing.Color.Black;
             this.levelView1.Dock = System.Windows.Forms.DockStyle.Fill;
             this.levelView1.Location = new System.Drawing.Point(0, 0);
             this.levelView1.Margin = new System.Windows.Forms.Padding(0);
             this.levelView1.Name = "levelView1";
             this.levelView1.Size = new System.Drawing.Size(712, 534);
             this.levelView1.TabIndex = 0;
+            this.levelView1.VSync = false;
             // 
             // materialsTab
             // 
@@ -227,7 +245,7 @@
             this.materialView1.Location = new System.Drawing.Point(0, 0);
             this.materialView1.Margin = new System.Windows.Forms.Padding(0);
             this.materialView1.Name = "materialView1";
-            this.materialView1.Size = new System.Drawing.Size(712, 375);
+            this.materialView1.Size = new System.Drawing.Size(712, 534);
             this.materialView1.TabIndex = 0;
             // 
             // blueprintsTab
@@ -307,9 +325,11 @@
             // 
             // worldMapView1
             // 
+            this.worldMapView1.controller = null;
             this.worldMapView1.Dock = System.Windows.Forms.DockStyle.Fill;
             this.worldMapView1.Location = new System.Drawing.Point(3, 3);
             this.worldMapView1.Name = "worldMapView1";
+            this.worldMapView1.properties = null;
             this.worldMapView1.Size = new System.Drawing.Size(706, 528);
             this.worldMapView1.TabIndex = 0;
             // 
@@ -365,6 +385,8 @@
         private System.Windows.Forms.MenuItem menuItem3;
         private System.Windows.Forms.TabPage worldMapTab;
         private WorldMapView worldMapView1;
+        private System.Windows.Forms.MenuItem optionsMenu;
+        private System.Windows.Forms.MenuItem editPathsMenuItem;
 
     }
 }

@@ -49,22 +49,25 @@ namespace StasisEditor.Views
         // Update screen position based on the scrolling types
         void updateScreenPosition(object sender, EventArgs e)
         {
-            Vector2 delta = Vector2.Zero;
-            string verticalScroll = verticalScrollList.SelectedItem as string;
-            string horizontalScroll = horizontalScrollList.SelectedItem as string;
-            float speed = (float)scrollSpeed.Value;
+            if (_controller != null)
+            {
+                Vector2 delta = Vector2.Zero;
+                string verticalScroll = verticalScrollList.SelectedItem as string;
+                string horizontalScroll = horizontalScrollList.SelectedItem as string;
+                float speed = (float)scrollSpeed.Value;
 
-            if (verticalScroll == "Up")
-                delta.Y -= speed;
-            else if (verticalScroll == "Down")
-                delta.Y += speed;
+                if (verticalScroll == "Up")
+                    delta.Y -= speed;
+                else if (verticalScroll == "Down")
+                    delta.Y += speed;
 
-            if (horizontalScroll == "Left")
-                delta.X -= speed;
-            else if (horizontalScroll == "Right")
-                delta.X += speed;
+                if (horizontalScroll == "Left")
+                    delta.X -= speed;
+                else if (horizontalScroll == "Right")
+                    delta.X += speed;
 
-            _controller.screenCenter += delta;
+                _controller.screenCenter += delta;
+            }
         }
 
         // Add new background

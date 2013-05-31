@@ -187,6 +187,12 @@
     <Compile Include="Views\Controls\CircuitDisplay.cs">
       <SubType>UserControl</SubType>
     </Compile>
+    <Compile Include="Views\Controls\EditPathsForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Views\Controls\EditPathsForm.Designer.cs">
+      <DependentUpon>EditPathsForm.cs</DependentUpon>
+    </Compile>
     <Compile Include="Views\Controls\SelectItem.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -377,6 +383,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Views\Controls\ActorToolbar.resx">
       <DependentUpon>ActorToolbar.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Views\Controls\EditPathsForm.resx">
+      <DependentUpon>EditPathsForm.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Views\Controls\SelectItem.resx">
       <DependentUpon>SelectItem.cs</DependentUpon>

@@ -229,5 +229,15 @@ namespace StasisEditor.Views
             EditorResourceManager.pushResources();
             MessageBox.Show("Resources pushed.");
         }
+
+        private void editPathsMenuItem_Click(object sender, EventArgs e)
+        {
+            EditPathsForm editPathsForm = new EditPathsForm();
+
+            if (editPathsForm.ShowDialog() == System.Windows.Forms.DialogResult.OK)
+            {
+                editPathsForm.saveSettings();
+            }
+        }
     }
 }
