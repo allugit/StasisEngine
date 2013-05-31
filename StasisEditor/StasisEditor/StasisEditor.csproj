@@ -229,15 +229,6 @@
     <Compile Include="Views\Controls\LevelSettings.Designer.cs">
       <DependentUpon>LevelSettings.cs</DependentUpon>
     </Compile>
-    <Compile Include="Views\Controls\MaterialPreview.cs">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="Views\Controls\MaterialPreview.Designer.cs">
-      <DependentUpon>MaterialPreview.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Views\Controls\MaterialPreviewGraphics.cs">
-      <SubType>UserControl</SubType>
-    </Compile>
     <Compile Include="Views\Controls\PlantSelectBox.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -399,9 +390,6 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Views\Controls\LevelSettings.resx">
       <DependentUpon>LevelSettings.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Views\Controls\MaterialPreview.resx">
-      <DependentUpon>MaterialPreview.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Views\Controls\PlantSelectBox.resx">
       <DependentUpon>PlantSelectBox.cs</DependentUpon>

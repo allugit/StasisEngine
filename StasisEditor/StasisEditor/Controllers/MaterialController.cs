@@ -21,15 +21,11 @@ namespace StasisEditor.Controllers
     {
         private EditorController _editorController;
         private MaterialView _materialView;
-        private MaterialPreview _materialPreview;
         private BindingList<EditorMaterial> _materials;
-        private bool _autoUpdatePreview;
         private MaterialLayer _copiedMaterialLayer;
-        private List<Vector2> _testPolygonPoints;
 
         public BindingList<EditorMaterial> materials { get { return _materials; } }
         public MaterialLayer copiedMaterialLayer { get { return _copiedMaterialLayer; } set { _copiedMaterialLayer = value; } }
-        public List<Vector2> testPolygonPoints { get { return _testPolygonPoints; } }
         public EditorController editorController { get { return _editorController; } }
 
         public MaterialController(EditorController editorController, MaterialView materialView)
@@ -47,49 +43,11 @@ namespace StasisEditor.Controllers
 
             // Initialize material view
             materialView.setController(this);
-            materialView.setAutoUpdatePreview(true);
-
-            // Initialize preview polygon points
-            _testPolygonPoints = new List<Vector2>();
-            _testPolygonPoints.Add(new Vector2(-3.5f, 0));
-            _testPolygonPoints.Add(new Vector2(-1, 1));
-            _testPolygonPoints.Add(new Vector2(0, 3));
-            _testPolygonPoints.Add(new Vector2(2, 2.5f));
-            _testPolygonPoints.Add(new Vector2(3, 0));
-            _testPolygonPoints.Add(new Vector2(4, -1));
-            _testPolygonPoints.Add(new Vector2(3.5f, -3));
-            _testPolygonPoints.Add(new Vector2(1, -3.5f));
-            _testPolygonPoints.Add(new Vector2(0.5f, -3));
-            _testPolygonPoints.Add(new Vector2(-1, -4));
-            _testPolygonPoints.Add(new Vector2(-2.5f, -2.5f));
-            _testPolygonPoints.Add(new Vector2(-3.5f, -3));
-            _testPolygonPoints.Add(new Vector2(-4.5f, -1.5f));
-            for (int i = 0; i < _testPolygonPoints.Count; i++)
-                _testPolygonPoints[i] *= 2;
-        }
-
-        // setAutoUpdatePreview
-        public void setAutoUpdatePreview(bool status)
-        {
-            _autoUpdatePreview = status;
-        }
-
-        // getAutoUpdatePreview
-        public bool getAutoUpdatePreview()
-        {
-            return _autoUpdatePreview;
         }
 
         // setChangesMade
         public void setChangesMade(bool status)
         {
-            // Update if set to auto update
-            if (_autoUpdatePreview)
-            {
-                Material material = _materialView.selectedMaterial;
-                if (material != null)
-                    preview(material, null);
-            }
         }
 
         // Check if material exists
@@ -195,28 +153,6 @@ namespace StasisEditor.Controllers
 
             // Insert at the position after its last position
             parent.layers.Insert(index + 1, layer);
-        }
-
-        // preview
-        public void preview(Material material, List<Vector2> polygonPoints)
-        {
-            // Render material
-            if (_materialPreview == null)
-            {
-                _materialPreview = new MaterialPreview(this);
-                _materialPreview.Show();
-                _materialPreview.updateMaterial(material, polygonPoints);
-            }
-            else
-            {
-                _materialPreview.updateMaterial(material, polygonPoints);
-            }
-        }
-
-        // previewClosed
-        public void previewClosed()
-        {
-            _materialPreview = null;
         }
 
         // Clone material

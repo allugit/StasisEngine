@@ -30,8 +30,6 @@ namespace StasisEditor.Views
         private void InitializeComponent()
         {
             this.saveButton = new System.Windows.Forms.Button();
-            this.previewButton = new System.Windows.Forms.Button();
-            this.autoUpdatePreview = new System.Windows.Forms.CheckBox();
             this.addButton = new System.Windows.Forms.Button();
             this.removeButton = new System.Windows.Forms.Button();
             this.cloneButton = new System.Windows.Forms.Button();
@@ -72,30 +70,6 @@ namespace StasisEditor.Views
             this.saveButton.Text = "Save";
             this.saveButton.UseVisualStyleBackColor = true;
             this.saveButton.Click += new System.EventHandler(this.saveButton_Click);
-            // 
-            // previewButton
-            // 
-            this.previewButton.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
-            this.previewButton.Enabled = false;
-            this.previewButton.Location = new System.Drawing.Point(518, 493);
-            this.previewButton.Name = "previewButton";
-            this.previewButton.Size = new System.Drawing.Size(75, 23);
-            this.previewButton.TabIndex = 8;
-            this.previewButton.Text = "Preview";
-            this.previewButton.UseVisualStyleBackColor = true;
-            this.previewButton.Click += new System.EventHandler(this.previewButton_Click);
-            // 
-            // autoUpdatePreview
-            // 
-            this.autoUpdatePreview.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
-            this.autoUpdatePreview.AutoSize = true;
-            this.autoUpdatePreview.Location = new System.Drawing.Point(385, 497);
-            this.autoUpdatePreview.Name = "autoUpdatePreview";
-            this.autoUpdatePreview.Size = new System.Drawing.Size(127, 17);
-            this.autoUpdatePreview.TabIndex = 10;
-            this.autoUpdatePreview.Text = "Auto Update Preview";
-            this.autoUpdatePreview.UseVisualStyleBackColor = true;
-            this.autoUpdatePreview.CheckedChanged += new System.EventHandler(this.autoUpdatePreview_CheckedChanged);
             // 
             // addButton
             // 
@@ -175,9 +149,9 @@ namespace StasisEditor.Views
             // 
             // splitContainer2
             // 
-            this.splitContainer2.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom)
-                        | System.Windows.Forms.AnchorStyles.Left)
-                        | System.Windows.Forms.AnchorStyles.Right)));
+            this.splitContainer2.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
             this.splitContainer2.Location = new System.Drawing.Point(3, 3);
             this.splitContainer2.Name = "splitContainer2";
             // 
@@ -277,9 +251,9 @@ namespace StasisEditor.Views
             // 
             // layersTreeView
             // 
-            this.layersTreeView.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom)
-                        | System.Windows.Forms.AnchorStyles.Left)
-                        | System.Windows.Forms.AnchorStyles.Right)));
+            this.layersTreeView.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
             this.layersTreeView.CheckBoxes = true;
             this.layersTreeView.HideSelection = false;
             this.layersTreeView.Location = new System.Drawing.Point(3, 3);
@@ -324,8 +298,6 @@ namespace StasisEditor.Views
             this.Controls.Add(this.cloneButton);
             this.Controls.Add(this.removeButton);
             this.Controls.Add(this.addButton);
-            this.Controls.Add(this.autoUpdatePreview);
-            this.Controls.Add(this.previewButton);
             this.Controls.Add(this.saveButton);
             this.Name = "MaterialView";
             this.Size = new System.Drawing.Size(680, 527);
@@ -342,7 +314,6 @@ namespace StasisEditor.Views
             ((System.ComponentModel.ISupportInitialize)(this.splitContainer3)).EndInit();
             this.splitContainer3.ResumeLayout(false);
             this.ResumeLayout(false);
-            this.PerformLayout();
 
         }
 
@@ -350,8 +321,6 @@ namespace StasisEditor.Views
 
         private System.Windows.Forms.Button saveButton;
         private RefreshingListBox materialsListBox;
-        private System.Windows.Forms.Button previewButton;
-        private System.Windows.Forms.CheckBox autoUpdatePreview;
         private System.Windows.Forms.Button addButton;
         private System.Windows.Forms.Button removeButton;
         private System.Windows.Forms.Button cloneButton;

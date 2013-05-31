@@ -40,12 +40,6 @@ namespace StasisEditor.Views
             materialsListBox.DataSource = controller.materials;
         }
 
-        // setAutoUpdatePreview -- this will trigger an event
-        public void setAutoUpdatePreview(bool status)
-        {
-            autoUpdatePreview.Checked = status;
-        }
-
         // Refresh material list
         public void refreshMaterialList()
         {
@@ -55,9 +49,6 @@ namespace StasisEditor.Views
         // Selected materials changed
         private void materialsListBox_SelectedIndexChanged(object sender, EventArgs e)
         {
-            // Enabled/disable preview button
-            previewButton.Enabled = selectedMaterial != null;
-
             // Enable/disable remove button
             removeButton.Enabled = selectedMaterial != null;
 
@@ -79,18 +70,6 @@ namespace StasisEditor.Views
         {
             // Refresh the materials list
             (materialsListBox as RefreshingListBox).RefreshItems();
-        }
-
-        // Preview material
-        private void previewButton_Click(object sender, EventArgs e)
-        {
-            _controller.preview(selectedMaterial, null);
-        }
-
-        // Auto update changed
-        private void autoUpdatePreview_CheckedChanged(object sender, EventArgs e)
-        {
-            _controller.setAutoUpdatePreview(autoUpdatePreview.Checked);
         }
 
         // Material save button
