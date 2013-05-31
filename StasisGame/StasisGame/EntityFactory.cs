@@ -1437,16 +1437,34 @@ namespace StasisGame
             return entityId;
         }
 
+        // createDecal -- Used to determine which decal to create
+        public int createDecal(XElement data)
+        {
+            string decalUID = data.Attribute("decal_uid").Value;
+            Vector2 position = Loader.loadVector2(data.Attribute("position"), Vector2.Zero);
+            float angle = Loader.loadFloat(data.Attribute("angle"), 0f);
+            int entityId = Loader.loadInt(data.Attribute("id"), -1);
+            float layerDepth = Loader.loadFloat(data.Attribute("layer_depth"), 0.11f);
+
+            switch (decalUID)
+            {
+                case "blacksmith_hut":
+                    entityId = createBlacksmithHut(position, angle, layerDepth);
+                    break;
+            }
+
+            return entityId;
+        }
+
         // createBlacksmithHut
-        public int createBlacksmithHut(Vector2 position, float angle)
+        public int createBlacksmithHut(Vector2 position, float angle, float layerDepth)
         {
             RenderSystem renderSystem = _systemManager.getSystem(SystemType.Render) as RenderSystem;
             int entityId = _entityManager.createEntity();
             Texture2D texture = ResourceManager.getTexture("blacksmith_hut");
             Vector2 origin = new Vector2(texture.Width, texture.Height) / 2f;
 
-            //_entityManager.addComponent(entityId, new DecalRenderComponent(texture, position, origin, angle, 0.11f));
-            _entityManager.addComponent(entityId, new PrimitivesRenderComponent(renderSystem.createSpritePrimitiveObject(texture, position, new Vector2(texture.Width / 2f, texture.Height), angle, 1f, 0.11f)));
+            _entityManager.addComponent(entityId, new PrimitivesRenderComponent(renderSystem.createSpritePrimitiveObject(texture, position, new Vector2(texture.Width / 2f, texture.Height), angle, 1f, layerDepth)));
 
             return entityId;
         }

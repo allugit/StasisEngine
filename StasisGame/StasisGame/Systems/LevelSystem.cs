@@ -167,6 +167,10 @@ namespace StasisGame.Systems
                     case "Goal":
                         _entityManager.factory.createRegionGoal(actorData);
                         break;
+
+                    case "Decal":
+                        _entityManager.factory.createDecal(actorData);
+                        break;
                 }
             }
 
