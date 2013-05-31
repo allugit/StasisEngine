@@ -213,7 +213,7 @@ namespace StasisCore
         }
 
         // Get texture -- Try to get the texture from the cache before loading it from file
-        public static Texture2D getTexture(string textureUID)
+        public static Texture2D getTexture(string textureUID, bool cacheTextures = true)
         {
             Texture2D texture = null;
             if (!_cachedTextures.TryGetValue(textureUID, out texture))
@@ -275,10 +275,17 @@ namespace StasisCore
                 result.Dispose();
                 
                 // Add it to cache
-                //_cachedTextures[textureUID] = texture;
+                if (cacheTextures)
+                    _cachedTextures[textureUID] = texture;
                 
             }
             return texture;
+        }
+
+        // clearCache
+        public static void clearCache()
+        {
+            _cachedTextures.Clear();
         }
 
         // Load materials

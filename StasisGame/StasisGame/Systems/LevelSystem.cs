@@ -226,6 +226,7 @@ namespace StasisGame.Systems
 
             _isActive = false;
 
+            ResourceManager.clearCache();
             entitiesToPreserve.Add(_playerSystem.playerId);
             _playerSystem.removeLevelComponents();
             _entityManager.killAllEntities(entitiesToPreserve);
