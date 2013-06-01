@@ -1451,6 +1451,9 @@ namespace StasisGame
                 case "blacksmith_hut":
                     entityId = createBlacksmithHut(position, angle, layerDepth);
                     break;
+                case "tree_hut":
+                    entityId = createTreeHut(position, angle, layerDepth);
+                    break;
             }
 
             return entityId;
@@ -1462,6 +1465,19 @@ namespace StasisGame
             RenderSystem renderSystem = _systemManager.getSystem(SystemType.Render) as RenderSystem;
             int entityId = _entityManager.createEntity();
             Texture2D texture = ResourceManager.getTexture("blacksmith_hut");
+            Vector2 origin = new Vector2(texture.Width, texture.Height) / 2f;
+
+            _entityManager.addComponent(entityId, new PrimitivesRenderComponent(renderSystem.createSpritePrimitiveObject(texture, position, new Vector2(texture.Width / 2f, texture.Height), angle, 1f, layerDepth)));
+
+            return entityId;
+        }
+
+        // createTreeHut
+        public int createTreeHut(Vector2 position, float angle, float layerDepth)
+        {
+            RenderSystem renderSystem = _systemManager.getSystem(SystemType.Render) as RenderSystem;
+            int entityId = _entityManager.createEntity();
+            Texture2D texture = ResourceManager.getTexture("tree_hut");
             Vector2 origin = new Vector2(texture.Width, texture.Height) / 2f;
 
             _entityManager.addComponent(entityId, new PrimitivesRenderComponent(renderSystem.createSpritePrimitiveObject(texture, position, new Vector2(texture.Width / 2f, texture.Height), angle, 1f, layerDepth)));
