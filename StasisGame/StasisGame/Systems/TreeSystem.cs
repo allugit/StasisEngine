@@ -33,6 +33,7 @@ namespace StasisGame.Systems
         public bool paused { get { return _paused; } set { _paused = value; } }
         public bool singleStep { get { return _singleStep; } set { _singleStep = value; } }
         public LevelSystem levelSystem { get { return (LevelSystem)_systemManager.getSystem(SystemType.Level); } }
+        public EntityManager entityManager { get { return _entityManager; } }
 
         public TreeSystem(SystemManager systemManager, EntityManager entityManager)
         {
@@ -119,14 +120,7 @@ namespace StasisGame.Systems
                 int entityId = (int)fixture.Body.UserData;
                 if (_entityManager.getComponent(entityId, ComponentType.IgnoreTreeCollision) != null)
                     return true;
-                /*
-                UserData data = fixtureProxy.fixture.GetBody().GetUserData() as UserData;
-                if (data.actorType == ActorType.LIMB || data.actorType == ActorType.WALL_GROUP ||
-                    data.actorType == ActorType.GROUND || data.actorType == ActorType.GRENADE ||
-                    data.actorType == ActorType.PLAYER ||
-                    data.actorType == ActorType.GRAVITY_WELL || data.actorType == ActorType.EDGE_GROUP)
-                    return true;
-                */
+
                 AABB aabb;
                 Transform transform;
                 fixture.Body.GetTransform(out transform);

@@ -1476,11 +1476,82 @@ namespace StasisGame
         public int createTreeHut(Vector2 position, float angle, float layerDepth)
         {
             RenderSystem renderSystem = _systemManager.getSystem(SystemType.Render) as RenderSystem;
+            World world = (_systemManager.getSystem(SystemType.Physics) as PhysicsSystem).world;
             int entityId = _entityManager.createEntity();
             Texture2D texture = ResourceManager.getTexture("tree_hut");
+            Vector2 textureOffset = new Vector2(texture.Width / 2f, texture.Height);
             Vector2 origin = new Vector2(texture.Width, texture.Height) / 2f;
+            List<Vector2> points = new List<Vector2>();
+            List<PolygonPoint> polygonPoints = new List<PolygonPoint>();
+            Polygon polygon;
+            Body body = BodyFactory.CreateBody(world);
 
-            _entityManager.addComponent(entityId, new PrimitivesRenderComponent(renderSystem.createSpritePrimitiveObject(texture, position, new Vector2(texture.Width / 2f, texture.Height), angle, 1f, layerDepth)));
+            // Set up body
+            body.BodyType = BodyType.Static;
+            body.Position = position + new Vector2(0, -texture.Height / 2f) / Settings.BASE_SCALE;
+            body.UserData = entityId;
+
+            // Points from decal shape editor
+            points.Add(new Vector2(-8.857142f, 8.914286f));
+            points.Add(new Vector2(-2.685714f, 8.828571f));
+            points.Add(new Vector2(-2.714286f, 6.571429f));
+            points.Add(new Vector2(-4.885715f, 6.457143f));
+            points.Add(new Vector2(-5.6f, 2.371428f));
+            points.Add(new Vector2(-3.342857f, 2.342857f));
+            points.Add(new Vector2(-2.828572f, -0.2285714f));
+            points.Add(new Vector2(-3.971429f, -0.2f));
+            points.Add(new Vector2(-4.028572f, -1f));
+            points.Add(new Vector2(-0.3428572f, -1.114286f));
+            points.Add(new Vector2(-0.5714286f, -2.428571f));
+            points.Add(new Vector2(-0.6285715f, -3.085714f));
+            points.Add(new Vector2(0.6571429f, -7.371428f));
+            points.Add(new Vector2(1.542857f, -9.8f));
+            points.Add(new Vector2(2.657143f, -6.771429f));
+            points.Add(new Vector2(3.628572f, -3.142857f));
+            points.Add(new Vector2(3.742857f, -2.4f));
+            points.Add(new Vector2(3.571429f, -1.057143f));
+            points.Add(new Vector2(8.542857f, -0.8857143f));
+            points.Add(new Vector2(8.514286f, -0.2f));
+            points.Add(new Vector2(7.628572f, -0.1428571f));
+            points.Add(new Vector2(10f, 5.628572f));
+            points.Add(new Vector2(9.542857f, 5.685714f));
+            points.Add(new Vector2(9.542857f, 6.514286f));
+            points.Add(new Vector2(8.6f, 6.6f));
+            points.Add(new Vector2(8.514286f, 8.571428f));
+            points.Add(new Vector2(3.685714f, 8.571428f));
+            points.Add(new Vector2(2.628572f, 9.285714f));
+            points.Add(new Vector2(-1.228571f, 9.285714f));
+            points.Add(new Vector2(-2.142857f, 9.828571f));
+            points.Add(new Vector2(-7.857143f, 9.828571f));
+            points.Add(new Vector2(-8.885715f, 9.171429f));
+
+            // Decompose polygon
+            for (int i = 0; i < points.Count; i++)
+                polygonPoints.Add(new PolygonPoint(points[i].X, points[i].Y));
+            polygon = new Polygon(polygonPoints);
+            P2T.Triangulate(polygon);
+
+            // Create fixtures
+            foreach (DelaunayTriangle triangle in polygon.Triangles)
+            {
+                Vector2 p1 = new Vector2(triangle.Points[0].Xf, triangle.Points[0].Yf);
+                Vector2 p2 = new Vector2(triangle.Points[1].Xf, triangle.Points[1].Yf);
+                Vector2 p3 = new Vector2(triangle.Points[2].Xf, triangle.Points[2].Yf);
+                PolygonShape polygonShape = new PolygonShape(new Vertices(new Vector2[3] { p1, p2, p3 }), 1f);
+                Fixture fixture = body.CreateFixture(polygonShape);
+
+                fixture.Restitution = 0;
+                fixture.Friction = 0;
+                fixture.CollisionCategories = (ushort)CollisionCategory.StaticGeometry;
+                fixture.CollidesWith =
+                    (ushort)CollisionCategory.DynamicGeometry |
+                    (ushort)CollisionCategory.Item |
+                    (ushort)CollisionCategory.Player |
+                    (ushort)CollisionCategory.Rope;
+            }
+
+            _entityManager.addComponent(entityId, new PrimitivesRenderComponent(renderSystem.createSpritePrimitiveObject(texture, position, textureOffset, angle, 1f, layerDepth)));
+            _entityManager.addComponent(entityId, new IgnoreTreeCollisionComponent());
 
             return entityId;
         }

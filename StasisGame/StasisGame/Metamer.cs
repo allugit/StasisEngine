@@ -10,6 +10,7 @@ using FarseerPhysics.Dynamics;
 using FarseerPhysics.Dynamics.Contacts;
 using FarseerPhysics.Dynamics.Joints;
 using FarseerPhysics.Factories;
+using StasisGame.Components;
 using StasisGame.Systems;
 using StasisCore;
 
@@ -323,6 +324,7 @@ namespace StasisGame
                                     aabb.LowerBound = random;
                                     aabb.UpperBound = random;
                                     bool placeMarker = true;
+                                    /*
                                     tree.treeSystem.physicsSystem.world.QueryAABB((Fixture fixture) =>
                                     {
                                         //UserData data = fixtureProxy.fixture.GetBody().GetUserData() as UserData;
@@ -338,10 +340,12 @@ namespace StasisGame
                                             return true;
                                     },
                                         ref aabb);
-
+                                    */
                                     // Add marker
                                     if (placeMarker)
+                                    {
                                         tree.treeSystem.markerGrid[gridX + i][gridY + j].markers.Add(new MetamerMarker(cell, random));
+                                    }
                                 }
                             }
                         }
@@ -574,9 +578,9 @@ namespace StasisGame
             Vector2 hitPoint = Vector2.Zero;
             tree.treeSystem.physicsSystem.world.RayCast((Fixture fixture, Vector2 point, Vector2 normal, float fraction) =>
             {
-                //UserData data = fixture.GetBody().GetUserData() as UserData;
-                //if (data.actorType == ActorType.WALL_GROUP || data.actorType == ActorType.GROUND)
-                //    return fraction;
+                int entityId = (int)fixture.Body.UserData;
+                if (tree.treeSystem.entityManager.getComponent(entityId, ComponentType.IgnoreTreeCollision) != null)
+                    return fraction;
 
                 recalculateDistance = true;
                 hitPoint = point;
