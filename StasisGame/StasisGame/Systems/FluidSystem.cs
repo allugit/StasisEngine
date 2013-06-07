@@ -209,6 +209,9 @@ namespace StasisGame.Systems
                 }
             }
 
+            // Apply gravitational force
+            particle.velocity += liquidGravity;
+
             return accumulatedDelta;
         }
 
@@ -615,7 +618,7 @@ namespace StasisGame.Systems
                     if (!particle.skipMovementUpdate)
                     {
                         // Update velocity
-                        particle.velocity += delta[index] + liquidGravity;
+                        particle.velocity += delta[index];
 
                         // Update position
                         particle.position += delta[index];
