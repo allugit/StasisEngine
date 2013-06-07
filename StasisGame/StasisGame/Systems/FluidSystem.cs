@@ -43,7 +43,7 @@ namespace StasisGame.Systems
         private List<int> collisionGridY;
         private Vector2[] simPositions;
         private Vector2[] simVelocities;
-        private Vector2[] simDelta;
+        private Vector2[] delta;
         private object applyForcesLock = new object();
         public bool debug = false;
         public bool drawCells = false;
@@ -70,7 +70,7 @@ namespace StasisGame.Systems
             activeParticles = new int[MAX_PARTICLES];
             simPositions = new Vector2[MAX_PARTICLES];
             simVelocities = new Vector2[MAX_PARTICLES];
-            simDelta = new Vector2[MAX_PARTICLES];
+            delta = new Vector2[MAX_PARTICLES];
             for (int i = 0; i < MAX_PARTICLES; i++)
             {
                 liquid[i] = new Particle(this, i, LIQUID_ORIGIN);
@@ -142,14 +142,14 @@ namespace StasisGame.Systems
             // Simulation-specifc values
             simPositions[index] = liquid[index].position * MULTIPLIER;
             simVelocities[index] = liquid[index].velocity * MULTIPLIER;
-            simDelta[index] = Vector2.Zero;
+            delta[index] = Vector2.Zero;
 
             // Store old position
             liquid[index].oldPosition = liquid[index].position;
         }
 
-        // calculateForces
-        private void calculateForces(int index)
+        // calculatePressure
+        private void calculatePressure(int index)
         {
             // Current particle
             Particle particle = liquid[index];
@@ -180,8 +180,8 @@ namespace StasisGame.Systems
             }
         }
 
-        // applyForces
-        private Vector2[] applyForces(int index, Vector2[] accumulatedDelta)
+        // calculateForce
+        private Vector2[] calculateForce(int index, Vector2[] accumulatedDelta)
         {
             // Current particle
             Particle particle = liquid[index];
@@ -279,16 +279,16 @@ namespace StasisGame.Systems
         }
 
         // resolveCollisions
-        private void resolveCollision(int activeParticleIndex)
+        private void resolveCollision(int index)
         {
-            Particle particle = liquid[activeParticles[activeParticleIndex]];
+            Particle particle = liquid[activeParticles[index]];
             for (int i = 0; i < particle.numFixturesToTest; i++)
             {
                 Fixture fixture = particle.fixturesToTest[i];
                 if (fixture.Shape == null)     // fixtures can be destroyed before they're tested
                     continue;
 
-                Vector2 newPosition = particle.position + particle.velocity + particle.delta;
+                Vector2 newPosition = particle.position + particle.velocity + delta[activeParticles[index]];
                 if (fixture.TestPoint(ref newPosition, 0.01f))
                 {
                     Body body = fixture.Body;
@@ -306,12 +306,13 @@ namespace StasisGame.Systems
                         {
                             // Polygons
                             PolygonShape shape = fixture.Shape as PolygonShape;
-                            body.GetTransform(out particle.collisionXF);
+                            Transform collisionXF;
+                            body.GetTransform(out collisionXF);
 
                             for (int v = 0; v < shape.Vertices.Count; v++)
                             {
-                                particle.collisionVertices[v] = MathUtils.Multiply(ref particle.collisionXF, shape.Vertices[v]);
-                                particle.collisionNormals[v] = MathUtils.Multiply(ref particle.collisionXF.R, shape.Normals[v]);
+                                particle.collisionVertices[v] = MathUtils.Multiply(ref collisionXF, shape.Vertices[v]);
+                                particle.collisionNormals[v] = MathUtils.Multiply(ref collisionXF.R, shape.Normals[v]);
                             }
 
                             // Find closest edge
@@ -345,7 +346,6 @@ namespace StasisGame.Systems
                         }
 
                         // Update velocity
-                        particle.oldVelocity = particle.velocity;
                         particle.velocity = (particle.velocity - 1.2f * Vector2.Dot(particle.velocity, normal) * normal) * 0.85f;
 
                         // Handle fast moving bodies
@@ -583,22 +583,21 @@ namespace StasisGame.Systems
                 prepareCollisions();
 
                 // Calculate liquid forces
-                Parallel.For(0, numActiveParticles, i => { calculateForces(activeParticles[i]); });
+                Parallel.For(0, numActiveParticles, i => { calculatePressure(activeParticles[i]); });
 
                 // Apply liquid forces
                 Parallel.For(
                     0,
                     numActiveParticles,
                     () => new Vector2[MAX_PARTICLES],
-                    (i, state, accumulatedDelta) => applyForces(activeParticles[i], accumulatedDelta),
+                    (i, state, accumulatedDelta) => calculateForce(activeParticles[i], accumulatedDelta),
                     (accumulatedDelta) =>
                     {
                         lock (applyForcesLock)
                         {
                             for (int i = numActiveParticles - 1; i >= 0; i--)
                             {
-                                simDelta[activeParticles[i]] += accumulatedDelta[activeParticles[i]];
-                                liquid[activeParticles[i]].delta = simDelta[activeParticles[i]] / MULTIPLIER;
+                                delta[activeParticles[i]] += accumulatedDelta[activeParticles[i]] / MULTIPLIER;
                             }
                         }
                     }
@@ -610,16 +609,16 @@ namespace StasisGame.Systems
                 // Move particles
                 Parallel.For(0, numActiveParticles, i =>
                 {
-                    // Move particle
-                    Particle particle = liquid[activeParticles[i]];
+                    int index = activeParticles[i];
+                    Particle particle = liquid[index];
 
                     if (!particle.skipMovementUpdate)
                     {
                         // Update velocity
-                        particle.velocity += particle.delta + liquidGravity;
+                        particle.velocity += delta[index] + liquidGravity;
 
                         // Update position
-                        particle.position += particle.delta;
+                        particle.position += delta[index];
                         particle.position += particle.velocity;
                     }
                 });

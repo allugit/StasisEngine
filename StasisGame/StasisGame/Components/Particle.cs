@@ -16,8 +16,6 @@ namespace StasisGame.Components
         public Vector2 position;
         public Vector2 velocity;
         public Vector2 oldPosition;
-        public Vector2 oldVelocity;
-        public Vector2 delta;
         public AABB aabb;
         public int index;
         public int ci;
@@ -29,7 +27,6 @@ namespace StasisGame.Components
         public bool alive;
         public Dictionary<int, List<int>> gridX;
         public List<int> gridY;
-        public Transform collisionXF;
         public bool skipMovementUpdate;
         public Vector2[] collisionVertices;
         public Vector2[] collisionNormals;
