@@ -284,14 +284,14 @@ namespace StasisGame.Systems
         // resolveCollisions
         private void resolveCollision(int index)
         {
-            Particle particle = liquid[activeParticles[index]];
+            Particle particle = liquid[index];
             for (int i = 0; i < particle.numFixturesToTest; i++)
             {
                 Fixture fixture = particle.fixturesToTest[i];
                 if (fixture.Shape == null)     // fixtures can be destroyed before they're tested
                     continue;
 
-                Vector2 newPosition = particle.position + particle.velocity + delta[activeParticles[index]];
+                Vector2 newPosition = particle.position + particle.velocity + delta[index];
                 if (fixture.TestPoint(ref newPosition, 0.01f))
                 {
                     Body body = fixture.Body;
@@ -607,7 +607,7 @@ namespace StasisGame.Systems
                 );
 
                 // Resolve collisions
-                Parallel.For(0, numActiveParticles, i => resolveCollision(i));
+                Parallel.For(0, numActiveParticles, i => resolveCollision(activeParticles[i]));
 
                 // Move particles
                 Parallel.For(0, numActiveParticles, i =>
