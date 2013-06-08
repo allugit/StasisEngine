@@ -1454,6 +1454,9 @@ namespace StasisGame
                 case "tree_hut":
                     entityId = createTreeHut(position, angle, layerDepth);
                     break;
+                case "carpenter_hut":
+                    entityId = createCarpenterHut(position, angle, layerDepth);
+                    break;
             }
 
             return entityId;
@@ -1549,6 +1552,21 @@ namespace StasisGame
                     (ushort)CollisionCategory.Player |
                     (ushort)CollisionCategory.Rope;
             }
+
+            _entityManager.addComponent(entityId, new PrimitivesRenderComponent(renderSystem.createSpritePrimitiveObject(texture, position, textureOffset, angle, 1f, layerDepth)));
+            _entityManager.addComponent(entityId, new IgnoreTreeCollisionComponent());
+
+            return entityId;
+        }
+
+        // createCarpenterHut
+        public int createCarpenterHut(Vector2 position, float angle, float layerDepth)
+        {
+            RenderSystem renderSystem = _systemManager.getSystem(SystemType.Render) as RenderSystem;
+            int entityId = _entityManager.createEntity();
+            Texture2D texture = ResourceManager.getTexture("carpenter_hut");
+            Vector2 textureOffset = new Vector2(texture.Width / 2f, texture.Height);
+            Vector2 origin = new Vector2(texture.Width, texture.Height) / 2f;
 
             _entityManager.addComponent(entityId, new PrimitivesRenderComponent(renderSystem.createSpritePrimitiveObject(texture, position, textureOffset, angle, 1f, layerDepth)));
             _entityManager.addComponent(entityId, new IgnoreTreeCollisionComponent());
