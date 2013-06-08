@@ -270,9 +270,54 @@ namespace StasisEditor.Models
             return current;
         }
 
+        // validateActorLayerDepths
+        public void validateActorLayerDepths()
+        {
+            Dictionary<float, List<EditorActor>> invalidActors = new Dictionary<float, List<EditorActor>>();
+
+            // Search through our sorted dictionary of actors and look for actors whose layer depth doesn't match their key
+            foreach (KeyValuePair<float, List<EditorActor>> actorLayerPair in _sortedActors)
+            {
+                foreach (EditorActor actor in actorLayerPair.Value)
+                {
+                    if (actor.layerDepth != actorLayerPair.Key)
+                    {
+                        if (!invalidActors.ContainsKey(actorLayerPair.Key))
+                            invalidActors.Add(actorLayerPair.Key, new List<EditorActor>());
+
+                        invalidActors[actorLayerPair.Key].Add(actor);
+                    }
+                }
+            }
+
+            // Remove invalid actors from the sorted dictionary
+            foreach (KeyValuePair<float, List<EditorActor>> invalidActorLayerPair in invalidActors)
+            {
+                foreach (EditorActor actor in invalidActorLayerPair.Value)
+                {
+                    _sortedActors[invalidActorLayerPair.Key].Remove(actor);
+
+                    if (_sortedActors[invalidActorLayerPair.Key].Count == 0)
+                        _sortedActors.Remove(invalidActorLayerPair.Key);
+                }
+            }
+
+            // Re-add actors to the sorted dictionary
+            foreach (List<EditorActor> actors in invalidActors.Values)
+            {
+                foreach (EditorActor actor in actors)
+                {
+                    addActor(actor, true);
+                }
+            }
+        }
+
         // Update
         public void update()
         {
+            // Check actor layer depths and reorder them if necessary
+            validateActorLayerDepths();
+
             foreach (EditorActor actor in _actorsToAdd)
             {
                 if (!_sortedActors.ContainsKey(actor.layerDepth))
