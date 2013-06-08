@@ -111,8 +111,8 @@ namespace StasisGame.Systems
                     {
                         int entityIdA = (int)current.anchorJoint.BodyA.UserData;
                         int entityIdB = (int)current.anchorJoint.BodyB.UserData;
-                        MetamerComponent metamerComponentA = _entityManager.getComponent(entityIdA, ComponentType.Tree) as MetamerComponent;
-                        MetamerComponent metamerComponentB = _entityManager.getComponent(entityIdB, ComponentType.Tree) as MetamerComponent;
+                        MetamerComponent metamerComponentA = _entityManager.getComponent(entityIdA, ComponentType.Metamer) as MetamerComponent;
+                        MetamerComponent metamerComponentB = _entityManager.getComponent(entityIdB, ComponentType.Metamer) as MetamerComponent;
 
                         if (metamerComponentA != null)
                         {
