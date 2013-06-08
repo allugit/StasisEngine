@@ -199,8 +199,9 @@ namespace StasisGame
         public void createLimbBody()
         {
             Fixture fixture;
-
-            body = BodyFactory.CreateBody(tree.treeSystem.physicsSystem.world, position, tree.entityId);
+            int entityId = tree.treeSystem.entityManager.createEntity();
+            
+            body = BodyFactory.CreateBody(tree.treeSystem.physicsSystem.world, position, entityId);
             body.BodyType = BodyType.Dynamic;
             body.FixedRotation = true;
             body.LinearDamping = 0.5f;
@@ -211,39 +212,8 @@ namespace StasisGame
             mouseJoint.MaxForce = 4000f;
 
             tree.treeSystem.physicsSystem.world.AddJoint(mouseJoint);
-
-            //shape._radius = 0.5f;
-            //fixtureDef.density = 0.5f;
-            //fixtureDef.isSensor = true;
-            //bodyDef.position = position;
-            //bodyDef.linearDamping = 0.5f;
-            //(bodyDef.userData as UserData).allowGrenadeAttachment = false;
-            //body = tree.treeSystem.physicsSystem.world.CreateBody(bodyDef);
-            //body.CreateFixture(fixtureDef);
-
-            // Create mouse joint
-            //MouseJointDef jointDef = new MouseJointDef();
-            //jointDef.bodyA = tree.treeSystem.physicsSystem.groundBody;
-            //jointDef.bodyB = body;
-            //jointDef.collideConnected = false;
-            //jointDef.maxForce = 4000f;
-            //jointDef.target = body.GetPosition();
-            //mouseJoint = tree.treeSystem.physicsSystem.world.CreateJoint(jointDef) as MouseJoint;
+            tree.treeSystem.entityManager.addComponent(entityId, new MetamerComponent(this));
         }
-
-        /*
-        // handleRopeRemoval
-        public override void handleRopeRemoval(RopeActor ropeActor)
-        {
-            base.handleRopeRemoval(ropeActor);
-
-            // Handle limb body
-            if (!isTrunk && attachedRopes.Count == 0 && body != null)
-            {
-                destroyBody();
-                mouseJoint = null;  // the box2d world will destroy the joint
-            }
-        }*/
 
         // destroyMarkersInOccupiedZone
         private void destroyMarkersInOccupiedZone()

@@ -14,7 +14,6 @@ namespace StasisGame.Components
         Tree,
         IgnoreTreeCollision,
         GroundBody,
-        EditorId,
         Revolute,
         Prismatic,
         GateOutput,
@@ -32,7 +31,8 @@ namespace StasisGame.Components
         SkipFluidResolution,
         DestructibleGeometry,
         Debris,
-        ParticleInfluence
+        ParticleInfluence,
+        Metamer
     };
 
     public interface IComponent

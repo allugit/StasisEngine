@@ -111,16 +111,18 @@ namespace StasisGame.Systems
                     {
                         int entityIdA = (int)current.anchorJoint.BodyA.UserData;
                         int entityIdB = (int)current.anchorJoint.BodyB.UserData;
-                        TreeComponent treeComponentA = _entityManager.getComponent(entityIdA, ComponentType.Tree) as TreeComponent;
-                        TreeComponent treeComponentB = _entityManager.getComponent(entityIdB, ComponentType.Tree) as TreeComponent;
+                        MetamerComponent metamerComponentA = _entityManager.getComponent(entityIdA, ComponentType.Tree) as MetamerComponent;
+                        MetamerComponent metamerComponentB = _entityManager.getComponent(entityIdB, ComponentType.Tree) as MetamerComponent;
 
-                        if (treeComponentA != null)
+                        if (metamerComponentA != null)
                         {
                             current.anchorJoint.BodyA.World.RemoveBody(current.anchorJoint.BodyA);
+                            metamerComponentA.metamer.body = null;
                         }
-                        else if (treeComponentB != null)
+                        if (metamerComponentB != null)
                         {
                             current.anchorJoint.BodyB.World.RemoveBody(current.anchorJoint.BodyB);
+                            metamerComponentB.metamer.body = null;
                         }
                     }
 
