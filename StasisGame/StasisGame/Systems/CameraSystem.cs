@@ -19,8 +19,6 @@ namespace StasisGame.Systems
         private EntityManager _entityManager;
         private Vector2 _screenCenter;
         private bool _enableManualMovement = true;
-        private KeyboardState _keyState;
-        private KeyboardState _oldKeyState;
         private bool _paused;
         private bool _singleStep;
 
@@ -39,31 +37,29 @@ namespace StasisGame.Systems
 
         public void update()
         {
+            float speed = 0.1f;
+            List<BodyFocusPointComponent> bodyFocusPoints = _entityManager.getComponents<BodyFocusPointComponent>(ComponentType.BodyFocusPoint);
+            Vector2 singleTarget = _screenCenter;
+            Vector2 multipleTarget = Vector2.Zero;
+            bool useSingleTarget = false;
+            int multipleTargetCount = 0;
+
+            // Handle manual camera movement
             if (_enableManualMovement)
             {
-                float speed = 0.1f;
-
-                _keyState = Keyboard.GetState();
-
-                if (_keyState.IsKeyDown(Keys.NumPad8))
+                if (InputSystem.newKeyState.IsKeyDown(Keys.NumPad8))
                     _screenCenter += new Vector2(0, -speed);
-                if (_keyState.IsKeyDown(Keys.NumPad2))
+                if (InputSystem.newKeyState.IsKeyDown(Keys.NumPad2))
                     _screenCenter += new Vector2(0, speed);
-                if (_keyState.IsKeyDown(Keys.NumPad4))
+                if (InputSystem.newKeyState.IsKeyDown(Keys.NumPad4))
                     _screenCenter += new Vector2(-speed, 0);
-                if (_keyState.IsKeyDown(Keys.NumPad6))
+                if (InputSystem.newKeyState.IsKeyDown(Keys.NumPad6))
                     _screenCenter += new Vector2(speed, 0);
-
-                _oldKeyState = _keyState;
             }
-            else
-            {
-                List<BodyFocusPointComponent> bodyFocusPoints = _entityManager.getComponents<BodyFocusPointComponent>(ComponentType.BodyFocusPoint);
-                Vector2 singleTarget = _screenCenter;
-                Vector2 multipleTarget = Vector2.Zero;
-                bool useSingleTarget = false;
-                int multipleTargetCount = 0;
 
+            // Handle camera movement
+            if (!_paused || _singleStep)
+            {
                 for (int i = 0; i < bodyFocusPoints.Count; i++)
                 {
                     if (bodyFocusPoints[i].focusType == FocusType.Multiple)
@@ -83,6 +79,8 @@ namespace StasisGame.Systems
                     _screenCenter += (singleTarget - _screenCenter) / 2f;
                 else
                     _screenCenter += (multipleTarget / multipleTargetCount - _screenCenter) / 2f;
+
+                _singleStep = false;
             }
         }
     }

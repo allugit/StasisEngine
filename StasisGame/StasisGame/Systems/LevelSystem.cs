@@ -133,10 +133,8 @@ namespace StasisGame.Systems
 
                     case "PlayerSpawn":
                         if (_systemManager.getSystem(SystemType.CharacterMovement) == null)
-                        {
                             _systemManager.add(new CharacterMovementSystem(_systemManager, _entityManager), -1);
-                            (_systemManager.getSystem(SystemType.Camera) as CameraSystem).enableManualMovement = false;
-                        }
+
                         (_systemManager.getSystem(SystemType.Player) as PlayerSystem).spawnPosition = Loader.loadVector2(actorData.Attribute("position"), Vector2.Zero);
                         break;
 
