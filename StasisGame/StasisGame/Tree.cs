@@ -35,8 +35,6 @@ namespace StasisGame
         private float _optimalGrowthWeight;
         private float _tropismWeight;
         private Vector2 _tropism;
-        private float _minLeafRatioCutoff;
-        private float _leafRatioOffset;
         private float _maxBaseHalfWidth;
         private float _minBaseHalfWidth = 0.04f;
         private Vector2 _gravity = new Vector2(0, 0.005f);
@@ -90,8 +88,6 @@ namespace StasisGame
         public Texture2D barkTexture { get { return _barkTexture; } }
         public List<List<Texture2D>> leafTextures { get { return _leafTextures; } }
         public Metamer rootMetamer { get { return _rootMetamer; } }
-        public float minLeafRatioCutoff { get { return _minLeafRatioCutoff; } }
-        public float leafRatioOffset { get { return _leafRatioOffset; } }
         public bool active { get { return _active; } }
         public float layerDepth { get { return _layerDepth; } }
         public Matrix worldMatrix { get { return Matrix.Identity; } }
@@ -121,8 +117,6 @@ namespace StasisGame
             _optimalGrowthWeight = Loader.loadFloat(data.Attribute("optimal_growth_weight"), 1f);
             _tropismWeight = Loader.loadFloat(data.Attribute("tropism_weight"), 1f);
             _tropism = Loader.loadVector2(data.Attribute("tropism"), Vector2.Zero);
-            _minLeafRatioCutoff = Loader.loadFloat(data.Attribute("min_leaf_ratio_cutoff"), 0f);
-            _leafRatioOffset = Loader.loadFloat(data.Attribute("leaf_ratio_offset"), 0f);
             _position = Loader.loadVector2(data.Attribute("position"), Vector2.Zero);
             _layerDepth = Loader.loadFloat(data.Attribute("layer_depth"), 0.1f);
             _entityId = int.Parse(data.Attribute("id").Value);

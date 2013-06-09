@@ -8,6 +8,8 @@ using StasisCore;
 
 namespace StasisEditor.Models
 {
+    using UITypeEditor = System.Drawing.Design.UITypeEditor;
+
     public class EditorTreeActor : EditorActor, IActorComponent
     {
         private float _angle;
@@ -26,8 +28,6 @@ namespace StasisEditor.Models
         private float _optimalGrowthWeight;
         private float _tropismWeight;
         private Vector2 _tropism;
-        private float _minLeafRatioCutoff;
-        private float _leafRatioOffset;
         private Vector2 _position;
         private string _leafMaterialUID;
         private string _barkMaterialUID;
@@ -47,9 +47,8 @@ namespace StasisEditor.Models
         public float penumbraB { get { return _penumbraB; } set { _penumbraB = value; } }
         public float optimalGrowthWeight { get { return _optimalGrowthWeight; } set { _optimalGrowthWeight = value; } }
         public float tropismWeight { get { return _tropismWeight; } set { _tropismWeight = value; } }
+        [EditorAttribute(typeof(Vector2Editor), typeof(UITypeEditor))]
         public Vector2 tropism { get { return _tropism; } set { _tropism = value; } }
-        public float minLeafRatioCutoff { get { return _minLeafRatioCutoff; } set { _minLeafRatioCutoff = Math.Min(Math.Max(value, 0f), 1f); } }
-        public float leafRatioOffset { get { return _leafRatioOffset; } set { _leafRatioOffset = Math.Min(Math.Max(value, 0f), 1f); } }
         public string leafMaterialUID { get { return _leafMaterialUID; } set { _leafMaterialUID = value; } }
         public string barkMaterialUID { get { return _barkMaterialUID; } set { _barkMaterialUID = value; } }
         [Browsable(false)]
@@ -76,8 +75,6 @@ namespace StasisEditor.Models
                 d.SetAttributeValue("optimal_growth_weight", _optimalGrowthWeight);
                 d.SetAttributeValue("tropism_weight", _tropismWeight);
                 d.SetAttributeValue("tropism", _tropism);
-                d.SetAttributeValue("min_leaf_ratio_cutoff", _minLeafRatioCutoff);
-                d.SetAttributeValue("leaf_ratio_offset", _leafRatioOffset);
                 d.SetAttributeValue("position", _position);
                 d.SetAttributeValue("leaf_material_uid", _leafMaterialUID);
                 d.SetAttributeValue("bark_material_uid", _barkMaterialUID);
@@ -104,8 +101,6 @@ namespace StasisEditor.Models
             _optimalGrowthWeight = 1f;
             _tropismWeight = 1f;
             _tropism = Vector2.Zero;
-            _minLeafRatioCutoff = 0f;
-            _leafRatioOffset = 0f;
             _position = level.controller.worldMouse;
             _layerDepth = 0.1f;
             _leafMaterialUID = "default";
@@ -131,8 +126,6 @@ namespace StasisEditor.Models
             _optimalGrowthWeight = Loader.loadFloat(data.Attribute("optimal_growth_weight"), 1f);
             _tropismWeight = Loader.loadFloat(data.Attribute("tropism_weight"), 1f);
             _tropism = Loader.loadVector2(data.Attribute("tropism"), Vector2.Zero);
-            _minLeafRatioCutoff = Loader.loadFloat(data.Attribute("min_leaf_ratio_cutoff"), 0f);
-            _leafRatioOffset = Loader.loadFloat(data.Attribute("leaf_ratio_offset"), 0f);
             _position = Loader.loadVector2(data.Attribute("position"), Vector2.Zero);
             _leafMaterialUID = Loader.loadString(data.Attribute("leaf_material_uid"), "default");
             _barkMaterialUID = Loader.loadString(data.Attribute("bark_material_uid"), "default");
