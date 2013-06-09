@@ -599,43 +599,35 @@ namespace StasisGame
         // calculateResources
         private float widthWeight(float x) { return 1 - (float)Math.Pow(x, 1d / 4d); }
         private float textureWeight(float x) { return 1 - (float)Math.Sqrt(1 - x); }
-        public int calculateResources(int count)
+        public int calculateResources(int previousCount)
         {
             if (isBroken)
-                return count;
+                return previousCount;
 
-            int maxCount = count;
+            int maxCount = previousCount;
             if (mainMetamer != null)
-                maxCount = Math.Max(mainMetamer.calculateResources(count + 1), maxCount);
+                maxCount = mainMetamer.calculateResources(previousCount + 1);
             if (lateralMetamer != null)
-                maxCount = Math.Max(lateralMetamer.calculateResources(count + 1), maxCount);
+                maxCount = lateralMetamer.calculateResources(previousCount + 1);
 
             // Store largest count
             tree.longestPath = Math.Max(tree.longestPath, maxCount);
 
-            float apexRatio = (float)count / (float)maxCount;
-            //width = Math.Max(widthWeight(tree.maxBaseWidth * apexRatio), tree.minBaseWidth);
+            float apexRatio = (float)previousCount / (float)maxCount;
             width = Math.Max(tree.maxBaseHalfWidth * 2 * widthWeight(apexRatio), tree.minBaseHalfWidth);
             textureWidth = (width / tree.maxBaseHalfWidth);
 
-            // Calculate new mass (mass = volume * density)
-            //float area = width * tree.internodeLength;
-            //float density = 1f;
-            //mass = area * density;
-            mass = (float)maxCount / (float)count;
+            // Calculate new mass
+            mass = (float)maxCount / (float)previousCount;
             inverseMass = isRoot ? 0 : 1 / mass;
             inverseMassSq = inverseMass * inverseMass;
 
             // Assign texture
-            int variations = tree.leafTextures[0].Count;
-            float ratio = (float)count / (float)tree.longestPath;
-            ratio = Math.Max(ratio - tree.leafRatioOffset, 0) / Math.Max(1f - tree.leafRatioOffset, 0.001f);
-            Debug.Assert(ratio >= 0 && ratio <= 1);
-            if (ratio >= tree.minLeafRatioCutoff)
+            if (previousCount > 3)
             {
-                int variationIndex = tree.random.Next(0, variations);
-                int textureIndex = (int)(ratio * (tree.leafTextures.Count - 1));
-                leafTexture = tree.leafTextures[textureIndex][variationIndex];
+                int variation = tree.random.Next(TreeSystem.NUM_LEAF_VARIATIONS);
+                int group = tree.random.Next((int)((float)TreeSystem.NUM_LEAF_GROUPS * textureWeight(apexRatio)));
+                leafTexture = tree.leafTextures[variation][group];
             }
             else
             {
@@ -643,8 +635,9 @@ namespace StasisGame
             }
 
             // Find texture shadow value
-            float shadowValue = Math.Max(Math.Min(budQuality * ratio * 2, 1f), 0.5f);
+            float shadowValue = Math.Max(Math.Min(budQuality, 1f), 0.5f);
             textureColor = new Color(new Vector3(shadowValue, shadowValue, shadowValue));
+            //textureColor = Color.White;
 
             // Modify z index based on shadow value
             _z += shadowValue / 10f;

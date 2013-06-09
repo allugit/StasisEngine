@@ -994,11 +994,10 @@ namespace StasisGame
             List<Vector2> maxLeafPoints = new List<Vector2>();
             Texture2D barkTexture;
             List<List<Texture2D>> leafTextures = new List<List<Texture2D>>();
-            int leafVariations = 3;
             Tree tree;
             float maxBaseHalfWidth = Loader.loadFloat(data.Attribute("max_base_half_width"), 0.5f);
             float internodeHalfLength = Loader.loadFloat(data.Attribute("internode_half_length"), 0.5f);
-            float leafRange = 1f / 14f;  // 1f / numSizes
+            float leafRange = 1f / (float)TreeSystem.NUM_LEAF_GROUPS;  // 1f / numSizes
 
             // Bark texture
             barkPoints.Add(new Vector2(-maxBaseHalfWidth, -internodeHalfLength));
@@ -1012,7 +1011,7 @@ namespace StasisGame
             maxLeafPoints.Add(new Vector2(-256f, 256f) / renderSystem.scale);
             maxLeafPoints.Add(new Vector2(256f, 256f) / renderSystem.scale);
             maxLeafPoints.Add(new Vector2(256f, -256f) / renderSystem.scale);
-            for (int i = 0; i < leafVariations; i++)
+            for (int i = 0; i < TreeSystem.NUM_LEAF_VARIATIONS; i++)
             {
                 List<Texture2D> insideList = new List<Texture2D>();
                 leafTextures.Add(insideList);

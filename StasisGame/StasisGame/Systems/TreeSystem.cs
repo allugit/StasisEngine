@@ -11,6 +11,8 @@ namespace StasisGame.Systems
 {
     public class TreeSystem : ISystem
     {
+        public const int NUM_LEAF_VARIATIONS = 3;
+        public const int NUM_LEAF_GROUPS = 14;
         public const float PLANT_CELL_SIZE = 0.8f;
         public const int MARKERS_PER_CELL = 1;
         private SystemManager _systemManager;
