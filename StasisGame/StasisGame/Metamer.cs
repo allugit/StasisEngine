@@ -74,12 +74,8 @@ namespace StasisGame
         private Transform collisionXF;
         private Vector2[] collisionVertices;
         private Vector2[] collisionNormals;
-        //private float trunkBodyThreshold = 0.5f;
         private FixedMouseJoint mouseJoint;
         private float textureWidth;
-        //private BodyDef bodyDef;
-        //private FixtureDef fixtureDef;
-        //private CircleShape shape;
         public List<MetamerConstraint> constraints;
         public List<MetamerConstraint> relatedConstraints;
         private MetamerConstraint internodeConstraint;
@@ -90,6 +86,7 @@ namespace StasisGame
         private VertexPositionTexture[] _vertices;
         private Texture2D leafTexture;
         private float _z;
+        public int anchorCount;
 
         public VertexPositionTexture[] vertices { get { return _vertices; } }
 
@@ -183,21 +180,25 @@ namespace StasisGame
         // createLimbBody
         public void createLimbBody()
         {
-            Fixture fixture;
-            int entityId = tree.treeSystem.entityManager.createEntity();
-            
-            body = BodyFactory.CreateBody(tree.treeSystem.physicsSystem.world, position, entityId);
-            body.BodyType = BodyType.Dynamic;
-            body.FixedRotation = true;
-            body.LinearDamping = 0.5f;
-            fixture = body.CreateFixture(new CircleShape(0.5f, 0.5f));
-            fixture.IsSensor = true;
+            if (body == null)
+            {
+                Fixture fixture;
+                int entityId = tree.treeSystem.entityManager.createEntity();
 
-            mouseJoint = new FixedMouseJoint(body, body.Position);
-            mouseJoint.MaxForce = 4000f;
+                body = BodyFactory.CreateBody(tree.treeSystem.physicsSystem.world, position, entityId);
+                body.BodyType = BodyType.Dynamic;
+                body.FixedRotation = true;
+                body.LinearDamping = 0.5f;
+                fixture = body.CreateFixture(new CircleShape(0.5f, 0.5f));
+                fixture.IsSensor = true;
 
-            tree.treeSystem.physicsSystem.world.AddJoint(mouseJoint);
-            tree.treeSystem.entityManager.addComponent(entityId, new MetamerComponent(this));
+                mouseJoint = new FixedMouseJoint(body, body.Position);
+                mouseJoint.MaxForce = 4000f;
+
+                tree.treeSystem.physicsSystem.world.AddJoint(mouseJoint);
+                tree.treeSystem.entityManager.addComponent(entityId, new MetamerComponent(this));
+                tree.treeSystem.entityManager.addComponent(entityId, new IgnoreRopeRaycastComponent());
+            }
         }
 
         // destroyMarkersInOccupiedZone

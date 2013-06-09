@@ -116,13 +116,21 @@ namespace StasisGame.Systems
 
                         if (metamerComponentA != null)
                         {
-                            current.anchorJoint.BodyA.World.RemoveBody(current.anchorJoint.BodyA);
-                            metamerComponentA.metamer.body = null;
+                            metamerComponentA.metamer.anchorCount--;
+                            if (metamerComponentA.metamer.anchorCount <= 0)
+                            {
+                                current.anchorJoint.BodyA.World.RemoveBody(current.anchorJoint.BodyA);
+                                metamerComponentA.metamer.body = null;
+                            }
                         }
                         if (metamerComponentB != null)
                         {
-                            current.anchorJoint.BodyB.World.RemoveBody(current.anchorJoint.BodyB);
-                            metamerComponentB.metamer.body = null;
+                            metamerComponentB.metamer.anchorCount--;
+                            if (metamerComponentB.metamer.anchorCount <= 0)
+                            {
+                                current.anchorJoint.BodyB.World.RemoveBody(current.anchorJoint.BodyB);
+                                metamerComponentB.metamer.body = null;
+                            }
                         }
                     }
 

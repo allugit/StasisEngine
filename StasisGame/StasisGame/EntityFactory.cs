@@ -594,6 +594,7 @@ namespace StasisGame
                 {
                     // Create limb body
                     metamer.createLimbBody();
+                    metamer.anchorCount++;
 
                     // Store result
                     ropeTarget.fixture = metamer.body.FixtureList[0];
@@ -678,6 +679,7 @@ namespace StasisGame
                 {
                     // Create metamer limb
                     metamer.createLimbBody();
+                    metamer.anchorCount++;
 
                     // Store result
                     ropeTargetA.fixture = metamer.body.FixtureList[0];
@@ -713,6 +715,7 @@ namespace StasisGame
                 {
                     // Create metamer limb
                     metamer.createLimbBody();
+                    metamer.anchorCount++;
 
                     // Store result
                     ropeTargetB.fixture = metamer.body.FixtureList[0];
