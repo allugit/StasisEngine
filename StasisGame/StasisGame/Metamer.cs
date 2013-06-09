@@ -115,24 +115,9 @@ namespace StasisGame
             currentTextureAngle = axis;
             collisionVertices = new Vector2[FarseerPhysics.Settings.MaxPolygonVertices];
             collisionNormals = new Vector2[FarseerPhysics.Settings.MaxPolygonVertices];
-            //vertices = new CustomVertexFormat[2];
             constraints = new List<MetamerConstraint>();
             relatedConstraints = new List<MetamerConstraint>();
             _vertices = new VertexPositionTexture[2];
-
-            // Create definitions
-            //bodyDef = new BodyDef();
-            //bodyDef.type = BodyType.Dynamic;
-            //bodyDef.angle = currentAngle;
-            //bodyDef.bullet = true;
-            //bodyDef.userData = tree.entityId;
-            //shape = new CircleShape();
-            //fixtureDef = new FixtureDef();
-            //fixtureDef.density = 1.4f;
-            //fixtureDef.friction = 1f;
-            //fixtureDef.restitution = 0.1f;
-            //fixtureDef.shape = shape;
-            //fixtureDef.filter.groupIndex = -8;
 
             // Mass
             mass = 1f;
@@ -637,7 +622,6 @@ namespace StasisGame
             // Find texture shadow value
             float shadowValue = Math.Max(Math.Min(budQuality, 1f), 0.5f);
             textureColor = new Color(new Vector3(shadowValue, shadowValue, shadowValue));
-            //textureColor = Color.White;
 
             // Modify z index based on shadow value
             _z += shadowValue / 10f;
@@ -910,19 +894,13 @@ namespace StasisGame
                         continue;
 
                     Body fixtureBody = fixture.Body;
-                    if (fixture.TestPoint(ref position, 0.1f))
-                    {
-                        // Hit
-                        //UserData data = fixtureBody.GetUserData() as UserData;
-                        //Actor actor = data.parent as Actor;
-                        //Debug.Assert(actor != null);
+                    int entityId = (int)fixtureBody.UserData;
+                    IComponent ignoreTreeCollisionComponent = tree.treeSystem.entityManager.getComponent(entityId, ComponentType.IgnoreTreeCollision);
 
-                        // Don't check for collisions against certain actors
-                        //if (!(data.actorType == ActorType.LIMB || data.actorType == ActorType.WALL_GROUP ||
-                        //    data.actorType == ActorType.GROUND || data.actorType == ActorType.GRENADE ||
-                        //    data.actorType == ActorType.PLAYER || data.actorType == ActorType.ROPE_SEGMENT ||
-                        //    data.actorType == ActorType.GRAVITY_WELL))
-                        //{
+                    if (ignoreTreeCollisionComponent == null)
+                    {
+                        if (fixture.TestPoint(ref position, 0.1f))
+                        {
                             // Continue with normal collisions
                             Vector2 closestPoint = Vector2.Zero;
                             Vector2 normal = Vector2.Zero;
@@ -959,9 +937,8 @@ namespace StasisGame
                                     externalForce += normal * 0.05f;
                                     fixtureBody.ApplyForce(externalForce, position);
                                 }
-                            //}
-                            //else if (fixture.GetShape().ShapeType == ShapeType.Circle)
-                            if (fixture.ShapeType == ShapeType.Circle)
+                            }
+                            else if (fixture.ShapeType == ShapeType.Circle)
                             {
                                 // Circles
                                 CircleShape circleShape = fixture.Shape as CircleShape;
@@ -986,54 +963,17 @@ namespace StasisGame
                             {
                                 Vector2 bodyVelocity = fixtureBody.GetLinearVelocityFromWorldPoint(oldPosition);
                                 fixtureBody.LinearVelocity = fixtureBody.LinearVelocity * 0.999f;
-                                fixtureBody.AngularVelocity = fixtureBody.AngularVelocity  * 0.98f;
+                                fixtureBody.AngularVelocity = fixtureBody.AngularVelocity * 0.98f;
                                 externalForce += bodyVelocity * 0.005f;
                             }
                         }
                     }
                 }
-                /*
-                // Test for fluid particles
-                Dictionary<int, List<int>> fluidGridX;
-                List<int> fluidGridY;
-                int fx = GameEnvironment.getFluidGridX(position.X);
-                int fy = GameEnvironment.getFluidGridY(position.Y);
-                if (GameEnvironment.fluidGrid.TryGetValue(fx, out fluidGridX) && fluidGridX.TryGetValue(fy, out fluidGridY))
-                {
-                    for (int i = 0; i < fluidGridY.Count; i++)
-                    {
-                        Particle particle = FluidSimulation.liquid[fluidGridY[i]];
-                        Vector2 force = (position - oldPosition) * 0.1f;
-                        particle.velocity += force;
-                        externalForce += -force * 0.5f;
-                    }
-                }*/
             }
 
             // Reset number of fixtures to test
             numFixturesToTest = 0;
         }
-
-        // handleImpact
-        /*
-        public void handleImpact(Contact contact, ContactImpulse impulse)
-        {
-            if (!doBreak && !isBroken)
-            {
-                for (int i = 0; i < 2; i++)
-                {
-                    if (impulse.normalImpulses[i] > 200f)
-                        doBreak = true;
-                }
-            }
-        }*/
-
-        /*
-        // handleParticleInfluences
-        public override void handleParticleInfluence(Particle particle)
-        {
-            externalForce += particle.velocity * 0.05f;
-        }*/
 
         // breakConstraints
         private void breakConstraints(List<Metamer> metamersOnBranch)
@@ -1163,49 +1103,32 @@ namespace StasisGame
                 int count = tree.numVertices;
                 // 1
                 tree.vertices[count].Position = _vertices[0].Position;
-                //tree.vertices[count].texCoord = new Vector2(0, 0);
                 tree.vertices[count].TextureCoordinate.X = 0f;
                 tree.vertices[count].TextureCoordinate.Y = 0f;
-                //tree.vertices[count].color = tree.barkColor;
-                //tree.vertices[count].color = new Vector3(1, 1, 1);
                 count++;
                 // 2
                 tree.vertices[count].Position = _vertices[1].Position;
-                //tree.vertices[count].texCoord = new Vector2(textureWidth, 0);
                 tree.vertices[count].TextureCoordinate.X = textureWidth;
                 tree.vertices[count].TextureCoordinate.Y = 0f;
-                //tree.vertices[count].color = tree.barkColor;
-                //tree.vertices[count].color = new Vector3(1, 1, 1);
                 count++;
                 // 3
                 tree.vertices[count].Position = previousMetamer.vertices[0].Position;
-                //tree.vertices[count].texCoord = new Vector2(0, 1);
                 tree.vertices[count].TextureCoordinate.X = 0f;
                 tree.vertices[count].TextureCoordinate.Y = 1f;
-                //tree.vertices[count].color = tree.barkColor;
-                //tree.vertices[count].color = new Vector3(1, 1, 1);
                 count++;
                 // 4
                 tree.vertices[count].Position = vertices[1].Position;
                 tree.vertices[count].TextureCoordinate = new Vector2(textureWidth, 0);
-                //tree.vertices[count].color = tree.barkColor;
-                //tree.vertices[count].color = new Vector3(1, 1, 1);
                 count++;
                 // 5
                 tree.vertices[count].Position = previousMetamer.vertices[1].Position;
-                //tree.vertices[count].texCoord = new Vector2(previousMetamer.textureWidth, 1);
                 tree.vertices[count].TextureCoordinate.X = previousMetamer.textureWidth;
                 tree.vertices[count].TextureCoordinate.Y = 1f;
-                //tree.vertices[count].color = tree.barkColor;
-                //tree.vertices[count].color = new Vector3(1, 1, 1);
                 count++;
                 // 6
                 tree.vertices[count].Position = previousMetamer.vertices[0].Position;
-                //tree.vertices[count].texCoord = new Vector2(0, 1);
                 tree.vertices[count].TextureCoordinate.X = 0f;
                 tree.vertices[count].TextureCoordinate.Y = 1f;
-                //tree.vertices[count].color = tree.barkColor;
-                //tree.vertices[count].color = new Vector3(1, 1, 1);
                 tree.numVertices += 6;
                 tree.primitiveCount += 2;
             }
@@ -1335,134 +1258,7 @@ namespace StasisGame
 
             tree.expandAABB(position);
         }
-        /*
-        // drawConstraints
-        public void drawConstraints()
-        {
-            if (mainMetamer != null)
-                mainMetamer.drawConstraints();
-            if (lateralMetamer != null)
-                lateralMetamer.drawConstraints();
-
-            for (int i = 0; i < constraints.Count; i++)
-            {
-                if (Tree.drawDistanceConstraints && constraints[i].type == ConstraintType.DISTANCE)
-                {
-                    DistanceConstraint constraint = constraints[i] as DistanceConstraint;
-                    renderer.drawLine(constraint.metamerA.position, constraint.metamerB.position, Color.Blue);
-                }
-                else if (Tree.drawAngularConstraints && constraints[i].type == ConstraintType.ANGULAR)
-                {
-                    AngularConstraint constraint = constraints[i] as AngularConstraint;
-                    Color color = constraint.isBroken ? Color.Purple : Color.Orange;
-                    renderer.drawLine(constraint.metamerA.position, constraint.metamerB.position, color);
-                    renderer.drawLine(constraint.metamerB.position, constraint.metamerC.position, color);
-                }
-                else if (constraints[i].type == ConstraintType.TRUNK)
-                {
-                    TrunkConstraint constraint = constraints[i] as TrunkConstraint;
-                    renderer.drawLine(constraint.metamer.position, constraint.anchorPoint, Color.DarkGray);
-                }
-            }
-
-            // debug --  draw branch normal
-            //renderer.drawLine(position, position + debugBranchNormal, Color.Violet);
-        }
-
-        // drawOccupancyZone
-        public void drawOccupancyZone()
-        {
-            // Chain metamer drawing
-            if (mainMetamer != null)
-                mainMetamer.drawOccupancyZone();
-            if (lateralMetamer != null)
-                lateralMetamer.drawOccupancyZone();
-
-            // Occupancy zones
-            Main.spriteBatch.Draw(
-                Main.circleTexture,
-                position,
-                Main.circleRect,
-                Main.occupancyZoneColor,
-                0,
-                new Vector2(Main.circleTexture.Width / 2, Main.circleTexture.Height / 2),
-                //(1 / Main.scale) * ((Tree.BUD_OCCUPANCY_RADIUS * 2 * Main.scale) / Main.circleTexture.Width),
-                (2 * Tree.BUD_OCCUPANCY_RADIUS) / Main.circleTexture.Width,
-                SpriteEffects.None,
-                0);
-        }
-
-        // drawInternode
-        public void drawInternode()
-        {
-            // Chain metamer drawing
-            if (mainMetamer != null)
-                mainMetamer.drawInternode();
-            if (lateralMetamer != null)
-                lateralMetamer.drawInternode();
-
-            if (!isRoot)
-            {
-                Vector2 midPoint = (position + previousMetamer.position) / 2;
-                renderer.drawBox(midPoint, tree.internodeLength / 2, width / 2, currentAngle, isBroken ? Color.Red : Color.Green);
-            }
-        }
-
-        // drawTrunkBodies
-        public void drawTrunkBodies()
-        {
-            if (mainMetamer != null)
-                mainMetamer.drawTrunkBodies();
-            if (lateralMetamer != null)
-                lateralMetamer.drawTrunkBodies();
-
-            if (isTrunk && body != null)
-                renderer.drawCircle(body.GetPosition(), body.GetFixtureList().GetShape()._radius, Color.Brown);
-        }
-
-        // drawOptimalGrowthDirection
-        public void drawOptimalGrowthDirection()
-        {
-            // Chain metamer drawing
-            if (mainMetamer != null)
-                mainMetamer.drawOptimalGrowthDirection();
-            if (lateralMetamer != null)
-                lateralMetamer.drawOptimalGrowthDirection();
-
-            //Vector2 pointA = Vector2.Transform(position, Main.viewMatrix);
-            //Vector2 pointB = Vector2.Transform(position + optimalGrowthDirection, Main.viewMatrix);
-            Vector2 pointA = position;
-            Vector2 pointB = position + optimalGrowthDirection;
-            renderer.drawLine(pointA, pointB, Color.White);
-        }
-
-        // drawMetamers
-        public void drawMetamers()
-        {
-            // Chain metamer drawing
-            if (mainMetamer != null)
-                mainMetamer.drawMetamers();
-            if (lateralMetamer != null)
-                lateralMetamer.drawMetamers();
-
-            if (isTail)
-                renderer.drawPoint(position, Color.Yellow);
-            else if (isBranchingPoint())
-                renderer.drawPoint(position, Color.Orange);
-            else
-                renderer.drawPoint(position, Color.LightGreen);
-
-            // Draw bodies created for rope attachment
-            if (!isTrunk && body != null)
-                renderer.drawCircle(body.GetPosition(), body.GetFixtureList().GetShape()._radius, Color.Blue);
-
-            // Draw reaction forces
-            //Vector2 offset = new Vector2(0.5f, 0f);
-            //renderer.drawLine(position + offset, position + offset + debugCurrentReactionForce, Color.Orange);
-            //offset = new Vector2(0.55f, 0f);
-            //renderer.drawLine(position + offset, position + offset + debugTargetReactionForce, Color.Yellow);
-        }*/
-
+        
         // draw
         public void draw(RenderSystem renderSystem)
         {
