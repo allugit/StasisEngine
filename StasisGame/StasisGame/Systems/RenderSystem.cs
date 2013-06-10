@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Content;
+using Microsoft.Xna.Framework.Input;
 using FarseerPhysics.Collision.Shapes;
 using FarseerPhysics.Dynamics;
 using FarseerPhysics.Dynamics.Joints;
@@ -36,10 +37,12 @@ namespace StasisGame.Systems
         private Texture2D _reticle;
         private bool _paused;
         private bool _singleStep;
+        private bool _enlargeDebugFuild;
 
         private BackgroundRenderer _backgroundRenderer;
         private RenderTarget2D _fluidRenderTarget;
         private RenderTarget2D _renderedFluid;
+        private RenderTarget2D _debugFluid;
         private Texture2D _fluidParticleTexture;
         private Effect _fluidEffect;
 
@@ -68,6 +71,7 @@ namespace StasisGame.Systems
             _backgroundRenderer = new BackgroundRenderer(_spriteBatch);
             _fluidRenderTarget = new RenderTarget2D(_graphicsDevice, _graphicsDevice.Viewport.Width, _graphicsDevice.Viewport.Height);
             _renderedFluid = new RenderTarget2D(_graphicsDevice, _graphicsDevice.Viewport.Width, _graphicsDevice.Viewport.Height);
+            _debugFluid = new RenderTarget2D(_graphicsDevice, _graphicsDevice.Viewport.Width, _graphicsDevice.Viewport.Height);
 
             _contentManager = new ContentManager(game.Services);
             _contentManager.RootDirectory = "Content";
@@ -187,6 +191,8 @@ namespace StasisGame.Systems
         // update
         public void update()
         {
+            if (InputSystem.newKeyState.IsKeyDown(Keys.F4) && InputSystem.oldKeyState.IsKeyUp(Keys.F4))
+                _enlargeDebugFuild = !_enlargeDebugFuild;
         }
 
         // draw
@@ -227,6 +233,59 @@ namespace StasisGame.Systems
                 spriteBatch.Begin(SpriteSortMode.Immediate, BlendState.AlphaBlend, null, null, null, _fluidEffect);
                 spriteBatch.Draw(_fluidRenderTarget, Vector2.Zero, Color.DarkBlue);
                 spriteBatch.End();
+                _graphicsDevice.SetRenderTarget(null);
+            }
+
+            // Temporary debug draw
+            if (LoderGame.debug)
+            {
+                Vector2 debugOffset = new Vector2(0f, 5f);
+                _graphicsDevice.SetRenderTarget(_debugFluid);
+                _graphicsDevice.Clear(Color.Black);
+                _spriteBatch.Begin();
+
+                // Cells
+                foreach (KeyValuePair<int, Dictionary<int, List<int>>> row1Pair in fluidSystem.fluidGrid)
+                {
+                    foreach (KeyValuePair<int, List<int>> row2Pair in row1Pair.Value)
+                    {
+                        int gridSize = (int)(FluidSystem.CELL_SPACING * scale) - 1;
+                        Vector2 position = new Vector2((float)row1Pair.Key * FluidSystem.CELL_SPACING, (float)row2Pair.Key * FluidSystem.CELL_SPACING);
+                        _spriteBatch.Draw(_pixel, (position - debugOffset) * scale + _halfScreen, new Rectangle(0, 0, gridSize, gridSize), Color.DarkBlue, 0f, Vector2.Zero, 1f, SpriteEffects.None, 0f);
+                    }
+                }
+
+                // Particle pressures
+                for (int i = 0; i < FluidSystem.MAX_PARTICLES; i++)
+                {
+                    Particle particle = fluidSystem.liquid[i];
+                    _spriteBatch.Draw(_pixel, (particle.position - debugOffset) * scale + _halfScreen, new Rectangle(0, 0, 8, 8), Color.Red * 0.5f, 0f, new Vector2(4, 4), Math.Abs(particle.pressure) / FluidSystem.MAX_PRESSURE, SpriteEffects.None, 0f);
+                }
+
+                // Particle positions
+                for (int i = 0; i < FluidSystem.MAX_PARTICLES; i++)
+                {
+                    Particle particle = fluidSystem.liquid[i];
+                    _spriteBatch.Draw(_pixel, (particle.position - debugOffset) * scale + _halfScreen, new Rectangle(0, 0, 4, 4), Color.White, 0, new Vector2(2, 2), 1, SpriteEffects.None, 0);
+                }
+
+                // Simulation AABB
+                Vector2[] vertices = new Vector2[4];
+                vertices[0] = fluidSystem.simulationAABB.LowerBound;
+                vertices[1] = new Vector2(fluidSystem.simulationAABB.UpperBound.X, fluidSystem.simulationAABB.LowerBound.Y);
+                vertices[2] = fluidSystem.simulationAABB.UpperBound;
+                vertices[3] = new Vector2(fluidSystem.simulationAABB.LowerBound.X, fluidSystem.simulationAABB.UpperBound.Y);
+                for (int i = 0; i < 4; i++)
+                {
+                    Vector2 a = vertices[i];
+                    Vector2 b = vertices[i == 3 ? 0 : i + 1];
+                    Vector2 relative = b - a;
+                    float angle = (float)Math.Atan2(relative.Y, relative.X);
+                    Rectangle rect = new Rectangle(0, 0, (int)(relative.Length() * scale), 2);
+                    _spriteBatch.Draw(_pixel, (a - debugOffset) * scale + _halfScreen, rect, Color.Lime, angle, new Vector2(0, 1), 1f, SpriteEffects.None, 0);
+                }
+
+                _spriteBatch.End();
                 _graphicsDevice.SetRenderTarget(null);
             }
 
@@ -402,6 +461,11 @@ namespace StasisGame.Systems
             if (LoderGame.debug)
             {
                 _spriteBatch.Begin();
+                _spriteBatch.Draw(_debugFluid, Vector2.Zero, _debugFluid.Bounds, Color.White, 0f, Vector2.Zero, _enlargeDebugFuild ? 1f : 0.25f, SpriteEffects.None, 0f);
+                _spriteBatch.End();
+
+                /*
+                _spriteBatch.Begin();
                 int limit = fluidSystem.numActiveParticles;
                 for (int i = 0; i < limit; i++)
                 {
@@ -410,6 +474,7 @@ namespace StasisGame.Systems
                     spriteBatch.Draw(_pixel, (particle.position - _cameraSystem.screenCenter) * scale + _halfScreen, new Rectangle(0, 0, 2, 2), Color.White, 0, new Vector2(1, 1), 1, SpriteEffects.None, 0);
                 }
                 _spriteBatch.End();
+                */
             }
         }
     }

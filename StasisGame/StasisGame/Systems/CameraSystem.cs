@@ -55,6 +55,8 @@ namespace StasisGame.Systems
                     _screenCenter += new Vector2(-speed, 0);
                 if (InputSystem.newKeyState.IsKeyDown(Keys.NumPad6))
                     _screenCenter += new Vector2(speed, 0);
+                //if (InputSystem.newKeyState.IsKeyDown(Keys.F4))
+                //    Console.WriteLine("Screen center: {0}", _screenCenter);
             }
 
             // Handle camera movement

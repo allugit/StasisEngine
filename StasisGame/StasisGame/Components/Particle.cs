@@ -34,6 +34,8 @@ namespace StasisGame.Components
         public float[] oneminusq;
         public float p;
         public float pnear;
+        public float pressure;
+        public float pressureNear;
         public int[] entitiesToInfluence;
         public int entityInfluenceCount;
         public Fixture[] fixturesToTest;

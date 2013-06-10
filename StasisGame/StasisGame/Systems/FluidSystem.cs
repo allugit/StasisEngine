@@ -187,10 +187,10 @@ namespace StasisGame.Systems
             Particle particle = liquid[index];
 
             // Now actually apply the forces
-            float pressure = (particle.p - GAS_CONSTANT) / 2.0F; //normal pressure term
-            float pressureNear = particle.pnear / 2.0F; //near particles term
-            pressure = pressure > MAX_PRESSURE ? MAX_PRESSURE : pressure;
-            pressureNear = pressureNear > MAX_PRESSURE_NEAR ? MAX_PRESSURE_NEAR : pressureNear;
+            particle.pressure = (particle.p - GAS_CONSTANT) / 2.0F; //normal pressure term
+            particle.pressureNear = particle.pnear / 2.0F; //near particles term
+            particle.pressure = particle.pressure > MAX_PRESSURE ? MAX_PRESSURE : particle.pressure;
+            particle.pressureNear = particle.pressureNear > MAX_PRESSURE_NEAR ? MAX_PRESSURE_NEAR : particle.pressureNear;
             for (int a = particle.neighborCount - 1; a >= 0; a--)
             {
                 int neighborIndex = particle.neighbors[a];
@@ -198,7 +198,7 @@ namespace StasisGame.Systems
 
                 if (particle.distances[a] < IDEAL_RADIUS)
                 {
-                    float factor = particle.oneminusq[a] * (pressure + pressureNear * particle.oneminusq[a]) / (2.0F * particle.distances[a]);
+                    float factor = particle.oneminusq[a] * (particle.pressure + particle.pressureNear * particle.oneminusq[a]) / (2.0F * particle.distances[a]);
                     Vector2 d = particle.relativePosition[a] * factor;
                     Vector2 relativeVelocity = simVelocities[neighborIndex] - simVelocities[particle.index];
                     factor = VISCOSITY * particle.oneminusq[a] * dt;
