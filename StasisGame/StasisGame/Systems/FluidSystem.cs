@@ -344,8 +344,6 @@ namespace StasisGame.Systems
                                     normal = particle.collisionNormals[v];
                                 }
                             }
-                            //Vector2 averagedNormal = (normal + (particle.position - newPosition) / 2);
-                            //averagedNormal.Normalize();
                             particle.position = closestPoint + 0.05f * normal;
                             particle.skipMovementUpdate = true;
                         }
@@ -395,26 +393,6 @@ namespace StasisGame.Systems
                     }
                 }
             }
-
-            /*
-            // Test for metamers
-            int mx = GameEnvironment.getPlantGridX(particle.position.X);
-            int my = GameEnvironment.getPlantGridY(particle.position.Y);
-            Dictionary<int, List<Metamer>> plantGridX;
-            List<Metamer> plantGridY;
-            if (GameEnvironment.metamerGrid.TryGetValue(mx, out plantGridX) && plantGridX.TryGetValue(my, out plantGridY))
-            {
-                for (int i = 0; i < plantGridY.Count; i++)
-                {
-                    if (particle.actorInfluenceCount < Particle.MAX_INFLUENCES)
-                    {
-                        particle.actorsToInfluence[particle.actorInfluenceCount] = plantGridY[i];
-                        particle.actorInfluenceCount++;
-                        particle.velocity *= 0.95f;
-                    }
-                }
-            }
-            */
         }
 
         // killParticle
