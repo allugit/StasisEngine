@@ -23,7 +23,7 @@ namespace StasisGame.Components
         public int[] neighbors;
         public float[] distances;
         public int neighborCount;
-        public bool onScreen;
+        public bool active;
         public bool alive;
         public Dictionary<int, List<int>> gridX;
         public List<int> gridY;
@@ -41,19 +41,13 @@ namespace StasisGame.Components
         public Fixture[] fixturesToTest;
         public int numFixturesToTest;
 
-        // isActive
-        public bool isActive()
-        {
-            return onScreen && alive;
-        }
-
         // Constructor
         public Particle(FluidSystem fluidSystem, int index, Vector2 position)
         {
             //this.simulation = simulation;
             this.index = index;
             this.position = position;
-            onScreen = false;
+            active = false;
             alive = false;
 
             aabb = new AABB();

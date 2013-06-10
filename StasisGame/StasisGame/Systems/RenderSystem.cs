@@ -262,11 +262,18 @@ namespace StasisGame.Systems
                     _spriteBatch.Draw(_pixel, (particle.position - debugOffset) * scale + _halfScreen, new Rectangle(0, 0, 16, 16), Color.Red * 0.5f, 0f, new Vector2(8, 8), Math.Abs(particle.pressure) / FluidSystem.MAX_PRESSURE, SpriteEffects.None, 0f);
                 }
 
+                // Particle near pressures
+                for (int i = 0; i < FluidSystem.MAX_PARTICLES; i++)
+                {
+                    Particle particle = fluidSystem.liquid[i];
+                    _spriteBatch.Draw(_pixel, (particle.position - debugOffset) * scale + _halfScreen, new Rectangle(0, 0, 16, 16), Color.Orange * 0.5f, 0f, new Vector2(8, 8), Math.Abs(particle.pressureNear) / FluidSystem.MAX_PRESSURE_NEAR, SpriteEffects.None, 0f);
+                }
+
                 // Particle positions
                 for (int i = 0; i < FluidSystem.MAX_PARTICLES; i++)
                 {
                     Particle particle = fluidSystem.liquid[i];
-                    Color color = particle.isActive() ? Color.White : Color.DarkGray;
+                    Color color = particle.active ? Color.White : Color.DarkGray;
                     _spriteBatch.Draw(_pixel, (particle.position - debugOffset) * scale + _halfScreen, new Rectangle(0, 0, 4, 4), color, 0, new Vector2(2, 2), 1, SpriteEffects.None, 0);
                 }
 

@@ -178,6 +178,11 @@ namespace StasisGame.Systems
                     particle.distances[a] = float.MaxValue;
                 }
             }
+
+            particle.pressure = (particle.p - GAS_CONSTANT) / 2.0F; //normal pressure term
+            particle.pressureNear = particle.pnear / 2.0F; //near particles term
+            particle.pressure = particle.pressure > MAX_PRESSURE ? MAX_PRESSURE : particle.pressure;
+            particle.pressureNear = particle.pressureNear > MAX_PRESSURE_NEAR ? MAX_PRESSURE_NEAR : particle.pressureNear;
         }
 
         // calculateForce
@@ -187,10 +192,6 @@ namespace StasisGame.Systems
             Particle particle = liquid[index];
 
             // Now actually apply the forces
-            particle.pressure = (particle.p - GAS_CONSTANT) / 2.0F; //normal pressure term
-            particle.pressureNear = particle.pnear / 2.0F; //near particles term
-            particle.pressure = particle.pressure > MAX_PRESSURE ? MAX_PRESSURE : particle.pressure;
-            particle.pressureNear = particle.pressureNear > MAX_PRESSURE_NEAR ? MAX_PRESSURE_NEAR : particle.pressureNear;
             for (int a = particle.neighborCount - 1; a >= 0; a--)
             {
                 int neighborIndex = particle.neighbors[a];
@@ -204,8 +205,15 @@ namespace StasisGame.Systems
                     factor = VISCOSITY * particle.oneminusq[a] * dt;
                     d -= relativeVelocity * factor;
 
-                    accumulatedDelta[neighborIndex] += d;
-                    accumulatedDelta[particle.index] -= d;
+                    if (neighbor.active)
+                    {
+                        accumulatedDelta[neighborIndex] += d;
+                        accumulatedDelta[particle.index] -= d;
+                    }
+                    else
+                    {
+                        accumulatedDelta[particle.index] -= d * 2;
+                    }
                 }
             }
 
@@ -224,15 +232,18 @@ namespace StasisGame.Systems
                 Particle particle = liquid[i];
                 if (particle.alive)
                 {
-                    particle.onScreen =
-                        particle.position.X > simulationAABB.LowerBound.X &&
+                    if (particle.position.X > simulationAABB.LowerBound.X &&
                         particle.position.X < simulationAABB.UpperBound.X &&
                         particle.position.Y > simulationAABB.LowerBound.Y &&
-                        particle.position.Y < simulationAABB.UpperBound.Y;
-                    if (particle.isActive())
+                        particle.position.Y < simulationAABB.UpperBound.Y)
                     {
+                        particle.active = true;
                         activeParticles[numActiveParticles] = i;
                         numActiveParticles++;
+                    }
+                    else
+                    {
+                        particle.active = false;
                     }
                 }
             }
@@ -408,7 +419,7 @@ namespace StasisGame.Systems
         {
             particle.position = LIQUID_ORIGIN;
             particle.alive = false;
-            particle.onScreen = false;
+            particle.active = false;
             numActiveParticles--;
         }
 
