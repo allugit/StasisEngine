@@ -259,7 +259,7 @@ namespace StasisGame.Systems
                 for (int i = 0; i < FluidSystem.MAX_PARTICLES; i++)
                 {
                     Particle particle = fluidSystem.liquid[i];
-                    _spriteBatch.Draw(_pixel, (particle.position - debugOffset) * scale + _halfScreen, new Rectangle(0, 0, 8, 8), Color.Red * 0.5f, 0f, new Vector2(4, 4), Math.Abs(particle.pressure) / FluidSystem.MAX_PRESSURE, SpriteEffects.None, 0f);
+                    _spriteBatch.Draw(_pixel, (particle.position - debugOffset) * scale + _halfScreen, new Rectangle(0, 0, 16, 16), Color.Red * 0.5f, 0f, new Vector2(8, 8), Math.Abs(particle.pressure) / FluidSystem.MAX_PRESSURE, SpriteEffects.None, 0f);
                 }
 
                 // Particle positions
