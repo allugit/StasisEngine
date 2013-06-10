@@ -25,7 +25,7 @@ namespace StasisGame.Systems
         public Particle[] liquid;
         public int[] activeParticles;
         public int numActiveParticles = 0;
-        private int initializedParticleCount = 0;
+        private int _initializedParticleCount = 0;
         public const float RADIUS = 0.9f;
         public const float RADIUS_SQ = RADIUS * RADIUS;
         public const float IDEAL_RADIUS = 50.0f;
@@ -37,14 +37,14 @@ namespace StasisGame.Systems
         public const float CELL_SPACING_SQ = CELL_SPACING * CELL_SPACING;
         public const float MAX_PRESSURE = 0.8f;
         public const float MAX_PRESSURE_NEAR = 1.6f;
-        private Vector2 liquidGravity = new Vector2(0, 9.8f) / 3000;
+        private Vector2 _gravity = new Vector2(0, 9.8f) / 3000;
         public static Vector2 LIQUID_ORIGIN = new Vector2(999999999f);
-        private Dictionary<int, List<int>> collisionGridX;
-        private List<int> collisionGridY;
-        private Vector2[] simPositions;
-        private Vector2[] simVelocities;
-        private Vector2[] delta;
-        private object applyForcesLock = new object();
+        private Dictionary<int, List<int>> _collisionGridX;
+        private List<int> _collisionGridY;
+        private Vector2[] _simPositions;
+        private Vector2[] _simVelocities;
+        private Vector2[] _delta;
+        private object _calculateForcesLock = new object();
         public bool debug = false;
         public bool drawCells = false;
         public bool drawVelocities = true;
@@ -68,9 +68,9 @@ namespace StasisGame.Systems
             fluidGrid = new Dictionary<int, Dictionary<int, List<int>>>();
             liquid = new Particle[MAX_PARTICLES];
             activeParticles = new int[MAX_PARTICLES];
-            simPositions = new Vector2[MAX_PARTICLES];
-            simVelocities = new Vector2[MAX_PARTICLES];
-            delta = new Vector2[MAX_PARTICLES];
+            _simPositions = new Vector2[MAX_PARTICLES];
+            _simVelocities = new Vector2[MAX_PARTICLES];
+            _delta = new Vector2[MAX_PARTICLES];
             for (int i = 0; i < MAX_PARTICLES; i++)
             {
                 liquid[i] = new Particle(this, i, LIQUID_ORIGIN);
@@ -113,12 +113,12 @@ namespace StasisGame.Systems
         // createParticle
         public void createParticle(Vector2 position)
         {
-            Particle particle = liquid[initializedParticleCount];
+            Particle particle = liquid[_initializedParticleCount];
             particle.position = position;
             particle.oldPosition = position;
             particle.velocity = Vector2.Zero;
             particle.alive = true;
-            initializedParticleCount++;
+            _initializedParticleCount++;
         }
 
         // prepareSimulation
@@ -140,9 +140,9 @@ namespace StasisGame.Systems
             liquid[index].pnear = 0;
 
             // Simulation-specifc values
-            simPositions[index] = liquid[index].position * MULTIPLIER;
-            simVelocities[index] = liquid[index].velocity * MULTIPLIER;
-            delta[index] = Vector2.Zero;
+            _simPositions[index] = liquid[index].position * MULTIPLIER;
+            _simVelocities[index] = liquid[index].velocity * MULTIPLIER;
+            _delta[index] = Vector2.Zero;
 
             // Store old position
             liquid[index].oldPosition = liquid[index].position;
@@ -160,7 +160,7 @@ namespace StasisGame.Systems
             {
                 int neighborIndex = particle.neighbors[a];
                 Particle neighbor = liquid[neighborIndex];
-                particle.relativePosition[a] = simPositions[neighborIndex] - simPositions[particle.index];
+                particle.relativePosition[a] = _simPositions[neighborIndex] - _simPositions[particle.index];
 
                 float vlensqr = particle.relativePosition[a].LengthSquared();
                 //within idealRad check
@@ -201,10 +201,13 @@ namespace StasisGame.Systems
                 {
                     float factor = particle.oneminusq[a] * (particle.pressure + particle.pressureNear * particle.oneminusq[a]) / (2.0F * particle.distances[a]);
                     Vector2 d = particle.relativePosition[a] * factor;
-                    Vector2 relativeVelocity = simVelocities[neighborIndex] - simVelocities[particle.index];
+                    Vector2 relativeVelocity = _simVelocities[neighborIndex] - _simVelocities[particle.index];
                     factor = VISCOSITY * particle.oneminusq[a] * dt;
                     d -= relativeVelocity * factor;
 
+                    // Calculate forces differently based on whether or not the neighboring particle is active (usually
+                    // the change is split evenly between two particles, but if one is inactive, it won't be updated.
+                    // So if one is inactive, double up on the other).
                     if (neighbor.active)
                     {
                         accumulatedDelta[neighborIndex] += d;
@@ -218,7 +221,7 @@ namespace StasisGame.Systems
             }
 
             // Apply gravitational force
-            particle.velocity += liquidGravity;
+            particle.velocity += _gravity;
 
             return accumulatedDelta;
         }
@@ -272,11 +275,11 @@ namespace StasisGame.Systems
                 {
                     for (int j = Ay; j < By; j++)
                     {
-                        if (fluidGrid.TryGetValue(i, out collisionGridX) && collisionGridX.TryGetValue(j, out collisionGridY))
+                        if (fluidGrid.TryGetValue(i, out _collisionGridX) && _collisionGridX.TryGetValue(j, out _collisionGridY))
                         {
-                            for (int n = 0; n < collisionGridY.Count; n++)
+                            for (int n = 0; n < _collisionGridY.Count; n++)
                             {
-                                Particle particle = liquid[collisionGridY[n]];
+                                Particle particle = liquid[_collisionGridY[n]];
                                 if (particle.numFixturesToTest < Particle.MAX_FIXTURES_TO_TEST)
                                 {
                                     particle.fixturesToTest[particle.numFixturesToTest] = fixture;
@@ -302,7 +305,7 @@ namespace StasisGame.Systems
                 if (fixture.Shape == null)     // fixtures can be destroyed before they're tested
                     continue;
 
-                Vector2 newPosition = particle.position + particle.velocity + delta[index];
+                Vector2 newPosition = particle.position + particle.velocity + _delta[index];
                 if (fixture.TestPoint(ref newPosition, 0.01f))
                 {
                     Body body = fixture.Body;
@@ -519,17 +522,6 @@ namespace StasisGame.Systems
             // Influence actors
             handleParticleInfluence(particle);
 
-            /*
-            // Revert movement if off screen
-            if (particle.position.X < simulationAABB.LowerBound.X ||
-                particle.position.X > simulationAABB.UpperBound.X ||
-                particle.position.Y < simulationAABB.LowerBound.Y ||
-                particle.position.Y > simulationAABB.UpperBound.Y)
-            {
-                particle.position = particle.oldPosition;
-                particle.velocity = Vector2.Zero;
-            }*/
-
             // Update cell
             updateParticleCell(index);
         }
@@ -597,10 +589,10 @@ namespace StasisGame.Systems
                 // Prepare collisions
                 prepareCollisions();
 
-                // Calculate liquid forces
+                // Calculate pressures
                 Parallel.For(0, numActiveParticles, i => { calculatePressure(activeParticles[i]); });
 
-                // Apply liquid forces
+                // Calculate forces
                 Parallel.For(
                     0,
                     numActiveParticles,
@@ -608,11 +600,11 @@ namespace StasisGame.Systems
                     (i, state, accumulatedDelta) => calculateForce(activeParticles[i], accumulatedDelta),
                     (accumulatedDelta) =>
                     {
-                        lock (applyForcesLock)
+                        lock (_calculateForcesLock)
                         {
                             for (int i = numActiveParticles - 1; i >= 0; i--)
                             {
-                                delta[activeParticles[i]] += accumulatedDelta[activeParticles[i]] / MULTIPLIER;
+                                _delta[activeParticles[i]] += accumulatedDelta[activeParticles[i]] / MULTIPLIER;
                             }
                         }
                     }
@@ -630,10 +622,10 @@ namespace StasisGame.Systems
                     if (!particle.skipMovementUpdate)
                     {
                         // Update velocity
-                        particle.velocity += delta[index];
+                        particle.velocity += _delta[index];
 
                         // Update position
-                        particle.position += delta[index];
+                        particle.position += _delta[index];
                         particle.position += particle.velocity;
                     }
                 });
