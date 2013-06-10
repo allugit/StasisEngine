@@ -15,17 +15,8 @@ namespace StasisGame.Systems
 {
     public class FluidSystem : ISystem
     {
-        private SystemManager _systemManager;
-        private EntityManager _entityManager;
-        private PhysicsSystem _physicsSystem;
-        private RenderSystem _renderSystem;
-        public Dictionary<int, Dictionary<int, List<int>>> fluidGrid;
         public const int MAX_PARTICLES = 10000;
         public const int MAX_NEIGHBORS = 75;
-        public Particle[] liquid;
-        public int[] activeParticles;
-        public int numActiveParticles = 0;
-        private int _initializedParticleCount = 0;
         public const float RADIUS = 0.9f;
         public const float RADIUS_SQ = RADIUS * RADIUS;
         public const float IDEAL_RADIUS = 50.0f;
@@ -37,8 +28,18 @@ namespace StasisGame.Systems
         public const float CELL_SPACING_SQ = CELL_SPACING * CELL_SPACING;
         public const float MAX_PRESSURE = 0.8f;
         public const float MAX_PRESSURE_NEAR = 1.6f;
-        private Vector2 _gravity = new Vector2(0, 9.8f) / 3000;
+        public static Vector2 SIMULATION_MARGIN = new Vector2(6f, 6f);
         public static Vector2 LIQUID_ORIGIN = new Vector2(999999999f);
+        private SystemManager _systemManager;
+        private EntityManager _entityManager;
+        private PhysicsSystem _physicsSystem;
+        private RenderSystem _renderSystem;
+        public Dictionary<int, Dictionary<int, List<int>>> fluidGrid;
+        public Particle[] liquid;
+        public int[] activeParticles;
+        public int numActiveParticles = 0;
+        private int _initializedParticleCount = 0;
+        private Vector2 _gravity = new Vector2(0, 9.8f) / 3000;
         private Dictionary<int, List<int>> _collisionGridX;
         private List<int> _collisionGridY;
         private Vector2[] _simPositions;
@@ -551,12 +552,9 @@ namespace StasisGame.Systems
 
                 // Update simulation AABB
                 Vector2 screenCenter = _renderSystem.screenCenter;
-                float width = (_renderSystem.screenWidth / _renderSystem.scale) * 0.75f;
-                float height = (_renderSystem.screenHeight / _renderSystem.scale);
-                simulationAABB.LowerBound.X = screenCenter.X - width;
-                simulationAABB.UpperBound.X = screenCenter.X + width;
-                simulationAABB.LowerBound.Y = screenCenter.Y - height;
-                simulationAABB.UpperBound.Y = screenCenter.Y + height;
+                Vector2 simHalfScreen = (_renderSystem.halfScreen / _renderSystem.scale) + SIMULATION_MARGIN;
+                simulationAABB.LowerBound = screenCenter - simHalfScreen;
+                simulationAABB.UpperBound = screenCenter + simHalfScreen;
 
                 // Flag active particles
                 flagActive();
