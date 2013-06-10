@@ -266,7 +266,8 @@ namespace StasisGame.Systems
                 for (int i = 0; i < FluidSystem.MAX_PARTICLES; i++)
                 {
                     Particle particle = fluidSystem.liquid[i];
-                    _spriteBatch.Draw(_pixel, (particle.position - debugOffset) * scale + _halfScreen, new Rectangle(0, 0, 4, 4), Color.White, 0, new Vector2(2, 2), 1, SpriteEffects.None, 0);
+                    Color color = particle.isActive() ? Color.White : Color.DarkGray;
+                    _spriteBatch.Draw(_pixel, (particle.position - debugOffset) * scale + _halfScreen, new Rectangle(0, 0, 4, 4), color, 0, new Vector2(2, 2), 1, SpriteEffects.None, 0);
                 }
 
                 // Simulation AABB

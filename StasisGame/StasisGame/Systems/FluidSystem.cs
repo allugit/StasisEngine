@@ -508,6 +508,7 @@ namespace StasisGame.Systems
             // Influence actors
             handleParticleInfluence(particle);
 
+            /*
             // Revert movement if off screen
             if (particle.position.X < simulationAABB.LowerBound.X ||
                 particle.position.X > simulationAABB.UpperBound.X ||
@@ -516,7 +517,7 @@ namespace StasisGame.Systems
             {
                 particle.position = particle.oldPosition;
                 particle.velocity = Vector2.Zero;
-            }
+            }*/
 
             // Update cell
             updateParticleCell(index);
