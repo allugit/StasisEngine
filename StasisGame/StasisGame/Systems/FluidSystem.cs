@@ -160,7 +160,6 @@ namespace StasisGame.Systems
             for (int a = particle.neighborCount - 1; a >= 0; a--)
             {
                 int neighborIndex = particle.neighbors[a];
-                Particle neighbor = liquid[neighborIndex];
                 particle.relativePosition[a] = _simPositions[neighborIndex] - _simPositions[particle.index];
 
                 float vlensqr = particle.relativePosition[a].LengthSquared();
