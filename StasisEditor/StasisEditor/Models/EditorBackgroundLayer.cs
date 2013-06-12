@@ -9,8 +9,16 @@ using StasisCore.Models;
 
 namespace StasisEditor.Models
 {
+    using UITypeEditor = System.Drawing.Design.UITypeEditor;
+
     public class EditorBackgroundLayer : BackgroundLayer
     {
+        [EditorAttribute(typeof(Vector2Editor), typeof(UITypeEditor))]
+        public override Vector2 initialOffset { get { return base.initialOffset; } set { base.initialOffset = value; } }
+
+        [EditorAttribute(typeof(Vector2Editor), typeof(UITypeEditor))]
+        public override Vector2 speedScale { get { return base.speedScale; } set { base.speedScale = value; } }
+
         [Browsable(false)]
         public override XElement data { get { return base.data; } }
         

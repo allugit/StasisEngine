@@ -18,9 +18,9 @@ namespace StasisCore.Models
 
         virtual public Texture2D texture { get { return _texture; } set { _texture = value; } }
         public string textureUID { get { return _textureUID; } set { _textureUID = value; } }
-        public Vector2 speedScale { get { return _speedScale; } set { _speedScale = value; } }
+        virtual public Vector2 speedScale { get { return _speedScale; } set { _speedScale = value; } }
         public float layerDepth { get { return _layerDepth; } set { _layerDepth = value; } }
-        public Vector2 initialOffset { get { return _initialOffset; } set { _initialOffset = value; } }
+        virtual public Vector2 initialOffset { get { return _initialOffset; } set { _initialOffset = value; } }
         public bool fitToScreen { get { return _fitToScreen; } set { _fitToScreen = value; } }
         public float scale { get { return _scale; } set { _scale = value; } }
         public bool tile { get { return _tile; } set { _tile = value; } }
