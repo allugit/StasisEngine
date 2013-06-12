@@ -24,7 +24,7 @@ namespace StasisGame.Systems
 
         public int defaultPriority { get { return 80; } }
         public SystemType systemType { get { return SystemType.Camera; } }
-        public Vector2 screenCenter { get { return _screenCenter; } }
+        public Vector2 screenCenter { get { return _screenCenter; } set { _screenCenter = value; } }
         public bool enableManualMovement { get { return _enableManualMovement; } set { _enableManualMovement = value; } }
         public bool paused { get { return _paused; } set { _paused = value; } }
         public bool singleStep { get { return _singleStep; } set { _singleStep = value; } }

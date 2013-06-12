@@ -132,10 +132,12 @@ namespace StasisGame.Systems
                         break;
 
                     case "PlayerSpawn":
+                        Vector2 spawnPosition = Loader.loadVector2(actorData.Attribute("position"), Vector2.Zero);
                         if (_systemManager.getSystem(SystemType.CharacterMovement) == null)
                             _systemManager.add(new CharacterMovementSystem(_systemManager, _entityManager), -1);
 
-                        (_systemManager.getSystem(SystemType.Player) as PlayerSystem).spawnPosition = Loader.loadVector2(actorData.Attribute("position"), Vector2.Zero);
+                        (_systemManager.getSystem(SystemType.Player) as PlayerSystem).spawnPosition = spawnPosition;
+                        (_systemManager.getSystem(SystemType.Camera) as CameraSystem).screenCenter = spawnPosition;
                         break;
 
                     case "Rope":
