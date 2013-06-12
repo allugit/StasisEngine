@@ -69,20 +69,8 @@ namespace StasisCore.Models
                 {
                     _scale = (float)ResourceManager.graphicsDevice.Viewport.Height / (float)texture.Height;
 
-                    //int screenWidth = ResourceController.graphicsDevice.Viewport.Width;
-                    //int screenHeight = ResourceController.graphicsDevice.Viewport.Height;
-                    //int widthDifference = texture.Width - screenWidth;
-                    //int heightDifference = texture.Height - screenHeight;
-
-                    /*
-                    if (Math.Abs(widthDifference) > Math.Abs(heightDifference))
-                    {
-                        scale = (float)screenHeight / (float)texture.Height;
-                    }
-                    else
-                    {
-                        scale = (float)screenWidth / (float)texture.Width;
-                    }*/
+                    if ((float)_texture.Width * _scale < (float)ResourceManager.graphicsDevice.Viewport.Width)
+                        _scale = (float)ResourceManager.graphicsDevice.Viewport.Width / (float)texture.Width;
                 }
             }
         }

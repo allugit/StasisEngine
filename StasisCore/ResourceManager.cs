@@ -231,7 +231,6 @@ namespace StasisCore
                 using (FileStream fs = new FileStream(textureFiles[0], FileMode.Open))
                     texture = Texture2D.FromStream(_graphicsDevice, fs);
 #endif
-                
                 // Premultiply alpha
                 RenderTarget2D result = new RenderTarget2D(_graphicsDevice, texture.Width, texture.Height);
                 _graphicsDevice.SetRenderTarget(result);
