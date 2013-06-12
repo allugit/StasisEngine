@@ -209,6 +209,8 @@ namespace StasisGame.Systems
                 }
             }
 
+            (_systemManager.getSystem(SystemType.Fluid) as FluidSystem).relaxFluid();
+
             _isActive = true;
 
             // Reset entity manager and entity factory -- TODO: move this to unload() ?

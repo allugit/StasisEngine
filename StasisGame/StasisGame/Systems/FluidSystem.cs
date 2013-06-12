@@ -53,6 +53,7 @@ namespace StasisGame.Systems
         private bool _paused;
         private bool _singleStep;
         public AABB simulationAABB;
+        private bool _skipAABBUpdate;
 
         public int defaultPriority { get { return 10; } }
         public SystemType systemType { get { return SystemType.Fluid; } }
@@ -109,6 +110,19 @@ namespace StasisGame.Systems
                         createParticle(point);
                 }
             }
+        }
+
+        // relaxFluid -- Runs the simulation for all particles
+        public void relaxFluid()
+        {
+            simulationAABB.LowerBound.X = float.MinValue;
+            simulationAABB.LowerBound.Y = float.MinValue;
+            simulationAABB.UpperBound.X = float.MaxValue;
+            simulationAABB.UpperBound.Y = float.MaxValue;
+            _skipAABBUpdate = true;
+            for (int i = 0; i < 300; i++)
+                update();
+            _skipAABBUpdate = false;
         }
 
         // createParticle
@@ -549,11 +563,14 @@ namespace StasisGame.Systems
                 for (int i = 0; i < particleInfluenceComponents.Count; i++)
                     particleInfluenceComponents[i].particleCount = 0;
 
-                // Update simulation AABB
-                Vector2 screenCenter = _renderSystem.screenCenter;
-                Vector2 simHalfScreen = (_renderSystem.halfScreen / _renderSystem.scale) + SIMULATION_MARGIN;
-                simulationAABB.LowerBound = screenCenter - simHalfScreen;
-                simulationAABB.UpperBound = screenCenter + simHalfScreen;
+                if (!_skipAABBUpdate)
+                {
+                    // Update simulation AABB
+                    Vector2 screenCenter = _renderSystem.screenCenter;
+                    Vector2 simHalfScreen = (_renderSystem.halfScreen / _renderSystem.scale) + SIMULATION_MARGIN;
+                    simulationAABB.LowerBound = screenCenter - simHalfScreen;
+                    simulationAABB.UpperBound = screenCenter + simHalfScreen;
+                }
 
                 // Flag active particles
                 flagActive();
