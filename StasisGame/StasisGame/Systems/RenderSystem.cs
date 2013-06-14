@@ -43,6 +43,8 @@ namespace StasisGame.Systems
         private RenderTarget2D _fluidRenderTarget;
         private RenderTarget2D _renderedFluid;
         private RenderTarget2D _debugFluid;
+        private RenderTarget2D _postSourceUnder;
+        private RenderTarget2D _postSourceOver;
         private Texture2D _fluidParticleTexture;
         private Effect _fluidEffect;
 
@@ -72,6 +74,8 @@ namespace StasisGame.Systems
             _fluidRenderTarget = new RenderTarget2D(_graphicsDevice, _graphicsDevice.Viewport.Width, _graphicsDevice.Viewport.Height);
             _renderedFluid = new RenderTarget2D(_graphicsDevice, _graphicsDevice.Viewport.Width, _graphicsDevice.Viewport.Height);
             _debugFluid = new RenderTarget2D(_graphicsDevice, _graphicsDevice.Viewport.Width, _graphicsDevice.Viewport.Height);
+            _postSourceUnder = new RenderTarget2D(_graphicsDevice, _graphicsDevice.Viewport.Width, _graphicsDevice.Viewport.Height);
+            _postSourceOver = new RenderTarget2D(_graphicsDevice, _graphicsDevice.Viewport.Width, _graphicsDevice.Viewport.Height);
 
             _contentManager = new ContentManager(game.Services);
             _contentManager.RootDirectory = "Content";
@@ -299,6 +303,10 @@ namespace StasisGame.Systems
                 _graphicsDevice.SetRenderTarget(null);
             }
 
+            // Begin drawing a source for post effects under the player's level
+            _graphicsDevice.SetRenderTarget(_postSourceUnder);
+            _graphicsDevice.Clear(Color.Black);
+
             // Draw background
             if (_backgroundRenderer.background != null)
             {
@@ -469,6 +477,10 @@ namespace StasisGame.Systems
 
             _spriteBatch.End();
 
+            // Begin drawing source for post effects over the player's layer
+            _graphicsDevice.SetRenderTarget(_postSourceOver);
+            _graphicsDevice.Clear(Color.Transparent);
+
             // Draw background's second half
             if (_backgroundRenderer.background != null)
             {
@@ -476,6 +488,17 @@ namespace StasisGame.Systems
                 _backgroundRenderer.drawSecondHalf();
                 _spriteBatch.End();
             }
+
+            // Draw post source under and over
+            _graphicsDevice.SetRenderTarget(null);
+            _graphicsDevice.Clear(Color.Transparent);
+            _spriteBatch.Begin();
+            _spriteBatch.Draw(_postSourceUnder, _postSourceUnder.Bounds, Color.White);
+            _spriteBatch.End();
+
+            _spriteBatch.Begin(SpriteSortMode.Immediate, BlendState.AlphaBlend);
+            _spriteBatch.Draw(_postSourceOver, _postSourceOver.Bounds, Color.White);
+            _spriteBatch.End();
 
             // Particle debug
             if (LoderGame.debug)
