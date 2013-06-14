@@ -194,7 +194,7 @@ namespace StasisGame.Systems
             if (InputSystem.newKeyState.IsKeyDown(Keys.F4) && InputSystem.oldKeyState.IsKeyUp(Keys.F4))
                 _enlargeDebugFuild = !_enlargeDebugFuild;
 
-            _backgroundRenderer.update(-screenCenter);
+            _backgroundRenderer.update(_scale, -screenCenter);
         }
 
         // draw

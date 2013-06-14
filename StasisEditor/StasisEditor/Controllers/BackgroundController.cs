@@ -23,6 +23,7 @@ namespace StasisEditor.Controllers
         private Vector2 _screenCenter;
 
         public BindingList<EditorBackground> backgrounds { get { return _backgrounds; } }
+        public EditorController editorController { get { return _editorController; } }
         public Point mouse
         {
             get { return _mouse; }

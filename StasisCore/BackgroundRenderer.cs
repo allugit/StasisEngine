@@ -25,13 +25,13 @@ namespace StasisCore
             return (x % y) + (x < 0 ? y : 0);
         }
 
-        public void update(Vector2 screenOffset)
+        public void update(float scale, Vector2 screenOffset)
         {
             _screenSize = new Vector2(_spriteBatch.GraphicsDevice.Viewport.Width, _spriteBatch.GraphicsDevice.Viewport.Height);
             _halfScreen = _screenSize / 2f;
 
             foreach (BackgroundLayer layer in _background.layers)
-                layer.position = screenOffset * layer.speedScale;
+                layer.position = screenOffset * (layer.speedScale * scale);
         }
 
         public void drawLayer(BackgroundLayer layer)

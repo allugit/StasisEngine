@@ -171,7 +171,7 @@ namespace StasisGame.Systems
             _entityManager.addComponent(playerId, new PhysicsComponent(body));
             _entityManager.addComponent(playerId, new CharacterMovementComponent(feetFixture));
             _entityManager.addComponent(playerId, new CharacterRenderComponent());
-            _entityManager.addComponent(playerId, new BodyFocusPointComponent(body, new Vector2(0, -7f), FocusType.Multiple));
+            _entityManager.addComponent(playerId, new BodyFocusPointComponent(body, new Vector2(0, -5f), FocusType.Multiple));
             _entityManager.addComponent(playerId, new IgnoreTreeCollisionComponent());
             _entityManager.addComponent(playerId, new IgnoreRopeRaycastComponent());
             _entityManager.addComponent(playerId, new WorldPositionComponent(body.Position));
