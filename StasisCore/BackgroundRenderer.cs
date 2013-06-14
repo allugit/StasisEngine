@@ -12,8 +12,10 @@ namespace StasisCore
         private Background _background;
         private Vector2 _screenSize;
         private Vector2 _halfScreen;
+        private Vector2 _screenOffset;
 
         public Background background { get { return _background; } set { _background = value; } }
+        public Vector2 screenOffset { get { return _screenOffset; } set { _screenOffset = value; } }
 
         public BackgroundRenderer(SpriteBatch spriteBatch)
         {
@@ -27,11 +29,12 @@ namespace StasisCore
 
         public void update(float scale, Vector2 screenOffset)
         {
+            _screenOffset = screenOffset;
             _screenSize = new Vector2(_spriteBatch.GraphicsDevice.Viewport.Width, _spriteBatch.GraphicsDevice.Viewport.Height);
             _halfScreen = _screenSize / 2f;
 
             foreach (BackgroundLayer layer in _background.layers)
-                layer.position = screenOffset * (layer.speedScale * scale);
+                layer.position = _screenOffset * (layer.speedScale * scale);
         }
 
         public void drawLayer(BackgroundLayer layer)

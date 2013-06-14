@@ -83,14 +83,32 @@ namespace StasisEditor.Views.Controls
 
                 GraphicsDevice.Clear(Color.Black);
 
-                _spriteBatch.Begin(SpriteSortMode.BackToFront, BlendState.AlphaBlend);
-
                 if (_backgroundRenderer.background != null)
                 {
-                    _backgroundRenderer.draw();
-                }
+                    _spriteBatch.Begin(SpriteSortMode.BackToFront, BlendState.AlphaBlend);
+                    _backgroundRenderer.drawFirstHalf();
+                    _spriteBatch.End();
 
-                _spriteBatch.End();
+                    Vector2 previousScreenCenter = _view.controller.editorController.levelController.screenCenter;
+                    _view.controller.editorController.levelController.screenCenter = _backgroundRenderer.screenOffset;
+                    _view.controller.editorController.levelController.view.spriteBatch.Begin(SpriteSortMode.BackToFront, BlendState.AlphaBlend);
+                    if (_view.controller.editorController.levelController.level != null)
+                    {
+                        foreach (List<EditorActor> actors in _view.controller.editorController.levelController.level.sortedActors.Values)
+                        {
+                            foreach (EditorActor actor in actors)
+                            {
+                                actor.draw();
+                            }
+                        }
+                    }
+                    _view.controller.editorController.levelController.view.spriteBatch.End();
+                    _view.controller.editorController.levelController.screenCenter = previousScreenCenter;
+
+                    _spriteBatch.Begin(SpriteSortMode.BackToFront, BlendState.AlphaBlend);
+                    _backgroundRenderer.drawSecondHalf();
+                    _spriteBatch.End();
+                }
             }
         }
     }
