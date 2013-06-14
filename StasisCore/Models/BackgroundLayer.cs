@@ -15,6 +15,7 @@ namespace StasisCore.Models
         protected bool _fitToScreen;
         protected float _scale = 1f;
         protected bool _tile = true;
+        protected Vector2 _position;
 
         virtual public Texture2D texture { get { return _texture; } set { _texture = value; } }
         public string textureUID { get { return _textureUID; } set { _textureUID = value; } }
@@ -24,6 +25,7 @@ namespace StasisCore.Models
         public bool fitToScreen { get { return _fitToScreen; } set { _fitToScreen = value; } }
         public float scale { get { return _scale; } set { _scale = value; } }
         public bool tile { get { return _tile; } set { _tile = value; } }
+        virtual public Vector2 position { get { return _position; } set { _position = value; } }
         virtual public XElement data
         {
             get

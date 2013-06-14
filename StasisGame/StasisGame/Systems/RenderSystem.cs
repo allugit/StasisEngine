@@ -193,6 +193,8 @@ namespace StasisGame.Systems
         {
             if (InputSystem.newKeyState.IsKeyDown(Keys.F4) && InputSystem.oldKeyState.IsKeyUp(Keys.F4))
                 _enlargeDebugFuild = !_enlargeDebugFuild;
+
+            _backgroundRenderer.update(-screenCenter);
         }
 
         // draw
@@ -301,7 +303,7 @@ namespace StasisGame.Systems
             if (_backgroundRenderer.background != null)
             {
                 _spriteBatch.Begin(SpriteSortMode.BackToFront, BlendState.AlphaBlend);
-                _backgroundRenderer.draw(-screenCenter);
+                _backgroundRenderer.draw();
                 _spriteBatch.End();
             }
 

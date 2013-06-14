@@ -78,13 +78,16 @@ namespace StasisEditor.Views.Controls
         {
             if (!IsDesignerHosted)
             {
+                if (_backgroundRenderer.background != null)
+                    _backgroundRenderer.update(_view.controller.screenCenter);
+
                 GraphicsDevice.Clear(Color.Black);
 
                 _spriteBatch.Begin(SpriteSortMode.BackToFront, BlendState.AlphaBlend);
 
                 if (_backgroundRenderer.background != null)
                 {
-                    _backgroundRenderer.draw(_view.controller.screenCenter);
+                    _backgroundRenderer.draw();
                 }
 
                 _spriteBatch.End();
