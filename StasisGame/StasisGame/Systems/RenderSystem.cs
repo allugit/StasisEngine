@@ -303,7 +303,7 @@ namespace StasisGame.Systems
             if (_backgroundRenderer.background != null)
             {
                 _spriteBatch.Begin(SpriteSortMode.BackToFront, BlendState.AlphaBlend);
-                _backgroundRenderer.draw();
+                _backgroundRenderer.drawFirstHalf();
                 _spriteBatch.End();
             }
 
@@ -436,15 +436,7 @@ namespace StasisGame.Systems
 
             drawRenderablePrimitives();
 
-            for (int i = 0; i < aimEntities.Count; i++)
-            {
-                AimComponent aimComponent = (AimComponent)_entityManager.getComponent(aimEntities[i], ComponentType.Aim);
-                Vector2 worldPosition = (_entityManager.getComponent(aimEntities[i], ComponentType.WorldPosition) as WorldPositionComponent).position;
-                float length = aimComponent.length;
-
-                _spriteBatch.Draw(_reticle, (worldPosition - screenCenter + new Vector2((float)Math.Cos(aimComponent.angle), (float)Math.Sin(aimComponent.angle)) * length) * _scale + _halfScreen, _reticle.Bounds, Color.Red, aimComponent.angle, new Vector2(_reticle.Width, _reticle.Height) / 2f, 1f, SpriteEffects.None, 0f);
-            }
-
+            // Rope grab components (TEMPORARY)
             for (int i = 0; i < ropeGrabComponents.Count; i++)
             {
                 foreach (KeyValuePair<Body, RevoluteJoint> pair in ropeGrabComponents[i].joints)
@@ -458,14 +450,32 @@ namespace StasisGame.Systems
                 }
             }
 
-            // Draw explosions
+            // Draw explosions (TEMPORARY)
             for (int i = 0; i < explosionEntities.Count; i++)
             {
                 ExplosionComponent explosionComponent = (ExplosionComponent)_entityManager.getComponent(explosionEntities[i], ComponentType.Explosion);
                 _spriteBatch.Draw(_circle, (explosionComponent.position - screenCenter) * _scale + _halfScreen, _circle.Bounds, Color.Red, 0f, new Vector2(_circle.Width, _circle.Height) / 2f, ((explosionComponent.radius * _scale) / (_circle.Width / 2f)), SpriteEffects.None, 0f);
             }
 
+            // Aim components
+            for (int i = 0; i < aimEntities.Count; i++)
+            {
+                AimComponent aimComponent = (AimComponent)_entityManager.getComponent(aimEntities[i], ComponentType.Aim);
+                Vector2 worldPosition = (_entityManager.getComponent(aimEntities[i], ComponentType.WorldPosition) as WorldPositionComponent).position;
+                float length = aimComponent.length;
+
+                _spriteBatch.Draw(_reticle, (worldPosition - screenCenter + new Vector2((float)Math.Cos(aimComponent.angle), (float)Math.Sin(aimComponent.angle)) * length) * _scale + _halfScreen, _reticle.Bounds, Color.Red, aimComponent.angle, new Vector2(_reticle.Width, _reticle.Height) / 2f, 1f, SpriteEffects.None, 0f);
+            }
+
             _spriteBatch.End();
+
+            // Draw background's second half
+            if (_backgroundRenderer.background != null)
+            {
+                _spriteBatch.Begin(SpriteSortMode.BackToFront, BlendState.AlphaBlend);
+                _backgroundRenderer.drawSecondHalf();
+                _spriteBatch.End();
+            }
 
             // Particle debug
             if (LoderGame.debug)
