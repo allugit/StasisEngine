@@ -215,34 +215,6 @@ namespace StasisGame.Systems
             List<RopeGrabComponent> ropeGrabComponents = _entityManager.getComponents<RopeGrabComponent>(ComponentType.RopeGrab);
             Vector2 screenCenter = _cameraSystem.screenCenter;
 
-            // Pre render fluid
-            if (fluidSystem != null)
-            {
-                // Draw on render target
-                _graphicsDevice.SetRenderTarget(_fluidRenderTarget);
-                _graphicsDevice.Clear(Color.Transparent);
-                spriteBatch.Begin();
-                int limit = fluidSystem.numActiveParticles;
-                for (int i = 0; i < limit; i++)
-                {
-                    // Current particle
-                    Particle particle = fluidSystem.liquid[fluidSystem.activeParticles[i]];
-                    Color color = new Color(1, particle.velocity.X < 0 ? -particle.velocity.X : particle.velocity.X, particle.velocity.Y < 0 ? -particle.velocity.Y : particle.velocity.Y);
-                    spriteBatch.Draw(_fluidParticleTexture, (particle.position - _cameraSystem.screenCenter) * scale + _halfScreen, _fluidParticleTexture.Bounds, color, 0, new Vector2(16, 16), 1, SpriteEffects.None, 0);
-                }
-                spriteBatch.End();
-                _graphicsDevice.SetRenderTarget(_renderedFluid);
-                _graphicsDevice.Clear(Color.Transparent);
-
-                // Draw post-processed render target to screen
-                _graphicsDevice.Textures[1] = _postSourceUnder;
-                _fluidEffect.Parameters["renderSize"].SetValue(new Vector2(_renderedFluid.Width, _renderedFluid.Height));
-                spriteBatch.Begin(SpriteSortMode.Immediate, BlendState.AlphaBlend, SamplerState.LinearClamp, null, null, _fluidEffect);
-                spriteBatch.Draw(_fluidRenderTarget, Vector2.Zero, Color.DarkBlue);
-                spriteBatch.End();
-                _graphicsDevice.SetRenderTarget(null);
-            }
-
             // Temporary debug draw
             if (LoderGame.debug)
             {
@@ -483,6 +455,31 @@ namespace StasisGame.Systems
             }
             _graphicsDevice.SetRenderTarget(null);
             _graphicsDevice.Clear(Color.Transparent);
+
+
+            // Render fluid
+            _graphicsDevice.SetRenderTarget(_fluidRenderTarget);
+            _graphicsDevice.Clear(Color.Transparent);
+            spriteBatch.Begin();
+            int limit = fluidSystem.numActiveParticles;
+            for (int i = 0; i < limit; i++)
+            {
+                // Current particle
+                Particle particle = fluidSystem.liquid[fluidSystem.activeParticles[i]];
+                Color color = new Color(1, particle.velocity.X < 0 ? -particle.velocity.X : particle.velocity.X, particle.velocity.Y < 0 ? -particle.velocity.Y : particle.velocity.Y);
+                spriteBatch.Draw(_fluidParticleTexture, (particle.position - _cameraSystem.screenCenter) * scale + _halfScreen, _fluidParticleTexture.Bounds, color, 0, new Vector2(16, 16), 1, SpriteEffects.None, 0);
+            }
+            spriteBatch.End();
+            _graphicsDevice.SetRenderTarget(_renderedFluid);
+            _graphicsDevice.Clear(Color.Transparent);
+
+            // Draw post-processed render target to screen
+            _graphicsDevice.Textures[1] = _postSourceUnder;
+            _fluidEffect.Parameters["renderSize"].SetValue(new Vector2(_renderedFluid.Width, _renderedFluid.Height));
+            spriteBatch.Begin(SpriteSortMode.Immediate, BlendState.AlphaBlend, SamplerState.LinearClamp, null, null, _fluidEffect);
+            spriteBatch.Draw(_fluidRenderTarget, Vector2.Zero, Color.DarkBlue);
+            spriteBatch.End();
+            _graphicsDevice.SetRenderTarget(null);
 
             // Draw post source under and over
             _spriteBatch.Begin();

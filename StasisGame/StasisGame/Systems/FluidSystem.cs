@@ -358,8 +358,9 @@ namespace StasisGame.Systems
                                     normal = particle.collisionNormals[v];
                                 }
                             }
-                            particle.position = closestPoint + 0.05f * normal;
+                            particle.position = closestPoint + 0.025f * normal;
                             particle.skipMovementUpdate = true;
+                            particle.pressure = MAX_PRESSURE;
                         }
                         else if (fixture.ShapeType == ShapeType.Circle)
                         {
@@ -370,8 +371,9 @@ namespace StasisGame.Systems
                             normal = difference;
                             normal.Normalize();
                             closestPoint = center + difference * (shape.Radius / difference.Length());
-                            particle.position = closestPoint + 0.05f * normal;
+                            particle.position = closestPoint + 0.025f * normal;
                             particle.skipMovementUpdate = true;
+                            particle.pressure = MAX_PRESSURE;
                         }
 
                         // Update velocity
