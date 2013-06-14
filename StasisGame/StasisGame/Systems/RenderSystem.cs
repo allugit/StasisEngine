@@ -228,15 +228,16 @@ namespace StasisGame.Systems
                     // Current particle
                     Particle particle = fluidSystem.liquid[fluidSystem.activeParticles[i]];
                     Color color = new Color(1, particle.velocity.X < 0 ? -particle.velocity.X : particle.velocity.X, particle.velocity.Y < 0 ? -particle.velocity.Y : particle.velocity.Y);
-                    spriteBatch.Draw(_fluidParticleTexture, (particle.position - _cameraSystem.screenCenter) * scale + _halfScreen, _fluidParticleTexture.Bounds, color, 0, new Vector2(12, 12), 1, SpriteEffects.None, 0);
+                    spriteBatch.Draw(_fluidParticleTexture, (particle.position - _cameraSystem.screenCenter) * scale + _halfScreen, _fluidParticleTexture.Bounds, color, 0, new Vector2(16, 16), 1, SpriteEffects.None, 0);
                 }
                 spriteBatch.End();
                 _graphicsDevice.SetRenderTarget(_renderedFluid);
                 _graphicsDevice.Clear(Color.Transparent);
 
                 // Draw post-processed render target to screen
+                _graphicsDevice.Textures[1] = _postSourceUnder;
                 _fluidEffect.Parameters["renderSize"].SetValue(new Vector2(_renderedFluid.Width, _renderedFluid.Height));
-                spriteBatch.Begin(SpriteSortMode.Immediate, BlendState.AlphaBlend, null, null, null, _fluidEffect);
+                spriteBatch.Begin(SpriteSortMode.Immediate, BlendState.AlphaBlend, SamplerState.LinearClamp, null, null, _fluidEffect);
                 spriteBatch.Draw(_fluidRenderTarget, Vector2.Zero, Color.DarkBlue);
                 spriteBatch.End();
                 _graphicsDevice.SetRenderTarget(null);
@@ -312,14 +313,6 @@ namespace StasisGame.Systems
             {
                 _spriteBatch.Begin(SpriteSortMode.BackToFront, BlendState.AlphaBlend);
                 _backgroundRenderer.drawFirstHalf();
-                _spriteBatch.End();
-            }
-
-            // Draw fluid
-            if (fluidSystem != null)
-            {
-                _spriteBatch.Begin();
-                _spriteBatch.Draw(_renderedFluid, _renderedFluid.Bounds, Color.White);
                 _spriteBatch.End();
             }
 
@@ -488,13 +481,21 @@ namespace StasisGame.Systems
                 _backgroundRenderer.drawSecondHalf();
                 _spriteBatch.End();
             }
-
-            // Draw post source under and over
             _graphicsDevice.SetRenderTarget(null);
             _graphicsDevice.Clear(Color.Transparent);
+
+            // Draw post source under and over
             _spriteBatch.Begin();
             _spriteBatch.Draw(_postSourceUnder, _postSourceUnder.Bounds, Color.White);
             _spriteBatch.End();
+
+            // Draw fluid
+            if (fluidSystem != null)
+            {
+                _spriteBatch.Begin();
+                _spriteBatch.Draw(_renderedFluid, _renderedFluid.Bounds, Color.White);
+                _spriteBatch.End();
+            }
 
             _spriteBatch.Begin(SpriteSortMode.Immediate, BlendState.AlphaBlend);
             _spriteBatch.Draw(_postSourceOver, _postSourceOver.Bounds, Color.White);

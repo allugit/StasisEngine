@@ -1,4 +1,5 @@
 sampler baseSample : register(s0);
+sampler postSource : register(s1);
 float2 renderSize;
 
 float4 LiquidPS(float2 texCoord:TEXCOORD0) : COLOR0
@@ -6,8 +7,21 @@ float4 LiquidPS(float2 texCoord:TEXCOORD0) : COLOR0
 	// Base texture has density information in the red channel,
 	//   and x and y velocity in the green and blue channels.
     float4 base = tex2D(baseSample, texCoord);
-	float4 blue = float4(0.15, 0.3, 0.6, step(0.5, base.a) * 0.8);
-	float4 result = blue;
+	float alpha = step(0.5, base.a) * 0.8;
+	float3 blue = float3(0.07, 0.15, 0.4);
+	float4 result = float4(1, 1, 1, alpha);
+
+	// Calculate speed
+	float speed = sqrt(base.g * base.g + base.b * base.b) * 0.75;
+	if (base.a > 0.9)
+		speed *= 2;
+	else if (base.a > 0.7 && base.a < 0.8)
+		speed *= 0.5;
+	else
+		speed = 0;
+
+	// Warp post source
+	result.rgb *= tex2D(postSource, texCoord + float2(-speed, -speed) / 10).rgb;
 
 	// Pixel size
 	float2 pixelSize = 1 / renderSize;
@@ -21,16 +35,8 @@ float4 LiquidPS(float2 texCoord:TEXCOORD0) : COLOR0
 	// Clamp result based on alpha
 	result *= step(0.7, base.a);
 
-	// Speed
-	float speed = sqrt(base.g * base.g + base.b * base.b) * 0.75;
-	if (base.a > 0.9)
-		result.rgb += speed * 2;
-	else if(base.a > 0.8)
-		result.rgb += speed;
-	else if(base.a > 0.7)
-		result.rgb += speed * 0.5;
-	else
-		result.rgb = 0;
+	// Apply speed
+	result.rgb += speed;
 
 	// Scattering
 	float scattering = base.a / 10;
@@ -47,6 +53,9 @@ float4 LiquidPS(float2 texCoord:TEXCOORD0) : COLOR0
 	scattering = 1 - scattering;
 	scattering = lerp(0.5, 0.8, scattering);
 	result.rgb *= scattering;
+
+	// Add some blue
+	result.rgb += blue * alpha;
 
 	return result;
 }
