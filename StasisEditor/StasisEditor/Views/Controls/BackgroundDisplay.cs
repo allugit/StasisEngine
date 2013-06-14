@@ -72,6 +72,9 @@ namespace StasisEditor.Views.Controls
         public void previewBackground(EditorBackground background)
         {
             _backgroundRenderer.background = background;
+
+            // TEMPORARY -- Set the background in the level view
+            _view.controller.editorController.levelController.view.backgroundRenderer.background = background;
         }
 
         protected override void Draw()

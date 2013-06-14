@@ -1,10 +1,12 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Windows.Forms;
+using System.Xml.Linq;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Content;
 using Microsoft.Xna.Framework.Graphics;
 using StasisCore;
+using StasisCore.Models;
 using StasisEditor.Controllers;
 using StasisEditor.Models;
 using StasisEditor.Views.Controls;
@@ -29,6 +31,7 @@ namespace StasisEditor.Views
         private Effect _primitivesEffect;
         private bool _draw = true;
         private bool _keysEnabled = true;
+        private BackgroundRenderer _backgroundRenderer;
 
         public bool active
         {
@@ -36,6 +39,7 @@ namespace StasisEditor.Views
             set { _draw = value; _keysEnabled = value; }
         }
         public SpriteBatch spriteBatch { get { return _spriteBatch; } }
+        public BackgroundRenderer backgroundRenderer { get { return _backgroundRenderer; } }
 
         // setController
         public void setController(LevelController controller)
@@ -48,6 +52,7 @@ namespace StasisEditor.Views
         {
             // Resources
             _spriteBatch = new SpriteBatch(GraphicsDevice);
+            _backgroundRenderer = new BackgroundRenderer(_spriteBatch);
             _contentManager = new ContentManager(Services, "Content");
             _pixel = new Texture2D(GraphicsDevice, 1, 1);
             _pixel.SetData<Color>(new[] { Color.White });
@@ -64,7 +69,7 @@ namespace StasisEditor.Views
             _primitivesEffect = _coreContentManager.Load<Effect>("effects\\primitives");
 
             // Draw loop
-            //Application.Idle += delegate { Invalidate(); };
+            Application.Idle += delegate { Invalidate(); };
 
             // Input
             MouseDown += new MouseEventHandler(LevelView_MouseDown);
@@ -112,10 +117,23 @@ namespace StasisEditor.Views
 
             if (_draw && _controller.level != null)
             {
+                if (_backgroundRenderer.background != null)
+                {
+                    _backgroundRenderer.update(_controller.scale, _controller.screenCenter);
+
+                    // Draw first half of background layers
+                    _spriteBatch.Begin(SpriteSortMode.BackToFront, BlendState.AlphaBlend);
+                    _backgroundRenderer.drawFirstHalf();
+                    _spriteBatch.End();
+                }
+                
                 _spriteBatch.Begin();
 
                 // Draw grid
                 drawGrid();
+
+                // Draw level
+                _controller.level.draw();
 
                 // Draw mouse position
                 drawMousePosition();
@@ -132,6 +150,14 @@ namespace StasisEditor.Views
                 }
 
                 _spriteBatch.End();
+
+                if (_backgroundRenderer.background != null)
+                {
+                    // Draw second half of background layers
+                    _spriteBatch.Begin(SpriteSortMode.BackToFront, BlendState.AlphaBlend);
+                    _backgroundRenderer.drawSecondHalf();
+                    _spriteBatch.End();
+                }
             }
         }
 

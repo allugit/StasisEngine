@@ -28,8 +28,6 @@ namespace StasisEditor.Controllers
         private System.Drawing.Point _oldMouse;
         private Vector2 _screenCenter;
         private EditorActor _selectedActor;
-        //private KeyboardState _keyState;
-        //private KeyboardState _oldKeyState;
         private bool[] _keysPressed;
         private bool[] _keysChecked;
         private bool _mouseOverView;
@@ -56,7 +54,7 @@ namespace StasisEditor.Controllers
             _keysPressed = new bool[255];
             _keysChecked = new bool[255];
             Application.Idle += new EventHandler(update);
-            Application.Idle += new EventHandler(draw);
+            //Application.Idle += new EventHandler(draw);
             _levelView.FindForm().KeyDown += new System.Windows.Forms.KeyEventHandler(Parent_KeyDown);
             _levelView.FindForm().KeyUp += new System.Windows.Forms.KeyEventHandler(Parent_KeyUp);
         }
@@ -430,6 +428,7 @@ namespace StasisEditor.Controllers
         }
 
         // Draw
+        /*
         void draw(object sender, EventArgs e)
         {
             if (_level != null)
@@ -439,6 +438,6 @@ namespace StasisEditor.Controllers
                 _levelView.spriteBatch.End();
                 _levelView.Invalidate();
             }
-        }
+        }*/
     }
 }
