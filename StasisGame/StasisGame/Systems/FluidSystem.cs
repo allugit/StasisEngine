@@ -501,8 +501,8 @@ namespace StasisGame.Systems
                     relative = particle.position - explosionComponent.position;
                     distanceSq = relative.LengthSquared();
                     relative.Normalize();
-                    force = relative * (explosionComponent.strength / Math.Max(distanceSq, 0.2f));
-                    particle.velocity += force * 0.0035f;
+                    force = relative * (explosionComponent.strength / Math.Max(distanceSq, 1f));
+                    particle.velocity += force * 0.0055f;
                 }
             }
         }
