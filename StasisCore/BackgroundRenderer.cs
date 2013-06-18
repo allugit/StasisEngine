@@ -58,7 +58,7 @@ namespace StasisCore
             }
             else
             {
-                _spriteBatch.Draw(layer.texture, layer.initialOffset + _halfScreen, layer.texture.Bounds, Color.White, 0f, new Vector2(layer.texture.Width, layer.texture.Height) / 2, layer.scale, SpriteEffects.None, layer.layerDepth);
+                _spriteBatch.Draw(layer.texture, layer.position + layer.initialOffset + _halfScreen, layer.texture.Bounds, Color.White, 0f, new Vector2(layer.texture.Width, layer.texture.Height) / 2, layer.scale, SpriteEffects.None, layer.layerDepth);
             }
         }
 
