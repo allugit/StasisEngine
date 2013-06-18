@@ -16,6 +16,7 @@ namespace StasisCore.Models
         protected float _scale = 1f;
         protected bool _tile = true;
         protected Vector2 _position;
+        protected Color _baseColor;
 
         virtual public Texture2D texture { get { return _texture; } set { _texture = value; } }
         public string textureUID { get { return _textureUID; } set { _textureUID = value; } }
@@ -26,6 +27,7 @@ namespace StasisCore.Models
         public float scale { get { return _scale; } set { _scale = value; } }
         public bool tile { get { return _tile; } set { _tile = value; } }
         virtual public Vector2 position { get { return _position; } set { _position = value; } }
+        virtual public Color baseColor { get { return _baseColor; } set { _baseColor = value; } }
         virtual public XElement data
         {
             get
@@ -36,7 +38,8 @@ namespace StasisCore.Models
                     new XAttribute("speed_scale", _speedScale),
                     new XAttribute("layer_depth", _layerDepth),
                     new XAttribute("fit_to_screen", _fitToScreen),
-                    new XAttribute("tile", _tile));
+                    new XAttribute("tile", _tile),
+                    new XAttribute("base_color", _baseColor));
             }
         }
 
@@ -48,6 +51,7 @@ namespace StasisCore.Models
             _initialOffset = Loader.loadVector2(data.Attribute("initial_offset"), Vector2.Zero);
             _fitToScreen = Loader.loadBool(data.Attribute("fit_to_screen"), false);
             _tile = Loader.loadBool(data.Attribute("tile"), true);
+            _baseColor = Loader.loadColor(data.Attribute("base_color"), Color.White);
         }
 
         public BackgroundLayer()
@@ -59,6 +63,7 @@ namespace StasisCore.Models
             _layerDepth = 1f;
             _fitToScreen = false;
             _tile = true;
+            _baseColor = Color.White;
         }
 
         public void loadTexture()

@@ -13,6 +13,9 @@ namespace StasisEditor.Models
 
     public class EditorBackgroundLayer : BackgroundLayer
     {
+        [EditorAttribute(typeof(XNAColorEditor), typeof(UITypeEditor))]
+        public override Color baseColor { get { return base.baseColor; } set { base.baseColor = value; } }
+
         [EditorAttribute(typeof(Vector2Editor), typeof(UITypeEditor))]
         public override Vector2 initialOffset { get { return base.initialOffset; } set { base.initialOffset = value; } }
 
@@ -24,6 +27,9 @@ namespace StasisEditor.Models
         
         [Browsable(false)]
         public override Texture2D texture { get { return base.texture; } set { base.texture = value; } }
+
+        [Browsable(false)]
+        public override Vector2 position { get { return base.position; } set { base.position = value; } }
 
         public EditorBackgroundLayer() : base()
         {
