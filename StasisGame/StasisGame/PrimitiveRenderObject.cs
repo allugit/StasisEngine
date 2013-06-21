@@ -30,5 +30,16 @@ namespace StasisGame
             _layerDepth = layerDepth;
             _originMatrix = Matrix.Identity;
         }
+
+        public void updateVertices()
+        {
+            int index = 0;
+            for (int k = 0; k < _renderableTriangles.Count; k++)
+            {
+                _vertices[index++] = _renderableTriangles[k].vertices[0];
+                _vertices[index++] = _renderableTriangles[k].vertices[1];
+                _vertices[index++] = _renderableTriangles[k].vertices[2];
+            }
+        }
     }
 }

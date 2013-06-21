@@ -314,13 +314,7 @@ namespace StasisGame.Systems
                     }
 
                     // Update vertices
-                    int index = 0;
-                    for (int k = 0; k < primitiveRenderObject.renderableTriangles.Count; k++)
-                    {
-                        primitiveRenderObject.vertices[index++] = primitiveRenderObject.renderableTriangles[k].vertices[0];
-                        primitiveRenderObject.vertices[index++] = primitiveRenderObject.renderableTriangles[k].vertices[1];
-                        primitiveRenderObject.vertices[index++] = primitiveRenderObject.renderableTriangles[k].vertices[2];
-                    }
+                    primitiveRenderObject.updateVertices();
 
                     addRenderablePrimitive(primitiveRenderObject);
                 }

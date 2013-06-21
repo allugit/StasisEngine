@@ -87,6 +87,7 @@ namespace StasisGame
         private Texture2D leafTexture;
         private float _z;
         public int anchorCount;
+        private PrimitiveRenderObject _renderObject;
 
         public VertexPositionTexture[] vertices { get { return _vertices; } }
 
@@ -161,7 +162,7 @@ namespace StasisGame
             tree.treeSystem.levelSystem.expandBoundary(position);
 
             // Determine z-index
-            _z = StasisMathHelper.floatBetween(0.1f, 0.15f, tree.random);
+            _z = tree.layerDepth + StasisMathHelper.floatBetween(-0.01f, 0.01f, tree.random);
         }
 
         // isBranchingPoint
@@ -608,24 +609,32 @@ namespace StasisGame
             inverseMass = isRoot ? 0 : 1 / mass;
             inverseMassSq = inverseMass * inverseMass;
 
+            // Find texture shadow value
+            float shadowValue = Math.Max(Math.Min(budQuality, 1f), 0.5f);
+            textureColor = new Color(new Vector3(shadowValue, shadowValue, shadowValue));
+
+            // Modify z index based on shadow value
+            _z = tree.layerDepth + StasisMathHelper.floatBetween(-0.01f, 0.01f, tree.random) + shadowValue / 100f;
+
             // Assign texture
             if (previousCount > 3)
             {
                 int variation = tree.random.Next(TreeSystem.NUM_LEAF_VARIATIONS);
                 int group = tree.random.Next((int)((float)TreeSystem.NUM_LEAF_GROUPS * textureWeight(apexRatio)));
                 leafTexture = tree.leafTextures[variation][group];
+                _renderObject = (tree.treeSystem.systemManager.getSystem(SystemType.Render) as RenderSystem).createSpritePrimitiveObject(
+                    leafTexture,
+                    position,
+                    new Vector2(leafTexture.Width, leafTexture.Height) / 2f,
+                    0f,
+                    1f,
+                    _z);
             }
             else
             {
                 leafTexture = null;
+                _renderObject = null;
             }
-
-            // Find texture shadow value
-            float shadowValue = Math.Max(Math.Min(budQuality, 1f), 0.5f);
-            textureColor = new Color(new Vector3(shadowValue, shadowValue, shadowValue));
-
-            // Modify z index based on shadow value
-            _z += shadowValue / 10f;
 
             return maxCount;
         }
@@ -1263,8 +1272,12 @@ namespace StasisGame
         // draw
         public void draw(RenderSystem renderSystem)
         {
-            if (leafTexture != null)
-                renderSystem.spriteBatch.Draw(leafTexture, (position - renderSystem.screenCenter) * renderSystem.scale + renderSystem.halfScreen, leafTexture.Bounds, textureColor, currentTextureAngle, new Vector2(leafTexture.Width, leafTexture.Height) / 2, 1, SpriteEffects.None, _z);
+            if (_renderObject != null)
+            {
+                _renderObject.worldMatrix = _renderObject.originMatrix * Matrix.CreateRotationZ(currentTextureAngle) * Matrix.CreateTranslation(new Vector3(position, 0));
+                _renderObject.updateVertices();
+                renderSystem.addRenderablePrimitive(_renderObject);
+            }
 
             if (mainMetamer != null)
                 mainMetamer.draw(renderSystem);

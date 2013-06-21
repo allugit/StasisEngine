@@ -36,6 +36,7 @@ namespace StasisGame.Systems
         public bool singleStep { get { return _singleStep; } set { _singleStep = value; } }
         public LevelSystem levelSystem { get { return (LevelSystem)_systemManager.getSystem(SystemType.Level); } }
         public EntityManager entityManager { get { return _entityManager; } }
+        public SystemManager systemManager { get { return _systemManager; } }
 
         public TreeSystem(SystemManager systemManager, EntityManager entityManager)
         {
