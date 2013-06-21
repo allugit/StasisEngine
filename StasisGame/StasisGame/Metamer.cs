@@ -162,7 +162,7 @@ namespace StasisGame
             tree.treeSystem.levelSystem.expandBoundary(position);
 
             // Determine z-index
-            _z = tree.layerDepth + StasisMathHelper.floatBetween(-0.01f, 0.01f, tree.random);
+            _z = tree.layerDepth + StasisMathHelper.floatBetween(-0.02f, 0.01f, tree.random);
         }
 
         // isBranchingPoint
@@ -614,7 +614,7 @@ namespace StasisGame
             textureColor = new Color(new Vector3(shadowValue, shadowValue, shadowValue));
 
             // Modify z index based on shadow value
-            _z = tree.layerDepth + StasisMathHelper.floatBetween(-0.01f, 0.01f, tree.random) + shadowValue / 100f;
+            _z = tree.layerDepth + StasisMathHelper.floatBetween(-0.02f, 0.01f, tree.random) + shadowValue / 100f;
 
             // Assign texture
             if (previousCount > 3)
