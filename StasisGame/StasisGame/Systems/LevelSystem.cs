@@ -169,7 +169,7 @@ namespace StasisGame.Systems
                         break;
 
                     case "Decal":
-                        _entityManager.factory.createDecal(actorData);
+                        secondPassData.Add(actorData);
                         break;
                 }
             }
@@ -205,6 +205,10 @@ namespace StasisGame.Systems
 
                     case "CollisionFilter":
                         _entityManager.factory.createCollisionFilter(actorData);
+                        break;
+
+                    case "Decal":
+                        _entityManager.factory.createDecal(actorData);
                         break;
                 }
             }

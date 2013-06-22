@@ -39,13 +39,8 @@ namespace StasisGame.Systems
             _bodiesToRemove = new List<Body>();
             _playerSystem = (PlayerSystem)systemManager.getSystem(SystemType.Player);
 
-            //BodyDef groundBodyDef = new BodyDef();
-            //CircleShape circleShape = new CircleShape();
-            //FixtureDef fixtureDef = new FixtureDef();
-
             // Create world
             _world = new World(Loader.loadVector2(data.Attribute("gravity"), new Vector2(0, 32)));
-            //_world.ContactListener = this;
 
             // Contact callbacks
             _world.ContactManager.BeginContact += new BeginContactDelegate(BeginContact);
@@ -55,17 +50,6 @@ namespace StasisGame.Systems
 
             // Create ground body/entity
             _groundBody = _entityManager.factory.createGroundBody(_world);
-            /*
-            groundBodyDef.type = BodyType.Static;
-            groundBodyDef.userData = groundId;
-            circleShape._radius = 0.1f;
-            fixtureDef.isSensor = true;
-            fixtureDef.shape = circleShape;
-            _groundBody = world.CreateBody(groundBodyDef);
-            _groundBody.CreateFixture(fixtureDef);
-            _entityManager.addComponent(groundId, new GroundBodyComponent(_groundBody));
-            _entityManager.addComponent(groundId, new SkipFluidResolutionComponent());
-            */
         }
 
         public void removeBody(Body body)
@@ -120,13 +104,19 @@ namespace StasisGame.Systems
 
                 _world.Step(_dt);
 
-                // Update world positions
+                // Handle physic entities
                 physicsEntities = _entityManager.getEntitiesPosessing(ComponentType.Physics);
                 for (int i = 0; i < physicsEntities.Count; i++)
                 {
                     PhysicsComponent physicsComponent = _entityManager.getComponent(physicsEntities[i], ComponentType.Physics) as PhysicsComponent;
                     WorldPositionComponent worldPositionComponent = _entityManager.getComponent(physicsEntities[i], ComponentType.WorldPosition) as WorldPositionComponent;
+                    FollowMetamerComponent followMetamerComponent = _entityManager.getComponent(physicsEntities[i], ComponentType.FollowMetamer) as FollowMetamerComponent;
 
+                    // Set body position to the metamer being followed
+                    if (followMetamerComponent != null)
+                        physicsComponent.body.Position = followMetamerComponent.metamer.position;
+
+                    // Update world position component
                     worldPositionComponent.position = physicsComponent.body.Position;
                 }
             }

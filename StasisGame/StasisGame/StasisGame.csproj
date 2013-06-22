@@ -91,6 +91,7 @@
     <Compile Include="Components\DestructibleGeometryComponent.cs" />
     <Compile Include="Components\DynamiteComponent.cs" />
     <Compile Include="Components\ExplosionComponent.cs" />
+    <Compile Include="Components\FollowMetamerComponent.cs" />
     <Compile Include="Components\GateOutputComponent.cs" />
     <Compile Include="Components\MetamerComponent.cs" />
     <Compile Include="Components\ParticleInfluenceComponent.cs" />

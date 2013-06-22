@@ -32,7 +32,8 @@ namespace StasisGame.Components
         DestructibleGeometry,
         Debris,
         ParticleInfluence,
-        Metamer
+        Metamer,
+        FollowMetamer
     };
 
     public interface IComponent

@@ -1483,51 +1483,43 @@ namespace StasisGame
             World world = (_systemManager.getSystem(SystemType.Physics) as PhysicsSystem).world;
             int entityId = _entityManager.createEntity();
             Texture2D texture = ResourceManager.getTexture("tree_hut");
-            Vector2 textureOffset = new Vector2(texture.Width / 2f, texture.Height);
             Vector2 origin = new Vector2(texture.Width, texture.Height) / 2f;
             List<Vector2> points = new List<Vector2>();
             List<PolygonPoint> polygonPoints = new List<PolygonPoint>();
             Polygon polygon;
             Body body = BodyFactory.CreateBody(world);
+            Metamer metamer = (_systemManager.getSystem(SystemType.Tree) as TreeSystem).findMetamer(position);
+            System.Diagnostics.Debug.Assert(metamer != null);
 
             // Set up body
             body.BodyType = BodyType.Static;
-            body.Position = position + new Vector2(0, -texture.Height / 2f) / Settings.BASE_SCALE;
+            body.Position = position;
             body.UserData = entityId;
 
             // Points from decal shape editor
-            points.Add(new Vector2(-8.857142f, 8.914286f));
-            points.Add(new Vector2(-2.685714f, 8.828571f));
-            points.Add(new Vector2(-2.714286f, 6.571429f));
-            points.Add(new Vector2(-4.885715f, 6.457143f));
-            points.Add(new Vector2(-5.6f, 2.371428f));
-            points.Add(new Vector2(-3.342857f, 2.342857f));
-            points.Add(new Vector2(-2.828572f, -0.2285714f));
-            points.Add(new Vector2(-3.971429f, -0.2f));
-            points.Add(new Vector2(-4.028572f, -1f));
-            points.Add(new Vector2(-0.3428572f, -1.114286f));
-            points.Add(new Vector2(-0.5714286f, -2.428571f));
-            points.Add(new Vector2(-0.6285715f, -3.085714f));
-            points.Add(new Vector2(0.6571429f, -7.371428f));
-            points.Add(new Vector2(1.542857f, -9.8f));
-            points.Add(new Vector2(2.657143f, -6.771429f));
-            points.Add(new Vector2(3.628572f, -3.142857f));
-            points.Add(new Vector2(3.742857f, -2.4f));
-            points.Add(new Vector2(3.571429f, -1.057143f));
-            points.Add(new Vector2(8.542857f, -0.8857143f));
-            points.Add(new Vector2(8.514286f, -0.2f));
-            points.Add(new Vector2(7.628572f, -0.1428571f));
-            points.Add(new Vector2(10f, 5.628572f));
-            points.Add(new Vector2(9.542857f, 5.685714f));
-            points.Add(new Vector2(9.542857f, 6.514286f));
-            points.Add(new Vector2(8.6f, 6.6f));
-            points.Add(new Vector2(8.514286f, 8.571428f));
-            points.Add(new Vector2(3.685714f, 8.571428f));
-            points.Add(new Vector2(2.628572f, 9.285714f));
-            points.Add(new Vector2(-1.228571f, 9.285714f));
-            points.Add(new Vector2(-2.142857f, 9.828571f));
-            points.Add(new Vector2(-7.857143f, 9.828571f));
-            points.Add(new Vector2(-8.885715f, 9.171429f));
+            points.Add(new Vector2(-4.171429f, 0.4571429f));
+            points.Add(new Vector2(-3.685714f, -0.5142857f));
+            points.Add(new Vector2(-2.628572f, -1.914286f));
+            points.Add(new Vector2(-2.114286f, -4.628572f));
+            points.Add(new Vector2(-0.08571429f, -2.971429f));
+            points.Add(new Vector2(0.02857143f, -2.742857f));
+            points.Add(new Vector2(0.8285714f, -2.171429f));
+            points.Add(new Vector2(0.9428571f, -1.942857f));
+            points.Add(new Vector2(1.371429f, -1.8f));
+            points.Add(new Vector2(1.485714f, -2f));
+            points.Add(new Vector2(2.428571f, -1.514286f));
+            points.Add(new Vector2(2.771429f, -1.2f));
+            points.Add(new Vector2(3.514286f, -0.3142857f));
+            points.Add(new Vector2(4.342857f, 0.3142857f));
+            points.Add(new Vector2(3.428571f, 0.8857143f));
+            points.Add(new Vector2(2.085714f, 0.8857143f));
+            points.Add(new Vector2(1.914286f, 1.657143f));
+            points.Add(new Vector2(1.028571f, 1.828571f));
+            points.Add(new Vector2(-0.2285714f, 1.771429f));
+            points.Add(new Vector2(-1.085714f, 1.457143f));
+            points.Add(new Vector2(-1.942857f, 1.228571f));
+            points.Add(new Vector2(-2.914286f, 0.8285714f));
+            points.Add(new Vector2(-3.742857f, 0.5428572f));
 
             // Decompose polygon
             for (int i = 0; i < points.Count; i++)
@@ -1554,8 +1546,11 @@ namespace StasisGame
                     (ushort)CollisionCategory.Rope;
             }
 
-            _entityManager.addComponent(entityId, new PrimitivesRenderComponent(renderSystem.createSpritePrimitiveObject(texture, position, textureOffset, angle, 1f, layerDepth)));
+            _entityManager.addComponent(entityId, new PhysicsComponent(body));
+            _entityManager.addComponent(entityId, new PrimitivesRenderComponent(renderSystem.createSpritePrimitiveObject(texture, position, new Vector2(texture.Width, texture.Height) / 2f, angle, 1f, layerDepth)));
             _entityManager.addComponent(entityId, new IgnoreTreeCollisionComponent());
+            _entityManager.addComponent(entityId, new FollowMetamerComponent(metamer));
+            _entityManager.addComponent(entityId, new WorldPositionComponent(body.Position));
 
             return entityId;
         }
