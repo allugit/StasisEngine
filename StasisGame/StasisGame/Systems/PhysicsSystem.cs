@@ -114,7 +114,10 @@ namespace StasisGame.Systems
 
                     // Set body position to the metamer being followed
                     if (followMetamerComponent != null)
+                    {
                         physicsComponent.body.Position = followMetamerComponent.metamer.position;
+                        physicsComponent.body.Rotation = followMetamerComponent.metamer.currentAngle + StasisMathHelper.halfPi;
+                    }
 
                     // Update world position component
                     worldPositionComponent.position = physicsComponent.body.Position;
