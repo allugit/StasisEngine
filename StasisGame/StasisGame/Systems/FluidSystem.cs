@@ -107,7 +107,7 @@ namespace StasisGame.Systems
                     Vector2 jitter = new Vector2(-1 + (float)random.NextDouble() * 2, -1 + (float)random.NextDouble() * 2) * (spacing * 0.2f);
                     Vector2 point = new Vector2(i, j) + jitter;
                     if (polygon.IsPointInside(new PolygonPoint(point.X, point.Y)))
-                        createParticle(point);
+                        createParticle(point, Vector2.Zero);
                 }
             }
         }
@@ -126,12 +126,12 @@ namespace StasisGame.Systems
         }
 
         // createParticle
-        public void createParticle(Vector2 position)
+        public void createParticle(Vector2 position, Vector2 velocity)
         {
             Particle particle = liquid[_initializedParticleCount];
             particle.position = position;
             particle.oldPosition = position;
-            particle.velocity = Vector2.Zero;
+            particle.velocity = velocity;
             particle.alive = true;
             _initializedParticleCount++;
         }

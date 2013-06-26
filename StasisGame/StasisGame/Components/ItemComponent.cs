@@ -9,7 +9,8 @@ namespace StasisGame.Components
         Blueprint,
         BlueprintScrap,
         RopeGun,
-        Dynamite
+        Dynamite,
+        WaterGun
     };
 
     public class ItemComponent : IComponent
@@ -21,8 +22,10 @@ namespace StasisGame.Components
         private bool _inWorld;
         private bool _hasAiming;
         private float _maxRange;
-        private bool _primaryAction;
-        private bool _secondaryAction;
+        private bool _primarySingleAction;
+        private bool _primaryContinuousAction;
+        private bool _secondarySingleAction;
+        private bool _secondaryContinuousAction;
 
         public ComponentType componentType { get { return ComponentType.Item; } }
         public string itemUID { get { return _itemUID; } }
@@ -32,8 +35,10 @@ namespace StasisGame.Components
         public bool inWorld { get { return _inWorld; } set { _inWorld = value; } }
         public bool hasAiming { get { return _hasAiming; } set { _hasAiming = value; } }
         public float maxRange { get { return _maxRange; } set { _maxRange = value; } }
-        public bool primaryAction { get { return _primaryAction; } set { _primaryAction = value; } }
-        public bool secondaryAction { get { return _secondaryAction; } set { _secondaryAction = value; } }
+        public bool primarySingleAction { get { return _primarySingleAction; } set { _primarySingleAction = value; } }
+        public bool secondarySingleAction { get { return _secondarySingleAction; } set { _secondarySingleAction = value; } }
+        public bool primaryContinuousAction { get { return _primaryContinuousAction; } set { _primaryContinuousAction = value; } }
+        public bool secondaryContinuousAction { get { return _secondaryContinuousAction; } set { _secondaryContinuousAction = value; } }
 
         public ItemComponent(string itemUID, ItemType itemType, Texture2D inventoryTexture, int quantity, bool inWorld, bool hasAiming, float maxRange)
         {

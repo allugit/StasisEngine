@@ -17,6 +17,7 @@ namespace StasisGame.Systems
         private bool _paused;
         private bool _singleStep;
         private RopeMaterial _defaultRopeMaterial;
+        private Random _rng;
 
         public SystemType systemType { get { return SystemType.Equipment; } }
         public int defaultPriority { get { return 10; } }
@@ -28,6 +29,7 @@ namespace StasisGame.Systems
             _systemManager = systemManager;
             _entityManager = entityManager;
             _defaultRopeMaterial = new RopeMaterial(ResourceManager.getResource("default_rope_material"));
+            _rng = new Random();
         }
 
         // assignItemToToolbar
@@ -78,20 +80,13 @@ namespace StasisGame.Systems
 
                     if (handleInput && selectedItem != null)
                     {
-                        bool mouseLeftDown = InputSystem.newMouseState.LeftButton == ButtonState.Pressed && InputSystem.oldMouseState.LeftButton == ButtonState.Released;
-                        bool mouseRightDown = InputSystem.newMouseState.RightButton == ButtonState.Pressed && InputSystem.oldMouseState.RightButton == ButtonState.Released;
-                        bool leftTriggerDown = InputSystem.usingGamepad && InputSystem.newGamepadState.Triggers.Left > 0.5f && InputSystem.oldGamepadState.Triggers.Left <= 0.5f;
-                        bool rightTriggerDown = InputSystem.usingGamepad && InputSystem.newGamepadState.Triggers.Right > 0.5f && InputSystem.oldGamepadState.Triggers.Right <= 0.5f;
+                        selectedItem.primaryContinuousAction = InputSystem.newMouseState.LeftButton == ButtonState.Pressed;
+                        selectedItem.primarySingleAction = selectedItem.primaryContinuousAction && InputSystem.oldMouseState.LeftButton == ButtonState.Released;
+                        selectedItem.secondaryContinuousAction = InputSystem.newMouseState.RightButton == ButtonState.Pressed;
+                        selectedItem.secondarySingleAction = selectedItem.secondaryContinuousAction && InputSystem.oldMouseState.RightButton == ButtonState.Released;
+                        //bool leftTriggerDown = InputSystem.usingGamepad && InputSystem.newGamepadState.Triggers.Left > 0.5f && InputSystem.oldGamepadState.Triggers.Left <= 0.5f;
+                        //bool rightTriggerDown = InputSystem.usingGamepad && InputSystem.newGamepadState.Triggers.Right > 0.5f && InputSystem.oldGamepadState.Triggers.Right <= 0.5f;
                         AimComponent aimComponent = _entityManager.getComponent(playerId, ComponentType.Aim) as AimComponent;
-
-                        if (mouseLeftDown || leftTriggerDown)
-                        {
-                            selectedItem.primaryAction = true;
-                        }
-                        if (mouseRightDown || rightTriggerDown)
-                        {
-                            selectedItem.secondaryAction = true;
-                        }
 
                         if (selectedItem.hasAiming && aimComponent != null)
                         {
@@ -102,19 +97,18 @@ namespace StasisGame.Systems
                                 Vector2 worldPosition = worldPositionComponent.position;
                                 if (InputSystem.usingGamepad)
                                 {
-                                    Vector2 aim = InputSystem.newGamepadState.ThumbSticks.Left * selectedItem.maxRange;
-                                    aim.Y *= -1;
-                                    aimComponent.angle = (float)Math.Atan2(aim.Y, aim.X);
-                                    aimComponent.length = aim.Length();
-                                    aimComponent.vector = aim;
+                                    Vector2 vector = InputSystem.newGamepadState.ThumbSticks.Left * selectedItem.maxRange;
+                                    vector.Y *= -1;
+                                    aimComponent.angle = (float)Math.Atan2(vector.Y, vector.X);
+                                    aimComponent.length = vector.Length();
+                                    aimComponent.vector = vector;
                                 }
                                 else
                                 {
                                     Vector2 relative = (InputSystem.worldMouse - worldPosition);
                                     aimComponent.angle = (float)Math.Atan2(relative.Y, relative.X);
                                     aimComponent.length = Math.Min(relative.Length(), selectedItem.maxRange);
-                                    relative.Normalize();
-                                    aimComponent.vector = relative * aimComponent.length;
+                                    aimComponent.vector = relative;
                                 }
                             }
                         }
@@ -129,93 +123,108 @@ namespace StasisGame.Systems
 
                     if (selectedItem != null)
                     {
-                        if (selectedItem.primaryAction || selectedItem.secondaryAction)
+                        if (selectedItem.secondarySingleAction)
+                            Console.WriteLine("secondary action");
+
+                        switch (selectedItem.itemType)
                         {
-                            if (selectedItem.secondaryAction)
-                                Console.WriteLine("secondary action");
+                            // RopeGun
+                            case ItemType.RopeGun:
+                                if (selectedItem.primarySingleAction)
+                                {
+                                    AimComponent aimComponent = _entityManager.getComponent(toolbarEntities[i], ComponentType.Aim) as AimComponent;
+                                    Vector2 initialPointA = (_entityManager.getComponent(toolbarEntities[i], ComponentType.WorldPosition) as WorldPositionComponent).position;
+                                    Vector2 initialPointB = initialPointA + new Vector2((float)Math.Cos(aimComponent.angle), (float)Math.Sin(aimComponent.angle)) * aimComponent.length;
+                                    int ropeEntityId = _entityManager.factory.createSingleAnchorRope(initialPointA, initialPointB, _defaultRopeMaterial, true);
 
-                            switch (selectedItem.itemType)
-                            {
-                                // RopeGun
-                                case ItemType.RopeGun:
-                                    if (selectedItem.primaryAction)
+                                    if (ropeEntityId != -1)
                                     {
-                                        AimComponent aimComponent = _entityManager.getComponent(toolbarEntities[i], ComponentType.Aim) as AimComponent;
-                                        Vector2 initialPointA = (_entityManager.getComponent(toolbarEntities[i], ComponentType.WorldPosition) as WorldPositionComponent).position;
-                                        Vector2 initialPointB = initialPointA + new Vector2((float)Math.Cos(aimComponent.angle), (float)Math.Sin(aimComponent.angle)) * aimComponent.length;
-                                        int ropeEntityId = _entityManager.factory.createSingleAnchorRope(initialPointA, initialPointB, _defaultRopeMaterial, true);
+                                        RopeGrabComponent ropeGrabComponent = _entityManager.getComponent(toolbarComponent.entityId, ComponentType.RopeGrab) as RopeGrabComponent;
+                                        RopeComponent ropeComponent = _entityManager.getComponent(ropeEntityId, ComponentType.Rope) as RopeComponent;
+                                        PhysicsComponent physicsComponent = _entityManager.getComponent(toolbarEntities[i], ComponentType.Physics) as PhysicsComponent;
+                                        RopeGrabComponent newRopeGrabComponent = null;
+                                        Vector2 initialVelocity = physicsComponent.body.LinearVelocity;
+                                        RopeNode currentNode = null;
+                                        int ropeSegmentCount;
 
-                                        if (ropeEntityId != -1)
+                                        if (physicsComponent == null)
+                                            break;
+
+                                        // Handle initial velocity
+                                        currentNode = ropeComponent.ropeNodeHead;
+                                        ropeSegmentCount = currentNode.count;
+                                        System.Diagnostics.Debug.Assert(ropeSegmentCount != 0);
+                                        int count = ropeSegmentCount;
+                                        while (currentNode != null)
                                         {
-                                            RopeGrabComponent ropeGrabComponent = _entityManager.getComponent(toolbarComponent.entityId, ComponentType.RopeGrab) as RopeGrabComponent;
-                                            RopeComponent ropeComponent = _entityManager.getComponent(ropeEntityId, ComponentType.Rope) as RopeComponent;
-                                            PhysicsComponent physicsComponent = _entityManager.getComponent(toolbarEntities[i], ComponentType.Physics) as PhysicsComponent;
-                                            RopeGrabComponent newRopeGrabComponent = null;
-                                            Vector2 initialVelocity = physicsComponent.body.LinearVelocity;
-                                            RopeNode currentNode = null;
-                                            int ropeSegmentCount;
+                                            float weight = (float)count / (float)ropeSegmentCount;
 
-                                            if (physicsComponent == null)
-                                                break;
+                                            currentNode.body.LinearVelocity = currentNode.body.LinearVelocity + initialVelocity * weight;
 
-                                            // Handle initial velocity
-                                            currentNode = ropeComponent.ropeNodeHead;
-                                            ropeSegmentCount = currentNode.count;
-                                            System.Diagnostics.Debug.Assert(ropeSegmentCount != 0);
-                                            int count = ropeSegmentCount;
-                                            while (currentNode != null)
-                                            {
-                                                float weight = (float)count / (float)ropeSegmentCount;
-
-                                                currentNode.body.LinearVelocity = currentNode.body.LinearVelocity + initialVelocity * weight;
-
-                                                count--;
-                                                currentNode = currentNode.next;
-                                            }
-
-                                            // Handle previous grabs
-                                            if (ropeGrabComponent != null)
-                                            {
-                                                RopeComponent previouslyGrabbedRope = _entityManager.getComponent(ropeGrabComponent.ropeEntityId, ComponentType.Rope) as RopeComponent;
-                                                ropeSystem.releaseRope(ropeGrabComponent, physicsComponent.body);
-
-                                                if (previouslyGrabbedRope.destroyAfterRelease)
-                                                    previouslyGrabbedRope.timeToLive = 100;
-                                                _entityManager.removeComponent(toolbarComponent.entityId, ropeGrabComponent);
-                                                ropeGrabComponent = null;
-                                            }
-
-                                            newRopeGrabComponent = new RopeGrabComponent(ropeEntityId, ropeComponent.ropeNodeHead, 0f, ropeComponent.reverseClimbDirection);
-                                            ropeSystem.grabRope(newRopeGrabComponent, physicsComponent.body);
-                                            _entityManager.addComponent(toolbarComponent.entityId, newRopeGrabComponent);
+                                            count--;
+                                            currentNode = currentNode.next;
                                         }
+
+                                        // Handle previous grabs
+                                        if (ropeGrabComponent != null)
+                                        {
+                                            RopeComponent previouslyGrabbedRope = _entityManager.getComponent(ropeGrabComponent.ropeEntityId, ComponentType.Rope) as RopeComponent;
+                                            ropeSystem.releaseRope(ropeGrabComponent, physicsComponent.body);
+
+                                            if (previouslyGrabbedRope.destroyAfterRelease)
+                                                previouslyGrabbedRope.timeToLive = 100;
+                                            _entityManager.removeComponent(toolbarComponent.entityId, ropeGrabComponent);
+                                            ropeGrabComponent = null;
+                                        }
+
+                                        newRopeGrabComponent = new RopeGrabComponent(ropeEntityId, ropeComponent.ropeNodeHead, 0f, ropeComponent.reverseClimbDirection);
+                                        ropeSystem.grabRope(newRopeGrabComponent, physicsComponent.body);
+                                        _entityManager.addComponent(toolbarComponent.entityId, newRopeGrabComponent);
                                     }
-                                    break;
+                                }
+                                break;
 
-                                // Blueprint
-                                case ItemType.Blueprint:
-                                    Console.WriteLine("Blueprint");
-                                    break;
+                            // Blueprint
+                            case ItemType.Blueprint:
+                                Console.WriteLine("Blueprint");
+                                break;
 
-                                // BlueprintScrap
-                                case ItemType.BlueprintScrap:
-                                    Console.WriteLine("Blueprint scrap");
-                                    break;
+                            // BlueprintScrap
+                            case ItemType.BlueprintScrap:
+                                Console.WriteLine("Blueprint scrap");
+                                break;
 
-                                // Dynamite
-                                case ItemType.Dynamite:
-                                    if (selectedItem.primaryAction)
-                                    {
-                                        AimComponent aimComponent = _entityManager.getComponent(toolbarEntities[i], ComponentType.Aim) as AimComponent;
+                            // Dynamite
+                            case ItemType.Dynamite:
+                                if (selectedItem.primarySingleAction)
+                                {
+                                    AimComponent aimComponent = _entityManager.getComponent(toolbarEntities[i], ComponentType.Aim) as AimComponent;
 
-                                        _entityManager.factory.createDynamite(playerPhysicsComponent.body.Position, aimComponent.vector * 80f);
-                                    }
-                                    break;
-                            }
+                                    _entityManager.factory.createDynamite(playerPhysicsComponent.body.Position, aimComponent.vector * 80f);
+                                }
+                                break;
 
-                            selectedItem.primaryAction = false;
-                            selectedItem.secondaryAction = false;
+                            // Water gun
+                            case ItemType.WaterGun:
+                                if (selectedItem.primaryContinuousAction)
+                                {
+                                    FluidSystem fluidSystem = _systemManager.getSystem(SystemType.Fluid) as FluidSystem;
+                                    AimComponent aimComponent = _entityManager.getComponent(toolbarEntities[i], ComponentType.Aim) as AimComponent;
+                                    Vector2 particlePosition =
+                                        playerPhysicsComponent.body.Position +
+                                        Vector2.Normalize(aimComponent.vector) +
+                                        new Vector2(StasisMathHelper.floatBetween(-0.05f, 0.05f, _rng), StasisMathHelper.floatBetween(-0.05f, 0.05f, _rng));
+                                    Vector2 particleVelocity = aimComponent.vector * 0.025f;
+
+                                    fluidSystem.createParticle(particlePosition, particleVelocity);
+                                }
+                                break;
                         }
+
+                        selectedItem.primarySingleAction = false;
+                        selectedItem.secondarySingleAction = false;
+                        selectedItem.primaryContinuousAction = false;
+                        selectedItem.secondaryContinuousAction = false;
                     }
                 }
             }
