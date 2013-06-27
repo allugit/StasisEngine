@@ -240,6 +240,15 @@ namespace StasisGame.Systems
             return accumulatedDelta;
         }
 
+        // isInBounds
+        private bool isInBounds(ref Vector2 position)
+        {
+            return position.X > simulationAABB.LowerBound.X &&
+                    position.X < simulationAABB.UpperBound.X &&
+                    position.Y > simulationAABB.LowerBound.Y &&
+                    position.Y < simulationAABB.UpperBound.Y;
+        }
+
         // flagActive
         private void flagActive()
         {
@@ -249,10 +258,7 @@ namespace StasisGame.Systems
                 Particle particle = liquid[i];
                 if (particle.alive)
                 {
-                    if (particle.position.X > simulationAABB.LowerBound.X &&
-                        particle.position.X < simulationAABB.UpperBound.X &&
-                        particle.position.Y > simulationAABB.LowerBound.Y &&
-                        particle.position.Y < simulationAABB.UpperBound.Y)
+                    if (isInBounds(ref particle.position))
                     {
                         particle.active = true;
                         activeParticles[numActiveParticles] = i;
@@ -313,6 +319,8 @@ namespace StasisGame.Systems
         private void resolveCollision(int index)
         {
             Particle particle = liquid[index];
+
+            // Resolve collisions between particles and fixtures
             for (int i = 0; i < particle.numFixturesToTest; i++)
             {
                 Fixture fixture = particle.fixturesToTest[i];
@@ -332,6 +340,7 @@ namespace StasisGame.Systems
                     {
                         Vector2 closestPoint = Vector2.Zero;
                         Vector2 normal = Vector2.Zero;
+                        Vector2 resolvedPosition = Vector2.Zero;
 
                         if (fixture.ShapeType == ShapeType.Polygon)
                         {
@@ -358,7 +367,7 @@ namespace StasisGame.Systems
                                     normal = particle.collisionNormals[v];
                                 }
                             }
-                            particle.position = closestPoint + 0.025f * normal;
+                            resolvedPosition = closestPoint + 0.025f * normal;
                             particle.skipMovementUpdate = true;
                             particle.pressure = MAX_PRESSURE;
                         }
@@ -368,16 +377,21 @@ namespace StasisGame.Systems
                             CircleShape shape = fixture.Shape as CircleShape;
                             Vector2 center = shape.Position + body.Position;
                             Vector2 difference = particle.position - center;
+
                             normal = difference;
                             normal.Normalize();
                             closestPoint = center + difference * (shape.Radius / difference.Length());
-                            particle.position = closestPoint + 0.025f * normal;
+                            resolvedPosition = closestPoint + 0.025f * normal;
                             particle.skipMovementUpdate = true;
                             particle.pressure = MAX_PRESSURE;
                         }
 
-                        // Update velocity
-                        particle.velocity = (particle.velocity - 1.2f * Vector2.Dot(particle.velocity, normal) * normal) * 0.85f;
+                        // Update particle position and velocity
+                        if (isInBounds(ref resolvedPosition))
+                        {
+                            particle.position = resolvedPosition;
+                            particle.velocity = (particle.velocity - 1.2f * Vector2.Dot(particle.velocity, normal) * normal) * 0.85f;
+                        }
 
                         // Handle fast moving bodies
                         if (body.LinearVelocity.LengthSquared() > 50f)
@@ -615,12 +629,21 @@ namespace StasisGame.Systems
 
                     if (!particle.skipMovementUpdate)
                     {
+                        Vector2 newVelocity = particle.velocity + _delta[index];
+                        Vector2 newPosition = particle.position + _delta[index] + newVelocity;
+
+                        if (isInBounds(ref newPosition))
+                        {
+                            particle.velocity = newVelocity;
+                            particle.position = newPosition;
+                        }
+
                         // Update velocity
-                        particle.velocity += _delta[index];
+                        //particle.velocity += _delta[index];
 
                         // Update position
-                        particle.position += _delta[index];
-                        particle.position += particle.velocity;
+                        //particle.position += _delta[index];
+                        //particle.position += particle.velocity;
                     }
                 });
 
