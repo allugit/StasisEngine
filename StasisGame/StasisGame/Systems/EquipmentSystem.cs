@@ -210,11 +210,12 @@ namespace StasisGame.Systems
                                 {
                                     FluidSystem fluidSystem = _systemManager.getSystem(SystemType.Fluid) as FluidSystem;
                                     AimComponent aimComponent = _entityManager.getComponent(toolbarEntities[i], ComponentType.Aim) as AimComponent;
+                                    Vector2 aimUnitVector = Vector2.Normalize(aimComponent.vector);
                                     Vector2 particlePosition =
                                         playerPhysicsComponent.body.Position +
-                                        Vector2.Normalize(aimComponent.vector) +
-                                        new Vector2(StasisMathHelper.floatBetween(-0.05f, 0.05f, _rng), StasisMathHelper.floatBetween(-0.05f, 0.05f, _rng));
-                                    Vector2 particleVelocity = aimComponent.vector * 0.025f;
+                                        aimUnitVector +
+                                        new Vector2(StasisMathHelper.floatBetween(-0.1f, 0.1f, _rng), StasisMathHelper.floatBetween(-0.1f, 0.1f, _rng));
+                                    Vector2 particleVelocity = aimUnitVector * 0.4f;
 
                                     fluidSystem.createParticle(particlePosition, particleVelocity);
                                 }

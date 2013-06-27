@@ -39,7 +39,7 @@ namespace StasisGame.Systems
         public int[] activeParticles;
         public int numActiveParticles = 0;
         private int _initializedParticleCount = 0;
-        private Vector2 _gravity = new Vector2(0, 9.8f) / 3000;
+        private Vector2 _gravity = new Vector2(0, 9.8f) / 2000;
         private Dictionary<int, List<int>> _collisionGridX;
         private List<int> _collisionGridY;
         private Vector2[] _simPositions;
