@@ -235,7 +235,7 @@ namespace StasisGame.Systems
             }
 
             // Apply gravitational force
-            particle.velocity += _gravity;
+            //particle.velocity += _gravity;
 
             return accumulatedDelta;
         }
@@ -387,11 +387,8 @@ namespace StasisGame.Systems
                         }
 
                         // Update particle position and velocity
-                        if (isInBounds(ref resolvedPosition))
-                        {
-                            particle.position = resolvedPosition;
-                            particle.velocity = (particle.velocity - 1.2f * Vector2.Dot(particle.velocity, normal) * normal) * 0.85f;
-                        }
+                        particle.position = resolvedPosition;
+                        particle.velocity = (particle.velocity - 1.2f * Vector2.Dot(particle.velocity, normal) * normal) * 0.85f;
 
                         // Handle fast moving bodies
                         if (body.LinearVelocity.LengthSquared() > 50f)
@@ -629,7 +626,7 @@ namespace StasisGame.Systems
 
                     if (!particle.skipMovementUpdate)
                     {
-                        Vector2 newVelocity = particle.velocity + _delta[index];
+                        Vector2 newVelocity = particle.velocity + _delta[index] + _gravity;
                         Vector2 newPosition = particle.position + _delta[index] + newVelocity;
 
                         if (isInBounds(ref newPosition))
@@ -637,13 +634,6 @@ namespace StasisGame.Systems
                             particle.velocity = newVelocity;
                             particle.position = newPosition;
                         }
-
-                        // Update velocity
-                        //particle.velocity += _delta[index];
-
-                        // Update position
-                        //particle.position += _delta[index];
-                        //particle.position += particle.velocity;
                     }
                 });
 
