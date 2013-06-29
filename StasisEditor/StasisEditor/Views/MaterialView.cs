@@ -356,7 +356,11 @@ namespace StasisEditor.Views
             else
             {
                 upButton.Enabled = e.Node.Index > 0;
-                downButton.Enabled = e.Node.Index < e.Node.Parent.Nodes.Count - 1;
+
+                if (e.Node.Parent == null)
+                    downButton.Enabled = false;
+                else
+                    downButton.Enabled = e.Node.Index < e.Node.Parent.Nodes.Count - 1;
             }
 
             // Set layer's property grid
