@@ -1452,11 +1452,17 @@ namespace StasisGame
                 case "blacksmith_hut":
                     entityId = createBlacksmithHut(position, angle, layerDepth);
                     break;
-                case "tree_hut":
-                    entityId = createTreeHut(position, angle, layerDepth);
-                    break;
                 case "carpenter_hut":
                     entityId = createCarpenterHut(position, angle, layerDepth);
+                    break;
+                case "door_1":
+                    entityId = createDoor("door_1", position, angle, layerDepth);
+                    break;
+                case "door_2":
+                    entityId = createDoor("door_2", position, angle, layerDepth);
+                    break;
+                case "rose_window_1":
+                    entityId = createTreeWindow("rose_window_1", position, angle, layerDepth);
                     break;
             }
 
@@ -1476,81 +1482,16 @@ namespace StasisGame
             return entityId;
         }
 
-        // createTreeHut
-        public int createTreeHut(Vector2 position, float angle, float layerDepth)
+        // createDoor
+        public int createDoor(string textureUID, Vector2 position, float angle, float layerDepth)
         {
             RenderSystem renderSystem = _systemManager.getSystem(SystemType.Render) as RenderSystem;
-            World world = (_systemManager.getSystem(SystemType.Physics) as PhysicsSystem).world;
             int entityId = _entityManager.createEntity();
-            Texture2D texture = ResourceManager.getTexture("tree_hut");
-            Vector2 origin = new Vector2(texture.Width, texture.Height) / 2f;
-            List<Vector2> points = new List<Vector2>();
-            List<PolygonPoint> polygonPoints = new List<PolygonPoint>();
-            Polygon polygon;
-            Body body = BodyFactory.CreateBody(world);
-            Metamer metamer = (_systemManager.getSystem(SystemType.Tree) as TreeSystem).findMetamer(position);
-            System.Diagnostics.Debug.Assert(metamer != null);
+            Texture2D texture = ResourceManager.getTexture(textureUID);
+            Vector2 origin = new Vector2(texture.Width / 2f, texture.Height);
 
-            // Set up body
-            body.BodyType = BodyType.Static;
-            body.Position = position;
-            body.UserData = entityId;
-
-            // Points from decal shape editor
-            points.Add(new Vector2(-4.171429f, 0.4571429f));
-            points.Add(new Vector2(-3.685714f, -0.5142857f));
-            points.Add(new Vector2(-2.628572f, -1.914286f));
-            points.Add(new Vector2(-2.114286f, -4.628572f));
-            points.Add(new Vector2(-0.08571429f, -2.971429f));
-            points.Add(new Vector2(0.02857143f, -2.742857f));
-            points.Add(new Vector2(0.8285714f, -2.171429f));
-            points.Add(new Vector2(0.9428571f, -1.942857f));
-            points.Add(new Vector2(1.371429f, -1.8f));
-            points.Add(new Vector2(1.485714f, -2f));
-            points.Add(new Vector2(2.428571f, -1.514286f));
-            points.Add(new Vector2(2.771429f, -1.2f));
-            points.Add(new Vector2(3.514286f, -0.3142857f));
-            points.Add(new Vector2(4.342857f, 0.3142857f));
-            points.Add(new Vector2(3.428571f, 0.8857143f));
-            points.Add(new Vector2(2.085714f, 0.8857143f));
-            points.Add(new Vector2(1.914286f, 1.657143f));
-            points.Add(new Vector2(1.028571f, 1.828571f));
-            points.Add(new Vector2(-0.2285714f, 1.771429f));
-            points.Add(new Vector2(-1.085714f, 1.457143f));
-            points.Add(new Vector2(-1.942857f, 1.228571f));
-            points.Add(new Vector2(-2.914286f, 0.8285714f));
-            points.Add(new Vector2(-3.742857f, 0.5428572f));
-
-            // Decompose polygon
-            for (int i = 0; i < points.Count; i++)
-                polygonPoints.Add(new PolygonPoint(points[i].X, points[i].Y));
-            polygon = new Polygon(polygonPoints);
-            P2T.Triangulate(polygon);
-
-            // Create fixtures
-            foreach (DelaunayTriangle triangle in polygon.Triangles)
-            {
-                Vector2 p1 = new Vector2(triangle.Points[0].Xf, triangle.Points[0].Yf);
-                Vector2 p2 = new Vector2(triangle.Points[1].Xf, triangle.Points[1].Yf);
-                Vector2 p3 = new Vector2(triangle.Points[2].Xf, triangle.Points[2].Yf);
-                PolygonShape polygonShape = new PolygonShape(new Vertices(new Vector2[3] { p1, p2, p3 }), 1f);
-                Fixture fixture = body.CreateFixture(polygonShape);
-
-                fixture.Restitution = 0;
-                fixture.Friction = 0;
-                fixture.CollisionCategories = (ushort)CollisionCategory.StaticGeometry;
-                fixture.CollidesWith =
-                    (ushort)CollisionCategory.DynamicGeometry |
-                    (ushort)CollisionCategory.Item |
-                    (ushort)CollisionCategory.Player |
-                    (ushort)CollisionCategory.Rope;
-            }
-
-            _entityManager.addComponent(entityId, new PhysicsComponent(body));
-            _entityManager.addComponent(entityId, new PrimitivesRenderComponent(renderSystem.createSpritePrimitiveObject(texture, position, new Vector2(texture.Width, texture.Height) / 2f, angle, 1f, layerDepth)));
-            _entityManager.addComponent(entityId, new IgnoreTreeCollisionComponent());
-            _entityManager.addComponent(entityId, new FollowMetamerComponent(metamer));
-            _entityManager.addComponent(entityId, new WorldPositionComponent(body.Position));
+            _entityManager.addComponent(entityId, new PrimitivesRenderComponent(renderSystem.createSpritePrimitiveObject(texture, position, origin, angle, 1f, layerDepth)));
+            _entityManager.addComponent(entityId, new WorldPositionComponent(position));
 
             return entityId;
         }
@@ -1566,6 +1507,23 @@ namespace StasisGame
 
             _entityManager.addComponent(entityId, new PrimitivesRenderComponent(renderSystem.createSpritePrimitiveObject(texture, position, textureOffset, angle, 1f, layerDepth)));
             _entityManager.addComponent(entityId, new IgnoreTreeCollisionComponent());
+
+            return entityId;
+        }
+
+        // createTreeWindow -- Creates a window decal and attaches it to a metamer
+        public int createTreeWindow(string textureUID, Vector2 position, float angle, float layerDepth)
+        {
+            RenderSystem renderSystem = _systemManager.getSystem(SystemType.Render) as RenderSystem;
+            int entityId = _entityManager.createEntity();
+            Texture2D texture = ResourceManager.getTexture(textureUID);
+            Vector2 origin = new Vector2(texture.Width, texture.Height) / 2f;
+            Metamer metamer = (_systemManager.getSystem(SystemType.Tree) as TreeSystem).findMetamer(position);
+            System.Diagnostics.Debug.Assert(metamer != null);
+
+            _entityManager.addComponent(entityId, new PrimitivesRenderComponent(renderSystem.createSpritePrimitiveObject(texture, position, origin, angle, 1f, layerDepth)));
+            _entityManager.addComponent(entityId, new WorldPositionComponent(position));
+            _entityManager.addComponent(entityId, new FollowMetamerComponent(metamer));
 
             return entityId;
         }

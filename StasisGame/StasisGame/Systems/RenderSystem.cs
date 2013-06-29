@@ -296,7 +296,7 @@ namespace StasisGame.Systems
             _primitivesEffect.Parameters["view"].SetValue(_viewMatrix);
             _primitivesEffect.Parameters["projection"].SetValue(_projectionMatrix);
 
-            // Body rendering
+            // Primitive rendering
             for (int i = 0; i < primitiveRenderEntities.Count; i++)
             {
                 int entityId = primitiveRenderEntities[i];
@@ -306,11 +306,17 @@ namespace StasisGame.Systems
                 {
                     PrimitiveRenderObject primitiveRenderObject = primitiveRenderComponent.primitiveRenderObjects[j];
                     PhysicsComponent physicsComponent = (PhysicsComponent)_entityManager.getComponent(entityId, ComponentType.Physics);
+                    IComponent component;
 
+                    // Update world matrix
                     if (physicsComponent != null)
                     {
-                        // Update world matrix
                         primitiveRenderObject.worldMatrix = primitiveRenderObject.originMatrix * Matrix.CreateRotationZ(physicsComponent.body.Rotation) * Matrix.CreateTranslation(new Vector3(physicsComponent.body.Position, 0));
+                    }
+                    else if (_entityManager.tryGetComponent(entityId, ComponentType.FollowMetamer, out component))
+                    {
+                        FollowMetamerComponent followMetamerComponent = component as FollowMetamerComponent;
+                        primitiveRenderObject.worldMatrix = primitiveRenderObject.originMatrix * Matrix.CreateRotationZ(followMetamerComponent.metamer.currentAngle + StasisMathHelper.halfPi) * Matrix.CreateTranslation(new Vector3(followMetamerComponent.metamer.position, 0));
                     }
 
                     // Update vertices
