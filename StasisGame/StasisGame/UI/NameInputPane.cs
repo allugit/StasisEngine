@@ -37,90 +37,104 @@ namespace StasisGame.UI
             return InputSystem.newKeyState.IsKeyDown(key) && InputSystem.oldKeyState.IsKeyUp(key);
         }
 
+        private void addLetter(string letter)
+        {
+            _sb.Append(letter);
+            _selectedIndex = _letters.IndexOf(letter);
+        }
+
+        private void removeLetter()
+        {
+            _sb.Remove(_sb.Length - 1, 1);
+        }
+
         public override void UIUpdate()
         {
             bool shift = InputSystem.newKeyState.IsKeyDown(Keys.LeftShift);
 
             if (isKeyPressed(Keys.A))
-                _sb.Append(shift ? "A" : "a");
+                addLetter(shift ? "A" : "a");
             if (isKeyPressed(Keys.B))
-                _sb.Append(shift ? "B" : "b");
+                addLetter(shift ? "B" : "b");
             if (isKeyPressed(Keys.C))
-                _sb.Append(shift ? "C" : "c");
+                addLetter(shift ? "C" : "c");
             if (isKeyPressed(Keys.D))
-                _sb.Append(shift ? "D" : "d");
+                addLetter(shift ? "D" : "d");
             if (isKeyPressed(Keys.E))
-                _sb.Append(shift ? "E" : "e");
+                addLetter(shift ? "E" : "e");
             if (isKeyPressed(Keys.F))
-                _sb.Append(shift ? "F" : "f");
+                addLetter(shift ? "F" : "f");
             if (isKeyPressed(Keys.G))
-                _sb.Append(shift ? "G" : "g");
+                addLetter(shift ? "G" : "g");
             if (isKeyPressed(Keys.H))
-                _sb.Append(shift ? "H" : "h");
+                addLetter(shift ? "H" : "h");
             if (isKeyPressed(Keys.I))
-                _sb.Append(shift ? "I" : "i");
+                addLetter(shift ? "I" : "i");
             if (isKeyPressed(Keys.J))
-                _sb.Append(shift ? "J" : "j");
+                addLetter(shift ? "J" : "j");
             if (isKeyPressed(Keys.K))
-                _sb.Append(shift ? "K" : "k");
+                addLetter(shift ? "K" : "k");
             if (isKeyPressed(Keys.L))
-                _sb.Append(shift ? "L" : "l");
+                addLetter(shift ? "L" : "l");
             if (isKeyPressed(Keys.M))
-                _sb.Append(shift ? "M" : "m");
+                addLetter(shift ? "M" : "m");
             if (isKeyPressed(Keys.N))
-                _sb.Append(shift ? "N" : "n");
+                addLetter(shift ? "N" : "n");
             if (isKeyPressed(Keys.O))
-                _sb.Append(shift ? "O" : "o");
+                addLetter(shift ? "O" : "o");
             if (isKeyPressed(Keys.P))
-                _sb.Append(shift ? "P" : "p");
+                addLetter(shift ? "P" : "p");
             if (isKeyPressed(Keys.Q))
-                _sb.Append(shift ? "Q" : "q");
+                addLetter(shift ? "Q" : "q");
             if (isKeyPressed(Keys.R))
-                _sb.Append(shift ? "R" : "r");
+                addLetter(shift ? "R" : "r");
             if (isKeyPressed(Keys.S))
-                _sb.Append(shift ? "S" : "s");
+                addLetter(shift ? "S" : "s");
             if (isKeyPressed(Keys.T))
-                _sb.Append(shift ? "T" : "t");
+                addLetter(shift ? "T" : "t");
             if (isKeyPressed(Keys.U))
-                _sb.Append(shift ? "U" : "u");
+                addLetter(shift ? "U" : "u");
             if (isKeyPressed(Keys.V))
-                _sb.Append(shift ? "V" : "v");
+                addLetter(shift ? "V" : "v");
             if (isKeyPressed(Keys.W))
-                _sb.Append(shift ? "W" : "w");
+                addLetter(shift ? "W" : "w");
             if (isKeyPressed(Keys.X))
-                _sb.Append(shift ? "X" : "x");
+                addLetter(shift ? "X" : "x");
             if (isKeyPressed(Keys.Y))
-                _sb.Append(shift ? "Y" : "y");
+                addLetter(shift ? "Y" : "y");
             if (isKeyPressed(Keys.Z))
-                _sb.Append(shift ? "Z" : "z");
+                addLetter(shift ? "Z" : "z");
             if (isKeyPressed(Keys.D0))
-                _sb.Append("0");
+                addLetter("0");
             if (isKeyPressed(Keys.D1))
-                _sb.Append("1");
+                addLetter("1");
             if (isKeyPressed(Keys.D2))
-                _sb.Append("2");
+                addLetter("2");
             if (isKeyPressed(Keys.D3))
-                _sb.Append("3");
+                addLetter("3");
             if (isKeyPressed(Keys.D4))
-                _sb.Append("4");
+                addLetter("4");
             if (isKeyPressed(Keys.D5))
-                _sb.Append("5");
+                addLetter("5");
             if (isKeyPressed(Keys.D6))
-                _sb.Append("6");
+                addLetter("6");
             if (isKeyPressed(Keys.D7))
-                _sb.Append("7");
+                addLetter("7");
             if (isKeyPressed(Keys.D8))
-                _sb.Append("8");
+                addLetter("8");
             if (isKeyPressed(Keys.D9))
-                _sb.Append("9");
+                addLetter("9");
             if (isKeyPressed(Keys.Space))
-                _sb.Append(" ");
+                addLetter(" ");
             if (isKeyPressed(Keys.OemMinus))
-                _sb.Append(shift ? "_" : "-");
+                addLetter(shift ? "_" : "-");
             if (isKeyPressed(Keys.OemPeriod))
-                _sb.Append(".");
+                addLetter(".");
             if (isKeyPressed(Keys.OemComma))
-                _sb.Append(",");
+                addLetter(",");
+
+            if (isKeyPressed(Keys.Back))
+                removeLetter();
 
             base.UIUpdate();
 
@@ -141,13 +155,10 @@ namespace StasisGame.UI
                 int y = (int)Math.Floor((float)i / (float)gridWidth);
                 Vector2 letterPosition = new Vector2(_destRect.X, _destRect.Y) + new Vector2(x, y) * _letterSpacing + new Vector2(24, 24);
 
-                if (InputSystem.usingGamepad)
+                if (i == _selectedIndex)
                 {
-                    if (i == _selectedIndex)
-                    {
-                        Vector2 indicatorPosition = new Vector2(_destRect.X, _destRect.Y) + new Vector2(x, y) * _letterSpacing + new Vector2(32, 64);
-                        _spriteBatch.Draw(_lineIndicator, indicatorPosition, _lineIndicator.Bounds, Color.White, 0f, new Vector2(_lineIndicator.Width, 0) / 2f, 1f, SpriteEffects.None, 0f);
-                    }
+                    Vector2 indicatorPosition = new Vector2(_destRect.X, _destRect.Y) + new Vector2(x, y) * _letterSpacing + new Vector2(32, 64);
+                    _spriteBatch.Draw(_lineIndicator, indicatorPosition, _lineIndicator.Bounds, Color.White, 0f, new Vector2(_lineIndicator.Width, 0) / 2f, 1f, SpriteEffects.None, 0f);
                 }
 
                 _spriteBatch.DrawString(_font, _letters[i], letterPosition + new Vector2(-2, -2), Color.Black);
