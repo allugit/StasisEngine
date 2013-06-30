@@ -59,7 +59,6 @@
       <Name>santa_barbara_normal</Name>
       <Importer>FontDescriptionImporter</Importer>
       <Processor>MGSpriteFontDescriptionProcessor</Processor>
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Compile>
   </ItemGroup>
   <ItemGroup>
@@ -186,7 +185,6 @@
       <Name>arial</Name>
       <Importer>FontDescriptionImporter</Importer>
       <Processor>MGSpriteFontDescriptionProcessor</Processor>
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Compile>
   </ItemGroup>
   <ItemGroup>
@@ -194,7 +192,6 @@
       <Name>fluid_particle</Name>
       <Importer>TextureImporter</Importer>
       <Processor>MGTextureProcessor</Processor>
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Compile>
   </ItemGroup>
   <ItemGroup>
@@ -202,7 +199,6 @@
       <Name>fog_effect</Name>
       <Importer>EffectImporter</Importer>
       <Processor>MGEffectProcessor</Processor>
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Compile>
   </ItemGroup>
   <ItemGroup>
@@ -210,7 +206,6 @@
       <Name>inventory_background</Name>
       <Importer>TextureImporter</Importer>
       <Processor>MGTextureProcessor</Processor>
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Compile>
   </ItemGroup>
   <ItemGroup>
@@ -218,7 +213,6 @@
       <Name>level_select_icon</Name>
       <Importer>TextureImporter</Importer>
       <Processor>MGTextureProcessor</Processor>
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Compile>
   </ItemGroup>
   <ItemGroup>
@@ -226,7 +220,6 @@
       <Name>range_circle</Name>
       <Importer>TextureImporter</Importer>
       <Processor>MGTextureProcessor</Processor>
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Compile>
   </ItemGroup>
   <ItemGroup>
@@ -234,7 +227,6 @@
       <Name>reticle</Name>
       <Importer>TextureImporter</Importer>
       <Processor>MGTextureProcessor</Processor>
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Compile>
   </ItemGroup>
   <ItemGroup>
@@ -242,7 +234,6 @@
       <Name>fluid_effect</Name>
       <Importer>EffectImporter</Importer>
       <Processor>MGEffectProcessor</Processor>
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Compile>
   </ItemGroup>
   <ItemGroup>
@@ -301,6 +292,13 @@
       <Name>pane_top_side</Name>
       <Importer>TextureImporter</Importer>
       <Processor>MGTextureProcessor</Processor>
+    </Compile>
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="dialogue_font.spritefont">
+      <Name>dialogue_font</Name>
+      <Importer>FontDescriptionImporter</Importer>
+      <Processor>MGSpriteFontDescriptionProcessor</Processor>
     </Compile>
   </ItemGroup>
   <Import Project="$(MSBuildExtensionsPath)\Microsoft\XNA Game Studio\$(XnaFrameworkVersion)\Microsoft.Xna.GameStudio.ContentPipeline.targets" />
