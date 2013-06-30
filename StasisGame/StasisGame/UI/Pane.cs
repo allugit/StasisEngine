@@ -97,7 +97,7 @@ namespace StasisGame.UI
             switch (_alignment)
             {
                 case UIComponentAlignment.TopCenter:
-                    _destRect.X = (_spriteBatch.GraphicsDevice.Viewport.Width / 2) - (_width / 2);
+                    _destRect.X = _x + (_spriteBatch.GraphicsDevice.Viewport.Width / 2) - (_width / 2);
                     _destRect.Y = _y;
                     _destRect.Width = _width;
                     _destRect.Height = _height;

@@ -299,7 +299,7 @@ namespace StasisGame
                     break;
 
                 case GameState.CreatePlayer:
-                    _spriteBatch.Begin(SpriteSortMode.BackToFront, BlendState.AlphaBlend, SamplerState.LinearWrap, null, null);
+                    _spriteBatch.Begin(SpriteSortMode.Deferred, BlendState.AlphaBlend, SamplerState.LinearWrap, null, null);
                     _screenSystem.draw();
                     _spriteBatch.End();
                     break;
