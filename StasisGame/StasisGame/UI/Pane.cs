@@ -7,7 +7,7 @@ namespace StasisGame.UI
 {
     public class Pane : IUIComponent
     {
-        private SpriteBatch _spriteBatch;
+        protected SpriteBatch _spriteBatch;
         private Texture2D _topLeftCorner;
         private Texture2D _topRightCorner;
         private Texture2D _bottomRightCorner;
@@ -18,11 +18,11 @@ namespace StasisGame.UI
         private Texture2D _bottomSide;
         private Texture2D _background;
         private UIComponentAlignment _alignment;
-        private int _x;
-        private int _y;
-        private int _width;
-        private int _height;
-        private Rectangle _destRect;
+        protected int _x;
+        protected int _y;
+        protected int _width;
+        protected int _height;
+        protected Rectangle _destRect;
         private Rectangle _sourceRect;
 
         public float layerDepth { get { return 1f; } }
@@ -83,11 +83,11 @@ namespace StasisGame.UI
             _height = height;
         }
 
-        public void UIUpdate()
+        virtual public void UIUpdate()
         {
         }
 
-        public void UIDraw()
+        virtual public void UIDraw()
         {
             int innerBorderWidth = _width - (_topLeftCorner.Width + _topRightCorner.Width);
             int innerBorderHeight = _height - (_topLeftCorner.Height + _bottomLeftCorner.Height);

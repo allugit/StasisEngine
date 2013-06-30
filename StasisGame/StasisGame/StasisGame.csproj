@@ -165,6 +165,7 @@
     <Compile Include="UI\LevelScreen.cs" />
     <Compile Include="UI\LoadGameScreen.cs" />
     <Compile Include="UI\MainMenuScreen.cs" />
+    <Compile Include="UI\NameInputPane.cs" />
     <Compile Include="UI\OptionsMenuScreen.cs" />
     <Compile Include="UI\Pane.cs" />
     <Compile Include="UI\PlayerCreationScreen.cs" />

@@ -49,7 +49,8 @@ namespace StasisGame.Systems
             newMouseState = Mouse.GetState();
             newGamepadState = GamePad.GetState(PlayerIndex.One);
 
-            worldMouse = (new Vector2(newMouseState.X, newMouseState.Y) - renderSystem.halfScreen) / renderSystem.scale + renderSystem.screenCenter;
+            if (renderSystem != null)
+                worldMouse = (new Vector2(newMouseState.X, newMouseState.Y) - renderSystem.halfScreen) / renderSystem.scale + renderSystem.screenCenter;
 
             if (togglePause || toggleSingleStep)
             {

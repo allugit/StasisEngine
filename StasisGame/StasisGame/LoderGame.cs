@@ -79,6 +79,7 @@ namespace StasisGame
             _scriptManager = new ScriptManager(_systemManager, _entityManager);
             _screenSystem = new ScreenSystem(_systemManager);
             _systemManager.add(_screenSystem, -1);
+            _systemManager.add(new InputSystem(_systemManager, _entityManager), -1);
 
             DataManager.initialize(this, _systemManager);
             Components.Add(new GamerServicesComponent(this));
@@ -110,6 +111,7 @@ namespace StasisGame
             ResourceManager.setTexture("pane_right_side", Content.Load<Texture2D>("pane_right_side"));
             ResourceManager.setTexture("pane_bottom_side", Content.Load<Texture2D>("pane_bottom_side"));
             ResourceManager.setTexture("pane_background", Content.Load<Texture2D>("pane_background"));
+            ResourceManager.setTexture("line_indicator", Content.Load<Texture2D>("line_indicator"));
 
             _spriteBatch = new SpriteBatch(GraphicsDevice);
             _arial = Content.Load<SpriteFont>("arial");

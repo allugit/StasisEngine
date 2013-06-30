@@ -10,6 +10,7 @@ namespace StasisGame.UI
         private LoderGame _game;
         private SpriteBatch _spriteBatch;
         private SpriteFont _titleFont;
+        private SpriteFont _letterFont;
         private Vector2 _titleSize;
         private string _title;
 
@@ -18,24 +19,11 @@ namespace StasisGame.UI
             _game = game;
             _spriteBatch = game.spriteBatch;
             _titleFont = game.Content.Load<SpriteFont>("player_creation_screen/title_font");
+            _letterFont = game.Content.Load<SpriteFont>("dialogue_font");
             _title = "Please choose a name";
             _titleSize = _titleFont.MeasureString(_title);
 
-            _UIComponents.Add(new Pane(
-                game.spriteBatch,
-                UIComponentAlignment.TopCenter,
-                -256,
-                64,
-                90,
-                90));
-
-            _UIComponents.Add(new Pane(
-                game.spriteBatch,
-                UIComponentAlignment.TopCenter,
-                0,
-                154,
-                602,
-                512));
+            _UIComponents.Add(new NameInputPane(_letterFont, _spriteBatch, UIComponentAlignment.TopCenter, 0, 120));
         }
 
         public override void draw()
