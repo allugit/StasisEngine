@@ -89,6 +89,9 @@ namespace StasisGame
 
         protected override void LoadContent()
         {
+            Texture2D pixel = new Texture2D(GraphicsDevice, 1, 1);
+            pixel.SetData<Color>(new[] { Color.White });
+
             // TODO: Be more selective about which resources to load...
             ResourceManager.initialize(GraphicsDevice);
             ResourceManager.loadAllCharacters(TitleContainer.OpenStream(ResourceManager.characterPath));
@@ -112,6 +115,7 @@ namespace StasisGame
             ResourceManager.setTexture("pane_bottom_side", Content.Load<Texture2D>("pane_bottom_side"));
             ResourceManager.setTexture("pane_background", Content.Load<Texture2D>("pane_background"));
             ResourceManager.setTexture("line_indicator", Content.Load<Texture2D>("line_indicator"));
+            ResourceManager.setTexture("pixel", pixel);
 
             _spriteBatch = new SpriteBatch(GraphicsDevice);
             _arial = Content.Load<SpriteFont>("arial");

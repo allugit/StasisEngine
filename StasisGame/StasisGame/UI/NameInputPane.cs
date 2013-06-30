@@ -17,11 +17,15 @@ namespace StasisGame.UI
         private int _letterSpacing = 48;
         private Texture2D _lineIndicator;
         private StringBuilder _sb;
+        private int _maxLetters;
 
-        public NameInputPane(SpriteFont font, SpriteBatch spriteBatch, UIComponentAlignment alignment, int x, int y)
+        public string name { get { return _sb.ToString(); } }
+
+        public NameInputPane(SpriteBatch spriteBatch, SpriteFont font, UIComponentAlignment alignment, int x, int y, int maxLetters)
             : base(spriteBatch, alignment, x, y, 648, 320)
         {
             _font = font;
+            _maxLetters = maxLetters;
             _lineIndicator = ResourceManager.getTexture("line_indicator");
             _letters = new List<string>(new string[]
             {
@@ -39,13 +43,16 @@ namespace StasisGame.UI
 
         private void addLetter(string letter)
         {
-            _sb.Append(letter);
+            if (_sb.Length < _maxLetters)
+                _sb.Append(letter);
+
             _selectedIndex = _letters.IndexOf(letter);
         }
 
         private void removeLetter()
         {
-            _sb.Remove(_sb.Length - 1, 1);
+            if (_sb.Length > 0)
+                _sb.Remove(_sb.Length - 1, 1);
         }
 
         public override void UIUpdate()
@@ -137,8 +144,6 @@ namespace StasisGame.UI
                 removeLetter();
 
             base.UIUpdate();
-
-            Console.WriteLine("Name: {0}", _sb.ToString());
         }
 
         public override void UIDraw()
@@ -157,7 +162,7 @@ namespace StasisGame.UI
 
                 if (i == _selectedIndex)
                 {
-                    Vector2 indicatorPosition = new Vector2(_destRect.X, _destRect.Y) + new Vector2(x, y) * _letterSpacing + new Vector2(32, 64);
+                    Vector2 indicatorPosition = new Vector2(_destRect.X, _destRect.Y) + new Vector2(x, y) * _letterSpacing + new Vector2(32, 52);
                     _spriteBatch.Draw(_lineIndicator, indicatorPosition, _lineIndicator.Bounds, Color.White, 0f, new Vector2(_lineIndicator.Width, 0) / 2f, 1f, SpriteEffects.None, 0f);
                 }
 
