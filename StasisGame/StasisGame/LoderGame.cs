@@ -100,6 +100,17 @@ namespace StasisGame
             ResourceManager.loadAllWorldMaps(TitleContainer.OpenStream(ResourceManager.worldMapPath));
             ResourceManager.loadAllRopeMaterials(TitleContainer.OpenStream(ResourceManager.ropeMaterialPath));
 
+            // Load user interface textures
+            ResourceManager.setTexture("pane_top_left_corner", Content.Load<Texture2D>("pane_top_left_corner"));
+            ResourceManager.setTexture("pane_top_right_corner", Content.Load<Texture2D>("pane_top_right_corner"));
+            ResourceManager.setTexture("pane_bottom_right_corner", Content.Load<Texture2D>("pane_bottom_right_corner"));
+            ResourceManager.setTexture("pane_bottom_left_corner", Content.Load<Texture2D>("pane_bottom_left_corner"));
+            ResourceManager.setTexture("pane_left_side", Content.Load<Texture2D>("pane_left_side"));
+            ResourceManager.setTexture("pane_top_side", Content.Load<Texture2D>("pane_top_side"));
+            ResourceManager.setTexture("pane_right_side", Content.Load<Texture2D>("pane_right_side"));
+            ResourceManager.setTexture("pane_bottom_side", Content.Load<Texture2D>("pane_bottom_side"));
+            ResourceManager.setTexture("pane_background", Content.Load<Texture2D>("pane_background"));
+
             _spriteBatch = new SpriteBatch(GraphicsDevice);
             _arial = Content.Load<SpriteFont>("arial");
         }
@@ -153,6 +164,7 @@ namespace StasisGame
         public void newGame()
         {
             _screenSystem.removeScreen(_mainMenuScreen);
+            _screenSystem.addScreen(new PlayerCreationScreen(this));
             _gameState = GameState.CreatePlayer;
 
             // TODO: Destroy main menu screen?
@@ -253,9 +265,10 @@ namespace StasisGame
                     break;
 
                 case GameState.CreatePlayer:
-                    string playerName = "Wamboogley"; // TODO: Let user name their player
-                    int playerSlot = DataManager.createPlayerData(_systemManager, playerName);
-                    loadGame(playerSlot);
+                    //string playerName = "Wamboogley"; // TODO: Let user name their player
+                    //int playerSlot = DataManager.createPlayerData(_systemManager, playerName);
+                    //loadGame(playerSlot);
+                    _systemManager.process();
                     break;
 
                 case GameState.WorldMap:
@@ -281,6 +294,12 @@ namespace StasisGame
             {
                 case GameState.MainMenu:
                     _spriteBatch.Begin();
+                    _screenSystem.draw();
+                    _spriteBatch.End();
+                    break;
+
+                case GameState.CreatePlayer:
+                    _spriteBatch.Begin(SpriteSortMode.BackToFront, BlendState.AlphaBlend, SamplerState.LinearWrap, null, null);
                     _screenSystem.draw();
                     _spriteBatch.End();
                     break;

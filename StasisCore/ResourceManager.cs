@@ -212,6 +212,12 @@ namespace StasisCore
             return null;
         }
 
+        // Set texture -- Allow textures to be set manually (for example, after being loaded from the content pipeline)
+        public static void setTexture(string textureUID, Texture2D texture)
+        {
+            _cachedTextures[textureUID] = texture;
+        }
+
         // Get texture -- Try to get the texture from the cache before loading it from file
         public static Texture2D getTexture(string textureUID, bool cacheTextures = true)
         {
