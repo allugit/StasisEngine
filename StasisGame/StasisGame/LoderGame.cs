@@ -15,6 +15,7 @@ using StasisGame.UI;
 using StasisGame.Systems;
 using StasisGame.Components;
 using StasisCore;
+using StasisCore.Models;
 using EasyStorage;
 
 namespace StasisGame
@@ -54,6 +55,8 @@ namespace StasisGame
         private ScreenSystem _screenSystem;
         private MainMenuScreen _mainMenuScreen;
         private WorldMapScreen _worldMapScreen;
+        private BackgroundRenderer _menuBackgroundRenderer;
+        private Vector2 _menuBackgroundScreenOffset;
 
         public static bool debug;
         public SpriteBatch spriteBatch { get { return _spriteBatch; } }
@@ -61,6 +64,8 @@ namespace StasisGame
         public SystemManager systemManager { get { return _systemManager; } }
         public EntityManager entityManager { get { return _entityManager; } }
         public ScriptManager scriptManager { get { return _scriptManager; } }
+        public BackgroundRenderer menuBackgroundRenderer { get { return _menuBackgroundRenderer; } }
+        public Vector2 menuBackgroundScreenOffset { get { return _menuBackgroundScreenOffset; } }
 
         public LoderGame(string[] args)
         {
@@ -119,6 +124,8 @@ namespace StasisGame
 
             _spriteBatch = new SpriteBatch(GraphicsDevice);
             _arial = Content.Load<SpriteFont>("arial");
+
+            _menuBackgroundRenderer = new BackgroundRenderer(_spriteBatch);
         }
 
         protected override void UnloadContent()
@@ -241,6 +248,8 @@ namespace StasisGame
 
         protected override void Update(GameTime gameTime)
         {
+            _menuBackgroundScreenOffset += new Vector2(0.005f, 0f);
+
             switch (_gameState)
             {
                 case GameState.Initializing:
@@ -261,8 +270,13 @@ namespace StasisGame
                     break;
 
                 case GameState.Intro:
+                    // TODO: Do some sort of intro, and then open the main menu
+                    Background background = new Background(ResourceManager.getResource("main_menu_background"));
+
                     _gameState = GameState.MainMenu;
                     _mainMenuScreen = new MainMenuScreen(this);
+                    background.loadTextures();
+                    _menuBackgroundRenderer.background = background;
                     _screenSystem.addScreen(_mainMenuScreen);
                     break;
 
@@ -292,9 +306,6 @@ namespace StasisGame
         protected override void Draw(GameTime gameTime)
         {
             GraphicsDevice.Clear(Color.Black);
-
-            //_spriteBatch.Begin();
-            //_spriteBatch.DrawString(_arial, _argsDebug, new Vector2(16, 16), Color.White);
 
             switch (_gameState)
             {

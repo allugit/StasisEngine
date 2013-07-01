@@ -36,12 +36,19 @@ namespace StasisGame.UI
         {
             base.update();
 
+            // Copy name from input pane to preview component
             _namePreview.name = _nameInputPane.name;
+
+            // Background renderer
+            _game.menuBackgroundRenderer.update(35f, _game.menuBackgroundScreenOffset);
         }
 
         public override void draw()
         {
             Vector2 titlePosition = new Vector2(_spriteBatch.GraphicsDevice.Viewport.Width, 32) / 2f - new Vector2(_titleSize.X / 2f, 0);
+
+            // Background renderer
+            _game.menuBackgroundRenderer.draw();
 
             // Title
             _spriteBatch.DrawString(_titleFont, "Please choose a name", titlePosition, Color.White);

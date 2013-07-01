@@ -117,13 +117,15 @@ namespace StasisGame.UI
                 }
             }
 
+            // Background renderer
+            _game.menuBackgroundRenderer.update(35f, _game.menuBackgroundScreenOffset);
+
             base.update();
         }
 
         public override void draw()
         {
-            float scale = (float)_game.GraphicsDevice.Viewport.Height / (float)_background.Height;
-            _game.spriteBatch.Draw(_background, Vector2.Zero, _background.Bounds, Color.White, 0f, Vector2.Zero, scale, SpriteEffects.None, 0f);
+            _game.menuBackgroundRenderer.draw();
             _game.spriteBatch.Draw(_logo, new Vector2((int)(_game.GraphicsDevice.Viewport.Width / 2f), 100f), _logo.Bounds, Color.White, 0, new Vector2(_logo.Width, _logo.Height) / 2, 0.75f, SpriteEffects.None, 0);
             _game.spriteBatch.Draw(_savesContainer, new Vector2((int)(_game.GraphicsDevice.Viewport.Width / 2f), 150f), _savesContainer.Bounds, Color.White, 0f, new Vector2((int)(_savesContainer.Width / 2f), 0), 1f, SpriteEffects.None, 0f);
 
