@@ -84,7 +84,6 @@ namespace StasisGame
             _scriptManager = new ScriptManager(_systemManager, _entityManager);
             _screenSystem = new ScreenSystem(_systemManager);
             _systemManager.add(_screenSystem, -1);
-            _systemManager.add(new InputSystem(_systemManager, _entityManager), -1);
 
             DataManager.initialize(this, _systemManager);
             Components.Add(new GamerServicesComponent(this));

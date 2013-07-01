@@ -18,7 +18,6 @@ namespace StasisGame.UI
         private Texture2D _pixel;
         private SystemManager _systemManager;
         private EntityManager _entityManager;
-        private SpriteBatch _spriteBatch;
         private bool _displayInventory;
         private int _playerId;
         private InventoryDisplay _inventoryDisplay;
@@ -27,13 +26,12 @@ namespace StasisGame.UI
         private SpriteFont _arial;
 
         public LevelScreen(LoderGame game, SystemManager systemManager, EntityManager entityManager)
-            : base(ScreenType.Level)
+            : base(game.spriteBatch, ScreenType.Level)
         {
             _game = game;
             _systemManager = systemManager;
             _entityManager = entityManager;
             _levelSystem = (LevelSystem)_systemManager.getSystem(SystemType.Level);
-            _spriteBatch = _game.spriteBatch;
             _content = new ContentManager(_game.Services);
             _content.RootDirectory = "Content";
             _equipmentSystem = (EquipmentSystem)_systemManager.getSystem(SystemType.Equipment);

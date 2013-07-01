@@ -17,7 +17,6 @@ namespace StasisGame.UI
     {
         private LoderGame _game;
         private SystemManager _systemManager;
-        private SpriteBatch _spriteBatch;
         private float _scale;
         private Vector2 _currentScreenCenter;
         private Vector2 _targetScreenCenter;
@@ -43,11 +42,10 @@ namespace StasisGame.UI
         private SpriteFont _levelSelectTitleFont;
         private SpriteFont _levelSelectDescriptionFont;
 
-        public WorldMapScreen(LoderGame game, SystemManager systemManager) : base(ScreenType.WorldMap)
+        public WorldMapScreen(LoderGame game, SystemManager systemManager) : base(game.spriteBatch, ScreenType.WorldMap)
         {
             _game = game;
             _systemManager = systemManager;
-            _spriteBatch = _game.spriteBatch;
             _scale = 1f;
             _worldMapSystem = (WorldMapSystem)_systemManager.getSystem(SystemType.WorldMap);
 

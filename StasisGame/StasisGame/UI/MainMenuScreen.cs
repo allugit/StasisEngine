@@ -15,7 +15,7 @@ namespace StasisGame.UI
         private Texture2D _logo;
         private ContentManager _content;
 
-        public MainMenuScreen(LoderGame game) : base(ScreenType.MainMenu)
+        public MainMenuScreen(LoderGame game) : base(game.spriteBatch, ScreenType.MainMenu)
         {
             _game = game;
             _content = new ContentManager(game.Services);

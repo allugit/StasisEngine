@@ -4,6 +4,7 @@ using System.Text;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Input;
 using Microsoft.Xna.Framework.Graphics;
+using StasisGame.Systems;
 
 namespace StasisGame.UI
 {
@@ -25,6 +26,7 @@ namespace StasisGame.UI
 
     abstract public class Screen
     {
+        protected SpriteBatch _spriteBatch;
         protected List<IUIComponent> _UIComponents;
         protected ISelectableUIComponent _selectedComponent;
         protected GamePadState _newGamepadState;
@@ -36,9 +38,15 @@ namespace StasisGame.UI
         protected ScreenType _screenType;
 
         public ScreenType screenType { get { return _screenType; } set { _screenType = value; } }
+        public SpriteBatch spriteBatch { get { return _spriteBatch; } }
+        public KeyboardState newKeyState { get { return _newKeyState; } }
+        public KeyboardState oldKeyState { get { return _oldKeyState; } }
+        public MouseState newMouseState { get { return _newMouseState; } }
+        public MouseState oldMouseState { get { return _oldMouseState; } }
 
-        public Screen(ScreenType screenType)
+        public Screen(SpriteBatch spriteBatch, ScreenType screenType)
         {
+            _spriteBatch = spriteBatch;
             _screenType = screenType;
             _UIComponents = new List<IUIComponent>();
         }
@@ -170,6 +178,53 @@ namespace StasisGame.UI
 
         virtual public void update()
         {
+            _oldGamepadState = _newGamepadState;
+            _oldKeyState = _newKeyState;
+            _oldMouseState = _newMouseState;
+
+            _newGamepadState = GamePad.GetState(PlayerIndex.One);
+            _newKeyState = Keyboard.GetState();
+            _newMouseState = Mouse.GetState();
+
+            // Mouse input
+            for (int i = 0; i < _UIComponents.Count; i++)
+            {
+                IUIComponent component = _UIComponents[i];
+
+                if (component.selectable)
+                {
+                    ISelectableUIComponent selectableComponent = component as ISelectableUIComponent;
+                    if (selectableComponent.hitTest(new Vector2(_newMouseState.X, _newMouseState.Y)))
+                    {
+                        if (_oldMouseState.X - _newMouseState.X != 0 || _oldMouseState.Y - _newMouseState.Y != 0)
+                            select(selectableComponent);
+
+                        if (_oldMouseState.LeftButton == ButtonState.Released && _newMouseState.LeftButton == ButtonState.Pressed)
+                            selectableComponent.activate();
+                    }
+                }
+            }
+
+            // Gamepad input
+            if (InputSystem.usingGamepad)
+            {
+                bool movingUp = (_oldGamepadState.ThumbSticks.Left.Y < 0.25f && _newGamepadState.ThumbSticks.Left.Y > 0.25f) ||
+                    (_oldGamepadState.DPad.Up == ButtonState.Released && _newGamepadState.DPad.Up == ButtonState.Pressed);
+                bool movingDown = (_oldGamepadState.ThumbSticks.Left.Y > -0.25f && _newGamepadState.ThumbSticks.Left.Y < -0.25f) ||
+                    (_oldGamepadState.DPad.Down == ButtonState.Released && _newGamepadState.DPad.Down == ButtonState.Pressed);
+                bool activate = _oldGamepadState.Buttons.A == ButtonState.Released && _newGamepadState.Buttons.A == ButtonState.Pressed;
+
+                if (movingUp)
+                    selectPreviousComponent();
+                else if (movingDown)
+                    selectNextComponent();
+
+                if (activate && _selectedComponent != null)
+                {
+                    _selectedComponent.activate();
+                }
+            }
+
             for (int i = 0; i < _UIComponents.Count; i++)
             {
                 _UIComponents[i].UIUpdate();

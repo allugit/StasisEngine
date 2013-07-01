@@ -80,6 +80,7 @@ namespace StasisGame.Systems
             }
 
             // Create systems
+            _systemManager.add(new InputSystem(_systemManager, _entityManager), -1);
             _systemManager.add(new PhysicsSystem(_systemManager, _entityManager, data), -1);
             _systemManager.add(new CameraSystem(_systemManager, _entityManager), -1);
             _systemManager.add(new EventSystem(_systemManager, _entityManager), -1);

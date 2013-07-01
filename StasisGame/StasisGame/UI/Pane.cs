@@ -7,6 +7,7 @@ namespace StasisGame.UI
 {
     public class Pane : IUIComponent
     {
+        protected Screen _screen;
         protected SpriteBatch _spriteBatch;
         private Texture2D _topLeftCorner;
         private Texture2D _topRightCorner;
@@ -29,9 +30,10 @@ namespace StasisGame.UI
         public bool selectable { get { return false; } }
 
         // Constructor for default pane textures
-        public Pane(SpriteBatch spriteBatch, UIComponentAlignment alignment, int x, int y, int width, int height)
+        public Pane(Screen screen, UIComponentAlignment alignment, int x, int y, int width, int height)
         {
-            _spriteBatch = spriteBatch;
+            _screen = screen;
+            _spriteBatch = screen.spriteBatch;
             _alignment = alignment;
             _x = x;
             _y = y;

@@ -22,8 +22,8 @@ namespace StasisGame.UI
 
         public string name { get { return _sb.ToString(); } }
 
-        public NameInputPane(SpriteBatch spriteBatch, SpriteFont font, UIComponentAlignment alignment, int x, int y, int maxLetters)
-            : base(spriteBatch, alignment, x, y, 648, 320)
+        public NameInputPane(Screen screen, SpriteFont font, UIComponentAlignment alignment, int x, int y, int maxLetters)
+            : base(screen, alignment, x, y, 648, 320)
         {
             _font = font;
             _maxLetters = maxLetters;
@@ -39,7 +39,7 @@ namespace StasisGame.UI
 
         private bool isKeyPressed(Keys key)
         {
-            return InputSystem.newKeyState.IsKeyDown(key) && InputSystem.oldKeyState.IsKeyUp(key);
+            return _screen.newKeyState.IsKeyDown(key) && _screen.oldKeyState.IsKeyUp(key);
         }
 
         private void addLetter(string letter)
@@ -56,7 +56,7 @@ namespace StasisGame.UI
                 _sb.Remove(_sb.Length - 1, 1);
         }
 
-        private void selectIndexWithMouse(Vector2 position)
+        private void selectLetterIndexWithMouse(Vector2 position)
         {
             int gridWidth = (int)Math.Floor((float)_width / (float)_letterSpacing);
 
@@ -90,15 +90,15 @@ namespace StasisGame.UI
         {
             if (!_firstUpdate)
             {
-                bool shift = InputSystem.newKeyState.IsKeyDown(Keys.LeftShift);
+                bool shift = _screen.newKeyState.IsKeyDown(Keys.LeftShift);
 
                 // Mouse input
-                if (InputSystem.oldMouseState.X - InputSystem.newMouseState.X != 0 ||
-                    InputSystem.oldMouseState.Y - InputSystem.newMouseState.Y != 0)
+                if (_screen.oldMouseState.X - _screen.newMouseState.X != 0 ||
+                    _screen.oldMouseState.Y - _screen.newMouseState.Y != 0)
                 {
-                    selectIndexWithMouse(new Vector2(InputSystem.newMouseState.X, InputSystem.newMouseState.Y));
+                    selectLetterIndexWithMouse(new Vector2(_screen.newMouseState.X, _screen.newMouseState.Y));
                 }
-                if (InputSystem.newMouseState.LeftButton == ButtonState.Pressed && InputSystem.oldMouseState.LeftButton == ButtonState.Released)
+                if (_screen.newMouseState.LeftButton == ButtonState.Pressed && _screen.oldMouseState.LeftButton == ButtonState.Released)
                 {
                     addLetter(_letters[_selectedIndex]);
                 }

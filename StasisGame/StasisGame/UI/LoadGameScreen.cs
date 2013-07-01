@@ -21,7 +21,7 @@ namespace StasisGame.UI
         private ContentManager _content;
 
         public LoadGameScreen(LoderGame game)
-            : base(ScreenType.LoadGameMenu)
+            : base(game.spriteBatch, ScreenType.LoadGameMenu)
         {
             _game = game;
             _content = new ContentManager(game.Services);
@@ -126,8 +126,8 @@ namespace StasisGame.UI
         public override void draw()
         {
             _game.menuBackgroundRenderer.draw();
-            _game.spriteBatch.Draw(_logo, new Vector2((int)(_game.GraphicsDevice.Viewport.Width / 2f), 100f), _logo.Bounds, Color.White, 0, new Vector2(_logo.Width, _logo.Height) / 2, 0.75f, SpriteEffects.None, 0);
-            _game.spriteBatch.Draw(_savesContainer, new Vector2((int)(_game.GraphicsDevice.Viewport.Width / 2f), 150f), _savesContainer.Bounds, Color.White, 0f, new Vector2((int)(_savesContainer.Width / 2f), 0), 1f, SpriteEffects.None, 0f);
+            _spriteBatch.Draw(_logo, new Vector2((int)(_game.GraphicsDevice.Viewport.Width / 2f), 100f), _logo.Bounds, Color.White, 0, new Vector2(_logo.Width, _logo.Height) / 2, 0.75f, SpriteEffects.None, 0);
+            _spriteBatch.Draw(_savesContainer, new Vector2((int)(_game.GraphicsDevice.Viewport.Width / 2f), 150f), _savesContainer.Bounds, Color.White, 0f, new Vector2((int)(_savesContainer.Width / 2f), 0), 1f, SpriteEffects.None, 0f);
 
             base.draw();
         }
