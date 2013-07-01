@@ -18,6 +18,7 @@ namespace StasisGame.UI
         private Texture2D _lineIndicator;
         private StringBuilder _sb;
         private int _maxLetters;
+        private bool _firstUpdate = true;
 
         public string name { get { return _sb.ToString(); } }
 
@@ -55,95 +56,141 @@ namespace StasisGame.UI
                 _sb.Remove(_sb.Length - 1, 1);
         }
 
+        private void selectIndexWithMouse(Vector2 position)
+        {
+            int gridWidth = (int)Math.Floor((float)_width / (float)_letterSpacing);
+
+            for (int i = 0; i < _letters.Count; i++)
+            {
+                int x = i % gridWidth;
+                int y = (int)Math.Floor((float)i / (float)gridWidth);
+                Vector2 lowerLetterPosition = new Vector2(_destRect.X, _destRect.Y) + new Vector2(x, y) * _letterSpacing + new Vector2(12, 12);
+                Vector2 upperLetterPosition = lowerLetterPosition + new Vector2(_letterSpacing, _letterSpacing);
+                Vector2 d1, d2;
+
+                d1 = position - lowerLetterPosition;
+                d2 = upperLetterPosition - position;
+
+                if (d1.X < 0 || d1.Y < 0)
+                {
+                    continue;
+                }
+                else if (d2.X < 0 || d2.Y < 0)
+                {
+                    continue;
+                }
+                else
+                {
+                    _selectedIndex = i;
+                }
+            }
+        }
+
         public override void UIUpdate()
         {
-            bool shift = InputSystem.newKeyState.IsKeyDown(Keys.LeftShift);
+            if (!_firstUpdate)
+            {
+                bool shift = InputSystem.newKeyState.IsKeyDown(Keys.LeftShift);
 
-            if (isKeyPressed(Keys.A))
-                addLetter(shift ? "A" : "a");
-            if (isKeyPressed(Keys.B))
-                addLetter(shift ? "B" : "b");
-            if (isKeyPressed(Keys.C))
-                addLetter(shift ? "C" : "c");
-            if (isKeyPressed(Keys.D))
-                addLetter(shift ? "D" : "d");
-            if (isKeyPressed(Keys.E))
-                addLetter(shift ? "E" : "e");
-            if (isKeyPressed(Keys.F))
-                addLetter(shift ? "F" : "f");
-            if (isKeyPressed(Keys.G))
-                addLetter(shift ? "G" : "g");
-            if (isKeyPressed(Keys.H))
-                addLetter(shift ? "H" : "h");
-            if (isKeyPressed(Keys.I))
-                addLetter(shift ? "I" : "i");
-            if (isKeyPressed(Keys.J))
-                addLetter(shift ? "J" : "j");
-            if (isKeyPressed(Keys.K))
-                addLetter(shift ? "K" : "k");
-            if (isKeyPressed(Keys.L))
-                addLetter(shift ? "L" : "l");
-            if (isKeyPressed(Keys.M))
-                addLetter(shift ? "M" : "m");
-            if (isKeyPressed(Keys.N))
-                addLetter(shift ? "N" : "n");
-            if (isKeyPressed(Keys.O))
-                addLetter(shift ? "O" : "o");
-            if (isKeyPressed(Keys.P))
-                addLetter(shift ? "P" : "p");
-            if (isKeyPressed(Keys.Q))
-                addLetter(shift ? "Q" : "q");
-            if (isKeyPressed(Keys.R))
-                addLetter(shift ? "R" : "r");
-            if (isKeyPressed(Keys.S))
-                addLetter(shift ? "S" : "s");
-            if (isKeyPressed(Keys.T))
-                addLetter(shift ? "T" : "t");
-            if (isKeyPressed(Keys.U))
-                addLetter(shift ? "U" : "u");
-            if (isKeyPressed(Keys.V))
-                addLetter(shift ? "V" : "v");
-            if (isKeyPressed(Keys.W))
-                addLetter(shift ? "W" : "w");
-            if (isKeyPressed(Keys.X))
-                addLetter(shift ? "X" : "x");
-            if (isKeyPressed(Keys.Y))
-                addLetter(shift ? "Y" : "y");
-            if (isKeyPressed(Keys.Z))
-                addLetter(shift ? "Z" : "z");
-            if (isKeyPressed(Keys.D0))
-                addLetter("0");
-            if (isKeyPressed(Keys.D1))
-                addLetter("1");
-            if (isKeyPressed(Keys.D2))
-                addLetter("2");
-            if (isKeyPressed(Keys.D3))
-                addLetter("3");
-            if (isKeyPressed(Keys.D4))
-                addLetter("4");
-            if (isKeyPressed(Keys.D5))
-                addLetter("5");
-            if (isKeyPressed(Keys.D6))
-                addLetter("6");
-            if (isKeyPressed(Keys.D7))
-                addLetter("7");
-            if (isKeyPressed(Keys.D8))
-                addLetter("8");
-            if (isKeyPressed(Keys.D9))
-                addLetter("9");
-            if (isKeyPressed(Keys.Space))
-                addLetter(" ");
-            if (isKeyPressed(Keys.OemMinus))
-                addLetter(shift ? "_" : "-");
-            if (isKeyPressed(Keys.OemPeriod))
-                addLetter(".");
-            if (isKeyPressed(Keys.OemComma))
-                addLetter(",");
+                // Mouse input
+                if (InputSystem.oldMouseState.X - InputSystem.newMouseState.X != 0 ||
+                    InputSystem.oldMouseState.Y - InputSystem.newMouseState.Y != 0)
+                {
+                    selectIndexWithMouse(new Vector2(InputSystem.newMouseState.X, InputSystem.newMouseState.Y));
+                }
+                if (InputSystem.newMouseState.LeftButton == ButtonState.Pressed && InputSystem.oldMouseState.LeftButton == ButtonState.Released)
+                {
+                    addLetter(_letters[_selectedIndex]);
+                }
 
-            if (isKeyPressed(Keys.Back))
-                removeLetter();
+                // Keyboard input
+                if (isKeyPressed(Keys.A))
+                    addLetter(shift ? "A" : "a");
+                if (isKeyPressed(Keys.B))
+                    addLetter(shift ? "B" : "b");
+                if (isKeyPressed(Keys.C))
+                    addLetter(shift ? "C" : "c");
+                if (isKeyPressed(Keys.D))
+                    addLetter(shift ? "D" : "d");
+                if (isKeyPressed(Keys.E))
+                    addLetter(shift ? "E" : "e");
+                if (isKeyPressed(Keys.F))
+                    addLetter(shift ? "F" : "f");
+                if (isKeyPressed(Keys.G))
+                    addLetter(shift ? "G" : "g");
+                if (isKeyPressed(Keys.H))
+                    addLetter(shift ? "H" : "h");
+                if (isKeyPressed(Keys.I))
+                    addLetter(shift ? "I" : "i");
+                if (isKeyPressed(Keys.J))
+                    addLetter(shift ? "J" : "j");
+                if (isKeyPressed(Keys.K))
+                    addLetter(shift ? "K" : "k");
+                if (isKeyPressed(Keys.L))
+                    addLetter(shift ? "L" : "l");
+                if (isKeyPressed(Keys.M))
+                    addLetter(shift ? "M" : "m");
+                if (isKeyPressed(Keys.N))
+                    addLetter(shift ? "N" : "n");
+                if (isKeyPressed(Keys.O))
+                    addLetter(shift ? "O" : "o");
+                if (isKeyPressed(Keys.P))
+                    addLetter(shift ? "P" : "p");
+                if (isKeyPressed(Keys.Q))
+                    addLetter(shift ? "Q" : "q");
+                if (isKeyPressed(Keys.R))
+                    addLetter(shift ? "R" : "r");
+                if (isKeyPressed(Keys.S))
+                    addLetter(shift ? "S" : "s");
+                if (isKeyPressed(Keys.T))
+                    addLetter(shift ? "T" : "t");
+                if (isKeyPressed(Keys.U))
+                    addLetter(shift ? "U" : "u");
+                if (isKeyPressed(Keys.V))
+                    addLetter(shift ? "V" : "v");
+                if (isKeyPressed(Keys.W))
+                    addLetter(shift ? "W" : "w");
+                if (isKeyPressed(Keys.X))
+                    addLetter(shift ? "X" : "x");
+                if (isKeyPressed(Keys.Y))
+                    addLetter(shift ? "Y" : "y");
+                if (isKeyPressed(Keys.Z))
+                    addLetter(shift ? "Z" : "z");
+                if (isKeyPressed(Keys.D0))
+                    addLetter("0");
+                if (isKeyPressed(Keys.D1))
+                    addLetter("1");
+                if (isKeyPressed(Keys.D2))
+                    addLetter("2");
+                if (isKeyPressed(Keys.D3))
+                    addLetter("3");
+                if (isKeyPressed(Keys.D4))
+                    addLetter("4");
+                if (isKeyPressed(Keys.D5))
+                    addLetter("5");
+                if (isKeyPressed(Keys.D6))
+                    addLetter("6");
+                if (isKeyPressed(Keys.D7))
+                    addLetter("7");
+                if (isKeyPressed(Keys.D8))
+                    addLetter("8");
+                if (isKeyPressed(Keys.D9))
+                    addLetter("9");
+                if (isKeyPressed(Keys.Space))
+                    addLetter(" ");
+                if (isKeyPressed(Keys.OemMinus))
+                    addLetter(shift ? "_" : "-");
+                if (isKeyPressed(Keys.OemPeriod))
+                    addLetter(".");
+                if (isKeyPressed(Keys.OemComma))
+                    addLetter(",");
+                if (isKeyPressed(Keys.Back))
+                    removeLetter();
 
-            base.UIUpdate();
+                base.UIUpdate();
+            }
+
+            _firstUpdate = false;
         }
 
         public override void UIDraw()
