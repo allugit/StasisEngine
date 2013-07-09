@@ -113,7 +113,7 @@ namespace StasisGame.UI
             // Draw buttons
             for (int i = 0; i < _buttons.Count; i++)
             {
-                _buttons[i].UIDraw();
+                _buttons[i].draw();
             }
 
             base.draw();

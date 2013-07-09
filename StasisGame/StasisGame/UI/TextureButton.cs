@@ -95,11 +95,11 @@ namespace StasisGame.UI
             _selected = false;
         }
 
-        public void UIUpdate()
+        public void update()
         {
         }
 
-        public void UIDraw()
+        public void draw()
         {
             Texture2D texture = _selected ? _selectedTexture : _deselectedTexture;
             
