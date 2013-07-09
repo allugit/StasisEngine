@@ -36,8 +36,7 @@ namespace StasisGame.UI
         public override void update()
         {
             // Update components
-            _nameInputPane.UIUpdate();
-            _namePreview.UIUpdate();
+            _nameInputPane.update();
 
             // Copy name from input pane to preview component
             _namePreview.name = _nameInputPane.name;
@@ -58,8 +57,9 @@ namespace StasisGame.UI
             // Title
             _spriteBatch.DrawString(_titleFont, "Please choose a name", titlePosition, Color.White);
 
-            // Draw components
-            base.draw();
+            // Draw name input preview and pane
+            _nameInputPane.draw();
+            _namePreview.draw();
         }
     }
 }

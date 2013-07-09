@@ -34,11 +34,7 @@ namespace StasisGame.UI
             _letterLine = ResourceManager.getTexture("line_indicator");
         }
 
-        public void UIUpdate()
-        {
-        }
-
-        public void UIDraw()
+        public void draw()
         {
             int realX = _x;
 

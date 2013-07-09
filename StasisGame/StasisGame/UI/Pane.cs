@@ -85,11 +85,11 @@ namespace StasisGame.UI
             _height = height;
         }
 
-        virtual public void UIUpdate()
+        virtual public void update()
         {
         }
 
-        virtual public void UIDraw()
+        virtual public void draw()
         {
             int innerBorderWidth = _width - (_topLeftCorner.Width + _topRightCorner.Width);
             int innerBorderHeight = _height - (_topLeftCorner.Height + _bottomLeftCorner.Height);

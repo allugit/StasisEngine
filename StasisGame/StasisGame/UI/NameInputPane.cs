@@ -86,7 +86,7 @@ namespace StasisGame.UI
             }
         }
 
-        public override void UIUpdate()
+        public override void update()
         {
             if (!_firstUpdate)
             {
@@ -187,18 +187,18 @@ namespace StasisGame.UI
                 if (isKeyPressed(Keys.Back))
                     removeLetter();
 
-                base.UIUpdate();
+                base.update();
             }
 
             _firstUpdate = false;
         }
 
-        public override void UIDraw()
+        public override void draw()
         {
             int gridWidth = (int)Math.Floor((float)_width / (float)_letterSpacing);
 
             // Draw pane
-            base.UIDraw();
+            base.draw();
 
             // Draw letters
             for (int i = 0; i < _letters.Count; i++)
