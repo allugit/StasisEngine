@@ -5,13 +5,13 @@ using Microsoft.Xna.Framework.Graphics;
 
 namespace StasisGame.UI
 {
-    public class TextButton : ISelectableUIComponent
+    public class TextButton
     {
         private SpriteBatch _spriteBatch;
         private SpriteFont _font;
         private string _text;
         private bool _selected;
-        private UIComponentAlignment _alignment;
+        private UIAlignment _alignment;
         private Texture2D _pixel;
         private Color _color;
         private int _xOffset;
@@ -20,7 +20,7 @@ namespace StasisGame.UI
         private int _hitBoxOffsetY;
         private int _hitBoxWidth;
         private int _hitBoxHeight;
-        private UIComponentAction _action;
+        private Action _action;
         private object _extraData;
 
         public bool selectable { get { return true; } }
@@ -35,7 +35,7 @@ namespace StasisGame.UI
                 _hitBoxWidth = (int)_font.MeasureString(_text).X;
                 _hitBoxHeight = (int)_font.MeasureString(_text).Y;
 
-                if (_alignment == UIComponentAlignment.TopCenter)
+                if (_alignment == UIAlignment.TopCenter)
                 {
                     _hitBoxOffsetX = (int)(_hitBoxWidth / 2f);
                     _hitBoxOffsetY = (int)(_hitBoxHeight / 2f);
@@ -46,7 +46,7 @@ namespace StasisGame.UI
         {
             get
             {
-                if (_alignment == UIComponentAlignment.TopCenter)
+                if (_alignment == UIAlignment.TopCenter)
                     return _xOffset + (int)(_spriteBatch.GraphicsDevice.Viewport.Width / 2f);
 
                 return _xOffset;
@@ -60,7 +60,7 @@ namespace StasisGame.UI
             }
         }
 
-        public TextButton(SpriteBatch spriteBatch, SpriteFont font, Color color, int xOffset, int yOffset, string text, UIComponentAlignment alignment, UIComponentAction action)
+        public TextButton(SpriteBatch spriteBatch, SpriteFont font, Color color, int xOffset, int yOffset, string text, UIAlignment alignment, Action action)
         {
             _spriteBatch = spriteBatch;
             _font = font;
@@ -77,7 +77,7 @@ namespace StasisGame.UI
 
         public void activate()
         {
-            _action(this);
+            _action();
         }
 
         public bool hitTest(Vector2 point)
@@ -117,11 +117,11 @@ namespace StasisGame.UI
                 _spriteBatch.Draw(_pixel, hitBox, hitBox, Color.Red * 0.35f, 0f, Vector2.Zero, SpriteEffects.None, 0.1f);
             }
 
-            if (_alignment == UIComponentAlignment.TopLeft)
+            if (_alignment == UIAlignment.TopLeft)
             {
                 _spriteBatch.DrawString(_font, _text, new Vector2(x, y), color);
             }
-            else if (_alignment == UIComponentAlignment.TopCenter)
+            else if (_alignment == UIAlignment.TopCenter)
             {
                 _spriteBatch.DrawString(_font, _text, new Vector2(x, y), color, 0f, Vector2.Zero, 1f, SpriteEffects.None, 0f);
             }

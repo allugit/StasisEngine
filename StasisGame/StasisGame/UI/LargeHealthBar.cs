@@ -6,7 +6,7 @@ using StasisCore;
 
 namespace StasisGame.UI
 {
-    public class LargeHealthBar : IUIComponent
+    public class LargeHealthBar
     {
         private SpriteBatch _spriteBatch;
         private Texture2D _healthBarOverlay;

@@ -158,8 +158,6 @@
     <Compile Include="Tree.cs" />
     <Compile Include="TrunkMetamerConstraint.cs" />
     <Compile Include="UI\InventoryDisplay.cs" />
-    <Compile Include="UI\ISelectableUIComponent.cs" />
-    <Compile Include="UI\IUIComponent.cs" />
     <Compile Include="UI\Label.cs" />
     <Compile Include="UI\LargeHealthBar.cs" />
     <Compile Include="UI\LevelScreen.cs" />

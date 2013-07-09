@@ -24,6 +24,7 @@ namespace StasisGame.UI
         private ToolbarDisplay _toolbarDisplay;
         private EquipmentSystem _equipmentSystem;
         private SpriteFont _arial;
+        private LargeHealthBar _healthBar;
 
         public LevelScreen(LoderGame game, SystemManager systemManager, EntityManager entityManager)
             : base(game.spriteBatch, ScreenType.Level)
@@ -47,7 +48,7 @@ namespace StasisGame.UI
             _inventoryDisplay.inFocus = false;
             _toolbarDisplay.inFocus = true;
 
-            _UIComponents.Add(new LargeHealthBar(_game.spriteBatch));
+            _healthBar = new LargeHealthBar(_game.spriteBatch);
         }
 
         ~LevelScreen()

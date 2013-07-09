@@ -19,6 +19,7 @@ namespace StasisGame.UI
         private SpriteFont _santaBarbaraNormal;
         private SpriteFont _arial;
         private ContentManager _content;
+        private List<TextButton> _saveButtons;
 
         public LoadGameScreen(LoderGame game)
             : base(game.spriteBatch, ScreenType.LoadGameMenu)
@@ -31,6 +32,7 @@ namespace StasisGame.UI
             _savesContainer = _content.Load<Texture2D>("load_game_menu/saves_container");
             _santaBarbaraNormal = _content.Load<SpriteFont>("santa_barbara_normal");
             _arial = _content.Load<SpriteFont>("arial");
+            _saveButtons = new List<TextButton>();
 
             createUIComponents();
         }
@@ -43,7 +45,6 @@ namespace StasisGame.UI
         private void createUIComponents()
         {
             List<XElement> playerSaves = DataManager.loadPlayerSaves();
-            List<TextButton> saveButtons = new List<TextButton>();
             Vector2 initialPosition = new Vector2(-200, 300);
 
             foreach (XElement playerSave in playerSaves)
@@ -55,66 +56,25 @@ namespace StasisGame.UI
                     _arial,
                     Color.White,
                     (int)initialPosition.X,
-                    (int)(initialPosition.Y) + saveButtons.Count * 24,
+                    (int)(initialPosition.Y) + _saveButtons.Count * 24,
                     text,
-                    UIComponentAlignment.TopCenter,
-                    (component) =>
+                    UIAlignment.TopCenter,
+                    () =>
                     {
                         _game.closeLoadGameMenu();
                         _game.loadGame(slot);
                     });
-                saveButtons.Add(button);
-                _UIComponents.Add(button);
+                _saveButtons.Add(button);
             }
         }
 
         public override void update()
         {
-            _oldGamepadState = _newGamepadState;
-            _oldKeyState = _newKeyState;
-            _oldMouseState = _newMouseState;
+            base.update();
 
-            _newGamepadState = GamePad.GetState(PlayerIndex.One);
-            _newKeyState = Keyboard.GetState();
-            _newMouseState = Mouse.GetState();
-
-            // Mouse input
-            for (int i = 0; i < _UIComponents.Count; i++)
+            // Handle button mouse input
+            for (int i = 0; i < _saveButtons.Count; i++)
             {
-                IUIComponent component = _UIComponents[i];
-
-                if (component.selectable)
-                {
-                    ISelectableUIComponent selectableComponent = component as ISelectableUIComponent;
-                    if (selectableComponent.hitTest(new Vector2(_newMouseState.X, _newMouseState.Y)))
-                    {
-                        if (_oldMouseState.X - _newMouseState.X != 0 || _oldMouseState.Y - _newMouseState.Y != 0)
-                            select(selectableComponent);
-
-                        if (_oldMouseState.LeftButton == ButtonState.Released && _newMouseState.LeftButton == ButtonState.Pressed)
-                            selectableComponent.activate();
-                    }
-                }
-            }
-
-            // Gamepad input
-            if (InputSystem.usingGamepad)
-            {
-                bool movingUp = (_oldGamepadState.ThumbSticks.Left.Y < 0.25f && _newGamepadState.ThumbSticks.Left.Y > 0.25f) ||
-                    (_oldGamepadState.DPad.Up == ButtonState.Released && _newGamepadState.DPad.Up == ButtonState.Pressed);
-                bool movingDown = (_oldGamepadState.ThumbSticks.Left.Y > -0.25f && _newGamepadState.ThumbSticks.Left.Y < -0.25f) ||
-                    (_oldGamepadState.DPad.Down == ButtonState.Released && _newGamepadState.DPad.Down == ButtonState.Pressed);
-                bool activate = _oldGamepadState.Buttons.A == ButtonState.Released && _newGamepadState.Buttons.A == ButtonState.Pressed;
-
-                if (movingUp)
-                    selectPreviousComponent();
-                else if (movingDown)
-                    selectNextComponent();
-
-                if (activate && _selectedComponent != null)
-                {
-                    _selectedComponent.activate();
-                }
             }
 
             // Background renderer
@@ -125,9 +85,16 @@ namespace StasisGame.UI
 
         public override void draw()
         {
+            // Draw background
             _game.menuBackgroundRenderer.draw();
             _spriteBatch.Draw(_logo, new Vector2((int)(_game.GraphicsDevice.Viewport.Width / 2f), 100f), _logo.Bounds, Color.White, 0, new Vector2(_logo.Width, _logo.Height) / 2, 0.75f, SpriteEffects.None, 0);
             _spriteBatch.Draw(_savesContainer, new Vector2((int)(_game.GraphicsDevice.Viewport.Width / 2f), 150f), _savesContainer.Bounds, Color.White, 0f, new Vector2((int)(_savesContainer.Width / 2f), 0), 1f, SpriteEffects.None, 0f);
+
+            // Draw buttons
+            for (int i = 0; i < _saveButtons.Count; i++)
+            {
+                _saveButtons[i].UIDraw();
+            }
 
             base.draw();
         }

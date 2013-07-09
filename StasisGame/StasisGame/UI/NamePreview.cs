@@ -5,11 +5,11 @@ using StasisCore;
 
 namespace StasisGame.UI
 {
-    public class NamePreview : IUIComponent
+    public class NamePreview
     {
         private SpriteBatch _spriteBatch;
         private SpriteFont _font;
-        private UIComponentAlignment _alignment;
+        private UIAlignment _alignment;
         private int _x;
         private int _y;
         private string _name = "";
@@ -22,7 +22,7 @@ namespace StasisGame.UI
         public bool selectable { get { return false; } }
         public float layerDepth { get { return 0f; } }
 
-        public NamePreview(SpriteBatch spriteBatch, SpriteFont font, UIComponentAlignment alignment, int x, int y, int maxLetters)
+        public NamePreview(SpriteBatch spriteBatch, SpriteFont font, UIAlignment alignment, int x, int y, int maxLetters)
         {
             _spriteBatch = spriteBatch;
             _font = font;
@@ -44,7 +44,7 @@ namespace StasisGame.UI
 
             switch (_alignment)
             {
-                case UIComponentAlignment.TopCenter:
+                case UIAlignment.TopCenter:
                     realX = _x + (_spriteBatch.GraphicsDevice.Viewport.Width / 2) - (_width / 2);
                     break;
             }

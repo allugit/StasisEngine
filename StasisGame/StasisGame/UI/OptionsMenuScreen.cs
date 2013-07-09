@@ -94,7 +94,7 @@ namespace StasisGame.UI
 
                 _displayDimensions.Add(new DisplayDimensions(displayResolution.Width, displayResolution.Height));
             }*/
-
+            /*
             TextureButton saveButton = new TextureButton(
                 _game.spriteBatch,
                 0,
@@ -104,7 +104,7 @@ namespace StasisGame.UI
                 _content.Load<Texture2D>("options_menu/save_selected"),
                 _content.Load<Texture2D>("options_menu/save_unselected"),
                 UIComponentAlignment.TopCenter,
-                (component) => { saveOptions(); });
+                () => { saveOptions(); });
 
             Label controllerLabel = new Label(
                 _game.spriteBatch,
@@ -130,7 +130,7 @@ namespace StasisGame.UI
                 320,
                 "Redefine Keys",
                 UIComponentAlignment.TopCenter,
-                (component) => { });
+                () => { });
 
             Label gamepadLabel = new Label(
                 _game.spriteBatch,
@@ -148,7 +148,7 @@ namespace StasisGame.UI
                 340,
                 "Redefine Buttons",
                 UIComponentAlignment.TopCenter,
-                (component) => { });
+                () => { });
 
             Label controllerTypeLabel = new Label(
                 _game.spriteBatch,
@@ -166,7 +166,7 @@ namespace StasisGame.UI
                 360,
                 getControllerTypeText(_selectedControllerType),
                 UIComponentAlignment.TopCenter,
-                (component) => { selectNextControllerType(); });
+                () => { selectNextControllerType(); });
 
             Label displayLabel = new Label(
                 _game.spriteBatch,
@@ -192,7 +192,7 @@ namespace StasisGame.UI
                 440,
                 String.Format("{0} x {1}", _selectedDimensions.width, _selectedDimensions.height),
                 UIComponentAlignment.TopCenter,
-                (component) => { selectNextDisplayMode(); });
+                () => { selectNextDisplayMode(); });
 
             Label fullscreenLabel = new Label(
                 _game.spriteBatch,
@@ -210,7 +210,7 @@ namespace StasisGame.UI
                 460,
                 _selectedFullscreen ? "True" : "False",
                 UIComponentAlignment.TopCenter,
-                (component) => { switchFullscreen(); });
+                () => { switchFullscreen(); });
 
             _UIComponents.Add(controllerLabel);
             _UIComponents.Add(keyboardLabel);
@@ -226,7 +226,7 @@ namespace StasisGame.UI
             _UIComponents.Add(fullscreenLabel);
             _UIComponents.Add(_fullscreenButton);
 
-            _UIComponents.Add(saveButton);
+            _UIComponents.Add(saveButton);*/
         }
 
         ~OptionsMenuScreen()

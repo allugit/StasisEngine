@@ -5,14 +5,14 @@ using Microsoft.Xna.Framework.Graphics;
 
 namespace StasisGame.UI
 {
-    public class Label : IUIComponent
+    public class Label
     {
         private SpriteBatch _spriteBatch;
         private SpriteFont _font;
         private string _text;
         private int _xOffset;
         private int _yOffset;
-        private UIComponentAlignment _alignment;
+        private UIAlignment _alignment;
 
         public bool selectable { get { return false; } }
         public float layerDepth { get { return 0f; } }
@@ -20,7 +20,7 @@ namespace StasisGame.UI
         {
             get
             {
-                if (_alignment == UIComponentAlignment.TopCenter)
+                if (_alignment == UIAlignment.TopCenter)
                     return _xOffset + (int)(_spriteBatch.GraphicsDevice.Viewport.Width / 2f);
 
                 return _xOffset;
@@ -34,7 +34,7 @@ namespace StasisGame.UI
             }
         }
 
-        public Label(SpriteBatch spriteBatch, SpriteFont font, string text, int xOffset, int yOffset, UIComponentAlignment alignment)
+        public Label(SpriteBatch spriteBatch, SpriteFont font, string text, int xOffset, int yOffset, UIAlignment alignment)
         {
             _spriteBatch = spriteBatch;
             _font = font;

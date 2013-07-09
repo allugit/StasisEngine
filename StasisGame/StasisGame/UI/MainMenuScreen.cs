@@ -11,66 +11,61 @@ namespace StasisGame.UI
     public class MainMenuScreen : Screen
     {
         private LoderGame _game;
-        private Texture2D _background;
         private Texture2D _logo;
+        private Texture2D _buttonsBackground;
         private ContentManager _content;
+        private List<TextureButton> _buttons;
 
         public MainMenuScreen(LoderGame game) : base(game.spriteBatch, ScreenType.MainMenu)
         {
             _game = game;
             _content = new ContentManager(game.Services);
             _content.RootDirectory = "Content";
-            _background = _content.Load<Texture2D>("main_menu/bg");
-            _logo = _content.Load<Texture2D>("main_menu/logo");
+            _logo = _content.Load<Texture2D>("logo");
+            _buttonsBackground = _content.Load<Texture2D>("main_menu/buttons_background");
+            _buttons = new List<TextureButton>();
 
-            TextureButton newGameButton = new TextureButton(
-                _game.spriteBatch,
-                0,
-                256,
-                475,
-                80,
-                _content.Load<Texture2D>("main_menu/new_game_selected"),
-                _content.Load<Texture2D>("main_menu/new_game_unselected"),
-                UIComponentAlignment.TopCenter,
-                (component) => { _game.newGame(); });
-            
-            TextureButton loadGameButton = new TextureButton(
-                _game.spriteBatch,
-                0,
-                358,
-                475,
-                80,
-                _content.Load<Texture2D>("main_menu/load_game_selected"),
-                _content.Load<Texture2D>("main_menu/load_game_unselected"),
-                UIComponentAlignment.TopCenter,
-                (component) => { _game.openLoadGameMenu(); });
-            
-            TextureButton optionsButton = new TextureButton(
-                _game.spriteBatch,
-                0,
-                465,
-                475,
-                80,
-                _content.Load<Texture2D>("main_menu/options_selected"),
-                _content.Load<Texture2D>("main_menu/options_unselected"),
-                UIComponentAlignment.TopCenter,
-                (component) => { _game.openOptionsMenu(); });
+            Func<int> yOffset = () => { return 182 + 81 * _buttons.Count; };
+            Rectangle localHitBox = new Rectangle(20, 0, 198, 68);
+            _buttons.Add(new TextureButton(
+                _spriteBatch,
+                UIAlignment.TopLeft,
+                20,
+                yOffset(),
+                _content.Load<Texture2D>("main_menu/new_game_over"),
+                _content.Load<Texture2D>("main_menu/new_game"),
+                localHitBox,
+                () => { _game.newGame(); }));
 
-            TextureButton exitButton = new TextureButton(
-                _game.spriteBatch,
-                100,
-                565,
-                240,
-                80,
-                _content.Load<Texture2D>("main_menu/exit_selected"),
-                _content.Load<Texture2D>("main_menu/exit_unselected"),
-                UIComponentAlignment.TopCenter,
-                (component) => { _game.Exit(); });
-            
-            addComponent(newGameButton);
-            addComponent(loadGameButton);
-            addComponent(optionsButton);
-            addComponent(exitButton);
+            _buttons.Add(new TextureButton(
+                _spriteBatch,
+                UIAlignment.TopLeft,
+                20,
+                yOffset(),
+                _content.Load<Texture2D>("main_menu/load_game_over"),
+                _content.Load<Texture2D>("main_menu/load_game"),
+                localHitBox,
+                () => { _game.openLoadGameMenu(); }));
+
+            _buttons.Add(new TextureButton(
+                _spriteBatch,
+                UIAlignment.TopLeft,
+                20,
+                yOffset(),
+                _content.Load<Texture2D>("main_menu/options_over"),
+                _content.Load<Texture2D>("main_menu/options"),
+                localHitBox,
+                () => { _game.openOptionsMenu(); }));
+
+            _buttons.Add(new TextureButton(
+                _spriteBatch,
+                UIAlignment.TopLeft,
+                20,
+                yOffset(),
+                _content.Load<Texture2D>("main_menu/quit_game_over"),
+                _content.Load<Texture2D>("main_menu/quit_game"),
+                localHitBox,
+                () => { _game.Exit(); }));
         }
 
         ~MainMenuScreen()
@@ -80,50 +75,23 @@ namespace StasisGame.UI
 
         override public void update()
         {
-            _oldGamepadState = _newGamepadState;
-            _oldKeyState = _newKeyState;
-            _oldMouseState = _newMouseState;
+            base.update();
 
-            _newGamepadState = GamePad.GetState(PlayerIndex.One);
-            _newKeyState = Keyboard.GetState();
-            _newMouseState = Mouse.GetState();
-
-            // Mouse input
-            for (int i = 0; i < _UIComponents.Count; i++)
+            // Handle button input
+            for (int i = 0; i < _buttons.Count; i++)
             {
-                IUIComponent component = _UIComponents[i];
+                TextureButton button = _buttons[i];
 
-                if (component.selectable)
+                if (button.hitTest(new Vector2(_newMouseState.X, _newMouseState.Y)))
                 {
-                    ISelectableUIComponent selectableComponent = component as ISelectableUIComponent;
-                    if (selectableComponent.hitTest(new Vector2(_newMouseState.X, _newMouseState.Y)))
-                    {
-                        if (_oldMouseState.X - _newMouseState.X != 0 || _oldMouseState.Y - _newMouseState.Y != 0)
-                            select(selectableComponent);
+                    button.onMouseOver();
 
-                        if (_oldMouseState.LeftButton == ButtonState.Released && _newMouseState.LeftButton == ButtonState.Pressed)
-                            selectableComponent.activate();
-                    }
+                    if (_newMouseState.LeftButton == ButtonState.Pressed && _oldMouseState.LeftButton == ButtonState.Released)
+                        button.activate();
                 }
-            }
-
-            // Gamepad input
-            if (InputSystem.usingGamepad)
-            {
-                bool movingUp = (_oldGamepadState.ThumbSticks.Left.Y < 0.25f && _newGamepadState.ThumbSticks.Left.Y > 0.25f) ||
-                    (_oldGamepadState.DPad.Up == ButtonState.Released && _newGamepadState.DPad.Up == ButtonState.Pressed);
-                bool movingDown = (_oldGamepadState.ThumbSticks.Left.Y > -0.25f && _newGamepadState.ThumbSticks.Left.Y < -0.25f) ||
-                    (_oldGamepadState.DPad.Down == ButtonState.Released && _newGamepadState.DPad.Down == ButtonState.Pressed);
-                bool activate = _oldGamepadState.Buttons.A == ButtonState.Released && _newGamepadState.Buttons.A == ButtonState.Pressed;
-
-                if (movingUp)
-                    selectPreviousComponent();
-                else if (movingDown)
-                    selectNextComponent();
-
-                if (activate && _selectedComponent != null)
+                else if (button.selected)
                 {
-                    _selectedComponent.activate();
+                    button.onMouseOut();
                 }
             }
 
@@ -135,8 +103,18 @@ namespace StasisGame.UI
 
         override public void draw()
         {
+            // Draw background
             _game.menuBackgroundRenderer.draw();
-            _game.spriteBatch.Draw(_logo, new Vector2(_game.GraphicsDevice.Viewport.Width / 2f, 100f), _logo.Bounds, Color.White, 0, new Vector2(_logo.Width, _logo.Height) / 2, 0.75f, SpriteEffects.None, 0);
+            _game.spriteBatch.Draw(_logo, new Vector2(_game.GraphicsDevice.Viewport.Width - _logo.Width, 0), _logo.Bounds, Color.White, 0, Vector2.Zero, 1f, SpriteEffects.None, 0);
+
+            // Draw button background
+            _game.spriteBatch.Draw(_buttonsBackground, new Vector2(0, 100), _buttonsBackground.Bounds, Color.White, 0f, Vector2.Zero, 1f, SpriteEffects.None, 0f);
+
+            // Draw buttons
+            for (int i = 0; i < _buttons.Count; i++)
+            {
+                _buttons[i].UIDraw();
+            }
 
             base.draw();
         }

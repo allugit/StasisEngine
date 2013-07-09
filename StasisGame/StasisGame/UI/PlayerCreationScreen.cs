@@ -29,27 +29,16 @@ namespace StasisGame.UI
             _cancelButtonOverTexture = game.Content.Load<Texture2D>("player_creation_screen/cancel_button_over");
             _title = "Please choose a name";
             _titleSize = _titleFont.MeasureString(_title);
-            _namePreview = new NamePreview(_spriteBatch, _letterFont, UIComponentAlignment.TopCenter, 0, 64, _maxLetters);
-            _nameInputPane = new NameInputPane(this, _letterFont, UIComponentAlignment.TopCenter, 0, 120, _maxLetters);
-
-            _cancelButton = new TextureButton(
-                _spriteBatch,
-                -256,
-                440,
-                _cancelButtonTexture.Width,
-                _cancelButtonTexture.Height,
-                _cancelButtonOverTexture,
-                _cancelButtonTexture,
-                UIComponentAlignment.TopCenter,
-                (button) => { Console.WriteLine("cancel clicked"); });
-
-            _UIComponents.Add(_namePreview);
-            _UIComponents.Add(_nameInputPane);
-            _UIComponents.Add(_cancelButton);
+            _namePreview = new NamePreview(_spriteBatch, _letterFont, UIAlignment.TopCenter, 0, 64, _maxLetters);
+            _nameInputPane = new NameInputPane(this, _letterFont, UIAlignment.TopCenter, 0, 120, _maxLetters);
         }
 
         public override void update()
         {
+            // Update components
+            _nameInputPane.UIUpdate();
+            _namePreview.UIUpdate();
+
             // Copy name from input pane to preview component
             _namePreview.name = _nameInputPane.name;
 

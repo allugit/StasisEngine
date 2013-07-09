@@ -5,7 +5,7 @@ using StasisCore;
 
 namespace StasisGame.UI
 {
-    public class Pane : IUIComponent
+    public class Pane
     {
         protected Screen _screen;
         protected SpriteBatch _spriteBatch;
@@ -18,7 +18,7 @@ namespace StasisGame.UI
         private Texture2D _rightSide;
         private Texture2D _bottomSide;
         private Texture2D _background;
-        private UIComponentAlignment _alignment;
+        private UIAlignment _alignment;
         protected int _x;
         protected int _y;
         protected int _width;
@@ -30,7 +30,7 @@ namespace StasisGame.UI
         public bool selectable { get { return false; } }
 
         // Constructor for default pane textures
-        public Pane(Screen screen, UIComponentAlignment alignment, int x, int y, int width, int height)
+        public Pane(Screen screen, UIAlignment alignment, int x, int y, int width, int height)
         {
             _screen = screen;
             _spriteBatch = screen.spriteBatch;
@@ -62,7 +62,7 @@ namespace StasisGame.UI
             Texture2D rightSide,
             Texture2D bottomSide,
             Texture2D background,
-            UIComponentAlignment alignment,
+            UIAlignment alignment,
             int x,
             int y,
             int width,
@@ -98,7 +98,7 @@ namespace StasisGame.UI
             // Calculate rectangle
             switch (_alignment)
             {
-                case UIComponentAlignment.TopCenter:
+                case UIAlignment.TopCenter:
                     _destRect.X = _x + (_spriteBatch.GraphicsDevice.Viewport.Width / 2) - (_width / 2);
                     _destRect.Y = _y;
                     _destRect.Width = _width;

@@ -62,71 +62,8 @@
     </Compile>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="main_menu\bg.jpg">
-      <Name>bg</Name>
-      <Importer>TextureImporter</Importer>
-      <Processor>MGTextureProcessor</Processor>
-    </Compile>
-  </ItemGroup>
-  <ItemGroup>
-    <Compile Include="main_menu\exit_selected.png">
-      <Name>exit_selected</Name>
-      <Importer>TextureImporter</Importer>
-      <Processor>MGTextureProcessor</Processor>
-    </Compile>
-  </ItemGroup>
-  <ItemGroup>
-    <Compile Include="main_menu\exit_unselected.png">
-      <Name>exit_unselected</Name>
-      <Importer>TextureImporter</Importer>
-      <Processor>MGTextureProcessor</Processor>
-    </Compile>
-  </ItemGroup>
-  <ItemGroup>
-    <Compile Include="main_menu\load_game_selected.png">
-      <Name>load_game_selected</Name>
-      <Importer>TextureImporter</Importer>
-      <Processor>MGTextureProcessor</Processor>
-    </Compile>
-  </ItemGroup>
-  <ItemGroup>
-    <Compile Include="main_menu\load_game_unselected.png">
-      <Name>load_game_unselected</Name>
-      <Importer>TextureImporter</Importer>
-      <Processor>MGTextureProcessor</Processor>
-    </Compile>
-  </ItemGroup>
-  <ItemGroup>
-    <Compile Include="main_menu\logo.png">
+    <Compile Include="logo.png">
       <Name>logo</Name>
-      <Importer>TextureImporter</Importer>
-      <Processor>MGTextureProcessor</Processor>
-    </Compile>
-  </ItemGroup>
-  <ItemGroup>
-    <Compile Include="main_menu\new_game_selected.png">
-      <Name>new_game_selected</Name>
-      <Importer>TextureImporter</Importer>
-      <Processor>MGTextureProcessor</Processor>
-    </Compile>
-  </ItemGroup>
-  <ItemGroup>
-    <Compile Include="main_menu\new_game_unselected.png">
-      <Name>new_game_unselected</Name>
-      <Importer>TextureImporter</Importer>
-      <Processor>MGTextureProcessor</Processor>
-    </Compile>
-  </ItemGroup>
-  <ItemGroup>
-    <Compile Include="main_menu\options_selected.png">
-      <Name>options_selected</Name>
-      <Importer>TextureImporter</Importer>
-      <Processor>MGTextureProcessor</Processor>
-    </Compile>
-  </ItemGroup>
-  <ItemGroup>
-    <Compile Include="main_menu\options_unselected.png">
-      <Name>options_unselected</Name>
       <Importer>TextureImporter</Importer>
       <Processor>MGTextureProcessor</Processor>
     </Compile>
@@ -345,6 +282,55 @@
       <Name>confirm_button_over</Name>
       <Importer>TextureImporter</Importer>
       <Processor>TextureProcessor</Processor>
+    </Compile>
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="main_menu\buttons_background.png">
+      <Name>buttons_background</Name>
+      <Importer>TextureImporter</Importer>
+      <Processor>MGTextureProcessor</Processor>
+    </Compile>
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="main_menu\load_game.png">
+      <Name>load_game</Name>
+      <Importer>TextureImporter</Importer>
+      <Processor>MGTextureProcessor</Processor>
+    </Compile>
+    <Compile Include="main_menu\load_game_over.png">
+      <Name>load_game_over</Name>
+      <Importer>TextureImporter</Importer>
+      <Processor>MGTextureProcessor</Processor>
+    </Compile>
+    <Compile Include="main_menu\new_game.png">
+      <Name>new_game</Name>
+      <Importer>TextureImporter</Importer>
+      <Processor>MGTextureProcessor</Processor>
+    </Compile>
+    <Compile Include="main_menu\new_game_over.png">
+      <Name>new_game_over</Name>
+      <Importer>TextureImporter</Importer>
+      <Processor>MGTextureProcessor</Processor>
+    </Compile>
+    <Compile Include="main_menu\options.png">
+      <Name>options</Name>
+      <Importer>TextureImporter</Importer>
+      <Processor>MGTextureProcessor</Processor>
+    </Compile>
+    <Compile Include="main_menu\options_over.png">
+      <Name>options_over</Name>
+      <Importer>TextureImporter</Importer>
+      <Processor>MGTextureProcessor</Processor>
+    </Compile>
+    <Compile Include="main_menu\quit_game.png">
+      <Name>quit_game</Name>
+      <Importer>TextureImporter</Importer>
+      <Processor>MGTextureProcessor</Processor>
+    </Compile>
+    <Compile Include="main_menu\quit_game_over.png">
+      <Name>quit_game_over</Name>
+      <Importer>TextureImporter</Importer>
+      <Processor>MGTextureProcessor</Processor>
     </Compile>
   </ItemGroup>
   <Import Project="$(MSBuildExtensionsPath)\Microsoft\XNA Game Studio\$(XnaFrameworkVersion)\Microsoft.Xna.GameStudio.ContentPipeline.targets" />

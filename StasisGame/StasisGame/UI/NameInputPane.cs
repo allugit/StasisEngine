@@ -22,7 +22,7 @@ namespace StasisGame.UI
 
         public string name { get { return _sb.ToString(); } }
 
-        public NameInputPane(Screen screen, SpriteFont font, UIComponentAlignment alignment, int x, int y, int maxLetters)
+        public NameInputPane(Screen screen, SpriteFont font, UIAlignment alignment, int x, int y, int maxLetters)
             : base(screen, alignment, x, y, 648, 320)
         {
             _font = font;
