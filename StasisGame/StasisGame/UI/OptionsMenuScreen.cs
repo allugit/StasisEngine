@@ -47,10 +47,13 @@ namespace StasisGame.UI
         private Color _optionsColor;
         private Label _videoTitle;
         private Label _resolutionLabel;
-        private Label _fullscreenLabel;
         private Label _resolutionValue;
         private TextureButton _resolutionPrevious;
         private TextureButton _resolutionNext;
+        private Label _fullscreenLabel;
+        private Label _fullscreenValue;
+        private TextureButton _fullscreenPrevious;
+        private TextureButton _fullscreenNext;
         private Label _audioTitle;
         private Label _controlsTitle;
         private List<Resolution> _availableResolutions;
@@ -209,6 +212,36 @@ namespace StasisGame.UI
                 TextAlignment.Left,
                 "Fullscreen",
                 _optionsColor);
+
+            _fullscreenValue = new Label(
+                _spriteBatch,
+                _optionsFont,
+                200,
+                -40,
+                UIAlignment.MiddleCenter,
+                TextAlignment.Center,
+                _fullscreen ? "True" : "False",
+                _optionsColor);
+
+            _fullscreenPrevious = new TextureButton(
+                _spriteBatch,
+                UIAlignment.MiddleCenter,
+                120,
+                -40,
+                _leftArrowsOver,
+                _leftArrows,
+                _leftArrows.Bounds,
+                () => { toggleFullscreen(); });
+
+            _fullscreenNext = new TextureButton(
+                _spriteBatch,
+                UIAlignment.MiddleCenter,
+                264,
+                -40,
+                _rightArrowsOver,
+                _rightArrows,
+                _rightArrows.Bounds,
+                () => { toggleFullscreen(); });
         }
 
         private void createAudioElements()
@@ -306,11 +339,19 @@ namespace StasisGame.UI
                 _currentResolution = _availableResolutions[currentIndex + 1];
         }
 
+        private void toggleFullscreen()
+        {
+            _fullscreen = !_fullscreen;
+        }
+
         private void updateVideoCategory()
         {
             _resolutionValue.text = _currentResolution.text;
+            _fullscreenValue.text = _fullscreen ? "True" : "False";
             hitTestButton(_resolutionPrevious);
             hitTestButton(_resolutionNext);
+            hitTestButton(_fullscreenPrevious);
+            hitTestButton(_fullscreenNext);
         }
 
         private void updateAudioCategory()
@@ -353,6 +394,9 @@ namespace StasisGame.UI
             _resolutionPrevious.draw();
             _resolutionNext.draw();
             _fullscreenLabel.draw();
+            _fullscreenValue.draw();
+            _fullscreenPrevious.draw();
+            _fullscreenNext.draw();
         }
 
         private void drawAudioCategory()
