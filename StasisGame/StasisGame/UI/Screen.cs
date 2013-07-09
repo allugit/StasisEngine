@@ -20,6 +20,12 @@ namespace StasisGame.UI
         BottomCenter,
         BottomRight
     };
+    public enum TextAlignment
+    {
+        Left,
+        Center,
+        Right
+    };
     public enum ScreenType
     {
         MainMenu,

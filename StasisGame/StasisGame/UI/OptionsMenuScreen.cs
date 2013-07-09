@@ -5,6 +5,8 @@ using Microsoft.Xna.Framework.Content;
 using Microsoft.Xna.Framework.Input;
 using Microsoft.Xna.Framework.Graphics;
 using StasisGame.Systems;
+using StasisGame.Managers;
+using StasisGame.Data;
 
 namespace StasisGame.UI
 {
@@ -17,6 +19,19 @@ namespace StasisGame.UI
 
     public class OptionsMenuScreen : Screen
     {
+        private struct Resolution
+        {
+            public int width;
+            public int height;
+            public string text;
+            public Resolution(int width, int height)
+            {
+                this.width = width;
+                this.height = height;
+                text = width.ToString() + " x " + height.ToString();
+            }
+        };
+
         private LoderGame _game;
         private Texture2D _logo;
         private ContentManager _content;
@@ -25,12 +40,22 @@ namespace StasisGame.UI
         private OptionsCategory _currentCategory;
         private SpriteFont _categoryTitleFont;
         private SpriteFont _optionsFont;
+        private Texture2D _leftArrows;
+        private Texture2D _rightArrows;
+        private Texture2D _leftArrowsOver;
+        private Texture2D _rightArrowsOver;
         private Color _optionsColor;
         private Label _videoTitle;
         private Label _resolutionLabel;
         private Label _fullscreenLabel;
+        private Label _resolutionValue;
+        private TextureButton _resolutionPrevious;
+        private TextureButton _resolutionNext;
         private Label _audioTitle;
         private Label _controlsTitle;
+        private List<Resolution> _availableResolutions;
+        private Resolution _currentResolution;
+        private bool _fullscreen;
 
         public OptionsMenuScreen(LoderGame game)
             : base(game.spriteBatch, ScreenType.OptionsMenu)
@@ -42,9 +67,15 @@ namespace StasisGame.UI
             _container = _content.Load<Texture2D>("options_menu/container");
             _categoryTitleFont = _content.Load<SpriteFont>("options_menu/category_title_font");
             _optionsFont = _content.Load<SpriteFont>("options_menu/options_font");
+            _leftArrows = _content.Load<Texture2D>("shared_ui/left_arrows");
+            _leftArrowsOver = _content.Load<Texture2D>("shared_ui/left_arrows_over");
+            _rightArrows = _content.Load<Texture2D>("shared_ui/right_arrows");
+            _rightArrowsOver = _content.Load<Texture2D>("shared_ui/right_arrows_over");
             _buttons = new List<TextureButton>();
             _optionsColor = new Color(0.8f, 0.8f, 0.8f);
+            _availableResolutions = new List<Resolution>();
 
+            loadSettings();
             createInterfaceElements();
             createVideoElements();
             createAudioElements();
@@ -103,7 +134,7 @@ namespace StasisGame.UI
                 confirmButtonHitBox,
                 () =>
                 {
-                    save();
+                    saveSettings();
                     _game.closeOptionsMenu();
                 }));
 
@@ -126,6 +157,7 @@ namespace StasisGame.UI
                 -255,
                 -160,
                 UIAlignment.MiddleCenter,
+                TextAlignment.Left,
                 "Video");
 
             _resolutionLabel = new Label(
@@ -134,8 +166,39 @@ namespace StasisGame.UI
                 -255,
                 -80,
                 UIAlignment.MiddleCenter,
+                TextAlignment.Left,
                 "Resolution",
                 _optionsColor);
+
+            _resolutionValue = new Label(
+                _spriteBatch,
+                _optionsFont,
+                200,
+                -80,
+                UIAlignment.MiddleCenter,
+                TextAlignment.Center,
+                _currentResolution.text,
+                _optionsColor);
+
+            _resolutionPrevious = new TextureButton(
+                _spriteBatch,
+                UIAlignment.MiddleCenter,
+                120,
+                -80,
+                _leftArrowsOver,
+                _leftArrows,
+                _leftArrows.Bounds,
+                () => { selectPreviousResolution(); });
+
+            _resolutionNext = new TextureButton(
+                _spriteBatch,
+                UIAlignment.MiddleCenter,
+                264,
+                -80,
+                _rightArrowsOver,
+                _rightArrows,
+                _rightArrows.Bounds,
+                () => { selectNextResolution(); });
 
             _fullscreenLabel = new Label(
                 _spriteBatch,
@@ -143,6 +206,7 @@ namespace StasisGame.UI
                 -255,
                 -40,
                 UIAlignment.MiddleCenter,
+                TextAlignment.Left,
                 "Fullscreen",
                 _optionsColor);
         }
@@ -155,6 +219,7 @@ namespace StasisGame.UI
                 -255,
                 -160,
                 UIAlignment.MiddleCenter,
+                TextAlignment.Left,
                 "Audio");
         }
 
@@ -166,10 +231,37 @@ namespace StasisGame.UI
                 -255,
                 -160,
                 UIAlignment.MiddleCenter,
+                TextAlignment.Left,
                 "Controls");
         }
 
-        private void save()
+        private void loadSettings()
+        {
+            GameSettings settings = DataManager.gameSettings;
+            bool addCurrentResolution = true;
+
+            _currentResolution = new Resolution(settings.screenWidth, settings.screenHeight);
+            _fullscreen = settings.fullscreen;
+
+            // Populate available resolutions
+            _availableResolutions.Add(new Resolution(800, 600));
+            _availableResolutions.Add(new Resolution(1024, 768));
+            _availableResolutions.Add(new Resolution(1280, 768));
+            _availableResolutions.Add(new Resolution(1366, 768));
+            _availableResolutions.Add(new Resolution(1440, 900));
+            _availableResolutions.Add(new Resolution(1680, 1050));
+            foreach (Resolution resolution in _availableResolutions)
+            {
+                if (resolution.width == _currentResolution.width && resolution.height == _currentResolution.height)
+                {
+                    addCurrentResolution = false;
+                }
+            }
+            if (addCurrentResolution)
+                _availableResolutions.Add(_currentResolution);
+        }
+
+        private void saveSettings()
         {
             Console.WriteLine("TODO: Save...");
         }
@@ -179,8 +271,46 @@ namespace StasisGame.UI
             _currentCategory = category;
         }
 
+        private void hitTestButton(TextureButton button)
+        {
+            if (button.hitTest(new Vector2(_newMouseState.X, _newMouseState.Y)))
+            {
+                button.mouseOver();
+
+                if (_newMouseState.LeftButton == ButtonState.Pressed && _oldMouseState.LeftButton == ButtonState.Released)
+                    button.activate();
+            }
+            else if (button.selected)
+            {
+                button.mouseOut();
+            }
+        }
+
+        private void selectPreviousResolution()
+        {
+            int currentIndex = _availableResolutions.IndexOf(_currentResolution);
+
+            if (currentIndex - 1 < 0)
+                _currentResolution = _availableResolutions[_availableResolutions.Count - 1];
+            else
+                _currentResolution = _availableResolutions[currentIndex - 1];
+        }
+
+        private void selectNextResolution()
+        {
+            int currentIndex = _availableResolutions.IndexOf(_currentResolution);
+
+            if (currentIndex + 1 > _availableResolutions.Count - 1)
+                _currentResolution = _availableResolutions[0];
+            else
+                _currentResolution = _availableResolutions[currentIndex + 1];
+        }
+
         private void updateVideoCategory()
         {
+            _resolutionValue.text = _currentResolution.text;
+            hitTestButton(_resolutionPrevious);
+            hitTestButton(_resolutionNext);
         }
 
         private void updateAudioCategory()
@@ -198,19 +328,7 @@ namespace StasisGame.UI
             // Handle button input
             for (int i = 0; i < _buttons.Count; i++)
             {
-                TextureButton button = _buttons[i];
-
-                if (button.hitTest(new Vector2(_newMouseState.X, _newMouseState.Y)))
-                {
-                    button.mouseOver();
-
-                    if (_newMouseState.LeftButton == ButtonState.Pressed && _oldMouseState.LeftButton == ButtonState.Released)
-                        button.activate();
-                }
-                else if (button.selected)
-                {
-                    button.mouseOut();
-                }
+                hitTestButton(_buttons[i]);
             }
 
             // Handle options category update
@@ -231,6 +349,9 @@ namespace StasisGame.UI
         {
             _videoTitle.draw();
             _resolutionLabel.draw();
+            _resolutionValue.draw();
+            _resolutionPrevious.draw();
+            _resolutionNext.draw();
             _fullscreenLabel.draw();
         }
 
