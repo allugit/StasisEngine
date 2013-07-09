@@ -13,15 +13,18 @@ namespace StasisGame.UI
         private int _xOffset;
         private int _yOffset;
         private UIAlignment _alignment;
+        private Color _color;
 
-        public bool selectable { get { return false; } }
-        public float layerDepth { get { return 0f; } }
         public int x
         {
             get
             {
-                if (_alignment == UIAlignment.TopCenter)
+                if (_alignment == UIAlignment.TopLeft || _alignment == UIAlignment.MiddleLeft || _alignment == UIAlignment.BottomLeft)
+                    return _xOffset;
+                else if (_alignment == UIAlignment.TopCenter || _alignment == UIAlignment.MiddleCenter || _alignment == UIAlignment.BottomCenter)
                     return _xOffset + (int)(_spriteBatch.GraphicsDevice.Viewport.Width / 2f);
+                else if (_alignment == UIAlignment.TopRight || _alignment == UIAlignment.MiddleRight || _alignment == UIAlignment.BottomRight)
+                    return _xOffset + _spriteBatch.GraphicsDevice.Viewport.Width;
 
                 return _xOffset;
             }
@@ -30,27 +33,36 @@ namespace StasisGame.UI
         {
             get
             {
+                if (_alignment == UIAlignment.TopLeft || _alignment == UIAlignment.TopCenter || _alignment == UIAlignment.TopRight)
+                    return _yOffset;
+                else if (_alignment == UIAlignment.MiddleLeft || _alignment == UIAlignment.MiddleCenter || _alignment == UIAlignment.MiddleRight)
+                    return _yOffset + (int)(_spriteBatch.GraphicsDevice.Viewport.Height / 2f);
+                else if (_alignment == UIAlignment.BottomLeft || _alignment == UIAlignment.BottomCenter || _alignment == UIAlignment.BottomRight)
+                    return _yOffset + _spriteBatch.GraphicsDevice.Viewport.Height;
+
                 return _yOffset;
             }
         }
 
-        public Label(SpriteBatch spriteBatch, SpriteFont font, string text, int xOffset, int yOffset, UIAlignment alignment)
+        public Label(SpriteBatch spriteBatch, SpriteFont font, int x, int y, UIAlignment alignment, string text)
+            : this(spriteBatch, font, x, y, alignment, text, Color.White)
+        {
+        }
+
+        public Label(SpriteBatch spriteBatch, SpriteFont font, int x, int y, UIAlignment alignment, string text, Color color)
         {
             _spriteBatch = spriteBatch;
             _font = font;
             _text = text;
-            _xOffset = xOffset;
-            _yOffset = yOffset;
+            _xOffset = x;
+            _yOffset = y;
             _alignment = alignment;
+            _color = color;
         }
 
-        public void UIUpdate()
+        public void draw()
         {
-        }
-
-        public void UIDraw()
-        {
-            _spriteBatch.DrawString(_font, _text, new Vector2(x, y), Color.White, 0f, Vector2.Zero, 1f, SpriteEffects.None, layerDepth);
+            _spriteBatch.DrawString(_font, _text, new Vector2(x, y), _color, 0f, Vector2.Zero, 1f, SpriteEffects.None, 0f);
         }
     }
 }

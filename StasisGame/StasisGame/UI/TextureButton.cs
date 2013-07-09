@@ -106,10 +106,6 @@ namespace StasisGame.UI
             return screenHitBox.Intersects(pointRect);
         }
 
-        public void update()
-        {
-        }
-
         public void draw()
         {
             Texture2D texture = _selected ? _selectedTexture : _deselectedTexture;
