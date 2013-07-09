@@ -109,16 +109,16 @@ namespace StasisGame
             ResourceManager.loadAllRopeMaterials(TitleContainer.OpenStream(ResourceManager.ropeMaterialPath));
 
             // Load user interface textures
-            ResourceManager.setTexture("pane_top_left_corner", Content.Load<Texture2D>("pane_top_left_corner"));
-            ResourceManager.setTexture("pane_top_right_corner", Content.Load<Texture2D>("pane_top_right_corner"));
-            ResourceManager.setTexture("pane_bottom_right_corner", Content.Load<Texture2D>("pane_bottom_right_corner"));
-            ResourceManager.setTexture("pane_bottom_left_corner", Content.Load<Texture2D>("pane_bottom_left_corner"));
-            ResourceManager.setTexture("pane_left_side", Content.Load<Texture2D>("pane_left_side"));
-            ResourceManager.setTexture("pane_top_side", Content.Load<Texture2D>("pane_top_side"));
-            ResourceManager.setTexture("pane_right_side", Content.Load<Texture2D>("pane_right_side"));
-            ResourceManager.setTexture("pane_bottom_side", Content.Load<Texture2D>("pane_bottom_side"));
-            ResourceManager.setTexture("pane_background", Content.Load<Texture2D>("pane_background"));
-            ResourceManager.setTexture("line_indicator", Content.Load<Texture2D>("line_indicator"));
+            ResourceManager.setTexture("pane_top_left_corner", Content.Load<Texture2D>("shared_ui/pane_top_left_corner"));
+            ResourceManager.setTexture("pane_top_right_corner", Content.Load<Texture2D>("shared_ui/pane_top_right_corner"));
+            ResourceManager.setTexture("pane_bottom_right_corner", Content.Load<Texture2D>("shared_ui/pane_bottom_right_corner"));
+            ResourceManager.setTexture("pane_bottom_left_corner", Content.Load<Texture2D>("shared_ui/pane_bottom_left_corner"));
+            ResourceManager.setTexture("pane_left_side", Content.Load<Texture2D>("shared_ui/pane_left_side"));
+            ResourceManager.setTexture("pane_top_side", Content.Load<Texture2D>("shared_ui/pane_top_side"));
+            ResourceManager.setTexture("pane_right_side", Content.Load<Texture2D>("shared_ui/pane_right_side"));
+            ResourceManager.setTexture("pane_bottom_side", Content.Load<Texture2D>("shared_ui/pane_bottom_side"));
+            ResourceManager.setTexture("pane_background", Content.Load<Texture2D>("shared_ui/pane_background"));
+            ResourceManager.setTexture("line_indicator", Content.Load<Texture2D>("shared_ui/line_indicator"));
             ResourceManager.setTexture("pixel", pixel);
 
             _spriteBatch = new SpriteBatch(GraphicsDevice);
