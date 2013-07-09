@@ -296,7 +296,22 @@ namespace StasisGame.UI
 
         private void saveSettings()
         {
-            Console.WriteLine("TODO: Save...");
+            GameSettings settings = DataManager.gameSettings;
+            GraphicsDeviceManager graphics = _game.graphics;
+
+            // Assign new settings
+            settings.screenWidth = _currentResolution.width;
+            settings.screenHeight = _currentResolution.height;
+            settings.fullscreen = _fullscreen;
+            
+            // Apply settings
+            graphics.PreferredBackBufferWidth = _currentResolution.width;
+            graphics.PreferredBackBufferHeight = _currentResolution.height;
+            graphics.IsFullScreen = _fullscreen;
+            graphics.ApplyChanges();
+
+            // Save settings
+            DataManager.saveGameSettings();
         }
 
         private void switchCategory(OptionsCategory category)
