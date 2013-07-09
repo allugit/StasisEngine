@@ -39,6 +39,11 @@ namespace StasisCore
                 layer.position = _screenOffset * layer.speedScale;
         }
 
+        public void recalculateScales()
+        {
+            _background.recalculateScales();
+        }
+
         public void drawLayer(BackgroundLayer layer)
         {
             float textureWidth = (float)layer.texture.Width;

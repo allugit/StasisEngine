@@ -71,14 +71,18 @@ namespace StasisCore.Models
             if (_textureUID != null && _textureUID != "")
             {
                 _texture = ResourceManager.getTexture(_textureUID);
+                calculateScale();
+            }
+        }
 
-                if (fitToScreen)
-                {
-                    _scale = (float)ResourceManager.graphicsDevice.Viewport.Height / (float)texture.Height;
+        public void calculateScale()
+        {
+            if (_fitToScreen)
+            {
+                _scale = (float)ResourceManager.graphicsDevice.Viewport.Height / (float)texture.Height;
 
-                    if ((float)_texture.Width * _scale < (float)ResourceManager.graphicsDevice.Viewport.Width)
-                        _scale = (float)ResourceManager.graphicsDevice.Viewport.Width / (float)texture.Width;
-                }
+                if ((float)_texture.Width * _scale < (float)ResourceManager.graphicsDevice.Viewport.Width)
+                    _scale = (float)ResourceManager.graphicsDevice.Viewport.Width / (float)texture.Width;
             }
         }
     }

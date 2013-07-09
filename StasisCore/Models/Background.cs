@@ -38,6 +38,12 @@ namespace StasisCore.Models
                 layer.loadTexture();
         }
 
+        public void recalculateScales()
+        {
+            foreach (BackgroundLayer layer in _layers)
+                layer.calculateScale();
+        }
+
         virtual public void createLayers(XElement data)
         {
             foreach (XElement layerData in data.Elements("BackgroundLayer"))

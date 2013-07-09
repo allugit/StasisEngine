@@ -35,7 +35,7 @@ namespace StasisGame.UI
         private LoderGame _game;
         private Texture2D _logo;
         private ContentManager _content;
-        private List<TextureButton> _buttons;
+        private List<TextureButton> _generalButtons;
         private Texture2D _container;
         private OptionsCategory _currentCategory;
         private SpriteFont _categoryTitleFont;
@@ -74,7 +74,7 @@ namespace StasisGame.UI
             _leftArrowsOver = _content.Load<Texture2D>("shared_ui/left_arrows_over");
             _rightArrows = _content.Load<Texture2D>("shared_ui/right_arrows");
             _rightArrowsOver = _content.Load<Texture2D>("shared_ui/right_arrows_over");
-            _buttons = new List<TextureButton>();
+            _generalButtons = new List<TextureButton>();
             _optionsColor = new Color(0.8f, 0.8f, 0.8f);
             _availableResolutions = new List<Resolution>();
 
@@ -95,9 +95,9 @@ namespace StasisGame.UI
             Rectangle categoryButtonHitBox = new Rectangle(20, 0, 198, 68);
             Rectangle confirmButtonHitBox = new Rectangle(0, 0, 152, 33);
             Point categoryButtonOffset = new Point(-527, -160);
-            Func<int> yOffset = () => { return categoryButtonOffset.Y + 81 * _buttons.Count; };
+            Func<int> yOffset = () => { return categoryButtonOffset.Y + 81 * _generalButtons.Count; };
 
-            _buttons.Add(new TextureButton(
+            _generalButtons.Add(new TextureButton(
                 _spriteBatch,
                 UIAlignment.MiddleCenter,
                 categoryButtonOffset.X,
@@ -107,7 +107,7 @@ namespace StasisGame.UI
                 categoryButtonHitBox,
                 () => { switchCategory(OptionsCategory.Video); }));
 
-            _buttons.Add(new TextureButton(
+            _generalButtons.Add(new TextureButton(
                 _spriteBatch,
                 UIAlignment.MiddleCenter,
                 categoryButtonOffset.X,
@@ -117,7 +117,7 @@ namespace StasisGame.UI
                 categoryButtonHitBox,
                 () => { switchCategory(OptionsCategory.Audio); }));
 
-            _buttons.Add(new TextureButton(
+            _generalButtons.Add(new TextureButton(
                 _spriteBatch,
                 UIAlignment.MiddleCenter,
                 categoryButtonOffset.X,
@@ -127,7 +127,7 @@ namespace StasisGame.UI
                 categoryButtonHitBox,
                 () => { switchCategory(OptionsCategory.Controls); }));
 
-            _buttons.Add(new TextureButton(
+            _generalButtons.Add(new TextureButton(
                 _spriteBatch,
                 UIAlignment.MiddleCenter,
                 170,
@@ -141,7 +141,7 @@ namespace StasisGame.UI
                     _game.closeOptionsMenu();
                 }));
 
-            _buttons.Add(new TextureButton(
+            _generalButtons.Add(new TextureButton(
                 _spriteBatch,
                 UIAlignment.MiddleCenter,
                 6,
@@ -309,6 +309,7 @@ namespace StasisGame.UI
             graphics.PreferredBackBufferHeight = _currentResolution.height;
             graphics.IsFullScreen = _fullscreen;
             graphics.ApplyChanges();
+            _game.menuBackgroundRenderer.recalculateScales();
 
             // Save settings
             DataManager.saveGameSettings();
@@ -382,9 +383,9 @@ namespace StasisGame.UI
             base.update();
 
             // Handle button input
-            for (int i = 0; i < _buttons.Count; i++)
+            for (int i = 0; i < _generalButtons.Count; i++)
             {
-                hitTestButton(_buttons[i]);
+                hitTestButton(_generalButtons[i]);
             }
 
             // Handle options category update
@@ -435,9 +436,9 @@ namespace StasisGame.UI
             _spriteBatch.Draw(_container, containerPosition, _container.Bounds, Color.White, 0f, new Vector2((int)(_container.Width / 2f) , (int)(_container.Height / 2f)), 1f, SpriteEffects.None, 0.1f);
 
             // Draw buttons
-            for (int i = 0; i < _buttons.Count; i++)
+            for (int i = 0; i < _generalButtons.Count; i++)
             {
-                _buttons[i].draw();
+                _generalButtons[i].draw();
             }
 
             // Handle options category drawing
