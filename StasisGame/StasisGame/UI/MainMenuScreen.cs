@@ -84,14 +84,14 @@ namespace StasisGame.UI
 
                 if (button.hitTest(new Vector2(_newMouseState.X, _newMouseState.Y)))
                 {
-                    button.onMouseOver();
+                    button.mouseOver();
 
                     if (_newMouseState.LeftButton == ButtonState.Pressed && _oldMouseState.LeftButton == ButtonState.Released)
                         button.activate();
                 }
                 else if (button.selected)
                 {
-                    button.onMouseOut();
+                    button.mouseOut();
                 }
             }
 

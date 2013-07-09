@@ -16,7 +16,9 @@ namespace StasisGame.UI
         private int _xOffset;
         private int _yOffset;
         private Rectangle _localHitBox;
-        private Action _action;
+        private Action _onActivate;
+        private Action _onMouseOver;
+        private Action _onMouseOut;
 
         public bool selected { get { return _selected; } }
         public int x
@@ -48,7 +50,14 @@ namespace StasisGame.UI
             }
         }
 
-        public TextureButton(SpriteBatch spriteBatch, UIAlignment alignment, int x, int y, Texture2D selectedTexture, Texture2D deselectedTexture, Rectangle localHitBox, Action action)
+        public TextureButton(SpriteBatch spriteBatch, UIAlignment alignment, int x, int y, Texture2D selectedTexture, Texture2D deselectedTexture, Rectangle localHitBox, Action onActivate) :
+            this(spriteBatch, alignment, x, y, selectedTexture, deselectedTexture, localHitBox, onActivate, null, null)
+        {
+            _onMouseOver = () => { select(); };
+            _onMouseOut = () => { deselect(); };
+        }
+
+        public TextureButton(SpriteBatch spriteBatch, UIAlignment alignment, int x, int y, Texture2D selectedTexture, Texture2D deselectedTexture, Rectangle localHitBox, Action onActivate, Action onMouseOver, Action onMouseOut)
         {
             _spriteBatch = spriteBatch;
             _alignment = alignment;
@@ -57,7 +66,9 @@ namespace StasisGame.UI
             _selectedTexture = selectedTexture;
             _deselectedTexture = deselectedTexture;
             _localHitBox = localHitBox;
-            _action = action;
+            _onActivate = onActivate;
+            _onMouseOver = onMouseOver;
+            _onMouseOut = onMouseOut;
 
             _pixel = new Texture2D(spriteBatch.GraphicsDevice, 1, 1);
             _pixel.SetData<Color>(new[] { Color.White });
@@ -65,7 +76,27 @@ namespace StasisGame.UI
 
         public void activate()
         {
-            _action();
+            _onActivate();
+        }
+
+        public void select()
+        {
+            _selected = true;
+        }
+
+        public void deselect()
+        {
+            _selected = false;
+        }
+
+        public void mouseOut()
+        {
+            _onMouseOut();
+        }
+
+        public void mouseOver()
+        {
+            _onMouseOver();
         }
 
         public bool hitTest(Vector2 point)
@@ -73,26 +104,6 @@ namespace StasisGame.UI
             Rectangle pointRect = new Rectangle((int)point.X, (int)point.Y, 1, 1);
             Rectangle screenHitBox = new Rectangle(_localHitBox.X + x, _localHitBox.Y + y, _localHitBox.Width, _localHitBox.Height);
             return screenHitBox.Intersects(pointRect);
-        }
-
-        public void onSelect()
-        {
-            _selected = true;
-        }
-
-        public void onDeselect()
-        {
-            _selected = false;
-        }
-
-        public void onMouseOver()
-        {
-            _selected = true;
-        }
-
-        public void onMouseOut()
-        {
-            _selected = false;
         }
 
         public void update()
