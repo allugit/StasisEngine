@@ -46,12 +46,12 @@ namespace StasisGame.UI
             }
         }
 
-        public Label(SpriteBatch spriteBatch, SpriteFont font, int x, int y, UIAlignment alignment, TextAlignment textAlignment, string text)
-            : this(spriteBatch, font, x, y, alignment, textAlignment, text, Color.White)
+        public Label(SpriteBatch spriteBatch, SpriteFont font, UIAlignment alignment, int x, int y, TextAlignment textAlignment, string text)
+            : this(spriteBatch, font, alignment, x, y, textAlignment, text, Color.White)
         {
         }
 
-        public Label(SpriteBatch spriteBatch, SpriteFont font, int x, int y, UIAlignment alignment, TextAlignment textAlignment, string text, Color color)
+        public Label(SpriteBatch spriteBatch, SpriteFont font, UIAlignment alignment, int x, int y, TextAlignment textAlignment, string text, Color color)
         {
             _spriteBatch = spriteBatch;
             _font = font;

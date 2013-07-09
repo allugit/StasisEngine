@@ -157,18 +157,18 @@ namespace StasisGame.UI
             _videoTitle = new Label(
                 _spriteBatch,
                 _categoryTitleFont,
+                UIAlignment.MiddleCenter,
                 -255,
                 -160,
-                UIAlignment.MiddleCenter,
                 TextAlignment.Left,
                 "Video");
 
             _resolutionLabel = new Label(
                 _spriteBatch,
                 _optionsFont,
+                UIAlignment.MiddleCenter,
                 -255,
                 -80,
-                UIAlignment.MiddleCenter,
                 TextAlignment.Left,
                 "Resolution",
                 _optionsColor);
@@ -176,9 +176,9 @@ namespace StasisGame.UI
             _resolutionValue = new Label(
                 _spriteBatch,
                 _optionsFont,
+                UIAlignment.MiddleCenter,
                 200,
                 -80,
-                UIAlignment.MiddleCenter,
                 TextAlignment.Center,
                 _currentResolution.text,
                 _optionsColor);
@@ -206,9 +206,9 @@ namespace StasisGame.UI
             _fullscreenLabel = new Label(
                 _spriteBatch,
                 _optionsFont,
+                UIAlignment.MiddleCenter,
                 -255,
                 -40,
-                UIAlignment.MiddleCenter,
                 TextAlignment.Left,
                 "Fullscreen",
                 _optionsColor);
@@ -216,9 +216,9 @@ namespace StasisGame.UI
             _fullscreenValue = new Label(
                 _spriteBatch,
                 _optionsFont,
+                UIAlignment.MiddleCenter,
                 200,
                 -40,
-                UIAlignment.MiddleCenter,
                 TextAlignment.Center,
                 _fullscreen ? "True" : "False",
                 _optionsColor);
@@ -249,9 +249,9 @@ namespace StasisGame.UI
             _audioTitle = new Label(
                 _spriteBatch,
                 _categoryTitleFont,
+                UIAlignment.MiddleCenter,
                 -255,
                 -160,
-                UIAlignment.MiddleCenter,
                 TextAlignment.Left,
                 "Audio");
         }
@@ -261,9 +261,9 @@ namespace StasisGame.UI
             _controlsTitle = new Label(
                 _spriteBatch,
                 _categoryTitleFont,
+                UIAlignment.MiddleCenter,
                 -255,
                 -160,
-                UIAlignment.MiddleCenter,
                 TextAlignment.Left,
                 "Controls");
         }

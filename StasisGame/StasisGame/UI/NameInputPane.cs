@@ -22,8 +22,8 @@ namespace StasisGame.UI
 
         public string name { get { return _sb.ToString(); } }
 
-        public NameInputPane(Screen screen, SpriteFont font, UIAlignment alignment, int x, int y, int maxLetters)
-            : base(screen, alignment, x, y, 648, 320)
+        public NameInputPane(Screen screen, SpriteFont font, UIAlignment alignment, int x, int y, int width, int height, int maxLetters)
+            : base(screen, alignment, x, y, width, height)
         {
             _font = font;
             _maxLetters = maxLetters;
@@ -62,9 +62,9 @@ namespace StasisGame.UI
 
             for (int i = 0; i < _letters.Count; i++)
             {
-                int x = i % gridWidth;
-                int y = (int)Math.Floor((float)i / (float)gridWidth);
-                Vector2 lowerLetterPosition = new Vector2(_destRect.X, _destRect.Y) + new Vector2(x, y) * _letterSpacing + new Vector2(12, 12);
+                int letterX = i % gridWidth;
+                int letterY = (int)Math.Floor((float)i / (float)gridWidth);
+                Vector2 lowerLetterPosition = new Vector2(x, y) + new Vector2(letterX, letterY) * _letterSpacing + new Vector2(12, 12);
                 Vector2 upperLetterPosition = lowerLetterPosition + new Vector2(_letterSpacing, _letterSpacing);
                 Vector2 d1, d2;
 
@@ -203,13 +203,13 @@ namespace StasisGame.UI
             // Draw letters
             for (int i = 0; i < _letters.Count; i++)
             {
-                int x = i % gridWidth;
-                int y = (int)Math.Floor((float)i / (float)gridWidth);
-                Vector2 letterPosition = new Vector2(_destRect.X, _destRect.Y) + new Vector2(x, y) * _letterSpacing + new Vector2(24, 24);
+                int letterX = i % gridWidth;
+                int letterY = (int)Math.Floor((float)i / (float)gridWidth);
+                Vector2 letterPosition = new Vector2(x, y) + new Vector2(letterX, letterY) * _letterSpacing + new Vector2(24, 24);
 
                 if (i == _selectedIndex)
                 {
-                    Vector2 indicatorPosition = new Vector2(_destRect.X, _destRect.Y) + new Vector2(x, y) * _letterSpacing + new Vector2(32, 52);
+                    Vector2 indicatorPosition = new Vector2(x, y) + new Vector2(letterX, letterY) * _letterSpacing + new Vector2(32, 52);
                     _spriteBatch.Draw(_lineIndicator, indicatorPosition, _lineIndicator.Bounds, Color.White, 0f, new Vector2(_lineIndicator.Width, 0) / 2f, 1f, SpriteEffects.None, 0f);
                 }
 
