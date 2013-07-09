@@ -68,7 +68,11 @@ namespace StasisGame.UI
                 _content.Load<Texture2D>("options_menu/save_button_over"),
                 _content.Load<Texture2D>("options_menu/save_button"),
                 localHitBox,
-                () => { }));
+                () => 
+                {
+                    save();
+                    _game.closeOptionsMenu();
+                }));
 
             _buttons.Add(new TextureButton(
                 _spriteBatch,
@@ -78,12 +82,17 @@ namespace StasisGame.UI
                 _content.Load<Texture2D>("options_menu/cancel_button_over"),
                 _content.Load<Texture2D>("options_menu/cancel_button"),
                 localHitBox,
-                () => { }));
+                () => { _game.closeOptionsMenu(); }));
         }
 
         ~OptionsMenuScreen()
         {
             _content.Unload();
+        }
+
+        private void save()
+        {
+            Console.WriteLine("TODO: Save...");
         }
 
         override public void update()
