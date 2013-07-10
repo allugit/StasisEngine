@@ -20,6 +20,7 @@ namespace StasisGame.UI
         private List<StonePane> _bars;
         private List<TextButton> _savedGameButtons;
         private TextButton _selectedButton;
+        private TextureButton _cancelButton;
 
         public LoadGameScreen(LoderGame game)
             : base(game.spriteBatch, ScreenType.LoadGameMenu)
@@ -42,6 +43,20 @@ namespace StasisGame.UI
                 -200,
                 500,
                 400);
+
+            _cancelButton = new TextureButton(
+                _spriteBatch,
+                UIAlignment.MiddleCenter,
+                110,
+                180,
+                _content.Load<Texture2D>("shared_ui/cancel_button_over"),
+                _content.Load<Texture2D>("shared_ui/cancel_button"),
+                new Rectangle(0, 0, 152, 33),
+                () =>
+                {
+                    _game.closeLoadGameMenu();
+                    _game.openMainMenu();
+                });
 
             foreach (XElement playerSave in playerSaves)
             {
@@ -79,6 +94,21 @@ namespace StasisGame.UI
         ~LoadGameScreen()
         {
             _content.Unload();
+        }
+
+        private void hitTestTextureButton(TextureButton button)
+        {
+            if (button.hitTest(new Vector2(_newMouseState.X, _newMouseState.Y)))
+            {
+                button.mouseOver();
+
+                if (_newMouseState.LeftButton == ButtonState.Pressed && _oldMouseState.LeftButton == ButtonState.Released)
+                    button.activate();
+            }
+            else if (button.selected)
+            {
+                button.mouseOut();
+            }
         }
 
         public override void update()
@@ -119,6 +149,8 @@ namespace StasisGame.UI
                 _selectedButton = null;
             }
 
+            hitTestTextureButton(_cancelButton);
+
             // Background renderer
             _game.menuBackgroundRenderer.update(35f, _game.menuBackgroundScreenOffset);
 
@@ -142,9 +174,10 @@ namespace StasisGame.UI
 
             // Draw buttons
             for (int i = 0; i < _savedGameButtons.Count; i++)
-            {
                 _savedGameButtons[i].draw();
-            }
+
+            // Draw cancel button
+            _cancelButton.draw();
 
             base.draw();
         }
