@@ -30,7 +30,7 @@ namespace StasisGame.UI
             _titleFont = _content.Load<SpriteFont>("player_creation_screen/title_font");
             _letterFont = _content.Load<SpriteFont>("dialogue_font");
             _namePreview = new NamePreview(_spriteBatch, _letterFont, UIAlignment.MiddleCenter, -200, -122, _maxLetters);
-            _nameInputPane = new NameInputPane(this, _letterFont, UIAlignment.MiddleCenter, -324, -60, 648, 320, _maxLetters);
+            _nameInputPane = new NameInputPane(_spriteBatch, _letterFont, UIAlignment.MiddleCenter, -324, -60, 648, 320, _maxLetters);
 
             _title = new Label(
                 _spriteBatch,

@@ -108,16 +108,39 @@ namespace StasisGame
             ResourceManager.loadAllRopeMaterials(TitleContainer.OpenStream(ResourceManager.ropeMaterialPath));
 
             // Load user interface textures
-            ResourceManager.setTexture("pane_top_left_corner", Content.Load<Texture2D>("shared_ui/pane_top_left_corner"));
-            ResourceManager.setTexture("pane_top_right_corner", Content.Load<Texture2D>("shared_ui/pane_top_right_corner"));
-            ResourceManager.setTexture("pane_bottom_right_corner", Content.Load<Texture2D>("shared_ui/pane_bottom_right_corner"));
-            ResourceManager.setTexture("pane_bottom_left_corner", Content.Load<Texture2D>("shared_ui/pane_bottom_left_corner"));
-            ResourceManager.setTexture("pane_left_side", Content.Load<Texture2D>("shared_ui/pane_left_side"));
-            ResourceManager.setTexture("pane_top_side", Content.Load<Texture2D>("shared_ui/pane_top_side"));
-            ResourceManager.setTexture("pane_right_side", Content.Load<Texture2D>("shared_ui/pane_right_side"));
-            ResourceManager.setTexture("pane_bottom_side", Content.Load<Texture2D>("shared_ui/pane_bottom_side"));
-            ResourceManager.setTexture("pane_background", Content.Load<Texture2D>("shared_ui/pane_background"));
-            ResourceManager.setTexture("line_indicator", Content.Load<Texture2D>("shared_ui/line_indicator"));
+            string[] interfaceTextures =
+            {
+                "blue_pane_top_left_corner",
+                "blue_pane_top_right_corner",
+                "blue_pane_bottom_right_corner",
+                "blue_pane_bottom_left_corner",
+                "blue_pane_left_side",
+                "blue_pane_top_side",
+                "blue_pane_right_side",
+                "blue_pane_bottom_side",
+                "blue_pane_background",
+                "stone_pane_top_left_corner",
+                "stone_pane_top_right_corner",
+                "stone_pane_bottom_right_corner",
+                "stone_pane_bottom_left_corner",
+                "stone_pane_left_side",
+                "stone_pane_top_side",
+                "stone_pane_right_side",
+                "stone_pane_bottom_side",
+                "stone_pane_background",
+                "line_indicator"
+            };
+            foreach (string texture in interfaceTextures)
+            {
+                if (File.Exists(ResourceManager.texturePath + "/" + texture + ".png") || File.Exists(ResourceManager.texturePath + "/" + texture + ".jpg"))
+                {
+                    ResourceManager.getTexture(texture);
+                }
+                else
+                {
+                    ResourceManager.setTexture(texture, Content.Load<Texture2D>("shared_ui/" + texture));
+                }
+            }
             ResourceManager.setTexture("pixel", pixel);
 
             _spriteBatch = new SpriteBatch(GraphicsDevice);

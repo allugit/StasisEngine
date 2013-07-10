@@ -160,52 +160,52 @@
     </Compile>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="shared_ui\pane_background.png">
-      <Name>pane_background</Name>
+    <Compile Include="shared_ui\blue_pane_background.png">
+      <Name>blue_pane_background</Name>
       <Importer>TextureImporter</Importer>
       <Processor>MGTextureProcessor</Processor>
     </Compile>
-    <Compile Include="shared_ui\pane_bottom_left_corner.png">
-      <Name>pane_bottom_left_corner</Name>
+    <Compile Include="shared_ui\blue_pane_bottom_left_corner.png">
+      <Name>blue_pane_bottom_left_corner</Name>
       <Importer>TextureImporter</Importer>
       <Processor>MGTextureProcessor</Processor>
     </Compile>
-    <Compile Include="shared_ui\pane_bottom_right_corner.png">
-      <Name>pane_bottom_right_corner</Name>
+    <Compile Include="shared_ui\blue_pane_bottom_right_corner.png">
+      <Name>blue_pane_bottom_right_corner</Name>
       <Importer>TextureImporter</Importer>
       <Processor>MGTextureProcessor</Processor>
     </Compile>
-    <Compile Include="shared_ui\pane_bottom_side.png">
-      <Name>pane_bottom_side</Name>
+    <Compile Include="shared_ui\blue_pane_bottom_side.png">
+      <Name>blue_pane_bottom_side</Name>
       <Importer>TextureImporter</Importer>
       <Processor>MGTextureProcessor</Processor>
     </Compile>
-    <Compile Include="shared_ui\pane_left_side.png">
-      <Name>pane_left_side</Name>
+    <Compile Include="shared_ui\blue_pane_left_side.png">
+      <Name>blue_pane_left_side</Name>
       <Importer>TextureImporter</Importer>
       <Processor>MGTextureProcessor</Processor>
     </Compile>
-    <Compile Include="shared_ui\pane_right_side.png">
-      <Name>pane_right_side</Name>
+    <Compile Include="shared_ui\blue_pane_right_side.png">
+      <Name>blue_pane_right_side</Name>
       <Importer>TextureImporter</Importer>
       <Processor>MGTextureProcessor</Processor>
     </Compile>
-    <Compile Include="shared_ui\pane_top_left_corner.png">
-      <Name>pane_top_left_corner</Name>
-      <Importer>TextureImporter</Importer>
-      <Processor>MGTextureProcessor</Processor>
-    </Compile>
-  </ItemGroup>
-  <ItemGroup>
-    <Compile Include="shared_ui\pane_top_right_corner.png">
-      <Name>pane_top_right_corner</Name>
+    <Compile Include="shared_ui\blue_pane_top_left_corner.png">
+      <Name>blue_pane_top_left_corner</Name>
       <Importer>TextureImporter</Importer>
       <Processor>MGTextureProcessor</Processor>
     </Compile>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="shared_ui\pane_top_side.png">
-      <Name>pane_top_side</Name>
+    <Compile Include="shared_ui\blue_pane_top_right_corner.png">
+      <Name>blue_pane_top_right_corner</Name>
+      <Importer>TextureImporter</Importer>
+      <Processor>MGTextureProcessor</Processor>
+    </Compile>
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="shared_ui\blue_pane_top_side.png">
+      <Name>blue_pane_top_side</Name>
       <Importer>TextureImporter</Importer>
       <Processor>MGTextureProcessor</Processor>
     </Compile>
@@ -387,6 +387,55 @@
       <Name>save_button_over</Name>
       <Importer>TextureImporter</Importer>
       <Processor>TextureProcessor</Processor>
+    </Compile>
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="shared_ui\stone_pane_bottom_left_corner.png">
+      <Name>stone_pane_bottom_left_corner</Name>
+      <Importer>TextureImporter</Importer>
+      <Processor>MGTextureProcessor</Processor>
+    </Compile>
+    <Compile Include="shared_ui\stone_pane_bottom_right_corner.png">
+      <Name>stone_pane_bottom_right_corner</Name>
+      <Importer>TextureImporter</Importer>
+      <Processor>MGTextureProcessor</Processor>
+    </Compile>
+    <Compile Include="shared_ui\stone_pane_bottom_side.png">
+      <Name>stone_pane_bottom_side</Name>
+      <Importer>TextureImporter</Importer>
+      <Processor>MGTextureProcessor</Processor>
+    </Compile>
+    <Compile Include="shared_ui\stone_pane_left_side.png">
+      <Name>stone_pane_left_side</Name>
+      <Importer>TextureImporter</Importer>
+      <Processor>MGTextureProcessor</Processor>
+    </Compile>
+    <Compile Include="shared_ui\stone_pane_right_side.png">
+      <Name>stone_pane_right_side</Name>
+      <Importer>TextureImporter</Importer>
+      <Processor>MGTextureProcessor</Processor>
+    </Compile>
+    <Compile Include="shared_ui\stone_pane_top_left_corner.png">
+      <Name>stone_pane_top_left_corner</Name>
+      <Importer>TextureImporter</Importer>
+      <Processor>MGTextureProcessor</Processor>
+    </Compile>
+    <Compile Include="shared_ui\stone_pane_top_right_corner.png">
+      <Name>stone_pane_top_right_corner</Name>
+      <Importer>TextureImporter</Importer>
+      <Processor>MGTextureProcessor</Processor>
+    </Compile>
+    <Compile Include="shared_ui\stone_pane_top_side.png">
+      <Name>stone_pane_top_side</Name>
+      <Importer>TextureImporter</Importer>
+      <Processor>MGTextureProcessor</Processor>
+    </Compile>
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="shared_ui\stone_pane_background.png">
+      <Name>stone_pane_background</Name>
+      <Importer>TextureImporter</Importer>
+      <Processor>MGTextureProcessor</Processor>
     </Compile>
   </ItemGroup>
   <Import Project="$(MSBuildExtensionsPath)\Microsoft\XNA Game Studio\$(XnaFrameworkVersion)\Microsoft.Xna.GameStudio.ContentPipeline.targets" />

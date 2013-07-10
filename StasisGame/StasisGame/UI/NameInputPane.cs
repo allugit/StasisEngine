@@ -9,7 +9,7 @@ using StasisGame.Systems;
 
 namespace StasisGame.UI
 {
-    public class NameInputPane : Pane
+    public class NameInputPane : BluePane
     {
         private SpriteFont _font;
         private int _letterSpacing = 48;
@@ -18,11 +18,15 @@ namespace StasisGame.UI
         private int _maxLetters;
         private List<TextButton> _letterButtons;
         private TextButton _selectedButton;
+        private MouseState _newMouseState;
+        private MouseState _oldMouseState;
+        private KeyboardState _newKeyState;
+        private KeyboardState _oldKeyState;
 
         public string name { get { return _sb.ToString(); } }
 
-        public NameInputPane(Screen screen, SpriteFont font, UIAlignment alignment, int x, int y, int width, int height, int maxLetters)
-            : base(screen, alignment, x, y, width, height)
+        public NameInputPane(SpriteBatch spriteBatch, SpriteFont font, UIAlignment alignment, int x, int y, int width, int height, int maxLetters)
+            : base(spriteBatch, alignment, x, y, width, height)
         {
             _font = font;
             _maxLetters = maxLetters;
@@ -65,7 +69,7 @@ namespace StasisGame.UI
 
         private bool isKeyPressed(Keys key)
         {
-            return _screen.newKeyState.IsKeyDown(key) && _screen.oldKeyState.IsKeyUp(key);
+            return _newKeyState.IsKeyDown(key) && _oldKeyState.IsKeyUp(key);
         }
 
         private void addLetter(string letter)
@@ -82,8 +86,13 @@ namespace StasisGame.UI
 
         public override void update()
         {
-            bool shift = _screen.newKeyState.IsKeyDown(Keys.LeftShift);
-            Vector2 mouse = new Vector2(_screen.newMouseState.X, _screen.newMouseState.Y);
+            _oldKeyState = _newKeyState;
+            _oldMouseState = _newMouseState;
+            _newKeyState = Keyboard.GetState();
+            _newMouseState = Mouse.GetState();
+
+            bool shift = _newKeyState.IsKeyDown(Keys.LeftShift);
+            Vector2 mouse = new Vector2(_newMouseState.X, _newMouseState.Y);
             bool mouseOverTextButton = false;
 
             // Handle keyboard input
@@ -186,7 +195,7 @@ namespace StasisGame.UI
                     mouseOverTextButton = true;
                     _selectedButton = letterButton;
 
-                    if (_screen.newMouseState.LeftButton == ButtonState.Pressed && _screen.oldMouseState.LeftButton == ButtonState.Released)
+                    if (_newMouseState.LeftButton == ButtonState.Pressed && _oldMouseState.LeftButton == ButtonState.Released)
                         letterButton.activate();
 
                     break;

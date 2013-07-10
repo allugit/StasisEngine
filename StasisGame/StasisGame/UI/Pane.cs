@@ -5,9 +5,8 @@ using StasisCore;
 
 namespace StasisGame.UI
 {
-    public class Pane
+    abstract public class Pane
     {
-        protected Screen _screen;
         protected SpriteBatch _spriteBatch;
         private Texture2D _topLeftCorner;
         private Texture2D _topRightCorner;
@@ -51,27 +50,6 @@ namespace StasisGame.UI
 
                 return _yOffset;
             }
-        }
-
-        // Constructor for default pane textures
-        public Pane(Screen screen, UIAlignment alignment, int x, int y, int width, int height)
-        {
-            _screen = screen;
-            _spriteBatch = screen.spriteBatch;
-            _alignment = alignment;
-            _xOffset = x;
-            _yOffset = y;
-            _width = width;
-            _height = height;
-            _topLeftCorner = ResourceManager.getTexture("pane_top_left_corner");
-            _topRightCorner = ResourceManager.getTexture("pane_top_right_corner");
-            _bottomRightCorner = ResourceManager.getTexture("pane_bottom_right_corner");
-            _bottomLeftCorner = ResourceManager.getTexture("pane_bottom_left_corner");
-            _leftSide = ResourceManager.getTexture("pane_left_side");
-            _topSide = ResourceManager.getTexture("pane_top_side");
-            _rightSide = ResourceManager.getTexture("pane_right_side");
-            _bottomSide = ResourceManager.getTexture("pane_bottom_side");
-            _background = ResourceManager.getTexture("pane_background");
         }
 
         // Constructor for custom pane textures
