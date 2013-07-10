@@ -16,6 +16,7 @@ namespace StasisGame.UI
         private int _maxLetters;
         private int _letterSpacing = 32;
         private int _width;
+        private Color _color = new Color(0.7f, 1f, 0.6f);
         private Texture2D _letterLine;
 
         public string name { get { return _name; } set { _name = value; } }
@@ -74,7 +75,17 @@ namespace StasisGame.UI
                 Vector2 letterPosition = new Vector2(x + (i * _letterSpacing) + (_letterSpacing / 2f) - 2, y);
                 string letter = _name[i].ToString();
                 Vector2 letterSize = _font.MeasureString(letter);
-                _spriteBatch.DrawString(_font, letter, letterPosition, Color.White, 0f, new Vector2(letterSize.X / 2f, 0), 1f, SpriteEffects.None, 0f);
+
+
+                _spriteBatch.DrawString(_font, letter, letterPosition + new Vector2(-1, -1), Color.Black, 0f, new Vector2(letterSize.X / 2f, 0), 1f, SpriteEffects.None, 0.0001f);
+                _spriteBatch.DrawString(_font, letter, letterPosition + new Vector2(0, -1), Color.Black, 0f, new Vector2(letterSize.X / 2f, 0), 1f, SpriteEffects.None, 0.0001f);
+                _spriteBatch.DrawString(_font, letter, letterPosition + new Vector2(1, -1), Color.Black, 0f, new Vector2(letterSize.X / 2f, 0), 1f, SpriteEffects.None, 0.0001f);
+                _spriteBatch.DrawString(_font, letter, letterPosition + new Vector2(1, 0), Color.Black, 0f, new Vector2(letterSize.X / 2f, 0), 1f, SpriteEffects.None, 0.0001f);
+                _spriteBatch.DrawString(_font, letter, letterPosition + new Vector2(1, 1), Color.Black, 0f, new Vector2(letterSize.X / 2f, 0), 1f, SpriteEffects.None, 0.0001f);
+                _spriteBatch.DrawString(_font, letter, letterPosition + new Vector2(0, 1), Color.Black, 0f, new Vector2(letterSize.X / 2f, 0), 1f, SpriteEffects.None, 0.0001f);
+                _spriteBatch.DrawString(_font, letter, letterPosition + new Vector2(-1, 1), Color.Black, 0f, new Vector2(letterSize.X / 2f, 0), 1f, SpriteEffects.None, 0.0001f);
+                _spriteBatch.DrawString(_font, letter, letterPosition + new Vector2(-1, 0), Color.Black, 0f, new Vector2(letterSize.X / 2f, 0), 1f, SpriteEffects.None, 0.0001f);
+                _spriteBatch.DrawString(_font, letter, letterPosition, _color, 0f, new Vector2(letterSize.X / 2f, 0), 1f, SpriteEffects.None, 0f);
             }
         }
     }
