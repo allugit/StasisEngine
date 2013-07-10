@@ -17,6 +17,8 @@ namespace StasisGame.UI
         private Label _title;
         private NamePreview _namePreview;
         private NameInputPane _nameInputPane;
+        private TextureButton _cancelButton;
+        private TextureButton _createButton;
         private int _maxLetters = 13;
         private bool _skipUpdate = true;
 
@@ -39,11 +41,46 @@ namespace StasisGame.UI
                 TextAlignment.Center,
                 "Please choose a name",
                 1);
+
+            _cancelButton = new TextureButton(
+                _spriteBatch,
+                UIAlignment.MiddleCenter,
+                24,
+                240,
+                _content.Load<Texture2D>("shared_ui/cancel_button_over"),
+                _content.Load<Texture2D>("shared_ui/cancel_button"),
+                new Rectangle(0, 0, 152, 33),
+                () => { });
+
+            _createButton = new TextureButton(
+                _spriteBatch,
+                UIAlignment.MiddleCenter,
+                184,
+                240,
+                _content.Load<Texture2D>("player_creation_screen/create_button_over"),
+                _content.Load<Texture2D>("player_creation_screen/create_button"),
+                new Rectangle(0, 0, 152, 33),
+                () => { });
         }
 
         ~PlayerCreationScreen()
         {
             _content.Unload();
+        }
+
+        private void hitTestButton(TextureButton button)
+        {
+            if (button.hitTest(new Vector2(_newMouseState.X, _newMouseState.Y)))
+            {
+                button.mouseOver();
+
+                if (_newMouseState.LeftButton == ButtonState.Pressed && _oldMouseState.LeftButton == ButtonState.Released)
+                    button.activate();
+            }
+            else if (button.selected)
+            {
+                button.mouseOut();
+            }
         }
 
         public override void update()
@@ -58,6 +95,10 @@ namespace StasisGame.UI
 
                 // Copy name from input pane to preview component
                 _namePreview.name = _nameInputPane.name;
+
+                // Hit test buttons
+                hitTestButton(_cancelButton);
+                hitTestButton(_createButton);
 
                 // Background renderer
                 _game.menuBackgroundRenderer.update(35f, _game.menuBackgroundScreenOffset);
@@ -80,6 +121,10 @@ namespace StasisGame.UI
             // Draw name input preview and pane
             _nameInputPane.draw();
             _namePreview.draw();
+
+            // Draw cancel and create buttons
+            _cancelButton.draw();
+            _createButton.draw();
         }
     }
 }

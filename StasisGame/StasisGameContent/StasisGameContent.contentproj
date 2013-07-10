@@ -232,38 +232,6 @@
     </Compile>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="player_creation_screen\backspace_button.png">
-      <Name>backspace_button</Name>
-      <Importer>TextureImporter</Importer>
-      <Processor>TextureProcessor</Processor>
-    </Compile>
-    <Compile Include="player_creation_screen\backspace_button_over.png">
-      <Name>backspace_button_over</Name>
-      <Importer>TextureImporter</Importer>
-      <Processor>TextureProcessor</Processor>
-    </Compile>
-    <Compile Include="player_creation_screen\cancel_button.png">
-      <Name>cancel_button</Name>
-      <Importer>TextureImporter</Importer>
-      <Processor>TextureProcessor</Processor>
-    </Compile>
-    <Compile Include="player_creation_screen\cancel_button_over.png">
-      <Name>cancel_button_over</Name>
-      <Importer>TextureImporter</Importer>
-      <Processor>TextureProcessor</Processor>
-    </Compile>
-    <Compile Include="player_creation_screen\confirm_button.png">
-      <Name>confirm_button</Name>
-      <Importer>TextureImporter</Importer>
-      <Processor>TextureProcessor</Processor>
-    </Compile>
-    <Compile Include="player_creation_screen\confirm_button_over.png">
-      <Name>confirm_button_over</Name>
-      <Importer>TextureImporter</Importer>
-      <Processor>TextureProcessor</Processor>
-    </Compile>
-  </ItemGroup>
-  <ItemGroup>
     <Compile Include="main_menu\buttons_background.png">
       <Name>buttons_background</Name>
       <Importer>TextureImporter</Importer>
@@ -335,16 +303,6 @@
       <Importer>TextureImporter</Importer>
       <Processor>MGTextureProcessor</Processor>
     </Compile>
-    <Compile Include="options_menu\cancel_button.png">
-      <Name>cancel_button</Name>
-      <Importer>TextureImporter</Importer>
-      <Processor>MGTextureProcessor</Processor>
-    </Compile>
-    <Compile Include="options_menu\cancel_button_over.png">
-      <Name>cancel_button_over</Name>
-      <Importer>TextureImporter</Importer>
-      <Processor>MGTextureProcessor</Processor>
-    </Compile>
     <Compile Include="options_menu\container.png">
       <Name>container</Name>
       <Importer>TextureImporter</Importer>
@@ -357,16 +315,6 @@
     </Compile>
     <Compile Include="options_menu\controls_button_over.png">
       <Name>controls_button_over</Name>
-      <Importer>TextureImporter</Importer>
-      <Processor>MGTextureProcessor</Processor>
-    </Compile>
-    <Compile Include="options_menu\save_button.png">
-      <Name>save_button</Name>
-      <Importer>TextureImporter</Importer>
-      <Processor>MGTextureProcessor</Processor>
-    </Compile>
-    <Compile Include="options_menu\save_button_over.png">
-      <Name>save_button_over</Name>
       <Importer>TextureImporter</Importer>
       <Processor>MGTextureProcessor</Processor>
     </Compile>
@@ -403,6 +351,40 @@
     </Compile>
     <Compile Include="shared_ui\right_arrows_over.png">
       <Name>right_arrows_over</Name>
+      <Importer>TextureImporter</Importer>
+      <Processor>TextureProcessor</Processor>
+    </Compile>
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="player_creation_screen\create_button.png">
+      <Name>create_button</Name>
+      <Importer>TextureImporter</Importer>
+      <Processor>TextureProcessor</Processor>
+    </Compile>
+    <Compile Include="player_creation_screen\create_button_over.png">
+      <Name>create_button_over</Name>
+      <Importer>TextureImporter</Importer>
+      <Processor>TextureProcessor</Processor>
+    </Compile>
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="shared_ui\cancel_button.png">
+      <Name>cancel_button</Name>
+      <Importer>TextureImporter</Importer>
+      <Processor>TextureProcessor</Processor>
+    </Compile>
+    <Compile Include="shared_ui\cancel_button_over.png">
+      <Name>cancel_button_over</Name>
+      <Importer>TextureImporter</Importer>
+      <Processor>TextureProcessor</Processor>
+    </Compile>
+    <Compile Include="shared_ui\save_button.png">
+      <Name>save_button</Name>
+      <Importer>TextureImporter</Importer>
+      <Processor>TextureProcessor</Processor>
+    </Compile>
+    <Compile Include="shared_ui\save_button_over.png">
+      <Name>save_button_over</Name>
       <Importer>TextureImporter</Importer>
       <Processor>TextureProcessor</Processor>
     </Compile>

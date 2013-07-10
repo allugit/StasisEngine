@@ -133,8 +133,8 @@ namespace StasisGame.UI
                 UIAlignment.MiddleCenter,
                 170,
                 158,
-                _content.Load<Texture2D>("options_menu/save_button_over"),
-                _content.Load<Texture2D>("options_menu/save_button"),
+                _content.Load<Texture2D>("shared_ui/save_button_over"),
+                _content.Load<Texture2D>("shared_ui/save_button"),
                 confirmButtonHitBox,
                 () =>
                 {
@@ -147,8 +147,8 @@ namespace StasisGame.UI
                 UIAlignment.MiddleCenter,
                 6,
                 158,
-                _content.Load<Texture2D>("options_menu/cancel_button_over"),
-                _content.Load<Texture2D>("options_menu/cancel_button"),
+                _content.Load<Texture2D>("shared_ui/cancel_button_over"),
+                _content.Load<Texture2D>("shared_ui/cancel_button"),
                 confirmButtonHitBox,
                 () => { _game.closeOptionsMenu(); }));
         }
