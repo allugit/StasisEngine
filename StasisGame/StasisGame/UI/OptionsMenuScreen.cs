@@ -162,7 +162,8 @@ namespace StasisGame.UI
                 -255,
                 -160,
                 TextAlignment.Left,
-                "Video");
+                "Video",
+                3);
 
             _resolutionLabel = new Label(
                 _spriteBatch,
@@ -172,6 +173,7 @@ namespace StasisGame.UI
                 -80,
                 TextAlignment.Left,
                 "Resolution",
+                2,
                 _optionsColor);
 
             _resolutionValue = new Label(
@@ -182,6 +184,7 @@ namespace StasisGame.UI
                 -80,
                 TextAlignment.Center,
                 _currentResolution.text,
+                2,
                 _optionsColor);
 
             _resolutionPrevious = new TextureButton(
@@ -212,6 +215,7 @@ namespace StasisGame.UI
                 -40,
                 TextAlignment.Left,
                 "Fullscreen",
+                2,
                 _optionsColor);
 
             _fullscreenValue = new Label(
@@ -222,6 +226,7 @@ namespace StasisGame.UI
                 -40,
                 TextAlignment.Center,
                 _fullscreen ? "True" : "False",
+                2,
                 _optionsColor);
 
             _fullscreenPrevious = new TextureButton(
@@ -254,7 +259,8 @@ namespace StasisGame.UI
                 -255,
                 -160,
                 TextAlignment.Left,
-                "Audio");
+                "Audio",
+                3);
         }
 
         private void createControlsElements()
@@ -266,7 +272,8 @@ namespace StasisGame.UI
                 -255,
                 -160,
                 TextAlignment.Left,
-                "Controls");
+                "Controls",
+                3);
         }
 
         private void loadSettings()

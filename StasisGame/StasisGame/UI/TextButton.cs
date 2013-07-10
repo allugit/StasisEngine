@@ -17,6 +17,7 @@ namespace StasisGame.UI
         private Action _onActivate;
         private Action _onMouseOver;
         private Action _onMouseOut;
+        private int _outline;
         private Color _selectedColor;
         private Color _deselectedColor;
         private Color _color;
@@ -71,14 +72,14 @@ namespace StasisGame.UI
             }
         }
 
-        public TextButton(SpriteBatch spriteBatch, SpriteFont font, UIAlignment alignment, int xOffset, int yOffset, int hitBoxPadding, TextAlignment textAlignment, string text, Color selectedColor, Color deselectedColor, Action onActivate)
-            : this(spriteBatch, font, alignment, xOffset, yOffset, hitBoxPadding, textAlignment, text, selectedColor, deselectedColor, onActivate, null, null)
+        public TextButton(SpriteBatch spriteBatch, SpriteFont font, UIAlignment alignment, int xOffset, int yOffset, int hitBoxPadding, TextAlignment textAlignment, string text, int outline, Color selectedColor, Color deselectedColor, Action onActivate)
+            : this(spriteBatch, font, alignment, xOffset, yOffset, hitBoxPadding, textAlignment, text, outline, selectedColor, deselectedColor, onActivate, null, null)
         {
             _onMouseOver = () => { select(); };
             _onMouseOut = () => { deselect(); };
         }
 
-        public TextButton(SpriteBatch spriteBatch, SpriteFont font, UIAlignment alignment, int xOffset, int yOffset, int hitBoxPadding, TextAlignment textAlignment, string text, Color selectedColor, Color deselectedColor, Action onActivate, Action onMouseOver, Action onMouseOut)
+        public TextButton(SpriteBatch spriteBatch, SpriteFont font, UIAlignment alignment, int xOffset, int yOffset, int hitBoxPadding, TextAlignment textAlignment, string text, int outline, Color selectedColor, Color deselectedColor, Action onActivate, Action onMouseOver, Action onMouseOut)
         {
             _spriteBatch = spriteBatch;
             _font = font;
@@ -88,6 +89,7 @@ namespace StasisGame.UI
             _hitBoxPadding = hitBoxPadding;
             _textAlignment = textAlignment;
             this.text = text;
+            _outline = outline;
             _selectedColor = selectedColor;
             _deselectedColor = deselectedColor;
             _onActivate = onActivate;
@@ -144,6 +146,17 @@ namespace StasisGame.UI
             else if (_textAlignment == TextAlignment.Right)
                 origin = new Vector2(stringSize.X, 0);
 
+            if (_outline > 0)
+            {
+                _spriteBatch.DrawString(_font, _text, new Vector2(x - _outline, y - _outline), Color.Black, 0f, origin, 1f, SpriteEffects.None, 0.0001f);
+                _spriteBatch.DrawString(_font, _text, new Vector2(x, y - _outline), Color.Black, 0f, origin, 1f, SpriteEffects.None, 0.0001f);
+                _spriteBatch.DrawString(_font, _text, new Vector2(x + _outline, y - _outline), Color.Black, 0f, origin, 1f, SpriteEffects.None, 0.0001f);
+                _spriteBatch.DrawString(_font, _text, new Vector2(x + _outline, y), Color.Black, 0f, origin, 1f, SpriteEffects.None, 0.0001f);
+                _spriteBatch.DrawString(_font, _text, new Vector2(x + _outline, y + _outline), Color.Black, 0f, origin, 1f, SpriteEffects.None, 0.0001f);
+                _spriteBatch.DrawString(_font, _text, new Vector2(x, y + _outline), Color.Black, 0f, origin, 1f, SpriteEffects.None, 0.0001f);
+                _spriteBatch.DrawString(_font, _text, new Vector2(x - _outline, y + _outline), Color.Black, 0f, origin, 1f, SpriteEffects.None, 0.0001f);
+                _spriteBatch.DrawString(_font, _text, new Vector2(x - _outline, y), Color.Black, 0f, origin, 1f, SpriteEffects.None, 0.0001f);
+            }
             _spriteBatch.DrawString(_font, _text, new Vector2(x, y), _color, 0f, origin, 1f, SpriteEffects.None, 0f);
         }
     }

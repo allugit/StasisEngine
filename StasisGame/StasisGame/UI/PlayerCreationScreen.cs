@@ -37,7 +37,8 @@ namespace StasisGame.UI
                 0,
                 -180,
                 TextAlignment.Center,
-                "Please choose a name");
+                "Please choose a name",
+                1);
         }
 
         ~PlayerCreationScreen()

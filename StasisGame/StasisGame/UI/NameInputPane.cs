@@ -56,6 +56,7 @@ namespace StasisGame.UI
                     16,
                     TextAlignment.Center,
                     letter,
+                    1,
                     Color.White,
                     new Color(0.8f, 0.8f, 0.8f),
                     () => { addLetter(letter); }));
