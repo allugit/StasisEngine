@@ -13,13 +13,9 @@ namespace StasisGame.UI
     public class LoadGameScreen : Screen
     {
         private LoderGame _game;
-        private Texture2D _background;
         private Texture2D _logo;
-        private Texture2D _savesContainer;
-        private SpriteFont _santaBarbaraNormal;
-        private SpriteFont _arial;
         private ContentManager _content;
-        private List<TextButton> _saveButtons;
+        private List<TextButton> _savedGameButtons;
 
         public LoadGameScreen(LoderGame game)
             : base(game.spriteBatch, ScreenType.LoadGameMenu)
@@ -27,12 +23,8 @@ namespace StasisGame.UI
             _game = game;
             _content = new ContentManager(game.Services);
             _content.RootDirectory = "Content";
-            _background = _content.Load<Texture2D>("main_menu/bg");
-            _logo = _content.Load<Texture2D>("main_menu/logo");
-            _savesContainer = _content.Load<Texture2D>("load_game_menu/saves_container");
-            _santaBarbaraNormal = _content.Load<SpriteFont>("santa_barbara_normal");
-            _arial = _content.Load<SpriteFont>("arial");
-            _saveButtons = new List<TextButton>();
+            _logo = _content.Load<Texture2D>("logo");
+            _savedGameButtons = new List<TextButton>();
 
             createUIComponents();
         }
@@ -74,7 +66,7 @@ namespace StasisGame.UI
             base.update();
 
             // Handle button mouse input
-            for (int i = 0; i < _saveButtons.Count; i++)
+            for (int i = 0; i < _savedGameButtons.Count; i++)
             {
             }
 
@@ -88,15 +80,15 @@ namespace StasisGame.UI
         {
             // Draw background
             _game.menuBackgroundRenderer.draw();
-            _spriteBatch.Draw(_logo, new Vector2((int)(_game.GraphicsDevice.Viewport.Width / 2f), 100f), _logo.Bounds, Color.White, 0, new Vector2(_logo.Width, _logo.Height) / 2, 0.75f, SpriteEffects.None, 0);
-            _spriteBatch.Draw(_savesContainer, new Vector2((int)(_game.GraphicsDevice.Viewport.Width / 2f), 150f), _savesContainer.Bounds, Color.White, 0f, new Vector2((int)(_savesContainer.Width / 2f), 0), 1f, SpriteEffects.None, 0f);
 
-            /*
+            // Draw logo
+            _spriteBatch.Draw(_logo, new Vector2((int)(_game.GraphicsDevice.Viewport.Width - _logo.Width), 0), _logo.Bounds, Color.White, 0, Vector2.Zero, 1f, SpriteEffects.None, 0);
+
             // Draw buttons
-            for (int i = 0; i < _saveButtons.Count; i++)
+            for (int i = 0; i < _savedGameButtons.Count; i++)
             {
-                _saveButtons[i].UIDraw();
-            }*/
+                _savedGameButtons[i].draw();
+            }
 
             base.draw();
         }

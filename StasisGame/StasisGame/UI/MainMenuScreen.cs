@@ -117,6 +117,8 @@ namespace StasisGame.UI
         {
             // Draw background
             _game.menuBackgroundRenderer.draw();
+
+            // Draw logo
             _game.spriteBatch.Draw(_logo, new Vector2(_game.GraphicsDevice.Viewport.Width - _logo.Width, 0), _logo.Bounds, Color.White, 0, Vector2.Zero, 1f, SpriteEffects.None, 0);
 
             // Draw button background
