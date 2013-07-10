@@ -253,8 +253,6 @@ namespace StasisGame
 
         protected override void Update(GameTime gameTime)
         {
-            _menuBackgroundScreenOffset += new Vector2(0.005f, 0f);
-
             switch (_gameState)
             {
                 case GameState.Initializing:
@@ -286,6 +284,7 @@ namespace StasisGame
                     break;
 
                 case GameState.MainMenu:
+                    _menuBackgroundScreenOffset += new Vector2(0.005f, 0f);
                     _systemManager.process();
                     break;
 
