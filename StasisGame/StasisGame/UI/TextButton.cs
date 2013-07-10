@@ -21,6 +21,7 @@ namespace StasisGame.UI
         private Color _deselectedColor;
         private Color _color;
         private Rectangle _localHitBox;
+        private int _hitBoxPadding;
 
         public string text
         {
@@ -33,12 +34,12 @@ namespace StasisGame.UI
 
                 if (_textAlignment == TextAlignment.Center)
                 {
-                    _localHitBox.X = -(int)(textSize.X / 2f);
-                    //_localHitBox.Y = -(int)(textSize.Y / 2f);
+                    _localHitBox.X = -(int)(textSize.X / 2f + _hitBoxPadding);
+                    _localHitBox.Y = -(int)(_hitBoxPadding / 2f);
                 }
 
-                _localHitBox.Width = (int)textSize.X;
-                _localHitBox.Height = (int)textSize.Y;
+                _localHitBox.Width = (int)textSize.X + _hitBoxPadding * 2;
+                _localHitBox.Height = (int)textSize.Y + _hitBoxPadding;
             }
         }
         public int x
@@ -70,20 +71,21 @@ namespace StasisGame.UI
             }
         }
 
-        public TextButton(SpriteBatch spriteBatch, SpriteFont font, UIAlignment alignment, int xOffset, int yOffset, TextAlignment textAlignment, string text, Color selectedColor, Color deselectedColor, Action onActivate)
-            : this(spriteBatch, font, alignment, xOffset, yOffset, textAlignment, text, selectedColor, deselectedColor, onActivate, null, null)
+        public TextButton(SpriteBatch spriteBatch, SpriteFont font, UIAlignment alignment, int xOffset, int yOffset, int hitBoxPadding, TextAlignment textAlignment, string text, Color selectedColor, Color deselectedColor, Action onActivate)
+            : this(spriteBatch, font, alignment, xOffset, yOffset, hitBoxPadding, textAlignment, text, selectedColor, deselectedColor, onActivate, null, null)
         {
             _onMouseOver = () => { select(); };
             _onMouseOut = () => { deselect(); };
         }
 
-        public TextButton(SpriteBatch spriteBatch, SpriteFont font, UIAlignment alignment, int xOffset, int yOffset, TextAlignment textAlignment, string text, Color selectedColor, Color deselectedColor, Action onActivate, Action onMouseOver, Action onMouseOut)
+        public TextButton(SpriteBatch spriteBatch, SpriteFont font, UIAlignment alignment, int xOffset, int yOffset, int hitBoxPadding, TextAlignment textAlignment, string text, Color selectedColor, Color deselectedColor, Action onActivate, Action onMouseOver, Action onMouseOut)
         {
             _spriteBatch = spriteBatch;
             _font = font;
             _alignment = alignment;
             _xOffset = xOffset;
             _yOffset = yOffset;
+            _hitBoxPadding = hitBoxPadding;
             _textAlignment = textAlignment;
             this.text = text;
             _selectedColor = selectedColor;

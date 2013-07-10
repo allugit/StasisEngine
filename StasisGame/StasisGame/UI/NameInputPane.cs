@@ -53,6 +53,7 @@ namespace StasisGame.UI
                     _alignment,
                     letterOffset.X + x + letterCellX * _letterSpacing,
                     letterOffset.Y + y + letterCellY * _letterSpacing,
+                    16,
                     TextAlignment.Center,
                     letter,
                     Color.White,
@@ -174,7 +175,12 @@ namespace StasisGame.UI
                 if (letterButton.hitTest(mouse))
                 {
                     if (_selectedButton != letterButton)
+                    {
+                        if (_selectedButton != null)
+                            _selectedButton.mouseOut();
+
                         letterButton.mouseOver();
+                    }
 
                     mouseOverTextButton = true;
                     _selectedButton = letterButton;
