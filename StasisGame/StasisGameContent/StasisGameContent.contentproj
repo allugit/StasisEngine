@@ -48,13 +48,6 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="load_game_menu\saves_container.png">
-      <Name>saves_container</Name>
-      <Importer>TextureImporter</Importer>
-      <Processor>MGTextureProcessor</Processor>
-    </Compile>
-  </ItemGroup>
-  <ItemGroup>
     <Compile Include="santa_barbara_normal.spritefont">
       <Name>santa_barbara_normal</Name>
       <Importer>FontDescriptionImporter</Importer>
@@ -436,6 +429,13 @@
       <Name>stone_pane_background</Name>
       <Importer>TextureImporter</Importer>
       <Processor>MGTextureProcessor</Processor>
+    </Compile>
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="load_game_menu\saved_game_font.spritefont">
+      <Name>saved_game_font</Name>
+      <Importer>FontDescriptionImporter</Importer>
+      <Processor>FontDescriptionProcessor</Processor>
     </Compile>
   </ItemGroup>
   <Import Project="$(MSBuildExtensionsPath)\Microsoft\XNA Game Studio\$(XnaFrameworkVersion)\Microsoft.Xna.GameStudio.ContentPipeline.targets" />
