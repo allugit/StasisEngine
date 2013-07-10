@@ -18,6 +18,7 @@ namespace StasisGame.UI
         private NamePreview _namePreview;
         private NameInputPane _nameInputPane;
         private int _maxLetters = 13;
+        private bool _skipUpdate = true;
 
         public PlayerCreationScreen(LoderGame game) : base(game.spriteBatch, ScreenType.PlayerCreation)
         {
@@ -46,16 +47,21 @@ namespace StasisGame.UI
 
         public override void update()
         {
-            // Update components
-            _nameInputPane.update();
+            if (!_skipUpdate)
+            {
+                // Update input
+                base.update();
 
-            // Copy name from input pane to preview component
-            _namePreview.name = _nameInputPane.name;
+                // Update components
+                _nameInputPane.update();
 
-            // Background renderer
-            _game.menuBackgroundRenderer.update(35f, _game.menuBackgroundScreenOffset);
+                // Copy name from input pane to preview component
+                _namePreview.name = _nameInputPane.name;
 
-            base.update();
+                // Background renderer
+                _game.menuBackgroundRenderer.update(35f, _game.menuBackgroundScreenOffset);
+            }
+            _skipUpdate = false;
         }
 
         public override void draw()

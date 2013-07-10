@@ -59,6 +59,7 @@ namespace StasisGame.UI
         private List<Resolution> _availableResolutions;
         private Resolution _currentResolution;
         private bool _fullscreen;
+        private bool _skipUpdate = true;
 
         public OptionsMenuScreen(LoderGame game)
             : base(game.spriteBatch, ScreenType.OptionsMenu)
@@ -380,26 +381,29 @@ namespace StasisGame.UI
 
         override public void update()
         {
-            base.update();
-
-            // Handle button input
-            for (int i = 0; i < _generalButtons.Count; i++)
+            if (!_skipUpdate)
             {
-                hitTestButton(_generalButtons[i]);
+                // Update input
+                base.update();
+
+                // Handle button input
+                for (int i = 0; i < _generalButtons.Count; i++)
+                {
+                    hitTestButton(_generalButtons[i]);
+                }
+
+                // Handle options category update
+                if (_currentCategory == OptionsCategory.Video)
+                    updateVideoCategory();
+                else if (_currentCategory == OptionsCategory.Audio)
+                    updateAudioCategory();
+                else if (_currentCategory == OptionsCategory.Controls)
+                    updateControlsCategory();
+
+                // Background
+                _game.menuBackgroundRenderer.update(35f, _game.menuBackgroundScreenOffset);
             }
-
-            // Handle options category update
-            if (_currentCategory == OptionsCategory.Video)
-                updateVideoCategory();
-            else if (_currentCategory == OptionsCategory.Audio)
-                updateAudioCategory();
-            else if (_currentCategory == OptionsCategory.Controls)
-                updateControlsCategory();
-
-            // Background
-            _game.menuBackgroundRenderer.update(35f, _game.menuBackgroundScreenOffset);
-
-            base.update();
+            _skipUpdate = false;
         }
 
         private void drawVideoCategory()
