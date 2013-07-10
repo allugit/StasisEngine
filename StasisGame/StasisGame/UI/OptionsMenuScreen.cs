@@ -140,6 +140,7 @@ namespace StasisGame.UI
                 {
                     saveSettings();
                     _game.closeOptionsMenu();
+                    _game.openMainMenu();
                 }));
 
             _generalButtons.Add(new TextureButton(
@@ -150,7 +151,11 @@ namespace StasisGame.UI
                 _content.Load<Texture2D>("shared_ui/cancel_button_over"),
                 _content.Load<Texture2D>("shared_ui/cancel_button"),
                 confirmButtonHitBox,
-                () => { _game.closeOptionsMenu(); }));
+                () =>
+                {
+                    _game.closeOptionsMenu();
+                    _game.openMainMenu();
+                }));
         }
 
         private void createVideoElements()

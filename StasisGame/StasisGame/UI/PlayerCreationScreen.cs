@@ -50,7 +50,11 @@ namespace StasisGame.UI
                 _content.Load<Texture2D>("shared_ui/cancel_button_over"),
                 _content.Load<Texture2D>("shared_ui/cancel_button"),
                 new Rectangle(0, 0, 152, 33),
-                () => { });
+                () => 
+                {
+                    _game.closePlayerCreationScreen();
+                    _game.openMainMenu();
+                });
 
             _createButton = new TextureButton(
                 _spriteBatch,

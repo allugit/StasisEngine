@@ -26,7 +26,6 @@ namespace StasisGame
         Intro,
         MainMenu,
         Options,
-        CreatePlayer,
         WorldMap,
         Level
     };
@@ -173,15 +172,6 @@ namespace StasisGame
             loadLevel(levelUID);
         }
 
-        public void newGame()
-        {
-            _screenSystem.removeScreen(_mainMenuScreen);
-            _screenSystem.addScreen(new PlayerCreationScreen(this));
-            _gameState = GameState.CreatePlayer;
-
-            // TODO: Destroy main menu screen?
-        }
-
         public void loadGame(int playerDataSlot)
         {
             startPersistentSystems();
@@ -203,28 +193,44 @@ namespace StasisGame
             _screenSystem.addScreen(new LevelScreen(this, _systemManager, _entityManager));
         }
 
-        public void openLoadGameMenu()
+        public void closeMainMenu()
         {
             _screenSystem.removeScreen(_mainMenuScreen);
+        }
+
+        public void openMainMenu()
+        {
+            _screenSystem.addScreen(_mainMenuScreen);
+        }
+
+        public void openLoadGameMenu()
+        {
             _screenSystem.addScreen(new LoadGameScreen(this));
         }
 
         public void closeLoadGameMenu()
         {
             _screenSystem.removeScreen(ScreenType.LoadGameMenu);
-            _screenSystem.addScreen(_mainMenuScreen);
         }
 
         public void openOptionsMenu()
         {
-            _screenSystem.removeScreen(_mainMenuScreen);
             _screenSystem.addScreen(new OptionsMenuScreen(this));
         }
 
         public void closeOptionsMenu()
         {
             _screenSystem.removeScreen(ScreenType.OptionsMenu);
-            _screenSystem.addScreen(_mainMenuScreen);
+        }
+
+        public void openPlayerCreationScreen()
+        {
+            _screenSystem.addScreen(new PlayerCreationScreen(this));
+        }
+
+        public void closePlayerCreationScreen()
+        {
+            _screenSystem.removeScreen(ScreenType.PlayerCreation);
         }
 
         public void openWorldMap()
@@ -283,13 +289,6 @@ namespace StasisGame
                     _systemManager.process();
                     break;
 
-                case GameState.CreatePlayer:
-                    //string playerName = "Wamboogley"; // TODO: Let user name their player
-                    //int playerSlot = DataManager.createPlayerData(_systemManager, playerName);
-                    //loadGame(playerSlot);
-                    _systemManager.process();
-                    break;
-
                 case GameState.WorldMap:
                     _systemManager.process();
                     break;
@@ -309,12 +308,6 @@ namespace StasisGame
             switch (_gameState)
             {
                 case GameState.MainMenu:
-                    _spriteBatch.Begin();
-                    _screenSystem.draw();
-                    _spriteBatch.End();
-                    break;
-
-                case GameState.CreatePlayer:
                     _spriteBatch.Begin(SpriteSortMode.Deferred, BlendState.AlphaBlend, SamplerState.LinearWrap, null, null);
                     _screenSystem.draw();
                     _spriteBatch.End();

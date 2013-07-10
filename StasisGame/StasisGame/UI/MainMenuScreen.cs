@@ -35,7 +35,11 @@ namespace StasisGame.UI
                 _content.Load<Texture2D>("main_menu/new_game_over"),
                 _content.Load<Texture2D>("main_menu/new_game"),
                 localHitBox,
-                () => { _game.newGame(); }));
+                () => 
+                {
+                    _game.closeMainMenu();
+                    _game.openPlayerCreationScreen();
+                }));
 
             _buttons.Add(new TextureButton(
                 _spriteBatch,
@@ -45,7 +49,11 @@ namespace StasisGame.UI
                 _content.Load<Texture2D>("main_menu/load_game_over"),
                 _content.Load<Texture2D>("main_menu/load_game"),
                 localHitBox,
-                () => { _game.openLoadGameMenu(); }));
+                () =>
+                {
+                    _game.closeMainMenu();
+                    _game.openLoadGameMenu();
+                }));
 
             _buttons.Add(new TextureButton(
                 _spriteBatch,
@@ -55,7 +63,11 @@ namespace StasisGame.UI
                 _content.Load<Texture2D>("main_menu/options_over"),
                 _content.Load<Texture2D>("main_menu/options"),
                 localHitBox,
-                () => { _game.openOptionsMenu(); }));
+                () => 
+                {
+                    _game.closeMainMenu();
+                    _game.openOptionsMenu();
+                }));
 
             _buttons.Add(new TextureButton(
                 _spriteBatch,
