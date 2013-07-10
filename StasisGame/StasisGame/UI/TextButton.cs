@@ -9,45 +9,48 @@ namespace StasisGame.UI
     {
         private SpriteBatch _spriteBatch;
         private SpriteFont _font;
-        private string _text;
-        private bool _selected;
         private UIAlignment _alignment;
-        private Texture2D _pixel;
-        private Color _color;
         private int _xOffset;
         private int _yOffset;
-        private int _hitBoxOffsetX;
-        private int _hitBoxOffsetY;
-        private int _hitBoxWidth;
-        private int _hitBoxHeight;
-        private Action _action;
-        private object _extraData;
+        private TextAlignment _textAlignment;
+        private string _text;
+        private Action _onActivate;
+        private Action _onMouseOver;
+        private Action _onMouseOut;
+        private Color _selectedColor;
+        private Color _deselectedColor;
+        private Color _color;
+        private Rectangle _localHitBox;
 
-        public bool selectable { get { return true; } }
-        public float layerDepth { get { return 0f; } }
-        public object extraData { get { return _extraData; } set { _extraData = value; } }
         public string text
         {
             get { return _text; }
-            set
+            set 
             {
-                _text = value;
-                _hitBoxWidth = (int)_font.MeasureString(_text).X;
-                _hitBoxHeight = (int)_font.MeasureString(_text).Y;
+                Vector2 textSize = _font.MeasureString(value);
 
-                if (_alignment == UIAlignment.TopCenter)
+                _text = value;
+
+                if (_textAlignment == TextAlignment.Center)
                 {
-                    _hitBoxOffsetX = (int)(_hitBoxWidth / 2f);
-                    _hitBoxOffsetY = (int)(_hitBoxHeight / 2f);
+                    _localHitBox.X = -(int)(textSize.X / 2f);
+                    //_localHitBox.Y = -(int)(textSize.Y / 2f);
                 }
+
+                _localHitBox.Width = (int)textSize.X;
+                _localHitBox.Height = (int)textSize.Y;
             }
         }
         public int x
         {
             get
             {
-                if (_alignment == UIAlignment.TopCenter)
+                if (_alignment == UIAlignment.TopLeft || _alignment == UIAlignment.MiddleLeft || _alignment == UIAlignment.BottomLeft)
+                    return _xOffset;
+                else if (_alignment == UIAlignment.TopCenter || _alignment == UIAlignment.MiddleCenter || _alignment == UIAlignment.BottomCenter)
                     return _xOffset + (int)(_spriteBatch.GraphicsDevice.Viewport.Width / 2f);
+                else if (_alignment == UIAlignment.TopRight || _alignment == UIAlignment.MiddleRight || _alignment == UIAlignment.BottomRight)
+                    return _xOffset + _spriteBatch.GraphicsDevice.Viewport.Width;
 
                 return _xOffset;
             }
@@ -56,75 +59,90 @@ namespace StasisGame.UI
         {
             get
             {
+                if (_alignment == UIAlignment.TopLeft || _alignment == UIAlignment.TopCenter || _alignment == UIAlignment.TopRight)
+                    return _yOffset;
+                else if (_alignment == UIAlignment.MiddleLeft || _alignment == UIAlignment.MiddleCenter || _alignment == UIAlignment.MiddleRight)
+                    return _yOffset + (int)(_spriteBatch.GraphicsDevice.Viewport.Height / 2f);
+                else if (_alignment == UIAlignment.BottomLeft || _alignment == UIAlignment.BottomCenter || _alignment == UIAlignment.BottomRight)
+                    return _yOffset + _spriteBatch.GraphicsDevice.Viewport.Height;
+
                 return _yOffset;
             }
         }
 
-        public TextButton(SpriteBatch spriteBatch, SpriteFont font, Color color, int xOffset, int yOffset, string text, UIAlignment alignment, Action action)
+        public TextButton(SpriteBatch spriteBatch, SpriteFont font, UIAlignment alignment, int xOffset, int yOffset, TextAlignment textAlignment, string text, Color selectedColor, Color deselectedColor, Action onActivate)
+            : this(spriteBatch, font, alignment, xOffset, yOffset, textAlignment, text, selectedColor, deselectedColor, onActivate, null, null)
+        {
+            _onMouseOver = () => { select(); };
+            _onMouseOut = () => { deselect(); };
+        }
+
+        public TextButton(SpriteBatch spriteBatch, SpriteFont font, UIAlignment alignment, int xOffset, int yOffset, TextAlignment textAlignment, string text, Color selectedColor, Color deselectedColor, Action onActivate, Action onMouseOver, Action onMouseOut)
         {
             _spriteBatch = spriteBatch;
             _font = font;
-            _color = color;
             _alignment = alignment;
             _xOffset = xOffset;
             _yOffset = yOffset;
-            _action = action;
+            _textAlignment = textAlignment;
             this.text = text;
-
-            _pixel = new Texture2D(spriteBatch.GraphicsDevice, 1, 1);
-            _pixel.SetData<Color>(new[] { Color.White });
+            _selectedColor = selectedColor;
+            _deselectedColor = deselectedColor;
+            _onActivate = onActivate;
+            _onMouseOver = onMouseOver;
+            _onMouseOut = onMouseOut;
+            _color = deselectedColor;
         }
 
         public void activate()
         {
-            _action();
+            _onActivate();
+        }
+
+        public void mouseOver()
+        {
+            _onMouseOver();
+        }
+
+        public void mouseOut()
+        {
+            _onMouseOut();
+        }
+
+        public void select()
+        {
+            _color = _selectedColor;
+        }
+
+        public void deselect()
+        {
+            _color = _deselectedColor;
         }
 
         public bool hitTest(Vector2 point)
         {
-            int pointX = (int)point.X;
-            int pointY = (int)point.Y;
-
-            if (pointX < x || pointX > x + _hitBoxWidth)
-                return false;
-            else if (pointY < y || pointY > y + _hitBoxHeight)
-                return false;
-
-            return true;
+            Rectangle pointRect = new Rectangle((int)point.X, (int)point.Y, 1, 1);
+            Rectangle hitBox = new Rectangle(x + _localHitBox.X, y + _localHitBox.Y, _localHitBox.Width, _localHitBox.Height);
+            return pointRect.Intersects(hitBox);
         }
 
-        public void onSelect()
-        {
-            _selected = true;
-        }
-
-        public void onDeselect()
-        {
-            _selected = false;
-        }
-
-        public void UIUpdate()
+        public void update()
         {
         }
 
-        public void UIDraw()
+        public void draw()
         {
-            Color color = _selected ? Color.White : _color;
+            int x = this.x;
+            int y = this.y;
+            Vector2 origin = Vector2.Zero;
+            Vector2 stringSize = _font.MeasureString(text);
 
-            if (_selected)
-            {
-                Rectangle hitBox = new Rectangle(x, y, _hitBoxWidth, _hitBoxHeight);
-                _spriteBatch.Draw(_pixel, hitBox, hitBox, Color.Red * 0.35f, 0f, Vector2.Zero, SpriteEffects.None, 0.1f);
-            }
+            if (_textAlignment == TextAlignment.Center)
+                origin = new Vector2(stringSize.X / 2f, 0);
+            else if (_textAlignment == TextAlignment.Right)
+                origin = new Vector2(stringSize.X, 0);
 
-            if (_alignment == UIAlignment.TopLeft)
-            {
-                _spriteBatch.DrawString(_font, _text, new Vector2(x, y), color);
-            }
-            else if (_alignment == UIAlignment.TopCenter)
-            {
-                _spriteBatch.DrawString(_font, _text, new Vector2(x, y), color, 0f, Vector2.Zero, 1f, SpriteEffects.None, 0f);
-            }
+            _spriteBatch.DrawString(_font, _text, new Vector2(x, y), _color, 0f, origin, 1f, SpriteEffects.None, 0f);
         }
     }
 }

@@ -12,13 +12,12 @@ namespace StasisGame.UI
     public class NameInputPane : Pane
     {
         private SpriteFont _font;
-        private List<string> _letters;
-        private int _selectedIndex = 0;
         private int _letterSpacing = 48;
         private Texture2D _lineIndicator;
         private StringBuilder _sb;
         private int _maxLetters;
-        private bool _firstUpdate = true;
+        private List<TextButton> _letterButtons;
+        private TextButton _selectedButton;
 
         public string name { get { return _sb.ToString(); } }
 
@@ -28,13 +27,38 @@ namespace StasisGame.UI
             _font = font;
             _maxLetters = maxLetters;
             _lineIndicator = ResourceManager.getTexture("line_indicator");
-            _letters = new List<string>(new string[]
+            _sb = new StringBuilder();
+            _letterButtons = new List<TextButton>();
+
+            string[] letters = new string[]
             {
                 "A", "B", "C", "D", "E", "F", "G", "H", "I", "J", "K", "L", "M", "N", "O", "P", "Q", "R", "S", "T", "U", "V", "W", "X", "Y", "Z",
                 "a", "b", "c", "d", "e", "f", "g", "h", "i", "j", "k", "l", "m", "n", "o", "p", "q", "r", "s", "t", "u", "v", "w", "x", "y", "z",
                 "0", "1", "2", "3", "4", "5", "6", "7", "8", "9", " ", "-", "_", ".", ","
-            });
-            _sb = new StringBuilder();
+            };
+            int gridCellWidth = (int)Math.Floor((float)_width / (float)_letterSpacing);
+            int calculatedX = base.x;
+            int calculatedY = base.y;
+            Point letterOffset = new Point(32, 24);
+
+            for (int i = 0; i < letters.Length; i++)
+            {
+                string letter = letters[i];
+                int letterCellX = i % gridCellWidth;
+                int letterCellY = (int)Math.Floor((float)i / (float)gridCellWidth);
+
+                _letterButtons.Add(new TextButton(
+                    _spriteBatch,
+                    _font,
+                    _alignment,
+                    letterOffset.X + x + letterCellX * _letterSpacing,
+                    letterOffset.Y + y + letterCellY * _letterSpacing,
+                    TextAlignment.Center,
+                    letter,
+                    Color.White,
+                    new Color(0.8f, 0.8f, 0.8f),
+                    () => { addLetter(letter); }));
+            }
         }
 
         private bool isKeyPressed(Keys key)
@@ -46,8 +70,6 @@ namespace StasisGame.UI
         {
             if (_sb.Length < _maxLetters)
                 _sb.Append(letter);
-
-            _selectedIndex = _letters.IndexOf(letter);
         }
 
         private void removeLetter()
@@ -56,141 +78,122 @@ namespace StasisGame.UI
                 _sb.Remove(_sb.Length - 1, 1);
         }
 
-        private void selectLetterIndexWithMouse(Vector2 position)
-        {
-            int gridWidth = (int)Math.Floor((float)_width / (float)_letterSpacing);
-
-            for (int i = 0; i < _letters.Count; i++)
-            {
-                int letterX = i % gridWidth;
-                int letterY = (int)Math.Floor((float)i / (float)gridWidth);
-                Vector2 lowerLetterPosition = new Vector2(x, y) + new Vector2(letterX, letterY) * _letterSpacing + new Vector2(12, 12);
-                Vector2 upperLetterPosition = lowerLetterPosition + new Vector2(_letterSpacing, _letterSpacing);
-                Vector2 d1, d2;
-
-                d1 = position - lowerLetterPosition;
-                d2 = upperLetterPosition - position;
-
-                if (d1.X < 0 || d1.Y < 0)
-                {
-                    continue;
-                }
-                else if (d2.X < 0 || d2.Y < 0)
-                {
-                    continue;
-                }
-                else
-                {
-                    _selectedIndex = i;
-                }
-            }
-        }
-
         public override void update()
         {
-            if (!_firstUpdate)
+            bool shift = _screen.newKeyState.IsKeyDown(Keys.LeftShift);
+            Vector2 mouse = new Vector2(_screen.newMouseState.X, _screen.newMouseState.Y);
+            bool mouseOverTextButton = false;
+
+            // Handle keyboard input
+            if (isKeyPressed(Keys.A))
+                addLetter(shift ? "A" : "a");
+            if (isKeyPressed(Keys.B))
+                addLetter(shift ? "B" : "b");
+            if (isKeyPressed(Keys.C))
+                addLetter(shift ? "C" : "c");
+            if (isKeyPressed(Keys.D))
+                addLetter(shift ? "D" : "d");
+            if (isKeyPressed(Keys.E))
+                addLetter(shift ? "E" : "e");
+            if (isKeyPressed(Keys.F))
+                addLetter(shift ? "F" : "f");
+            if (isKeyPressed(Keys.G))
+                addLetter(shift ? "G" : "g");
+            if (isKeyPressed(Keys.H))
+                addLetter(shift ? "H" : "h");
+            if (isKeyPressed(Keys.I))
+                addLetter(shift ? "I" : "i");
+            if (isKeyPressed(Keys.J))
+                addLetter(shift ? "J" : "j");
+            if (isKeyPressed(Keys.K))
+                addLetter(shift ? "K" : "k");
+            if (isKeyPressed(Keys.L))
+                addLetter(shift ? "L" : "l");
+            if (isKeyPressed(Keys.M))
+                addLetter(shift ? "M" : "m");
+            if (isKeyPressed(Keys.N))
+                addLetter(shift ? "N" : "n");
+            if (isKeyPressed(Keys.O))
+                addLetter(shift ? "O" : "o");
+            if (isKeyPressed(Keys.P))
+                addLetter(shift ? "P" : "p");
+            if (isKeyPressed(Keys.Q))
+                addLetter(shift ? "Q" : "q");
+            if (isKeyPressed(Keys.R))
+                addLetter(shift ? "R" : "r");
+            if (isKeyPressed(Keys.S))
+                addLetter(shift ? "S" : "s");
+            if (isKeyPressed(Keys.T))
+                addLetter(shift ? "T" : "t");
+            if (isKeyPressed(Keys.U))
+                addLetter(shift ? "U" : "u");
+            if (isKeyPressed(Keys.V))
+                addLetter(shift ? "V" : "v");
+            if (isKeyPressed(Keys.W))
+                addLetter(shift ? "W" : "w");
+            if (isKeyPressed(Keys.X))
+                addLetter(shift ? "X" : "x");
+            if (isKeyPressed(Keys.Y))
+                addLetter(shift ? "Y" : "y");
+            if (isKeyPressed(Keys.Z))
+                addLetter(shift ? "Z" : "z");
+            if (isKeyPressed(Keys.D0))
+                addLetter("0");
+            if (isKeyPressed(Keys.D1))
+                addLetter("1");
+            if (isKeyPressed(Keys.D2))
+                addLetter("2");
+            if (isKeyPressed(Keys.D3))
+                addLetter("3");
+            if (isKeyPressed(Keys.D4))
+                addLetter("4");
+            if (isKeyPressed(Keys.D5))
+                addLetter("5");
+            if (isKeyPressed(Keys.D6))
+                addLetter("6");
+            if (isKeyPressed(Keys.D7))
+                addLetter("7");
+            if (isKeyPressed(Keys.D8))
+                addLetter("8");
+            if (isKeyPressed(Keys.D9))
+                addLetter("9");
+            if (isKeyPressed(Keys.Space))
+                addLetter(" ");
+            if (isKeyPressed(Keys.OemMinus))
+                addLetter(shift ? "_" : "-");
+            if (isKeyPressed(Keys.OemPeriod))
+                addLetter(".");
+            if (isKeyPressed(Keys.OemComma))
+                addLetter(",");
+            if (isKeyPressed(Keys.Back))
+                removeLetter();
+
+            // Handle mouse input
+            foreach (TextButton letterButton in _letterButtons)
             {
-                bool shift = _screen.newKeyState.IsKeyDown(Keys.LeftShift);
-
-                // Mouse input
-                if (_screen.oldMouseState.X - _screen.newMouseState.X != 0 ||
-                    _screen.oldMouseState.Y - _screen.newMouseState.Y != 0)
+                if (letterButton.hitTest(mouse))
                 {
-                    selectLetterIndexWithMouse(new Vector2(_screen.newMouseState.X, _screen.newMouseState.Y));
-                }
-                if (_screen.newMouseState.LeftButton == ButtonState.Pressed && _screen.oldMouseState.LeftButton == ButtonState.Released)
-                {
-                    addLetter(_letters[_selectedIndex]);
-                }
+                    if (_selectedButton != letterButton)
+                        letterButton.mouseOver();
 
-                // Keyboard input
-                if (isKeyPressed(Keys.A))
-                    addLetter(shift ? "A" : "a");
-                if (isKeyPressed(Keys.B))
-                    addLetter(shift ? "B" : "b");
-                if (isKeyPressed(Keys.C))
-                    addLetter(shift ? "C" : "c");
-                if (isKeyPressed(Keys.D))
-                    addLetter(shift ? "D" : "d");
-                if (isKeyPressed(Keys.E))
-                    addLetter(shift ? "E" : "e");
-                if (isKeyPressed(Keys.F))
-                    addLetter(shift ? "F" : "f");
-                if (isKeyPressed(Keys.G))
-                    addLetter(shift ? "G" : "g");
-                if (isKeyPressed(Keys.H))
-                    addLetter(shift ? "H" : "h");
-                if (isKeyPressed(Keys.I))
-                    addLetter(shift ? "I" : "i");
-                if (isKeyPressed(Keys.J))
-                    addLetter(shift ? "J" : "j");
-                if (isKeyPressed(Keys.K))
-                    addLetter(shift ? "K" : "k");
-                if (isKeyPressed(Keys.L))
-                    addLetter(shift ? "L" : "l");
-                if (isKeyPressed(Keys.M))
-                    addLetter(shift ? "M" : "m");
-                if (isKeyPressed(Keys.N))
-                    addLetter(shift ? "N" : "n");
-                if (isKeyPressed(Keys.O))
-                    addLetter(shift ? "O" : "o");
-                if (isKeyPressed(Keys.P))
-                    addLetter(shift ? "P" : "p");
-                if (isKeyPressed(Keys.Q))
-                    addLetter(shift ? "Q" : "q");
-                if (isKeyPressed(Keys.R))
-                    addLetter(shift ? "R" : "r");
-                if (isKeyPressed(Keys.S))
-                    addLetter(shift ? "S" : "s");
-                if (isKeyPressed(Keys.T))
-                    addLetter(shift ? "T" : "t");
-                if (isKeyPressed(Keys.U))
-                    addLetter(shift ? "U" : "u");
-                if (isKeyPressed(Keys.V))
-                    addLetter(shift ? "V" : "v");
-                if (isKeyPressed(Keys.W))
-                    addLetter(shift ? "W" : "w");
-                if (isKeyPressed(Keys.X))
-                    addLetter(shift ? "X" : "x");
-                if (isKeyPressed(Keys.Y))
-                    addLetter(shift ? "Y" : "y");
-                if (isKeyPressed(Keys.Z))
-                    addLetter(shift ? "Z" : "z");
-                if (isKeyPressed(Keys.D0))
-                    addLetter("0");
-                if (isKeyPressed(Keys.D1))
-                    addLetter("1");
-                if (isKeyPressed(Keys.D2))
-                    addLetter("2");
-                if (isKeyPressed(Keys.D3))
-                    addLetter("3");
-                if (isKeyPressed(Keys.D4))
-                    addLetter("4");
-                if (isKeyPressed(Keys.D5))
-                    addLetter("5");
-                if (isKeyPressed(Keys.D6))
-                    addLetter("6");
-                if (isKeyPressed(Keys.D7))
-                    addLetter("7");
-                if (isKeyPressed(Keys.D8))
-                    addLetter("8");
-                if (isKeyPressed(Keys.D9))
-                    addLetter("9");
-                if (isKeyPressed(Keys.Space))
-                    addLetter(" ");
-                if (isKeyPressed(Keys.OemMinus))
-                    addLetter(shift ? "_" : "-");
-                if (isKeyPressed(Keys.OemPeriod))
-                    addLetter(".");
-                if (isKeyPressed(Keys.OemComma))
-                    addLetter(",");
-                if (isKeyPressed(Keys.Back))
-                    removeLetter();
+                    mouseOverTextButton = true;
+                    _selectedButton = letterButton;
 
-                base.update();
+                    if (_screen.newMouseState.LeftButton == ButtonState.Pressed && _screen.oldMouseState.LeftButton == ButtonState.Released)
+                        letterButton.activate();
+
+                    break;
+                }
+            }
+            if (!mouseOverTextButton)
+            {
+                if (_selectedButton != null)
+                    _selectedButton.mouseOut();
+
+                _selectedButton = null;
             }
 
-            _firstUpdate = false;
+            base.update();
         }
 
         public override void draw()
@@ -201,23 +204,15 @@ namespace StasisGame.UI
             base.draw();
 
             // Draw letters
-            for (int i = 0; i < _letters.Count; i++)
+            for (int i = 0; i < _letterButtons.Count; i++)
             {
-                int letterX = i % gridWidth;
-                int letterY = (int)Math.Floor((float)i / (float)gridWidth);
-                Vector2 letterPosition = new Vector2(x, y) + new Vector2(letterX, letterY) * _letterSpacing + new Vector2(24, 24);
+                _letterButtons[i].draw();
+            }
 
-                if (i == _selectedIndex)
-                {
-                    Vector2 indicatorPosition = new Vector2(x, y) + new Vector2(letterX, letterY) * _letterSpacing + new Vector2(32, 52);
-                    _spriteBatch.Draw(_lineIndicator, indicatorPosition, _lineIndicator.Bounds, Color.White, 0f, new Vector2(_lineIndicator.Width, 0) / 2f, 1f, SpriteEffects.None, 0f);
-                }
-
-                _spriteBatch.DrawString(_font, _letters[i], letterPosition + new Vector2(-2, -2), Color.Black);
-                _spriteBatch.DrawString(_font, _letters[i], letterPosition + new Vector2(2, -2), Color.Black);
-                _spriteBatch.DrawString(_font, _letters[i], letterPosition + new Vector2(2, 2), Color.Black);
-                _spriteBatch.DrawString(_font, _letters[i], letterPosition + new Vector2(-2, 2), Color.Black);
-                _spriteBatch.DrawString(_font, _letters[i], letterPosition, Color.White);
+            // Draw line indicator
+            if (_selectedButton != null)
+            {
+                _spriteBatch.Draw(_lineIndicator, new Vector2(_selectedButton.x, _selectedButton.y), _lineIndicator.Bounds, Color.White, 0f, new Vector2(19, -32), 1f, SpriteEffects.None, 0f);
             }
         }
     }

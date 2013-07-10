@@ -18,7 +18,7 @@ namespace StasisGame.UI
         private Texture2D _rightSide;
         private Texture2D _bottomSide;
         private Texture2D _background;
-        private UIAlignment _alignment;
+        protected UIAlignment _alignment;
         protected int _xOffset;
         protected int _yOffset;
         protected int _width;
