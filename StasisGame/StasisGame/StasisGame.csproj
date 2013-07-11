@@ -160,6 +160,7 @@
     <Compile Include="UI\BluePane.cs" />
     <Compile Include="UI\InventoryDisplay.cs" />
     <Compile Include="UI\Label.cs" />
+    <Compile Include="UI\LabelTextureButton.cs" />
     <Compile Include="UI\LargeHealthBar.cs" />
     <Compile Include="UI\LevelScreen.cs" />
     <Compile Include="UI\LoadGameScreen.cs" />

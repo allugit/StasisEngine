@@ -17,9 +17,8 @@ namespace StasisGame.UI
         private ContentManager _content;
         private SpriteFont _savedGameFont;
         private BluePane _container;
-        private List<StonePane> _bars;
-        private List<TextButton> _savedGameButtons;
-        private TextButton _selectedButton;
+        private List<LabelTextureButton> _savedGameButtons;
+        private LabelTextureButton _selectedButton;
         private TextureButton _cancelButton;
 
         public LoadGameScreen(LoderGame game)
@@ -30,11 +29,10 @@ namespace StasisGame.UI
             _content.RootDirectory = "Content";
             _logo = _content.Load<Texture2D>("logo");
             _savedGameFont = _content.Load<SpriteFont>("load_game_menu/saved_game_font");
-            _savedGameButtons = new List<TextButton>();
-            _bars = new List<StonePane>();
+            _savedGameButtons = new List<LabelTextureButton>();
 
             List<XElement> playerSaves = DataManager.loadPlayerSaves();
-            Vector2 initialPosition = new Vector2(-230, -180);
+            Vector2 initialPosition = new Vector2(-240, -190);
 
             _container = new BluePane(
                 _spriteBatch,
@@ -63,23 +61,19 @@ namespace StasisGame.UI
                 int slot = int.Parse(playerSave.Attribute("slot").Value);
                 string text = slot.ToString() + " - " + playerSave.Attribute("name").Value;
 
-                _bars.Add(new StonePane(
-                    _spriteBatch,
-                    UIAlignment.MiddleCenter,
-                    (int)initialPosition.X - 10,
-                    (int)(initialPosition.Y) + _bars.Count * 48 - 10,
-                    480,
-                    40));
-
-                _savedGameButtons.Add(new TextButton(
+                _savedGameButtons.Add(new LabelTextureButton(
                     _game.spriteBatch,
-                    _savedGameFont,
                     UIAlignment.MiddleCenter,
                     (int)initialPosition.X,
                     (int)(initialPosition.Y) + _savedGameButtons.Count * 48,
-                    4,
+                    _content.Load<Texture2D>("load_game_menu/saved_game_button_over"),
+                    _content.Load<Texture2D>("load_game_menu/saved_game_button"),
+                    new Rectangle(0, 0, 480, 40),
+                    _savedGameFont,
                     TextAlignment.Left,
                     text,
+                    16,
+                    12,
                     1,
                     Color.White,
                     new Color(0.7f, 0.7f, 0.7f),
@@ -120,7 +114,7 @@ namespace StasisGame.UI
             base.update();
 
             // Handle button mouse input
-            foreach (TextButton button in _savedGameButtons)
+            foreach (LabelTextureButton button in _savedGameButtons)
             {
                 if (button.hitTest(mouse))
                 {
@@ -167,10 +161,6 @@ namespace StasisGame.UI
 
             // Draw container
             _container.draw();
-
-            // Draw bars
-            foreach (StonePane bar in _bars)
-                bar.draw();
 
             // Draw buttons
             for (int i = 0; i < _savedGameButtons.Count; i++)

@@ -7,7 +7,7 @@ namespace StasisGame.UI
 {
     public class TextureButton
     {
-        private SpriteBatch _spriteBatch;
+        protected SpriteBatch _spriteBatch;
         private Texture2D _selectedTexture;
         private Texture2D _deselectedTexture;
         private bool _selected;
@@ -79,12 +79,12 @@ namespace StasisGame.UI
             _onActivate();
         }
 
-        public void select()
+        virtual public void select()
         {
             _selected = true;
         }
 
-        public void deselect()
+        virtual public void deselect()
         {
             _selected = false;
         }
@@ -106,7 +106,7 @@ namespace StasisGame.UI
             return screenHitBox.Intersects(pointRect);
         }
 
-        public void draw()
+        virtual public void draw()
         {
             Texture2D texture = _selected ? _selectedTexture : _deselectedTexture;
             
