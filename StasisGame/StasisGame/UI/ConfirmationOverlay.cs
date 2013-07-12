@@ -23,6 +23,7 @@ namespace StasisGame.UI
         private MouseState _oldMouseState;
         private KeyboardState _newKeyState;
         private KeyboardState _oldKeyState;
+        private bool _firstUpdate = true;
 
         public ConfirmationOverlay(SpriteBatch spriteBatch, SpriteFont font, string text, Action onCancel, Action onOkay)
         {
@@ -94,15 +95,19 @@ namespace StasisGame.UI
 
         public void update()
         {
-            _oldMouseState = _newMouseState;
-            _oldKeyState = _newKeyState;
-            _newMouseState = Mouse.GetState();
-            _newKeyState = Keyboard.GetState();
+            if (!_firstUpdate)
+            {
+                _oldMouseState = _newMouseState;
+                _oldKeyState = _newKeyState;
+                _newMouseState = Mouse.GetState();
+                _newKeyState = Keyboard.GetState();
 
-            Vector2 mouse = new Vector2(_newMouseState.X, _newMouseState.Y);
+                Vector2 mouse = new Vector2(_newMouseState.X, _newMouseState.Y);
 
-            hitTestTextureButton(_cancelButton, mouse);
-            hitTestTextureButton(_okayButton, mouse);
+                hitTestTextureButton(_cancelButton, mouse);
+                hitTestTextureButton(_okayButton, mouse);
+            }
+            _firstUpdate = false;
         }
 
         public void draw()

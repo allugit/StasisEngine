@@ -82,6 +82,8 @@ namespace StasisGame.UI
                             {
                                 DataManager.deletePlayerData(slot);
                                 closeConfirmation();
+                                _game.closeLoadGameMenu();
+                                _game.openLoadGameMenu();
                             });
                     }));
 
