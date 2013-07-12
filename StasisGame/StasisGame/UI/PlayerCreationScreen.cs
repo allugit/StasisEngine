@@ -4,6 +4,7 @@ using Microsoft.Xna.Framework.Content;
 using Microsoft.Xna.Framework.Input;
 using Microsoft.Xna.Framework.Graphics;
 using StasisCore;
+using StasisGame.Managers;
 
 namespace StasisGame.UI
 {
@@ -64,7 +65,12 @@ namespace StasisGame.UI
                 _content.Load<Texture2D>("player_creation_screen/create_button_over"),
                 _content.Load<Texture2D>("player_creation_screen/create_button"),
                 new Rectangle(0, 0, 152, 33),
-                () => { });
+                () =>
+                {
+                    int playerSlot = DataManager.createPlayerData(_game.systemManager, _nameInputPane.name);
+                    _game.closePlayerCreationScreen();
+                    _game.loadGame(playerSlot);
+                });
         }
 
         ~PlayerCreationScreen()
