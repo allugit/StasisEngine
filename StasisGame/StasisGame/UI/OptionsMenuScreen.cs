@@ -35,8 +35,8 @@ namespace StasisGame.UI
         private LoderGame _game;
         private Texture2D _logo;
         private ContentManager _content;
+        private Pane _pane;
         private List<TextureButton> _generalButtons;
-        private Texture2D _container;
         private OptionsCategory _currentCategory;
         private SpriteFont _categoryTitleFont;
         private SpriteFont _optionsFont;
@@ -68,7 +68,6 @@ namespace StasisGame.UI
             _content = new ContentManager(game.Services);
             _content.RootDirectory = "Content";
             _logo = _content.Load<Texture2D>("logo");
-            _container = _content.Load<Texture2D>("options_menu/container");
             _categoryTitleFont = _content.Load<SpriteFont>("options_menu/category_title_font");
             _optionsFont = _content.Load<SpriteFont>("options_menu/options_font");
             _leftArrows = _content.Load<Texture2D>("shared_ui/left_arrows");
@@ -97,6 +96,14 @@ namespace StasisGame.UI
             Rectangle confirmButtonHitBox = new Rectangle(0, 0, 152, 33);
             Point categoryButtonOffset = new Point(-527, -160);
             Func<int> yOffset = () => { return categoryButtonOffset.Y + 81 * _generalButtons.Count; };
+
+            _pane = new BluePane(
+                _spriteBatch,
+                UIAlignment.MiddleCenter,
+                -310,
+                -180,
+                620,
+                360);
 
             _generalButtons.Add(new TextureButton(
                 _spriteBatch,
@@ -449,9 +456,8 @@ namespace StasisGame.UI
             // Draw logo
             _game.spriteBatch.Draw(_logo, new Vector2(_game.GraphicsDevice.Viewport.Width - _logo.Width, 0), _logo.Bounds, Color.White, 0, Vector2.Zero, 1f, SpriteEffects.None, 0);
 
-            // Draw container
-            Vector2 containerPosition = new Vector2((int)(_spriteBatch.GraphicsDevice.Viewport.Width / 2f), (int)(_spriteBatch.GraphicsDevice.Viewport.Height / 2f));
-            _spriteBatch.Draw(_container, containerPosition, _container.Bounds, Color.White, 0f, new Vector2((int)(_container.Width / 2f) , (int)(_container.Height / 2f)), 1f, SpriteEffects.None, 0.1f);
+            // Draw pane
+            _pane.draw();
 
             // Draw buttons
             for (int i = 0; i < _generalButtons.Count; i++)

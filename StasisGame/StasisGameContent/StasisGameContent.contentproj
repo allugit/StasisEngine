@@ -296,11 +296,6 @@
       <Importer>TextureImporter</Importer>
       <Processor>MGTextureProcessor</Processor>
     </Compile>
-    <Compile Include="options_menu\container.png">
-      <Name>container</Name>
-      <Importer>TextureImporter</Importer>
-      <Processor>MGTextureProcessor</Processor>
-    </Compile>
     <Compile Include="options_menu\controls_button.png">
       <Name>controls_button</Name>
       <Importer>TextureImporter</Importer>
