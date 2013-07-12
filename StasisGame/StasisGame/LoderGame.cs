@@ -128,6 +128,10 @@ namespace StasisGame
                 "stone_pane_right_side",
                 "stone_pane_bottom_side",
                 "stone_pane_background",
+                "cancel_button",
+                "cancel_button_over",
+                "okay_button",
+                "okay_button_over",
                 "line_indicator"
             };
             foreach (string texture in interfaceTextures)

@@ -16,10 +16,12 @@ namespace StasisGame.UI
         private Texture2D _logo;
         private ContentManager _content;
         private SpriteFont _savedGameFont;
+        private SpriteFont _confirmationFont;
         private BluePane _container;
         private List<LabelTextureButton> _savedGameButtons;
         private List<TextureButton> _deleteGameButtons;
         private TextureButton _cancelButton;
+        private ConfirmationOverlay _confirmationOverlay;
 
         public LoadGameScreen(LoderGame game)
             : base(game.spriteBatch, ScreenType.LoadGameMenu)
@@ -29,6 +31,7 @@ namespace StasisGame.UI
             _content.RootDirectory = "Content";
             _logo = _content.Load<Texture2D>("logo");
             _savedGameFont = _content.Load<SpriteFont>("load_game_menu/saved_game_font");
+            _confirmationFont = _content.Load<SpriteFont>("shared_ui/confirmation_font");
             _savedGameButtons = new List<LabelTextureButton>();
             _deleteGameButtons = new List<TextureButton>();
 
@@ -70,7 +73,17 @@ namespace StasisGame.UI
                     _content.Load<Texture2D>("shared_ui/x_button_over"),
                     _content.Load<Texture2D>("shared_ui/x_button"),
                     new Rectangle(0, 0, 40, 40),
-                    () => { }));
+                    () =>
+                    {
+                        openConfirmation(
+                            "Are you sure you want to delete this saved game?",
+                            () => { closeConfirmation(); },
+                            () =>
+                            {
+                                DataManager.deletePlayerData(slot);
+                                closeConfirmation();
+                            });
+                    }));
 
                 _savedGameButtons.Add(new LabelTextureButton(
                     _game.spriteBatch,
@@ -101,11 +114,27 @@ namespace StasisGame.UI
             _content.Unload();
         }
 
+        private void openConfirmation(string text, Action onCancel, Action onOkay)
+        {
+            _confirmationOverlay = new ConfirmationOverlay(
+                _spriteBatch,
+                _confirmationFont,
+                text,
+                onCancel,
+                onOkay);
+        }
+
+        private void closeConfirmation()
+        {
+            _confirmationOverlay = null;
+        }
+
         private bool hitTestTextureButton(TextureButton button)
         {
             if (button.hitTest(new Vector2(_newMouseState.X, _newMouseState.Y)))
             {
-                button.mouseOver();
+                if (!button.selected)
+                    button.mouseOver();
 
                 if (_newMouseState.LeftButton == ButtonState.Pressed && _oldMouseState.LeftButton == ButtonState.Released)
                     button.activate();
@@ -124,24 +153,30 @@ namespace StasisGame.UI
         {
             Vector2 mouse = new Vector2(_newMouseState.X, _newMouseState.Y);
 
-            // Update input
-            base.update();
+            // Only update confirmation window if one exists
+            if (_confirmationOverlay != null)
+            {
+                _confirmationOverlay.update();
+            }
+            else
+            {
+                // Update input
+                base.update();
 
-            // Handle mouse input for saved game buttons
-            foreach (LabelTextureButton button in _savedGameButtons)
-                hitTestTextureButton(button);
+                // Handle mouse input for saved game buttons
+                foreach (LabelTextureButton button in _savedGameButtons)
+                    hitTestTextureButton(button);
 
-            // Handle mouse input for delete game buttons
-            foreach (TextureButton button in _deleteGameButtons)
-                hitTestTextureButton(button);
+                // Handle mouse input for delete game buttons
+                foreach (TextureButton button in _deleteGameButtons)
+                    hitTestTextureButton(button);
 
-            // Handle mouse input for cancel button
-            hitTestTextureButton(_cancelButton);
+                // Handle mouse input for cancel button
+                hitTestTextureButton(_cancelButton);
+            }
 
-            // Background renderer
+            // Update background renderer
             _game.menuBackgroundRenderer.update(35f, _game.menuBackgroundScreenOffset);
-
-            base.update();
         }
 
         public override void draw()
@@ -163,6 +198,10 @@ namespace StasisGame.UI
 
             // Draw cancel button
             _cancelButton.draw();
+
+            // Draw confirmation window if it exists
+            if (_confirmationOverlay != null)
+                _confirmationOverlay.draw();
 
             base.draw();
         }

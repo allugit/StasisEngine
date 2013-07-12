@@ -113,6 +113,22 @@ namespace StasisGame.Managers
             return unusedPlayerSlot;
         }
 
+        // Delete player data
+        public static void deletePlayerData(int slot)
+        {
+            bool deleted = false;
+            string fileName = string.Format("player_data_{0}.xml", slot);
+            while (!deleted)
+            {
+                if (_storageDevice.IsReady)
+                {
+                    if (_storageDevice.FileExists(PLAYER_CONTAINER, fileName))
+                        _storageDevice.Delete(PLAYER_CONTAINER, fileName);
+                    deleted = true;
+                }
+            }
+        }
+
         // Create temporary player data
         public static void createTemporaryPlayerData(SystemManager systemManager)
         {
