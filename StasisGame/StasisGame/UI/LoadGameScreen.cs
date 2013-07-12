@@ -18,7 +18,7 @@ namespace StasisGame.UI
         private SpriteFont _savedGameFont;
         private BluePane _container;
         private List<LabelTextureButton> _savedGameButtons;
-        private LabelTextureButton _selectedButton;
+        private List<TextureButton> _deleteGameButtons;
         private TextureButton _cancelButton;
 
         public LoadGameScreen(LoderGame game)
@@ -30,6 +30,7 @@ namespace StasisGame.UI
             _logo = _content.Load<Texture2D>("logo");
             _savedGameFont = _content.Load<SpriteFont>("load_game_menu/saved_game_font");
             _savedGameButtons = new List<LabelTextureButton>();
+            _deleteGameButtons = new List<TextureButton>();
 
             List<XElement> playerSaves = DataManager.loadPlayerSaves();
             Vector2 initialPosition = new Vector2(-240, -190);
@@ -39,13 +40,13 @@ namespace StasisGame.UI
                 UIAlignment.MiddleCenter,
                 -250,
                 -200,
-                500,
+                545,
                 400);
 
             _cancelButton = new TextureButton(
                 _spriteBatch,
                 UIAlignment.MiddleCenter,
-                110,
+                155,
                 180,
                 _content.Load<Texture2D>("shared_ui/cancel_button_over"),
                 _content.Load<Texture2D>("shared_ui/cancel_button"),
@@ -60,6 +61,16 @@ namespace StasisGame.UI
             {
                 int slot = int.Parse(playerSave.Attribute("slot").Value);
                 string text = slot.ToString() + " - " + playerSave.Attribute("name").Value;
+
+                _deleteGameButtons.Add(new TextureButton(
+                    _spriteBatch,
+                    UIAlignment.MiddleCenter,
+                    (int)initialPosition.X + 485,
+                    (int)(initialPosition.Y) + _savedGameButtons.Count * 48,
+                    _content.Load<Texture2D>("shared_ui/x_button_over"),
+                    _content.Load<Texture2D>("shared_ui/x_button"),
+                    new Rectangle(0, 0, 40, 40),
+                    () => { }));
 
                 _savedGameButtons.Add(new LabelTextureButton(
                     _game.spriteBatch,
@@ -90,7 +101,7 @@ namespace StasisGame.UI
             _content.Unload();
         }
 
-        private void hitTestTextureButton(TextureButton button)
+        private bool hitTestTextureButton(TextureButton button)
         {
             if (button.hitTest(new Vector2(_newMouseState.X, _newMouseState.Y)))
             {
@@ -98,51 +109,33 @@ namespace StasisGame.UI
 
                 if (_newMouseState.LeftButton == ButtonState.Pressed && _oldMouseState.LeftButton == ButtonState.Released)
                     button.activate();
+
+                return true;
             }
             else if (button.selected)
             {
                 button.mouseOut();
             }
+
+            return false;
         }
 
         public override void update()
         {
-            bool mouseOverTextButton = false;
             Vector2 mouse = new Vector2(_newMouseState.X, _newMouseState.Y);
 
             // Update input
             base.update();
 
-            // Handle button mouse input
+            // Handle mouse input for saved game buttons
             foreach (LabelTextureButton button in _savedGameButtons)
-            {
-                if (button.hitTest(mouse))
-                {
-                    if (_selectedButton != button)
-                    {
-                        if (_selectedButton != null)
-                            _selectedButton.mouseOut();
+                hitTestTextureButton(button);
 
-                        button.mouseOver();
-                    }
+            // Handle mouse input for delete game buttons
+            foreach (TextureButton button in _deleteGameButtons)
+                hitTestTextureButton(button);
 
-                    mouseOverTextButton = true;
-                    _selectedButton = button;
-
-                    if (_newMouseState.LeftButton == ButtonState.Pressed && _oldMouseState.LeftButton == ButtonState.Released)
-                        button.activate();
-
-                    break;
-                }
-            }
-            if (!mouseOverTextButton)
-            {
-                if (_selectedButton != null)
-                    _selectedButton.mouseOut();
-
-                _selectedButton = null;
-            }
-
+            // Handle mouse input for cancel button
             hitTestTextureButton(_cancelButton);
 
             // Background renderer
@@ -165,6 +158,8 @@ namespace StasisGame.UI
             // Draw buttons
             for (int i = 0; i < _savedGameButtons.Count; i++)
                 _savedGameButtons[i].draw();
+            for (int i = 0; i < _deleteGameButtons.Count; i++)
+                _deleteGameButtons[i].draw();
 
             // Draw cancel button
             _cancelButton.draw();
