@@ -56,8 +56,6 @@ namespace StasisGame
         private WorldMapScreen _worldMapScreen;
         private BackgroundRenderer _menuBackgroundRenderer;
         private Vector2 _menuBackgroundScreenOffset;
-        private int _mainMenuDrawCount = 0;
-        private int _mainMenuUpdateCount = 0;
 
         public static bool debug;
         public SpriteBatch spriteBatch { get { return _spriteBatch; } }
@@ -333,12 +331,6 @@ namespace StasisGame
                     break;
 
                 case GameState.MainMenu:
-                    /*
-                    if (_mainMenuUpdateCount < 10)
-                    {
-                        Logger.log(string.Format("In MainMenu game state in LoderGame.Update -- {0}", _mainMenuUpdateCount));
-                        _mainMenuUpdateCount++;
-                    }*/
                     _menuBackgroundScreenOffset += new Vector2(0.005f, 0f);
                     _systemManager.process();
                     break;
@@ -362,12 +354,6 @@ namespace StasisGame
             switch (_gameState)
             {
                 case GameState.MainMenu:
-                    /*
-                    if (_mainMenuDrawCount < 10)
-                    {
-                        Logger.log(string.Format("In MainMenu game state in LoderGame.Draw -- {0}", _mainMenuDrawCount));
-                        _mainMenuDrawCount++;
-                    }*/
                     _spriteBatch.Begin(SpriteSortMode.Deferred, BlendState.AlphaBlend, SamplerState.LinearWrap, null, null);
                     _screenSystem.draw();
                     _spriteBatch.End();
