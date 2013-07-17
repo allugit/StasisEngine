@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using StasisGame.Managers;
 using StasisGame.UI;
+using StasisCore;
 
 namespace StasisGame.Systems
 {
@@ -27,6 +28,7 @@ namespace StasisGame.Systems
         public void addScreen(Screen screen)
         {
             _screens.Add(screen);
+            Logger.log(string.Format("Added {0} screen to ScreenSystem.", screen.screenType));
         }
 
         public void removeScreen(ScreenType screenType)
@@ -40,12 +42,19 @@ namespace StasisGame.Systems
             }
 
             if (screenToRemove != null)
+            {
                 removeScreen(screenToRemove);
+            }
+            else
+            {
+                Logger.log(string.Format("Could not remove {0} screen from ScreenSystem.", screenType));
+            }
         }
 
         public void removeScreen(Screen screen)
         {
             _screens.Remove(screen);
+            Logger.log(string.Format("Removed {0} screen from ScreenSystem.", screen.screenType));
         }
 
         public void update()

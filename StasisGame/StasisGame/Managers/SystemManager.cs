@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Diagnostics;
 using StasisGame.Systems;
+using StasisCore;
 
 namespace StasisGame.Managers
 {
@@ -76,11 +77,13 @@ namespace StasisGame.Managers
                 int countAfter = count;
                 Debug.Assert(countAfter == countBefore + 1);
             }
+            Logger.log(string.Format("Added {0} system to SystemManager.", system.systemType));
         }
 
         public void remove(SystemType systemType)
         {
             remove(getSystem(systemType));
+            Logger.log(string.Format("Removed {0} system from SystemManager.", systemType));
         }
 
         public void remove(ISystem system)
@@ -95,6 +98,7 @@ namespace StasisGame.Managers
                 }
                 current = current.next;
             }
+            Logger.log(string.Format("Removed {0} system from SystemManager.", system.systemType));
         }
 
         public void process()

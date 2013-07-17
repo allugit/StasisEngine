@@ -5,6 +5,7 @@ using Microsoft.Xna.Framework.Content;
 using Microsoft.Xna.Framework.Input;
 using Microsoft.Xna.Framework.Graphics;
 using StasisGame.Systems;
+using StasisCore;
 
 namespace StasisGame.UI
 {
@@ -37,6 +38,7 @@ namespace StasisGame.UI
                 localHitBox,
                 () => 
                 {
+                    Logger.log("New game button clicked.");
                     _game.closeMainMenu();
                     _game.openPlayerCreationScreen();
                 }));
@@ -51,6 +53,7 @@ namespace StasisGame.UI
                 localHitBox,
                 () =>
                 {
+                    Logger.log("Load game button clicked.");
                     _game.closeMainMenu();
                     _game.openLoadGameMenu();
                 }));
@@ -65,6 +68,7 @@ namespace StasisGame.UI
                 localHitBox,
                 () => 
                 {
+                    Logger.log("Options button clicked.");
                     _game.closeMainMenu();
                     _game.openOptionsMenu();
                 }));

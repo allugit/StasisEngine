@@ -155,6 +155,7 @@ namespace StasisGame.Managers
                     string[] files = _storageDevice.GetFiles(PLAYER_CONTAINER, "player_data_*.xml");
                     foreach (string file in files)
                     {
+                        Logger.log(string.Format("DataManager.loadPlayerSaves() -- file: {0}", file));
                         _storageDevice.Load(PLAYER_CONTAINER, file, (stream) =>
                             {
                                 XDocument doc = XDocument.Load(stream);
