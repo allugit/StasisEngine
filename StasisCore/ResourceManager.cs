@@ -6,6 +6,7 @@ using System.Xml.Linq;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using StasisCore.Models;
+using log4net;
 
 namespace StasisCore
 {
@@ -31,7 +32,7 @@ namespace StasisCore
         private static Dictionary<string, Texture2D> _cachedTextures;
         private static List<Dictionary<string, XElement>> _resources;
         public static string rootDirectory = "";
-
+        public static ILog logger;
         public static string texturePath { get { return rootDirectory + @"data/textures"; } }
         public static string levelPath { get { return rootDirectory + @"data/levels"; } }
         public static string materialPath { get { return rootDirectory + @"data/materials.xml"; } }
@@ -159,6 +160,7 @@ namespace StasisCore
         // Initialize -- Called once when the application starts
         public static void initialize(GraphicsDevice graphicsDevice)
         {
+            Logger.log("ResourceManager.initialize method started.");
             _graphicsDevice = graphicsDevice;
             _materialResources = new Dictionary<string, XElement>();
             _itemResources = new Dictionary<string, XElement>();
@@ -186,6 +188,7 @@ namespace StasisCore
             _resources.Add(_backgroundResources);
             _resources.Add(_worldMapResources);
             _resources.Add(_ropeMaterialResources);
+            Logger.log("ResourceManager.initialize method finished.");
         }
 
         // Checks to see if a resource has been loaded
@@ -203,6 +206,8 @@ namespace StasisCore
         // Returns a resource that matches a uid
         public static XElement getResource(string uid)
         {
+            Logger.log("In ResourceManager.getResource...");
+            Logger.log(string.Format("\tgetting uid: {0}", uid));
             foreach (Dictionary<string, XElement> dictionary in _resources)
             {
                 if (dictionary.ContainsKey(uid))
@@ -215,12 +220,16 @@ namespace StasisCore
         // Set texture -- Allow textures to be set manually (for example, after being loaded from the content pipeline)
         public static void setTexture(string textureUID, Texture2D texture)
         {
+            Logger.log("In ResourceManager.setTexture...");
+            Logger.log(string.Format("\tsetting texture uid: {0}", textureUID));
             _cachedTextures[textureUID] = texture;
         }
 
         // Get texture -- Try to get the texture from the cache before loading it from file
         public static Texture2D getTexture(string textureUID, bool cacheTextures = true)
         {
+            Logger.log("In ResourceManager.getTexture...");
+
             Texture2D texture = null;
             if (!_cachedTextures.TryGetValue(textureUID, out texture))
             {
@@ -234,6 +243,7 @@ namespace StasisCore
                 using (Stream stream = TitleContainer.OpenStream(textureFiles[0]))
                     texture = Texture2D.FromStream(_graphicsDevice, stream);
 #else
+                Logger.log(string.Format("\tloading texture from file: {0}", textureUID));
                 using (FileStream fs = new FileStream(textureFiles[0], FileMode.Open))
                     texture = Texture2D.FromStream(_graphicsDevice, fs);
 #endif
@@ -284,6 +294,7 @@ namespace StasisCore
                     _cachedTextures[textureUID] = texture;
                 
             }
+            Logger.log(string.Format("\treturning texture: {0}", textureUID));
             return texture;
         }
 

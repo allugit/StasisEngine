@@ -56,6 +56,8 @@ namespace StasisGame
         private WorldMapScreen _worldMapScreen;
         private BackgroundRenderer _menuBackgroundRenderer;
         private Vector2 _menuBackgroundScreenOffset;
+        private int _mainMenuDrawCount = 0;
+        private int _mainMenuUpdateCount = 0;
 
         public static bool debug;
         public SpriteBatch spriteBatch { get { return _spriteBatch; } }
@@ -68,16 +70,19 @@ namespace StasisGame
 
         public LoderGame(string[] args)
         {
+            Logger.log("LoderGame constructor started.");
             _args = args;
             _graphics = new GraphicsDeviceManager(this);
             Content.RootDirectory = "Content";
             IsMouseVisible = true;
             Window.Title = "Loder's Fall";
             _gameState = GameState.Initializing;
+            Logger.log("LoderGame constructor finished.");
         }
 
         protected override void Initialize()
         {
+            Logger.log("LoderGame.Initialize method started.");
             _systemManager = new SystemManager();
             _entityManager = new EntityManager(_systemManager);
             _scriptManager = new ScriptManager(_systemManager, _entityManager);
@@ -88,10 +93,14 @@ namespace StasisGame
             Components.Add(new GamerServicesComponent(this));
 
             base.Initialize();
+
+            Logger.log("LoderGame.Initialize method finished.");
         }
 
         protected override void LoadContent()
         {
+            Logger.log("LoderGame.LoadContent method started.");
+
             Texture2D pixel = new Texture2D(GraphicsDevice, 1, 1);
             pixel.SetData<Color>(new[] { Color.White });
 
@@ -151,6 +160,8 @@ namespace StasisGame
             _arial = Content.Load<SpriteFont>("arial");
 
             _menuBackgroundRenderer = new BackgroundRenderer(_spriteBatch);
+
+            Logger.log("LoderGame.LoadContent method finished.");
         }
 
         protected override void UnloadContent()
@@ -285,8 +296,10 @@ namespace StasisGame
                 case GameState.Initializing:
                     if (DataManager.ready)
                     {
+                        Logger.log("Initializing in LoderGame.Update");
                         // Load and apply game settings
                         DataManager.loadGameSettings();
+                        Logger.log("Applying display settings.");
                         _graphics.PreferMultiSampling = true;
                         _graphics.PreferredBackBufferWidth = DataManager.gameSettings.screenWidth;
                         _graphics.PreferredBackBufferHeight = DataManager.gameSettings.screenHeight;
@@ -300,17 +313,32 @@ namespace StasisGame
                     break;
 
                 case GameState.Intro:
+                    Logger.log("In Intro game state in LoderGame.Update");
+                    
                     // TODO: Do some sort of intro, and then open the main menu
+
+                    Logger.log("Creating background object.");
                     Background background = new Background(ResourceManager.getResource("main_menu_background"));
 
-                    _gameState = GameState.MainMenu;
+                    Logger.log("Creating main menu screen.");
                     _mainMenuScreen = new MainMenuScreen(this);
+
+                    Logger.log("Loading background textures.");
                     background.loadTextures();
                     _menuBackgroundRenderer.background = background;
                     _screenSystem.addScreen(_mainMenuScreen);
+
+                    Logger.log("Changing game state to MainMenu.");
+                    _gameState = GameState.MainMenu;
                     break;
 
                 case GameState.MainMenu:
+                    /*
+                    if (_mainMenuUpdateCount < 10)
+                    {
+                        Logger.log(string.Format("In MainMenu game state in LoderGame.Update -- {0}", _mainMenuUpdateCount));
+                        _mainMenuUpdateCount++;
+                    }*/
                     _menuBackgroundScreenOffset += new Vector2(0.005f, 0f);
                     _systemManager.process();
                     break;
@@ -334,6 +362,12 @@ namespace StasisGame
             switch (_gameState)
             {
                 case GameState.MainMenu:
+                    /*
+                    if (_mainMenuDrawCount < 10)
+                    {
+                        Logger.log(string.Format("In MainMenu game state in LoderGame.Draw -- {0}", _mainMenuDrawCount));
+                        _mainMenuDrawCount++;
+                    }*/
                     _spriteBatch.Begin(SpriteSortMode.Deferred, BlendState.AlphaBlend, SamplerState.LinearWrap, null, null);
                     _screenSystem.draw();
                     _spriteBatch.End();

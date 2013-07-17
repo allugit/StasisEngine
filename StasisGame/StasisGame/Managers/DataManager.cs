@@ -50,6 +50,8 @@ namespace StasisGame.Managers
         // Load game settings
         public static void loadGameSettings()
         {
+            Logger.log("DataManager.loadGameSettings method started.");
+
             if (_storageDevice.FileExists(GLOBAL_CONTAINER, "settings.xml"))
             {
                 // Load settings
@@ -70,11 +72,15 @@ namespace StasisGame.Managers
                 doc = new XDocument(_gameSettings.data);
                 _storageDevice.Save(GLOBAL_CONTAINER, "settings.xml", (stream) => doc.Save(stream));
             }
+
+            Logger.log("DataManager.loadGameSettings method finished.");
         }
 
         // Save game settings
         public static void saveGameSettings()
         {
+            Logger.log("DataManager.saveGameSettings method started.");
+
             bool saved = false;
             while (!saved)
             {
@@ -89,6 +95,8 @@ namespace StasisGame.Managers
                     saved = true;
                 }
             }
+
+            Logger.log("DataManager.saveGameSettings method finished.");
         }
 
         // Create new player data
