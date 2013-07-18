@@ -12,7 +12,7 @@ namespace StasisGame.Managers
      * going to be used throughout the program to save and load data as it's needed. */
     public class DataManager
     {
-        private static string _rootDirectory = Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments) + "/LodersFall";
+        private static string _rootDirectory = Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments) + "/LodersFall/";
         private static string _settingsDirectory = _rootDirectory + "settings/";
         private static string _playersDirectory = _rootDirectory + "players/";
         private static string _settingsPath = _settingsDirectory + "settings.xml";

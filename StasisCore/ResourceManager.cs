@@ -228,7 +228,7 @@ namespace StasisCore
         // Get texture -- Try to get the texture from the cache before loading it from file
         public static Texture2D getTexture(string textureUID, bool cacheTextures = true)
         {
-            Logger.log("In ResourceManager.getTexture...");
+            //Logger.log("In ResourceManager.getTexture...");
 
             Texture2D texture = null;
             if (!_cachedTextures.TryGetValue(textureUID, out texture))
@@ -243,7 +243,7 @@ namespace StasisCore
                 using (Stream stream = TitleContainer.OpenStream(textureFiles[0]))
                     texture = Texture2D.FromStream(_graphicsDevice, stream);
 #else
-                Logger.log(string.Format("\tloading texture from file: {0}", textureUID));
+                //Logger.log(string.Format("\tloading texture from file: {0}", textureUID));
                 using (FileStream fs = new FileStream(textureFiles[0], FileMode.Open))
                     texture = Texture2D.FromStream(_graphicsDevice, fs);
 #endif
@@ -294,7 +294,7 @@ namespace StasisCore
                     _cachedTextures[textureUID] = texture;
                 
             }
-            Logger.log(string.Format("\treturning texture: {0}", textureUID));
+            //Logger.log(string.Format("\treturning texture: {0}", textureUID));
             return texture;
         }
 
