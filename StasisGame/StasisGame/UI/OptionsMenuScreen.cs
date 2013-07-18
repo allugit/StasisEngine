@@ -325,10 +325,7 @@ namespace StasisGame.UI
             settings.fullscreen = _fullscreen;
             
             // Apply settings
-            graphics.PreferredBackBufferWidth = _currentResolution.width;
-            graphics.PreferredBackBufferHeight = _currentResolution.height;
-            graphics.IsFullScreen = _fullscreen;
-            graphics.ApplyChanges();
+            _game.applyDisplaySettings();
             _game.menuBackgroundRenderer.recalculateScales();
 
             // Save settings

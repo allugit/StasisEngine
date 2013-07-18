@@ -16,7 +16,6 @@ using StasisGame.Systems;
 using StasisGame.Components;
 using StasisCore;
 using StasisCore.Models;
-using EasyStorage;
 
 namespace StasisGame
 {
@@ -88,7 +87,8 @@ namespace StasisGame
             _systemManager.add(_screenSystem, -1);
 
             DataManager.initialize(this, _systemManager);
-            Components.Add(new GamerServicesComponent(this));
+            DataManager.loadGameSettings();
+            applyDisplaySettings();
 
             base.Initialize();
 
@@ -208,6 +208,17 @@ namespace StasisGame
             loadLevel(levelUID);
         }
 
+        // applyDisplaySettings -- Uses data from DataManager to alter the display settings.
+        public void applyDisplaySettings()
+        {
+            Logger.log("Applying display settings.");
+            _graphics.PreferMultiSampling = true;
+            _graphics.PreferredBackBufferWidth = DataManager.gameSettings.screenWidth;
+            _graphics.PreferredBackBufferHeight = DataManager.gameSettings.screenHeight;
+            _graphics.IsFullScreen = DataManager.gameSettings.fullscreen;
+            _graphics.ApplyChanges();
+        }
+
         public void loadGame(int playerDataSlot)
         {
             startPersistentSystems();
@@ -292,22 +303,9 @@ namespace StasisGame
             switch (_gameState)
             {
                 case GameState.Initializing:
-                    if (DataManager.ready)
-                    {
-                        Logger.log("Initializing in LoderGame.Update");
-                        // Load and apply game settings
-                        DataManager.loadGameSettings();
-                        Logger.log("Applying display settings.");
-                        _graphics.PreferMultiSampling = true;
-                        _graphics.PreferredBackBufferWidth = DataManager.gameSettings.screenWidth;
-                        _graphics.PreferredBackBufferHeight = DataManager.gameSettings.screenHeight;
-                        _graphics.IsFullScreen = DataManager.gameSettings.fullscreen;
-                        _graphics.ApplyChanges();
-
-                        _gameState = GameState.Intro;
-
-                        handleArgs();
-                    }
+                    Logger.log("Initializing in LoderGame.Update");
+                    _gameState = GameState.Intro;
+                    handleArgs();
                     break;
 
                 case GameState.Intro:

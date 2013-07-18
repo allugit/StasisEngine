@@ -1,8 +1,8 @@
 ﻿using System;
+using System.IO;
 using System.Collections.Generic;
 using System.Xml.Linq;
 using StasisGame.Data;
-using EasyStorage;
 using StasisCore;
 using StasisGame.Systems;
 
@@ -12,39 +12,30 @@ namespace StasisGame.Managers
      * going to be used throughout the program to save and load data as it's needed. */
     public class DataManager
     {
-        public const string GLOBAL_CONTAINER = "LodersFallGlobal";
-        public const string PLAYER_CONTAINER = "LodersFallPlayer";
+        private static string _rootDirectory = Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments) + "/LodersFall";
+        private static string _settingsDirectory = _rootDirectory + "settings/";
+        private static string _playersDirectory = _rootDirectory + "players/";
+        private static string _settingsPath = _settingsDirectory + "settings.xml";
         private static LoderGame _game;
         private static SystemManager _systemManager;
         private static GameSettings _gameSettings;
         private static PlayerData _playerData;
-        private static IAsyncSaveDevice _storageDevice;
 
         public static GameSettings gameSettings { get { return _gameSettings; } }
         public static PlayerData playerData { get { return _playerData; } }
-        public static bool ready { get { return _storageDevice.IsReady; } } // Have to wait for Update() to be called once before the storage device is ready... ugh.
 
+        // Initialize
         public static void initialize(LoderGame game, SystemManager systemManager)
         {
             _game = game;
             _systemManager = systemManager;
 
-            EasyStorageSettings.SetSupportedLanguages(Language.English);
-            SharedSaveDevice sharedSaveDevice = new SharedSaveDevice();
-
-            _storageDevice = sharedSaveDevice;
-            sharedSaveDevice.DeviceSelectorCanceled += (s, e) => { e.Response = SaveDeviceEventResponse.Force; };
-            sharedSaveDevice.DeviceDisconnected += (s, e) => { e.Response = SaveDeviceEventResponse.Force; };
-            sharedSaveDevice.PromptForDevice();
-
-            game.Components.Add(sharedSaveDevice);
-            _storageDevice.SaveCompleted += new SaveCompletedEventHandler(saveDevice_SaveCompleted);
-        }
-
-        // Save complete event
-        private static void saveDevice_SaveCompleted(object sender, FileActionCompletedEventArgs args)
-        {
-            Console.WriteLine("save completed.");
+            if (!Directory.Exists(_rootDirectory))
+                Directory.CreateDirectory(_rootDirectory);
+            if (!Directory.Exists(_settingsDirectory))
+                Directory.CreateDirectory(_settingsDirectory);
+            if (!Directory.Exists(_playersDirectory))
+                Directory.CreateDirectory(_playersDirectory);
         }
 
         // Load game settings
@@ -52,25 +43,25 @@ namespace StasisGame.Managers
         {
             Logger.log("DataManager.loadGameSettings method started.");
 
-            if (_storageDevice.FileExists(GLOBAL_CONTAINER, "settings.xml"))
+            if (File.Exists(_settingsPath))
             {
-                // Load settings
-                _storageDevice.Load(GLOBAL_CONTAINER, "settings.xml", (stream) =>
+                using (FileStream fs = new FileStream(_settingsPath, FileMode.Open))
                 {
-                    XDocument doc = XDocument.Load(stream);
+                    XDocument doc = XDocument.Load(fs);
                     XElement data = doc.Element("Settings");
-
                     _gameSettings = new GameSettings(data);
-                });
+                }
             }
             else
             {
                 // Create and save default settings
-                XDocument doc;
-
                 _gameSettings = new GameSettings(_game);
-                doc = new XDocument(_gameSettings.data);
-                _storageDevice.Save(GLOBAL_CONTAINER, "settings.xml", (stream) => doc.Save(stream));
+
+                using (FileStream fs = new FileStream(_settingsPath, FileMode.Create))
+                {
+                    XDocument doc = new XDocument(_gameSettings.data);
+                    doc.Save(fs);
+                }
             }
 
             Logger.log("DataManager.loadGameSettings method finished.");
@@ -81,19 +72,10 @@ namespace StasisGame.Managers
         {
             Logger.log("DataManager.saveGameSettings method started.");
 
-            bool saved = false;
-            while (!saved)
+            using (FileStream fs = new FileStream(_settingsPath, FileMode.Create))
             {
-                if (_storageDevice.IsReady)
-                {
-                    _storageDevice.Save(GLOBAL_CONTAINER, "settings.xml", (stream) =>
-                    {
-                        XDocument doc = new XDocument();
-                        doc.Add(_gameSettings.data);
-                        doc.Save(stream);
-                    });
-                    saved = true;
-                }
+                XDocument doc = new XDocument(_gameSettings.data);
+                doc.Save(fs);
             }
 
             Logger.log("DataManager.saveGameSettings method finished.");
@@ -102,39 +84,39 @@ namespace StasisGame.Managers
         // Create new player data
         public static int createPlayerData(SystemManager systemManager, string playerName)
         {
-            bool created = false;
+            Logger.log("DataManager.createPlayerData method starting.");
+
             int unusedPlayerSlot = 0;
+            bool created = false;
+
             while (!created)
             {
-                if (_storageDevice.IsReady)
+                if (File.Exists(_playersDirectory + string.Format("player_data_{0}.xml", unusedPlayerSlot)))
+                    unusedPlayerSlot++;
+                else
                 {
-                    if (_storageDevice.FileExists(PLAYER_CONTAINER, string.Format("player_data_{0}.xml", unusedPlayerSlot)))
-                        unusedPlayerSlot++;
-                    else
-                    {
-                        _playerData = new PlayerData(systemManager, unusedPlayerSlot, playerName);
-                        savePlayerData();
-                        created = true;
-                    }
+                    _playerData = new PlayerData(systemManager, unusedPlayerSlot, playerName);
+                    savePlayerData();
+                    created = true;
                 }
             }
+
+            Logger.log("DataManager.createPlayerData method finished.");
+
             return unusedPlayerSlot;
         }
 
         // Delete player data
         public static void deletePlayerData(int slot)
         {
-            bool deleted = false;
-            string fileName = string.Format("player_data_{0}.xml", slot);
-            while (!deleted)
-            {
-                if (_storageDevice.IsReady)
-                {
-                    if (_storageDevice.FileExists(PLAYER_CONTAINER, fileName))
-                        _storageDevice.Delete(PLAYER_CONTAINER, fileName);
-                    deleted = true;
-                }
-            }
+            Logger.log(string.Format("DataManager.deletePlayerData method starting -- slot: {0}", slot));
+
+            string filePath = _playersDirectory + string.Format("player_data_{0}.xml", slot);
+
+            if (File.Exists(filePath))
+                File.Delete(filePath);
+
+            Logger.log("DataManager.deletePlayerData method finished.");
         }
 
         // Create temporary player data
@@ -146,49 +128,60 @@ namespace StasisGame.Managers
         // Load player saves
         public static List<XElement> loadPlayerSaves()
         {
+            Logger.log("DataManager.loadPlayerSaves method starting.");
+
             List<XElement> savesData = new List<XElement>();
-            bool loaded = false;
-            while (!loaded)
+            string[] files = Directory.GetFiles(_playersDirectory, "player_data_*.xml");
+            foreach (string file in files)
             {
-                if (_storageDevice.IsReady)
+                Logger.log(string.Format("\tloading play data file: {0}...", file));
+                using (FileStream fs = new FileStream(file, FileMode.Open))
                 {
-                    string[] files = _storageDevice.GetFiles(PLAYER_CONTAINER, "player_data_*.xml");
-                    foreach (string file in files)
-                    {
-                        Logger.log(string.Format("DataManager.loadPlayerSaves() -- file: {0}", file));
-                        _storageDevice.Load(PLAYER_CONTAINER, file, (stream) =>
-                            {
-                                XDocument doc = XDocument.Load(stream);
-                                savesData.Add(doc.Element("PlayerData"));
-                            });
-                    }
-                    loaded = true;
+                    XDocument doc = XDocument.Load(fs);
+                    savesData.Add(doc.Element("PlayerData"));
                 }
+                Logger.log("\tloaded.");
             }
+
+            Logger.log("DataManager.loadPlayerSaves method finished.");
+
             return savesData;
         }
 
         // Load player data
         public static void loadPlayerData(int playerSlot)
         {
-            bool loaded = false;
-            while (!loaded)
+            Logger.log("DataManager.loadPlayerData method starting.");
+
+            string filePath = _playersDirectory + string.Format("player_data_{0}.xml", playerSlot);
+
+            using (FileStream fs = new FileStream(filePath, FileMode.Open))
             {
-                if (_storageDevice.IsReady)
-                {
-                    _storageDevice.Load(PLAYER_CONTAINER, string.Format("player_data_{0}.xml", playerSlot), (stream) =>
-                        {
-                            XDocument doc = XDocument.Load(stream);
-                            _playerData = new PlayerData(_systemManager, doc.Element("PlayerData"));
-                        });
-                    loaded = true;
-                }
+                Logger.log(string.Format("\tloading player data file: {0}...", filePath));
+                XDocument doc = XDocument.Load(fs);
+                _playerData = new PlayerData(_systemManager, doc.Element("PlayerData"));
+                Logger.log("\tloaded.");
             }
+
+            Logger.log("DataManager.loadPlayerData method finished.");
         }
 
         // Save player data
         public static void savePlayerData()
         {
+            Logger.log("DataManager.savePlayerData method starting.");
+
+            string filePath = _playersDirectory + string.Format("player_data_{0}.xml", _playerData.playerSlot);
+
+            using (FileStream fs = new FileStream(filePath, FileMode.Create))
+            {
+                XDocument doc = new XDocument(_playerData.data);
+                doc.Save(fs);
+            }
+
+            Logger.log("DataManager.savePlayerData method finished.");
+
+            /*
             bool saved = false;
             while (!saved)
             {
@@ -202,7 +195,7 @@ namespace StasisGame.Managers
                         });
                     saved = true;
                 }
-            }
+            }*/
         }
     }
 }

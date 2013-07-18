@@ -60,10 +60,6 @@
     <XnaCompressContent>true</XnaCompressContent>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="EasyStorage, Version=2.0.0.0, Culture=neutral, processorArchitecture=x86">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\..\EasyStorage_GS4\EasyStorage\bin\x86\Release\EasyStorage.dll</HintPath>
-    </Reference>
     <Reference Include="FarseerPhysicsXNA">
       <HintPath>..\..\..\Farseer Physics Engine 3.3.1 Samples XNA\Farseer Physics Engine 3.3 XNA\bin\x86\Release\FarseerPhysicsXNA.dll</HintPath>
     </Reference>
