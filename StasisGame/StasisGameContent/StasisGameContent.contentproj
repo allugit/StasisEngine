@@ -43,106 +43,103 @@
     <Reference Include="Microsoft.Xna.Framework.Content.Pipeline.XImporter" />
     <Reference Include="Microsoft.Xna.Framework.Content.Pipeline.AudioImporters" />
     <Reference Include="Microsoft.Xna.Framework.Content.Pipeline.VideoImporters" />
-    <Reference Include="MonoGameContentProcessors">
-      <HintPath>..\..\..\MonoGame-flibit\MonoGame.ContentPipeline\ContentProcessors\bin\Release\MonoGameContentProcessors.dll</HintPath>
-    </Reference>
   </ItemGroup>
   <ItemGroup>
     <Compile Include="santa_barbara_normal.spritefont">
       <Name>santa_barbara_normal</Name>
       <Importer>FontDescriptionImporter</Importer>
-      <Processor>MGSpriteFontDescriptionProcessor</Processor>
+      <Processor>FontDescriptionProcessor</Processor>
     </Compile>
   </ItemGroup>
   <ItemGroup>
     <Compile Include="logo.png">
       <Name>logo</Name>
       <Importer>TextureImporter</Importer>
-      <Processor>MGTextureProcessor</Processor>
+      <Processor>TextureProcessor</Processor>
     </Compile>
   </ItemGroup>
   <ItemGroup>
     <Compile Include="world_map\anti_fog_brush.png">
       <Name>anti_fog_brush</Name>
       <Importer>TextureImporter</Importer>
-      <Processor>MGTextureProcessor</Processor>
+      <Processor>TextureProcessor</Processor>
     </Compile>
   </ItemGroup>
   <ItemGroup>
     <Compile Include="world_map\level_select_description.spritefont">
       <Name>level_select_description</Name>
       <Importer>FontDescriptionImporter</Importer>
-      <Processor>MGSpriteFontDescriptionProcessor</Processor>
+      <Processor>FontDescriptionProcessor</Processor>
     </Compile>
   </ItemGroup>
   <ItemGroup>
     <Compile Include="world_map\level_select_title.spritefont">
       <Name>level_select_title</Name>
       <Importer>FontDescriptionImporter</Importer>
-      <Processor>MGSpriteFontDescriptionProcessor</Processor>
+      <Processor>FontDescriptionProcessor</Processor>
     </Compile>
   </ItemGroup>
   <ItemGroup>
     <Compile Include="world_map\path.png">
       <Name>path</Name>
       <Importer>TextureImporter</Importer>
-      <Processor>MGTextureProcessor</Processor>
+      <Processor>TextureProcessor</Processor>
     </Compile>
   </ItemGroup>
   <ItemGroup>
     <Compile Include="arial.spritefont">
       <Name>arial</Name>
       <Importer>FontDescriptionImporter</Importer>
-      <Processor>MGSpriteFontDescriptionProcessor</Processor>
+      <Processor>FontDescriptionProcessor</Processor>
     </Compile>
   </ItemGroup>
   <ItemGroup>
     <Compile Include="fluid_particle.png">
       <Name>fluid_particle</Name>
       <Importer>TextureImporter</Importer>
-      <Processor>MGTextureProcessor</Processor>
+      <Processor>TextureProcessor</Processor>
     </Compile>
   </ItemGroup>
   <ItemGroup>
     <Compile Include="fog_effect.fx">
       <Name>fog_effect</Name>
       <Importer>EffectImporter</Importer>
-      <Processor>MGEffectProcessor</Processor>
+      <Processor>EffectProcessor</Processor>
     </Compile>
   </ItemGroup>
   <ItemGroup>
     <Compile Include="inventory_background.png">
       <Name>inventory_background</Name>
       <Importer>TextureImporter</Importer>
-      <Processor>MGTextureProcessor</Processor>
+      <Processor>TextureProcessor</Processor>
     </Compile>
   </ItemGroup>
   <ItemGroup>
     <Compile Include="world_map\level_select_icon.png">
       <Name>level_select_icon</Name>
       <Importer>TextureImporter</Importer>
-      <Processor>MGTextureProcessor</Processor>
+      <Processor>TextureProcessor</Processor>
     </Compile>
   </ItemGroup>
   <ItemGroup>
     <Compile Include="range_circle.png">
       <Name>range_circle</Name>
       <Importer>TextureImporter</Importer>
-      <Processor>MGTextureProcessor</Processor>
+      <Processor>TextureProcessor</Processor>
     </Compile>
   </ItemGroup>
   <ItemGroup>
     <Compile Include="reticle.png">
       <Name>reticle</Name>
       <Importer>TextureImporter</Importer>
-      <Processor>MGTextureProcessor</Processor>
+      <Processor>TextureProcessor</Processor>
     </Compile>
   </ItemGroup>
   <ItemGroup>
     <Compile Include="fluid_effect.fx">
       <Name>fluid_effect</Name>
       <Importer>EffectImporter</Importer>
-      <Processor>MGEffectProcessor</Processor>
+      <Processor>EffectProcessor</Processor>
     </Compile>
   </ItemGroup>
   <ItemGroup>
@@ -156,58 +153,58 @@
     <Compile Include="shared_ui\blue_pane_background.png">
       <Name>blue_pane_background</Name>
       <Importer>TextureImporter</Importer>
-      <Processor>MGTextureProcessor</Processor>
+      <Processor>TextureProcessor</Processor>
     </Compile>
     <Compile Include="shared_ui\blue_pane_bottom_left_corner.png">
       <Name>blue_pane_bottom_left_corner</Name>
       <Importer>TextureImporter</Importer>
-      <Processor>MGTextureProcessor</Processor>
+      <Processor>TextureProcessor</Processor>
     </Compile>
     <Compile Include="shared_ui\blue_pane_bottom_right_corner.png">
       <Name>blue_pane_bottom_right_corner</Name>
       <Importer>TextureImporter</Importer>
-      <Processor>MGTextureProcessor</Processor>
+      <Processor>TextureProcessor</Processor>
     </Compile>
     <Compile Include="shared_ui\blue_pane_bottom_side.png">
       <Name>blue_pane_bottom_side</Name>
       <Importer>TextureImporter</Importer>
-      <Processor>MGTextureProcessor</Processor>
+      <Processor>TextureProcessor</Processor>
     </Compile>
     <Compile Include="shared_ui\blue_pane_left_side.png">
       <Name>blue_pane_left_side</Name>
       <Importer>TextureImporter</Importer>
-      <Processor>MGTextureProcessor</Processor>
+      <Processor>TextureProcessor</Processor>
     </Compile>
     <Compile Include="shared_ui\blue_pane_right_side.png">
       <Name>blue_pane_right_side</Name>
       <Importer>TextureImporter</Importer>
-      <Processor>MGTextureProcessor</Processor>
+      <Processor>TextureProcessor</Processor>
     </Compile>
     <Compile Include="shared_ui\blue_pane_top_left_corner.png">
       <Name>blue_pane_top_left_corner</Name>
       <Importer>TextureImporter</Importer>
-      <Processor>MGTextureProcessor</Processor>
+      <Processor>TextureProcessor</Processor>
     </Compile>
   </ItemGroup>
   <ItemGroup>
     <Compile Include="shared_ui\blue_pane_top_right_corner.png">
       <Name>blue_pane_top_right_corner</Name>
       <Importer>TextureImporter</Importer>
-      <Processor>MGTextureProcessor</Processor>
+      <Processor>TextureProcessor</Processor>
     </Compile>
   </ItemGroup>
   <ItemGroup>
     <Compile Include="shared_ui\blue_pane_top_side.png">
       <Name>blue_pane_top_side</Name>
       <Importer>TextureImporter</Importer>
-      <Processor>MGTextureProcessor</Processor>
+      <Processor>TextureProcessor</Processor>
     </Compile>
   </ItemGroup>
   <ItemGroup>
     <Compile Include="dialogue_font.spritefont">
       <Name>dialogue_font</Name>
       <Importer>FontDescriptionImporter</Importer>
-      <Processor>MGSpriteFontDescriptionProcessor</Processor>
+      <Processor>FontDescriptionProcessor</Processor>
     </Compile>
   </ItemGroup>
   <ItemGroup>
@@ -228,93 +225,93 @@
     <Compile Include="main_menu\buttons_background.png">
       <Name>buttons_background</Name>
       <Importer>TextureImporter</Importer>
-      <Processor>MGTextureProcessor</Processor>
+      <Processor>TextureProcessor</Processor>
     </Compile>
   </ItemGroup>
   <ItemGroup>
     <Compile Include="main_menu\load_game.png">
       <Name>load_game</Name>
       <Importer>TextureImporter</Importer>
-      <Processor>MGTextureProcessor</Processor>
+      <Processor>TextureProcessor</Processor>
     </Compile>
     <Compile Include="main_menu\load_game_over.png">
       <Name>load_game_over</Name>
       <Importer>TextureImporter</Importer>
-      <Processor>MGTextureProcessor</Processor>
+      <Processor>TextureProcessor</Processor>
     </Compile>
     <Compile Include="main_menu\new_game.png">
       <Name>new_game</Name>
       <Importer>TextureImporter</Importer>
-      <Processor>MGTextureProcessor</Processor>
+      <Processor>TextureProcessor</Processor>
     </Compile>
     <Compile Include="main_menu\new_game_over.png">
       <Name>new_game_over</Name>
       <Importer>TextureImporter</Importer>
-      <Processor>MGTextureProcessor</Processor>
+      <Processor>TextureProcessor</Processor>
     </Compile>
     <Compile Include="main_menu\options.png">
       <Name>options</Name>
       <Importer>TextureImporter</Importer>
-      <Processor>MGTextureProcessor</Processor>
+      <Processor>TextureProcessor</Processor>
     </Compile>
     <Compile Include="main_menu\options_over.png">
       <Name>options_over</Name>
       <Importer>TextureImporter</Importer>
-      <Processor>MGTextureProcessor</Processor>
+      <Processor>TextureProcessor</Processor>
     </Compile>
     <Compile Include="main_menu\quit_game.png">
       <Name>quit_game</Name>
       <Importer>TextureImporter</Importer>
-      <Processor>MGTextureProcessor</Processor>
+      <Processor>TextureProcessor</Processor>
     </Compile>
     <Compile Include="main_menu\quit_game_over.png">
       <Name>quit_game_over</Name>
       <Importer>TextureImporter</Importer>
-      <Processor>MGTextureProcessor</Processor>
+      <Processor>TextureProcessor</Processor>
     </Compile>
   </ItemGroup>
   <ItemGroup>
     <Compile Include="shared_ui\left_arrows.png">
       <Name>left_arrows</Name>
       <Importer>TextureImporter</Importer>
-      <Processor>MGTextureProcessor</Processor>
+      <Processor>TextureProcessor</Processor>
     </Compile>
     <Compile Include="shared_ui\right_arrows.png">
       <Name>right_arrows</Name>
       <Importer>TextureImporter</Importer>
-      <Processor>MGTextureProcessor</Processor>
+      <Processor>TextureProcessor</Processor>
     </Compile>
   </ItemGroup>
   <ItemGroup>
     <Compile Include="options_menu\audio_button.png">
       <Name>audio_button</Name>
       <Importer>TextureImporter</Importer>
-      <Processor>MGTextureProcessor</Processor>
+      <Processor>TextureProcessor</Processor>
     </Compile>
     <Compile Include="options_menu\audio_button_over.png">
       <Name>audio_button_over</Name>
       <Importer>TextureImporter</Importer>
-      <Processor>MGTextureProcessor</Processor>
+      <Processor>TextureProcessor</Processor>
     </Compile>
     <Compile Include="options_menu\controls_button.png">
       <Name>controls_button</Name>
       <Importer>TextureImporter</Importer>
-      <Processor>MGTextureProcessor</Processor>
+      <Processor>TextureProcessor</Processor>
     </Compile>
     <Compile Include="options_menu\controls_button_over.png">
       <Name>controls_button_over</Name>
       <Importer>TextureImporter</Importer>
-      <Processor>MGTextureProcessor</Processor>
+      <Processor>TextureProcessor</Processor>
     </Compile>
     <Compile Include="options_menu\video_button.png">
       <Name>video_button</Name>
       <Importer>TextureImporter</Importer>
-      <Processor>MGTextureProcessor</Processor>
+      <Processor>TextureProcessor</Processor>
     </Compile>
     <Compile Include="options_menu\video_button_over.png">
       <Name>video_button_over</Name>
       <Importer>TextureImporter</Importer>
-      <Processor>MGTextureProcessor</Processor>
+      <Processor>TextureProcessor</Processor>
     </Compile>
   </ItemGroup>
   <ItemGroup>
@@ -381,49 +378,49 @@
     <Compile Include="shared_ui\stone_pane_bottom_left_corner.png">
       <Name>stone_pane_bottom_left_corner</Name>
       <Importer>TextureImporter</Importer>
-      <Processor>MGTextureProcessor</Processor>
+      <Processor>TextureProcessor</Processor>
     </Compile>
     <Compile Include="shared_ui\stone_pane_bottom_right_corner.png">
       <Name>stone_pane_bottom_right_corner</Name>
       <Importer>TextureImporter</Importer>
-      <Processor>MGTextureProcessor</Processor>
+      <Processor>TextureProcessor</Processor>
     </Compile>
     <Compile Include="shared_ui\stone_pane_bottom_side.png">
       <Name>stone_pane_bottom_side</Name>
       <Importer>TextureImporter</Importer>
-      <Processor>MGTextureProcessor</Processor>
+      <Processor>TextureProcessor</Processor>
     </Compile>
     <Compile Include="shared_ui\stone_pane_left_side.png">
       <Name>stone_pane_left_side</Name>
       <Importer>TextureImporter</Importer>
-      <Processor>MGTextureProcessor</Processor>
+      <Processor>TextureProcessor</Processor>
     </Compile>
     <Compile Include="shared_ui\stone_pane_right_side.png">
       <Name>stone_pane_right_side</Name>
       <Importer>TextureImporter</Importer>
-      <Processor>MGTextureProcessor</Processor>
+      <Processor>TextureProcessor</Processor>
     </Compile>
     <Compile Include="shared_ui\stone_pane_top_left_corner.png">
       <Name>stone_pane_top_left_corner</Name>
       <Importer>TextureImporter</Importer>
-      <Processor>MGTextureProcessor</Processor>
+      <Processor>TextureProcessor</Processor>
     </Compile>
     <Compile Include="shared_ui\stone_pane_top_right_corner.png">
       <Name>stone_pane_top_right_corner</Name>
       <Importer>TextureImporter</Importer>
-      <Processor>MGTextureProcessor</Processor>
+      <Processor>TextureProcessor</Processor>
     </Compile>
     <Compile Include="shared_ui\stone_pane_top_side.png">
       <Name>stone_pane_top_side</Name>
       <Importer>TextureImporter</Importer>
-      <Processor>MGTextureProcessor</Processor>
+      <Processor>TextureProcessor</Processor>
     </Compile>
   </ItemGroup>
   <ItemGroup>
     <Compile Include="shared_ui\stone_pane_background.png">
       <Name>stone_pane_background</Name>
       <Importer>TextureImporter</Importer>
-      <Processor>MGTextureProcessor</Processor>
+      <Processor>TextureProcessor</Processor>
     </Compile>
   </ItemGroup>
   <ItemGroup>

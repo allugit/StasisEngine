@@ -43,15 +43,12 @@
     <Reference Include="Microsoft.Xna.Framework.Content.Pipeline.XImporter" />
     <Reference Include="Microsoft.Xna.Framework.Content.Pipeline.AudioImporters" />
     <Reference Include="Microsoft.Xna.Framework.Content.Pipeline.VideoImporters" />
-    <Reference Include="MonoGameContentProcessors">
-      <HintPath>..\..\..\MonoGame-flibit\MonoGame.ContentPipeline\ContentProcessors\bin\Release\MonoGameContentProcessors.dll</HintPath>
-    </Reference>
   </ItemGroup>
   <ItemGroup>
     <Compile Include="arial.spritefont">
       <Name>arial</Name>
       <Importer>FontDescriptionImporter</Importer>
-      <Processor>MGSpriteFontDescriptionProcessor</Processor>
+      <Processor>FontDescriptionProcessor</Processor>
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Compile>
   </ItemGroup>
@@ -59,7 +56,7 @@
     <Compile Include="gate_font.spritefont">
       <Name>gate_font</Name>
       <Importer>FontDescriptionImporter</Importer>
-      <Processor>MGSpriteFontDescriptionProcessor</Processor>
+      <Processor>FontDescriptionProcessor</Processor>
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Compile>
   </ItemGroup>
@@ -67,7 +64,7 @@
     <Compile Include="circle.png">
       <Name>circle</Name>
       <Importer>TextureImporter</Importer>
-      <Processor>MGTextureProcessor</Processor>
+      <Processor>TextureProcessor</Processor>
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Compile>
   </ItemGroup>
@@ -75,7 +72,7 @@
     <Compile Include="actor_icons\circuit.png">
       <Name>circuit</Name>
       <Importer>TextureImporter</Importer>
-      <Processor>MGTextureProcessor</Processor>
+      <Processor>TextureProcessor</Processor>
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Compile>
   </ItemGroup>
@@ -83,7 +80,7 @@
     <Compile Include="actor_icons\item.png">
       <Name>item</Name>
       <Importer>TextureImporter</Importer>
-      <Processor>MGTextureProcessor</Processor>
+      <Processor>TextureProcessor</Processor>
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Compile>
   </ItemGroup>
@@ -91,7 +88,7 @@
     <Compile Include="actor_icons\player_spawn.png">
       <Name>player_spawn</Name>
       <Importer>TextureImporter</Importer>
-      <Processor>MGTextureProcessor</Processor>
+      <Processor>TextureProcessor</Processor>
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Compile>
   </ItemGroup>
@@ -99,7 +96,7 @@
     <Compile Include="actor_icons\prismatic.png">
       <Name>prismatic</Name>
       <Importer>TextureImporter</Importer>
-      <Processor>MGTextureProcessor</Processor>
+      <Processor>TextureProcessor</Processor>
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Compile>
   </ItemGroup>
@@ -107,7 +104,7 @@
     <Compile Include="actor_icons\revolute.png">
       <Name>revolute</Name>
       <Importer>TextureImporter</Importer>
-      <Processor>MGTextureProcessor</Processor>
+      <Processor>TextureProcessor</Processor>
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Compile>
   </ItemGroup>
@@ -115,7 +112,7 @@
     <Compile Include="logic_gate_icons\and.png">
       <Name>and</Name>
       <Importer>TextureImporter</Importer>
-      <Processor>MGTextureProcessor</Processor>
+      <Processor>TextureProcessor</Processor>
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Compile>
   </ItemGroup>
@@ -123,7 +120,7 @@
     <Compile Include="logic_gate_icons\input.png">
       <Name>input</Name>
       <Importer>TextureImporter</Importer>
-      <Processor>MGTextureProcessor</Processor>
+      <Processor>TextureProcessor</Processor>
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Compile>
   </ItemGroup>
@@ -131,7 +128,7 @@
     <Compile Include="logic_gate_icons\not.png">
       <Name>not</Name>
       <Importer>TextureImporter</Importer>
-      <Processor>MGTextureProcessor</Processor>
+      <Processor>TextureProcessor</Processor>
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Compile>
   </ItemGroup>
@@ -139,7 +136,7 @@
     <Compile Include="logic_gate_icons\or.png">
       <Name>or</Name>
       <Importer>TextureImporter</Importer>
-      <Processor>MGTextureProcessor</Processor>
+      <Processor>TextureProcessor</Processor>
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Compile>
   </ItemGroup>
@@ -147,7 +144,7 @@
     <Compile Include="logic_gate_icons\output.png">
       <Name>output</Name>
       <Importer>TextureImporter</Importer>
-      <Processor>MGTextureProcessor</Processor>
+      <Processor>TextureProcessor</Processor>
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Compile>
   </ItemGroup>

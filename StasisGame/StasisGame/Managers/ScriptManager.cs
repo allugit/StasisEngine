@@ -74,9 +74,15 @@ namespace StasisGame
 
             parameters.GenerateExecutable = false;
             parameters.GenerateInMemory = true;
-            parameters.ReferencedAssemblies.Add("MonoGame.Framework.dll");
-            parameters.ReferencedAssemblies.Add("StasisGame.exe");
-            parameters.ReferencedAssemblies.Add("StasisCore.dll");
+
+            // Add references to all the assemblies we might need.
+            Assembly executingAssembly = Assembly.GetExecutingAssembly();
+            parameters.ReferencedAssemblies.Add(executingAssembly.Location);
+            foreach (AssemblyName assemblyName in executingAssembly.GetReferencedAssemblies())
+                parameters.ReferencedAssemblies.Add(Assembly.Load(assemblyName).Location);
+
+            //parameters.ReferencedAssemblies.Add("StasisGame.exe");
+            //parameters.ReferencedAssemblies.Add("StasisCore.dll");
             results = _provider.CompileAssemblyFromSource(parameters, source);
             if (results.Errors.Count > 0)
             {

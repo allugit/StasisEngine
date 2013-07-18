@@ -1,7 +1,7 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Project DefaultTargets="Build" ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <PropertyGroup>
-    <ProjectGuid>{7F72DEBB-6E3F-4477-B312-AD37BC4002B9}</ProjectGuid>
+    <ProjectGuid>{2CAE49BD-8B39-42BE-A010-D3E62657000E}</ProjectGuid>
     <ProjectTypeGuids>{6D335F3A-9D43-41b4-9D22-F6F17C4BE596};{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</ProjectTypeGuids>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">x86</Platform>
@@ -13,7 +13,7 @@
     <TargetFrameworkProfile>Client</TargetFrameworkProfile>
     <XnaFrameworkVersion>v4.0</XnaFrameworkVersion>
     <XnaPlatform>Windows</XnaPlatform>
-    <XnaProfile>HiDef</XnaProfile>
+    <XnaProfile>Reach</XnaProfile>
     <XnaCrossPlatformGroupID>d24658f7-d315-46a8-b80c-d51990813b47</XnaCrossPlatformGroupID>
     <XnaOutputType>Game</XnaOutputType>
     <ApplicationIcon>Game.ico</ApplicationIcon>
@@ -64,15 +64,9 @@
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\..\..\Box2D.XNA\bin\x86\Release\Box2D.XNA.dll</HintPath>
     </Reference>
-    <Reference Include="MonoGame.Framework, Version=3.0.1.0, Culture=neutral, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\..\MonoGame\MonoGame.Framework\bin\WindowsGL\Debug\MonoGame.Framework.dll</HintPath>
-    </Reference>
+    <Reference Include="Microsoft.Xna.Framework, Version=4.0.0.0, Culture=neutral, PublicKeyToken=842cf8be1de50553, processorArchitecture=x86" />
+    <Reference Include="Microsoft.Xna.Framework.Graphics, Version=4.0.0.0, Culture=neutral, PublicKeyToken=842cf8be1de50553, processorArchitecture=x86" />
     <Reference Include="mscorlib" />
-    <Reference Include="OpenTK, Version=1.1.0.0, Culture=neutral, PublicKeyToken=bad199fe84eb3df4, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\..\MonoGame\ThirdParty\Libs\OpenTK.dll</HintPath>
-    </Reference>
     <Reference Include="Poly2Tri">
       <HintPath>..\..\..\Poly2Tri\poly2tri.cs\bin\Release\Poly2Tri.dll</HintPath>
     </Reference>
@@ -95,18 +89,6 @@
     <Compile Include="Controllers\MaterialController.cs" />
     <Compile Include="Controllers\WorldMapController.cs" />
     <Compile Include="EditorResourceManager.cs" />
-    <Compile Include="GLControl\CarbonGLControl.cs" />
-    <Compile Include="GLControl\DummyGLControl.cs" />
-    <Compile Include="GLControl\GLControl.cs">
-      <SubType>UserControl</SubType>
-    </Compile>
-    <Compile Include="GLControl\GLControl.designer.cs">
-      <DependentUpon>GLControl.cs</DependentUpon>
-    </Compile>
-    <Compile Include="GLControl\GLControlFactory.cs" />
-    <Compile Include="GLControl\IGLControl.cs" />
-    <Compile Include="GLControl\WinGLControl.cs" />
-    <Compile Include="GLControl\X11GLControl.cs" />
     <Compile Include="Models\CircuitConnection.cs" />
     <Compile Include="Models\CircuitInputConnection.cs" />
     <Compile Include="Models\CircuitOutputConnection.cs" />
@@ -182,10 +164,10 @@
       <DependentUpon>ActorToolbar.cs</DependentUpon>
     </Compile>
     <Compile Include="Views\Controls\BackgroundDisplay.cs">
-      <SubType>UserControl</SubType>
+      <SubType>Component</SubType>
     </Compile>
     <Compile Include="Views\Controls\CircuitDisplay.cs">
-      <SubType>UserControl</SubType>
+      <SubType>Component</SubType>
     </Compile>
     <Compile Include="Views\Controls\EditPathsForm.cs">
       <SubType>Form</SubType>
@@ -212,7 +194,7 @@
       <DependentUpon>EditBlueprintScrapShape.cs</DependentUpon>
     </Compile>
     <Compile Include="Views\Controls\EditBlueprintScrapShapeGraphics.cs">
-      <SubType>UserControl</SubType>
+      <SubType>Component</SubType>
     </Compile>
     <Compile Include="Views\Controls\EditBlueprintSocketsView.cs">
       <SubType>Form</SubType>
@@ -224,7 +206,7 @@
       <SubType>Component</SubType>
     </Compile>
     <Compile Include="Views\Controls\GraphicsDeviceControl.cs">
-      <SubType>UserControl</SubType>
+      <SubType>Component</SubType>
     </Compile>
     <Compile Include="Views\Controls\LayerNode.cs" />
     <Compile Include="Views\Controls\LayersTreeView.cs">
@@ -267,10 +249,10 @@
       <DependentUpon>ViewBlueprintAssociateScraps.cs</DependentUpon>
     </Compile>
     <Compile Include="Views\Controls\EditBlueprintSocketsGraphics.cs">
-      <SubType>UserControl</SubType>
+      <SubType>Component</SubType>
     </Compile>
     <Compile Include="Views\Controls\WorldMapDisplay.cs">
-      <SubType>UserControl</SubType>
+      <SubType>Component</SubType>
     </Compile>
     <Compile Include="Views\WorldMapView.cs">
       <SubType>UserControl</SubType>
@@ -280,7 +262,7 @@
     </Compile>
     <Compile Include="XNAColorEditor.cs" />
     <Compile Include="Views\LevelView.cs">
-      <SubType>UserControl</SubType>
+      <SubType>Component</SubType>
     </Compile>
     <Compile Include="Views\Controls\RefreshingListBox.cs">
       <SubType>Component</SubType>
@@ -366,9 +348,6 @@
     </BootstrapperPackage>
   </ItemGroup>
   <ItemGroup>
-    <EmbeddedResource Include="GLControl\GLControl.resx">
-      <DependentUpon>GLControl.cs</DependentUpon>
-    </EmbeddedResource>
     <EmbeddedResource Include="Views\BackgroundView.resx">
       <DependentUpon>BackgroundView.cs</DependentUpon>
     </EmbeddedResource>
@@ -433,14 +412,6 @@
   <ItemGroup />
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <Import Project="$(MSBuildExtensionsPath)\Microsoft\XNA Game Studio\Microsoft.Xna.GameStudio.targets" />
-  <Import Project="$(MSBuildExtensionsPath)\MonoGame\v3.0\MonoGame.ContentPipeline.targets" />
-  <PropertyGroup>
-    <ProjectGuid>{2CAE49BD-8B39-42BE-A010-D3E62657000E}</ProjectGuid>
-    <ProjectTypeGuids>{6D335F3A-9D43-41b4-9D22-F6F17C4BE596};{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</ProjectTypeGuids>
-    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
-    <Platform Condition=" '$(Platform)' == '' ">x86</Platform>
-    <MonoGamePlatform>Windows</MonoGamePlatform>
-  </PropertyGroup>
   <!--
       To modify your build process, add your task inside one of the targets below and uncomment it. 
       Other similar extension points exist, see Microsoft.Common.targets.

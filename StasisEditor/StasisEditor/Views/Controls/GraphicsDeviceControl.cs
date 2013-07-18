@@ -1,10 +1,18 @@
-﻿using System;
-using System.Collections.Generic;
+﻿#region File Description
+//-----------------------------------------------------------------------------
+// GraphicsDeviceControl.cs
+//
+// Microsoft XNA Community Game Platform
+// Copyright (C) Microsoft Corporation. All rights reserved.
+//-----------------------------------------------------------------------------
+#endregion
+
+#region Using Statements
+using System;
 using System.Drawing;
 using System.Windows.Forms;
-using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
-using OpenTK;
+#endregion
 
 namespace StasisEditor.Views.Controls
 {
@@ -19,7 +27,7 @@ namespace StasisEditor.Views.Controls
     /// a Windows Form. Derived classes can override the Initialize and Draw
     /// methods to add their own drawing code.
     /// </summary>
-    abstract public class GraphicsDeviceControl : GLControl
+    abstract public class GraphicsDeviceControl : Control
     {
         #region Fields
 
@@ -55,21 +63,6 @@ namespace StasisEditor.Views.Controls
 
         ServiceContainer services = new ServiceContainer();
 
-        public bool IsDesignerHosted
-        {
-            get
-            {
-                Control ctrl = this;
-
-                while (ctrl != null)
-                {
-                    if ((ctrl.Site != null) && ctrl.Site.DesignMode)
-                        return true;
-                    ctrl = ctrl.Parent;
-                }
-                return false;
-            }
-        }
 
         #endregion
 
@@ -84,7 +77,9 @@ namespace StasisEditor.Views.Controls
             // Don't initialize the graphics device if we are running in the designer.
             if (!DesignMode)
             {
-                graphicsDeviceService = GraphicsDeviceService.AddRef(Handle, ClientSize.Width, ClientSize.Height);
+                graphicsDeviceService = GraphicsDeviceService.AddRef(Handle,
+                                                                     ClientSize.Width,
+                                                                     ClientSize.Height);
 
                 // Register the service, so components like ContentManager can find it.
                 services.AddService<IGraphicsDeviceService>(graphicsDeviceService);
@@ -94,6 +89,22 @@ namespace StasisEditor.Views.Controls
             }
 
             base.OnCreateControl();
+        }
+
+        public bool IsDesignerHosted
+        {
+            get
+            {
+                Control ctrl = this;
+
+                while (ctrl != null)
+                {
+                    if ((ctrl.Site != null) && ctrl.Site.DesignMode)
+                        return true;
+                    ctrl = ctrl.Parent;
+                }
+                return false;
+            }
         }
 
 
@@ -159,14 +170,6 @@ namespace StasisEditor.Views.Controls
                 return deviceResetError;
             }
 
-            GLControl control = GLControl.FromHandle(graphicsDeviceService.GraphicsDevice.PresentationParameters.DeviceWindowHandle) as GLControl;
-            if (control != null)
-            {
-                control.Context.MakeCurrent(WindowInfo);
-                graphicsDeviceService.GraphicsDevice.PresentationParameters.BackBufferHeight = ClientSize.Height;
-                graphicsDeviceService.GraphicsDevice.PresentationParameters.BackBufferWidth = ClientSize.Width;
-            }
-
             // Many GraphicsDeviceControl instances can be sharing the same
             // GraphicsDevice. The device backbuffer will be resized to fit the
             // largest of these controls. But what if we are currently drawing
@@ -197,16 +200,13 @@ namespace StasisEditor.Views.Controls
         /// </summary>
         void EndDraw()
         {
-            
             //try
             //{
-                SwapBuffers();
-                /*
                 Rectangle sourceRectangle = new Rectangle(0, 0, ClientSize.Width,
                                                                 ClientSize.Height);
 
-                GraphicsDevice.Present(sourceRectangle, null, this.Handle);*/
-            //}
+                GraphicsDevice.Present(sourceRectangle, null, this.Handle);
+            //
             //catch
             //{
                 // Present might throw if the device became lost while we were
@@ -249,15 +249,15 @@ namespace StasisEditor.Views.Controls
             // Do we need to reset the device?
             if (deviceNeedsReset)
             {
-                try
-                {
+                //try
+                //{
                     graphicsDeviceService.ResetDevice(ClientSize.Width,
                                                       ClientSize.Height);
-                }
-                catch (Exception e)
-                {
-                    return "Graphics device reset failed\n\n" + e;
-                }
+                //}
+                //catch (Exception e)
+                //{
+                //    return "Graphics device reset failed\n\n" + e;
+                //}
             }
 
             return null;

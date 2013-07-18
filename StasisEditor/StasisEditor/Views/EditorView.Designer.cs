@@ -226,7 +226,6 @@
             this.levelView1.Name = "levelView1";
             this.levelView1.Size = new System.Drawing.Size(712, 534);
             this.levelView1.TabIndex = 0;
-            this.levelView1.VSync = false;
             // 
             // materialsTab
             // 

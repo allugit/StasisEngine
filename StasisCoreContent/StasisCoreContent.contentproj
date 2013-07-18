@@ -43,27 +43,24 @@
     <Reference Include="Microsoft.Xna.Framework.Content.Pipeline.XImporter" />
     <Reference Include="Microsoft.Xna.Framework.Content.Pipeline.AudioImporters" />
     <Reference Include="Microsoft.Xna.Framework.Content.Pipeline.VideoImporters" />
-    <Reference Include="MonoGameContentProcessors">
-      <HintPath>..\..\MonoGame-flibit\MonoGame.ContentPipeline\ContentProcessors\bin\Release\MonoGameContentProcessors.dll</HintPath>
-    </Reference>
   </ItemGroup>
   <ItemGroup>
     <None Include="effects\normal_functions.fx">
       <Name>normal_functions</Name>
       <Importer>EffectImporter</Importer>
-      <Processor>MGEffectProcessor</Processor>
+      <Processor>EffectProcessor</Processor>
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
     <Compile Include="effects\primitives.fx">
       <Name>primitives</Name>
       <Importer>EffectImporter</Importer>
-      <Processor>MGEffectProcessor</Processor>
+      <Processor>EffectProcessor</Processor>
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Compile>
     <Compile Include="effects\texture.fx">
       <Name>texture</Name>
       <Importer>EffectImporter</Importer>
-      <Processor>MGEffectProcessor</Processor>
+      <Processor>EffectProcessor</Processor>
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Compile>
   </ItemGroup>

@@ -238,15 +238,10 @@ namespace StasisCore
                 if (textureFiles.Length == 0)
                     throw new ResourceNotFoundException(textureUID);
 
-                // Load texture
-#if XBOX
-                using (Stream stream = TitleContainer.OpenStream(textureFiles[0]))
-                    texture = Texture2D.FromStream(_graphicsDevice, stream);
-#else
                 //Logger.log(string.Format("\tloading texture from file: {0}", textureUID));
                 using (FileStream fs = new FileStream(textureFiles[0], FileMode.Open))
                     texture = Texture2D.FromStream(_graphicsDevice, fs);
-#endif
+
                 // Premultiply alpha
                 RenderTarget2D result = new RenderTarget2D(_graphicsDevice, texture.Width, texture.Height);
                 _graphicsDevice.SetRenderTarget(result);
