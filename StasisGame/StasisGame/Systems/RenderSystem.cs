@@ -110,9 +110,9 @@ namespace StasisGame.Systems
             // b-----------c
             float gameScale = Settings.BASE_SCALE;
             Vector3 a = Vector3.Zero;
-            Vector3 b = new Vector3(0, (float)texture.Height / gameScale, layerDepth);
-            Vector3 c = new Vector3((float)texture.Width / gameScale, (float)texture.Height / gameScale, layerDepth);
-            Vector3 d = new Vector3((float)texture.Width / gameScale, 0, layerDepth);
+            Vector3 b = new Vector3(0, (float)texture.Height / gameScale, 0);
+            Vector3 c = new Vector3((float)texture.Width / gameScale, (float)texture.Height / gameScale, 0);
+            Vector3 d = new Vector3((float)texture.Width / gameScale, 0, 0);
             List<RenderableTriangle> renderableTriangles = new List<RenderableTriangle>();
             PrimitiveRenderObject primitiveRenderObject;
 
