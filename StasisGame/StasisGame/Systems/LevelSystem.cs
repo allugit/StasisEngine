@@ -283,7 +283,7 @@ namespace StasisGame.Systems
             _eventGoals.Clear();
             _completedGoals.Clear();
 
-            screenSystem.removeScreen(ScreenType.Level);
+            screenSystem.removeScreen(_game.levelScreen);
 
             _systemManager.remove(SystemType.Input);
             _systemManager.remove(SystemType.Physics);

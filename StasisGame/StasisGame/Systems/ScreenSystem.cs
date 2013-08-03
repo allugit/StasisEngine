@@ -33,6 +33,7 @@ namespace StasisGame.Systems
             Logger.log(string.Format("Added {0} screen to ScreenSystem.", screen.screenType));
         }
 
+        /*
         public void removeScreen(ScreenType screenType)
         {
             Screen screenToRemove = null;
@@ -51,7 +52,7 @@ namespace StasisGame.Systems
             {
                 Logger.log(string.Format("Could not remove {0} screen from ScreenSystem.", screenType));
             }
-        }
+        }*/
 
         public void removeScreen(Screen screen)
         {
