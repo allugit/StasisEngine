@@ -13,8 +13,8 @@ namespace StasisGame.UI
         private Screen _screen;
         private Texture2D _pixel;
 
-        public FadeInTransition(ScreenSystem screenSystem, SpriteBatch spriteBatch, Screen screen, Color color, float speed = 0.05f)
-            : base(screenSystem, spriteBatch, speed)
+        public FadeInTransition(ScreenSystem screenSystem, SpriteBatch spriteBatch, Screen screen, Color color, bool queue = true, float speed = 0.05f)
+            : base(screenSystem, spriteBatch, queue, speed)
         {
             _color = color;
             _screen = screen;

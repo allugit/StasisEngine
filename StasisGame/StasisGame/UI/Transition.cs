@@ -11,16 +11,19 @@ namespace StasisGame.UI
         protected SpriteBatch _spriteBatch;
         protected float _progress;
         protected float _speed;
+        protected bool _queue;
 
         public float progress { get { return _progress; } }
 
         public bool finished { get { return _progress >= 1f; } }
         public bool starting { get { return _progress == 0f; } }
+        public bool queued { get { return _queue; } }
 
-        public Transition(ScreenSystem screenSystem, SpriteBatch spriteBatch, float speed)
+        public Transition(ScreenSystem screenSystem, SpriteBatch spriteBatch, bool queue, float speed)
         {
             _screenSystem = screenSystem;
             _spriteBatch = spriteBatch;
+            _queue = queue;
             _speed = speed;
         }
 

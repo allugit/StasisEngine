@@ -11,6 +11,7 @@ namespace StasisGame.Systems
         private SystemManager _systemManager;
         private List<Screen> _screens;
         private List<Transition> _transitions;
+        private List<Transition> _transitionsToRemove;
         private bool _paused;
         private bool _singleStep;
 
@@ -25,6 +26,7 @@ namespace StasisGame.Systems
             _systemManager = systemManager;
             _screens = new List<Screen>();
             _transitions = new List<Transition>();
+            _transitionsToRemove = new List<Transition>();
         }
 
         public void addScreen(Screen screen)
@@ -32,27 +34,6 @@ namespace StasisGame.Systems
             _screens.Add(screen);
             Logger.log(string.Format("Added {0} screen to ScreenSystem.", screen.screenType));
         }
-
-        /*
-        public void removeScreen(ScreenType screenType)
-        {
-            Screen screenToRemove = null;
-
-            for (int i = 0; i < _screens.Count; i++)
-            {
-                if (_screens[i].screenType == screenType)
-                    screenToRemove = _screens[i];
-            }
-
-            if (screenToRemove != null)
-            {
-                removeScreen(screenToRemove);
-            }
-            else
-            {
-                Logger.log(string.Format("Could not remove {0} screen from ScreenSystem.", screenType));
-            }
-        }*/
 
         public void removeScreen(Screen screen)
         {
@@ -75,22 +56,37 @@ namespace StasisGame.Systems
                     _screens[i].update();
                 }
 
-                // Update transition (one at a time)
-                if (_transitions.Count > 0)
+                // Remove finished transitions
+                for (int i = 0; i < _transitionsToRemove.Count; i++)
                 {
-                    Transition transition = _transitions[0];
+                    _transitions.Remove(_transitionsToRemove[i]);
+                }
+                _transitionsToRemove.Clear();
 
+                // Update transitions
+                for (int i = 0; i < _transitions.Count; i++)
+                {
+                    Transition transition = _transitions[i];
+
+                    // Break if this is a queued transition that's not ready to be processed.
+                    if (transition.queued && i != 0)
+                    {
+                        break;
+                    }
+
+                    // Handle starting/finished transitions
                     if (transition.finished)
                     {
                         transition.end();
-                        _transitions.Remove(transition);
+                        _transitionsToRemove.Add(transition);
                     }
                     else if (transition.starting)
                     {
                         transition.begin();
-                        transition.update();
                     }
-                    else
+
+                    // Update transitions
+                    if ((transition.queued && i == 0) || !transition.queued)
                     {
                         transition.update();
                     }

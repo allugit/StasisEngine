@@ -243,7 +243,7 @@ namespace StasisGame
             _levelSystem.load(levelUID);
             _playerSystem.addLevelComponents();
             _levelScreen = new LevelScreen(this, _systemManager, _entityManager);
-            _screenSystem.addTransition(new FadeInTransition(_screenSystem, _spriteBatch, _levelScreen, Color.Black, 0.01f));
+            _screenSystem.addTransition(new FadeInTransition(_screenSystem, _spriteBatch, _levelScreen, Color.Black, true, 0.01f));
             //_screenSystem.addScreen(new LevelScreen(this, _systemManager, _entityManager));
         }
 
@@ -254,7 +254,7 @@ namespace StasisGame
 
         public void openMainMenu(float speed = 0.05f)
         {
-            _screenSystem.addTransition(new FadeInTransition(_screenSystem, _spriteBatch, _mainMenuScreen, Color.Black, speed));
+            _screenSystem.addTransition(new FadeInTransition(_screenSystem, _spriteBatch, _mainMenuScreen, Color.Black, true, speed));
         }
 
         public void openLoadGameMenu()
