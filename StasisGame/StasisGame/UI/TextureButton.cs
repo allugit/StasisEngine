@@ -7,6 +7,7 @@ namespace StasisGame.UI
 {
     public class TextureButton
     {
+        protected Screen _screen;
         protected SpriteBatch _spriteBatch;
         private Texture2D _selectedTexture;
         private Texture2D _deselectedTexture;
@@ -50,15 +51,16 @@ namespace StasisGame.UI
             }
         }
 
-        public TextureButton(SpriteBatch spriteBatch, UIAlignment alignment, int x, int y, Texture2D selectedTexture, Texture2D deselectedTexture, Rectangle localHitBox, Action onActivate) :
-            this(spriteBatch, alignment, x, y, selectedTexture, deselectedTexture, localHitBox, onActivate, null, null)
+        public TextureButton(Screen screen, SpriteBatch spriteBatch, UIAlignment alignment, int x, int y, Texture2D selectedTexture, Texture2D deselectedTexture, Rectangle localHitBox, Action onActivate) :
+            this(screen, spriteBatch, alignment, x, y, selectedTexture, deselectedTexture, localHitBox, onActivate, null, null)
         {
             _onMouseOver = () => { select(); };
             _onMouseOut = () => { deselect(); };
         }
 
-        public TextureButton(SpriteBatch spriteBatch, UIAlignment alignment, int x, int y, Texture2D selectedTexture, Texture2D deselectedTexture, Rectangle localHitBox, Action onActivate, Action onMouseOver, Action onMouseOut)
+        public TextureButton(Screen screen, SpriteBatch spriteBatch, UIAlignment alignment, int x, int y, Texture2D selectedTexture, Texture2D deselectedTexture, Rectangle localHitBox, Action onActivate, Action onMouseOver, Action onMouseOut)
         {
+            _screen = screen;
             _spriteBatch = spriteBatch;
             _alignment = alignment;
             _xOffset = x;
@@ -110,7 +112,7 @@ namespace StasisGame.UI
         {
             Texture2D texture = _selected ? _selectedTexture : _deselectedTexture;
             
-            _spriteBatch.Draw(texture, new Rectangle(x, y, texture.Width, texture.Height), texture.Bounds, Color.White, 0f, Vector2.Zero, SpriteEffects.None, 0f);
+            _spriteBatch.Draw(texture, new Rectangle(x + _screen.slideX, y + _screen.slideY, texture.Width, texture.Height), texture.Bounds, Color.White, 0f, Vector2.Zero, SpriteEffects.None, 0f);
 
             //Rectangle hitBox = new Rectangle(_x, _y, _hitBoxWidth, _hitBoxHeight);
             //_spriteBatch.Draw(_pixel, hitBox, hitBox, Color.Green * 0.5f, 0f, new Vector2(_hitBoxOffsetX, _hitBoxOffsetY), SpriteEffects.None, 0f);

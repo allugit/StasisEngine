@@ -27,7 +27,7 @@ namespace StasisGame.UI
         private LargeHealthBar _healthBar;
 
         public LevelScreen(LoderGame game, SystemManager systemManager, EntityManager entityManager)
-            : base(game.spriteBatch, ScreenType.Level)
+            : base(game.screenSystem, ScreenType.Level)
         {
             _game = game;
             _systemManager = systemManager;

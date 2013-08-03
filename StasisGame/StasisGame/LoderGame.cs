@@ -69,6 +69,7 @@ namespace StasisGame
         public BackgroundRenderer menuBackgroundRenderer { get { return _menuBackgroundRenderer; } }
         public Vector2 menuBackgroundScreenOffset { get { return _menuBackgroundScreenOffset; } }
         public LevelScreen levelScreen { get { return _levelScreen; } }
+        public ScreenSystem screenSystem { get { return _screenSystem; } }
 
         public LoderGame(string[] args)
         {
@@ -85,17 +86,18 @@ namespace StasisGame
         protected override void Initialize()
         {
             Logger.log("LoderGame.Initialize method started.");
+
+            base.Initialize();
+
             _systemManager = new SystemManager();
             _entityManager = new EntityManager(_systemManager);
             _scriptManager = new ScriptManager(_systemManager, _entityManager);
-            _screenSystem = new ScreenSystem(_systemManager);
+            _screenSystem = new ScreenSystem(_systemManager, _spriteBatch);
             _systemManager.add(_screenSystem, -1);
 
             DataManager.initialize(this, _systemManager);
             DataManager.loadGameSettings();
             applyDisplaySettings();
-
-            base.Initialize();
 
             Logger.log("LoderGame.Initialize method finished.");
         }
@@ -243,60 +245,53 @@ namespace StasisGame
             _levelSystem.load(levelUID);
             _playerSystem.addLevelComponents();
             _levelScreen = new LevelScreen(this, _systemManager, _entityManager);
-            _screenSystem.addTransition(new FadeInTransition(_screenSystem, _spriteBatch, _levelScreen, Color.Black, true, 0.01f));
-            //_screenSystem.addScreen(new LevelScreen(this, _systemManager, _entityManager));
+            _screenSystem.addTransition(new FadeInTransition(_levelScreen, Color.Black, true, 0.01f));
         }
 
         public void closeMainMenu()
         {
-            _screenSystem.addTransition(new FadeOutTransition(_screenSystem, _spriteBatch, _mainMenuScreen, Color.Black));
+            _screenSystem.addTransition(new FadeOutTransition(_mainMenuScreen, Color.Black));
         }
 
         public void openMainMenu(float speed = 0.05f)
         {
-            _screenSystem.addTransition(new FadeInTransition(_screenSystem, _spriteBatch, _mainMenuScreen, Color.Black, true, speed));
+            _screenSystem.addTransition(new FadeInTransition(_mainMenuScreen, Color.Black, true, speed));
         }
 
         public void openLoadGameMenu()
         {
             _loadGameScreen = new LoadGameScreen(this);
-            _screenSystem.addTransition(new FadeInTransition(_screenSystem, _spriteBatch, _loadGameScreen, Color.Black));
-            //_screenSystem.addScreen(new LoadGameScreen(this));
+            _screenSystem.addTransition(new FadeInTransition(_loadGameScreen, Color.Black));
         }
 
         public void closeLoadGameMenu()
         {
-            _screenSystem.addTransition(new FadeOutTransition(_screenSystem, _spriteBatch, _loadGameScreen, Color.Black));
+            _screenSystem.addTransition(new FadeOutTransition(_loadGameScreen, Color.Black));
             _loadGameScreen = null;
-            //_screenSystem.removeScreen(ScreenType.LoadGameMenu);
         }
 
         public void openOptionsMenu()
         {
             _optionsMenuScreen = new OptionsMenuScreen(this);
-            _screenSystem.addTransition(new FadeInTransition(_screenSystem, _spriteBatch, _optionsMenuScreen, Color.Black));
-            //_screenSystem.addScreen(new OptionsMenuScreen(this));
+            _screenSystem.addTransition(new FadeInTransition(_optionsMenuScreen, Color.Black));
         }
 
         public void closeOptionsMenu()
         {
-            _screenSystem.addTransition(new FadeOutTransition(_screenSystem, _spriteBatch, _optionsMenuScreen, Color.Black));
+            _screenSystem.addTransition(new FadeOutTransition(_optionsMenuScreen, Color.Black));
             _optionsMenuScreen = null;
-            //_screenSystem.removeScreen(ScreenType.OptionsMenu);
         }
 
         public void openPlayerCreationScreen()
         {
             _playerCreationScreen = new PlayerCreationScreen(this);
-            _screenSystem.addTransition(new FadeInTransition(_screenSystem, _spriteBatch, _playerCreationScreen, Color.Black));
-            //_screenSystem.addScreen(new PlayerCreationScreen(this));
+            _screenSystem.addTransition(new FadeInTransition(_playerCreationScreen, Color.Black));
         }
 
         public void closePlayerCreationScreen()
         {
-            _screenSystem.addTransition(new FadeOutTransition(_screenSystem, _spriteBatch, _playerCreationScreen, Color.Black));
+            _screenSystem.addTransition(new FadeOutTransition(_playerCreationScreen, Color.Black));
             _playerCreationScreen = null;
-            //_screenSystem.removeScreen(ScreenType.PlayerCreation);
         }
 
         public void openWorldMap()

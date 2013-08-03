@@ -17,7 +17,7 @@ namespace StasisGame.UI
         private ContentManager _content;
         private List<TextureButton> _buttons;
 
-        public MainMenuScreen(LoderGame game) : base(game.spriteBatch, ScreenType.MainMenu)
+        public MainMenuScreen(LoderGame game) : base(game.screenSystem, ScreenType.MainMenu)
         {
             _game = game;
             _content = new ContentManager(game.Services);
@@ -29,6 +29,7 @@ namespace StasisGame.UI
             Func<int> yOffset = () => { return 182 + 81 * _buttons.Count; };
             Rectangle localHitBox = new Rectangle(20, 0, 198, 68);
             _buttons.Add(new TextureButton(
+                this,
                 _spriteBatch,
                 UIAlignment.TopLeft,
                 20,
@@ -44,6 +45,7 @@ namespace StasisGame.UI
                 }));
 
             _buttons.Add(new TextureButton(
+                this,
                 _spriteBatch,
                 UIAlignment.TopLeft,
                 20,
@@ -59,6 +61,7 @@ namespace StasisGame.UI
                 }));
 
             _buttons.Add(new TextureButton(
+                this,
                 _spriteBatch,
                 UIAlignment.TopLeft,
                 20,
@@ -74,6 +77,7 @@ namespace StasisGame.UI
                 }));
 
             _buttons.Add(new TextureButton(
+                this,
                 _spriteBatch,
                 UIAlignment.TopLeft,
                 20,
@@ -126,7 +130,7 @@ namespace StasisGame.UI
             _game.spriteBatch.Draw(_logo, new Vector2(_game.GraphicsDevice.Viewport.Width - _logo.Width, 0), _logo.Bounds, Color.White, 0, Vector2.Zero, 1f, SpriteEffects.None, 0);
 
             // Draw button background
-            _game.spriteBatch.Draw(_buttonsBackground, new Vector2(0, 100), _buttonsBackground.Bounds, Color.White, 0f, Vector2.Zero, 1f, SpriteEffects.None, 0f);
+            _game.spriteBatch.Draw(_buttonsBackground, new Vector2(0 + slideX, 100 + slideY), _buttonsBackground.Bounds, Color.White, 0f, Vector2.Zero, 1f, SpriteEffects.None, 0f);
 
             // Draw buttons
             for (int i = 0; i < _buttons.Count; i++)

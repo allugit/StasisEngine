@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using Microsoft.Xna.Framework.Graphics;
 using StasisGame.Managers;
 using StasisGame.UI;
 using StasisCore;
@@ -9,6 +10,7 @@ namespace StasisGame.Systems
     public class ScreenSystem : ISystem
     {
         private SystemManager _systemManager;
+        private SpriteBatch _spriteBatch;
         private List<Screen> _screens;
         private List<Transition> _transitions;
         private List<Transition> _transitionsToRemove;
@@ -20,10 +22,12 @@ namespace StasisGame.Systems
         public bool paused { get { return _paused; } set { _paused = value; } }
         public bool singleStep { get { return _singleStep; } set { _singleStep = value; } }
         public int count { get { return _screens.Count; } }
+        public SpriteBatch spriteBatch { get { return _spriteBatch; } }
 
-        public ScreenSystem(SystemManager systemManager)
+        public ScreenSystem(SystemManager systemManager, SpriteBatch spriteBatch)
         {
             _systemManager = systemManager;
+            _spriteBatch = spriteBatch;
             _screens = new List<Screen>();
             _transitions = new List<Transition>();
             _transitionsToRemove = new List<Transition>();

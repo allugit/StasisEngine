@@ -23,7 +23,7 @@ namespace StasisGame.UI
         private int _maxLetters = 13;
         private bool _skipUpdate = true;
 
-        public PlayerCreationScreen(LoderGame game) : base(game.spriteBatch, ScreenType.PlayerCreation)
+        public PlayerCreationScreen(LoderGame game) : base(game.screenSystem, ScreenType.PlayerCreation)
         {
             _game = game;
             _content = new ContentManager(game.Services, "Content");
@@ -44,6 +44,7 @@ namespace StasisGame.UI
                 1);
 
             _cancelButton = new TextureButton(
+                this,
                 _spriteBatch,
                 UIAlignment.MiddleCenter,
                 24,
@@ -58,6 +59,7 @@ namespace StasisGame.UI
                 });
 
             _createButton = new TextureButton(
+                this,
                 _spriteBatch,
                 UIAlignment.MiddleCenter,
                 184,

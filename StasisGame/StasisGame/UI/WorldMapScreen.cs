@@ -42,7 +42,8 @@ namespace StasisGame.UI
         private SpriteFont _levelSelectTitleFont;
         private SpriteFont _levelSelectDescriptionFont;
 
-        public WorldMapScreen(LoderGame game, SystemManager systemManager) : base(game.spriteBatch, ScreenType.WorldMap)
+        public WorldMapScreen(LoderGame game, SystemManager systemManager)
+            : base(game.screenSystem, ScreenType.WorldMap)
         {
             _game = game;
             _systemManager = systemManager;

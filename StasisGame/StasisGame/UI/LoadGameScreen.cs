@@ -24,7 +24,7 @@ namespace StasisGame.UI
         private ConfirmationOverlay _confirmationOverlay;
 
         public LoadGameScreen(LoderGame game)
-            : base(game.spriteBatch, ScreenType.LoadGameMenu)
+            : base(game.screenSystem, ScreenType.LoadGameMenu)
         {
             _game = game;
             _content = new ContentManager(game.Services);
@@ -47,6 +47,7 @@ namespace StasisGame.UI
                 400);
 
             _cancelButton = new TextureButton(
+                this,
                 _spriteBatch,
                 UIAlignment.MiddleCenter,
                 155,
@@ -66,6 +67,7 @@ namespace StasisGame.UI
                 string text = slot.ToString() + " - " + playerSave.Attribute("name").Value;
 
                 _deleteGameButtons.Add(new TextureButton(
+                    this,
                     _spriteBatch,
                     UIAlignment.MiddleCenter,
                     (int)initialPosition.X + 485,
@@ -88,6 +90,7 @@ namespace StasisGame.UI
                     }));
 
                 _savedGameButtons.Add(new LabelTextureButton(
+                    this,
                     _game.spriteBatch,
                     UIAlignment.MiddleCenter,
                     (int)initialPosition.X,
@@ -119,6 +122,7 @@ namespace StasisGame.UI
         private void openConfirmation(string text, Action onCancel, Action onOkay)
         {
             _confirmationOverlay = new ConfirmationOverlay(
+                this,
                 _spriteBatch,
                 _confirmationFont,
                 text,

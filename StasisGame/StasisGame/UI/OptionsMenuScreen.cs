@@ -62,7 +62,7 @@ namespace StasisGame.UI
         private bool _skipUpdate = true;
 
         public OptionsMenuScreen(LoderGame game)
-            : base(game.spriteBatch, ScreenType.OptionsMenu)
+            : base(game.screenSystem, ScreenType.OptionsMenu)
         {
             _game = game;
             _content = new ContentManager(game.Services);
@@ -106,6 +106,7 @@ namespace StasisGame.UI
                 360);
 
             _generalButtons.Add(new TextureButton(
+                this,
                 _spriteBatch,
                 UIAlignment.MiddleCenter,
                 categoryButtonOffset.X,
@@ -116,6 +117,7 @@ namespace StasisGame.UI
                 () => { switchCategory(OptionsCategory.Video); }));
 
             _generalButtons.Add(new TextureButton(
+                this,
                 _spriteBatch,
                 UIAlignment.MiddleCenter,
                 categoryButtonOffset.X,
@@ -126,6 +128,7 @@ namespace StasisGame.UI
                 () => { switchCategory(OptionsCategory.Audio); }));
 
             _generalButtons.Add(new TextureButton(
+                this,
                 _spriteBatch,
                 UIAlignment.MiddleCenter,
                 categoryButtonOffset.X,
@@ -136,6 +139,7 @@ namespace StasisGame.UI
                 () => { switchCategory(OptionsCategory.Controls); }));
 
             _generalButtons.Add(new TextureButton(
+                this,
                 _spriteBatch,
                 UIAlignment.MiddleCenter,
                 170,
@@ -151,6 +155,7 @@ namespace StasisGame.UI
                 }));
 
             _generalButtons.Add(new TextureButton(
+                this,
                 _spriteBatch,
                 UIAlignment.MiddleCenter,
                 6,
@@ -200,6 +205,7 @@ namespace StasisGame.UI
                 _optionsColor);
 
             _resolutionPrevious = new TextureButton(
+                this,
                 _spriteBatch,
                 UIAlignment.MiddleCenter,
                 120,
@@ -210,6 +216,7 @@ namespace StasisGame.UI
                 () => { selectPreviousResolution(); });
 
             _resolutionNext = new TextureButton(
+                this,
                 _spriteBatch,
                 UIAlignment.MiddleCenter,
                 264,
@@ -242,6 +249,7 @@ namespace StasisGame.UI
                 _optionsColor);
 
             _fullscreenPrevious = new TextureButton(
+                this,
                 _spriteBatch,
                 UIAlignment.MiddleCenter,
                 120,
@@ -252,6 +260,7 @@ namespace StasisGame.UI
                 () => { toggleFullscreen(); });
 
             _fullscreenNext = new TextureButton(
+                this,
                 _spriteBatch,
                 UIAlignment.MiddleCenter,
                 264,

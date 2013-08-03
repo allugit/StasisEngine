@@ -38,6 +38,7 @@ namespace StasisGame.UI
 
     abstract public class Screen
     {
+        protected ScreenSystem _screenSystem;
         protected SpriteBatch _spriteBatch;
         protected GamePadState _newGamepadState;
         protected GamePadState _oldGamepadState;
@@ -46,17 +47,22 @@ namespace StasisGame.UI
         protected MouseState _newMouseState;
         protected MouseState _oldMouseState;
         protected ScreenType _screenType;
+        protected int _slideX;
+        protected int _slideY;
 
         public ScreenType screenType { get { return _screenType; } set { _screenType = value; } }
-        public SpriteBatch spriteBatch { get { return _spriteBatch; } }
+        public ScreenSystem screenSystem { get { return _screenSystem; } }
         public KeyboardState newKeyState { get { return _newKeyState; } }
         public KeyboardState oldKeyState { get { return _oldKeyState; } }
         public MouseState newMouseState { get { return _newMouseState; } }
         public MouseState oldMouseState { get { return _oldMouseState; } }
+        public int slideX { get { return _slideX; } set { _slideX = value; } }
+        public int slideY { get { return _slideY; } set { _slideY = value; } }
 
-        public Screen(SpriteBatch spriteBatch, ScreenType screenType)
+        public Screen(ScreenSystem screenSystem, ScreenType screenType)
         {
-            _spriteBatch = spriteBatch;
+            _screenSystem = screenSystem;
+            _spriteBatch = screenSystem.spriteBatch;
             _screenType = screenType;
         }
 

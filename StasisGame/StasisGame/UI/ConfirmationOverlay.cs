@@ -9,6 +9,7 @@ namespace StasisGame.UI
 {
     public class ConfirmationOverlay
     {
+        private Screen _screen;
         private SpriteBatch _spriteBatch;
         private SpriteFont _font;
         private Color _backgroundColor;
@@ -25,8 +26,9 @@ namespace StasisGame.UI
         private KeyboardState _oldKeyState;
         private bool _firstUpdate = true;
 
-        public ConfirmationOverlay(SpriteBatch spriteBatch, SpriteFont font, string text, Action onCancel, Action onOkay)
+        public ConfirmationOverlay(Screen screen, SpriteBatch spriteBatch, SpriteFont font, string text, Action onCancel, Action onOkay)
         {
+            _screen = screen;
             _spriteBatch = spriteBatch;
             _font = font;
             _onCancel = onCancel;
@@ -57,6 +59,7 @@ namespace StasisGame.UI
                 2);
 
             _cancelButton = new TextureButton(
+                _screen,
                 _spriteBatch,
                 UIAlignment.MiddleCenter,
                 (int)(titleSize.X / 2f) - 285,
@@ -67,6 +70,7 @@ namespace StasisGame.UI
                 () => { _onCancel(); });
 
             _okayButton = new TextureButton(
+                _screen,
                 _spriteBatch,
                 UIAlignment.MiddleCenter,
                 (int)(titleSize.X / 2f) - 125,

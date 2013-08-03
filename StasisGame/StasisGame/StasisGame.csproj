@@ -173,6 +173,7 @@
     <Compile Include="UI\Pane.cs" />
     <Compile Include="UI\PlayerCreationScreen.cs" />
     <Compile Include="UI\Screen.cs" />
+    <Compile Include="UI\SlideTransition.cs" />
     <Compile Include="UI\StonePane.cs" />
     <Compile Include="UI\TextButton.cs" />
     <Compile Include="UI\TextureButton.cs" />

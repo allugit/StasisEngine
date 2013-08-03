@@ -16,6 +16,7 @@ namespace StasisGame.UI
         private Color _deselectedColor;
 
         public LabelTextureButton(
+            Screen screen,
             SpriteBatch spriteBatch,
             UIAlignment alignment,
             int x,
@@ -32,7 +33,7 @@ namespace StasisGame.UI
             Color selectedColor,
             Color deselectedColor,
             Action onActivate)
-            : base(spriteBatch, alignment, x, y, selectedTexture, deselectedTexture, localHitBox, onActivate)
+            : base(screen, spriteBatch, alignment, x, y, selectedTexture, deselectedTexture, localHitBox, onActivate)
         {
             _font = font;
             _textAlignment = textAlignment;
@@ -45,6 +46,7 @@ namespace StasisGame.UI
         }
 
         public LabelTextureButton(
+            Screen screen,
             SpriteBatch spriteBatch,
             UIAlignment alignment,
             int x,
@@ -63,7 +65,7 @@ namespace StasisGame.UI
             Action onActivate,
             Action onMouseOver,
             Action onMouseOut)
-            : base(spriteBatch, alignment, x, y, selectedTexture, deselectedTexture, localHitBox, onActivate, onMouseOver, onMouseOut)
+            : base(screen, spriteBatch, alignment, x, y, selectedTexture, deselectedTexture, localHitBox, onActivate, onMouseOver, onMouseOut)
         {
             _font = font;
             _textAlignment = textAlignment;

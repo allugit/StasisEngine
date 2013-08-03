@@ -7,7 +7,7 @@ namespace StasisGame.UI
 {
     abstract public class Transition
     {
-        protected ScreenSystem _screenSystem;
+        protected Screen _screen;
         protected SpriteBatch _spriteBatch;
         protected float _progress;
         protected float _speed;
@@ -19,10 +19,10 @@ namespace StasisGame.UI
         public bool starting { get { return _progress == 0f; } }
         public bool queued { get { return _queue; } }
 
-        public Transition(ScreenSystem screenSystem, SpriteBatch spriteBatch, bool queue, float speed)
+        public Transition(Screen screen, bool queue, float speed)
         {
-            _screenSystem = screenSystem;
-            _spriteBatch = spriteBatch;
+            _screen = screen;
+            _spriteBatch = screen.screenSystem.spriteBatch;
             _queue = queue;
             _speed = speed;
         }
