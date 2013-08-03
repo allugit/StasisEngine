@@ -7,13 +7,14 @@ using StasisCore;
 
 namespace StasisGame.UI
 {
-    public class FadeOutTransition : Transition
+    public class FadeInTransition : Transition
     {
         private Color _color;
         private Screen _screen;
         private Texture2D _pixel;
 
-        public FadeOutTransition(ScreenSystem screenSystem, SpriteBatch spriteBatch, Screen screen, Color color, float speed = 0.05f) : base(screenSystem, spriteBatch, speed)
+        public FadeInTransition(ScreenSystem screenSystem, SpriteBatch spriteBatch, Screen screen, Color color, float speed = 0.05f)
+            : base(screenSystem, spriteBatch, speed)
         {
             _color = color;
             _screen = screen;
@@ -22,11 +23,11 @@ namespace StasisGame.UI
 
         public override void begin()
         {
+            _screenSystem.addScreen(_screen);
         }
 
         public override void end()
         {
-            _screenSystem.removeScreen(_screen);
         }
 
         public override void update()
@@ -36,7 +37,7 @@ namespace StasisGame.UI
 
         public override void draw()
         {
-            _spriteBatch.Draw(_pixel, _spriteBatch.GraphicsDevice.Viewport.Bounds, _color * _progress);
+            _spriteBatch.Draw(_pixel, _spriteBatch.GraphicsDevice.Viewport.Bounds, _color * (1f - _progress));
         }
     }
 }

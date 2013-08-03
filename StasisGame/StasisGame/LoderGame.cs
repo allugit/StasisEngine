@@ -243,12 +243,11 @@ namespace StasisGame
         public void closeMainMenu()
         {
             _screenSystem.addTransition(new FadeOutTransition(_screenSystem, _spriteBatch, _mainMenuScreen, Color.Black));
-            //_screenSystem.removeScreen(_mainMenuScreen);
         }
 
-        public void openMainMenu()
+        public void openMainMenu(float speed = 0.05f)
         {
-            _screenSystem.addScreen(_mainMenuScreen);
+            _screenSystem.addTransition(new FadeInTransition(_screenSystem, _spriteBatch, _mainMenuScreen, Color.Black, speed));
         }
 
         public void openLoadGameMenu()
@@ -323,9 +322,9 @@ namespace StasisGame
                     Logger.log("Loading background textures.");
                     background.loadTextures();
                     _menuBackgroundRenderer.background = background;
-                    _screenSystem.addScreen(_mainMenuScreen);
 
                     Logger.log("Changing game state to MainMenu.");
+                    openMainMenu(0.01f);
                     _gameState = GameState.MainMenu;
                     break;
 
