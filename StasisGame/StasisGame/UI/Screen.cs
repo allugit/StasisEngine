@@ -47,8 +47,8 @@ namespace StasisGame.UI
         protected MouseState _newMouseState;
         protected MouseState _oldMouseState;
         protected ScreenType _screenType;
-        protected int _slideX;
-        protected int _slideY;
+        protected float _slideX;
+        protected float _slideY;
 
         public ScreenType screenType { get { return _screenType; } set { _screenType = value; } }
         public ScreenSystem screenSystem { get { return _screenSystem; } }
@@ -56,8 +56,8 @@ namespace StasisGame.UI
         public KeyboardState oldKeyState { get { return _oldKeyState; } }
         public MouseState newMouseState { get { return _newMouseState; } }
         public MouseState oldMouseState { get { return _oldMouseState; } }
-        public int slideX { get { return _slideX; } set { _slideX = value; } }
-        public int slideY { get { return _slideY; } set { _slideY = value; } }
+        public float slideX { get { return _slideX; } set { _slideX = value; } }
+        public float slideY { get { return _slideY; } set { _slideY = value; } }
 
         public Screen(ScreenSystem screenSystem, ScreenType screenType)
         {

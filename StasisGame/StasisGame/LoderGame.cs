@@ -255,7 +255,9 @@ namespace StasisGame
 
         public void openMainMenu(float speed = 0.05f)
         {
+            _mainMenuScreen.slideX = -300;
             _screenSystem.addTransition(new FadeInTransition(_mainMenuScreen, Color.Black, true, speed));
+            _screenSystem.addTransition(new SlideTransition(_mainMenuScreen, -300, 0, 0, 0, false, 0.025f));
         }
 
         public void openLoadGameMenu()

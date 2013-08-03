@@ -112,7 +112,7 @@ namespace StasisGame.UI
         {
             Texture2D texture = _selected ? _selectedTexture : _deselectedTexture;
             
-            _spriteBatch.Draw(texture, new Rectangle(x + _screen.slideX, y + _screen.slideY, texture.Width, texture.Height), texture.Bounds, Color.White, 0f, Vector2.Zero, SpriteEffects.None, 0f);
+            _spriteBatch.Draw(texture, new Rectangle(x + (int)_screen.slideX, y + (int)_screen.slideY, texture.Width, texture.Height), texture.Bounds, Color.White, 0f, Vector2.Zero, SpriteEffects.None, 0f);
 
             //Rectangle hitBox = new Rectangle(_x, _y, _hitBoxWidth, _hitBoxHeight);
             //_spriteBatch.Draw(_pixel, hitBox, hitBox, Color.Green * 0.5f, 0f, new Vector2(_hitBoxOffsetX, _hitBoxOffsetY), SpriteEffects.None, 0f);
