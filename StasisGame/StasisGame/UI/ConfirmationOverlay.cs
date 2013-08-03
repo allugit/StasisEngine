@@ -40,7 +40,7 @@ namespace StasisGame.UI
             int padding = 16;
 
             _pane = new StonePane(
-                _spriteBatch,
+                _screen,
                 UIAlignment.MiddleCenter,
                 -(int)(titleSize.X / 2f) - padding,
                 -50 + -padding,

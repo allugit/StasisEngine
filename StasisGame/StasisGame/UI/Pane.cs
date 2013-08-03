@@ -8,6 +8,7 @@ namespace StasisGame.UI
     abstract public class Pane
     {
         protected SpriteBatch _spriteBatch;
+        protected Screen _screen;
         private Texture2D _topLeftCorner;
         private Texture2D _topRightCorner;
         private Texture2D _bottomRightCorner;
@@ -54,7 +55,7 @@ namespace StasisGame.UI
 
         // Constructor for custom pane textures
         public Pane(
-            SpriteBatch spriteBatch,
+            Screen screen,
             Texture2D topLeftCorner,
             Texture2D topRightCorner,
             Texture2D bottomRightCorner,
@@ -70,7 +71,8 @@ namespace StasisGame.UI
             int width,
             int height)
         {
-            _spriteBatch = spriteBatch;
+            _screen = screen;
+            _spriteBatch = _screen.screenSystem.spriteBatch;
             _topLeftCorner = topLeftCorner;
             _topRightCorner = topRightCorner;
             _bottomRightCorner = bottomRightCorner;
@@ -93,8 +95,8 @@ namespace StasisGame.UI
 
         virtual public void draw()
         {
-            int x = this.x;     // prevent redundant calculation... only needs to be done once per frame
-            int y = this.y;
+            int x = this.x + (int)_screen.slideX;     // prevent redundant calculation... only needs to be done once per frame
+            int y = this.y + (int)_screen.slideY;
             int backgroundMargin = 3;
 
             // Draw logo

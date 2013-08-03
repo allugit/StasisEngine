@@ -7,6 +7,7 @@ namespace StasisGame.UI
 {
     public class TextButton
     {
+        private Screen _screen;
         private SpriteBatch _spriteBatch;
         private SpriteFont _font;
         private UIAlignment _alignment;
@@ -72,16 +73,17 @@ namespace StasisGame.UI
             }
         }
 
-        public TextButton(SpriteBatch spriteBatch, SpriteFont font, UIAlignment alignment, int xOffset, int yOffset, int hitBoxPadding, TextAlignment textAlignment, string text, int outline, Color selectedColor, Color deselectedColor, Action onActivate)
-            : this(spriteBatch, font, alignment, xOffset, yOffset, hitBoxPadding, textAlignment, text, outline, selectedColor, deselectedColor, onActivate, null, null)
+        public TextButton(Screen screen, SpriteFont font, UIAlignment alignment, int xOffset, int yOffset, int hitBoxPadding, TextAlignment textAlignment, string text, int outline, Color selectedColor, Color deselectedColor, Action onActivate)
+            : this(screen, font, alignment, xOffset, yOffset, hitBoxPadding, textAlignment, text, outline, selectedColor, deselectedColor, onActivate, null, null)
         {
             _onMouseOver = () => { select(); };
             _onMouseOut = () => { deselect(); };
         }
 
-        public TextButton(SpriteBatch spriteBatch, SpriteFont font, UIAlignment alignment, int xOffset, int yOffset, int hitBoxPadding, TextAlignment textAlignment, string text, int outline, Color selectedColor, Color deselectedColor, Action onActivate, Action onMouseOver, Action onMouseOut)
+        public TextButton(Screen screen, SpriteFont font, UIAlignment alignment, int xOffset, int yOffset, int hitBoxPadding, TextAlignment textAlignment, string text, int outline, Color selectedColor, Color deselectedColor, Action onActivate, Action onMouseOver, Action onMouseOut)
         {
-            _spriteBatch = spriteBatch;
+            _screen = screen;
+            _spriteBatch = _screen.screenSystem.spriteBatch;
             _font = font;
             _alignment = alignment;
             _xOffset = xOffset;
@@ -136,8 +138,8 @@ namespace StasisGame.UI
 
         public void draw()
         {
-            int x = this.x;
-            int y = this.y;
+            int x = this.x + (int)_screen.slideX;
+            int y = this.y + (int)_screen.slideY;
             Vector2 origin = Vector2.Zero;
             Vector2 stringSize = _font.MeasureString(text);
 

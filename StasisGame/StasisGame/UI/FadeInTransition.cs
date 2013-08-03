@@ -10,7 +10,6 @@ namespace StasisGame.UI
     public class FadeInTransition : Transition
     {
         private Color _color;
-        private Screen _screen;
         private Texture2D _pixel;
 
         public FadeInTransition(Screen screen, Color color, bool queue = true, float speed = 0.05f)

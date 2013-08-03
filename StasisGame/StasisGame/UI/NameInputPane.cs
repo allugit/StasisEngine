@@ -25,8 +25,8 @@ namespace StasisGame.UI
 
         public string name { get { return _sb.ToString(); } }
 
-        public NameInputPane(SpriteBatch spriteBatch, SpriteFont font, UIAlignment alignment, int x, int y, int width, int height, int maxLetters)
-            : base(spriteBatch, alignment, x, y, width, height)
+        public NameInputPane(Screen screen, SpriteFont font, UIAlignment alignment, int x, int y, int width, int height, int maxLetters)
+            : base(screen, alignment, x, y, width, height)
         {
             _font = font;
             _maxLetters = maxLetters;
@@ -52,7 +52,7 @@ namespace StasisGame.UI
                 int letterCellY = (int)Math.Floor((float)i / (float)gridCellWidth);
 
                 _letterButtons.Add(new TextButton(
-                    _spriteBatch,
+                    _screen,
                     _font,
                     _alignment,
                     letterOffset.X + x + letterCellX * _letterSpacing,

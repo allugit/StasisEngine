@@ -7,9 +7,9 @@ namespace StasisGame.UI
 {
     public class BluePane : Pane
     {
-        public BluePane(SpriteBatch spriteBatch, UIAlignment alignment, int x, int y, int width, int height)
+        public BluePane(Screen screen, UIAlignment alignment, int x, int y, int width, int height)
             : base(
-                spriteBatch,
+                screen,
                 ResourceManager.getTexture("blue_pane_top_left_corner"),
                 ResourceManager.getTexture("blue_pane_top_right_corner"),
                 ResourceManager.getTexture("blue_pane_bottom_right_corner"),

@@ -7,6 +7,7 @@ namespace StasisGame.UI
 {
     public class NamePreview
     {
+        private Screen _screen;
         private SpriteBatch _spriteBatch;
         private SpriteFont _font;
         private UIAlignment _alignment;
@@ -49,9 +50,10 @@ namespace StasisGame.UI
             }
         }
 
-        public NamePreview(SpriteBatch spriteBatch, SpriteFont font, UIAlignment alignment, int x, int y, int maxLetters)
+        public NamePreview(Screen screen, SpriteFont font, UIAlignment alignment, int x, int y, int maxLetters)
         {
-            _spriteBatch = spriteBatch;
+            _screen = screen;
+            _spriteBatch = _screen.screenSystem.spriteBatch;
             _font = font;
             _alignment = alignment;
             _xOffset = x;

@@ -39,7 +39,7 @@ namespace StasisGame.UI
             Vector2 initialPosition = new Vector2(-240, -190);
 
             _container = new BluePane(
-                _spriteBatch,
+                this,
                 UIAlignment.MiddleCenter,
                 -250,
                 -200,

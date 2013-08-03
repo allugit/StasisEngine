@@ -98,7 +98,7 @@ namespace StasisGame.UI
             Func<int> yOffset = () => { return categoryButtonOffset.Y + 81 * _generalButtons.Count; };
 
             _pane = new BluePane(
-                _spriteBatch,
+                this,
                 UIAlignment.MiddleCenter,
                 -310,
                 -180,
