@@ -10,6 +10,7 @@ namespace StasisGame.Systems
     {
         private SystemManager _systemManager;
         private List<Screen> _screens;
+        private List<Transition> _transitions;
         private bool _paused;
         private bool _singleStep;
 
@@ -23,6 +24,7 @@ namespace StasisGame.Systems
         {
             _systemManager = systemManager;
             _screens = new List<Screen>();
+            _transitions = new List<Transition>();
         }
 
         public void addScreen(Screen screen)
@@ -57,13 +59,40 @@ namespace StasisGame.Systems
             Logger.log(string.Format("Removed {0} screen from ScreenSystem.", screen.screenType));
         }
 
+        public void addTransition(Transition transition)
+        {
+            _transitions.Add(transition);
+        }
+
         public void update()
         {
             if (!_paused || _singleStep)
             {
+                // Update screen
                 for (int i = 0; i < _screens.Count; i++)
                 {
                     _screens[i].update();
+                }
+
+                // Update transition (one at a time)
+                if (_transitions.Count > 0)
+                {
+                    Transition transition = _transitions[0];
+
+                    if (transition.finished)
+                    {
+                        transition.end();
+                        _transitions.Remove(transition);
+                    }
+                    else if (transition.starting)
+                    {
+                        transition.begin();
+                        transition.update();
+                    }
+                    else
+                    {
+                        transition.update();
+                    }
                 }
             }
             _singleStep = false;
@@ -71,9 +100,16 @@ namespace StasisGame.Systems
 
         public void draw()
         {
+            // Draw screens
             for (int i = 0; i < _screens.Count; i++)
             {
                 _screens[i].draw();
+            }
+
+            // Draw transition
+            if (_transitions.Count > 0)
+            {
+                _transitions[0].draw();
             }
         }
     }

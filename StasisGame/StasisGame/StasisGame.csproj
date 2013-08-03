@@ -158,6 +158,7 @@
     <Compile Include="TrunkMetamerConstraint.cs" />
     <Compile Include="UI\BluePane.cs" />
     <Compile Include="UI\ConfirmationOverlay.cs" />
+    <Compile Include="UI\FadeOutTransition.cs" />
     <Compile Include="UI\InventoryDisplay.cs" />
     <Compile Include="UI\Label.cs" />
     <Compile Include="UI\LabelTextureButton.cs" />
@@ -175,6 +176,7 @@
     <Compile Include="UI\TextButton.cs" />
     <Compile Include="UI\TextureButton.cs" />
     <Compile Include="UI\ToolbarDisplay.cs" />
+    <Compile Include="UI\Transition.cs" />
     <Compile Include="UI\WorldMapScreen.cs" />
   </ItemGroup>
   <ItemGroup>

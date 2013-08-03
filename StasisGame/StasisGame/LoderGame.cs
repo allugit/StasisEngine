@@ -242,7 +242,8 @@ namespace StasisGame
 
         public void closeMainMenu()
         {
-            _screenSystem.removeScreen(_mainMenuScreen);
+            _screenSystem.addTransition(new FadeOutTransition(_screenSystem, _spriteBatch, _mainMenuScreen, Color.Black));
+            //_screenSystem.removeScreen(_mainMenuScreen);
         }
 
         public void openMainMenu()
