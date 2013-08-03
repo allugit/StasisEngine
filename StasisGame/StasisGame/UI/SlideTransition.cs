@@ -14,8 +14,8 @@ namespace StasisGame.UI
         private float _dX;
         private float _dY;
 
-        public SlideTransition(Screen screen, int fromX, int fromY, int toX, int toY, bool queue = false, float speed = 0.05f) :
-            base(screen, queue, speed)
+        public SlideTransition(Screen screen, int fromX, int fromY, int toX, int toY, bool queue = true, float speed = 0.05f, Action onBegin = null, Action onEnd = null) :
+            base(screen, queue, speed, onBegin, onEnd)
         {
             _fromX = fromX;
             _fromY = fromY;
@@ -29,12 +29,14 @@ namespace StasisGame.UI
         {
             _screen.slideX = _fromX;
             _screen.slideY = _fromY;
+            base.begin();
         }
 
         public override void end()
         {
             _screen.slideX = 0;
             _screen.slideY = 0;
+            base.end();
         }
 
         public override void update()

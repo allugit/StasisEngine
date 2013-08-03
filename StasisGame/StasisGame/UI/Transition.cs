@@ -12,6 +12,8 @@ namespace StasisGame.UI
         protected float _progress;
         protected float _speed;
         protected bool _queue;
+        private Action _onBegin;
+        private Action _onEnd;
 
         public float progress { get { return _progress; } }
 
@@ -19,16 +21,27 @@ namespace StasisGame.UI
         public bool starting { get { return _progress == 0f; } }
         public bool queued { get { return _queue; } }
 
-        public Transition(Screen screen, bool queue, float speed)
+        public Transition(Screen screen, bool queue, float speed, Action onBegin, Action onEnd)
         {
             _screen = screen;
             _spriteBatch = screen.screenSystem.spriteBatch;
             _queue = queue;
             _speed = speed;
+            _onBegin = onBegin;
+            _onEnd = onEnd;
         }
 
-        abstract public void begin();
-        abstract public void end();
+        virtual public void begin()
+        {
+            if (_onBegin != null)
+                _onBegin();
+        }
+
+        virtual public void end()
+        {
+            if (_onEnd != null)
+                _onEnd();
+        }
 
         abstract public void update();
         abstract public void draw();

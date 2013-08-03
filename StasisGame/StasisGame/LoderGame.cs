@@ -250,37 +250,36 @@ namespace StasisGame
 
         public void closeMainMenu()
         {
-            _screenSystem.addTransition(new FadeOutTransition(_mainMenuScreen, Color.Black));
+            _screenSystem.addTransition(new SlideTransition(_mainMenuScreen, 0, 0, -300, 0, true, 0.05f, null, () => { _screenSystem.removeScreen(_mainMenuScreen); }));
         }
 
-        public void openMainMenu(float speed = 0.05f)
+        public void openMainMenu(bool fadeIn = false)
         {
             _mainMenuScreen.slideX = -300;
-            _screenSystem.addTransition(new FadeInTransition(_mainMenuScreen, Color.Black, true, speed));
-            _screenSystem.addTransition(new SlideTransition(_mainMenuScreen, -300, 0, 0, 0, false, 0.025f));
+            if (fadeIn)
+            {
+                _screenSystem.addTransition(new FadeInTransition(_mainMenuScreen, Color.Black, true, 0.01f));
+            }
+            _screenSystem.addTransition(new SlideTransition(_mainMenuScreen, -300, 0, 0, 0, false, 0.025f, () => { _screenSystem.addScreen(_mainMenuScreen); }));
         }
 
         public void openLoadGameMenu()
         {
             _loadGameScreen = new LoadGameScreen(this);
-            _screenSystem.addTransition(new FadeInTransition(_loadGameScreen, Color.Black));
         }
 
         public void closeLoadGameMenu()
         {
-            _screenSystem.addTransition(new FadeOutTransition(_loadGameScreen, Color.Black));
             _loadGameScreen = null;
         }
 
         public void openOptionsMenu()
         {
-            _optionsMenuScreen = new OptionsMenuScreen(this);
             _screenSystem.addTransition(new FadeInTransition(_optionsMenuScreen, Color.Black));
         }
 
         public void closeOptionsMenu()
         {
-            _screenSystem.addTransition(new FadeOutTransition(_optionsMenuScreen, Color.Black));
             _optionsMenuScreen = null;
         }
 
@@ -288,13 +287,11 @@ namespace StasisGame
         {
             _playerCreationScreen = new PlayerCreationScreen(this);
             _playerCreationScreen.slideX = GraphicsDevice.Viewport.Width;
-            _screenSystem.addTransition(new FadeInTransition(_playerCreationScreen, Color.Black));
             _screenSystem.addTransition(new SlideTransition(_playerCreationScreen, (int)_playerCreationScreen.slideX, 0, 0, 0));
         }
 
         public void closePlayerCreationScreen()
         {
-            _screenSystem.addTransition(new FadeOutTransition(_playerCreationScreen, Color.Black));
             _playerCreationScreen = null;
         }
 
@@ -342,7 +339,7 @@ namespace StasisGame
                     _menuBackgroundRenderer.background = background;
 
                     Logger.log("Changing game state to MainMenu.");
-                    openMainMenu(0.01f);
+                    openMainMenu(true);
                     _gameState = GameState.MainMenu;
                     break;
 

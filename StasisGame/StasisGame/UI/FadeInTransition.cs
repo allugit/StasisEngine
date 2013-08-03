@@ -12,21 +12,12 @@ namespace StasisGame.UI
         private Color _color;
         private Texture2D _pixel;
 
-        public FadeInTransition(Screen screen, Color color, bool queue = true, float speed = 0.05f)
-            : base(screen, queue, speed)
+        public FadeInTransition(Screen screen, Color color, bool queue = true, float speed = 0.05f, Action onBegin = null, Action onEnd = null)
+            : base(screen, queue, speed, onBegin, onEnd)
         {
             _color = color;
             _screen = screen;
             _pixel = ResourceManager.getTexture("pixel");
-        }
-
-        public override void begin()
-        {
-            _screen.screenSystem.addScreen(_screen);
-        }
-
-        public override void end()
-        {
         }
 
         public override void update()
