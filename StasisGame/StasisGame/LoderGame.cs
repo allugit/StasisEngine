@@ -287,7 +287,9 @@ namespace StasisGame
         public void openPlayerCreationScreen()
         {
             _playerCreationScreen = new PlayerCreationScreen(this);
+            _playerCreationScreen.slideX = GraphicsDevice.Viewport.Width;
             _screenSystem.addTransition(new FadeInTransition(_playerCreationScreen, Color.Black));
+            _screenSystem.addTransition(new SlideTransition(_playerCreationScreen, (int)_playerCreationScreen.slideX, 0, 0, 0));
         }
 
         public void closePlayerCreationScreen()
