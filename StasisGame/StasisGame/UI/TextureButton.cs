@@ -20,8 +20,8 @@ namespace StasisGame.UI
         private Action _onActivate;
         private Action _onMouseOver;
         private Action _onMouseOut;
-        private float _translationX;
-        private float _translationY;
+        protected float _translationX;
+        protected float _translationY;
 
         public bool selected { get { return _selected; } }
         public float translationX { get { return _translationX; } set { _translationX = value; } }

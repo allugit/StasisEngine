@@ -23,7 +23,7 @@ namespace StasisGame.UI
         protected int _yOffset;
         protected int _width;
         protected int _height;
-        protected float _scale;
+        protected float _scale = 1f;
 
         public float scale { get { return _scale; } set { _scale = value; } }
         public Screen screen { get { return _screen; } }

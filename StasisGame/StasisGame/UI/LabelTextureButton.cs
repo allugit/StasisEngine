@@ -79,7 +79,7 @@ namespace StasisGame.UI
 
         public override void draw()
         {
-            Vector2 position = new Vector2(x + _textXOffset + (int)_screen.translationX, y + _textYOffset + (int)_screen.translationY);
+            Vector2 position = new Vector2(x + _textXOffset + (int)_screen.translationX + _translationX, y + _textYOffset + (int)_screen.translationY + _translationY);
             Vector2 origin = Vector2.Zero;
             Vector2 stringSize = _font.MeasureString(_text);
 

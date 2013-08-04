@@ -269,12 +269,14 @@ namespace StasisGame
 
         public void openLoadGameMenu()
         {
-            _loadGameScreen = new LoadGameScreen(this);
+            _loadGameScreen = _loadGameScreen ?? new LoadGameScreen(this);
+            _loadGameScreen.applyIntroTransitions();
+            _screenSystem.addScreen(_loadGameScreen);
         }
 
         public void closeLoadGameMenu()
         {
-            _loadGameScreen = null;
+            _loadGameScreen.applyOutroTransitions(() => _screenSystem.removeScreen(_loadGameScreen));
         }
 
         public void openOptionsMenu()

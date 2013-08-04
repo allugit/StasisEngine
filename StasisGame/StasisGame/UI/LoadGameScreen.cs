@@ -13,7 +13,6 @@ namespace StasisGame.UI
     public class LoadGameScreen : Screen
     {
         private LoderGame _game;
-        private Texture2D _logo;
         private ContentManager _content;
         private SpriteFont _savedGameFont;
         private SpriteFont _confirmationFont;
@@ -29,20 +28,19 @@ namespace StasisGame.UI
             _game = game;
             _content = new ContentManager(game.Services);
             _content.RootDirectory = "Content";
-            _logo = _content.Load<Texture2D>("logo");
             _savedGameFont = _content.Load<SpriteFont>("load_game_menu/saved_game_font");
             _confirmationFont = _content.Load<SpriteFont>("shared_ui/confirmation_font");
             _savedGameButtons = new List<LabelTextureButton>();
             _deleteGameButtons = new List<TextureButton>();
 
             List<XElement> playerSaves = DataManager.loadPlayerSaves();
-            Vector2 initialPosition = new Vector2(-240, -190);
+            Vector2 initialPosition = new Vector2(-262, -190);
 
             _container = new BluePane(
                 this,
                 UIAlignment.MiddleCenter,
-                -250,
-                -200,
+                0,
+                0,
                 545,
                 400);
 
@@ -50,7 +48,7 @@ namespace StasisGame.UI
                 this,
                 _spriteBatch,
                 UIAlignment.MiddleCenter,
-                155,
+                135,
                 180,
                 _content.Load<Texture2D>("shared_ui/cancel_button_over"),
                 _content.Load<Texture2D>("shared_ui/cancel_button"),
@@ -117,6 +115,38 @@ namespace StasisGame.UI
         ~LoadGameScreen()
         {
             _content.Unload();
+        }
+
+        public override void applyIntroTransitions()
+        {
+            for (int i = 0; i < _savedGameButtons.Count; i++)
+            {
+                _savedGameButtons[i].translationX = _spriteBatch.GraphicsDevice.Viewport.Width;
+                _deleteGameButtons[i].translationX = _spriteBatch.GraphicsDevice.Viewport.Width;
+            }
+            _cancelButton.translationX = _spriteBatch.GraphicsDevice.Viewport.Width;
+            _transitions.Clear();
+            _transitions.Add(new ScaleTransition(_container, 0f, 1f));
+            _transitions.Add(new TranslateTransition(_cancelButton, _spriteBatch.GraphicsDevice.Viewport.Width, 0, 0, 0, false));
+            for (int i = 0; i < _savedGameButtons.Count; i++)
+            {
+                _transitions.Add(new TranslateTransition(_savedGameButtons[i], _spriteBatch.GraphicsDevice.Viewport.Width, 0, 0, 0, true, 0.1f));
+                _transitions.Add(new TranslateTransition(_deleteGameButtons[i], _spriteBatch.GraphicsDevice.Viewport.Width, 0, 0, 0, false, 0.1f));
+            }
+            base.applyIntroTransitions();
+        }
+
+        public override void applyOutroTransitions(Action onFinished = null)
+        {
+            _transitions.Clear();
+            for (int i = 0; i < _savedGameButtons.Count; i++)
+            {
+                _transitions.Add(new TranslateTransition(_savedGameButtons[i], 0, 0, _spriteBatch.GraphicsDevice.Viewport.Width, 0, true, 0.2f));
+                _transitions.Add(new TranslateTransition(_deleteGameButtons[i], 0, 0, _spriteBatch.GraphicsDevice.Viewport.Width, 0, false, 0.2f));
+            }
+            _transitions.Add(new ScaleTransition(_container, 1f, 0f));
+            _transitions.Add(new TranslateTransition(_cancelButton, 0, 0, _spriteBatch.GraphicsDevice.Viewport.Width, 0, false, 0.2f));
+            base.applyOutroTransitions(onFinished);
         }
 
         private void openConfirmation(string text, Action onCancel, Action onOkay)
@@ -187,12 +217,6 @@ namespace StasisGame.UI
 
         public override void draw()
         {
-            // Draw background
-            _game.menuBackgroundRenderer.draw();
-
-            // Draw logo
-            _spriteBatch.Draw(_logo, new Vector2((int)(_game.GraphicsDevice.Viewport.Width - _logo.Width), 0), _logo.Bounds, Color.White, 0, Vector2.Zero, 1f, SpriteEffects.None, 0);
-
             // Draw container
             _container.draw();
 
