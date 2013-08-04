@@ -69,7 +69,6 @@ namespace StasisGame.Systems
                 _transitionsToRemove.Clear();
 
                 // Update transitions
-                Console.WriteLine("number of transitions: {0}", _transitions.Count);
                 for (int i = 0; i < _transitions.Count; i++)
                 {
                     Transition transition = _transitions[i];

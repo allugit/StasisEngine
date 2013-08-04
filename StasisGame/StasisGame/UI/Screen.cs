@@ -36,7 +36,7 @@ namespace StasisGame.UI
         PlayerCreation
     };
 
-    abstract public class Screen
+    abstract public class Screen : ITranslatable
     {
         protected ScreenSystem _screenSystem;
         protected SpriteBatch _spriteBatch;
@@ -47,8 +47,10 @@ namespace StasisGame.UI
         protected MouseState _newMouseState;
         protected MouseState _oldMouseState;
         protected ScreenType _screenType;
-        protected float _slideX;
-        protected float _slideY;
+        protected float _translationX;
+        protected float _translationY;
+        protected List<Transition> _transitions;
+        protected List<Transition> _transitionsToRemove;
 
         public ScreenType screenType { get { return _screenType; } set { _screenType = value; } }
         public ScreenSystem screenSystem { get { return _screenSystem; } }
@@ -56,14 +58,17 @@ namespace StasisGame.UI
         public KeyboardState oldKeyState { get { return _oldKeyState; } }
         public MouseState newMouseState { get { return _newMouseState; } }
         public MouseState oldMouseState { get { return _oldMouseState; } }
-        public float slideX { get { return _slideX; } set { _slideX = value; } }
-        public float slideY { get { return _slideY; } set { _slideY = value; } }
+        public float translationX { get { return _translationX; } set { _translationX = value; } }
+        public float translationY { get { return _translationY; } set { _translationY = value; } }
+        public Screen screen { get { return this; } }
 
         public Screen(ScreenSystem screenSystem, ScreenType screenType)
         {
             _screenSystem = screenSystem;
             _spriteBatch = screenSystem.spriteBatch;
             _screenType = screenType;
+            _transitions = new List<Transition>();
+            _transitionsToRemove = new List<Transition>();
         }
 
         public string wrapText(SpriteFont spriteFont, string text, float maxLineWidth)
@@ -95,6 +100,14 @@ namespace StasisGame.UI
             return sb.ToString();
         }
 
+        virtual public void applyIntroTransitions()
+        {
+        }
+
+        virtual public void applyOutroTransitions()
+        {
+        }
+
         virtual public void update()
         {
             _oldGamepadState = _newGamepadState;
@@ -104,6 +117,43 @@ namespace StasisGame.UI
             _newGamepadState = GamePad.GetState(PlayerIndex.One);
             _newKeyState = Keyboard.GetState();
             _newMouseState = Mouse.GetState();
+
+            // Remove finished transitions
+            for (int i = 0; i < _transitionsToRemove.Count; i++)
+            {
+                _transitions.Remove(_transitionsToRemove[i]);
+            }
+            _transitionsToRemove.Clear();
+
+            // Update transitions
+            for (int i = 0; i < _transitions.Count; i++)
+            {
+                Transition transition = _transitions[i];
+
+                // Break if this is a queued transition that's not ready to be processed.
+                if (transition.queued && i != 0)
+                {
+                    break;
+                }
+
+                // Handle starting/finished transitions
+                if (transition.finished)
+                {
+                    transition.end();
+                    _transitionsToRemove.Add(transition);
+                    break;
+                }
+                else if (transition.starting)
+                {
+                    transition.begin();
+                }
+
+                // Update transitions
+                if ((transition.queued && i == 0) || !transition.queued)
+                {
+                    transition.update();
+                }
+            }
         }
 
         virtual public void draw()

@@ -91,6 +91,28 @@ namespace StasisGame.UI
             _content.Unload();
         }
 
+        public override void applyIntroTransitions()
+        {
+            _buttons[0].translationX = -100;
+            _buttons[1].translationX = -100;
+            _buttons[2].translationX = -100;
+            _buttons[3].translationX = -100;
+            _transitions.Clear();
+            _transitions.Add(new TranslateTransition(_buttons[3], -100, 0, 0, 0, true, 0.05f));
+            _transitions.Add(new TranslateTransition(_buttons[2], -100, 0, 0, 0, true, 0.05f));
+            _transitions.Add(new TranslateTransition(_buttons[1], -100, 0, 0, 0, true, 0.05f));
+            _transitions.Add(new TranslateTransition(_buttons[0], -100, 0, 0, 0, true, 0.05f));
+        }
+
+        public override void applyOutroTransitions()
+        {
+            _transitions.Clear();
+            _transitions.Add(new TranslateTransition(_buttons[0], 0, 0, -100, 0, true, 0.2f));
+            _transitions.Add(new TranslateTransition(_buttons[1], 0, 0, -100, 0, true, 0.2f));
+            _transitions.Add(new TranslateTransition(_buttons[2], 0, 0, -100, 0, true, 0.2f));
+            _transitions.Add(new TranslateTransition(_buttons[3], 0, 0, -100, 0, true, 0.2f));
+        }
+
         override public void update()
         {
             base.update();
@@ -122,7 +144,7 @@ namespace StasisGame.UI
         override public void draw()
         {
             // Draw button background
-            _game.spriteBatch.Draw(_buttonsBackground, new Vector2(0 + slideX, 100 + slideY), _buttonsBackground.Bounds, Color.White, 0f, Vector2.Zero, 1f, SpriteEffects.None, 0f);
+            _game.spriteBatch.Draw(_buttonsBackground, new Vector2(0 + translationX, 100 + translationY), _buttonsBackground.Bounds, Color.White, 0f, Vector2.Zero, 1f, SpriteEffects.None, 0f);
 
             // Draw buttons
             for (int i = 0; i < _buttons.Count; i++)

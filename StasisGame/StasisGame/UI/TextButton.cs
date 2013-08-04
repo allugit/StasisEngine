@@ -138,8 +138,8 @@ namespace StasisGame.UI
 
         public void draw()
         {
-            int x = this.x + (int)_screen.slideX;
-            int y = this.y + (int)_screen.slideY;
+            int x = this.x + (int)_screen.translationX;
+            int y = this.y + (int)_screen.translationY;
             Vector2 origin = Vector2.Zero;
             Vector2 stringSize = _font.MeasureString(text);
 

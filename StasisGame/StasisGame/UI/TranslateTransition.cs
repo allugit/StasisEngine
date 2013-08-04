@@ -5,8 +5,9 @@ using StasisGame.Systems;
 
 namespace StasisGame.UI
 {
-    public class SlideTransition : Transition
+    public class TranslateTransition : Transition
     {
+        private ITranslatable _target;
         private int _fromX;
         private int _fromY;
         private int _toX;
@@ -14,9 +15,10 @@ namespace StasisGame.UI
         private float _dX;
         private float _dY;
 
-        public SlideTransition(Screen screen, int fromX, int fromY, int toX, int toY, bool queue = true, float speed = 0.05f, Action onBegin = null, Action onEnd = null) :
-            base(screen, queue, speed, onBegin, onEnd)
+        public TranslateTransition(ITranslatable obj, int fromX, int fromY, int toX, int toY, bool queue = true, float speed = 0.05f, Action onBegin = null, Action onEnd = null) :
+            base(obj, queue, speed, onBegin, onEnd)
         {
+            _target = obj;
             _fromX = fromX;
             _fromY = fromY;
             _toX = toX;
@@ -27,23 +29,23 @@ namespace StasisGame.UI
 
         public override void begin()
         {
-            _screen.slideX = _fromX;
-            _screen.slideY = _fromY;
+            _target.translationX = _fromX;
+            _target.translationY = _fromY;
             base.begin();
         }
 
         public override void end()
         {
-            _screen.slideX = 0;
-            _screen.slideY = 0;
+            _target.translationX = _toX;
+            _target.translationY = _toY;
             base.end();
         }
 
         public override void update()
         {
             _progress += _speed;
-            _screen.slideX += _dX;
-            _screen.slideY += _dY;
+            _target.translationX += _dX;
+            _target.translationY += _dY;
         }
 
         public override void draw()

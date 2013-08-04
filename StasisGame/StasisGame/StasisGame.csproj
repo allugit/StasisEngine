@@ -161,6 +161,8 @@
     <Compile Include="UI\FadeInTransition.cs" />
     <Compile Include="UI\FadeOutTransition.cs" />
     <Compile Include="UI\InventoryDisplay.cs" />
+    <Compile Include="UI\ITransition.cs" />
+    <Compile Include="UI\ITranslatable.cs" />
     <Compile Include="UI\Label.cs" />
     <Compile Include="UI\LabelTextureButton.cs" />
     <Compile Include="UI\LargeHealthBar.cs" />
@@ -173,7 +175,7 @@
     <Compile Include="UI\Pane.cs" />
     <Compile Include="UI\PlayerCreationScreen.cs" />
     <Compile Include="UI\Screen.cs" />
-    <Compile Include="UI\SlideTransition.cs" />
+    <Compile Include="UI\TranslateTransition.cs" />
     <Compile Include="UI\StonePane.cs" />
     <Compile Include="UI\TextButton.cs" />
     <Compile Include="UI\TextureButton.cs" />

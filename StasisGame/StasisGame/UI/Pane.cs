@@ -95,8 +95,8 @@ namespace StasisGame.UI
 
         virtual public void draw()
         {
-            int x = this.x + (int)_screen.slideX;     // prevent redundant calculation... only needs to be done once per frame
-            int y = this.y + (int)_screen.slideY;
+            int x = this.x + (int)_screen.translationX;     // prevent redundant calculation... only needs to be done once per frame
+            int y = this.y + (int)_screen.translationY;
             int backgroundMargin = 3;
 
             // Draw logo

@@ -5,7 +5,7 @@ using Microsoft.Xna.Framework.Graphics;
 
 namespace StasisGame.UI
 {
-    public class TextureButton
+    public class TextureButton : ITranslatable
     {
         protected Screen _screen;
         protected SpriteBatch _spriteBatch;
@@ -20,8 +20,13 @@ namespace StasisGame.UI
         private Action _onActivate;
         private Action _onMouseOver;
         private Action _onMouseOut;
+        private float _translationX;
+        private float _translationY;
 
         public bool selected { get { return _selected; } }
+        public float translationX { get { return _translationX; } set { _translationX = value; } }
+        public float translationY { get { return _translationY; } set { _translationY = value; } }
+        public Screen screen { get { return _screen; } }
         public int x
         {
             get
@@ -112,7 +117,15 @@ namespace StasisGame.UI
         {
             Texture2D texture = _selected ? _selectedTexture : _deselectedTexture;
             
-            _spriteBatch.Draw(texture, new Rectangle(x + (int)_screen.slideX, y + (int)_screen.slideY, texture.Width, texture.Height), texture.Bounds, Color.White, 0f, Vector2.Zero, SpriteEffects.None, 0f);
+            _spriteBatch.Draw(
+                texture,
+                new Rectangle(x + (int)_screen.translationX + (int)_translationX, y + (int)_screen.translationY + (int)_translationY, texture.Width, texture.Height),
+                texture.Bounds,
+                Color.White,
+                0f,
+                Vector2.Zero, 
+                SpriteEffects.None,
+                0f);
 
             //Rectangle hitBox = new Rectangle(_x, _y, _hitBoxWidth, _hitBoxHeight);
             //_spriteBatch.Draw(_pixel, hitBox, hitBox, Color.Green * 0.5f, 0f, new Vector2(_hitBoxOffsetX, _hitBoxOffsetY), SpriteEffects.None, 0f);

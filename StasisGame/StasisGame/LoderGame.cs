@@ -253,17 +253,18 @@ namespace StasisGame
 
         public void closeMainMenu()
         {
-            _screenSystem.addTransition(new SlideTransition(_mainMenuScreen, 0, 0, -300, 0, true, 0.05f, null, () => { _screenSystem.removeScreen(_mainMenuScreen); }));
+            _mainMenuScreen.applyOutroTransitions();
+            _screenSystem.addTransition(new TranslateTransition(_mainMenuScreen, 0, 0, -300, 0, true, 0.05f, null, () => { _screenSystem.removeScreen(_mainMenuScreen); }));
         }
 
         public void openMainMenu(bool fadeIn = false)
         {
-            _mainMenuScreen.slideX = -300;
+            _mainMenuScreen.applyIntroTransitions();
             if (fadeIn)
             {
                 _screenSystem.addTransition(new FadeInTransition(_mainMenuScreen, Color.Black, true, 0.01f));
             }
-            _screenSystem.addTransition(new SlideTransition(_mainMenuScreen, -300, 0, 0, 0, false, 0.025f, () => { _screenSystem.addScreen(_mainMenuScreen); }));
+            _screenSystem.addTransition(new TranslateTransition(_mainMenuScreen, -300, 0, 0, 0, false, 0.025f, () => { _screenSystem.addScreen(_mainMenuScreen); }));
         }
 
         public void openLoadGameMenu()
@@ -289,13 +290,13 @@ namespace StasisGame
         public void openPlayerCreationScreen()
         {
             _playerCreationScreen = _playerCreationScreen ?? new PlayerCreationScreen(this);
-            _playerCreationScreen.slideX = GraphicsDevice.Viewport.Width;
-            _screenSystem.addTransition(new SlideTransition(_playerCreationScreen, (int)_playerCreationScreen.slideX, 0, 0, 0, true, 0.05f, () => { _screenSystem.addScreen(_playerCreationScreen); }));
+            _playerCreationScreen.translationX = GraphicsDevice.Viewport.Width;
+            _screenSystem.addTransition(new TranslateTransition(_playerCreationScreen, (int)_playerCreationScreen.translationX, 0, 0, 0, true, 0.05f, () => { _screenSystem.addScreen(_playerCreationScreen); }));
         }
 
         public void closePlayerCreationScreen()
         {
-            _screenSystem.addTransition(new SlideTransition(_playerCreationScreen, 0, 0, GraphicsDevice.Viewport.Width, 0, true, 0.05f, null, () => { _screenSystem.removeScreen(_playerCreationScreen); }));
+            _screenSystem.addTransition(new TranslateTransition(_playerCreationScreen, 0, 0, GraphicsDevice.Viewport.Width, 0, true, 0.05f, null, () => { _screenSystem.removeScreen(_playerCreationScreen); }));
         }
 
         public void openWorldMap()
