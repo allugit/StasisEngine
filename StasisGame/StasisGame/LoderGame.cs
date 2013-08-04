@@ -292,6 +292,7 @@ namespace StasisGame
             _playerCreationScreen = _playerCreationScreen ?? new PlayerCreationScreen(this);
             _playerCreationScreen.applyIntroTransitions();
             _screenSystem.addScreen(_playerCreationScreen);
+            _playerCreationScreen.resetName();
             //_screenSystem.addTransition(new TranslateTransition(_playerCreationScreen, GraphicsDevice.Viewport.Width, 0, 0, 0, true, 0.05f, () => { _screenSystem.addScreen(_playerCreationScreen); }));
         }
 

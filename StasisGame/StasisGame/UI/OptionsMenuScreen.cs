@@ -173,7 +173,7 @@ namespace StasisGame.UI
         private void createVideoElements()
         {
             _videoTitle = new Label(
-                _spriteBatch,
+                this,
                 _categoryTitleFont,
                 UIAlignment.MiddleCenter,
                 -255,
@@ -183,7 +183,7 @@ namespace StasisGame.UI
                 3);
 
             _resolutionLabel = new Label(
-                _spriteBatch,
+                this,
                 _optionsFont,
                 UIAlignment.MiddleCenter,
                 -255,
@@ -194,7 +194,7 @@ namespace StasisGame.UI
                 _optionsColor);
 
             _resolutionValue = new Label(
-                _spriteBatch,
+                this,
                 _optionsFont,
                 UIAlignment.MiddleCenter,
                 200,
@@ -227,7 +227,7 @@ namespace StasisGame.UI
                 () => { selectNextResolution(); });
 
             _fullscreenLabel = new Label(
-                _spriteBatch,
+                this,
                 _optionsFont,
                 UIAlignment.MiddleCenter,
                 -255,
@@ -238,7 +238,7 @@ namespace StasisGame.UI
                 _optionsColor);
 
             _fullscreenValue = new Label(
-                _spriteBatch,
+                this,
                 _optionsFont,
                 UIAlignment.MiddleCenter,
                 200,
@@ -274,7 +274,7 @@ namespace StasisGame.UI
         private void createAudioElements()
         {
             _audioTitle = new Label(
-                _spriteBatch,
+                this,
                 _categoryTitleFont,
                 UIAlignment.MiddleCenter,
                 -255,
@@ -287,7 +287,7 @@ namespace StasisGame.UI
         private void createControlsElements()
         {
             _controlsTitle = new Label(
-                _spriteBatch,
+                this,
                 _categoryTitleFont,
                 UIAlignment.MiddleCenter,
                 -255,

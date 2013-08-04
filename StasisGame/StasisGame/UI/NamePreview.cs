@@ -5,7 +5,7 @@ using StasisCore;
 
 namespace StasisGame.UI
 {
-    public class NamePreview
+    public class NamePreview : IAlphaFadable, ITranslatable
     {
         private Screen _screen;
         private SpriteBatch _spriteBatch;
@@ -19,8 +19,15 @@ namespace StasisGame.UI
         private int _width;
         private Color _color = new Color(0.7f, 1f, 0.6f);
         private Texture2D _letterLine;
+        private float _alpha = 1f;
+        private float _translationX;
+        private float _translationY;
 
         public string name { get { return _name; } set { _name = value; } }
+        public float alpha { get { return _alpha; } set { _alpha = value; } }
+        public float translationX { get { return _translationX; } set { _translationX = value; } }
+        public float translationY { get { return _translationY; } set { _translationY = value; } }
+        public Screen screen { get { return _screen; } }
         public int x
         {
             get
@@ -65,29 +72,31 @@ namespace StasisGame.UI
 
         public void draw()
         {
+            float outlineAlpha = _alpha >= 1f ? 1f : _alpha / 8f;
+
             // Draw spaces
             for (int i = 0; i < _maxLetters; i++)
             {
-                _spriteBatch.Draw(_letterLine, new Vector2(x + i * _letterSpacing, y + _letterSpacing), _letterLine.Bounds, Color.White, 0f, Vector2.Zero, 0.7f, SpriteEffects.None, 0f);
+                _spriteBatch.Draw(_letterLine, new Vector2(x + i * _letterSpacing + (int)_translationX, y + _letterSpacing + (int)_translationY), _letterLine.Bounds, Color.White * _alpha, 0f, Vector2.Zero, 0.7f, SpriteEffects.None, 0f);
             }
 
             // Draw letters
             for (int i = 0; i < _name.Length; i++)
             {
-                Vector2 letterPosition = new Vector2(x + (i * _letterSpacing) + (_letterSpacing / 2f) - 2, y);
+                Vector2 letterPosition = new Vector2(x + (i * _letterSpacing) + (_letterSpacing / 2f) - 2, y) + new Vector2(_translationX, _translationY);
                 string letter = _name[i].ToString();
                 Vector2 letterSize = _font.MeasureString(letter);
 
 
-                _spriteBatch.DrawString(_font, letter, letterPosition + new Vector2(-1, -1), Color.Black, 0f, new Vector2(letterSize.X / 2f, 0), 1f, SpriteEffects.None, 0.0001f);
-                _spriteBatch.DrawString(_font, letter, letterPosition + new Vector2(0, -1), Color.Black, 0f, new Vector2(letterSize.X / 2f, 0), 1f, SpriteEffects.None, 0.0001f);
-                _spriteBatch.DrawString(_font, letter, letterPosition + new Vector2(1, -1), Color.Black, 0f, new Vector2(letterSize.X / 2f, 0), 1f, SpriteEffects.None, 0.0001f);
-                _spriteBatch.DrawString(_font, letter, letterPosition + new Vector2(1, 0), Color.Black, 0f, new Vector2(letterSize.X / 2f, 0), 1f, SpriteEffects.None, 0.0001f);
-                _spriteBatch.DrawString(_font, letter, letterPosition + new Vector2(1, 1), Color.Black, 0f, new Vector2(letterSize.X / 2f, 0), 1f, SpriteEffects.None, 0.0001f);
-                _spriteBatch.DrawString(_font, letter, letterPosition + new Vector2(0, 1), Color.Black, 0f, new Vector2(letterSize.X / 2f, 0), 1f, SpriteEffects.None, 0.0001f);
-                _spriteBatch.DrawString(_font, letter, letterPosition + new Vector2(-1, 1), Color.Black, 0f, new Vector2(letterSize.X / 2f, 0), 1f, SpriteEffects.None, 0.0001f);
-                _spriteBatch.DrawString(_font, letter, letterPosition + new Vector2(-1, 0), Color.Black, 0f, new Vector2(letterSize.X / 2f, 0), 1f, SpriteEffects.None, 0.0001f);
-                _spriteBatch.DrawString(_font, letter, letterPosition, _color, 0f, new Vector2(letterSize.X / 2f, 0), 1f, SpriteEffects.None, 0f);
+                _spriteBatch.DrawString(_font, letter, letterPosition + new Vector2(-2, -2), Color.Black * outlineAlpha, 0f, new Vector2(letterSize.X / 2f, 0), 1f, SpriteEffects.None, 0.0001f);
+                _spriteBatch.DrawString(_font, letter, letterPosition + new Vector2(0, -2), Color.Black * outlineAlpha, 0f, new Vector2(letterSize.X / 2f, 0), 1f, SpriteEffects.None, 0.0001f);
+                _spriteBatch.DrawString(_font, letter, letterPosition + new Vector2(2, -2), Color.Black * outlineAlpha, 0f, new Vector2(letterSize.X / 2f, 0), 1f, SpriteEffects.None, 0.0001f);
+                _spriteBatch.DrawString(_font, letter, letterPosition + new Vector2(2, 0), Color.Black * outlineAlpha, 0f, new Vector2(letterSize.X / 2f, 0), 1f, SpriteEffects.None, 0.0001f);
+                _spriteBatch.DrawString(_font, letter, letterPosition + new Vector2(2, 2), Color.Black * outlineAlpha, 0f, new Vector2(letterSize.X / 2f, 0), 1f, SpriteEffects.None, 0.0001f);
+                _spriteBatch.DrawString(_font, letter, letterPosition + new Vector2(0, 2), Color.Black * outlineAlpha, 0f, new Vector2(letterSize.X / 2f, 0), 1f, SpriteEffects.None, 0.0001f);
+                _spriteBatch.DrawString(_font, letter, letterPosition + new Vector2(-2, 2), Color.Black * outlineAlpha, 0f, new Vector2(letterSize.X / 2f, 0), 1f, SpriteEffects.None, 0.0001f);
+                _spriteBatch.DrawString(_font, letter, letterPosition + new Vector2(-2, 0), Color.Black * outlineAlpha, 0f, new Vector2(letterSize.X / 2f, 0), 1f, SpriteEffects.None, 0.0001f);
+                _spriteBatch.DrawString(_font, letter, letterPosition, _color * _alpha, 0f, new Vector2(letterSize.X / 2f, 0), 1f, SpriteEffects.None, 0f);
             }
         }
     }

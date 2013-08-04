@@ -49,7 +49,7 @@ namespace StasisGame.UI
 
 
             _label = new Label(
-                _spriteBatch,
+                _screen,
                 _font,
                 UIAlignment.MiddleCenter,
                 0,

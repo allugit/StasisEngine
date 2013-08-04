@@ -85,6 +85,11 @@ namespace StasisGame.UI
                 _sb.Remove(_sb.Length - 1, 1);
         }
 
+        public void reset()
+        {
+            _sb.Clear();
+        }
+
         public override void update()
         {
             _oldKeyState = _newKeyState;

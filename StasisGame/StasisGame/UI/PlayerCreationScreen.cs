@@ -32,14 +32,14 @@ namespace StasisGame.UI
             _nameInputPane = new NameInputPane(this, _letterFont, UIAlignment.MiddleCenter, -324, -60, 648, 320, _maxLetters);
 
             _title = new Label(
-                _spriteBatch,
+                this,
                 _titleFont,
                 UIAlignment.MiddleCenter,
                 0,
                 -180,
                 TextAlignment.Center,
                 "Please choose a name",
-                1);
+                2);
 
             _cancelButton = new TextureButton(
                 this,
@@ -78,15 +78,24 @@ namespace StasisGame.UI
             _content.Unload();
         }
 
+        public void resetName()
+        {
+            _nameInputPane.reset();
+            _namePreview.name = _nameInputPane.name;
+        }
+
         public override void applyIntroTransitions()
         {
             _nameInputPane.scale = 0f;
+            _title.alpha = 0f;
             _cancelButton.translationX = _spriteBatch.GraphicsDevice.Viewport.Width;
             _createButton.translationX = _spriteBatch.GraphicsDevice.Viewport.Width;
             _transitions.Clear();
             _transitions.Add(new ScaleTransition(_nameInputPane, 0f, 1f));
             _transitions.Add(new TranslateTransition(_cancelButton, _spriteBatch.GraphicsDevice.Viewport.Width, 0, 0, 0, false));
             _transitions.Add(new TranslateTransition(_createButton, _spriteBatch.GraphicsDevice.Viewport.Width, 0, 0, 0, false));
+            _transitions.Add(new TranslateTransition(_namePreview, _spriteBatch.GraphicsDevice.Viewport.Width, 0, 0, 0, false));
+            _transitions.Add(new AlphaFadeTransition(_title, 0f, 1f, false));
             for (int i = 0; i < _nameInputPane.letterButtons.Count; i++)
             {
                 _nameInputPane.letterButtons[i].alpha = 0f;
@@ -101,6 +110,8 @@ namespace StasisGame.UI
             _transitions.Add(new ScaleTransition(_nameInputPane, 1f, 0f));
             _transitions.Add(new TranslateTransition(_cancelButton, 0, 0, _spriteBatch.GraphicsDevice.Viewport.Width, 0, false));
             _transitions.Add(new TranslateTransition(_createButton, 0, 0, _spriteBatch.GraphicsDevice.Viewport.Width, 0, false));
+            _transitions.Add(new TranslateTransition(_namePreview, 0, 0, _spriteBatch.GraphicsDevice.Viewport.Width, 0, false));
+            _transitions.Add(new AlphaFadeTransition(_title, 1f, 0f, false));
             for (int i = 0; i < _nameInputPane.letterButtons.Count; i++)
             {
                 _transitions.Add(new AlphaFadeTransition(_nameInputPane.letterButtons[i], 1f, 0f, false, 0.2f));
