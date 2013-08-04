@@ -20,7 +20,7 @@ namespace StasisGame.UI
         private List<LabelTextureButton> _savedGameButtons;
         private List<TextureButton> _deleteGameButtons;
         private TextureButton _cancelButton;
-        private ConfirmationOverlay _confirmationOverlay;
+        private ConfirmationScreen _confirmationScreen;
 
         public LoadGameScreen(LoderGame game)
             : base(game.screenSystem, ScreenType.LoadGameMenu)
@@ -151,18 +151,23 @@ namespace StasisGame.UI
 
         private void openConfirmation(string text, Action onCancel, Action onOkay)
         {
-            _confirmationOverlay = new ConfirmationOverlay(
-                this,
-                _spriteBatch,
+            _confirmationScreen = new ConfirmationScreen(
+                _screenSystem,
                 _confirmationFont,
                 text,
                 onCancel,
                 onOkay);
+            _confirmationScreen.applyIntroTransitions();
+            _screenSystem.addScreen(_confirmationScreen);
         }
 
         private void closeConfirmation()
         {
-            _confirmationOverlay = null;
+            _confirmationScreen.applyOutroTransitions(() =>
+            {
+                _screenSystem.removeScreen(_confirmationScreen);
+                _confirmationScreen = null;
+            });
         }
 
         private bool hitTestTextureButton(TextureButton button)
@@ -190,11 +195,7 @@ namespace StasisGame.UI
             Vector2 mouse = new Vector2(_newMouseState.X, _newMouseState.Y);
 
             // Only update confirmation window if one exists
-            if (_confirmationOverlay != null)
-            {
-                _confirmationOverlay.update();
-            }
-            else
+            if (_confirmationScreen == null)
             {
                 // Update input
                 base.update();
@@ -210,9 +211,6 @@ namespace StasisGame.UI
                 // Handle mouse input for cancel button
                 hitTestTextureButton(_cancelButton);
             }
-
-            // Update background renderer
-            _game.menuBackgroundRenderer.update(35f, _game.menuBackgroundScreenOffset);
         }
 
         public override void draw()
@@ -230,8 +228,8 @@ namespace StasisGame.UI
             _cancelButton.draw();
 
             // Draw confirmation window if it exists
-            if (_confirmationOverlay != null)
-                _confirmationOverlay.draw();
+            if (_confirmationScreen != null)
+                _confirmationScreen.draw();
 
             base.draw();
         }

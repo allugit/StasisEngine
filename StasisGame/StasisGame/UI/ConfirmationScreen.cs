@@ -4,52 +4,45 @@ using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 using StasisCore;
+using StasisGame.Systems;
 
 namespace StasisGame.UI
 {
-    public class ConfirmationOverlay
+    public class ConfirmationScreen : Screen
     {
-        private Screen _screen;
-        private SpriteBatch _spriteBatch;
         private SpriteFont _font;
-        private Color _backgroundColor;
         private Label _label;
         private Pane _pane;
+        private Overlay _overlay;
         private TextureButton _cancelButton;
         private TextureButton _okayButton;
-        private Texture2D _pixel;
         private Action _onCancel;
         private Action _onOkay;
-        private MouseState _newMouseState;
-        private MouseState _oldMouseState;
-        private KeyboardState _newKeyState;
-        private KeyboardState _oldKeyState;
-        private bool _firstUpdate = true;
 
-        public ConfirmationOverlay(Screen screen, SpriteBatch spriteBatch, SpriteFont font, string text, Action onCancel, Action onOkay)
+        public ConfirmationScreen(ScreenSystem screenSystem, SpriteFont font, string text, Action onCancel, Action onOkay)
+            : base(screenSystem, ScreenType.Confirmation)
         {
-            _screen = screen;
-            _spriteBatch = spriteBatch;
+            _spriteBatch = screenSystem.spriteBatch;
             _font = font;
             _onCancel = onCancel;
             _onOkay = onOkay;
-            _backgroundColor = Color.Black * 0.6f;
-            _pixel = ResourceManager.getTexture("pixel");
 
             Vector2 titleSize = _font.MeasureString(text);
             int padding = 16;
 
+            _overlay = new Overlay(this, Color.Black);
+
             _pane = new StonePane(
-                _screen,
+                this,
                 UIAlignment.MiddleCenter,
-                -(int)(titleSize.X / 2f) - padding,
-                -50 + -padding,
+                0,
+                -padding,
                 (int)titleSize.X + padding * 2,
                 100);
 
 
             _label = new Label(
-                _screen,
+                this,
                 _font,
                 UIAlignment.MiddleCenter,
                 0,
@@ -59,7 +52,7 @@ namespace StasisGame.UI
                 2);
 
             _cancelButton = new TextureButton(
-                _screen,
+                this,
                 _spriteBatch,
                 UIAlignment.MiddleCenter,
                 (int)(titleSize.X / 2f) - 285,
@@ -70,7 +63,7 @@ namespace StasisGame.UI
                 () => { _onCancel(); });
 
             _okayButton = new TextureButton(
-                _screen,
+                this,
                 _spriteBatch,
                 UIAlignment.MiddleCenter,
                 (int)(titleSize.X / 2f) - 125,
@@ -79,6 +72,31 @@ namespace StasisGame.UI
                 ResourceManager.getTexture("okay_button"),
                 new Rectangle(0, 0, 152, 33),
                 () => { _onOkay(); });
+        }
+
+        public override void applyIntroTransitions()
+        {
+            int fromX = _spriteBatch.GraphicsDevice.Viewport.Width;
+
+            _overlay.alpha = 0f;
+            _cancelButton.translationX = fromX;
+            _okayButton.translationX = fromX;
+            _transitions.Clear();
+            _transitions.Add(new AlphaFadeTransition(_overlay, 0f, 0.6f));
+            _transitions.Add(new ScaleTransition(_pane, 0f, 1f, false, 0.1f));
+            _transitions.Add(new TranslateTransition(_cancelButton, fromX, 0, 0, 0, false));
+            _transitions.Add(new TranslateTransition(_okayButton, fromX, 0, 0, 0, false));
+            base.applyIntroTransitions();
+        }
+
+        public override void applyOutroTransitions(Action onFinished = null)
+        {
+            int toX = _spriteBatch.GraphicsDevice.Viewport.Width;
+            _transitions.Add(new AlphaFadeTransition(_overlay, 0.6f, 0f));
+            _transitions.Add(new ScaleTransition(_pane, 1f, 0f, false, 0.1f));
+            _transitions.Add(new TranslateTransition(_cancelButton, 0, 0, toX, 0, false));
+            _transitions.Add(new TranslateTransition(_okayButton, 0, 0, toX, 0, false));
+            base.applyOutroTransitions(onFinished);
         }
 
         private void hitTestTextureButton(TextureButton button, Vector2 point)
@@ -97,29 +115,21 @@ namespace StasisGame.UI
             }
         }
 
-        public void update()
+        public override void update()
         {
-            if (!_firstUpdate)
-            {
-                _oldMouseState = _newMouseState;
-                _oldKeyState = _newKeyState;
-                _newMouseState = Mouse.GetState();
-                _newKeyState = Keyboard.GetState();
+            Vector2 mouse = new Vector2(_newMouseState.X, _newMouseState.Y);
 
-                Vector2 mouse = new Vector2(_newMouseState.X, _newMouseState.Y);
-
-                hitTestTextureButton(_cancelButton, mouse);
-                hitTestTextureButton(_okayButton, mouse);
-            }
-            _firstUpdate = false;
+            base.update();
+            hitTestTextureButton(_cancelButton, mouse);
+            hitTestTextureButton(_okayButton, mouse);
         }
 
-        public void draw()
+        public override void draw()
         {
-            // Draw overlay
-            _spriteBatch.Draw(_pixel, _spriteBatch.GraphicsDevice.Viewport.Bounds, _backgroundColor);
+            base.draw();
 
             // Draw components
+            _overlay.draw();
             _pane.draw();
             _label.draw();
             _cancelButton.draw();

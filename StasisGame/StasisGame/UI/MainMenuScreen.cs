@@ -137,9 +137,6 @@ namespace StasisGame.UI
                 }
             }
 
-            // Background
-            _game.menuBackgroundRenderer.update(35f, _game.menuBackgroundScreenOffset);
-
             base.update();
         }
 

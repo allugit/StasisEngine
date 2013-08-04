@@ -158,7 +158,7 @@
     <Compile Include="TrunkMetamerConstraint.cs" />
     <Compile Include="UI\AlphaFadeTransition.cs" />
     <Compile Include="UI\BluePane.cs" />
-    <Compile Include="UI\ConfirmationOverlay.cs" />
+    <Compile Include="UI\ConfirmationScreen.cs" />
     <Compile Include="UI\ColorFadeInTransition.cs" />
     <Compile Include="UI\ColorFadeOutTransition.cs" />
     <Compile Include="UI\IAlphaFadable.cs" />
@@ -175,6 +175,7 @@
     <Compile Include="UI\NameInputPane.cs" />
     <Compile Include="UI\NamePreview.cs" />
     <Compile Include="UI\OptionsMenuScreen.cs" />
+    <Compile Include="UI\Overlay.cs" />
     <Compile Include="UI\Pane.cs" />
     <Compile Include="UI\PlayerCreationScreen.cs" />
     <Compile Include="UI\ScaleTransition.cs" />

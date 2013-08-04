@@ -354,6 +354,7 @@ namespace StasisGame
 
                 case GameState.MainMenu:
                     _menuBackgroundScreenOffset += new Vector2(0.005f, 0f);
+                    _menuBackgroundRenderer.update(35f, _menuBackgroundScreenOffset);
                     _systemManager.process();
                     break;
 

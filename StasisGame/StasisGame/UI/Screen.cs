@@ -33,7 +33,8 @@ namespace StasisGame.UI
         WorldMap,
         Level,
         LoadGameMenu,
-        PlayerCreation
+        PlayerCreation,
+        Confirmation
     };
 
     abstract public class Screen : ITranslatable
