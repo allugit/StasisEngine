@@ -5,7 +5,7 @@ using Microsoft.Xna.Framework.Graphics;
 
 namespace StasisGame.UI
 {
-    public class TextureButton : ITranslatable
+    public class TextureButton : ITranslatable, IAlphaFadable
     {
         protected Screen _screen;
         protected SpriteBatch _spriteBatch;
@@ -22,11 +22,13 @@ namespace StasisGame.UI
         private Action _onMouseOut;
         protected float _translationX;
         protected float _translationY;
+        protected float _alpha = 1f;
 
         public bool selected { get { return _selected; } }
         public float translationX { get { return _translationX; } set { _translationX = value; } }
         public float translationY { get { return _translationY; } set { _translationY = value; } }
         public Screen screen { get { return _screen; } }
+        public float alpha { get { return _alpha; } set { _alpha = value; } }
         public int x
         {
             get
@@ -121,7 +123,7 @@ namespace StasisGame.UI
                 texture,
                 new Rectangle(x + (int)_screen.translationX + (int)_translationX, y + (int)_screen.translationY + (int)_translationY, texture.Width, texture.Height),
                 texture.Bounds,
-                Color.White,
+                Color.White * _alpha,
                 0f,
                 Vector2.Zero, 
                 SpriteEffects.None,

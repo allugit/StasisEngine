@@ -281,12 +281,15 @@ namespace StasisGame
 
         public void openOptionsMenu()
         {
-            _screenSystem.addTransition(new ColorFadeInTransition(_optionsMenuScreen, Color.Black));
+            _optionsMenuScreen = _optionsMenuScreen ?? new OptionsMenuScreen(this);
+            _optionsMenuScreen.applyIntroTransitions();
+            _optionsMenuScreen.skipUpdate = true;
+            _screenSystem.addScreen(_optionsMenuScreen);
         }
 
         public void closeOptionsMenu()
         {
-            _optionsMenuScreen = null;
+            _optionsMenuScreen.applyOutroTransitions(() => { _screenSystem.removeScreen(_optionsMenuScreen); });
         }
 
         public void openPlayerCreationScreen()

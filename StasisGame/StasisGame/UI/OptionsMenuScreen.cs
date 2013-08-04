@@ -59,7 +59,6 @@ namespace StasisGame.UI
         private List<Resolution> _availableResolutions;
         private Resolution _currentResolution;
         private bool _fullscreen;
-        private bool _skipUpdate = true;
 
         public OptionsMenuScreen(LoderGame game)
             : base(game.screenSystem, ScreenType.OptionsMenu)
@@ -100,8 +99,8 @@ namespace StasisGame.UI
             _pane = new BluePane(
                 this,
                 UIAlignment.MiddleCenter,
-                -310,
-                -180,
+                0,
+                0,
                 620,
                 360);
 
@@ -297,6 +296,53 @@ namespace StasisGame.UI
                 3);
         }
 
+        public override void applyIntroTransitions()
+        {
+            _generalButtons[0].translationX = -400;
+            _generalButtons[1].translationX = -400;
+            _generalButtons[2].translationX = -400;
+            _generalButtons[3].translationX = _spriteBatch.GraphicsDevice.Viewport.Width;
+            _generalButtons[4].translationX = _spriteBatch.GraphicsDevice.Viewport.Width;
+            _transitions.Clear();
+            _transitions.Add(new AlphaFadeTransition(_videoTitle, 0f, 1f, true, 0.2f));
+            _transitions.Add(new AlphaFadeTransition(_resolutionLabel, 0f, 1f, false, 0.2f));
+            _transitions.Add(new AlphaFadeTransition(_resolutionNext, 0f, 1f, false, 0.2f));
+            _transitions.Add(new AlphaFadeTransition(_resolutionPrevious, 0f, 1f, false, 0.2f));
+            _transitions.Add(new AlphaFadeTransition(_resolutionValue, 0f, 1f, false, 0.2f));
+            _transitions.Add(new AlphaFadeTransition(_fullscreenLabel, 0f, 1f, false, 0.2f));
+            _transitions.Add(new AlphaFadeTransition(_fullscreenNext, 0f, 1f, false, 0.2f));
+            _transitions.Add(new AlphaFadeTransition(_fullscreenPrevious, 0f, 1f, false, 0.2f));
+            _transitions.Add(new AlphaFadeTransition(_fullscreenValue, 0f, 1f, false, 0.2f));
+            _transitions.Add(new ScaleTransition(_pane, 0f, 1f, false));
+            _transitions.Add(new TranslateTransition(_generalButtons[0], -400, 0, 0, 0, true, 0.2f));
+            _transitions.Add(new TranslateTransition(_generalButtons[1], -400, 0, 0, 0, true, 0.2f));
+            _transitions.Add(new TranslateTransition(_generalButtons[2], -400, 0, 0, 0, true, 0.2f));
+            _transitions.Add(new TranslateTransition(_generalButtons[3], _spriteBatch.GraphicsDevice.Viewport.Width, 0, 0, 0, true, 0.2f));
+            _transitions.Add(new TranslateTransition(_generalButtons[4], _spriteBatch.GraphicsDevice.Viewport.Width, 0, 0, 0, false, 0.2f));
+            base.applyIntroTransitions();
+        }
+
+        public override void applyOutroTransitions(Action onFinished = null)
+        {
+            _transitions.Clear();
+            _transitions.Add(new AlphaFadeTransition(_videoTitle, 1f, 0f, true, 0.3f));
+            _transitions.Add(new AlphaFadeTransition(_resolutionLabel, 1f, 0f, false, 0.3f));
+            _transitions.Add(new AlphaFadeTransition(_resolutionNext, 1f, 0f, false, 0.3f));
+            _transitions.Add(new AlphaFadeTransition(_resolutionPrevious, 1f, 0f, false, 0.3f));
+            _transitions.Add(new AlphaFadeTransition(_resolutionValue, 1f, 0f, false, 0.3f));
+            _transitions.Add(new AlphaFadeTransition(_fullscreenLabel, 1f, 0f, false, 0.3f));
+            _transitions.Add(new AlphaFadeTransition(_fullscreenNext, 1f, 0f, false, 0.3f));
+            _transitions.Add(new AlphaFadeTransition(_fullscreenPrevious, 1f, 0f, false, 0.3f));
+            _transitions.Add(new AlphaFadeTransition(_fullscreenValue, 1f, 0f, false, 0.3f));
+            _transitions.Add(new TranslateTransition(_generalButtons[3], 0, 0, _spriteBatch.GraphicsDevice.Viewport.Width, 0, false, 0.2f));
+            _transitions.Add(new TranslateTransition(_generalButtons[4], 0, 0, _spriteBatch.GraphicsDevice.Viewport.Width, 0, false, 0.2f));
+            _transitions.Add(new TranslateTransition(_generalButtons[0], 0, 0, -400, 0, true, 0.3f));
+            _transitions.Add(new TranslateTransition(_generalButtons[1], 0, 0, -400, 0, true, 0.3f));
+            _transitions.Add(new TranslateTransition(_generalButtons[2], 0, 0, -400, 0, true, 0.3f));
+            _transitions.Add(new ScaleTransition(_pane, 1f, 0f));
+            base.applyOutroTransitions(onFinished);
+        }
+
         private void loadSettings()
         {
             GameSettings settings = DataManager.gameSettings;
@@ -406,11 +452,11 @@ namespace StasisGame.UI
 
         override public void update()
         {
+            // Update input
+            base.update();
+
             if (!_skipUpdate)
             {
-                // Update input
-                base.update();
-
                 // Handle button input
                 for (int i = 0; i < _generalButtons.Count; i++)
                 {

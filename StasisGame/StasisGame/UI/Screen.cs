@@ -53,6 +53,7 @@ namespace StasisGame.UI
         protected List<Transition> _transitions;
         protected List<Transition> _transitionsToRemove;
         private Action _onFinished;
+        protected bool _skipUpdate = true;
 
         public ScreenType screenType { get { return _screenType; } set { _screenType = value; } }
         public ScreenSystem screenSystem { get { return _screenSystem; } }
@@ -63,6 +64,7 @@ namespace StasisGame.UI
         public float translationX { get { return _translationX; } set { _translationX = value; } }
         public float translationY { get { return _translationY; } set { _translationY = value; } }
         public Screen screen { get { return this; } }
+        public bool skipUpdate { get { return _skipUpdate; } set { _skipUpdate = value; } }
 
         public Screen(ScreenSystem screenSystem, ScreenType screenType)
         {
