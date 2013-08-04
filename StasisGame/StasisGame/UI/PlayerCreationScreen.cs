@@ -81,8 +81,12 @@ namespace StasisGame.UI
         public override void applyIntroTransitions()
         {
             _nameInputPane.scale = 0f;
+            _cancelButton.translationX = _spriteBatch.GraphicsDevice.Viewport.Width;
+            _createButton.translationX = _spriteBatch.GraphicsDevice.Viewport.Width;
             _transitions.Clear();
             _transitions.Add(new ScaleTransition(_nameInputPane, 0f, 1f));
+            _transitions.Add(new TranslateTransition(_cancelButton, _spriteBatch.GraphicsDevice.Viewport.Width, 0, 0, 0));
+            _transitions.Add(new TranslateTransition(_createButton, _spriteBatch.GraphicsDevice.Viewport.Width, 0, 0, 0, false));
             base.applyIntroTransitions();
         }
 
@@ -90,6 +94,8 @@ namespace StasisGame.UI
         {
             _transitions.Clear();
             _transitions.Add(new ScaleTransition(_nameInputPane, 1f, 0f));
+            _transitions.Add(new TranslateTransition(_cancelButton, 0, 0, _spriteBatch.GraphicsDevice.Viewport.Width, 0));
+            _transitions.Add(new TranslateTransition(_createButton, 0, 0, _spriteBatch.GraphicsDevice.Viewport.Width, 0, false));
             base.applyOutroTransitions(onFinished);
         }
 
