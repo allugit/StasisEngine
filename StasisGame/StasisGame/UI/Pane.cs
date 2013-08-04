@@ -31,28 +31,30 @@ namespace StasisGame.UI
         {
             get
             {
+                int halfWidth = (int)(((float)_width * _scale) / 2f);
                 if (_alignment == UIAlignment.TopLeft || _alignment == UIAlignment.MiddleLeft || _alignment == UIAlignment.BottomLeft)
-                    return _xOffset;
+                    return _xOffset - halfWidth;
                 else if (_alignment == UIAlignment.TopCenter || _alignment == UIAlignment.MiddleCenter || _alignment == UIAlignment.BottomCenter)
-                    return _xOffset + (int)(_spriteBatch.GraphicsDevice.Viewport.Width / 2f);
+                    return _xOffset - halfWidth + (int)(_spriteBatch.GraphicsDevice.Viewport.Width / 2f);
                 else if (_alignment == UIAlignment.TopRight || _alignment == UIAlignment.MiddleRight || _alignment == UIAlignment.BottomRight)
-                    return _xOffset + _spriteBatch.GraphicsDevice.Viewport.Width;
+                    return _xOffset - halfWidth + _spriteBatch.GraphicsDevice.Viewport.Width;
 
-                return _xOffset;
+                return _xOffset - halfWidth;
             }
         }
         public int y
         {
             get
             {
+                int halfHeight = (int)(((float)_height * _scale) / 2f);
                 if (_alignment == UIAlignment.TopLeft || _alignment == UIAlignment.TopCenter || _alignment == UIAlignment.TopRight)
-                    return _yOffset;
+                    return _yOffset - halfHeight;
                 else if (_alignment == UIAlignment.MiddleLeft || _alignment == UIAlignment.MiddleCenter || _alignment == UIAlignment.MiddleRight)
-                    return _yOffset + (int)(_spriteBatch.GraphicsDevice.Viewport.Height / 2f);
+                    return _yOffset - halfHeight + (int)(_spriteBatch.GraphicsDevice.Viewport.Height / 2f);
                 else if (_alignment == UIAlignment.BottomLeft || _alignment == UIAlignment.BottomCenter || _alignment == UIAlignment.BottomRight)
-                    return _yOffset + _spriteBatch.GraphicsDevice.Viewport.Height;
+                    return _yOffset - halfHeight + _spriteBatch.GraphicsDevice.Viewport.Height;
 
-                return _yOffset;
+                return _yOffset - halfHeight;
             }
         }
 

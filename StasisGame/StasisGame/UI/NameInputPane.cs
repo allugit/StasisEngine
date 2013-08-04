@@ -42,8 +42,8 @@ namespace StasisGame.UI
                 "0", "1", "2", "3", "4", "5", "6", "7", "8", "9", " ", "-", "_", ".", ","
             };
             int gridCellWidth = (int)Math.Floor((float)_width / (float)_letterSpacing);
-            int calculatedX = base.x;
-            int calculatedY = base.y;
+            int halfWidth = (int)((float)_width / 2f);
+            int halfHeight = (int)((float)_height / 2f);
             Point letterOffset = new Point(32, 24);
 
             for (int i = 0; i < letters.Length; i++)
@@ -56,8 +56,8 @@ namespace StasisGame.UI
                     _screen,
                     _font,
                     _alignment,
-                    letterOffset.X + x + letterCellX * _letterSpacing,
-                    letterOffset.Y + y + letterCellY * _letterSpacing,
+                    letterOffset.X + - halfWidth  + _xOffset + letterCellX * _letterSpacing,
+                    letterOffset.Y + - halfHeight + _yOffset + letterCellY * _letterSpacing,
                     16,
                     TextAlignment.Center,
                     letter,
