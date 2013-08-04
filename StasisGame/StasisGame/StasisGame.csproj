@@ -156,10 +156,12 @@
     <Compile Include="Systems\WorldMapSystem.cs" />
     <Compile Include="Tree.cs" />
     <Compile Include="TrunkMetamerConstraint.cs" />
+    <Compile Include="UI\AlphaFadeTransition.cs" />
     <Compile Include="UI\BluePane.cs" />
     <Compile Include="UI\ConfirmationOverlay.cs" />
-    <Compile Include="UI\FadeInTransition.cs" />
-    <Compile Include="UI\FadeOutTransition.cs" />
+    <Compile Include="UI\ColorFadeInTransition.cs" />
+    <Compile Include="UI\ColorFadeOutTransition.cs" />
+    <Compile Include="UI\IAlphaFadable.cs" />
     <Compile Include="UI\InventoryDisplay.cs" />
     <Compile Include="UI\IScalable.cs" />
     <Compile Include="UI\ITransitionTarget.cs" />

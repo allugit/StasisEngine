@@ -248,7 +248,7 @@ namespace StasisGame
             _levelSystem.load(levelUID);
             _playerSystem.addLevelComponents();
             _levelScreen = new LevelScreen(this, _systemManager, _entityManager);
-            _screenSystem.addTransition(new FadeInTransition(_levelScreen, Color.Black, true, 0.01f));
+            _screenSystem.addTransition(new ColorFadeInTransition(_levelScreen, Color.Black, true, 0.01f));
         }
 
         public void closeMainMenu()
@@ -262,7 +262,7 @@ namespace StasisGame
             _mainMenuScreen.applyIntroTransitions();
             if (fadeIn)
             {
-                _screenSystem.addTransition(new FadeInTransition(_mainMenuScreen, Color.Black, true, 0.01f));
+                _screenSystem.addTransition(new ColorFadeInTransition(_mainMenuScreen, Color.Black, true, 0.01f));
             }
             _screenSystem.addTransition(new TranslateTransition(_mainMenuScreen, -300, 0, 0, 0, false, 0.025f, () => { _screenSystem.addScreen(_mainMenuScreen); }));
         }
@@ -279,7 +279,7 @@ namespace StasisGame
 
         public void openOptionsMenu()
         {
-            _screenSystem.addTransition(new FadeInTransition(_optionsMenuScreen, Color.Black));
+            _screenSystem.addTransition(new ColorFadeInTransition(_optionsMenuScreen, Color.Black));
         }
 
         public void closeOptionsMenu()

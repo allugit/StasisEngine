@@ -5,7 +5,7 @@ using Microsoft.Xna.Framework.Graphics;
 
 namespace StasisGame.UI
 {
-    public class TextButton
+    public class TextButton : IAlphaFadable
     {
         private Screen _screen;
         private SpriteBatch _spriteBatch;
@@ -24,7 +24,10 @@ namespace StasisGame.UI
         private Color _color;
         private Rectangle _localHitBox;
         private int _hitBoxPadding;
+        private float _alpha = 1f;
 
+        public float alpha { get { return _alpha; } set { _alpha = value; } }
+        public Screen screen { get { return _screen; } }
         public string text
         {
             get { return _text; }
@@ -142,6 +145,7 @@ namespace StasisGame.UI
             int y = this.y + (int)_screen.translationY;
             Vector2 origin = Vector2.Zero;
             Vector2 stringSize = _font.MeasureString(text);
+            float shadowAlpha = _alpha >= 1f ? 1f : _alpha / 8f;
 
             if (_textAlignment == TextAlignment.Center)
                 origin = new Vector2(stringSize.X / 2f, 0);
@@ -150,16 +154,16 @@ namespace StasisGame.UI
 
             if (_outline > 0)
             {
-                _spriteBatch.DrawString(_font, _text, new Vector2(x - _outline, y - _outline), Color.Black, 0f, origin, 1f, SpriteEffects.None, 0.0001f);
-                _spriteBatch.DrawString(_font, _text, new Vector2(x, y - _outline), Color.Black, 0f, origin, 1f, SpriteEffects.None, 0.0001f);
-                _spriteBatch.DrawString(_font, _text, new Vector2(x + _outline, y - _outline), Color.Black, 0f, origin, 1f, SpriteEffects.None, 0.0001f);
-                _spriteBatch.DrawString(_font, _text, new Vector2(x + _outline, y), Color.Black, 0f, origin, 1f, SpriteEffects.None, 0.0001f);
-                _spriteBatch.DrawString(_font, _text, new Vector2(x + _outline, y + _outline), Color.Black, 0f, origin, 1f, SpriteEffects.None, 0.0001f);
-                _spriteBatch.DrawString(_font, _text, new Vector2(x, y + _outline), Color.Black, 0f, origin, 1f, SpriteEffects.None, 0.0001f);
-                _spriteBatch.DrawString(_font, _text, new Vector2(x - _outline, y + _outline), Color.Black, 0f, origin, 1f, SpriteEffects.None, 0.0001f);
-                _spriteBatch.DrawString(_font, _text, new Vector2(x - _outline, y), Color.Black, 0f, origin, 1f, SpriteEffects.None, 0.0001f);
+                _spriteBatch.DrawString(_font, _text, new Vector2(x - _outline, y - _outline), Color.Black * shadowAlpha, 0f, origin, 1f, SpriteEffects.None, 0.0001f);
+                _spriteBatch.DrawString(_font, _text, new Vector2(x, y - _outline), Color.Black * shadowAlpha, 0f, origin, 1f, SpriteEffects.None, 0.0001f);
+                _spriteBatch.DrawString(_font, _text, new Vector2(x + _outline, y - _outline), Color.Black * shadowAlpha, 0f, origin, 1f, SpriteEffects.None, 0.0001f);
+                _spriteBatch.DrawString(_font, _text, new Vector2(x + _outline, y), Color.Black * shadowAlpha, 0f, origin, 1f, SpriteEffects.None, 0.0001f);
+                _spriteBatch.DrawString(_font, _text, new Vector2(x + _outline, y + _outline), Color.Black * shadowAlpha, 0f, origin, 1f, SpriteEffects.None, 0.0001f);
+                _spriteBatch.DrawString(_font, _text, new Vector2(x, y + _outline), Color.Black * shadowAlpha, 0f, origin, 1f, SpriteEffects.None, 0.0001f);
+                _spriteBatch.DrawString(_font, _text, new Vector2(x - _outline, y + _outline), Color.Black * shadowAlpha, 0f, origin, 1f, SpriteEffects.None, 0.0001f);
+                _spriteBatch.DrawString(_font, _text, new Vector2(x - _outline, y), Color.Black * shadowAlpha, 0f, origin, 1f, SpriteEffects.None, 0.0001f);
             }
-            _spriteBatch.DrawString(_font, _text, new Vector2(x, y), _color, 0f, origin, 1f, SpriteEffects.None, 0f);
+            _spriteBatch.DrawString(_font, _text, new Vector2(x, y), _color * _alpha, 0f, origin, 1f, SpriteEffects.None, 0f);
         }
     }
 }

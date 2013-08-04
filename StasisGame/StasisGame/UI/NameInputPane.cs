@@ -24,6 +24,7 @@ namespace StasisGame.UI
         private KeyboardState _oldKeyState;
 
         public string name { get { return _sb.ToString(); } }
+        public List<TextButton> letterButtons { get { return _letterButtons; } }
 
         public NameInputPane(Screen screen, SpriteFont font, UIAlignment alignment, int x, int y, int width, int height, int maxLetters)
             : base(screen, alignment, x, y, width, height)

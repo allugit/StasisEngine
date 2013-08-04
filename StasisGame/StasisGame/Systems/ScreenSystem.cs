@@ -84,7 +84,7 @@ namespace StasisGame.Systems
                     {
                         transition.end();
                         _transitionsToRemove.Add(transition);
-                        break;
+                        continue;
                     }
                     else if (transition.starting)
                     {

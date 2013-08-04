@@ -153,7 +153,7 @@ namespace StasisGame.UI
                 {
                     transition.end();
                     _transitionsToRemove.Add(transition);
-                    break;
+                    continue;
                 }
                 else if (transition.starting)
                 {
