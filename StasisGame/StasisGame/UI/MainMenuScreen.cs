@@ -102,15 +102,17 @@ namespace StasisGame.UI
             _transitions.Add(new TranslateTransition(_buttons[2], -100, 0, 0, 0, true, 0.05f));
             _transitions.Add(new TranslateTransition(_buttons[1], -100, 0, 0, 0, true, 0.05f));
             _transitions.Add(new TranslateTransition(_buttons[0], -100, 0, 0, 0, true, 0.05f));
+            base.applyIntroTransitions();
         }
 
-        public override void applyOutroTransitions()
+        public override void applyOutroTransitions(Action onFinished = null)
         {
             _transitions.Clear();
             _transitions.Add(new TranslateTransition(_buttons[0], 0, 0, -100, 0, true, 0.2f));
             _transitions.Add(new TranslateTransition(_buttons[1], 0, 0, -100, 0, true, 0.2f));
             _transitions.Add(new TranslateTransition(_buttons[2], 0, 0, -100, 0, true, 0.2f));
             _transitions.Add(new TranslateTransition(_buttons[3], 0, 0, -100, 0, true, 0.2f));
+            base.applyOutroTransitions(onFinished);
         }
 
         override public void update()

@@ -297,8 +297,7 @@ namespace StasisGame
 
         public void closePlayerCreationScreen()
         {
-            _playerCreationScreen.applyOutroTransitions();
-            _screenSystem.removeScreen(_playerCreationScreen);
+            _playerCreationScreen.applyOutroTransitions(() => { _screenSystem.removeScreen(_playerCreationScreen); });
             //_screenSystem.addTransition(new TranslateTransition(_playerCreationScreen, 0, 0, GraphicsDevice.Viewport.Width, 0, true, 0.05f, null, () => { _screenSystem.removeScreen(_playerCreationScreen); }));
         }
 

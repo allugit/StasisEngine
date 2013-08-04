@@ -83,12 +83,14 @@ namespace StasisGame.UI
             _nameInputPane.scale = 0f;
             _transitions.Clear();
             _transitions.Add(new ScaleTransition(_nameInputPane, 0f, 1f));
+            base.applyIntroTransitions();
         }
 
-        public override void applyOutroTransitions()
+        public override void applyOutroTransitions(Action onFinished = null)
         {
             _transitions.Clear();
             _transitions.Add(new ScaleTransition(_nameInputPane, 1f, 0f));
+            base.applyOutroTransitions(onFinished);
         }
 
         private void hitTestButton(TextureButton button)

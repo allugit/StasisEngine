@@ -51,6 +51,7 @@ namespace StasisGame.UI
         protected float _translationY;
         protected List<Transition> _transitions;
         protected List<Transition> _transitionsToRemove;
+        private Action _onFinished;
 
         public ScreenType screenType { get { return _screenType; } set { _screenType = value; } }
         public ScreenSystem screenSystem { get { return _screenSystem; } }
@@ -104,12 +105,15 @@ namespace StasisGame.UI
         {
         }
 
-        virtual public void applyOutroTransitions()
+        virtual public void applyOutroTransitions(Action onFinished = null)
         {
+            _onFinished = onFinished;
         }
 
         virtual public void update()
         {
+            bool tryOnFinished = false;
+
             _oldGamepadState = _newGamepadState;
             _oldKeyState = _newKeyState;
             _oldMouseState = _newMouseState;
@@ -122,8 +126,16 @@ namespace StasisGame.UI
             for (int i = 0; i < _transitionsToRemove.Count; i++)
             {
                 _transitions.Remove(_transitionsToRemove[i]);
+                tryOnFinished = true;
             }
             _transitionsToRemove.Clear();
+
+            // Attempt to call onFinished callback
+            if (tryOnFinished && _transitions.Count == 0 && _onFinished != null)
+            {
+                _onFinished();
+                _onFinished = null;
+            }
 
             // Update transitions
             for (int i = 0; i < _transitions.Count; i++)
