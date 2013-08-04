@@ -5,8 +5,8 @@ using System.Text;
 
 namespace StasisGame.UI
 {
-    public interface ITransition
+    public interface IScalable : ITransitionTarget
     {
-        Screen screen { get; }
+        float scale { get; set; }
     }
 }

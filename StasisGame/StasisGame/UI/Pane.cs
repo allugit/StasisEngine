@@ -5,7 +5,7 @@ using StasisCore;
 
 namespace StasisGame.UI
 {
-    abstract public class Pane
+    abstract public class Pane : IScalable
     {
         protected SpriteBatch _spriteBatch;
         protected Screen _screen;
@@ -23,7 +23,10 @@ namespace StasisGame.UI
         protected int _yOffset;
         protected int _width;
         protected int _height;
+        protected float _scale;
 
+        public float scale { get { return _scale; } set { _scale = value; } }
+        public Screen screen { get { return _screen; } }
         public int x
         {
             get
@@ -99,12 +102,10 @@ namespace StasisGame.UI
             int y = this.y + (int)_screen.translationY;
             int backgroundMargin = 3;
 
-            // Draw logo
-
             // Draw background
             _spriteBatch.Draw(
                 _background,
-                new Rectangle(x + backgroundMargin, y + backgroundMargin, _width - backgroundMargin * 2,_height - backgroundMargin * 2),
+                new Rectangle(x + backgroundMargin, y + backgroundMargin, (int)(_width * _scale) - backgroundMargin * 2, (int)(_height * _scale) - backgroundMargin * 2),
                 new Rectangle(0, 0, _width - backgroundMargin * 2, _height - backgroundMargin * 2),
                 Color.White);
 
@@ -116,24 +117,24 @@ namespace StasisGame.UI
 
             _spriteBatch.Draw(
                 _topRightCorner,
-                new Rectangle(x + _width - _topRightCorner.Width, y, _topRightCorner.Width, _topRightCorner.Height),
+                new Rectangle(x + (int)(_width * _scale) - _topRightCorner.Width, y, _topRightCorner.Width, _topRightCorner.Height),
                 Color.White);
 
             _spriteBatch.Draw(
                 _bottomRightCorner,
-                new Rectangle(x + _width - _bottomRightCorner.Width, y + _height - _bottomRightCorner.Height, _bottomRightCorner.Width, _bottomRightCorner.Height),
+                new Rectangle(x + (int)(_width * _scale) - _bottomRightCorner.Width, y + (int)(_height * _scale) - _bottomRightCorner.Height, _bottomRightCorner.Width, _bottomRightCorner.Height),
                 Color.White);
 
             _spriteBatch.Draw(
                 _bottomLeftCorner,
-                new Rectangle(x, y + _height - _bottomLeftCorner.Height, _bottomLeftCorner.Width, _bottomLeftCorner.Height),
+                new Rectangle(x, y + (int)(_height * _scale) - _bottomLeftCorner.Height, _bottomLeftCorner.Width, _bottomLeftCorner.Height),
                 Color.White);
 
             // Draw sides
-            int leftSideHeight = _height - (_topLeftCorner.Height + _bottomLeftCorner.Height);
-            int rightSideHeight = _height - (_topRightCorner.Height + _bottomRightCorner.Height);
-            int topSideWidth = _width - (_topLeftCorner.Width + _topRightCorner.Width);
-            int bottomSideWidth = _width - (_bottomLeftCorner.Width + _bottomRightCorner.Width);
+            int leftSideHeight = (int)(_height * _scale) - (_topLeftCorner.Height + _bottomLeftCorner.Height);
+            int rightSideHeight = (int)(_height * _scale) - (_topRightCorner.Height + _bottomRightCorner.Height);
+            int topSideWidth = (int)(_width * _scale) - (_topLeftCorner.Width + _topRightCorner.Width);
+            int bottomSideWidth = (int)(_width * _scale) - (_bottomLeftCorner.Width + _bottomRightCorner.Width);
 
             _spriteBatch.Draw(
                 _leftSide,
@@ -149,13 +150,13 @@ namespace StasisGame.UI
 
             _spriteBatch.Draw(
                 _rightSide,
-                new Rectangle(x + _width - _rightSide.Width, y + _topRightCorner.Height, _rightSide.Width, rightSideHeight),
+                new Rectangle(x + (int)(_width * _scale) - _rightSide.Width, y + _topRightCorner.Height, _rightSide.Width, rightSideHeight),
                 new Rectangle(0, 0, _rightSide.Width, rightSideHeight),
                 Color.White);
 
             _spriteBatch.Draw(
                 _bottomSide,
-                new Rectangle(x + _bottomLeftCorner.Width, y + _height - _bottomSide.Height, bottomSideWidth, _bottomSide.Height),
+                new Rectangle(x + _bottomLeftCorner.Width, y + (int)(_height * _scale) - _bottomSide.Height, bottomSideWidth, _bottomSide.Height),
                 new Rectangle(0, 0, bottomSideWidth, _bottomSide.Height),
                 Color.White);
         }

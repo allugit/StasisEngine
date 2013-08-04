@@ -78,6 +78,19 @@ namespace StasisGame.UI
             _content.Unload();
         }
 
+        public override void applyIntroTransitions()
+        {
+            _nameInputPane.scale = 0f;
+            _transitions.Clear();
+            _transitions.Add(new ScaleTransition(_nameInputPane, 0f, 1f));
+        }
+
+        public override void applyOutroTransitions()
+        {
+            _transitions.Clear();
+            _transitions.Add(new ScaleTransition(_nameInputPane, 1f, 0f));
+        }
+
         private void hitTestButton(TextureButton button)
         {
             if (button.hitTest(new Vector2(_newMouseState.X, _newMouseState.Y)))
@@ -86,7 +99,6 @@ namespace StasisGame.UI
 
                 if (_newMouseState.LeftButton == ButtonState.Pressed && _oldMouseState.LeftButton == ButtonState.Released)
                 {
-                    Console.WriteLine("hitting button: {0}", button);
                     button.activate();
                 }
             }

@@ -290,13 +290,16 @@ namespace StasisGame
         public void openPlayerCreationScreen()
         {
             _playerCreationScreen = _playerCreationScreen ?? new PlayerCreationScreen(this);
-            _playerCreationScreen.translationX = GraphicsDevice.Viewport.Width;
-            _screenSystem.addTransition(new TranslateTransition(_playerCreationScreen, (int)_playerCreationScreen.translationX, 0, 0, 0, true, 0.05f, () => { _screenSystem.addScreen(_playerCreationScreen); }));
+            _playerCreationScreen.applyIntroTransitions();
+            _screenSystem.addScreen(_playerCreationScreen);
+            //_screenSystem.addTransition(new TranslateTransition(_playerCreationScreen, GraphicsDevice.Viewport.Width, 0, 0, 0, true, 0.05f, () => { _screenSystem.addScreen(_playerCreationScreen); }));
         }
 
         public void closePlayerCreationScreen()
         {
-            _screenSystem.addTransition(new TranslateTransition(_playerCreationScreen, 0, 0, GraphicsDevice.Viewport.Width, 0, true, 0.05f, null, () => { _screenSystem.removeScreen(_playerCreationScreen); }));
+            _playerCreationScreen.applyOutroTransitions();
+            _screenSystem.removeScreen(_playerCreationScreen);
+            //_screenSystem.addTransition(new TranslateTransition(_playerCreationScreen, 0, 0, GraphicsDevice.Viewport.Width, 0, true, 0.05f, null, () => { _screenSystem.removeScreen(_playerCreationScreen); }));
         }
 
         public void openWorldMap()
