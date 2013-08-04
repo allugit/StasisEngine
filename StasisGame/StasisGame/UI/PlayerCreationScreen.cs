@@ -12,7 +12,6 @@ namespace StasisGame.UI
     {
         private LoderGame _game;
         private ContentManager _content;
-        private Texture2D _logo;
         private SpriteFont _titleFont;
         private SpriteFont _letterFont;
         private Label _title;
@@ -27,7 +26,6 @@ namespace StasisGame.UI
         {
             _game = game;
             _content = new ContentManager(game.Services, "Content");
-            _logo = _content.Load<Texture2D>("logo");
             _titleFont = _content.Load<SpriteFont>("player_creation_screen/title_font");
             _letterFont = _content.Load<SpriteFont>("dialogue_font");
             _namePreview = new NamePreview(this, _letterFont, UIAlignment.MiddleCenter, -200, -122, _maxLetters);
@@ -87,7 +85,10 @@ namespace StasisGame.UI
                 button.mouseOver();
 
                 if (_newMouseState.LeftButton == ButtonState.Pressed && _oldMouseState.LeftButton == ButtonState.Released)
+                {
+                    Console.WriteLine("hitting button: {0}", button);
                     button.activate();
+                }
             }
             else if (button.selected)
             {
@@ -97,11 +98,11 @@ namespace StasisGame.UI
 
         public override void update()
         {
+            // Update input
+            base.update();
+
             if (!_skipUpdate)
             {
-                // Update input
-                base.update();
-
                 // Update components
                 _nameInputPane.update();
 
@@ -120,13 +121,6 @@ namespace StasisGame.UI
 
         public override void draw()
         {
-
-            // Background renderer
-            _game.menuBackgroundRenderer.draw();
-
-            // Draw logo
-            _spriteBatch.Draw(_logo, new Rectangle(_spriteBatch.GraphicsDevice.Viewport.Width - _logo.Width, 0, _logo.Width, _logo.Height), Color.White);
-
             // Draw title
             _title.draw();
 

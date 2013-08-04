@@ -58,6 +58,7 @@ namespace StasisGame
         private LevelScreen _levelScreen;
         private PlayerCreationScreen _playerCreationScreen;
         private BackgroundRenderer _menuBackgroundRenderer;
+        private Texture2D _logo;
         private Vector2 _menuBackgroundScreenOffset;
 
         public static bool debug;
@@ -108,6 +109,8 @@ namespace StasisGame
 
             Texture2D pixel = new Texture2D(GraphicsDevice, 1, 1);
             pixel.SetData<Color>(new[] { Color.White });
+
+            _logo = Content.Load<Texture2D>("logo");
 
             // TODO: Be more selective about which resources to load...
             ResourceManager.initialize(GraphicsDevice);
@@ -285,14 +288,14 @@ namespace StasisGame
 
         public void openPlayerCreationScreen()
         {
-            _playerCreationScreen = new PlayerCreationScreen(this);
+            _playerCreationScreen = _playerCreationScreen ?? new PlayerCreationScreen(this);
             _playerCreationScreen.slideX = GraphicsDevice.Viewport.Width;
-            _screenSystem.addTransition(new SlideTransition(_playerCreationScreen, (int)_playerCreationScreen.slideX, 0, 0, 0));
+            _screenSystem.addTransition(new SlideTransition(_playerCreationScreen, (int)_playerCreationScreen.slideX, 0, 0, 0, true, 0.05f, () => { _screenSystem.addScreen(_playerCreationScreen); }));
         }
 
         public void closePlayerCreationScreen()
         {
-            _playerCreationScreen = null;
+            _screenSystem.addTransition(new SlideTransition(_playerCreationScreen, 0, 0, GraphicsDevice.Viewport.Width, 0, true, 0.05f, null, () => { _screenSystem.removeScreen(_playerCreationScreen); }));
         }
 
         public void openWorldMap()
@@ -368,6 +371,8 @@ namespace StasisGame
             {
                 case GameState.MainMenu:
                     _spriteBatch.Begin(SpriteSortMode.Deferred, BlendState.AlphaBlend, SamplerState.LinearWrap, null, null);
+                    _menuBackgroundRenderer.draw();
+                    _spriteBatch.Draw(_logo, new Vector2(GraphicsDevice.Viewport.Width - _logo.Width, 0), _logo.Bounds, Color.White, 0, Vector2.Zero, 1f, SpriteEffects.None, 0);
                     _screenSystem.draw();
                     _spriteBatch.End();
                     break;

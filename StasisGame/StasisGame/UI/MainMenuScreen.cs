@@ -12,7 +12,6 @@ namespace StasisGame.UI
     public class MainMenuScreen : Screen
     {
         private LoderGame _game;
-        private Texture2D _logo;
         private Texture2D _buttonsBackground;
         private ContentManager _content;
         private List<TextureButton> _buttons;
@@ -22,7 +21,6 @@ namespace StasisGame.UI
             _game = game;
             _content = new ContentManager(game.Services);
             _content.RootDirectory = "Content";
-            _logo = _content.Load<Texture2D>("logo");
             _buttonsBackground = _content.Load<Texture2D>("main_menu/buttons_background");
             _buttons = new List<TextureButton>();
 
@@ -123,12 +121,6 @@ namespace StasisGame.UI
 
         override public void draw()
         {
-            // Draw background
-            _game.menuBackgroundRenderer.draw();
-
-            // Draw logo
-            _game.spriteBatch.Draw(_logo, new Vector2(_game.GraphicsDevice.Viewport.Width - _logo.Width, 0), _logo.Bounds, Color.White, 0, Vector2.Zero, 1f, SpriteEffects.None, 0);
-
             // Draw button background
             _game.spriteBatch.Draw(_buttonsBackground, new Vector2(0 + slideX, 100 + slideY), _buttonsBackground.Bounds, Color.White, 0f, Vector2.Zero, 1f, SpriteEffects.None, 0f);
 

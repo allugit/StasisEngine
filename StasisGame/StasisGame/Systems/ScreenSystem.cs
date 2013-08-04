@@ -35,6 +35,7 @@ namespace StasisGame.Systems
 
         public void addScreen(Screen screen)
         {
+            System.Diagnostics.Debug.Assert(!_screens.Contains(screen));
             _screens.Add(screen);
             Logger.log(string.Format("Added {0} screen to ScreenSystem.", screen.screenType));
         }
@@ -68,6 +69,7 @@ namespace StasisGame.Systems
                 _transitionsToRemove.Clear();
 
                 // Update transitions
+                Console.WriteLine("number of transitions: {0}", _transitions.Count);
                 for (int i = 0; i < _transitions.Count; i++)
                 {
                     Transition transition = _transitions[i];
