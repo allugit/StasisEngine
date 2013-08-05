@@ -320,7 +320,7 @@ namespace StasisGame
             worldMapSystem.loadWorldMap(currentWorldMapUID, DataManager.playerData.getWorldMapData(currentWorldMapUID));
             _gameState = GameState.WorldMap;
 
-            _screenSystem.addTransition(new ScreenFadeInTransition(_worldMapScreen, Color.Black, true, 0.025f));
+            _screenSystem.addTransition(new ScreenFadeInTransition(_worldMapScreen, Color.Black, true, 0.02f));
         }
 
         public void closeWorldMap()

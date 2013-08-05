@@ -109,28 +109,37 @@ namespace StasisGame.UI
                 _background,
                 new Rectangle(x + backgroundMargin, y + backgroundMargin, (int)(_width * _scale) - backgroundMargin * 2, (int)(_height * _scale) - backgroundMargin * 2),
                 new Rectangle(0, 0, _width - backgroundMargin * 2, _height - backgroundMargin * 2),
-                Color.White);
+                Color.White,
+                0f, Vector2.Zero, SpriteEffects.None, 0.1f);
 
             // Draw corners
             _spriteBatch.Draw(
                 _topLeftCorner,
                 new Rectangle(x, y, _topLeftCorner.Width, _topLeftCorner.Height),
-                Color.White);
+                _topLeftCorner.Bounds,
+                Color.White,
+                0f, Vector2.Zero, SpriteEffects.None, 0.1f);
 
             _spriteBatch.Draw(
                 _topRightCorner,
                 new Rectangle(x + (int)(_width * _scale) - _topRightCorner.Width, y, _topRightCorner.Width, _topRightCorner.Height),
-                Color.White);
+                _topRightCorner.Bounds,
+                Color.White,
+                0f, Vector2.Zero, SpriteEffects.None, 0.1f);
 
             _spriteBatch.Draw(
                 _bottomRightCorner,
                 new Rectangle(x + (int)(_width * _scale) - _bottomRightCorner.Width, y + (int)(_height * _scale) - _bottomRightCorner.Height, _bottomRightCorner.Width, _bottomRightCorner.Height),
-                Color.White);
+                _bottomRightCorner.Bounds,
+                Color.White,
+                0f, Vector2.Zero, SpriteEffects.None, 0.1f);
 
             _spriteBatch.Draw(
                 _bottomLeftCorner,
                 new Rectangle(x, y + (int)(_height * _scale) - _bottomLeftCorner.Height, _bottomLeftCorner.Width, _bottomLeftCorner.Height),
-                Color.White);
+                _bottomLeftCorner.Bounds,
+                Color.White,
+                0f, Vector2.Zero, SpriteEffects.None, 0.1f);
 
             // Draw sides
             int leftSideHeight = (int)(_height * _scale) - (_topLeftCorner.Height + _bottomLeftCorner.Height);
@@ -142,25 +151,29 @@ namespace StasisGame.UI
                 _leftSide,
                 new Rectangle(x, y + _topLeftCorner.Height, _leftSide.Width, leftSideHeight),
                 new Rectangle(0, 0, _leftSide.Width, leftSideHeight),
-                Color.White);
+                Color.White,
+                0f, Vector2.Zero, SpriteEffects.None, 0.1f);
 
             _spriteBatch.Draw(
                 _topSide,
                 new Rectangle(x + _topLeftCorner.Width, y, topSideWidth, _topSide.Height),
                 new Rectangle(0, 0, topSideWidth, _topSide.Height),
-                Color.White);
+                Color.White,
+                0f, Vector2.Zero, SpriteEffects.None, 0.1f);
 
             _spriteBatch.Draw(
                 _rightSide,
                 new Rectangle(x + (int)(_width * _scale) - _rightSide.Width, y + _topRightCorner.Height, _rightSide.Width, rightSideHeight),
                 new Rectangle(0, 0, _rightSide.Width, rightSideHeight),
-                Color.White);
+                Color.White,
+                0f, Vector2.Zero, SpriteEffects.None, 0.1f);
 
             _spriteBatch.Draw(
                 _bottomSide,
                 new Rectangle(x + _bottomLeftCorner.Width, y + (int)(_height * _scale) - _bottomSide.Height, bottomSideWidth, _bottomSide.Height),
                 new Rectangle(0, 0, bottomSideWidth, _bottomSide.Height),
-                Color.White);
+                Color.White,
+                0f, Vector2.Zero, SpriteEffects.None, 0.1f);
         }
     }
 }
