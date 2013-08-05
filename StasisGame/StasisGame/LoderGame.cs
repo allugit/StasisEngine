@@ -26,7 +26,8 @@ namespace StasisGame
         MainMenu,
         Options,
         WorldMap,
-        Level
+        Level,
+        LoadingLevel
     };
 
     public enum ControllerType
@@ -245,13 +246,40 @@ namespace StasisGame
 
         public void loadLevel(string levelUID)
         {
-            _screenSystem.addTransition(new ScreenFadeInTransition(_loadingScreen, Color.Black, true, 0.025f, () => { _screenSystem.addScreen(_loadingScreen); }));
+            _screenSystem.addTransition(new ScreenFadeInTransition(_loadingScreen, Color.Black, true, 0.025f, () =>
+            {
+                _screenSystem.addScreen(_loadingScreen);
+            },
+            () =>
+            {
+                _gameState = GameState.LoadingLevel;
+                _levelSystem.loadData(levelUID);
+                _levelSystem.createLevelSystems();
+                _levelSystem.createBackgroundRenderer();
+            }));
+
             //_gameState = GameState.Level;
             //_scriptManager.loadLevelScript(levelUID);
             //_levelSystem.load(levelUID);
             //_playerSystem.addLevelComponents();
             //_levelScreen = new LevelScreen(this, _systemManager, _entityManager);
             //_screenSystem.addTransition(new ColorFadeInTransition(_levelScreen, Color.Black, true, 0.01f));
+        }
+
+        public void afterLevelLoad()
+        {
+            Console.WriteLine("after level load...");
+            _gameState = GameState.Level;
+            _screenSystem.addTransition(new ScreenFadeOutTransition(_loadingScreen, Color.Black, true, 0.05f, null, () =>
+                {
+                    _screenSystem.removeScreen(_loadingScreen);
+                    _levelSystem.relax();
+                    _levelSystem.clean();
+                    _levelSystem.callScripts();
+                    _levelSystem.paused = false;
+                    _levelScreen = new LevelScreen(this, _systemManager, _entityManager);
+                    _screenSystem.addScreen(_levelScreen);
+                }));
         }
 
         public void closeMainMenu()
@@ -368,6 +396,22 @@ namespace StasisGame
                     _systemManager.process();
                     break;
 
+                case GameState.LoadingLevel:
+                    _systemManager.process();
+                    if (!_levelSystem.firstPassDone)
+                    {
+                        _levelSystem.loadEntity();
+                    }
+                    else if (!_levelSystem.secondPassDone)
+                    {
+                        _levelSystem.loadSecondPassEntity();
+                    }
+                    else
+                    {
+                        afterLevelLoad();
+                    }
+                    break;
+
                 case GameState.Level:
                     _systemManager.process();
                     break;
@@ -400,15 +444,19 @@ namespace StasisGame
                     _spriteBatch.End();
                     break;
 
-                case GameState.Level:
-                    _levelSystem.draw();
+                case GameState.LoadingLevel:
                     _spriteBatch.Begin(SpriteSortMode.BackToFront, BlendState.AlphaBlend);
                     _screenSystem.draw();
                     _spriteBatch.End();
                     break;
-            }
 
-            //_spriteBatch.End();
+                case GameState.Level:
+                    _levelSystem.draw();
+                    _spriteBatch.Begin(SpriteSortMode.BackToFront, BlendState.AlphaBlend);
+                    //_screenSystem.draw();
+                    _spriteBatch.End();
+                    break;
+            }
 
             base.Draw(gameTime);
         }

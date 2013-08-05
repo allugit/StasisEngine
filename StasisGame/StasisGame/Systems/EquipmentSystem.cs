@@ -68,7 +68,6 @@ namespace StasisGame.Systems
                 RopeSystem ropeSystem = _systemManager.getSystem(SystemType.Rope) as RopeSystem;
                 PhysicsComponent playerPhysicsComponent = _entityManager.getComponent(playerSystem.playerId, ComponentType.Physics) as PhysicsComponent;
                 List<int> toolbarEntities = _entityManager.getEntitiesPosessing(ComponentType.Toolbar);
-                bool handleInput = levelSystem.isAcceptingInput;
 
                 // Player equipment
                 if (playerSystem != null)
@@ -78,7 +77,7 @@ namespace StasisGame.Systems
                     WorldPositionComponent playerPositionComponent = _entityManager.getComponent(playerId, ComponentType.WorldPosition) as WorldPositionComponent;
                     ItemComponent selectedItem = playerToolbar.selectedItem;
 
-                    if (handleInput && selectedItem != null)
+                    if (selectedItem != null)
                     {
                         selectedItem.primaryContinuousAction = InputSystem.newMouseState.LeftButton == ButtonState.Pressed;
                         selectedItem.primarySingleAction = selectedItem.primaryContinuousAction && InputSystem.oldMouseState.LeftButton == ButtonState.Released;

@@ -32,7 +32,7 @@ namespace StasisGame.Systems
         public bool paused { get { return _paused; } set { _paused = value; } }
         public bool singleStep { get { return _singleStep; } set { _singleStep = value; } }
 
-        public PhysicsSystem(SystemManager systemManager, EntityManager entityManager, XElement data)
+        public PhysicsSystem(SystemManager systemManager, EntityManager entityManager, Vector2 gravity)
         {
             _systemManager = systemManager;
             _entityManager = entityManager;
@@ -40,7 +40,7 @@ namespace StasisGame.Systems
             _playerSystem = (PlayerSystem)systemManager.getSystem(SystemType.Player);
 
             // Create world
-            _world = new World(Loader.loadVector2(data.Attribute("gravity"), new Vector2(0, 32)));
+            _world = new World(gravity);
 
             // Contact callbacks
             _world.ContactManager.BeginContact += new BeginContactDelegate(BeginContact);
