@@ -13,6 +13,12 @@ namespace StasisGame.UI
         private Texture2D _background;
         private ContentManager _content;
         private int _textureIndex;
+        private Label _title;
+        private Label _message;
+        private SpriteFont _titleFont;
+        private SpriteFont _messageFont;
+
+        public string message { get { return _message.text; } set { _message.text = value; } }
 
         public LoadingScreen(LoderGame game)
             : base(game.screenSystem, ScreenType.Loading)
@@ -25,6 +31,28 @@ namespace StasisGame.UI
                 _textures.Add(_content.Load<Texture2D>(string.Format("loading_screen/gear_{0}", i)));
             }
             _background = _content.Load<Texture2D>("loading_screen/background");
+            _titleFont = _content.Load<SpriteFont>("loading_screen/title");
+            _messageFont = _content.Load<SpriteFont>("loading_screen/message");
+
+            _title = new Label(
+                this,
+                _titleFont,
+                UIAlignment.TopLeft,
+                32,
+                32,
+                TextAlignment.Left,
+                "Loading...",
+                4);
+
+            _message = new Label(
+                this,
+                _messageFont,
+                UIAlignment.BottomRight,
+                -32,
+                -48,
+                TextAlignment.Right,
+                "This is a Test Message",
+                2);
         }
 
         public override void update()
@@ -38,6 +66,9 @@ namespace StasisGame.UI
 
             _spriteBatch.Draw(_background, _background.Bounds, _background.Bounds, Color.White, 0f, Vector2.Zero, SpriteEffects.None, 0.11f);
             _spriteBatch.Draw(texture, new Rectangle(0, -110, texture.Width, texture.Height), texture.Bounds, Color.White, 0f, Vector2.Zero, SpriteEffects.None, 0.1f);
+
+            _title.draw();
+            _message.draw();
 
             base.draw();
         }
