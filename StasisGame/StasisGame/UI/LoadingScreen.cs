@@ -43,6 +43,7 @@ namespace StasisGame.UI
                 TextAlignment.Left,
                 "Loading...",
                 4);
+            _title.layerDepth = 0.1f;
 
             _message = new Label(
                 this,
@@ -53,6 +54,7 @@ namespace StasisGame.UI
                 TextAlignment.Right,
                 "This is a Test Message",
                 2);
+            _message.layerDepth = 0.1f;
         }
 
         public override void update()
