@@ -159,8 +159,8 @@
     <Compile Include="UI\AlphaFadeTransition.cs" />
     <Compile Include="UI\BluePane.cs" />
     <Compile Include="UI\ConfirmationScreen.cs" />
-    <Compile Include="UI\ColorFadeInTransition.cs" />
-    <Compile Include="UI\ColorFadeOutTransition.cs" />
+    <Compile Include="UI\ScreenFadeInTransition.cs" />
+    <Compile Include="UI\ScreenFadeOutTransition.cs" />
     <Compile Include="UI\IAlphaFadable.cs" />
     <Compile Include="UI\InventoryDisplay.cs" />
     <Compile Include="UI\IScalable.cs" />
@@ -171,6 +171,7 @@
     <Compile Include="UI\LargeHealthBar.cs" />
     <Compile Include="UI\LevelScreen.cs" />
     <Compile Include="UI\LoadGameScreen.cs" />
+    <Compile Include="UI\LoadingScreen.cs" />
     <Compile Include="UI\MainMenuScreen.cs" />
     <Compile Include="UI\NameInputPane.cs" />
     <Compile Include="UI\NamePreview.cs" />

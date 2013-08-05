@@ -54,6 +54,7 @@ namespace StasisGame
         private MainMenuScreen _mainMenuScreen;
         private WorldMapScreen _worldMapScreen;
         private LoadGameScreen _loadGameScreen;
+        private LoadingScreen _loadingScreen;
         private OptionsMenuScreen _optionsMenuScreen;
         private LevelScreen _levelScreen;
         private PlayerCreationScreen _playerCreationScreen;
@@ -95,6 +96,7 @@ namespace StasisGame
             _scriptManager = new ScriptManager(_systemManager, _entityManager);
             _screenSystem = new ScreenSystem(_systemManager, _spriteBatch);
             _systemManager.add(_screenSystem, -1);
+            _loadingScreen = new LoadingScreen(this);
 
             DataManager.initialize(this, _systemManager);
             DataManager.loadGameSettings();
@@ -243,12 +245,13 @@ namespace StasisGame
 
         public void loadLevel(string levelUID)
         {
-            _gameState = GameState.Level;
-            _scriptManager.loadLevelScript(levelUID);
-            _levelSystem.load(levelUID);
-            _playerSystem.addLevelComponents();
-            _levelScreen = new LevelScreen(this, _systemManager, _entityManager);
-            _screenSystem.addTransition(new ColorFadeInTransition(_levelScreen, Color.Black, true, 0.01f));
+            _screenSystem.addTransition(new ScreenFadeInTransition(_loadingScreen, Color.Black, true, 0.025f, () => { _screenSystem.addScreen(_loadingScreen); }));
+            //_gameState = GameState.Level;
+            //_scriptManager.loadLevelScript(levelUID);
+            //_levelSystem.load(levelUID);
+            //_playerSystem.addLevelComponents();
+            //_levelScreen = new LevelScreen(this, _systemManager, _entityManager);
+            //_screenSystem.addTransition(new ColorFadeInTransition(_levelScreen, Color.Black, true, 0.01f));
         }
 
         public void closeMainMenu()
@@ -262,7 +265,7 @@ namespace StasisGame
             _mainMenuScreen.applyIntroTransitions();
             if (fadeIn)
             {
-                _screenSystem.addTransition(new ColorFadeInTransition(_mainMenuScreen, Color.Black, true, 0.01f));
+                _screenSystem.addTransition(new ScreenFadeInTransition(_mainMenuScreen, Color.Black, true, 0.01f));
             }
             _screenSystem.addTransition(new TranslateTransition(_mainMenuScreen, -300, 0, 0, 0, false, 0.025f, () => { _screenSystem.addScreen(_mainMenuScreen); }));
         }
@@ -322,7 +325,6 @@ namespace StasisGame
         public void closeWorldMap()
         {
             _screenSystem.removeScreen(_worldMapScreen);
-            _gameState = GameState.Level;
         }
 
         protected override void Update(GameTime gameTime)

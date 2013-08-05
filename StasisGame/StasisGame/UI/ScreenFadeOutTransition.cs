@@ -7,12 +7,12 @@ using StasisCore;
 
 namespace StasisGame.UI
 {
-    public class ColorFadeOutTransition : Transition
+    public class ScreenFadeOutTransition : Transition
     {
         private Color _color;
         private Texture2D _pixel;
 
-        public ColorFadeOutTransition(Screen screen, Color color, bool queue = true, float speed = 0.05f, Action onBegin = null, Action onEnd = null)
+        public ScreenFadeOutTransition(Screen screen, Color color, bool queue = true, float speed = 0.05f, Action onBegin = null, Action onEnd = null)
             : base(screen, queue, speed, onBegin, onEnd)
         {
             _color = color;

@@ -206,6 +206,7 @@ namespace StasisGame.UI
             _spriteBatch.Draw(_antiFogRT, _antiFogRT.Bounds, Color.White);
             _spriteBatch.End();
             _spriteBatch.GraphicsDevice.SetRenderTarget(null);
+            _spriteBatch.GraphicsDevice.Clear(Color.Black);
         }
 
         public override void draw()
