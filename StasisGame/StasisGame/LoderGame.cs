@@ -266,11 +266,12 @@ namespace StasisGame
             //_screenSystem.addTransition(new ColorFadeInTransition(_levelScreen, Color.Black, true, 0.01f));
         }
 
-        public void afterLevelLoad()
+        /*
+        public void postLevelLoad()
         {
             Console.WriteLine("after level load...");
             _gameState = GameState.Level;
-            _screenSystem.addTransition(new ScreenFadeOutTransition(_loadingScreen, Color.Black, true, 0.05f, null, () =>
+            _screenSystem.addTransition(new ScreenFadeOutTransition(_loadingScreen, Color.Black, true, 0.025f, null, () =>
                 {
                     _screenSystem.removeScreen(_loadingScreen);
                     _levelSystem.relax();
@@ -279,8 +280,9 @@ namespace StasisGame
                     _levelSystem.paused = false;
                     _levelScreen = new LevelScreen(this, _systemManager, _entityManager);
                     _screenSystem.addScreen(_levelScreen);
+                    _screenSystem.addTransition(new ScreenFadeInTransition(_levelScreen, Color.Black, true, 0.025f));
                 }));
-        }
+        }*/
 
         public void closeMainMenu()
         {
@@ -406,9 +408,21 @@ namespace StasisGame
                     {
                         _levelSystem.loadSecondPassEntity();
                     }
-                    else
+                    else if (!_levelSystem.fullyLoaded)
                     {
-                        afterLevelLoad();
+                        _levelSystem.relax();
+                        _levelSystem.clean();
+                        _levelSystem.callScripts();
+                        _levelSystem.fullyLoaded = true;
+                        _screenSystem.addTransition(new ScreenFadeOutTransition(_loadingScreen, Color.Black, true, 0.05f, null, () =>
+                            {
+                                _screenSystem.removeScreen(_loadingScreen);
+                                _gameState = GameState.Level;
+                                _levelSystem.paused = false;
+                                _levelScreen = new LevelScreen(this, _systemManager, _entityManager);
+                                _screenSystem.addScreen(_levelScreen);
+                                _screenSystem.addTransition(new ScreenFadeInTransition(_levelScreen, Color.Black, true, 0.025f));
+                            }));
                     }
                     break;
 

@@ -36,6 +36,7 @@ namespace StasisGame.Systems
         private int _numEntitiesProcessed;
         private bool _firstPassDone;
         private bool _secondPassDone;
+        private bool _fullyLoaded;
         private XElement _data;
         private List<XElement> _actorData;
         private List<XElement> _secondPassData;
@@ -47,6 +48,7 @@ namespace StasisGame.Systems
         public string uid { get { return _uid; } }
         public bool firstPassDone { get { return _firstPassDone; } }
         public bool secondPassDone { get { return _secondPassDone; } }
+        public bool fullyLoaded { get { return _fullyLoaded; } set { _fullyLoaded = value; } }
 
         public LevelSystem(LoderGame game, SystemManager systemManager, EntityManager entityManager)
         {
@@ -75,6 +77,7 @@ namespace StasisGame.Systems
             _numSecondPassEntitiesLoaded = 0;
             _firstPassDone = false;
             _secondPassDone = false;
+            _fullyLoaded = false;
             _paused = true;
             _uid = levelUID;
 
