@@ -315,11 +315,12 @@ namespace StasisGame
             WorldMapSystem worldMapSystem = (WorldMapSystem)_systemManager.getSystem(SystemType.WorldMap);
             string currentWorldMapUID = DataManager.playerData.currentLocation.worldMapUID;
 
-            worldMapSystem.loadWorldMap(currentWorldMapUID, DataManager.playerData.getWorldMapData(currentWorldMapUID));
             _worldMapScreen = _worldMapScreen ?? new WorldMapScreen(this, _systemManager);
             _screenSystem.addScreen(_worldMapScreen);
-
+            worldMapSystem.loadWorldMap(currentWorldMapUID, DataManager.playerData.getWorldMapData(currentWorldMapUID));
             _gameState = GameState.WorldMap;
+
+            _screenSystem.addTransition(new ScreenFadeInTransition(_worldMapScreen, Color.Black, true, 0.025f));
         }
 
         public void closeWorldMap()
