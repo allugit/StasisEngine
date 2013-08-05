@@ -453,7 +453,7 @@ namespace StasisGame
                 case GameState.Level:
                     _levelSystem.draw();
                     _spriteBatch.Begin(SpriteSortMode.BackToFront, BlendState.AlphaBlend);
-                    //_screenSystem.draw();
+                    _screenSystem.draw();
                     _spriteBatch.End();
                     break;
             }

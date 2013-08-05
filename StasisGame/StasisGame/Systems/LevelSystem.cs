@@ -168,6 +168,7 @@ namespace StasisGame.Systems
 
                     (_systemManager.getSystem(SystemType.Player) as PlayerSystem).spawnPosition = spawnPosition;
                     (_systemManager.getSystem(SystemType.Camera) as CameraSystem).screenCenter = spawnPosition;
+                    _playerSystem.addLevelComponents();
                     _numEntitiesLoaded++;
                     //Logger.log(string.Format("Loaded play spawn entity -- Progress: {0}/{1}", _numEntitiesLoaded, _numEntitiesToLoad));
                     break;
