@@ -17,8 +17,19 @@ namespace StasisGame.UI
         private Label _message;
         private SpriteFont _titleFont;
         private SpriteFont _messageFont;
+        private int _elementsToLoad;
+        private int _elementsLoaded;
 
         public string message { get { return _message.text; } set { _message.text = value; } }
+        public int elementsToLoad { get { return _elementsToLoad; } set { _elementsToLoad = value; } }
+        public int elementsLoaded {
+            get { return _elementsLoaded; } 
+            set 
+            {
+                _textureIndex = (int)(((float)_elementsLoaded / (float)_elementsToLoad) * (float)(_textures.Count - 1));
+                _elementsLoaded = value;
+            } 
+        }
 
         public LoadingScreen(LoderGame game)
             : base(game.screenSystem, ScreenType.Loading)

@@ -31,7 +31,6 @@ namespace StasisGame.Systems
         private Dictionary<int, Goal> _completedGoals;
         private AABB _levelBoundary;
         private Vector2 _boundaryMargin;
-        private int _numEntitiesLoaded;
         private int _numSecondPassEntitiesLoaded;
         private int _numEntitiesProcessed;
         private bool _firstPassDone;
@@ -49,6 +48,7 @@ namespace StasisGame.Systems
         public bool firstPassDone { get { return _firstPassDone; } }
         public bool secondPassDone { get { return _secondPassDone; } }
         public bool fullyLoaded { get { return _fullyLoaded; } set { _fullyLoaded = value; } }
+        public int numEntitiesToLoad { get { return _actorData.Count; } }
 
         public LevelSystem(LoderGame game, SystemManager systemManager, EntityManager entityManager)
         {
@@ -72,7 +72,6 @@ namespace StasisGame.Systems
         // Load data
         public void loadData(string levelUID)
         {
-            _numEntitiesLoaded = 0;
             _numEntitiesProcessed = 0;
             _numSecondPassEntitiesLoaded = 0;
             _firstPassDone = false;
@@ -135,19 +134,18 @@ namespace StasisGame.Systems
         public void loadEntity()
         {
             XElement actorData = _actorData[_numEntitiesProcessed];
+            LoadingScreen loadingScreen = (_systemManager.getSystem(SystemType.Screen) as ScreenSystem).getScreen(ScreenType.Loading) as LoadingScreen;
 
             switch (actorData.Attribute("type").Value)
             {
                 case "Box":
                     _entityManager.factory.createBox(actorData);
-                    _numEntitiesLoaded++;
-                    //Logger.log(string.Format("Loaded box entity -- Progress: {0}/{1}", _numEntitiesLoaded, _numEntitiesToLoad));
+                    loadingScreen.elementsLoaded++;
                     break;
 
                 case "Circle":
                     _entityManager.factory.createCircle(actorData);
-                    _numEntitiesLoaded++;
-                    //Logger.log(string.Format("Loaded circle entity -- Progress: {0}/{1}", _numEntitiesLoaded, _numEntitiesToLoad));
+                    loadingScreen.elementsLoaded++;
                     break;
 
                 case "Circuit":
@@ -160,8 +158,7 @@ namespace StasisGame.Systems
 
                 case "Item":
                     _entityManager.factory.createWorldItem(actorData);
-                    _numEntitiesLoaded++;
-                    //Logger.log(string.Format("Loaded item entity -- Progress: {0}/{1}", _numEntitiesLoaded, _numEntitiesToLoad));
+                    loadingScreen.elementsLoaded++;
                     break;
 
                 case "PlayerSpawn":
@@ -172,8 +169,7 @@ namespace StasisGame.Systems
                     (_systemManager.getSystem(SystemType.Player) as PlayerSystem).spawnPosition = spawnPosition;
                     (_systemManager.getSystem(SystemType.Camera) as CameraSystem).screenCenter = spawnPosition;
                     _playerSystem.addLevelComponents();
-                    _numEntitiesLoaded++;
-                    //Logger.log(string.Format("Loaded play spawn entity -- Progress: {0}/{1}", _numEntitiesLoaded, _numEntitiesToLoad));
+                    loadingScreen.elementsLoaded++;
                     break;
 
                 case "Rope":
@@ -182,14 +178,12 @@ namespace StasisGame.Systems
 
                 case "Terrain":
                     _entityManager.factory.createTerrain(actorData);
-                    _numEntitiesLoaded++;
-                    //Logger.log(string.Format("Loaded terrain entity -- Progress: {0}/{1}", _numEntitiesLoaded, _numEntitiesToLoad));
+                    loadingScreen.elementsLoaded++;
                     break;
 
                 case "Tree":
                     _entityManager.factory.createTree(actorData);
-                    _numEntitiesLoaded++;
-                    //Logger.log(string.Format("Loaded tree entity -- Progress: {0}/{1}", _numEntitiesLoaded, _numEntitiesToLoad));
+                    loadingScreen.elementsLoaded++;
                     break;
 
                 case "Revolute":
@@ -206,8 +200,7 @@ namespace StasisGame.Systems
 
                 case "Goal":
                     _entityManager.factory.createRegionGoal(actorData);
-                    _numEntitiesLoaded++;
-                    //Logger.log(string.Format("Loaded goal entity -- Progress: {0}/{1}", _numEntitiesLoaded, _numEntitiesToLoad));
+                    loadingScreen.elementsLoaded++;
                     break;
 
                 case "Decal":
@@ -226,6 +219,7 @@ namespace StasisGame.Systems
         public void loadSecondPassEntity()
         {
             XElement actorData = _secondPassData[_numSecondPassEntitiesLoaded];
+            LoadingScreen loadingScreen = (_systemManager.getSystem(SystemType.Screen) as ScreenSystem).getScreen(ScreenType.Loading) as LoadingScreen;
 
             // Second pass
             switch (actorData.Attribute("type").Value)
@@ -236,44 +230,37 @@ namespace StasisGame.Systems
                         _systemManager.add(new CircuitSystem(_systemManager, _entityManager), -1);
                     }
                     _entityManager.factory.createCircuit(actorData);
-                    _numEntitiesLoaded++;
-                    //Logger.log(string.Format("Loaded circuit entity -- Progress: {0}/{1}", _numEntitiesLoaded, _numEntitiesToLoad));
+                    loadingScreen.elementsLoaded++;
                     break;
 
                 case "Fluid":
                     _entityManager.factory.createFluid(actorData);
-                    _numEntitiesLoaded++;
-                    //Logger.log(string.Format("Loaded fluid entity -- Progress: {0}/{1}", _numEntitiesLoaded, _numEntitiesToLoad));
+                    loadingScreen.elementsLoaded++;
                     break;
 
                 case "Rope":
                     _entityManager.factory.createRope(actorData);
-                    _numEntitiesLoaded++;
-                    //Logger.log(string.Format("Loaded rope entity -- Progress: {0}/{1}", _numEntitiesLoaded, _numEntitiesToLoad));
+                    loadingScreen.elementsLoaded++;
                     break;
 
                 case "Revolute":
                     _entityManager.factory.createRevoluteJoint(actorData);
-                    _numEntitiesLoaded++;
-                    //Logger.log(string.Format("Loaded revolute joint entity -- Progress: {0}/{1}", _numEntitiesLoaded, _numEntitiesToLoad));
+                    loadingScreen.elementsLoaded++;
                     break;
 
                 case "Prismatic":
                     _entityManager.factory.createPrismaticJoint(actorData);
-                    _numEntitiesLoaded++;
-                    //Logger.log(string.Format("Loaded prismatic joint entity -- Progress: {0}/{1}", _numEntitiesLoaded, _numEntitiesToLoad));
+                    loadingScreen.elementsLoaded++;
                     break;
 
                 case "CollisionFilter":
                     _entityManager.factory.createCollisionFilter(actorData);
-                    _numEntitiesLoaded++;
-                    //Logger.log(string.Format("Loaded collision filter entity -- Progress: {0}/{1}", _numEntitiesLoaded, _numEntitiesToLoad));
+                    loadingScreen.elementsLoaded++;
                     break;
 
                 case "Decal":
                     _entityManager.factory.createDecal(actorData);
-                    _numEntitiesLoaded++;
-                    //Logger.log(string.Format("Loaded decal entity -- Progress: {0}/{1}", _numEntitiesLoaded, _numEntitiesToLoad));
+                    loadingScreen.elementsLoaded++;
                     break;
             }
 

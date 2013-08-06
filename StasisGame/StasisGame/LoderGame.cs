@@ -253,9 +253,11 @@ namespace StasisGame
             () =>
             {
                 _gameState = GameState.LoadingLevel;
+                IsFixedTimeStep = false;
                 _levelSystem.loadData(levelUID);
                 _levelSystem.createLevelSystems();
                 _levelSystem.createBackgroundRenderer();
+                _loadingScreen.elementsToLoad += _levelSystem.numEntitiesToLoad;
             }));
 
             //_gameState = GameState.Level;
@@ -418,6 +420,7 @@ namespace StasisGame
                             {
                                 _screenSystem.removeScreen(_loadingScreen);
                                 _gameState = GameState.Level;
+                                IsFixedTimeStep = true;
                                 _levelSystem.paused = false;
                                 _levelScreen = new LevelScreen(this, _systemManager, _entityManager);
                                 _screenSystem.addScreen(_levelScreen);

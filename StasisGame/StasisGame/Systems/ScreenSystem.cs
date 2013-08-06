@@ -51,6 +51,18 @@ namespace StasisGame.Systems
             _transitions.Add(transition);
         }
 
+        public Screen getScreen(ScreenType type)
+        {
+            for (int i = 0; i < _screens.Count; i++)
+            {
+                if (_screens[i].screenType == type)
+                {
+                    return _screens[i];
+                }
+            }
+            return null;
+        }
+
         public void update()
         {
             if (!_paused || _singleStep)
