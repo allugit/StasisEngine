@@ -63,7 +63,7 @@ namespace StasisGame.UI
                 32,
                 80,
                 TextAlignment.Left,
-                "",
+                "Loading level data...",
                 2);
             _message.layerDepth = 0.1f;
         }

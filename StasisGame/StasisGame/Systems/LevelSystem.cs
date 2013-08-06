@@ -270,7 +270,7 @@ namespace StasisGame.Systems
             if (_numSecondPassEntitiesLoaded == _secondPassData.Count)
             {
                 _secondPassDone = true;
-                loadingScreen.message = "Relaxing fluid, trees, and physics systems...";
+                loadingScreen.message = "Relaxing fluid, tree, and physics systems...";
             }
         }
 
