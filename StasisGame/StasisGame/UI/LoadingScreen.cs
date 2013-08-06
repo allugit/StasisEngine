@@ -15,6 +15,8 @@ namespace StasisGame.UI
         private int _textureIndex;
         private Label _title;
         private Label _message;
+        private float _progress;
+        private ProgressBar _progressBar;
         private SpriteFont _titleFont;
         private SpriteFont _messageFont;
         private int _elementsToLoad;
@@ -26,8 +28,10 @@ namespace StasisGame.UI
             get { return _elementsLoaded; } 
             set 
             {
-                _textureIndex = (int)(((float)_elementsLoaded / (float)_elementsToLoad) * (float)(_textures.Count - 1));
                 _elementsLoaded = value;
+                _progress = (float)_elementsLoaded / (float)_elementsToLoad;
+                _progressBar.progress = _progress;
+                _textureIndex = (int)(_progress * (float)(_textures.Count - 1));
             } 
         }
 
@@ -59,13 +63,20 @@ namespace StasisGame.UI
             _message = new Label(
                 this,
                 _messageFont,
-                UIAlignment.TopLeft,
-                32,
-                80,
-                TextAlignment.Left,
+                UIAlignment.BottomRight,
+                -50,
+                -90,
+                TextAlignment.Right,
                 "Loading level data...",
                 2);
             _message.layerDepth = 0.1f;
+
+            _progressBar = new ProgressBar(
+                this,
+                UIAlignment.BottomRight,
+                -590,
+                -64);
+            _progressBar.layerDepth = 0.1f;
         }
 
         public override void update()
@@ -82,6 +93,7 @@ namespace StasisGame.UI
 
             _title.draw();
             _message.draw();
+            _progressBar.draw();
 
             base.draw();
         }

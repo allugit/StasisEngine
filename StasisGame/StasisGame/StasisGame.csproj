@@ -159,6 +159,7 @@
     <Compile Include="UI\AlphaFadeTransition.cs" />
     <Compile Include="UI\BluePane.cs" />
     <Compile Include="UI\ConfirmationScreen.cs" />
+    <Compile Include="UI\ProgressBar.cs" />
     <Compile Include="UI\ScreenFadeInTransition.cs" />
     <Compile Include="UI\ScreenFadeOutTransition.cs" />
     <Compile Include="UI\IAlphaFadable.cs" />

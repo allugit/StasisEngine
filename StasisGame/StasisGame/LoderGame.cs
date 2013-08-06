@@ -152,7 +152,10 @@ namespace StasisGame
                 "cancel_button_over",
                 "okay_button",
                 "okay_button_over",
-                "line_indicator"
+                "line_indicator",
+                "progress_bar_background",
+                "progress_bar_fill",
+                "progress_bar_border"
             };
             foreach (string texture in interfaceTextures)
             {
