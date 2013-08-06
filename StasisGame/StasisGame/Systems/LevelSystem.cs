@@ -213,6 +213,7 @@ namespace StasisGame.Systems
             if (_numEntitiesProcessed == _actorData.Count)
             {
                 _firstPassDone = true;
+                loadingScreen.message = "Loading entities, second pass...";
             }
         }
 
@@ -269,6 +270,7 @@ namespace StasisGame.Systems
             if (_numSecondPassEntitiesLoaded == _secondPassData.Count)
             {
                 _secondPassDone = true;
+                loadingScreen.message = "Relaxing fluid, trees, and physics systems...";
             }
         }
 

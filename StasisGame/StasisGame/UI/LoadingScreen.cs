@@ -52,18 +52,18 @@ namespace StasisGame.UI
                 32,
                 32,
                 TextAlignment.Left,
-                "Loading...",
+                "Loading",
                 4);
             _title.layerDepth = 0.1f;
 
             _message = new Label(
                 this,
                 _messageFont,
-                UIAlignment.BottomRight,
-                -32,
-                -48,
-                TextAlignment.Right,
-                "This is a Test Message",
+                UIAlignment.TopLeft,
+                32,
+                80,
+                TextAlignment.Left,
+                "",
                 2);
             _message.layerDepth = 0.1f;
         }

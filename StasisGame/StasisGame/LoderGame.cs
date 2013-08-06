@@ -254,10 +254,12 @@ namespace StasisGame
             {
                 _gameState = GameState.LoadingLevel;
                 IsFixedTimeStep = false;
+                _scriptManager.loadLevelScript(levelUID);
                 _levelSystem.loadData(levelUID);
                 _levelSystem.createLevelSystems();
                 _levelSystem.createBackgroundRenderer();
-                _loadingScreen.elementsToLoad += _levelSystem.numEntitiesToLoad;
+                _loadingScreen.elementsToLoad = _levelSystem.numEntitiesToLoad;
+                _loadingScreen.message = "Loading entities, first pass...";
             }));
 
             //_gameState = GameState.Level;
@@ -267,24 +269,6 @@ namespace StasisGame
             //_levelScreen = new LevelScreen(this, _systemManager, _entityManager);
             //_screenSystem.addTransition(new ColorFadeInTransition(_levelScreen, Color.Black, true, 0.01f));
         }
-
-        /*
-        public void postLevelLoad()
-        {
-            Console.WriteLine("after level load...");
-            _gameState = GameState.Level;
-            _screenSystem.addTransition(new ScreenFadeOutTransition(_loadingScreen, Color.Black, true, 0.025f, null, () =>
-                {
-                    _screenSystem.removeScreen(_loadingScreen);
-                    _levelSystem.relax();
-                    _levelSystem.clean();
-                    _levelSystem.callScripts();
-                    _levelSystem.paused = false;
-                    _levelScreen = new LevelScreen(this, _systemManager, _entityManager);
-                    _screenSystem.addScreen(_levelScreen);
-                    _screenSystem.addTransition(new ScreenFadeInTransition(_levelScreen, Color.Black, true, 0.025f));
-                }));
-        }*/
 
         public void closeMainMenu()
         {
@@ -416,6 +400,7 @@ namespace StasisGame
                         _levelSystem.clean();
                         _levelSystem.callScripts();
                         _levelSystem.fullyLoaded = true;
+                        _loadingScreen.message = "Starting level!";
                         _screenSystem.addTransition(new ScreenFadeOutTransition(_loadingScreen, Color.Black, true, 0.05f, null, () =>
                             {
                                 _screenSystem.removeScreen(_loadingScreen);
