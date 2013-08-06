@@ -33,9 +33,6 @@ namespace StasisGame.UI
             _savedGameButtons = new List<LabelTextureButton>();
             _deleteGameButtons = new List<TextureButton>();
 
-            List<XElement> playerSaves = DataManager.loadPlayerSaves();
-            Vector2 initialPosition = new Vector2(-262, -190);
-
             _container = new BluePane(
                 this,
                 UIAlignment.MiddleCenter,
@@ -58,6 +55,20 @@ namespace StasisGame.UI
                     _game.closeLoadGameMenu();
                     _game.openMainMenu();
                 });
+        }
+
+        ~LoadGameScreen()
+        {
+            _content.Unload();
+        }
+
+        public void loadPlayerSaves()
+        {
+            List<XElement> playerSaves = DataManager.loadPlayerSaves();
+            Vector2 initialPosition = new Vector2(-262, -190);
+
+            _savedGameButtons.Clear();
+            _deleteGameButtons.Clear();
 
             foreach (XElement playerSave in playerSaves)
             {
@@ -108,16 +119,11 @@ namespace StasisGame.UI
                     {
                         _game.closeLoadGameMenu();
                         _screenSystem.addTransition(new ScreenFadeOutTransition(this, Color.Black, true, 0.05f, null, () =>
-                            {
-                                _game.loadGame(slot);
-                            }));
+                        {
+                            _game.loadGame(slot);
+                        }));
                     }));
             }
-        }
-
-        ~LoadGameScreen()
-        {
-            _content.Unload();
         }
 
         public override void applyIntroTransitions()

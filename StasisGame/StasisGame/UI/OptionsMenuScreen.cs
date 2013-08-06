@@ -33,7 +33,6 @@ namespace StasisGame.UI
         };
 
         private LoderGame _game;
-        private Texture2D _logo;
         private ContentManager _content;
         private Pane _pane;
         private List<TextureButton> _generalButtons;
@@ -66,7 +65,6 @@ namespace StasisGame.UI
             _game = game;
             _content = new ContentManager(game.Services);
             _content.RootDirectory = "Content";
-            _logo = _content.Load<Texture2D>("logo");
             _categoryTitleFont = _content.Load<SpriteFont>("options_menu/category_title_font");
             _optionsFont = _content.Load<SpriteFont>("options_menu/options_font");
             _leftArrows = _content.Load<Texture2D>("shared_ui/left_arrows");
@@ -470,9 +468,6 @@ namespace StasisGame.UI
                     updateAudioCategory();
                 else if (_currentCategory == OptionsCategory.Controls)
                     updateControlsCategory();
-
-                // Background
-                _game.menuBackgroundRenderer.update(35f, _game.menuBackgroundScreenOffset);
             }
             _skipUpdate = false;
         }
@@ -502,12 +497,6 @@ namespace StasisGame.UI
 
         override public void draw()
         {
-            // Draw background
-            _game.menuBackgroundRenderer.draw();
-
-            // Draw logo
-            _game.spriteBatch.Draw(_logo, new Vector2(_game.GraphicsDevice.Viewport.Width - _logo.Width, 0), _logo.Bounds, Color.White, 0, Vector2.Zero, 1f, SpriteEffects.None, 0);
-
             // Draw pane
             _pane.draw();
 

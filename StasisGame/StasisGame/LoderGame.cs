@@ -292,6 +292,7 @@ namespace StasisGame
         public void openLoadGameMenu()
         {
             _loadGameScreen = _loadGameScreen ?? new LoadGameScreen(this);
+            _loadGameScreen.loadPlayerSaves();
             _loadGameScreen.applyIntroTransitions();
             _screenSystem.addScreen(_loadGameScreen);
         }
