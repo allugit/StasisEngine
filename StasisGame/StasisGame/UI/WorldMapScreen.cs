@@ -8,7 +8,6 @@ using Microsoft.Xna.Framework.Content;
 using StasisCore;
 using StasisCore.Models;
 using StasisGame.Managers;
-using StasisGame.Data;
 using StasisGame.Systems;
 
 namespace StasisGame.UI

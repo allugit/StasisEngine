@@ -4,7 +4,6 @@ using System.Xml.Linq;
 using StasisCore;
 using StasisCore.Models;
 using StasisGame.Managers;
-using StasisGame.Data;
 
 namespace StasisGame.Systems
 {

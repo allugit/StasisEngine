@@ -6,7 +6,7 @@ using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 using StasisCore;
 
-namespace StasisGame.Data
+namespace StasisGame
 {
     public class GameSettings
     {

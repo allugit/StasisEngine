@@ -2,8 +2,10 @@
 using System.IO;
 using System.Collections.Generic;
 using System.Xml.Linq;
-using StasisGame.Data;
+using Microsoft.Xna.Framework;
 using StasisCore;
+using StasisCore.Models;
+using StasisGame.States;
 using StasisGame.Systems;
 
 namespace StasisGame.Managers
@@ -19,10 +21,13 @@ namespace StasisGame.Managers
         private static LoderGame _game;
         private static SystemManager _systemManager;
         private static GameSettings _gameSettings;
-        private static PlayerData _playerData;
+        private static WorldMapManager _worldMapManager;
+        private static string _playerName;
+        private static int _playerSlot;
 
         public static GameSettings gameSettings { get { return _gameSettings; } }
-        public static PlayerData playerData { get { return _playerData; } }
+        public static string playerName { get { return _playerName; } }
+        public static int playerSlot { get { return _playerSlot; } }
 
         // Initialize
         public static void initialize(LoderGame game, SystemManager systemManager)
@@ -81,6 +86,97 @@ namespace StasisGame.Managers
             Logger.log("DataManager.saveGameSettings method finished.");
         }
 
+        // Create world map manager
+        private static WorldMapManager createWorldMapManager()
+        {
+            List<WorldMapDefinition> definitions = new List<WorldMapDefinition>();
+            List<XElement> allWorldMapData = ResourceManager.worldMapResources;
+
+            foreach (XElement worldMapData in allWorldMapData)
+            {
+                WorldMapDefinition worldMapDefinition = new WorldMapDefinition(worldMapData.Attribute("uid").Value, worldMapData.Attribute("texture_uid").Value, Loader.loadVector2("position", Vector2.Zero));
+
+                foreach (XElement levelIconData in worldMapData.Elements("LevelIcon"))
+                {
+                    worldMapDefinition.levelIconDefinitions.Add(
+                        new LevelIconDefinition(
+                            worldMapDefinition,
+                            levelIconData.Attribute("uid").Value,
+                            levelIconData.Attribute("level_uid").Value,
+                            levelIconData.Attribute("finished_texture_uid").Value,
+                            levelIconData.Attribute("unfinished_texture_uid").Value,
+                            levelIconData.Attribute("title").Value,
+                            levelIconData.Attribute("description").Value,
+                            Loader.loadVector2(levelIconData.Attribute("position"), Vector2.Zero)));
+                }
+
+                foreach (XElement levelPathData in worldMapData.Elements("LevelPath"))
+                {
+                    LevelPathDefinition levelPathDefinition = new LevelPathDefinition(
+                        worldMapDefinition,
+                        int.Parse(levelPathData.Attribute("id").Value),
+                        levelPathData.Attribute("level_icon_a_uid").Value,
+                        levelPathData.Attribute("level_icon_b_uid").Value);
+
+                    foreach (XElement pathKeyData in levelPathData.Elements("PathKey"))
+                    {
+                        levelPathDefinition.pathKeys.Add(
+                            new LevelPathKey(
+                                levelPathDefinition,
+                                Loader.loadVector2(pathKeyData.Attribute("p0"), Vector2.Zero),
+                                Loader.loadVector2(pathKeyData.Attribute("p1"), Vector2.Zero),
+                                Loader.loadVector2(pathKeyData.Attribute("p2"), Vector2.Zero),
+                                Loader.loadVector2(pathKeyData.Attribute("p3"), Vector2.Zero)));
+                    }
+
+                    worldMapDefinition.levelPathDefinitions.Add(levelPathDefinition);
+                }
+
+                definitions.Add(worldMapDefinition);
+            }
+
+            return new WorldMapManager(definitions);
+        }
+
+        // Load world map states
+        public static Dictionary<string, WorldMapState> loadWorldMapStates(List<XElement> allWorldMapStateData)
+        {
+            Dictionary<string, WorldMapState> worldMapStates = new Dictionary<string, WorldMapState>();
+
+            foreach (XElement worldMapStateData in allWorldMapStateData)
+            {
+                string worldMapUid = worldMapStateData.Attribute("world_map_uid").Value;
+                WorldMapState worldMapState = new WorldMapState(
+                        _worldMapManager.getWorldMapDefinition(worldMapUid),
+                        bool.Parse(worldMapStateData.Attribute("discovered").Value));
+
+                foreach (XElement levelIconStateData in worldMapStateData.Elements("LevelIconState"))
+                {
+                    string levelIconUid = levelIconStateData.Attribute("level_icon_uid").Value;
+
+                    worldMapState.levelIconStates.Add(
+                        new LevelIconState(
+                            _worldMapManager.getLevelIconDefinition(worldMapUid, levelIconUid),
+                            bool.Parse(levelIconStateData.Attribute("discovered").Value),
+                            bool.Parse(levelIconStateData.Attribute("finished").Value)));
+                }
+
+                foreach (XElement levelPathStateData in worldMapStateData.Elements("LevelPathState"))
+                {
+                    int id = int.Parse(levelPathStateData.Attribute("id").Value);
+
+                    worldMapState.levelPathState.Add(
+                        new LevelPathState(
+                            _worldMapManager.getLevelPathDefinition(worldMapUid, id),
+                            bool.Parse(levelPathStateData.Attribute("discovered").Value)));
+                }
+
+                worldMapStates.Add(worldMapUid, worldMapState);
+            }
+
+            return worldMapStates;
+        }
+
         // Create new player data
         public static int createPlayerData(SystemManager systemManager, string playerName)
         {
@@ -95,7 +191,19 @@ namespace StasisGame.Managers
                     unusedPlayerSlot++;
                 else
                 {
-                    _playerData = new PlayerData(systemManager, unusedPlayerSlot, playerName);
+                    Dictionary<string, WorldMapState> worldMapStates = new Dictionary<string, WorldMapState>();
+                    List<LevelIconState> startingLevelIconStates = new List<LevelIconState>();
+
+                    // Create world map manager
+                    _worldMapManager = createWorldMapManager();
+
+                    // Setup initial data and save it
+                    _playerName = playerName;
+                    _playerSlot = unusedPlayerSlot;
+                    worldMapStates.Add(
+                        "oria_world_map",
+                        new WorldMapState(_worldMapManager.getWorldMapDefinition("oria_world_map"), true));
+
                     savePlayerData();
                     created = true;
                 }
@@ -157,10 +265,12 @@ namespace StasisGame.Managers
 
             using (FileStream fs = new FileStream(filePath, FileMode.Open))
             {
-                Logger.log(string.Format("\tloading player data file: {0}...", filePath));
                 XDocument doc = XDocument.Load(fs);
-                _playerData = new PlayerData(_systemManager, doc.Element("PlayerData"));
-                Logger.log("\tloaded.");
+                Dictionary<string, WorldMapState> worldMapStates;
+
+                // Create world map manager and load states
+                _worldMapManager = createWorldMapManager();
+                worldMapStates = loadWorldMapStates(doc.Elements("WorldMapStates") as List<XElement>);
             }
 
             Logger.log("DataManager.loadPlayerData method finished.");
