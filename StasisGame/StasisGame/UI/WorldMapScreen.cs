@@ -9,6 +9,7 @@ using StasisCore;
 using StasisCore.Models;
 using StasisGame.Managers;
 using StasisGame.Systems;
+using StasisGame.States;
 
 namespace StasisGame.UI
 {
@@ -19,7 +20,6 @@ namespace StasisGame.UI
         private float _scale;
         private Vector2 _currentScreenCenter;
         private Vector2 _targetScreenCenter;
-        private WorldMapSystem _worldMapSystem;
         private Vector2 _halfScreenSize;
         private Texture2D _pathTexture;
         private Vector2 _pathTextureOrigin;
@@ -36,7 +36,6 @@ namespace StasisGame.UI
         private Color _levelSelectIconColor;
         private Color _levelSelectIconSelectedColor;
         private Color _levelSelectIconDeselectedColor;
-        private LevelIcon _selectedLevelIcon;
         private bool _allowNewLevelSelection = true;
         private SpriteFont _levelSelectTitleFont;
         private SpriteFont _levelSelectDescriptionFont;
@@ -47,7 +46,6 @@ namespace StasisGame.UI
             _game = game;
             _systemManager = systemManager;
             _scale = 1f;
-            _worldMapSystem = (WorldMapSystem)_systemManager.getSystem(SystemType.WorldMap);
 
             _content = new ContentManager(game.Services);
             _content.RootDirectory = "Content";
@@ -73,21 +71,26 @@ namespace StasisGame.UI
             _content.Unload();
         }
 
-        private LevelIcon hitTestLevelIcons(Vector2 mouseWorld, float tolerance)
+        private LevelIconDefinition hitTestLevelIcons(Vector2 mouseWorld, float tolerance)
         {
             float shortest = 9999999f;
-            LevelIcon result = null;
+            LevelIconDefinition result = null;
 
-            foreach (LevelIcon levelIcon in _worldMapSystem.worldMap.levelIcons)
+            foreach (WorldMapDefinition worldMapDefinition in DataManager.worldMapManager.worldMapDefinitions)
             {
-                if (levelIcon.state != LevelIconState.Undiscovered)
+                foreach (LevelIconDefinition levelIconDefinition in worldMapDefinition.levelIconDefinitions)
                 {
-                    float distance = (mouseWorld - levelIcon.position).Length();
+                    LevelIconState state = DataManager.worldMapManager.getLevelIconState(worldMapDefinition.uid, levelIconDefinition.uid);
 
-                    if (distance <= tolerance)
+                    if (state.discovered)
                     {
-                        shortest = distance;
-                        result = levelIcon;
+                        float distance = (mouseWorld - levelIconDefinition.position).Length();
+
+                        if (distance <= tolerance)
+                        {
+                            shortest = distance;
+                            result = levelIconDefinition;
+                        }
                     }
                 }
             }

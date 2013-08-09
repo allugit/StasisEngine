@@ -57,5 +57,22 @@ namespace StasisGame.Managers
             }
             return null;
         }
+
+        public WorldMapState getWorldMapState(string worldMapUid)
+        {
+            return worldMapStates[worldMapUid];
+        }
+
+        public LevelIconState getLevelIconState(string worldMapUid, string levelIconUid)
+        {
+            foreach (LevelIconState levelIconState in _worldMapStates[worldMapUid].levelIconStates)
+            {
+                if (levelIconState.definition.uid == levelIconUid)
+                {
+                    return levelIconState;
+                }
+            }
+            return null;
+        }
     }
 }

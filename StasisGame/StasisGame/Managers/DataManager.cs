@@ -28,6 +28,7 @@ namespace StasisGame.Managers
         public static GameSettings gameSettings { get { return _gameSettings; } }
         public static string playerName { get { return _playerName; } }
         public static int playerSlot { get { return _playerSlot; } }
+        public static WorldMapManager worldMapManager { get { return _worldMapManager; } }
 
         // Initialize
         public static void initialize(LoderGame game, SystemManager systemManager)

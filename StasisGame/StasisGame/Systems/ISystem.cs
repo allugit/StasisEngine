@@ -21,7 +21,6 @@ namespace StasisGame.Systems
         Equipment,
         Rope,
         Level,
-        WorldMap,
         Explosion
     };
 

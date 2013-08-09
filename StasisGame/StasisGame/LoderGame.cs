@@ -49,7 +49,6 @@ namespace StasisGame
         private ScriptManager _scriptManager;
         private PlayerSystem _playerSystem;
         private EquipmentSystem _equipmentSystem;
-        private WorldMapSystem _worldMapSystem;
         private LevelSystem _levelSystem;
         private ScreenSystem _screenSystem;
         private MainMenuScreen _mainMenuScreen;
@@ -204,11 +203,9 @@ namespace StasisGame
         {
             _playerSystem = new PlayerSystem(_systemManager, _entityManager);
             _equipmentSystem = new EquipmentSystem(_systemManager, _entityManager);
-            _worldMapSystem = new WorldMapSystem(_systemManager, _entityManager);
             _levelSystem = new LevelSystem(this, _systemManager, _entityManager);
             _systemManager.add(_playerSystem, -1);
             _systemManager.add(_equipmentSystem, -1);
-            _systemManager.add(_worldMapSystem, -1);
             _systemManager.add(_levelSystem, -1);
         }
 
@@ -332,14 +329,9 @@ namespace StasisGame
 
         public void openWorldMap()
         {
-            WorldMapSystem worldMapSystem = (WorldMapSystem)_systemManager.getSystem(SystemType.WorldMap);
-            string currentWorldMapUID = DataManager.playerData.currentLocation.worldMapUID;
-
+            _gameState = GameState.WorldMap;
             _worldMapScreen = _worldMapScreen ?? new WorldMapScreen(this, _systemManager);
             _screenSystem.addScreen(_worldMapScreen);
-            worldMapSystem.loadWorldMap(currentWorldMapUID, DataManager.playerData.getWorldMapData(currentWorldMapUID));
-            _gameState = GameState.WorldMap;
-
             _screenSystem.addTransition(new ScreenFadeInTransition(_worldMapScreen, Color.Black, true, 0.02f));
         }
 
