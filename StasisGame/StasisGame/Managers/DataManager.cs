@@ -178,7 +178,7 @@ namespace StasisGame.Managers
         }
 
         // Create new player data
-        public static int createPlayerData(SystemManager systemManager, string playerName)
+        public static int createPlayerData(string playerName)
         {
             Logger.log("DataManager.createPlayerData method starting.");
 
@@ -191,18 +191,19 @@ namespace StasisGame.Managers
                     unusedPlayerSlot++;
                 else
                 {
-                    Dictionary<string, WorldMapState> worldMapStates = new Dictionary<string, WorldMapState>();
-                    List<LevelIconState> startingLevelIconStates = new List<LevelIconState>();
+                    WorldMapState startingWorldMapState = new WorldMapState(_worldMapManager.getWorldMapDefinition("oria_world_map"), true);
 
-                    // Create world map manager
-                    _worldMapManager = createWorldMapManager();
-
-                    // Setup initial data and save it
                     _playerName = playerName;
                     _playerSlot = unusedPlayerSlot;
-                    worldMapStates.Add(
+                    _worldMapManager = createWorldMapManager();
+                    startingWorldMapState.levelIconStates.Add(
+                        new LevelIconState(
+                            _worldMapManager.getLevelIconDefinition("oria_world_map", "home_village"),
+                            true,
+                            true));
+                    _worldMapManager.worldMapStates.Add(
                         "oria_world_map",
-                        new WorldMapState(_worldMapManager.getWorldMapDefinition("oria_world_map"), true));
+                        startingWorldMapState);
 
                     savePlayerData();
                     created = true;
@@ -228,9 +229,9 @@ namespace StasisGame.Managers
         }
 
         // Create temporary player data
-        public static void createTemporaryPlayerData(SystemManager systemManager)
+        public static void createTemporaryPlayerData()
         {
-            _playerData = new PlayerData(systemManager, -1, "Test Character");
+            createPlayerData("McCormick");
         }
 
         // Load player saves
@@ -266,11 +267,12 @@ namespace StasisGame.Managers
             using (FileStream fs = new FileStream(filePath, FileMode.Open))
             {
                 XDocument doc = XDocument.Load(fs);
-                Dictionary<string, WorldMapState> worldMapStates;
+                XElement playerData = doc.Element("PlayerData");
 
-                // Create world map manager and load states
+                _playerSlot = playerSlot;
+                _playerName = playerData.Attribute("name").Value;
                 _worldMapManager = createWorldMapManager();
-                worldMapStates = loadWorldMapStates(doc.Elements("WorldMapStates") as List<XElement>);
+                _worldMapManager.worldMapStates = loadWorldMapStates(playerData.Elements("WorldMapState") as List<XElement>);
             }
 
             Logger.log("DataManager.loadPlayerData method finished.");
@@ -281,31 +283,42 @@ namespace StasisGame.Managers
         {
             Logger.log("DataManager.savePlayerData method starting.");
 
-            string filePath = _playersDirectory + string.Format("player_data_{0}.xml", _playerData.playerSlot);
+            string filePath = _playersDirectory + string.Format("player_data_{0}.xml", _playerSlot);
 
             using (FileStream fs = new FileStream(filePath, FileMode.Create))
             {
-                XDocument doc = new XDocument(_playerData.data);
+                XDocument doc = new XDocument();
+                XElement playerData = new XElement(
+                    "PlayerData",
+                    new XAttribute("name", _playerName),
+                    new XAttribute("slot", _playerSlot));
+
+                foreach (WorldMapState worldMapState in _worldMapManager.worldMapStates.Values)
+                {
+                    XElement worldMapStateData = new XElement("WorldMapState");
+
+                    foreach (LevelIconState levelIconState in worldMapState.levelIconStates)
+                    {
+                        worldMapStateData.Add(
+                            new XElement("LevelIconState",
+                                new XAttribute("level_icon_uid", levelIconState.definition.uid),
+                                new XAttribute("discovered", levelIconState.discovered),
+                                new XAttribute("finished", levelIconState.finished)));
+                    }
+
+                    foreach (LevelPathState levelPathState in worldMapState.levelPathState)
+                    {
+                        worldMapStateData.Add(new XElement("LevelPathState", new XAttribute("discovered", levelPathState.discovered)));
+                    }
+
+                    playerData.Add(worldMapStateData);
+                }
+
+                doc.Add(playerData);
                 doc.Save(fs);
             }
 
             Logger.log("DataManager.savePlayerData method finished.");
-
-            /*
-            bool saved = false;
-            while (!saved)
-            {
-                if (_storageDevice.IsReady)
-                {
-                    _storageDevice.Save(PLAYER_CONTAINER, string.Format("player_data_{0}.xml", _playerData.playerSlot), (stream) =>
-                        {
-                            XDocument doc = new XDocument();
-                            doc.Add(_playerData.data);
-                            doc.Save(stream);
-                        });
-                    saved = true;
-                }
-            }*/
         }
     }
 }

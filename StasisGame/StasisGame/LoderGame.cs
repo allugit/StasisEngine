@@ -216,7 +216,7 @@ namespace StasisGame
         {
             startPersistentSystems();
 
-            DataManager.createTemporaryPlayerData(_systemManager);
+            DataManager.createTemporaryPlayerData();
             _playerSystem.createPlayer();
             _playerSystem.initializeInventory();
 
