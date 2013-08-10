@@ -87,7 +87,6 @@
     <Compile Include="Controllers\EditorController.cs" />
     <Compile Include="Controllers\LevelController.cs" />
     <Compile Include="Controllers\MaterialController.cs" />
-    <Compile Include="Controllers\WorldMapController.cs" />
     <Compile Include="EditorResourceManager.cs" />
     <Compile Include="Models\CircuitConnection.cs" />
     <Compile Include="Models\CircuitInputConnection.cs" />
@@ -101,7 +100,6 @@
     <Compile Include="Models\EditorFluidActor.cs" />
     <Compile Include="Models\EditorGoalActor.cs" />
     <Compile Include="Models\EditorItemActor.cs" />
-    <Compile Include="Models\EditorLevelIcon.cs" />
     <Compile Include="Models\EditorMaterialWorleyLayer.cs" />
     <Compile Include="Models\EditorPlayerSpawnActor.cs" />
     <Compile Include="Models\EditorPolygonActor.cs" />
@@ -110,9 +108,6 @@
     <Compile Include="Models\EditorRopeActor.cs" />
     <Compile Include="Models\EditorTerrainActor.cs" />
     <Compile Include="Models\EditorTreeActor.cs" />
-    <Compile Include="Models\EditorWorldMap.cs" />
-    <Compile Include="Models\EditorWorldPath.cs" />
-    <Compile Include="Models\EditorWorldPathPoint.cs" />
     <Compile Include="Models\IActorComponent.cs" />
     <Compile Include="Models\EditorActor.cs" />
     <Compile Include="Models\EditorBoxActor.cs" />
@@ -129,7 +124,6 @@
     <Compile Include="Models\EditorCircuit.cs" />
     <Compile Include="Models\EditorLevel.cs" />
     <Compile Include="Models\EditorMaterial.cs" />
-    <Compile Include="Models\IWorldControl.cs" />
     <Compile Include="Models\PointListNode.cs" />
     <Compile Include="ServiceContainer.cs" />
     <Compile Include="Vector2Editor.cs" />
@@ -250,15 +244,6 @@
     </Compile>
     <Compile Include="Views\Controls\EditBlueprintSocketsGraphics.cs">
       <SubType>Component</SubType>
-    </Compile>
-    <Compile Include="Views\Controls\WorldMapDisplay.cs">
-      <SubType>Component</SubType>
-    </Compile>
-    <Compile Include="Views\WorldMapView.cs">
-      <SubType>UserControl</SubType>
-    </Compile>
-    <Compile Include="Views\WorldMapView.Designer.cs">
-      <DependentUpon>WorldMapView.cs</DependentUpon>
     </Compile>
     <Compile Include="XNAColorEditor.cs" />
     <Compile Include="Views\LevelView.cs">
@@ -404,9 +389,6 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Views\MaterialView.resx">
       <DependentUpon>MaterialView.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Views\WorldMapView.resx">
-      <DependentUpon>WorldMapView.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <ItemGroup />

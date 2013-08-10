@@ -26,7 +26,6 @@ namespace StasisEditor.Views
         public LevelView levelView { get { return levelView1; } }
         public BlueprintView blueprintView { get { return blueprintView1; } }
         public BackgroundView backgroundView { get { return backgroundView1; } }
-        public WorldMapView worldMapView { get { return worldMapView1; } }
 
         // Constructor
         public EditorView()

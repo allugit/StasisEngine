@@ -258,11 +258,12 @@ namespace StasisGame.Managers
                     unusedPlayerSlot++;
                 else
                 {
-                    WorldMapState startingWorldMapState = new WorldMapState(_worldMapManager.getWorldMapDefinition("oria_world_map"), true);
+                    WorldMapState startingWorldMapState;
 
+                    _worldMapManager = createWorldMapManager();
+                    startingWorldMapState = new WorldMapState(_worldMapManager.getWorldMapDefinition("oria_world_map"), true);
                     _playerName = playerName;
                     _playerSlot = unusedPlayerSlot;
-                    _worldMapManager = createWorldMapManager();
                     startingWorldMapState.levelIconStates.Add(
                         new LevelIconState(
                             _worldMapManager.getLevelIconDefinition("oria_world_map", "home_village"),
@@ -339,7 +340,7 @@ namespace StasisGame.Managers
                 _playerSlot = playerSlot;
                 _playerName = _playerData.Attribute("name").Value;
                 _worldMapManager = createWorldMapManager();
-                _worldMapManager.worldMapStates = loadWorldMapStates(_playerData.Elements("WorldMapState") as List<XElement>);
+                _worldMapManager.worldMapStates = loadWorldMapStates(new List<XElement>(_playerData.Elements("WorldMapState")));
             }
 
             Logger.log("DataManager.loadPlayerData method finished.");
@@ -363,7 +364,10 @@ namespace StasisGame.Managers
 
                 foreach (WorldMapState worldMapState in _worldMapManager.worldMapStates.Values)
                 {
-                    XElement worldMapStateData = new XElement("WorldMapState");
+                    XElement worldMapStateData = new XElement(
+                        "WorldMapState",
+                        new XAttribute("world_map_uid", worldMapState.definition.uid),
+                        new XAttribute("discovered", worldMapState.discovered));
 
                     foreach (LevelIconState levelIconState in worldMapState.levelIconStates)
                     {

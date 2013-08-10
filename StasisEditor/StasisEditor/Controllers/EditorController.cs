@@ -25,7 +25,6 @@ namespace StasisEditor.Controllers
         private BlueprintController _blueprintController;
         private CircuitController _circuitController;
         private BackgroundController _backgroundController;
-        private WorldMapController _worldMapController;
         private GraphicsDeviceService _graphicsDeviceService;
 
         private EditorView _editorView;
@@ -39,7 +38,6 @@ namespace StasisEditor.Controllers
         public BlueprintController blueprintController { get { return _blueprintController; } }
         public CircuitController circuitController { get { return _circuitController; } }
         public BackgroundController backgroundController { get { return _backgroundController; } }
-        public WorldMapController worldMapController { get { return _worldMapController; } }
         public float scale { get { return _scale; } set { _scale = value; } }
 
         public EditorController(EditorView view)
@@ -67,7 +65,6 @@ namespace StasisEditor.Controllers
             _blueprintController = new BlueprintController(this, _editorView.blueprintView);
             _circuitController = new CircuitController(this, _editorView.circuitsView);
             _backgroundController = new BackgroundController(this, _editorView.backgroundView);
-            _worldMapController = new WorldMapController(this, _editorView.worldMapView);
         }
 
         public void initializeSettings()

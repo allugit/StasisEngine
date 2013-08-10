@@ -16,6 +16,7 @@ namespace StasisGame.Managers
         public WorldMapManager(List<WorldMapDefinition> worldMapDefinitions)
         {
             _worldMapDefinitions = worldMapDefinitions;
+            _worldMapStates = new Dictionary<string, WorldMapState>();
         }
 
         public WorldMapDefinition getWorldMapDefinition(string worldMapUid)
@@ -80,6 +81,9 @@ namespace StasisGame.Managers
             LevelPathDefinition levelPathDefinition = getLevelPathDefinition(worldMapUid, id);
             LevelIconState levelA = getLevelIconState(worldMapUid, levelPathDefinition.levelIconAUid);
             LevelIconState levelB = getLevelIconState(worldMapUid, levelPathDefinition.levelIconBUid);
+
+            if (levelA == null || levelB == null)
+                return false;
 
             return levelA.discovered && levelB.discovered;
         }

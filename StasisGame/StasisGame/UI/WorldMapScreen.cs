@@ -83,7 +83,7 @@ namespace StasisGame.UI
                 {
                     LevelIconState state = DataManager.worldMapManager.getLevelIconState(worldMapDefinition.uid, levelIconDefinition.uid);
 
-                    if (state.discovered)
+                    if (state != null && state.discovered)
                     {
                         float distance = (mouseWorld - levelIconDefinition.position).Length();
 
@@ -96,6 +96,28 @@ namespace StasisGame.UI
                 }
             }
             return result;
+        }
+
+        public void loadTextures()
+        {
+            foreach (WorldMapDefinition worldMapDefinition in DataManager.worldMapManager.worldMapDefinitions)
+            {
+                if (worldMapDefinition.texture == null)
+                {
+                    worldMapDefinition.texture = ResourceManager.getTexture(worldMapDefinition.textureUid);
+                }
+                foreach (LevelIconDefinition levelIconDefinition in worldMapDefinition.levelIconDefinitions)
+                {
+                    if (levelIconDefinition.finishedTexture == null)
+                    {
+                        levelIconDefinition.finishedTexture = ResourceManager.getTexture(levelIconDefinition.finishedTextureUid);
+                    }
+                    if (levelIconDefinition.unfinishedTexture == null)
+                    {
+                        levelIconDefinition.unfinishedTexture = ResourceManager.getTexture(levelIconDefinition.unfinishedTextureUid);
+                    }
+                }
+            }
         }
 
         public override void update()
@@ -201,7 +223,7 @@ namespace StasisGame.UI
                 {
                     LevelIconState state = DataManager.worldMapManager.getLevelIconState(worldMap.uid, levelIcon.uid);
 
-                    if (state.discovered)
+                    if (state != null && state.discovered)
                     {
                         _spriteBatch.Draw(_antiFogBrush, viewOffset + levelIcon.position, _antiFogBrush.Bounds, Color.White, 0f, _antiFogBrushOrigin, antiFogTextureScale, SpriteEffects.None, 0f);
                     }
@@ -253,7 +275,7 @@ namespace StasisGame.UI
                     {
                         LevelIconState state = DataManager.worldMapManager.getLevelIconState(worldMap.uid, levelIcon.uid);
 
-                        if (state.discovered)
+                        if (state != null && state.discovered)
                         {
                             Texture2D texture = state.finished ? levelIcon.finishedTexture : levelIcon.unfinishedTexture;
 

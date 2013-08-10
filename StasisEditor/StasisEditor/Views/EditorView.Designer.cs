@@ -55,8 +55,6 @@
             this.circuitsView1 = new StasisEditor.Views.CircuitsView();
             this.backgroundsTab = new System.Windows.Forms.TabPage();
             this.backgroundView1 = new StasisEditor.Views.BackgroundView();
-            this.worldMapTab = new System.Windows.Forms.TabPage();
-            this.worldMapView1 = new StasisEditor.Views.WorldMapView();
             ((System.ComponentModel.ISupportInitialize)(this.mainSplit)).BeginInit();
             this.mainSplit.Panel2.SuspendLayout();
             this.mainSplit.SuspendLayout();
@@ -66,7 +64,6 @@
             this.blueprintsTab.SuspendLayout();
             this.circuitsTab.SuspendLayout();
             this.backgroundsTab.SuspendLayout();
-            this.worldMapTab.SuspendLayout();
             this.SuspendLayout();
             // 
             // mainMenu1
@@ -196,7 +193,6 @@
             this.editorTabControl.Controls.Add(this.blueprintsTab);
             this.editorTabControl.Controls.Add(this.circuitsTab);
             this.editorTabControl.Controls.Add(this.backgroundsTab);
-            this.editorTabControl.Controls.Add(this.worldMapTab);
             this.editorTabControl.Dock = System.Windows.Forms.DockStyle.Fill;
             this.editorTabControl.Location = new System.Drawing.Point(0, 0);
             this.editorTabControl.Margin = new System.Windows.Forms.Padding(0);
@@ -311,27 +307,6 @@
             this.backgroundView1.Size = new System.Drawing.Size(712, 534);
             this.backgroundView1.TabIndex = 0;
             // 
-            // worldMapTab
-            // 
-            this.worldMapTab.Controls.Add(this.worldMapView1);
-            this.worldMapTab.Location = new System.Drawing.Point(4, 22);
-            this.worldMapTab.Name = "worldMapTab";
-            this.worldMapTab.Padding = new System.Windows.Forms.Padding(3);
-            this.worldMapTab.Size = new System.Drawing.Size(712, 534);
-            this.worldMapTab.TabIndex = 5;
-            this.worldMapTab.Text = "World Map";
-            this.worldMapTab.UseVisualStyleBackColor = true;
-            // 
-            // worldMapView1
-            // 
-            this.worldMapView1.controller = null;
-            this.worldMapView1.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.worldMapView1.Location = new System.Drawing.Point(3, 3);
-            this.worldMapView1.Name = "worldMapView1";
-            this.worldMapView1.properties = null;
-            this.worldMapView1.Size = new System.Drawing.Size(706, 528);
-            this.worldMapView1.TabIndex = 0;
-            // 
             // EditorView
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -351,7 +326,6 @@
             this.blueprintsTab.ResumeLayout(false);
             this.circuitsTab.ResumeLayout(false);
             this.backgroundsTab.ResumeLayout(false);
-            this.worldMapTab.ResumeLayout(false);
             this.ResumeLayout(false);
 
         }
@@ -382,8 +356,6 @@
         private BackgroundView backgroundView1;
         private System.Windows.Forms.MenuItem pushResourcesMenuItem;
         private System.Windows.Forms.MenuItem menuItem3;
-        private System.Windows.Forms.TabPage worldMapTab;
-        private WorldMapView worldMapView1;
         private System.Windows.Forms.MenuItem optionsMenu;
         private System.Windows.Forms.MenuItem editPathsMenuItem;
 

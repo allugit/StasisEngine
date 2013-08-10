@@ -331,6 +331,7 @@ namespace StasisGame
         {
             _gameState = GameState.WorldMap;
             _worldMapScreen = _worldMapScreen ?? new WorldMapScreen(this, _systemManager);
+            _worldMapScreen.loadTextures();
             _screenSystem.addScreen(_worldMapScreen);
             _screenSystem.addTransition(new ScreenFadeInTransition(_worldMapScreen, Color.Black, true, 0.02f));
         }
