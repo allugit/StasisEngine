@@ -46,58 +46,8 @@ namespace StasisGame.Systems
         // initializePlayerInventory -- Creates the player's inventory components
         public void initializeInventory()
         {
-            XElement inventoryData = DataManager.playerData.inventoryData;
-            XElement toolbarData = DataManager.playerData.toolbarData;
-            InventoryComponent inventoryComponent;
-
-            // Player inventory
-            if (inventoryData == null)
-            {
-                inventoryComponent = new InventoryComponent(32);
-                _entityManager.addComponent(playerId, inventoryComponent);
-            }
-            else
-            {
-                int slots = int.Parse(inventoryData.Attribute("slots").Value);
-                inventoryComponent = new InventoryComponent(slots);
-                foreach (XElement itemData in inventoryData.Elements("Item"))
-                {
-                    string itemUID = itemData.Attribute("item_uid").Value;
-                    XElement itemResource = ResourceManager.getResource(itemUID);
-                    ItemType itemType = (ItemType)Enum.Parse(typeof(ItemType), itemResource.Attribute("type").Value);
-                    Texture2D inventoryTexture = ResourceManager.getTexture(itemResource.Attribute("inventory_texture_uid").Value);
-                    int quantity = int.Parse(itemData.Attribute("quantity").Value);
-                    bool inWorld = false;
-                    bool hasAiming = Loader.loadBool(itemResource.Attribute("adds_reticle"), false);
-                    int maxRange = Loader.loadInt(itemResource.Attribute("range"), 0);
-
-                    ItemComponent itemComponent = new ItemComponent(itemUID, itemType, inventoryTexture, quantity, inWorld, hasAiming, maxRange);
-                    inventoryComponent.addItem(itemComponent);
-                }
-                _entityManager.addComponent(playerId, inventoryComponent);
-            }
-
-            // Player toolbar
-            if (toolbarData != null)
-            {
-                int slots = int.Parse(toolbarData.Attribute("slots").Value);
-                ToolbarComponent toolbarComponent = new ToolbarComponent(slots, playerId);
-                EquipmentSystem equipmentSystem = (EquipmentSystem)_systemManager.getSystem(SystemType.Equipment);
-
-                foreach (XElement slotData in toolbarData.Elements("Slot"))
-                {
-                    int slotId = int.Parse(slotData.Attribute("id").Value);
-                    int inventorySlot = int.Parse(slotData.Attribute("inventory_slot").Value);
-                    ItemComponent itemComponent = inventoryComponent.getItem(inventorySlot);
-
-                    equipmentSystem.assignItemToToolbar(itemComponent, toolbarComponent, slotId);
-                }
-                _entityManager.addComponent(playerId, toolbarComponent);
-            }
-            else
-            {
-                _entityManager.addComponent(playerId, new ToolbarComponent(4, playerId));
-            }
+            _entityManager.addComponent(_playerId, DataManager.createPlayerInventoryComponent());
+            _entityManager.addComponent(_playerId, DataManager.createPlayerToolbarComponent(_playerId));
         }
 
         // Add components to the entity player that are needed to play in a level
@@ -105,11 +55,6 @@ namespace StasisGame.Systems
         {
             World world = (_systemManager.getSystem(SystemType.Physics) as PhysicsSystem).world;
             Body body;
-            //BodyDef bodyDef = new BodyDef();
-            //PolygonShape bodyShape = new PolygonShape();
-            //FixtureDef bodyFixtureDef = new FixtureDef();
-            //CircleShape feetShape = new CircleShape();
-            //FixtureDef feetFixtureDef = new FixtureDef();
             Fixture fixture;
             Fixture feetFixture;
             PolygonShape polygonShape = new PolygonShape(1f);
@@ -137,36 +82,6 @@ namespace StasisGame.Systems
             feetFixture.Friction = 0.1f;
             feetFixture.CollisionCategories = fixture.CollisionCategories;
             feetFixture.CollidesWith = fixture.CollidesWith;
-
-            /*bodyDef.bullet = true;
-            bodyDef.fixedRotation = true;
-            bodyDef.position = spawnPosition;
-            bodyDef.type = BodyType.Dynamic;
-            bodyDef.userData = playerId;
-            bodyShape.SetAsBox(0.18f, 0.27f);
-            bodyFixtureDef.density = 1f;
-            bodyFixtureDef.friction = 0f;
-            bodyFixtureDef.restitution = 0f;
-            bodyFixtureDef.shape = bodyShape;
-            bodyFixtureDef.filter.categoryBits = (ushort)CollisionCategory.Player;
-            bodyFixtureDef.filter.maskBits =
-                (ushort)CollisionCategory.DynamicGeometry |
-                (ushort)CollisionCategory.Item |
-                (ushort)CollisionCategory.Rope |
-                (ushort)CollisionCategory.StaticGeometry |
-                (ushort)CollisionCategory.Explosion;
-
-            feetShape._radius = 0.18f;
-            feetShape._p = new Vector2(0, 0.27f);
-            feetFixtureDef.density = 0.1f;
-            feetFixtureDef.friction = 0.1f;
-            feetFixtureDef.shape = feetShape;
-            feetFixtureDef.filter.categoryBits = bodyFixtureDef.filter.categoryBits;
-            feetFixtureDef.filter.maskBits = bodyFixtureDef.filter.maskBits;
-
-            body = world.CreateBody(bodyDef);
-            body.CreateFixture(bodyFixtureDef);
-            feetFixture = body.CreateFixture(feetFixtureDef);*/
 
             _entityManager.addComponent(playerId, new PhysicsComponent(body));
             _entityManager.addComponent(playerId, new CharacterMovementComponent(feetFixture));

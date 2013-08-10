@@ -351,6 +351,8 @@ namespace StasisGame.Systems
         // completeRegionGoal -- Handles completion of a region goal
         public void completeRegionGoal(int regionEntityId)
         {
+            Console.WriteLine("TODO: Implement completeRegionGoal() in LevelSystem.");
+            /*
             WorldMapSystem worldMapSystem = (WorldMapSystem)_systemManager.getSystem(SystemType.WorldMap);
             Goal goal = null;
             ScriptBase script = null;
@@ -365,12 +367,14 @@ namespace StasisGame.Systems
                         script.onGoalComplete(worldMapSystem, this, goal);
                     }
                 }
-            }
+            }*/
         }
 
         // tryCompleteEventGoal -- Tries to handle the completion of an event goal
         public void tryCompleteEventGoal(GameEvent e)
         {
+            Console.WriteLine("TODO: Reimplement tryCompleteEventGoal() in LevelSystem");
+            /*
             WorldMapSystem worldMapSystem = (WorldMapSystem)_systemManager.getSystem(SystemType.WorldMap);
             Goal goal = null;
             ScriptBase script = null;
@@ -386,7 +390,7 @@ namespace StasisGame.Systems
                         script.onGoalComplete(worldMapSystem, this, goal);
                     }
                 }
-            }
+            }*/
         }
 
         // endLevel

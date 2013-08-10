@@ -3,8 +3,10 @@ using System.IO;
 using System.Collections.Generic;
 using System.Xml.Linq;
 using Microsoft.Xna.Framework;
+using Microsoft.Xna.Framework.Graphics;
 using StasisCore;
 using StasisCore.Models;
+using StasisGame.Components;
 using StasisGame.States;
 using StasisGame.Systems;
 
@@ -20,10 +22,12 @@ namespace StasisGame.Managers
         private static string _settingsPath = _settingsDirectory + "settings.xml";
         private static LoderGame _game;
         private static SystemManager _systemManager;
+        private static EntityManager _entityManager;
         private static GameSettings _gameSettings;
         private static WorldMapManager _worldMapManager;
         private static string _playerName;
         private static int _playerSlot;
+        private static XElement _playerData;
 
         public static GameSettings gameSettings { get { return _gameSettings; } }
         public static string playerName { get { return _playerName; } }
@@ -31,10 +35,11 @@ namespace StasisGame.Managers
         public static WorldMapManager worldMapManager { get { return _worldMapManager; } }
 
         // Initialize
-        public static void initialize(LoderGame game, SystemManager systemManager)
+        public static void initialize(LoderGame game, SystemManager systemManager, EntityManager entityManager)
         {
             _game = game;
             _systemManager = systemManager;
+            _entityManager = entityManager;
 
             if (!Directory.Exists(_rootDirectory))
                 Directory.CreateDirectory(_rootDirectory);
@@ -178,6 +183,67 @@ namespace StasisGame.Managers
             return worldMapStates;
         }
 
+        // Create player inventory component
+        public static InventoryComponent createPlayerInventoryComponent()
+        {
+            XElement inventoryData = _playerData.Element("Inventory");
+            InventoryComponent inventoryComponent;
+
+            if (inventoryData == null)
+            {
+                inventoryComponent = new InventoryComponent(32);
+            }
+            else
+            {
+                int slots = int.Parse(inventoryData.Attribute("slots").Value);
+                inventoryComponent = new InventoryComponent(slots);
+                foreach (XElement itemData in inventoryData.Elements("Item"))
+                {
+                    string itemUID = itemData.Attribute("item_uid").Value;
+                    XElement itemResource = ResourceManager.getResource(itemUID);
+                    ItemType itemType = (ItemType)Enum.Parse(typeof(ItemType), itemResource.Attribute("type").Value);
+                    Texture2D inventoryTexture = ResourceManager.getTexture(itemResource.Attribute("inventory_texture_uid").Value);
+                    int quantity = int.Parse(itemData.Attribute("quantity").Value);
+                    bool inWorld = false;
+                    bool hasAiming = Loader.loadBool(itemResource.Attribute("adds_reticle"), false);
+                    int maxRange = Loader.loadInt(itemResource.Attribute("range"), 0);
+
+                    ItemComponent itemComponent = new ItemComponent(itemUID, itemType, inventoryTexture, quantity, inWorld, hasAiming, maxRange);
+                    inventoryComponent.addItem(itemComponent);
+                }
+            }
+            return inventoryComponent;
+        }
+
+        // Create player toolbar component
+        public static ToolbarComponent createPlayerToolbarComponent(int playerId)
+        {
+            XElement toolbarData = _playerData.Element("Toolbar");
+            ToolbarComponent toolbarComponent;
+
+            if (toolbarData == null)
+            {
+                toolbarComponent = new ToolbarComponent(4, playerId);
+            }
+            else
+            {
+                int slots = int.Parse(toolbarData.Attribute("slots").Value);
+                toolbarComponent = new ToolbarComponent(slots, playerId);
+                EquipmentSystem equipmentSystem = (EquipmentSystem)_systemManager.getSystem(SystemType.Equipment);
+                InventoryComponent inventoryComponent = _entityManager.getComponent(playerId, ComponentType.Inventory) as InventoryComponent;
+
+                foreach (XElement slotData in toolbarData.Elements("Slot"))
+                {
+                    int slotId = int.Parse(slotData.Attribute("id").Value);
+                    int inventorySlot = int.Parse(slotData.Attribute("inventory_slot").Value);
+                    ItemComponent itemComponent = inventoryComponent.getItem(inventorySlot);
+
+                    equipmentSystem.assignItemToToolbar(itemComponent, toolbarComponent, slotId);
+                }
+            }
+            return toolbarComponent;
+        }
+
         // Create new player data
         public static int createPlayerData(string playerName)
         {
@@ -268,12 +334,12 @@ namespace StasisGame.Managers
             using (FileStream fs = new FileStream(filePath, FileMode.Open))
             {
                 XDocument doc = XDocument.Load(fs);
-                XElement playerData = doc.Element("PlayerData");
 
+                _playerData = doc.Element("PlayerData");
                 _playerSlot = playerSlot;
-                _playerName = playerData.Attribute("name").Value;
+                _playerName = _playerData.Attribute("name").Value;
                 _worldMapManager = createWorldMapManager();
-                _worldMapManager.worldMapStates = loadWorldMapStates(playerData.Elements("WorldMapState") as List<XElement>);
+                _worldMapManager.worldMapStates = loadWorldMapStates(_playerData.Elements("WorldMapState") as List<XElement>);
             }
 
             Logger.log("DataManager.loadPlayerData method finished.");
@@ -289,7 +355,8 @@ namespace StasisGame.Managers
             using (FileStream fs = new FileStream(filePath, FileMode.Create))
             {
                 XDocument doc = new XDocument();
-                XElement playerData = new XElement(
+
+                _playerData = new XElement(
                     "PlayerData",
                     new XAttribute("name", _playerName),
                     new XAttribute("slot", _playerSlot));
@@ -312,10 +379,10 @@ namespace StasisGame.Managers
                         worldMapStateData.Add(new XElement("LevelPathState", new XAttribute("discovered", levelPathState.discovered)));
                     }
 
-                    playerData.Add(worldMapStateData);
+                    _playerData.Add(worldMapStateData);
                 }
 
-                doc.Add(playerData);
+                doc.Add(_playerData);
                 doc.Save(fs);
             }
 

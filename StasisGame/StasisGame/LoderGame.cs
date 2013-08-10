@@ -98,7 +98,7 @@ namespace StasisGame
             _systemManager.add(_screenSystem, -1);
             _loadingScreen = new LoadingScreen(this);
 
-            DataManager.initialize(this, _systemManager);
+            DataManager.initialize(this, _systemManager, _entityManager);
             DataManager.loadGameSettings();
             applyDisplaySettings();
 
