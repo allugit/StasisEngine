@@ -39,6 +39,7 @@ namespace StasisGame.UI
         private bool _allowNewLevelSelection = true;
         private SpriteFont _levelSelectTitleFont;
         private SpriteFont _levelSelectDescriptionFont;
+        private LevelIconDefinition _selectedLevelIcon;
 
         public WorldMapScreen(LoderGame game, SystemManager systemManager)
             : base(game.screenSystem, ScreenType.WorldMap)
@@ -104,13 +105,7 @@ namespace StasisGame.UI
             Vector2 viewOffset = _halfScreenSize - _currentScreenCenter;
             bool wasLevelIconPreviouslySelected = _selectedLevelIcon != null;
 
-            _oldGamepadState = _newGamepadState;
-            _oldKeyState = _newKeyState;
-            _oldMouseState = _newMouseState;
-
-            _newGamepadState = GamePad.GetState(PlayerIndex.One);
-            _newKeyState = Keyboard.GetState();
-            _newMouseState = Mouse.GetState();
+            base.update();
 
             mouseDelta = new Vector2(_newMouseState.X - _oldMouseState.X, _newMouseState.Y - _oldMouseState.Y);
             mousePosition = new Vector2(_newMouseState.X, _newMouseState.Y) - viewOffset;
@@ -137,6 +132,7 @@ namespace StasisGame.UI
                 _levelSelectPosition += mouseDelta;
             }
 
+            /*
             if (InputSystem.usingGamepad)
             {
                 _targetScreenCenter += _newGamepadState.ThumbSticks.Left * 7 * new Vector2(1, -1);
@@ -144,7 +140,7 @@ namespace StasisGame.UI
 
                 _scale = Math.Max(0.5f, _scale - _newGamepadState.Triggers.Left / 500f);
                 _scale = Math.Min(1f, _scale + _newGamepadState.Triggers.Right / 500f);
-            }
+            }*/
 
             if (_newKeyState.IsKeyDown(Keys.Left) || _newKeyState.IsKeyDown(Keys.A))
                 _targetScreenCenter += new Vector2(-7, 0);
@@ -160,7 +156,7 @@ namespace StasisGame.UI
                 if (_selectedLevelIcon != null)
                 {
                     _game.closeWorldMap();
-                    _game.loadLevel(_selectedLevelIcon.levelUID);
+                    _game.loadLevel(_selectedLevelIcon.levelUid);
                 }
             }
 
@@ -182,23 +178,33 @@ namespace StasisGame.UI
             _spriteBatch.GraphicsDevice.SetRenderTarget(_antiFogRT);
             _spriteBatch.GraphicsDevice.Clear(Color.Transparent);
             _spriteBatch.Begin(SpriteSortMode.BackToFront, BlendState.AlphaBlend);
-            foreach (WorldPath worldPath in _worldMapSystem.worldMap.worldPaths)
+
+            foreach (WorldMapDefinition worldMap in DataManager.worldMapManager.worldMapDefinitions)
             {
-                if (worldPath.state == WorldPathState.Discovered)
+                foreach (LevelPathDefinition levelPath in worldMap.levelPathDefinitions)
                 {
-                    float increment = 0.1f;
-                    for (float i = 0f; i < 1f; i += increment)
+                    if (DataManager.worldMapManager.isLevelPathDiscovered(worldMap.uid, levelPath.id))
                     {
-                        Vector2 point = Vector2.CatmullRom(worldPath.controlA.position, worldPath.pointA.position, worldPath.pointB.position, worldPath.controlB.position, i);
-                        _spriteBatch.Draw(_antiFogBrush, viewOffset + point, _antiFogBrush.Bounds, Color.White, 0f, _antiFogBrushOrigin, antiFogTextureScale, SpriteEffects.None, 0f);
+                        foreach (LevelPathKey key in levelPath.pathKeys)
+                        {
+                            float increment = 0.1f;
+                            for (float i = increment; i < 1f; i += increment)
+                            {
+                                Vector2 point = Vector2.Zero;
+                                StasisMathHelper.bezier(ref key.p0, ref key.p1, ref key.p2, ref key.p3, i, out point);
+                                _spriteBatch.Draw(_antiFogBrush, viewOffset + point, _antiFogBrush.Bounds, Color.White, 0f, _antiFogBrushOrigin, antiFogTextureScale, SpriteEffects.None, 0f);
+                            }
+                        }
                     }
                 }
-            }
-            foreach (LevelIcon levelIcon in _worldMapSystem.worldMap.levelIcons)
-            {
-                if (levelIcon.state != LevelIconState.Undiscovered)
+                foreach (LevelIconDefinition levelIcon in worldMap.levelIconDefinitions)
                 {
-                    _spriteBatch.Draw(_antiFogBrush, viewOffset + levelIcon.position, _antiFogBrush.Bounds, Color.White, 0f, _antiFogBrushOrigin, antiFogTextureScale, SpriteEffects.None, 0f);
+                    LevelIconState state = DataManager.worldMapManager.getLevelIconState(worldMap.uid, levelIcon.uid);
+
+                    if (state.discovered)
+                    {
+                        _spriteBatch.Draw(_antiFogBrush, viewOffset + levelIcon.position, _antiFogBrush.Bounds, Color.White, 0f, _antiFogBrushOrigin, antiFogTextureScale, SpriteEffects.None, 0f);
+                    }
                 }
             }
             _spriteBatch.End();
@@ -214,32 +220,46 @@ namespace StasisGame.UI
         public override void draw()
         {
             Vector2 viewOffset = -_currentScreenCenter + _halfScreenSize;
-            WorldMap worldMap = _worldMapSystem.worldMap;
 
-            // World map texture
-            _spriteBatch.Draw(worldMap.texture, viewOffset, worldMap.texture.Bounds, Color.White, 0f, worldMap.halfTextureSize, _scale, SpriteEffects.None, 1f);
-            
-            // World paths
-            foreach (WorldPath worldPath in worldMap.worldPaths)
+            foreach (WorldMapDefinition worldMap in DataManager.worldMapManager.worldMapDefinitions)
             {
-                if (worldPath.state == WorldPathState.Discovered)
+                WorldMapState worldMapState = DataManager.worldMapManager.getWorldMapState(worldMap.uid);
+
+                if (worldMapState.discovered)
                 {
-                    float increment = 0.001f;
-                    for (float i = 0f; i < 1f; i += increment)
+                    // World map texture
+                    _spriteBatch.Draw(worldMap.texture, viewOffset, worldMap.texture.Bounds, Color.White, 0f, new Vector2(worldMap.texture.Width, worldMap.texture.Height) / 2f, _scale, SpriteEffects.None, 1f);
+
+                    // Paths
+                    foreach (LevelPathDefinition levelPath in worldMap.levelPathDefinitions)
                     {
-                        Vector2 point = Vector2.CatmullRom(worldPath.controlA.position, worldPath.pointA.position, worldPath.pointB.position, worldPath.controlB.position, i);
-                        _spriteBatch.Draw(_pathTexture, viewOffset + point, _pathTexture.Bounds, Color.Yellow, 0f, _pathTextureOrigin, _scale, SpriteEffects.None, 0.3f);
+                        if (DataManager.worldMapManager.isLevelPathDiscovered(worldMap.uid, levelPath.id))
+                        {
+                            foreach (LevelPathKey key in levelPath.pathKeys)
+                            {
+                                float increment = 0.001f;
+                                for (float i = 0f; i < 1f; i += increment)
+                                {
+                                    Vector2 point = Vector2.Zero;
+                                    StasisMathHelper.bezier(ref key.p0, ref key.p1, ref key.p2, ref key.p3, i, out point);
+                                    _spriteBatch.Draw(_pathTexture, viewOffset + point, _pathTexture.Bounds, Color.Yellow, 0f, _pathTextureOrigin, _scale, SpriteEffects.None, 0.3f);
+                                }
+                            }
+                        }
                     }
-                }
-            }
 
-            // Level icons
-            foreach (LevelIcon levelIcon in worldMap.levelIcons)
-            {
-                if (levelIcon.state != LevelIconState.Undiscovered)
-                {
-                    Texture2D texture = levelIcon.state == LevelIconState.Unfinished ? levelIcon.unfinishedIcon : levelIcon.finishedIcon;
-                    _spriteBatch.Draw(texture, viewOffset + levelIcon.position, texture.Bounds, Color.White, 0f, new Vector2(texture.Width, texture.Height) / 2f, _scale, SpriteEffects.None, 0.2f);
+                    // Level icons
+                    foreach (LevelIconDefinition levelIcon in worldMap.levelIconDefinitions)
+                    {
+                        LevelIconState state = DataManager.worldMapManager.getLevelIconState(worldMap.uid, levelIcon.uid);
+
+                        if (state.discovered)
+                        {
+                            Texture2D texture = state.finished ? levelIcon.finishedTexture : levelIcon.unfinishedTexture;
+
+                            _spriteBatch.Draw(texture, viewOffset + levelIcon.position, texture.Bounds, Color.White, 0f, new Vector2(texture.Width, texture.Height) / 2f, _scale, SpriteEffects.None, 0.2f);
+                        }
+                    }
                 }
             }
 

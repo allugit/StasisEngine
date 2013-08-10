@@ -39,5 +39,19 @@ namespace StasisCore
             a3 = b.X;
             result.X = a0 * mu * mu2 + a1 * mu2 + a2 * mu + a3;
         }
+
+        public static void bezier(ref Vector2 p0, ref Vector2 p1, ref Vector2 p2, ref Vector2 p3, float t, out Vector2 result)
+        {
+            float cx = 3 * (p1.X - p0.X);
+            float cy = 3 * (p1.Y - p0.Y);
+            float bx = 3 * (p2.X - p1.X) - cx;
+            float by = 3 * (p2.Y - p1.Y) - cy;
+            float ax = p3.X - p0.X - cx - bx;
+            float ay = p3.Y - p0.Y - cy - by;
+            float cube = t * t * t;
+            float square = t * t;
+            result.X = (ax * cube) + (bx * square) + (cx * t) + p0.X;
+            result.Y = (ay * cube) + (by * square) + (cy * t) + p0.Y;
+        }
     }
 }

@@ -6,7 +6,6 @@ using Microsoft.Xna.Framework.Input;
 using Microsoft.Xna.Framework.Graphics;
 using StasisGame.Systems;
 using StasisGame.Managers;
-using StasisGame.Data;
 
 namespace StasisGame.UI
 {

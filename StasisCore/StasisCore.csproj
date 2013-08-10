@@ -68,13 +68,13 @@
     <Compile Include="Models\Background.cs" />
     <Compile Include="Models\BackgroundLayer.cs" />
     <Compile Include="BackgroundRenderer.cs" />
-    <Compile Include="Models\LevelIcon.cs" />
+    <Compile Include="Models\LevelIconDefinition.cs" />
+    <Compile Include="Models\LevelPathDefinition.cs" />
+    <Compile Include="Models\LevelPathKey.cs" />
     <Compile Include="Models\MaterialWorleyLayer.cs" />
     <Compile Include="Models\RopeMaterial.cs" />
     <Compile Include="Models\RopeMaterialTexture.cs" />
-    <Compile Include="Models\WorldMap.cs" />
-    <Compile Include="Models\WorldPath.cs" />
-    <Compile Include="Models\WorldPathPoint.cs" />
+    <Compile Include="Models\WorldMapDefinition.cs" />
     <Compile Include="ResourceManager.cs" />
     <Compile Include="IEventHandler.cs" />
     <Compile Include="Models\GameEvent.cs" />

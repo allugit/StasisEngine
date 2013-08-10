@@ -74,5 +74,14 @@ namespace StasisGame.Managers
             }
             return null;
         }
+
+        public bool isLevelPathDiscovered(string worldMapUid, int id)
+        {
+            LevelPathDefinition levelPathDefinition = getLevelPathDefinition(worldMapUid, id);
+            LevelIconState levelA = getLevelIconState(worldMapUid, levelPathDefinition.levelIconAUid);
+            LevelIconState levelB = getLevelIconState(worldMapUid, levelPathDefinition.levelIconBUid);
+
+            return levelA.discovered && levelB.discovered;
+        }
     }
 }
