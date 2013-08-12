@@ -108,6 +108,17 @@ namespace StasisEditor
                     }
                 }
 
+                // Check quests
+                using (FileStream fs = new FileStream(ResourceManager.questPath, FileMode.Open))
+                {
+                    XElement data = XElement.Load(fs);
+                    foreach (XElement questData in data.Elements("Quest"))
+                    {
+                        if (questData.Attribute("uid").Value == uid)
+                            return true;
+                    }
+                }
+
                 // Check rope materials
                 using (FileStream fs = new FileStream(ResourceManager.ropeMaterialPath, FileMode.Open))
                 {
@@ -182,6 +193,11 @@ namespace StasisEditor
                 string worldMapDestination = resourceDestinationPath + "\\" + ResourceManager.worldMapPath;
                 string worldMapSource = EditorController.resourcesSourcePath + "\\" + ResourceManager.worldMapPath;
                 File.Copy(worldMapSource, worldMapDestination);
+
+                // Quests
+                string questDestination = resourceDestinationPath + "\\" + ResourceManager.questPath;
+                string questSource = EditorController.resourcesSourcePath + "\\" + ResourceManager.questPath;
+                File.Copy(questSource, questDestination);
 
                 // Rope materials
                 string ropeMaterialDestination = resourceDestinationPath + "\\" + ResourceManager.ropeMaterialPath;
@@ -332,6 +348,26 @@ namespace StasisEditor
 
             // Reload world maps
             ResourceManager.loadAllWorldMaps(new FileStream(ResourceManager.worldMapPath, FileMode.Open));
+        }
+
+        // Save quest resources
+        public static void saveQuestResources(XElement data, bool backup)
+        {
+            // Backup quests
+            if (backup)
+            {
+                string backupFile = ResourceManager.questPath + ".bak";
+                if (File.Exists(backupFile))
+                    File.Delete(backupFile);
+                File.Move(ResourceManager.questPath, backupFile);
+            }
+
+            // Save quests
+            XDocument doc = new XDocument(data);
+            doc.Save(ResourceManager.questPath);
+
+            // Reload quests
+            ResourceManager.loadAllQuests(new FileStream(ResourceManager.questPath, FileMode.Open));
         }
 
         // Save rope material resources

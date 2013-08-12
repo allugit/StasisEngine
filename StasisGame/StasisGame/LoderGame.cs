@@ -125,6 +125,7 @@ namespace StasisGame
             ResourceManager.loadAllBackgrounds(TitleContainer.OpenStream(ResourceManager.backgroundPath));
             ResourceManager.loadAllWorldMaps(TitleContainer.OpenStream(ResourceManager.worldMapPath));
             ResourceManager.loadAllRopeMaterials(TitleContainer.OpenStream(ResourceManager.ropeMaterialPath));
+            ResourceManager.loadAllQuests(TitleContainer.OpenStream(ResourceManager.questPath));
 
             // Load user interface textures
             string[] interfaceTextures =

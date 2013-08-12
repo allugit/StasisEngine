@@ -28,6 +28,7 @@ namespace StasisCore
         private static Dictionary<string, XElement> _circuitResources;
         private static Dictionary<string, XElement> _backgroundResources;
         private static Dictionary<string, XElement> _worldMapResources;
+        private static Dictionary<string, XElement> _questResources;
         private static Dictionary<string, XElement> _ropeMaterialResources;
         private static Dictionary<string, Texture2D> _cachedTextures;
         private static List<Dictionary<string, XElement>> _resources;
@@ -43,6 +44,7 @@ namespace StasisCore
         public static string circuitPath { get { return rootDirectory + @"data/circuits.xml"; } }
         public static string backgroundPath { get { return rootDirectory + @"data/backgrounds.xml"; } }
         public static string worldMapPath { get { return rootDirectory + @"data/world_maps.xml"; } }
+        public static string questPath { get { return rootDirectory + @"data/quests.xml"; } }
         public static string ropeMaterialPath { get { return rootDirectory + @"data/rope_materials.xml"; } }
         public static GraphicsDevice graphicsDevice { get { return _graphicsDevice; } }
 
@@ -146,6 +148,16 @@ namespace StasisCore
                 return resources;
             }
         }
+        public static List<XElement> questResources
+        {
+            get
+            {
+                List<XElement> resources = new List<XElement>();
+                foreach (XElement resource in _questResources.Values)
+                    resources.Add(resource);
+                return resources;
+            }
+        }
         public static List<XElement> ropeMaterialResources
         {
             get
@@ -172,6 +184,7 @@ namespace StasisCore
             _circuitResources = new Dictionary<string, XElement>();
             _backgroundResources = new Dictionary<string, XElement>();
             _worldMapResources = new Dictionary<string, XElement>();
+            _questResources = new Dictionary<string, XElement>();
             _ropeMaterialResources = new Dictionary<string, XElement>();
             _cachedTextures = new Dictionary<string, Texture2D>();
 
@@ -187,6 +200,7 @@ namespace StasisCore
             _resources.Add(_circuitResources);
             _resources.Add(_backgroundResources);
             _resources.Add(_worldMapResources);
+            _resources.Add(_questResources);
             _resources.Add(_ropeMaterialResources);
             Logger.log("ResourceManager.initialize method finished.");
         }
@@ -415,6 +429,20 @@ namespace StasisCore
             foreach (XElement worldMapData in data.Elements("WorldMap"))
             {
                 _worldMapResources[worldMapData.Attribute("uid").Value] = worldMapData;
+            }
+
+            stream.Close();
+        }
+
+        // Load quests
+        public static void loadAllQuests(Stream stream)
+        {
+            _questResources.Clear();
+
+            XElement data = XElement.Load(stream);
+            foreach (XElement questData in data.Elements("Quest"))
+            {
+                _questResources[questData.Attribute("uid").Value] = questData;
             }
 
             stream.Close();

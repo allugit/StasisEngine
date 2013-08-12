@@ -25,6 +25,7 @@ namespace StasisGame.Managers
         private static EntityManager _entityManager;
         private static GameSettings _gameSettings;
         private static WorldMapManager _worldMapManager;
+        private static QuestManager _questManager;
         private static string _playerName;
         private static int _playerSlot;
         private static XElement _playerData;
@@ -144,6 +145,32 @@ namespace StasisGame.Managers
             return new WorldMapManager(definitions);
         }
 
+        // Create quest manager
+        public static QuestManager createQuestManager()
+        {
+            List<QuestDefinition> questDefinitions = new List<QuestDefinition>();
+            List<XElement> allQuestData = ResourceManager.questResources;
+
+            foreach (XElement questData in allQuestData)
+            {
+                QuestDefinition questDefinition = new QuestDefinition(questData.Attribute("uid").Value, questData.Attribute("title").Value, questData.Attribute("description").Value);
+
+                foreach (XElement objectiveData in questData.Elements("Objective"))
+                {
+                    questDefinition.objectiveDefinitions.Add(
+                        new ObjectiveDefinition(
+                            objectiveData.Attribute("uid").Value,
+                            objectiveData.Attribute("label").Value,
+                            Loader.loadInt(objectiveData.Attribute("starting_value"), 0),
+                            Loader.loadInt(objectiveData.Attribute("end_value"), 1),
+                            Loader.loadBool(objectiveData.Attribute("optional"), false)));
+                }
+                questDefinitions.Add(questDefinition);
+            }
+
+            return new QuestManager(questDefinitions);
+        }
+
         // Load world map states
         public static Dictionary<string, WorldMapState> loadWorldMapStates(List<XElement> allWorldMapStateData)
         {
@@ -260,10 +287,15 @@ namespace StasisGame.Managers
                 {
                     WorldMapState startingWorldMapState;
 
-                    _worldMapManager = createWorldMapManager();
-                    startingWorldMapState = new WorldMapState(_worldMapManager.getWorldMapDefinition("oria_world_map"), true);
                     _playerName = playerName;
                     _playerSlot = unusedPlayerSlot;
+
+                    // Create managers
+                    _worldMapManager = createWorldMapManager();
+                    _questManager = createQuestManager();
+
+                    // Create starting world map states
+                    startingWorldMapState = new WorldMapState(_worldMapManager.getWorldMapDefinition("oria_world_map"), true);
                     startingWorldMapState.levelIconStates.Add(
                         new LevelIconState(
                             _worldMapManager.getLevelIconDefinition("oria_world_map", "home_village"),
@@ -273,6 +305,10 @@ namespace StasisGame.Managers
                         "oria_world_map",
                         startingWorldMapState);
 
+                    // Create starting quest states
+                    _questManager.addNewQuestState("helping_dagny_1");
+
+                    // Save data
                     savePlayerData();
                     created = true;
                 }
@@ -357,11 +393,13 @@ namespace StasisGame.Managers
             {
                 XDocument doc = new XDocument();
 
+                // Basic player data
                 _playerData = new XElement(
                     "PlayerData",
                     new XAttribute("name", _playerName),
                     new XAttribute("slot", _playerSlot));
 
+                // World map states
                 foreach (WorldMapState worldMapState in _worldMapManager.worldMapStates.Values)
                 {
                     XElement worldMapStateData = new XElement(
@@ -384,6 +422,22 @@ namespace StasisGame.Managers
                     }
 
                     _playerData.Add(worldMapStateData);
+                }
+
+                // Quest states
+                foreach (QuestState questState in _questManager.questStates.Values)
+                {
+                    XElement questStateData = new XElement("QuestState", new XAttribute("quest_uid", questState.definition.uid));
+
+                    foreach (ObjectiveState objectiveState in questState.objectiveStates)
+                    {
+                        questStateData.Add(
+                            new XElement("ObjectiveState",
+                                new XAttribute("objective_uid", objectiveState.definition.uid),
+                                new XAttribute("current_value", objectiveState.currentValue)));
+                    }
+
+                    _playerData.Add(questStateData);
                 }
 
                 doc.Add(_playerData);
