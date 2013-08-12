@@ -19,6 +19,8 @@ namespace StasisEditor.Models
         private bool _firstDraw = true;
 
         [Browsable(false)]
+        public override string name { get { return base.name; } set { base.name = value; } }
+        [Browsable(false)]
         public SortedDictionary<float, List<EditorActor>> sortedActors { get { return _sortedActors; } }
         [Browsable(false)]
         public XElement data
@@ -226,9 +228,10 @@ namespace StasisEditor.Models
         }
 
         // Save
-        public void save()
+        public void save(string filePath)
         {
-            string filePath = ResourceManager.levelPath + "\\" + _name + ".xml";
+            XDocument doc = new XDocument();
+
             if (File.Exists(filePath))
             {
                 string backupFilePath = filePath + ".bak";
@@ -237,7 +240,7 @@ namespace StasisEditor.Models
                 File.Move(filePath, backupFilePath);
             }
 
-            XDocument doc = new XDocument();
+            _name = Path.GetFileNameWithoutExtension(filePath);
             doc.Add(data);
             doc.Save(filePath);
         }

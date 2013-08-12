@@ -14,7 +14,7 @@ namespace StasisCore.Models
 
         public Vector2 gravity { get { return _gravity; } set { _gravity = value; } }
         public Vector2 wind { get { return _wind; } set { _wind = value; } }
-        public string name { get { return _name; } set { _name = value; } }
+        virtual public string name { get { return _name; } set { _name = value; } }
         public string backgroundUID { get { return _backgroundUID; } set { _backgroundUID = value; } }
 
         // Create new

@@ -196,7 +196,12 @@ namespace StasisEditor.Views
         // "Level save" menu item clicked
         private void menuLevelSave_Click(object sender, EventArgs e)
         {
-            _controller.levelController.saveLevel();
+            SaveFileDialog fileDialog = new SaveFileDialog();
+            fileDialog.Filter = "Level XML (*.xml) | *.xml";
+            if (fileDialog.ShowDialog() == System.Windows.Forms.DialogResult.OK)
+            {
+                _controller.levelController.saveLevel(fileDialog.FileName);
+            }
         }
 
         // "Level load" menu item clicked
@@ -214,12 +219,13 @@ namespace StasisEditor.Views
         // "Level preview" menu item clicked
         private void menuItem1_Click(object sender, EventArgs e)
         {
+            /*
             if (MessageBox.Show("Save level before previewing?", "Save Level", MessageBoxButtons.YesNo) == System.Windows.Forms.DialogResult.OK)
             {
                 _controller.levelController.saveLevel();
             }
 
-            _controller.runGame();
+            _controller.runGame();*/
         }
 
         // "Push Resources" menu item clicked

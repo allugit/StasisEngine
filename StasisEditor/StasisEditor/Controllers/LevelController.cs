@@ -155,9 +155,9 @@ namespace StasisEditor.Controllers
         }
 
         // saveLevel
-        public void saveLevel()
+        public void saveLevel(string fileName)
         {
-            _level.save();
+            _level.save(fileName);
         }
 
         // closeLevel
