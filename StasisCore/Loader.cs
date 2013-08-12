@@ -46,8 +46,8 @@ namespace StasisCore
         }
         public static Color loadColor(string value, Color defaultValue)
         {
-            //Regex regex = new Regex(@"R:([\d\.]+){1}\s+G:([\d\.]+){1}\s+B:([\d\.]+){1}\s+A:([\d\.]+)");
-            Regex regex = new Regex(@"R=(\d+), G=(\d+), B=(\d+), A=(\d+)");
+            Regex regex = new Regex(@"R:([\d\.]+){1}\s+G:([\d\.]+){1}\s+B:([\d\.]+){1}\s+A:([\d\.]+)");
+            //Regex regex = new Regex(@"R=(\d+), G=(\d+), B=(\d+), A=(\d+)");
             Match match = regex.Match(value);
 
             if (match.Groups.Count != 5)
