@@ -31,6 +31,20 @@ namespace StasisGame.Managers
             return null;
         }
 
+        public ObjectiveDefinition getObjectiveDefinition(string questUid, string objectiveUid)
+        {
+            QuestDefinition questDefinition = getQuestDefinition(questUid);
+
+            foreach (ObjectiveDefinition objectiveDefinition in questDefinition.objectiveDefinitions)
+            {
+                if (objectiveDefinition.uid == objectiveUid)
+                {
+                    return objectiveDefinition;
+                }
+            }
+            return null;
+        }
+
         public void addNewQuestState(string questUid)
         {
             QuestDefinition questDefinition = getQuestDefinition(questUid);

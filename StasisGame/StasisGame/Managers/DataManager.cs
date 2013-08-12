@@ -210,6 +210,29 @@ namespace StasisGame.Managers
             return worldMapStates;
         }
 
+        // Load quest states
+        public static Dictionary<string, QuestState> loadQuestStates(List<XElement> allQuestStateData)
+        {
+            Dictionary<string, QuestState> questStates = new Dictionary<string, QuestState>();
+
+            foreach (XElement questStateData in allQuestStateData)
+            {
+                string questUid = questStateData.Attribute("quest_uid").Value;
+                QuestState questState = new QuestState(_questManager.getQuestDefinition(questUid));
+
+                foreach (XElement objectiveStateData in questStateData.Elements("ObjectiveState"))
+                {
+                    questState.objectiveStates.Add(
+                        new ObjectiveState(
+                            _questManager.getObjectiveDefinition(questUid, objectiveStateData.Attribute("objective_uid").Value),
+                            int.Parse(objectiveStateData.Attribute("current_value").Value)));
+                }
+                questStates.Add(questUid, questState);
+            }
+
+            return questStates;
+        }
+
         // Create player inventory component
         public static InventoryComponent createPlayerInventoryComponent()
         {
@@ -372,11 +395,18 @@ namespace StasisGame.Managers
             {
                 XDocument doc = XDocument.Load(fs);
 
+                // Basic player data
                 _playerData = doc.Element("PlayerData");
                 _playerSlot = playerSlot;
                 _playerName = _playerData.Attribute("name").Value;
+
+                // World map data
                 _worldMapManager = createWorldMapManager();
                 _worldMapManager.worldMapStates = loadWorldMapStates(new List<XElement>(_playerData.Elements("WorldMapState")));
+
+                // Quest data
+                _questManager = createQuestManager();
+                _questManager.questStates = loadQuestStates(new List<XElement>(_playerData.Elements("QuestState")));
             }
 
             Logger.log("DataManager.loadPlayerData method finished.");
