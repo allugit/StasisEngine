@@ -526,11 +526,14 @@ namespace StasisGame.Managers
                 toolbarData.SetAttributeValue("selected_index", toolbarComponent.selectedIndex);
                 foreach (KeyValuePair<int, ItemComponent> slotItemPair in toolbarComponent.inventory)
                 {
-                    toolbarData.Add(
-                        new XElement(
-                            "Slot",
-                            new XAttribute("slot_id", slotItemPair.Key),
-                            new XAttribute("inventory_slot", equipmentSystem.getInventorySlot(inventoryComponent, slotItemPair.Value))));
+                    if (slotItemPair.Value != null)
+                    {
+                        toolbarData.Add(
+                            new XElement(
+                                "Slot",
+                                new XAttribute("slot_id", slotItemPair.Key),
+                                new XAttribute("inventory_slot", equipmentSystem.getInventorySlot(inventoryComponent, slotItemPair.Value))));
+                    }
                 }
                 _playerData.Add(toolbarData);
 
