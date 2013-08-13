@@ -67,9 +67,14 @@ namespace StasisGame.UI
                 new Rectangle(0, 0, 152, 33),
                 () =>
                 {
-                    int playerSlot = DataManager.createPlayerData(_nameInputPane.name);
+                    int playerSlot;
+
                     _game.closePlayerCreationScreen();
-                    _game.loadGame(playerSlot);
+                    _game.startPersistentSystems();
+                    _game.playerSystem.createPlayer();
+                    playerSlot = DataManager.createPlayerData(_nameInputPane.name);
+                    DataManager.loadPlayerData(playerSlot);
+                    _game.openWorldMap();
                 });
         }
 

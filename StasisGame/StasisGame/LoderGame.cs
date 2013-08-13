@@ -72,6 +72,7 @@ namespace StasisGame
         public Vector2 menuBackgroundScreenOffset { get { return _menuBackgroundScreenOffset; } }
         public LevelScreen levelScreen { get { return _levelScreen; } }
         public ScreenSystem screenSystem { get { return _screenSystem; } }
+        public PlayerSystem playerSystem { get { return _playerSystem; } }
 
         public LoderGame(string[] args)
         {
@@ -199,8 +200,8 @@ namespace StasisGame
             }
         }
 
-        // initializePersistentSystems -- Certain systems (such as WorldMap, Level, Player, etc...) need to be active throughout the entire game
-        private void startPersistentSystems()
+        // startPersistentSystems -- Certain systems (such as WorldMap, Level, Player, etc...) that need to be active throughout the entire game
+        public void startPersistentSystems()
         {
             _playerSystem = new PlayerSystem(_systemManager, _entityManager);
             _equipmentSystem = new EquipmentSystem(_systemManager, _entityManager);
@@ -229,15 +230,6 @@ namespace StasisGame
             _graphics.PreferredBackBufferHeight = DataManager.gameSettings.screenHeight;
             _graphics.IsFullScreen = DataManager.gameSettings.fullscreen;
             _graphics.ApplyChanges();
-        }
-
-        public void loadGame(int playerDataSlot)
-        {
-            startPersistentSystems();
-            _playerSystem.createPlayer();
-            DataManager.loadPlayerData(playerDataSlot);
-            _screenSystem.removeScreen(_mainMenuScreen);
-            openWorldMap();
         }
 
         public void loadLevel(string levelUID)

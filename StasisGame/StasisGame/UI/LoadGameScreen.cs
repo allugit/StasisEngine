@@ -120,7 +120,10 @@ namespace StasisGame.UI
                         _game.closeLoadGameMenu();
                         _screenSystem.addTransition(new ScreenFadeOutTransition(this, Color.Black, true, 0.05f, null, () =>
                         {
-                            _game.loadGame(slot);
+                            _game.startPersistentSystems();
+                            _game.playerSystem.createPlayer();
+                            DataManager.loadPlayerData(slot);
+                            _game.openWorldMap();
                         }));
                     }));
             }

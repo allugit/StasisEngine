@@ -178,7 +178,9 @@ namespace StasisGame.Managers
         {
             List<ItemDefinition> itemDefinitions = new List<ItemDefinition>();
             List<XElement> allItemData = ResourceManager.itemResources;
+            List<XElement> allBlueprintData = ResourceManager.blueprintResources;
 
+            // Items
             foreach (XElement itemData in allItemData)
             {
                 itemDefinitions.Add(
@@ -190,6 +192,20 @@ namespace StasisGame.Managers
                         bool.Parse(itemData.Attribute("stackable").Value),
                         itemData.Attribute("inventory_texture_uid").Value,
                         itemData.Attribute("world_texture_uid").Value));
+            }
+
+            // Blueprints
+            foreach (XElement blueprintData in allBlueprintData)
+            {
+                itemDefinitions.Add(
+                    new ItemDefinition(
+                        blueprintData.Attribute("uid").Value,
+                        false,
+                        0,
+                        1,
+                        false,
+                        blueprintData.Attribute("inventory_texture_uid").Value,
+                        blueprintData.Attribute("world_texture_uid").Value));
             }
 
             return new ItemManager(itemDefinitions);
