@@ -108,7 +108,7 @@ namespace StasisGame.UI
                 }
 
                 // Keyboard input
-                ItemComponent selectedItem = _inventoryComponent.getItem(_selectedIndex);
+                ItemComponent selectedItem = _equipmentSystem.getInventoryItem(_inventoryComponent, _selectedIndex);
 
                 if (selectedItem != null)
                 {
@@ -142,7 +142,7 @@ namespace StasisGame.UI
                 int x = i % _columnWidth;
                 int y = (int)Math.Floor((decimal)(i / _columnWidth));
                 Vector2 tilePosition = containerPosition + _spacing * new Vector2(x, y) + new Vector2(2, 2);
-                ItemComponent itemComponent = _inventoryComponent.getItem(i);
+                ItemComponent itemComponent = _equipmentSystem.getInventoryItem(_inventoryComponent, i);
 
                 if (_selectedIndex == i)
                 {

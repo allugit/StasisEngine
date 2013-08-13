@@ -153,11 +153,13 @@ namespace StasisGame.Systems
                 if (itemComponent != null)
                 {
                     contact.Enabled = false;
-                    if (itemComponent.inWorld)
+                    if (itemComponent.state.inWorld)
                     {
                         InventoryComponent playerInventory = _entityManager.getComponent(playerId, ComponentType.Inventory) as InventoryComponent;
-                        playerInventory.addItem(itemComponent);
-                        itemComponent.inWorld = false;
+                        EquipmentSystem equipmentSystem = _systemManager.getSystem(SystemType.Equipment) as EquipmentSystem;
+
+                        equipmentSystem.addInventoryItem(playerInventory, itemComponent);
+                        itemComponent.state.inWorld = false;
                         _bodiesToRemove.Add(fixture.Body);
                         _entityManager.killEntity(itemEntityId);
                         eventSystem.postEvent(new GameEvent(GameEventType.OnItemPickedUp, itemEntityId));

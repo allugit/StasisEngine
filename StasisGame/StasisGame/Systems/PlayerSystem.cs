@@ -43,13 +43,6 @@ namespace StasisGame.Systems
             playerId = _entityManager.createEntity(PLAYER_ID);
         }
 
-        // initializePlayerInventory -- Creates the player's inventory components
-        public void initializeInventory()
-        {
-            _entityManager.addComponent(_playerId, DataManager.createPlayerInventoryComponent());
-            _entityManager.addComponent(_playerId, DataManager.createPlayerToolbarComponent(_playerId));
-        }
-
         // Add components to the entity player that are needed to play in a level
         public void addLevelComponents()
         {
@@ -118,7 +111,8 @@ namespace StasisGame.Systems
         {
             _entityManager.removeComponent(_playerId, ComponentType.Inventory);
             _entityManager.removeComponent(_playerId, ComponentType.Toolbar);
-            initializeInventory();
+            DataManager.loadPlayerInventory();
+            DataManager.loadPlayerToolbar();
         }
 
         // update

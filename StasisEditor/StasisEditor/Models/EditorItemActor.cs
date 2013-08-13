@@ -13,9 +13,11 @@ namespace StasisEditor.Models
         private Vector2 _position;
         private string _itemUID;
         private int _quantity;
+        private float _currentRangeLimit;
 
         public string itemUID { get { return _itemUID; } set { _itemUID = value; } }
         public int quantity { get { return _quantity; } set { _quantity = value; } }
+        public float currentRangeLimit { get { return _currentRangeLimit; } set { _currentRangeLimit = value; } }
         [Browsable(false)]
         public override Vector2 circuitConnectionPosition { get { return _position; } }
         [Browsable(false)]
@@ -27,6 +29,7 @@ namespace StasisEditor.Models
                 d.SetAttributeValue("position", _position);
                 d.SetAttributeValue("item_uid", _itemUID);
                 d.SetAttributeValue("quantity", _quantity);
+                d.SetAttributeValue("current_range_limit", _currentRangeLimit);
                 return d;
             }
         }
@@ -36,6 +39,7 @@ namespace StasisEditor.Models
         {
             _itemUID = itemUID;
             _quantity = 1;
+            _currentRangeLimit = 10;
             _position = level.controller.worldMouse;
         }
 
@@ -45,6 +49,7 @@ namespace StasisEditor.Models
             _position = Loader.loadVector2(data.Attribute("position"), Vector2.Zero);
             _itemUID = data.Attribute("item_uid").Value;
             _quantity = Loader.loadInt(data.Attribute("quantity"), 1);
+            _currentRangeLimit = Loader.loadFloat(data.Attribute("current_range_limit"), 10f);
         }
 
         public override void handleSelectedClick(System.Windows.Forms.MouseButtons button)

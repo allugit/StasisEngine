@@ -350,6 +350,8 @@ namespace StasisGame
             Texture2D worldTexture = ResourceManager.getTexture(Loader.loadString(itemData.Attribute("world_texture_uid"), "default_item"));
             Texture2D inventoryTexture = ResourceManager.getTexture(Loader.loadString(itemData.Attribute("inventory_texture_uid"), "default_item"));
             float layerDepth = Loader.loadFloat(data.Attribute("layer_depth"), 0.1f);
+            ItemDefinition itemDefinition = DataManager.itemManager.getItemDefinition(itemUID);
+            ItemState itemState = new ItemState(int.Parse(data.Attribute("quantity").Value), float.Parse(data.Attribute("current_range_limit").Value), true);
 
             body = BodyFactory.CreateBody(world, Loader.loadVector2(data.Attribute("position"), Vector2.Zero), entityId);
             body.BodyType = (BodyType)Loader.loadEnum(typeof(BodyType), data.Attribute("body_type"), (int)BodyType.Dynamic);
@@ -367,14 +369,7 @@ namespace StasisGame
                 (ushort)CollisionCategory.Explosion;
 
             // Add components
-            _entityManager.addComponent(entityId, new ItemComponent(
-                itemUID,
-                (ItemType)Loader.loadEnum(typeof(ItemType), itemData.Attribute("type"), 0),
-                inventoryTexture,
-                Loader.loadInt(data.Attribute("quantity"), 1),
-                true,
-                Loader.loadBool(itemData.Attribute("adds_reticle"), false),
-                Loader.loadFloat(itemData.Attribute("range"), 1f)));
+            _entityManager.addComponent(entityId, new ItemComponent(itemDefinition, itemState, ResourceManager.getTexture(itemDefinition.inventoryTextureUid)));
             _entityManager.addComponent(entityId, new PhysicsComponent(body));
             _entityManager.addComponent(entityId, new PrimitivesRenderComponent(renderSystem.createSpritePrimitiveObject(worldTexture, body.Position, new Vector2(worldTexture.Width, worldTexture.Height) / 2f, body.Rotation, 1f, layerDepth)));
             _entityManager.addComponent(entityId, new IgnoreTreeCollisionComponent());

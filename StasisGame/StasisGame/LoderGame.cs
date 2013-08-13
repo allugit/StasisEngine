@@ -213,10 +213,8 @@ namespace StasisGame
         private void previewLevel(string levelUID)
         {
             startPersistentSystems();
-
-            DataManager.createTemporaryPlayerData();
             _playerSystem.createPlayer();
-            _playerSystem.initializeInventory();
+            DataManager.createTemporaryPlayerData();
 
             // Load level
             loadLevel(levelUID);
@@ -236,11 +234,8 @@ namespace StasisGame
         public void loadGame(int playerDataSlot)
         {
             startPersistentSystems();
-
-            DataManager.loadPlayerData(playerDataSlot);
             _playerSystem.createPlayer();
-            _playerSystem.initializeInventory();
-
+            DataManager.loadPlayerData(playerDataSlot);
             _screenSystem.removeScreen(_mainMenuScreen);
             openWorldMap();
         }

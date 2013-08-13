@@ -43,7 +43,7 @@ namespace StasisGame.Systems
         public void selectToolbarSlot(ToolbarComponent toolbarComponent, int slot)
         {
             ItemComponent itemComponent = toolbarComponent.selectedItem;
-            if (itemComponent != null && itemComponent.hasAiming)
+            if (itemComponent != null && itemComponent.definition.hasAimingComponent)
             {
                 _entityManager.removeComponent(toolbarComponent.entityId, ComponentType.Aim);
             }
@@ -51,10 +51,65 @@ namespace StasisGame.Systems
             toolbarComponent.selectedIndex = slot;
 
             itemComponent = toolbarComponent.selectedItem;
-            if (itemComponent != null && itemComponent.hasAiming)
+            if (itemComponent != null && itemComponent.definition.hasAimingComponent)
             {
                 Console.WriteLine("Adding aim component");
                 _entityManager.addComponent(toolbarComponent.entityId, new AimComponent(new Vector2(10f, 0f), 0f, 10f));
+            }
+        }
+
+        // getInventorySlot
+        public int getInventorySlot(InventoryComponent inventoryComponent, ItemComponent itemComponent)
+        {
+            foreach (KeyValuePair<int, ItemComponent> slotItemPair in inventoryComponent.inventory)
+            {
+                if (slotItemPair.Value == itemComponent)
+                {
+                    return slotItemPair.Key;
+                }
+            }
+            return -1;
+        }
+
+        // getInventoryItem
+        public ItemComponent getInventoryItem(InventoryComponent inventoryComponent, int i)
+        {
+            ItemComponent itemComponent;
+
+            inventoryComponent.inventory.TryGetValue(i, out itemComponent);
+
+            return itemComponent;
+        }
+
+        // addInventoryItem
+        public void addInventoryItem(InventoryComponent inventoryComponent, ItemComponent item)
+        {
+            for (int i = 0; i < inventoryComponent.slots; i++)
+            {
+                if (!inventoryComponent.inventory.ContainsKey(i))
+                {
+                    inventoryComponent.inventory.Add(i, item);
+                    return;
+                }
+            }
+        }
+
+        // removeInventoryItem
+        public void removeInventoryItem(InventoryComponent inventoryComponent, ItemComponent item)
+        {
+            int index = -1;
+            foreach (KeyValuePair<int, ItemComponent> pair in inventoryComponent.inventory)
+            {
+                if (pair.Value == item)
+                {
+                    index = pair.Key;
+                    break;
+                }
+            }
+
+            if (index != -1)
+            {
+                inventoryComponent.inventory.Remove(index);
             }
         }
 
@@ -87,7 +142,7 @@ namespace StasisGame.Systems
                         //bool rightTriggerDown = InputSystem.usingGamepad && InputSystem.newGamepadState.Triggers.Right > 0.5f && InputSystem.oldGamepadState.Triggers.Right <= 0.5f;
                         AimComponent aimComponent = _entityManager.getComponent(playerId, ComponentType.Aim) as AimComponent;
 
-                        if (selectedItem.hasAiming && aimComponent != null)
+                        if (selectedItem.definition.hasAimingComponent && aimComponent != null)
                         {
                             WorldPositionComponent worldPositionComponent = _entityManager.getComponent(playerId, ComponentType.WorldPosition) as WorldPositionComponent;
 
@@ -96,7 +151,7 @@ namespace StasisGame.Systems
                                 Vector2 worldPosition = worldPositionComponent.position;
                                 if (InputSystem.usingGamepad)
                                 {
-                                    Vector2 vector = InputSystem.newGamepadState.ThumbSticks.Left * selectedItem.maxRange;
+                                    Vector2 vector = InputSystem.newGamepadState.ThumbSticks.Left * selectedItem.state.currentRangeLimit;
                                     vector.Y *= -1;
                                     aimComponent.angle = (float)Math.Atan2(vector.Y, vector.X);
                                     aimComponent.length = vector.Length();
@@ -106,7 +161,7 @@ namespace StasisGame.Systems
                                 {
                                     Vector2 relative = (InputSystem.worldMouse - worldPosition);
                                     aimComponent.angle = (float)Math.Atan2(relative.Y, relative.X);
-                                    aimComponent.length = Math.Min(relative.Length(), selectedItem.maxRange);
+                                    aimComponent.length = Math.Min(relative.Length(), selectedItem.state.currentRangeLimit);
                                     aimComponent.vector = relative;
                                 }
                             }
@@ -125,10 +180,10 @@ namespace StasisGame.Systems
                         if (selectedItem.secondarySingleAction)
                             Console.WriteLine("secondary action");
 
-                        switch (selectedItem.itemType)
+                        switch (selectedItem.definition.uid)
                         {
                             // RopeGun
-                            case ItemType.RopeGun:
+                            case "ropegun":
                                 if (selectedItem.primarySingleAction)
                                 {
                                     AimComponent aimComponent = _entityManager.getComponent(toolbarEntities[i], ComponentType.Aim) as AimComponent;
@@ -183,18 +238,8 @@ namespace StasisGame.Systems
                                 }
                                 break;
 
-                            // Blueprint
-                            case ItemType.Blueprint:
-                                Console.WriteLine("Blueprint");
-                                break;
-
-                            // BlueprintScrap
-                            case ItemType.BlueprintScrap:
-                                Console.WriteLine("Blueprint scrap");
-                                break;
-
                             // Dynamite
-                            case ItemType.Dynamite:
+                            case "dynamite":
                                 if (selectedItem.primarySingleAction)
                                 {
                                     AimComponent aimComponent = _entityManager.getComponent(toolbarEntities[i], ComponentType.Aim) as AimComponent;
@@ -204,7 +249,7 @@ namespace StasisGame.Systems
                                 break;
 
                             // Water gun
-                            case ItemType.WaterGun:
+                            case "watergun":
                                 if (selectedItem.primaryContinuousAction)
                                 {
                                     FluidSystem fluidSystem = _systemManager.getSystem(SystemType.Fluid) as FluidSystem;
