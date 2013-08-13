@@ -29,6 +29,8 @@ namespace StasisGame.Managers
         private static string _playerName;
         private static int _playerSlot;
         private static XElement _playerData;
+        private static Dictionary<string, bool> _customFlags;
+        private static Dictionary<string, int> _customValues;
 
         public static GameSettings gameSettings { get { return _gameSettings; } }
         public static string playerName { get { return _playerName; } }
@@ -50,6 +52,33 @@ namespace StasisGame.Managers
                 Directory.CreateDirectory(_settingsDirectory);
             if (!Directory.Exists(_playersDirectory))
                 Directory.CreateDirectory(_playersDirectory);
+
+            _customFlags = new Dictionary<string, bool>();
+            _customValues = new Dictionary<string, int>();
+        }
+
+        // Set custom flag
+        public static void setCustomFlag(string flagUid, bool value)
+        {
+            _customFlags.Add(flagUid, value);
+        }
+
+        // Get custom flag
+        public static bool getCustomFlag(string flagUid)
+        {
+            return _customFlags[flagUid];
+        }
+
+        // Set custom value
+        public static void setCustomValue(string valueUid, int value)
+        {
+            _customValues.Add(valueUid, value);
+        }
+
+        // Get custom value
+        public static int getCustomValue(string valueUid)
+        {
+            return _customValues[valueUid];
         }
 
         // Load game settings
@@ -314,6 +343,34 @@ namespace StasisGame.Managers
             equipmentSystem.selectToolbarSlot(toolbarComponent, int.Parse(toolbarData.Attribute("selected_index").Value));
         }
 
+        // Load custom flags
+        private static void loadCustomFlags()
+        {
+            List<XElement> allCustomFlagData = new List<XElement>(_playerData.Elements("CustomFlag"));
+
+            _customFlags.Clear();
+            foreach (XElement customFlagData in allCustomFlagData)
+            {
+                _customFlags.Add(
+                    customFlagData.Attribute("uid").Value,
+                    bool.Parse(customFlagData.Attribute("value").Value));
+            }
+        }
+
+        // Load custom values
+        private static void loadCustomValues()
+        {
+            List<XElement> allCustomValueData = new List<XElement>(_playerData.Elements("CustomValue"));
+
+            _customValues.Clear();
+            foreach (XElement customValueData in allCustomValueData)
+            {
+                _customValues.Add(
+                    customValueData.Attribute("uid").Value,
+                    int.Parse(customValueData.Attribute("value").Value));
+            }
+        }
+
         // Create new player data
         public static int createPlayerData(string playerName)
         {
@@ -355,6 +412,9 @@ namespace StasisGame.Managers
                     // Create inventory and toolbar
                     _entityManager.addComponent(PlayerSystem.PLAYER_ID, new InventoryComponent(32));
                     _entityManager.addComponent(PlayerSystem.PLAYER_ID, new ToolbarComponent(4, PlayerSystem.PLAYER_ID));
+
+                    // Custom flags
+                    setCustomFlag("new_game", true);
 
                     // Save data
                     savePlayerData();
@@ -439,6 +499,10 @@ namespace StasisGame.Managers
                 // Inventory and toolbar
                 loadPlayerInventory();
                 loadPlayerToolbar();
+
+                // Custom flags and values
+                loadCustomFlags();
+                loadCustomValues();
             }
 
             Logger.log("DataManager.loadPlayerData method finished.");
@@ -459,6 +523,8 @@ namespace StasisGame.Managers
                 EquipmentSystem equipmentSystem = _systemManager.getSystem(SystemType.Equipment) as EquipmentSystem;
                 XElement inventoryData = new XElement("InventoryState");
                 XElement toolbarData = new XElement("ToolbarState");
+                List<XElement> customFlagsData = new List<XElement>();
+                List<XElement> customValuesData = new List<XElement>();
 
                 // Basic player data
                 _playerData = new XElement(
@@ -536,6 +602,20 @@ namespace StasisGame.Managers
                     }
                 }
                 _playerData.Add(toolbarData);
+
+                // Custom flags
+                foreach (KeyValuePair<string, bool> uidFlagPair in _customFlags)
+                {
+                    customFlagsData.Add(new XElement("CustomFlag", new XAttribute("uid", uidFlagPair.Key), new XAttribute("value", uidFlagPair.Value)));
+                }
+                _playerData.Add(customFlagsData);
+
+                // Custom values
+                foreach (KeyValuePair<string, int> uidValuePair in _customValues)
+                {
+                    customValuesData.Add(new XElement("CustomValue", new XAttribute("uid", uidValuePair.Key), new XAttribute("value", uidValuePair.Value)));
+                }
+                _playerData.Add(customValuesData);
 
                 doc.Add(_playerData);
                 doc.Save(fs);
