@@ -122,11 +122,6 @@
     <Compile Include="Managers\WorldMapManager.cs" />
     <Compile Include="PrimitiveRenderObject.cs" />
     <Compile Include="RenderableTriangle.cs" />
-    <Compile Include="States\LevelIconState.cs" />
-    <Compile Include="States\LevelPathState.cs" />
-    <Compile Include="States\ObjectiveState.cs" />
-    <Compile Include="States\QuestState.cs" />
-    <Compile Include="States\WorldMapState.cs" />
     <Compile Include="Systems\ExplosionSystem.cs" />
     <Compile Include="Systems\LevelSystem.cs" />
     <Compile Include="Managers\DataManager.cs" />

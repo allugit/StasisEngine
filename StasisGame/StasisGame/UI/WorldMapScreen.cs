@@ -9,7 +9,6 @@ using StasisCore;
 using StasisCore.Models;
 using StasisGame.Managers;
 using StasisGame.Systems;
-using StasisGame.States;
 
 namespace StasisGame.UI
 {

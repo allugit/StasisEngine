@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using StasisCore.Models;
-using StasisGame.States;
 
 namespace StasisGame.Managers
 {

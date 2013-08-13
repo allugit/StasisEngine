@@ -1,8 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
-using StasisCore.Models;
 
-namespace StasisGame.States
+namespace StasisCore.Models
 {
     public class ObjectiveState
     {
