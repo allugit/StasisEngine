@@ -35,6 +35,7 @@ namespace StasisGame.Systems
         private Vector2 _halfScreen;
         private RenderablePrimitiveNode _headNode;
         private Texture2D _reticle;
+        private SpriteFont _tooltipFont;
         private bool _paused;
         private bool _singleStep;
         private bool _enlargeDebugFuild;
@@ -87,6 +88,7 @@ namespace StasisGame.Systems
             _pixel = new Texture2D(_graphicsDevice, 1, 1);
             _pixel.SetData<Color>(new [] { Color.White });
             _circle = _contentManager.Load<Texture2D>("circle");
+            _tooltipFont = _contentManager.Load<SpriteFont>("shared_ui/tooltip_font");
         }
 
         ~RenderSystem()
@@ -213,6 +215,7 @@ namespace StasisGame.Systems
             List<int> aimEntities = _entityManager.getEntitiesPosessing(ComponentType.Aim);
             List<int> explosionEntities = _entityManager.getEntitiesPosessing(ComponentType.Explosion);
             List<RopeGrabComponent> ropeGrabComponents = _entityManager.getComponents<RopeGrabComponent>(ComponentType.RopeGrab);
+            List<TooltipComponent> tooltipComponents = _entityManager.getComponents<TooltipComponent>(ComponentType.Tooltip);
             Vector2 screenCenter = _cameraSystem.screenCenter;
 
             // Temporary debug draw
@@ -445,14 +448,30 @@ namespace StasisGame.Systems
             // Begin drawing source for post effects over the player's layer
             _graphicsDevice.SetRenderTarget(_postSourceOver);
             _graphicsDevice.Clear(Color.Transparent);
+            _spriteBatch.Begin(SpriteSortMode.BackToFront, BlendState.AlphaBlend);
 
             // Draw background's second half
             if (_backgroundRenderer.background != null)
             {
-                _spriteBatch.Begin(SpriteSortMode.BackToFront, BlendState.AlphaBlend);
                 _backgroundRenderer.drawSecondHalf();
-                _spriteBatch.End();
             }
+
+            // Draw tooltips
+            for (int i = 0; i < tooltipComponents.Count; i++)
+            {
+                TooltipComponent tooltip = tooltipComponents[i];
+
+                if (tooltip.draw)
+                {
+                    Vector2 tooltipPosition = (tooltip.position - screenCenter) * _scale + _halfScreen - new Vector2(0, 50f);
+
+                    _spriteBatch.DrawString(_tooltipFont, tooltip.message, tooltipPosition + new Vector2(2, 2), Color.Black, 0f, Vector2.Zero, 1f, SpriteEffects.None, 0.0001f);
+                    _spriteBatch.DrawString(_tooltipFont, tooltip.message, tooltipPosition, Color.White, 0f, Vector2.Zero, 1f, SpriteEffects.None, 0f);
+                    tooltip.draw = false;
+                }
+            }
+
+            _spriteBatch.End();
             _graphicsDevice.SetRenderTarget(null);
             _graphicsDevice.Clear(Color.Transparent);
 

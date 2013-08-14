@@ -106,6 +106,7 @@
     <Compile Include="Components\RevoluteComponent.cs" />
     <Compile Include="Components\SkipFluidResolutionComponent.cs" />
     <Compile Include="Components\ToolbarComponent.cs" />
+    <Compile Include="Components\TooltipComponent.cs" />
     <Compile Include="Components\TreeComponent.cs" />
     <Compile Include="Components\WallComponent.cs" />
     <Compile Include="Components\Particle.cs" />

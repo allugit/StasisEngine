@@ -33,7 +33,8 @@ namespace StasisGame.Components
         Debris,
         ParticleInfluence,
         Metamer,
-        FollowMetamer
+        FollowMetamer,
+        Tooltip
     };
 
     public interface IComponent

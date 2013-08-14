@@ -409,17 +409,29 @@ namespace StasisGame.Systems
                 if (_firstPassDone && _secondPassDone)
                 {
                     PhysicsComponent playerPhysicsComponent = (PhysicsComponent)_entityManager.getComponent(_playerSystem.playerId, ComponentType.Physics);
+                    List<int> tooltipEntities = _entityManager.getEntitiesPosessing(ComponentType.Tooltip);
 
-                    // Check player's position against the level boundary
                     if (playerPhysicsComponent != null)
                     {
                         Vector2 position = playerPhysicsComponent.body.Position;
 
+                        // Check player's position against the level boundary
                         if (position.X < _levelBoundary.LowerBound.X || position.X > _levelBoundary.UpperBound.X ||
                             position.Y < _levelBoundary.LowerBound.Y || position.Y > _levelBoundary.UpperBound.Y)
                         {
                             endLevel();
                             _playerSystem.reloadInventory();
+                        }
+
+                        // Check player's position against tooltips
+                        for (int i = 0; i < tooltipEntities.Count; i++)
+                        {
+                            TooltipComponent tooltip = _entityManager.getComponent(tooltipEntities[i], ComponentType.Tooltip) as TooltipComponent;
+
+                            if ((position - tooltip.position).LengthSquared() <= tooltip.radiusSq)
+                            {
+                                tooltip.draw = true;
+                            }
                         }
                     }
                 }
