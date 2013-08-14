@@ -92,6 +92,7 @@
     <Compile Include="Components\ExplosionComponent.cs" />
     <Compile Include="Components\FollowMetamerComponent.cs" />
     <Compile Include="Components\GateOutputComponent.cs" />
+    <Compile Include="Components\LevelTransitionComponent.cs" />
     <Compile Include="Components\MetamerComponent.cs" />
     <Compile Include="Components\ParticleInfluenceComponent.cs" />
     <Compile Include="Components\RegionGoalComponent.cs" />

@@ -5,6 +5,7 @@ using System.Linq;
 using System.Xml.Linq;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
+using Microsoft.Xna.Framework.Input;
 using FarseerPhysics.Collision;
 using StasisCore;
 using StasisCore.Models;
@@ -39,6 +40,8 @@ namespace StasisGame.Systems
         private XElement _data;
         private List<XElement> _actorData;
         private List<XElement> _secondPassData;
+        private KeyboardState _newKeyState;
+        private KeyboardState _oldKeyState;
 
         public int defaultPriority { get { return 30; } }
         public SystemType systemType { get { return SystemType.Level; } }
@@ -409,7 +412,11 @@ namespace StasisGame.Systems
                 if (_firstPassDone && _secondPassDone)
                 {
                     PhysicsComponent playerPhysicsComponent = (PhysicsComponent)_entityManager.getComponent(_playerSystem.playerId, ComponentType.Physics);
-                    List<int> tooltipEntities = _entityManager.getEntitiesPosessing(ComponentType.Tooltip);
+                    List<TooltipComponent> tooltipComponents = _entityManager.getComponents<TooltipComponent>(ComponentType.Tooltip);
+                    List<LevelTransitionComponent> levelTransitionComponents = _entityManager.getComponents<LevelTransitionComponent>(ComponentType.LevelTransition);
+
+                    _oldKeyState = _newKeyState;
+                    _newKeyState = Keyboard.GetState();
 
                     if (playerPhysicsComponent != null)
                     {
@@ -424,13 +431,34 @@ namespace StasisGame.Systems
                         }
 
                         // Check player's position against tooltips
-                        for (int i = 0; i < tooltipEntities.Count; i++)
+                        for (int i = 0; i < tooltipComponents.Count; i++)
                         {
-                            TooltipComponent tooltip = _entityManager.getComponent(tooltipEntities[i], ComponentType.Tooltip) as TooltipComponent;
+                            TooltipComponent tooltip = tooltipComponents[i];
 
                             if ((position - tooltip.position).LengthSquared() <= tooltip.radiusSq)
                             {
                                 tooltip.draw = true;
+                            }
+                        }
+
+                        // Check player's position against level transitions
+                        for (int i = 0; i < levelTransitionComponents.Count; i++)
+                        {
+                            LevelTransitionComponent levelTransition = levelTransitionComponents[i];
+
+                            if ((position - levelTransition.position).LengthSquared() <= levelTransition.radiusSq)
+                            {
+                                if (levelTransition.requiresActivation)
+                                {
+                                    if (_newKeyState.IsKeyDown(Keys.E) && _oldKeyState.IsKeyUp(Keys.E))
+                                    {
+                                        Console.WriteLine("begin level transition to: {0}", levelTransition.levelUid);
+                                    }
+                                }
+                                else 
+                                {
+                                    Console.WriteLine("begin level transition to: {0}", levelTransition.levelUid);
+                                }
                             }
                         }
                     }

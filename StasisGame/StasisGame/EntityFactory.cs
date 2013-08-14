@@ -1553,7 +1553,8 @@ namespace StasisGame
 
             _entityManager.addComponent(entityId, new PrimitivesRenderComponent(renderSystem.createSpritePrimitiveObject(texture, position, origin, angle, 1f, layerDepth)));
             _entityManager.addComponent(entityId, new WorldPositionComponent(position));
-            _entityManager.addComponent(entityId, new TooltipComponent("[E] Enter Dagny's House", position, 1.2f));
+            _entityManager.addComponent(entityId, new TooltipComponent("[Use] Enter Dagny's House", position, 1.2f));
+            _entityManager.addComponent(entityId, new LevelTransitionComponent("dagny_house", position, 1.2f, true));
 
             return entityId;
         }

@@ -34,7 +34,8 @@ namespace StasisGame.Components
         ParticleInfluence,
         Metamer,
         FollowMetamer,
-        Tooltip
+        Tooltip,
+        LevelTransition
     };
 
     public interface IComponent
