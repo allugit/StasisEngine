@@ -53,6 +53,20 @@ namespace StasisGame
             _circuitIdGateIdGateComponentMap = new Dictionary<int, Dictionary<int, GateOutputComponent>>();
         }
 
+        // convertPolygonToCCW -- Take a list of polygon points and make sure they're wound in a counter clockwise direction
+        private List<Vector2> convertPolygonToCCW(List<Vector2> points)
+        {
+            if (StasisMathHelper.isPolygonClockwise(points))
+            {
+                return points;
+            }
+            else
+            {
+                points.Reverse();
+                return points;
+            }
+        }
+
         // reset -- Clears information used to create entities from the level's xml data. Used between level loads.
         public void reset()
         {
@@ -849,6 +863,9 @@ namespace StasisGame
             foreach (XElement pointData in data.Elements("Point"))
                 points.Add(Loader.loadVector2(pointData, Vector2.Zero));
 
+            // Convert to counter clockwise polygon
+            points = convertPolygonToCCW(points);
+
             // Calculate center (average)
             foreach (Vector2 point in points)
                 center += point / points.Count;
@@ -1459,6 +1476,9 @@ namespace StasisGame
                 case "rose_window_1":
                     entityId = createTreeWindow("rose_window_1", position, angle, layerDepth);
                     break;
+                case "dagny_hut":
+                    entityId = createDagnyHut("dagny_hut", position, angle, layerDepth);
+                    break;
             }
 
             return entityId;
@@ -1519,6 +1539,20 @@ namespace StasisGame
             _entityManager.addComponent(entityId, new PrimitivesRenderComponent(renderSystem.createSpritePrimitiveObject(texture, position, origin, angle, 1f, layerDepth)));
             _entityManager.addComponent(entityId, new WorldPositionComponent(position));
             _entityManager.addComponent(entityId, new FollowMetamerComponent(metamer));
+
+            return entityId;
+        }
+
+        // createDagnyHut -- Creates Dagny's hut
+        public int createDagnyHut(string textureUid, Vector2 position, float angle, float layerDepth)
+        {
+            RenderSystem renderSystem = _systemManager.getSystem(SystemType.Render) as RenderSystem;
+            int entityId = _entityManager.createEntity();
+            Texture2D texture = ResourceManager.getTexture(textureUid);
+            Vector2 origin = new Vector2(texture.Width / 2f, texture.Height);
+
+            _entityManager.addComponent(entityId, new PrimitivesRenderComponent(renderSystem.createSpritePrimitiveObject(texture, position, origin, angle, 1f, layerDepth)));
+            _entityManager.addComponent(entityId, new WorldPositionComponent(position));
 
             return entityId;
         }

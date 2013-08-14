@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using Microsoft.Xna.Framework;
 
 namespace StasisCore
@@ -52,6 +53,19 @@ namespace StasisCore
             float square = t * t;
             result.X = (ax * cube) + (bx * square) + (cx * t) + p0.X;
             result.Y = (ay * cube) + (by * square) + (cy * t) + p0.Y;
+        }
+
+        public static bool isPolygonClockwise(List<Vector2> points)
+        {
+            float sum = 0;
+
+            for (int i = 0; i < points.Count; i++)
+            {
+                int j = i == points.Count - 1 ? 0 : i + 1;
+                sum += (points[j].X - points[i].X) * (points[j].Y + points[i].Y);
+            }
+
+            return sum >= 0;
         }
     }
 }
