@@ -1477,7 +1477,7 @@ namespace StasisGame
                     entityId = createTreeWindow("rose_window_1", position, angle, layerDepth);
                     break;
                 case "dagny_hut":
-                    entityId = createDagnyHut("dagny_hut", position, angle, layerDepth);
+                    entityId = createDagnyHut(position, angle, layerDepth);
                     break;
             }
 
@@ -1544,11 +1544,11 @@ namespace StasisGame
         }
 
         // createDagnyHut -- Creates Dagny's hut
-        public int createDagnyHut(string textureUid, Vector2 position, float angle, float layerDepth)
+        public int createDagnyHut(Vector2 position, float angle, float layerDepth)
         {
             RenderSystem renderSystem = _systemManager.getSystem(SystemType.Render) as RenderSystem;
             int entityId = _entityManager.createEntity();
-            Texture2D texture = ResourceManager.getTexture(textureUid);
+            Texture2D texture = ResourceManager.getTexture("dagny_hut");
             Vector2 origin = new Vector2(texture.Width / 2f, texture.Height);
 
             _entityManager.addComponent(entityId, new PrimitivesRenderComponent(renderSystem.createSpritePrimitiveObject(texture, position, origin, angle, 1f, layerDepth)));
