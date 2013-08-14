@@ -370,7 +370,7 @@ namespace StasisGame
             body = BodyFactory.CreateBody(world, Loader.loadVector2(data.Attribute("position"), Vector2.Zero), entityId);
             body.BodyType = (BodyType)Loader.loadEnum(typeof(BodyType), data.Attribute("body_type"), (int)BodyType.Dynamic);
             body.Rotation = Loader.loadFloat(data.Attribute("angle"), 0f);
-            shape.SetAsBox(Loader.loadFloat(data.Attribute("half_width"), 0.25f), Loader.loadFloat(data.Attribute("half_height"), 0.25f));
+            shape.SetAsBox(Loader.loadFloat(data.Attribute("half_width"), 0.4f), Loader.loadFloat(data.Attribute("half_height"), 0.4f));
             fixture = body.CreateFixture(shape);
             fixture.Friction = Loader.loadFloat(data.Attribute("friction"), 1f);
             fixture.Restitution = Loader.loadFloat(data.Attribute("restitution"), 0f);
