@@ -213,12 +213,15 @@ namespace StasisGame
 
         private void previewLevel(string levelUID)
         {
+            /*
             startPersistentSystems();
             _playerSystem.createPlayer();
             DataManager.createTemporaryPlayerData();
 
             // Load level
             loadLevel(levelUID);
+            */
+            throw new NotImplementedException();
         }
 
         // applyDisplaySettings -- Uses data from DataManager to alter the display settings.
@@ -243,8 +246,8 @@ namespace StasisGame
                 _gameState = GameState.LoadingLevel;
                 IsFixedTimeStep = false;
                 _scriptManager.loadLevelScript(levelUid);
-                _levelSystem.loadAllData(levelUid);
                 _levelSystem.createLevelSystems();
+                _levelSystem.loadAllData(levelUid);
                 _levelSystem.createBackgrounds();
                 LevelSystem.currentLevelUid = levelUid;
                 _loadingScreen.elementsToLoad = _levelSystem.totalEntitiesCount;

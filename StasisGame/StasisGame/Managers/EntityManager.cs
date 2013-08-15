@@ -53,6 +53,11 @@ namespace StasisGame.Managers
         // Create an entity with a specific id -- can use reserved ids
         public int createEntity(string levelUid, int id)
         {
+            if (!_entities.ContainsKey(levelUid))
+            {
+                _entities.Add(levelUid, new Dictionary<int, List<IComponent>>());
+            }
+
             _entities[levelUid].Add(id, new List<IComponent>());
             return id;
         }
@@ -60,6 +65,11 @@ namespace StasisGame.Managers
         // Reserve entity id
         public void reserveEntityId(string levelUid, int id)
         {
+            if (!_reservedIds.ContainsKey(levelUid))
+            {
+                _reservedIds.Add(levelUid, new List<int>());
+            }
+
             Debug.Assert(!_reservedIds[levelUid].Contains(id));
             _reservedIds[levelUid].Add(id);
         }
@@ -100,6 +110,11 @@ namespace StasisGame.Managers
         // Add a component to an entity
         public void addComponent(string levelUid, int id, IComponent component)
         {
+            if (!_entities.ContainsKey(levelUid))
+            {
+                _entities.Add(levelUid, new Dictionary<int, List<IComponent>>());
+            }
+
             _entities[levelUid][id].Add(component);
         }
 

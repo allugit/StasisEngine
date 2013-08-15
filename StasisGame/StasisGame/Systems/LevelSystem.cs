@@ -110,6 +110,7 @@ namespace StasisGame.Systems
             _numEntities = new Dictionary<string, int>();
             _numEntitiesProcessed = new Dictionary<string, int>();
             _backgrounds = new Dictionary<string, Background>();
+            _finishedLoading = new Dictionary<string, bool>();
         }
 
         public void expandBoundary(Vector2 point)
@@ -121,7 +122,7 @@ namespace StasisGame.Systems
         // initializeLevelData -- Takes a level's data and initializes the states needed for the loading process
         private void initializeLevelData(XElement levelData)
         {
-            string levelUid = levelData.Attribute("uid").Value;
+            string levelUid = levelData.Attribute("name").Value;
             int levelEntityCount = 0;
             PhysicsSystem physicsSystem = _systemManager.getSystem(SystemType.Physics) as PhysicsSystem;
 
@@ -230,7 +231,7 @@ namespace StasisGame.Systems
                 backgroundData = ResourceManager.getResource(backgroundUid);
                 background = new Background(backgroundData);
                 background.loadTextures();
-                _backgrounds.Add(levelData.Attribute("uid").Value, background);
+                _backgrounds.Add(levelData.Attribute("name").Value, background);
             }
         }
 

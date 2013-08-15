@@ -197,10 +197,17 @@ namespace StasisGame.Systems
         // update
         public void update()
         {
-            if (InputSystem.newKeyState.IsKeyDown(Keys.F4) && InputSystem.oldKeyState.IsKeyUp(Keys.F4))
-                _enlargeDebugFuild = !_enlargeDebugFuild;
+            LevelSystem levelSystem = _systemManager.getSystem(SystemType.Level) as LevelSystem;
 
-            _backgroundRenderer.update(_scale, -screenCenter);
+            if (InputSystem.newKeyState.IsKeyDown(Keys.F4) && InputSystem.oldKeyState.IsKeyUp(Keys.F4))
+            {
+                _enlargeDebugFuild = !_enlargeDebugFuild;
+            }
+
+            if (levelSystem.finalized)
+            {
+                _backgroundRenderer.update(_scale, -screenCenter);
+            }
         }
 
         // draw
