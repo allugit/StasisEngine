@@ -46,7 +46,7 @@ namespace StasisGame.Systems
         // Add components to the entity player that are needed to play in a level
         public void addLevelComponents(string levelUid)
         {
-            World world = (_systemManager.getSystem(SystemType.Physics) as PhysicsSystem).world;
+            World world = (_systemManager.getSystem(SystemType.Physics) as PhysicsSystem).getWorld(levelUid);
             Body body;
             Fixture fixture;
             Fixture feetFixture;

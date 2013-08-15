@@ -34,7 +34,6 @@ namespace StasisGame.Systems
         private AABB _levelBoundary;
         private Vector2 _boundaryMargin;
         private Dictionary<string, XElement> _levelsData;
-        private Dictionary<string, World> _levelWorlds;
         private Dictionary<string, List<XElement>> _firstPassEntities;
         private Dictionary<string, List<XElement>> _secondPassEntities;
         private Dictionary<string, int> _numEntities;
@@ -124,6 +123,7 @@ namespace StasisGame.Systems
         {
             string levelUid = levelData.Attribute("uid").Value;
             int levelEntityCount = 0;
+            PhysicsSystem physicsSystem = _systemManager.getSystem(SystemType.Physics) as PhysicsSystem;
 
             _finalized = false;
             _paused = true;
@@ -133,6 +133,10 @@ namespace StasisGame.Systems
             _numEntitiesProcessed.Add(levelUid, 0);
             _finishedLoading.Add(levelUid, false);
 
+            // Create worlds
+            physicsSystem.addWorld(levelUid, Loader.loadVector2(levelData.Attribute("gravity"), Vector2.Zero));
+
+            // Parse actors
             foreach (XElement actorData in levelData.Elements("Actor"))
             {
                 string type = actorData.Attribute("type").Value;
@@ -380,10 +384,10 @@ namespace StasisGame.Systems
         public void callScripts()
         {
             // Call registerGoals script hook for this level
-            _scriptManager.registerGoals(_uid, this);
+            _scriptManager.registerGoals(currentLevelUid, this);
 
             // Call onLevelStart script hook for this level
-            _scriptManager.onLevelStart(_uid);
+            _scriptManager.onLevelStart(currentLevelUid);
         }
 
         // isGoalComplete -- Checks if a goal with a specific id has been completed
@@ -492,11 +496,11 @@ namespace StasisGame.Systems
         {
             if (!_paused || _singleStep)
             {
-                if (_firstPassDone && _secondPassDone)
+                if (_finalized)
                 {
-                    PhysicsComponent playerPhysicsComponent = (PhysicsComponent)_entityManager.getComponent(_playerSystem.playerId, ComponentType.Physics);
-                    List<TooltipComponent> tooltipComponents = _entityManager.getComponents<TooltipComponent>(ComponentType.Tooltip);
-                    List<LevelTransitionComponent> levelTransitionComponents = _entityManager.getComponents<LevelTransitionComponent>(ComponentType.LevelTransition);
+                    PhysicsComponent playerPhysicsComponent = (PhysicsComponent)_entityManager.getComponent(currentLevelUid, _playerSystem.playerId, ComponentType.Physics);
+                    List<TooltipComponent> tooltipComponents = _entityManager.getComponents<TooltipComponent>(currentLevelUid, ComponentType.Tooltip);
+                    List<LevelTransitionComponent> levelTransitionComponents = _entityManager.getComponents<LevelTransitionComponent>(currentLevelUid, ComponentType.LevelTransition);
 
                     _oldKeyState = _newKeyState;
                     _newKeyState = Keyboard.GetState();

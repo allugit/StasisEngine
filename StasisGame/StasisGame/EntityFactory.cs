@@ -206,7 +206,7 @@ namespace StasisGame
         // createBox -- Creates a box from supplied data
         public void createBox(string levelUid, XElement data)
         {
-            World world = (_systemManager.getSystem(SystemType.Physics) as PhysicsSystem).world;
+            World world = (_systemManager.getSystem(SystemType.Physics) as PhysicsSystem).getWorld(levelUid);
             int actorId = int.Parse(data.Attribute("id").Value);
             int entityId = _entityManager.createEntity(levelUid, actorId);
             float layerDepth = Loader.loadFloat(data.Attribute("layer_depth"), 0.1f);
@@ -302,7 +302,7 @@ namespace StasisGame
         // createCircle -- Creates a circle entity
         public void createCircle(string levelUid, XElement data)
         {
-            World world = (_systemManager.getSystem(SystemType.Physics) as PhysicsSystem).world;
+            World world = (_systemManager.getSystem(SystemType.Physics) as PhysicsSystem).getWorld(levelUid);
             int actorId = int.Parse(data.Attribute("id").Value);
             int entityId = _entityManager.createEntity(levelUid, actorId);
             Body body;
@@ -363,7 +363,7 @@ namespace StasisGame
         // createWorldItem -- Create an item that exists in the world (as opposed to an item in the inventory)
         public void createWorldItem(string levelUid, XElement data)
         {
-            World world = (_systemManager.getSystem(SystemType.Physics) as PhysicsSystem).world;
+            World world = (_systemManager.getSystem(SystemType.Physics) as PhysicsSystem).getWorld(levelUid);
             RenderSystem renderSystem = _systemManager.getSystem(SystemType.Render) as RenderSystem;
             int actorId = int.Parse(data.Attribute("id").Value);
             int entityId = _entityManager.createEntity(levelUid, actorId);
@@ -402,18 +402,18 @@ namespace StasisGame
         }
 
         // findRopeTarget -- Tries to find a rope target by raycasting
-        private RopeTarget findRopeTarget(Vector2 a, Vector2 b)
+        private RopeTarget findRopeTarget(string levelUid, Vector2 a, Vector2 b)
         {
-            World world = (_systemManager.getSystem(SystemType.Physics) as PhysicsSystem).world;
+            World world = (_systemManager.getSystem(SystemType.Physics) as PhysicsSystem).getWorld(levelUid);
             RopeTarget ropeTarget = new RopeTarget();
             float lowestFraction = 999999f;
 
             world.RayCast((fixture, point, normal, fraction) =>
                 {
                     int fixtureEntityId = (int)fixture.Body.UserData;
-                    if (_entityManager.getComponent(fixtureEntityId, ComponentType.IgnoreRopeRaycast) != null)
+                    if (_entityManager.getComponent(levelUid, fixtureEntityId, ComponentType.IgnoreRopeRaycast) != null)
                         return -1;
-                    else if (_entityManager.getComponent(fixtureEntityId, ComponentType.Tree) != null)
+                    else if (_entityManager.getComponent(levelUid, fixtureEntityId, ComponentType.Tree) != null)
                         return -1;  // the only bodies that exist on a tree are already supporting a rope, and will be destroyed along with the rope that created it
 
                     if (fraction < lowestFraction)
@@ -431,9 +431,9 @@ namespace StasisGame
         }
 
         // findWall -- Tries to find a wall rope target using QueryAABB
-        private Fixture findWall(Vector2 position)
+        private Fixture findWall(string levelUid, Vector2 position)
         {
-            World world = (_systemManager.getSystem(SystemType.Physics) as PhysicsSystem).world;
+            World world = (_systemManager.getSystem(SystemType.Physics) as PhysicsSystem).getWorld(levelUid);
             AABB aabb = new AABB();
             Fixture wallFixture = null;
 
@@ -444,7 +444,7 @@ namespace StasisGame
                     if (fixture.TestPoint(ref position, 0f))
                     {
                         int fixtureEntityId = (int)fixture.Body.UserData;
-                        WallComponent wallComponent = (WallComponent)_entityManager.getComponent(fixtureEntityId, ComponentType.Wall);
+                        WallComponent wallComponent = (WallComponent)_entityManager.getComponent(levelUid, fixtureEntityId, ComponentType.Wall);
 
                         if (wallComponent != null)
                         {
@@ -459,9 +459,9 @@ namespace StasisGame
         }
 
         // createRopeNodes -- Creates a linked list of physical bodies and joints that make up the rope
-        private RopeNode createRopeNodes(Vector2 a, Vector2 b, bool collidesWithPlayer)
+        private RopeNode createRopeNodes(string levelUid, Vector2 a, Vector2 b, bool collidesWithPlayer)
         {
-            World world = (_systemManager.getSystem(SystemType.Physics) as PhysicsSystem).world;
+            World world = (_systemManager.getSystem(SystemType.Physics) as PhysicsSystem).getWorld(levelUid);
             Vector2 relative = b - a;
             Vector2 ropeNormal = Vector2.Normalize(relative);
             float angle = (float)Math.Atan2(relative.Y, relative.X);
@@ -519,9 +519,9 @@ namespace StasisGame
 
         // createAnchor -- Creates a revolute joint between a node and its anchoring fixture
         // TODO: Move this to RopeSystem, since player will be able to pick ropes up and attach them to things?
-        private void createAnchor(RopeNode ropeNode, Vector2 ropeNodeLocalAnchor, Fixture fixture, Vector2 fixtureLocalAnchor)
+        private void createAnchor(string levelUid, RopeNode ropeNode, Vector2 ropeNodeLocalAnchor, Fixture fixture, Vector2 fixtureLocalAnchor)
         {
-            World world = (_systemManager.getSystem(SystemType.Physics) as PhysicsSystem).world;
+            World world = (_systemManager.getSystem(SystemType.Physics) as PhysicsSystem).getWorld(levelUid);
 
             ropeNode.anchorJoint = JointFactory.CreateRevoluteJoint(world, ropeNode.body, fixture.Body, ropeNodeLocalAnchor, fixtureLocalAnchor);
         }
@@ -600,7 +600,7 @@ namespace StasisGame
              *   - Otherwise, abort creation
              */
             RopeComponent ropeComponent;
-            RopeTarget ropeTarget = findRopeTarget(a, b);
+            RopeTarget ropeTarget = findRopeTarget(levelUid, a, b);
             RopeNode head;
             RopeNode tail;
 
@@ -624,7 +624,7 @@ namespace StasisGame
                 else
                 {
                     // Test for walls
-                    Fixture fixture = findWall(b);
+                    Fixture fixture = findWall(levelUid, b);
 
                     if (fixture != null)
                     {
@@ -641,11 +641,11 @@ namespace StasisGame
                 return -1;
 
             // Create rope
-            head = createRopeNodes(a, ropeTarget.fixture.Body.GetWorldPoint(ref ropeTarget.localPoint), false);
+            head = createRopeNodes(levelUid, a, ropeTarget.fixture.Body.GetWorldPoint(ref ropeTarget.localPoint), false);
             if (head == null)
                 return -1;
             tail = head.tail;
-            createAnchor(tail, new Vector2(-tail.halfLength, 0), ropeTarget.fixture, ropeTarget.localPoint);
+            createAnchor(levelUid, tail, new Vector2(-tail.halfLength, 0), ropeTarget.fixture, ropeTarget.localPoint);
             initializeRopeMaterial(head, ropeMaterial);
             entityId = entityId == -1 ? _entityManager.createEntity(levelUid) : _entityManager.createEntity(levelUid, entityId);
 
@@ -689,7 +689,7 @@ namespace StasisGame
             RopeComponent ropeComponent;
 
             // C to A
-            ropeTargetA = findRopeTarget(c, a);
+            ropeTargetA = findRopeTarget(levelUid, c, a);
             if (!ropeTargetA.success)
             {
                 // Test metamers
@@ -709,7 +709,7 @@ namespace StasisGame
                 else
                 {
                     // Test walls
-                    Fixture wallFixture = findWall(a);
+                    Fixture wallFixture = findWall(levelUid, a);
 
                     if (wallFixture != null)
                     {
@@ -725,7 +725,7 @@ namespace StasisGame
             }
 
             // C to B
-            ropeTargetB = findRopeTarget(c, b);
+            ropeTargetB = findRopeTarget(levelUid, c, b);
             if (!ropeTargetB.success)
             {
                 // Test metamers
@@ -745,7 +745,7 @@ namespace StasisGame
                 else
                 {
                     // Test walls
-                    Fixture wallFixture = findWall(b);
+                    Fixture wallFixture = findWall(levelUid, b);
 
                     if (wallFixture != null)
                     {
@@ -762,14 +762,15 @@ namespace StasisGame
 
             // Create rope
             head = createRopeNodes(
+                levelUid,
                 ropeTargetA.fixture.Body.GetWorldPoint(ref ropeTargetA.localPoint),
                 ropeTargetB.fixture.Body.GetWorldPoint(ref ropeTargetB.localPoint),
                 true);
             if (head == null)
                 return -1;
             tail = head.tail;
-            createAnchor(head, new Vector2(head.halfLength, 0), ropeTargetA.fixture, ropeTargetA.localPoint);
-            createAnchor(tail, new Vector2(-tail.halfLength, 0), ropeTargetB.fixture, ropeTargetB.localPoint);
+            createAnchor(levelUid, head, new Vector2(head.halfLength, 0), ropeTargetA.fixture, ropeTargetA.localPoint);
+            createAnchor(levelUid, tail, new Vector2(-tail.halfLength, 0), ropeTargetB.fixture, ropeTargetB.localPoint);
             initializeRopeMaterial(head, ropeMaterial);
             entityId = entityId == -1 ? _entityManager.createEntity(levelUid) : _entityManager.createEntity(levelUid, entityId);
 
@@ -844,7 +845,7 @@ namespace StasisGame
         // createTerrain -- Creates a terrain entity
         public void createTerrain(string levelUid, XElement data)
         {
-            World world = (_systemManager.getSystem(SystemType.Physics) as PhysicsSystem).world;
+            World world = (_systemManager.getSystem(SystemType.Physics) as PhysicsSystem).getWorld(levelUid);
             int actorId = int.Parse(data.Attribute("id").Value);
             int entityId = _entityManager.createEntity(levelUid, actorId);
             bool isWall = Loader.loadBool(data.Attribute("wall"), false);
@@ -1073,7 +1074,7 @@ namespace StasisGame
         public void createRevoluteJoint(string levelUid, XElement data)
         {
             EventSystem eventSystem = _systemManager.getSystem(SystemType.Event) as EventSystem;
-            World world = (_systemManager.getSystem(SystemType.Physics) as PhysicsSystem).world;
+            World world = (_systemManager.getSystem(SystemType.Physics) as PhysicsSystem).getWorld(levelUid);
             int actorId = int.Parse(data.Attribute("id").Value);
             int entityId;
             GroundBodyComponent groundBodyComponent = _entityManager.getComponents<GroundBodyComponent>(levelUid, ComponentType.GroundBody)[0];
@@ -1128,7 +1129,7 @@ namespace StasisGame
         public void createPrismaticJoint(string levelUid, XElement data)
         {
             EventSystem eventSystem = _systemManager.getSystem(SystemType.Event) as EventSystem;
-            World world = (_systemManager.getSystem(SystemType.Physics) as PhysicsSystem).world;
+            World world = (_systemManager.getSystem(SystemType.Physics) as PhysicsSystem).getWorld(levelUid);
             int actorId = int.Parse(data.Attribute("id").Value);
             int entityId;
             GroundBodyComponent groundBodyComponent = _entityManager.getComponents<GroundBodyComponent>(levelUid, ComponentType.GroundBody)[0];
@@ -1287,7 +1288,7 @@ namespace StasisGame
         {
             LevelSystem levelSystem = _systemManager.getSystem(SystemType.Level) as LevelSystem;
             RegionGoalComponent regionGoalComponent = new RegionGoalComponent();
-            World world = (_systemManager.getSystem(SystemType.Physics) as PhysicsSystem).world;
+            World world = (_systemManager.getSystem(SystemType.Physics) as PhysicsSystem).getWorld(levelUid);
             int actorId = int.Parse(data.Attribute("id").Value);
             int entityId = _entityManager.createEntity(levelUid, actorId);
             List<Vector2> points = new List<Vector2>();
@@ -1348,7 +1349,7 @@ namespace StasisGame
         // createDynamite
         public int createDynamite(string levelUid, Vector2 position, Vector2 force)
         {
-            World world = (_systemManager.getSystem(SystemType.Physics) as PhysicsSystem).world;
+            World world = (_systemManager.getSystem(SystemType.Physics) as PhysicsSystem).getWorld(levelUid);
             RenderSystem renderSystem = _systemManager.getSystem(SystemType.Render) as RenderSystem;
             Texture2D worldTexture = ResourceManager.getTexture("dynamite");
             int entityId = _entityManager.createEntity(levelUid);
@@ -1386,7 +1387,7 @@ namespace StasisGame
         // createExplosion
         public int createExplosion(string levelUid, Vector2 position, float strength, float radius)
         {
-            World world = (_systemManager.getSystem(SystemType.Physics) as PhysicsSystem).world;
+            World world = (_systemManager.getSystem(SystemType.Physics) as PhysicsSystem).getWorld(levelUid);
             int entityId = _entityManager.createEntity(levelUid);
             Body body = BodyFactory.CreateBody(world, entityId);
             CircleShape shape = new CircleShape(radius, 1f);
@@ -1412,7 +1413,7 @@ namespace StasisGame
         // createDebris
         public int createDebris(string levelUid, Fixture sourceFixture, Vector2 force, int timeToLive, RenderableTriangle renderableTriangle, Texture2D texture, float layerDepth)
         {
-            World world = (_systemManager.getSystem(SystemType.Physics) as PhysicsSystem).world;
+            World world = (_systemManager.getSystem(SystemType.Physics) as PhysicsSystem).getWorld(levelUid);
             int entityId = _entityManager.createEntity(levelUid);
             PolygonShape sourceShape = sourceFixture.Shape as PolygonShape;
             Body body = BodyFactory.CreateBody(world, entityId);

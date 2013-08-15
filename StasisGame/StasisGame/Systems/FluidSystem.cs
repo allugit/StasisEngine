@@ -276,7 +276,7 @@ namespace StasisGame.Systems
         private void prepareCollisions()
         {
             // Query the world using the screen's AABB
-            _physicsSystem.world.QueryAABB((Fixture fixture) =>
+            _physicsSystem.getWorld(LevelSystem.currentLevelUid).QueryAABB((Fixture fixture) =>
             {
                 // Skip certain collisions
                 //UserData data = fixtureProxy.fixture.GetBody().GetUserData() as UserData;

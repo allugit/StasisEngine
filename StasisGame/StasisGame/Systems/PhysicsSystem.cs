@@ -17,18 +17,16 @@ namespace StasisGame.Systems
     {
         private SystemManager _systemManager;
         private EntityManager _entityManager;
-        //private World _world;
         private float _dt = 1f / 60f;
-        //private Body _groundBody;
         private List<Body> _bodiesToRemove;
         private bool _paused;
         private bool _singleStep;
         private PlayerSystem _playerSystem;
+        private Dictionary<string, World> _worlds;
+        private Dictionary<string, Body> _groundBodies;
 
         public int defaultPriority { get { return 20; } }
         public SystemType systemType { get { return SystemType.Physics; } }
-        //public World world { get { return _world; } }
-        //public Body groundBody { get { return _groundBody; } }
         public bool paused { get { return _paused; } set { _paused = value; } }
         public bool singleStep { get { return _singleStep; } set { _singleStep = value; } }
 
@@ -38,6 +36,8 @@ namespace StasisGame.Systems
             _entityManager = entityManager;
             _bodiesToRemove = new List<Body>();
             _playerSystem = (PlayerSystem)systemManager.getSystem(SystemType.Player);
+            _worlds = new Dictionary<string, World>();
+            _groundBodies = new Dictionary<string, Body>();
             /*
             // Create world
             _world = new World(gravity);
@@ -50,6 +50,17 @@ namespace StasisGame.Systems
 
             // Create ground body/entity
             _groundBody = _entityManager.factory.createGroundBody(_world);*/
+        }
+
+        public void addWorld(string levelUid, Vector2 gravity)
+        {
+            _worlds.Add(levelUid, new World(gravity));
+            _groundBodies.Add(levelUid, _entityManager.factory.createGroundBody(levelUid, _worlds[levelUid]));
+        }
+
+        public World getWorld(string levelUid)
+        {
+            return _worlds[levelUid];
         }
 
         public void removeBody(Body body)
@@ -70,7 +81,7 @@ namespace StasisGame.Systems
 
                 for (int i = 0; i < _bodiesToRemove.Count; i++)
                 {
-                    _world.RemoveBody(_bodiesToRemove[i]);
+                    getWorld(levelUid).RemoveBody(_bodiesToRemove[i]);
                 }
                 _bodiesToRemove.Clear();
 
@@ -103,7 +114,7 @@ namespace StasisGame.Systems
                     prismaticJointComponent.previousLimitState = limitState;
                 }
 
-                _world.Step(_dt);
+                getWorld(levelUid).Step(_dt);
 
                 // Handle physic entities
                 physicsEntities = _entityManager.getEntitiesPosessing(levelUid, ComponentType.Physics);

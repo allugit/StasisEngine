@@ -246,6 +246,7 @@ namespace StasisGame
                 _levelSystem.loadAllData(levelUid);
                 _levelSystem.createLevelSystems();
                 _levelSystem.createBackgrounds();
+                LevelSystem.currentLevelUid = levelUid;
                 _loadingScreen.elementsToLoad = _levelSystem.totalEntitiesCount;
                 _loadingScreen.message = "Loading entities, first pass...";
             }));

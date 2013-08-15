@@ -39,10 +39,11 @@ namespace StasisGame.UI
 
         public void update()
         {
+            string levelUid = LevelSystem.currentLevelUid;
+
             _oldGamepadState = _newGamepadState;
             _oldKeyState = _newKeyState;
             _oldMouseState = _newMouseState;
-
             _newGamepadState = GamePad.GetState(PlayerIndex.One);
             _newMouseState = Mouse.GetState();
             _newKeyState = Keyboard.GetState();
@@ -50,13 +51,13 @@ namespace StasisGame.UI
             if (_inFocus)
             {
                 if (_newKeyState.IsKeyDown(Keys.D1) && _oldKeyState.IsKeyUp(Keys.D1))
-                    _equipmentSystem.selectToolbarSlot(_toolbarComponent, 0);
+                    _equipmentSystem.selectToolbarSlot(levelUid, _toolbarComponent, 0);
                 if (_newKeyState.IsKeyDown(Keys.D2) && _oldKeyState.IsKeyUp(Keys.D2))
-                    _equipmentSystem.selectToolbarSlot(_toolbarComponent, 1);
+                    _equipmentSystem.selectToolbarSlot(levelUid, _toolbarComponent, 1);
                 if (_newKeyState.IsKeyDown(Keys.D3) && _oldKeyState.IsKeyUp(Keys.D3))
-                    _equipmentSystem.selectToolbarSlot(_toolbarComponent, 2);
+                    _equipmentSystem.selectToolbarSlot(levelUid, _toolbarComponent, 2);
                 if (_newKeyState.IsKeyDown(Keys.D4) && _oldKeyState.IsKeyUp(Keys.D4))
-                    _equipmentSystem.selectToolbarSlot(_toolbarComponent, 3);
+                    _equipmentSystem.selectToolbarSlot(levelUid, _toolbarComponent, 3);
             }
         }
 

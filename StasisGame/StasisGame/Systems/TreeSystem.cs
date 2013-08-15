@@ -114,12 +114,12 @@ namespace StasisGame.Systems
         // prepareCollisions
         private void prepareCollisions()
         {
+            string levelUid = LevelSystem.currentLevelUid;
             Dictionary<int, List<Metamer>> gridX;
             List<Metamer> gridY;
-            string levelUid = LevelSystem.currentLevelUid;
 
             // Query the world using the screen's AABB
-            _physicsSystem.world.QueryAABB((Fixture fixture) =>
+            _physicsSystem.getWorld(levelUid).QueryAABB((Fixture fixture) =>
             {
                 // Skip certain collisions
                 int entityId = (int)fixture.Body.UserData;
