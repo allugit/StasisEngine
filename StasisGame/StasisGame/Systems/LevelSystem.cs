@@ -171,9 +171,14 @@ namespace StasisGame.Systems
                 XElement parentLevelData = doc.Element("Level");
 
                 initializeLevelData(parentLevelData);
-                foreach (XElement levelDependencyData in parentLevelData.Elements("LevelDependency"))
+
+                // Discover level dependencies -- TODO: Make this recursive, in case the level dependencies have dependencies of their own
+                foreach (XElement actorData in parentLevelData.Elements("Actor"))
                 {
-                    levelDependencies.Add(levelDependencyData.Attribute("level_uid").Value);
+                    if (actorData.Attribute("type").Value == "LevelTransition")
+                    {
+                        levelDependencies.Add(actorData.Attribute("level_uid").Value);
+                    }
                 }
             }
 
