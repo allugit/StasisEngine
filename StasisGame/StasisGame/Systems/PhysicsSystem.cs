@@ -78,67 +78,72 @@ namespace StasisGame.Systems
         {
             if (_singleStep || !_paused)
             {
-                string levelUid = LevelSystem.currentLevelUid;
-                EventSystem eventSystem = _systemManager.getSystem(SystemType.Event) as EventSystem;
-                List<CharacterMovementComponent> movementComponents = _entityManager.getComponents<CharacterMovementComponent>(levelUid, ComponentType.CharacterMovement);
-                List<int> ropeGrabEntities = _entityManager.getEntitiesPosessing(levelUid, ComponentType.RopeGrab);
-                List<int> prismaticEntities = _entityManager.getEntitiesPosessing(levelUid, ComponentType.Prismatic);
-                List<int> physicsEntities;
+                LevelSystem levelSystem = _systemManager.getSystem(SystemType.Level) as LevelSystem;
 
-                for (int i = 0; i < _bodiesToRemove.Count; i++)
+                if (levelSystem.finalized)
                 {
-                    getWorld(levelUid).RemoveBody(_bodiesToRemove[i]);
-                }
-                _bodiesToRemove.Clear();
+                    string levelUid = LevelSystem.currentLevelUid;
+                    EventSystem eventSystem = _systemManager.getSystem(SystemType.Event) as EventSystem;
+                    List<CharacterMovementComponent> movementComponents = _entityManager.getComponents<CharacterMovementComponent>(levelUid, ComponentType.CharacterMovement);
+                    List<int> ropeGrabEntities = _entityManager.getEntitiesPosessing(levelUid, ComponentType.RopeGrab);
+                    List<int> prismaticEntities = _entityManager.getEntitiesPosessing(levelUid, ComponentType.Prismatic);
+                    List<int> physicsEntities;
 
-                for (int i = 0; i < movementComponents.Count; i++)
-                {
-                    CharacterMovementComponent movementComponent = movementComponents[i];
-                    if (!movementComponent.onSurface)
+                    for (int i = 0; i < _bodiesToRemove.Count; i++)
                     {
-                        movementComponent.allowJumpResetOnCollision = true;
+                        getWorld(levelUid).RemoveBody(_bodiesToRemove[i]);
                     }
-                }
+                    _bodiesToRemove.Clear();
 
-                for (int i = 0; i < prismaticEntities.Count; i++)
-                {
-                    PrismaticJointComponent prismaticJointComponent = _entityManager.getComponent(levelUid, prismaticEntities[i], ComponentType.Prismatic) as PrismaticJointComponent;
-                    LimitState limitState = prismaticJointComponent.prismaticJoint.LimitState;
-
-                    if (prismaticJointComponent.previousLimitState != limitState)
+                    for (int i = 0; i < movementComponents.Count; i++)
                     {
-                        if (limitState == LimitState.AtLower)
+                        CharacterMovementComponent movementComponent = movementComponents[i];
+                        if (!movementComponent.onSurface)
                         {
-                            eventSystem.postEvent(new GameEvent(GameEventType.OnLowerLimitReached, prismaticEntities[i]));
-                        }
-                        else if (limitState == LimitState.AtUpper)
-                        {
-                            //eventSystem.postEvent(new GameEvent(GameEventType.OnUpperLimitReached, prismaticEntities[i]));
+                            movementComponent.allowJumpResetOnCollision = true;
                         }
                     }
 
-                    prismaticJointComponent.previousLimitState = limitState;
-                }
-
-                getWorld(levelUid).Step(_dt);
-
-                // Handle physic entities
-                physicsEntities = _entityManager.getEntitiesPosessing(levelUid, ComponentType.Physics);
-                for (int i = 0; i < physicsEntities.Count; i++)
-                {
-                    PhysicsComponent physicsComponent = _entityManager.getComponent(levelUid, physicsEntities[i], ComponentType.Physics) as PhysicsComponent;
-                    WorldPositionComponent worldPositionComponent = _entityManager.getComponent(levelUid, physicsEntities[i], ComponentType.WorldPosition) as WorldPositionComponent;
-                    FollowMetamerComponent followMetamerComponent = _entityManager.getComponent(levelUid, physicsEntities[i], ComponentType.FollowMetamer) as FollowMetamerComponent;
-
-                    // Set body position to the metamer being followed
-                    if (followMetamerComponent != null)
+                    for (int i = 0; i < prismaticEntities.Count; i++)
                     {
-                        physicsComponent.body.Position = followMetamerComponent.metamer.position;
-                        physicsComponent.body.Rotation = followMetamerComponent.metamer.currentAngle + StasisMathHelper.halfPi;
+                        PrismaticJointComponent prismaticJointComponent = _entityManager.getComponent(levelUid, prismaticEntities[i], ComponentType.Prismatic) as PrismaticJointComponent;
+                        LimitState limitState = prismaticJointComponent.prismaticJoint.LimitState;
+
+                        if (prismaticJointComponent.previousLimitState != limitState)
+                        {
+                            if (limitState == LimitState.AtLower)
+                            {
+                                eventSystem.postEvent(new GameEvent(GameEventType.OnLowerLimitReached, prismaticEntities[i]));
+                            }
+                            else if (limitState == LimitState.AtUpper)
+                            {
+                                //eventSystem.postEvent(new GameEvent(GameEventType.OnUpperLimitReached, prismaticEntities[i]));
+                            }
+                        }
+
+                        prismaticJointComponent.previousLimitState = limitState;
                     }
 
-                    // Update world position component
-                    worldPositionComponent.position = physicsComponent.body.Position;
+                    getWorld(levelUid).Step(_dt);
+
+                    // Handle physic entities
+                    physicsEntities = _entityManager.getEntitiesPosessing(levelUid, ComponentType.Physics);
+                    for (int i = 0; i < physicsEntities.Count; i++)
+                    {
+                        PhysicsComponent physicsComponent = _entityManager.getComponent(levelUid, physicsEntities[i], ComponentType.Physics) as PhysicsComponent;
+                        WorldPositionComponent worldPositionComponent = _entityManager.getComponent(levelUid, physicsEntities[i], ComponentType.WorldPosition) as WorldPositionComponent;
+                        FollowMetamerComponent followMetamerComponent = _entityManager.getComponent(levelUid, physicsEntities[i], ComponentType.FollowMetamer) as FollowMetamerComponent;
+
+                        // Set body position to the metamer being followed
+                        if (followMetamerComponent != null)
+                        {
+                            physicsComponent.body.Position = followMetamerComponent.metamer.position;
+                            physicsComponent.body.Rotation = followMetamerComponent.metamer.currentAngle + StasisMathHelper.halfPi;
+                        }
+
+                        // Update world position component
+                        worldPositionComponent.position = physicsComponent.body.Position;
+                    }
                 }
             }
             _singleStep = false;

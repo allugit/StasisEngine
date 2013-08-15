@@ -43,8 +43,8 @@ namespace StasisGame.Systems
             playerId = _entityManager.createEntity("global", PLAYER_ID);
         }
 
-        // Add components to the entity player that are needed to play in a level
-        public void addLevelComponents(string levelUid)
+        // Add level-specific components for the player
+        public void addPlayerToLevel(string levelUid, Vector2 position)
         {
             World world = (_systemManager.getSystem(SystemType.Physics) as PhysicsSystem).getWorld(levelUid);
             Body body;
@@ -53,7 +53,7 @@ namespace StasisGame.Systems
             PolygonShape polygonShape = new PolygonShape(1f);
             CircleShape feetShape = new CircleShape(0.18f, 0.1f);
 
-            body = BodyFactory.CreateBody(world, _spawnPosition, _playerId);
+            body = BodyFactory.CreateBody(world, position, _playerId);
             body.IsBullet = true;
             body.FixedRotation = true;
             body.BodyType = BodyType.Dynamic;
@@ -76,6 +76,9 @@ namespace StasisGame.Systems
             feetFixture.CollisionCategories = fixture.CollisionCategories;
             feetFixture.CollidesWith = fixture.CollidesWith;
 
+            _entityManager.createEntity(levelUid, playerId);
+            _entityManager.addComponent(levelUid, playerId, _entityManager.getComponent("global", playerId, ComponentType.Toolbar));
+            _entityManager.addComponent(levelUid, playerId, _entityManager.getComponent("global", playerId, ComponentType.Inventory));
             _entityManager.addComponent(levelUid, playerId, new PhysicsComponent(body));
             _entityManager.addComponent(levelUid, playerId, new CharacterMovementComponent(feetFixture));
             _entityManager.addComponent(levelUid, playerId, new CharacterRenderComponent());
@@ -87,24 +90,10 @@ namespace StasisGame.Systems
             _entityManager.addComponent(levelUid, playerId, new ParticleInfluenceComponent(ParticleInfluenceType.Character));
         }
 
-        // removeLevelComponents -- Remove level components from the player
-        public void removeLevelComponents(string levelUid)
+        // removePlayerFromLevel -- Removes the player entity from a specific level
+        public void removePlayerFromLevel(string levelUid)
         {
-            List<IComponent> components = new List<IComponent>(_entityManager.getEntityComponents(levelUid, _playerId));  // create a copy of the list since we'll need to modify the original
-
-            for (int i = 0; i < components.Count; i++)
-            {
-                IComponent component = components[i];
-
-                // Exclude certain components here if they need to persist through levels, otherwise remove them.
-                if (component.componentType == ComponentType.Inventory ||
-                    component.componentType == ComponentType.Toolbar)
-                {
-                    continue;
-                }
-
-                _entityManager.removeComponent(levelUid, _playerId, components[i]);
-            }
+            _entityManager.killEntity(levelUid, playerId);
         }
 
         public void reloadInventory()

@@ -38,52 +38,57 @@ namespace StasisGame.Systems
         public void update()
         {
             string levelUid = LevelSystem.currentLevelUid;
-            float speed = 0.1f;
-            List<BodyFocusPointComponent> bodyFocusPoints = _entityManager.getComponents<BodyFocusPointComponent>(levelUid, ComponentType.BodyFocusPoint);
-            Vector2 singleTarget = _screenCenter;
-            Vector2 multipleTarget = Vector2.Zero;
-            bool useSingleTarget = false;
-            int multipleTargetCount = 0;
+            LevelSystem levelSystem = _systemManager.getSystem(SystemType.Level) as LevelSystem;
 
-            // Handle manual camera movement
-            if (_enableManualMovement)
+            if (levelSystem.finalized)
             {
-                if (InputSystem.newKeyState.IsKeyDown(Keys.NumPad8))
-                    _screenCenter += new Vector2(0, -speed);
-                if (InputSystem.newKeyState.IsKeyDown(Keys.NumPad2))
-                    _screenCenter += new Vector2(0, speed);
-                if (InputSystem.newKeyState.IsKeyDown(Keys.NumPad4))
-                    _screenCenter += new Vector2(-speed, 0);
-                if (InputSystem.newKeyState.IsKeyDown(Keys.NumPad6))
-                    _screenCenter += new Vector2(speed, 0);
-                //if (InputSystem.newKeyState.IsKeyDown(Keys.F4))
-                //    Console.WriteLine("Screen center: {0}", _screenCenter);
-            }
+                float speed = 0.1f;
+                List<BodyFocusPointComponent> bodyFocusPoints = _entityManager.getComponents<BodyFocusPointComponent>(levelUid, ComponentType.BodyFocusPoint);
+                Vector2 singleTarget = _screenCenter;
+                Vector2 multipleTarget = Vector2.Zero;
+                bool useSingleTarget = false;
+                int multipleTargetCount = 0;
 
-            // Handle camera movement
-            if (!_paused || _singleStep)
-            {
-                for (int i = 0; i < bodyFocusPoints.Count; i++)
+                // Handle manual camera movement
+                if (_enableManualMovement)
                 {
-                    if (bodyFocusPoints[i].focusType == FocusType.Multiple)
-                    {
-                        multipleTarget += bodyFocusPoints[i].focusPoint;
-                        multipleTargetCount++;
-                    }
-                    else if (bodyFocusPoints[i].focusType == FocusType.Single)
-                    {
-                        singleTarget = bodyFocusPoints[i].focusPoint;
-                        useSingleTarget = true;
-                        break;
-                    }
+                    if (InputSystem.newKeyState.IsKeyDown(Keys.NumPad8))
+                        _screenCenter += new Vector2(0, -speed);
+                    if (InputSystem.newKeyState.IsKeyDown(Keys.NumPad2))
+                        _screenCenter += new Vector2(0, speed);
+                    if (InputSystem.newKeyState.IsKeyDown(Keys.NumPad4))
+                        _screenCenter += new Vector2(-speed, 0);
+                    if (InputSystem.newKeyState.IsKeyDown(Keys.NumPad6))
+                        _screenCenter += new Vector2(speed, 0);
+                    //if (InputSystem.newKeyState.IsKeyDown(Keys.F4))
+                    //    Console.WriteLine("Screen center: {0}", _screenCenter);
                 }
 
-                if (useSingleTarget)
-                    _screenCenter += (singleTarget - _screenCenter) / 2f;
-                else
-                    _screenCenter += (multipleTarget / multipleTargetCount - _screenCenter) / 2f;
+                // Handle camera movement
+                if (!_paused || _singleStep)
+                {
+                    for (int i = 0; i < bodyFocusPoints.Count; i++)
+                    {
+                        if (bodyFocusPoints[i].focusType == FocusType.Multiple)
+                        {
+                            multipleTarget += bodyFocusPoints[i].focusPoint;
+                            multipleTargetCount++;
+                        }
+                        else if (bodyFocusPoints[i].focusType == FocusType.Single)
+                        {
+                            singleTarget = bodyFocusPoints[i].focusPoint;
+                            useSingleTarget = true;
+                            break;
+                        }
+                    }
 
-                _singleStep = false;
+                    if (useSingleTarget)
+                        _screenCenter += (singleTarget - _screenCenter) / 2f;
+                    else
+                        _screenCenter += (multipleTarget / multipleTargetCount - _screenCenter) / 2f;
+
+                    _singleStep = false;
+                }
             }
         }
     }

@@ -184,10 +184,9 @@ namespace StasisGame
             if (body == null)
             {
                 Fixture fixture;
-                string levelUid = LevelSystem.currentLevelUid;
-                int entityId = tree.treeSystem.entityManager.createEntity(levelUid);
+                int entityId = tree.treeSystem.entityManager.createEntity(tree.levelUid);
 
-                body = BodyFactory.CreateBody(tree.treeSystem.physicsSystem.getWorld(levelUid), position, entityId);
+                body = BodyFactory.CreateBody(tree.treeSystem.physicsSystem.getWorld(tree.levelUid), position, entityId);
                 body.BodyType = BodyType.Dynamic;
                 body.FixedRotation = true;
                 body.LinearDamping = 0.5f;
@@ -197,9 +196,9 @@ namespace StasisGame
                 mouseJoint = new FixedMouseJoint(body, body.Position);
                 mouseJoint.MaxForce = 4000f;
 
-                tree.treeSystem.physicsSystem.getWorld(levelUid).AddJoint(mouseJoint);
-                tree.treeSystem.entityManager.addComponent(levelUid, entityId, new MetamerComponent(this));
-                tree.treeSystem.entityManager.addComponent(levelUid, entityId, new IgnoreRopeRaycastComponent());
+                tree.treeSystem.physicsSystem.getWorld(tree.levelUid).AddJoint(mouseJoint);
+                tree.treeSystem.entityManager.addComponent(tree.levelUid, entityId, new MetamerComponent(this));
+                tree.treeSystem.entityManager.addComponent(tree.levelUid, entityId, new IgnoreRopeRaycastComponent());
             }
         }
 
@@ -517,8 +516,6 @@ namespace StasisGame
         // assembleShoot
         private Metamer assembleShoot()
         {
-            string levelUid = LevelSystem.currentLevelUid;
-
             // Initial metamer conditions for the head metamer
             BudType initialActiveBud = tree.maxShootLength > 1 ? BudType.LATERAL : BudType.TERMINAL;
             BudState initialTerminalBudState = tree.maxShootLength > 1 ? BudState.NODE : BudState.DORMANT;
@@ -536,10 +533,10 @@ namespace StasisGame
             int shootLength = (int)(budQuality * tree.maxShootLength);
             bool recalculateDistance = false;
             Vector2 hitPoint = Vector2.Zero;
-            tree.treeSystem.physicsSystem.getWorld(levelUid).RayCast((Fixture fixture, Vector2 point, Vector2 normal, float fraction) =>
+            tree.treeSystem.physicsSystem.getWorld(tree.levelUid).RayCast((Fixture fixture, Vector2 point, Vector2 normal, float fraction) =>
             {
                 int entityId = (int)fixture.Body.UserData;
-                if (tree.treeSystem.entityManager.getComponent(levelUid, entityId, ComponentType.IgnoreTreeCollision) != null)
+                if (tree.treeSystem.entityManager.getComponent(tree.levelUid, entityId, ComponentType.IgnoreTreeCollision) != null)
                     return fraction;
 
                 recalculateDistance = true;
@@ -893,8 +890,6 @@ namespace StasisGame
         // resolveCollisions
         public void resolveCollisions()
         {
-            string levelUid = LevelSystem.currentLevelUid;
-
             if (mainMetamer != null)
                 mainMetamer.resolveCollisions();
             if (lateralMetamer != null)
@@ -910,7 +905,7 @@ namespace StasisGame
 
                     Body fixtureBody = fixture.Body;
                     int entityId = (int)fixtureBody.UserData;
-                    IComponent ignoreTreeCollisionComponent = tree.treeSystem.entityManager.getComponent(levelUid, entityId, ComponentType.IgnoreTreeCollision);
+                    IComponent ignoreTreeCollisionComponent = tree.treeSystem.entityManager.getComponent(tree.levelUid, entityId, ComponentType.IgnoreTreeCollision);
 
                     if (ignoreTreeCollisionComponent == null)
                     {
@@ -993,8 +988,6 @@ namespace StasisGame
         // breakConstraints
         private void breakConstraints(List<Metamer> metamersOnBranch)
         {
-            string levelUid = LevelSystem.currentLevelUid;
-
             // Destroy constraints for this metamer
             List<MetamerConstraint> constraintsToRemove = new List<MetamerConstraint>();
             for (int i = 0; i < constraints.Count; i++)
@@ -1029,7 +1022,7 @@ namespace StasisGame
             // Destroy trunk bodies
             if (isTrunk && body != null)
             {
-                tree.treeSystem.physicsSystem.getWorld(levelUid).RemoveBody(body);
+                tree.treeSystem.physicsSystem.getWorld(tree.levelUid).RemoveBody(body);
                 body = null;
                 mouseJoint = null;
             }

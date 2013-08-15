@@ -270,7 +270,6 @@ namespace StasisGame.Systems
 
                         (_systemManager.getSystem(SystemType.Player) as PlayerSystem).spawnPosition = spawnPosition;
                         (_systemManager.getSystem(SystemType.Camera) as CameraSystem).screenCenter = spawnPosition;
-                        _playerSystem.addLevelComponents(levelUid);
                         loadingScreen.elementsLoaded++;
                         break;
 
@@ -379,6 +378,7 @@ namespace StasisGame.Systems
             (_systemManager.getSystem(SystemType.Fluid) as FluidSystem).relaxFluid();
         }
 
+        // Clean states set during the level load process -- TODO: rename this?
         public void clean()
         {
             _numEntities.Clear();
@@ -392,13 +392,27 @@ namespace StasisGame.Systems
             _entityManager.factory.reset();
         }
 
+        // switchToLevel -- Switch to a different level (must be loaded!)
+        public void switchToLevel(string levelUid, Vector2 playerPosition)
+        {
+            if (currentLevelUid != null)
+            {
+                _playerSystem.removePlayerFromLevel(levelUid);
+            }
+            _playerSystem.addPlayerToLevel(levelUid, playerPosition);
+            _renderSystem.setBackground(_backgrounds[levelUid]);
+            currentLevelUid = levelUid;
+        }
+
+        // TODO: Refactor this crap
         public void callScripts()
         {
+            /*
             // Call registerGoals script hook for this level
             _scriptManager.registerGoals(currentLevelUid, this);
 
             // Call onLevelStart script hook for this level
-            _scriptManager.onLevelStart(currentLevelUid);
+            _scriptManager.onLevelStart(currentLevelUid);*/
         }
 
         // isGoalComplete -- Checks if a goal with a specific id has been completed
@@ -479,7 +493,6 @@ namespace StasisGame.Systems
                 List<int> entitiesToPreserve = new List<int>();
 
                 entitiesToPreserve.Add(_playerSystem.playerId);
-                _playerSystem.removeLevelComponents(levelUid);
                 _entityManager.killAllEntities(levelUid, entitiesToPreserve);
                 //_regionGoals.Clear();
                 //_eventGoals.Clear();
@@ -487,6 +500,7 @@ namespace StasisGame.Systems
             }
             ResourceManager.clearCache();
             _renderSystem = null;
+            currentLevelUid = null;
             screenSystem.removeScreen(_game.levelScreen);
             _systemManager.remove(SystemType.Input);
             _systemManager.remove(SystemType.Physics);

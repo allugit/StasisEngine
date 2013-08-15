@@ -571,76 +571,81 @@ namespace StasisGame.Systems
             if (!_paused || _singleStep)
             {
                 string levelUid = LevelSystem.currentLevelUid;
-                List<ParticleInfluenceComponent> particleInfluenceComponents = _entityManager.getComponents<ParticleInfluenceComponent>(levelUid, ComponentType.ParticleInfluence);
+                LevelSystem levelSystem = _systemManager.getSystem(SystemType.Level) as LevelSystem;
 
-                // Reset particle influence components
-                for (int i = 0; i < particleInfluenceComponents.Count; i++)
-                    particleInfluenceComponents[i].particleCount = 0;
-
-                if (!_skipAABBUpdate)
+                if (levelSystem.finalized)
                 {
-                    // Update simulation AABB
-                    Vector2 screenCenter = _renderSystem.screenCenter;
-                    Vector2 simHalfScreen = (_renderSystem.halfScreen / _renderSystem.scale) + SIMULATION_MARGIN;
-                    simulationAABB.LowerBound = screenCenter - simHalfScreen;
-                    simulationAABB.UpperBound = screenCenter + simHalfScreen;
-                }
+                    List<ParticleInfluenceComponent> particleInfluenceComponents = _entityManager.getComponents<ParticleInfluenceComponent>(levelUid, ComponentType.ParticleInfluence);
 
-                // Flag active particles
-                flagActive();
+                    // Reset particle influence components
+                    for (int i = 0; i < particleInfluenceComponents.Count; i++)
+                        particleInfluenceComponents[i].particleCount = 0;
 
-                // Prepare simulation
-                Parallel.For(0, numActiveParticles, i => { prepareSimulation(activeParticles[i]); });
-
-                // Prepare collisions
-                prepareCollisions();
-
-                // Calculate pressures
-                Parallel.For(0, numActiveParticles, i => { calculatePressure(activeParticles[i]); });
-
-                // Calculate forces
-                Parallel.For(
-                    0,
-                    numActiveParticles,
-                    () => new Vector2[MAX_PARTICLES],
-                    (i, state, accumulatedDelta) => calculateForce(activeParticles[i], accumulatedDelta),
-                    (accumulatedDelta) =>
+                    if (!_skipAABBUpdate)
                     {
-                        lock (_calculateForcesLock)
+                        // Update simulation AABB
+                        Vector2 screenCenter = _renderSystem.screenCenter;
+                        Vector2 simHalfScreen = (_renderSystem.halfScreen / _renderSystem.scale) + SIMULATION_MARGIN;
+                        simulationAABB.LowerBound = screenCenter - simHalfScreen;
+                        simulationAABB.UpperBound = screenCenter + simHalfScreen;
+                    }
+
+                    // Flag active particles
+                    flagActive();
+
+                    // Prepare simulation
+                    Parallel.For(0, numActiveParticles, i => { prepareSimulation(activeParticles[i]); });
+
+                    // Prepare collisions
+                    prepareCollisions();
+
+                    // Calculate pressures
+                    Parallel.For(0, numActiveParticles, i => { calculatePressure(activeParticles[i]); });
+
+                    // Calculate forces
+                    Parallel.For(
+                        0,
+                        numActiveParticles,
+                        () => new Vector2[MAX_PARTICLES],
+                        (i, state, accumulatedDelta) => calculateForce(activeParticles[i], accumulatedDelta),
+                        (accumulatedDelta) =>
                         {
-                            for (int i = numActiveParticles - 1; i >= 0; i--)
+                            lock (_calculateForcesLock)
                             {
-                                _delta[activeParticles[i]] += accumulatedDelta[activeParticles[i]] / MULTIPLIER;
+                                for (int i = numActiveParticles - 1; i >= 0; i--)
+                                {
+                                    _delta[activeParticles[i]] += accumulatedDelta[activeParticles[i]] / MULTIPLIER;
+                                }
                             }
                         }
-                    }
-                );
+                    );
 
-                // Resolve collisions
-                Parallel.For(0, numActiveParticles, i => resolveCollision(levelUid, activeParticles[i]));
+                    // Resolve collisions
+                    Parallel.For(0, numActiveParticles, i => resolveCollision(levelUid, activeParticles[i]));
 
-                // Move particles
-                Parallel.For(0, numActiveParticles, i =>
-                {
-                    int index = activeParticles[i];
-                    Particle particle = liquid[index];
-
-                    if (!particle.skipMovementUpdate)
+                    // Move particles
+                    Parallel.For(0, numActiveParticles, i =>
                     {
-                        Vector2 newVelocity = particle.velocity + _delta[index] + _gravity;
-                        Vector2 newPosition = particle.position + _delta[index] + newVelocity;
+                        int index = activeParticles[i];
+                        Particle particle = liquid[index];
 
-                        if (isInBounds(ref newPosition))
+                        if (!particle.skipMovementUpdate)
                         {
-                            particle.velocity = newVelocity;
-                            particle.position = newPosition;
-                        }
-                    }
-                });
+                            Vector2 newVelocity = particle.velocity + _delta[index] + _gravity;
+                            Vector2 newPosition = particle.position + _delta[index] + newVelocity;
 
-                // Update particles
-                for (int i = numActiveParticles - 1; i >= 0; i--)
-                    updateParticle(levelUid, activeParticles[i]);
+                            if (isInBounds(ref newPosition))
+                            {
+                                particle.velocity = newVelocity;
+                                particle.position = newPosition;
+                            }
+                        }
+                    });
+
+                    // Update particles
+                    for (int i = numActiveParticles - 1; i >= 0; i--)
+                        updateParticle(levelUid, activeParticles[i]);
+                }
             }
             _singleStep = false;
         }

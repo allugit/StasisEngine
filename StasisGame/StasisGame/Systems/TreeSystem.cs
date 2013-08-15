@@ -89,23 +89,28 @@ namespace StasisGame.Systems
             if (!_paused || _singleStep)
             {
                 string levelUid = LevelSystem.currentLevelUid;
-                List<int> treeEntities = _entityManager.getEntitiesPosessing(levelUid, ComponentType.Tree);
+                LevelSystem levelSystem = _systemManager.getSystem(SystemType.Level) as LevelSystem;
 
-                // Update treeAABB
-                Vector2 screenCenter = _renderSystem.screenCenter;
-                float halfWidth = ((float)_renderSystem.screenWidth / _renderSystem.scale) / 2f;
-                float halfHeight = ((float)_renderSystem.screenHeight / _renderSystem.scale) / 2f;
-                treeAABB.LowerBound.X = screenCenter.X - halfWidth;
-                treeAABB.UpperBound.X = screenCenter.X + halfWidth;
-                treeAABB.LowerBound.Y = screenCenter.Y - halfHeight;
-                treeAABB.UpperBound.Y = screenCenter.Y + halfHeight;
-
-                prepareCollisions();
-
-                for (int i = 0; i < treeEntities.Count; i++)
+                if (levelSystem.finalized)
                 {
-                    TreeComponent treeComponent = (TreeComponent)_entityManager.getComponent(levelUid, treeEntities[i], ComponentType.Tree);
-                    treeComponent.tree.update();
+                    List<int> treeEntities = _entityManager.getEntitiesPosessing(levelUid, ComponentType.Tree);
+
+                    // Update treeAABB
+                    Vector2 screenCenter = _renderSystem.screenCenter;
+                    float halfWidth = ((float)_renderSystem.screenWidth / _renderSystem.scale) / 2f;
+                    float halfHeight = ((float)_renderSystem.screenHeight / _renderSystem.scale) / 2f;
+                    treeAABB.LowerBound.X = screenCenter.X - halfWidth;
+                    treeAABB.UpperBound.X = screenCenter.X + halfWidth;
+                    treeAABB.LowerBound.Y = screenCenter.Y - halfHeight;
+                    treeAABB.UpperBound.Y = screenCenter.Y + halfHeight;
+
+                    prepareCollisions();
+
+                    for (int i = 0; i < treeEntities.Count; i++)
+                    {
+                        TreeComponent treeComponent = (TreeComponent)_entityManager.getComponent(levelUid, treeEntities[i], ComponentType.Tree);
+                        treeComponent.tree.update();
+                    }
                 }
             }
             _singleStep = false;

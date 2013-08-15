@@ -1049,7 +1049,7 @@ namespace StasisGame
                 insideList.Add(renderSystem.materialRenderer.renderMaterial(leafMaterial, maxLeafPoints, 1f, true));
             }
 
-            tree = new Tree(_systemManager.getSystem(SystemType.Tree) as TreeSystem, barkTexture, leafTextures, data);  // also expands level boundary
+            tree = new Tree(_systemManager.getSystem(SystemType.Tree) as TreeSystem, levelUid, barkTexture, leafTextures, data);  // also expands level boundary
 
             // Handle initial iterations
             while ((int)tree.age > tree.iterations)

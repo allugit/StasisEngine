@@ -176,64 +176,69 @@ namespace StasisGame.Systems
             if (!_paused || _singleStep)
             {
                 string levelUid = LevelSystem.currentLevelUid;
-                List<int> ropeEntities = _entityManager.getEntitiesPosessing(levelUid, ComponentType.Rope);
+                LevelSystem levelSystem = _systemManager.getSystem(SystemType.Level) as LevelSystem;
 
-                for (int i = 0; i < ropeEntities.Count; i++)
+                if (levelSystem.finalized)
                 {
-                    RopeComponent ropeComponent = _entityManager.getComponent(levelUid, ropeEntities[i], ComponentType.Rope) as RopeComponent;
-                    RopeGrabComponent ropeGrabComponent = _entityManager.getComponent(levelUid, ropeEntities[i], ComponentType.RopeGrab) as RopeGrabComponent;
-                    RopeNode head = ropeComponent.ropeNodeHead;
-                    RopeNode current = head;
-                    RopeNode tail = head.tail;
+                    List<int> ropeEntities = _entityManager.getEntitiesPosessing(levelUid, ComponentType.Rope);
 
-                    // Check segment length
-                    if (head.count < 3 && ropeGrabComponent == null)
-                        ropeComponent.startTTLCountdown();
-
-                    // Check anchors
-                    if (head.anchorJoint == null && tail.anchorJoint == null)
-                        ropeComponent.startTTLCountdown();
-
-                    // Check time to live
-                    if (ropeComponent.timeToLive == 0)
+                    for (int i = 0; i < ropeEntities.Count; i++)
                     {
-                        killRope(levelUid, ropeEntities[i]);
-                        ropeComponent.timeToLive--;
-                    }
-                    else if (ropeComponent.timeToLive > -1)
-                    {
-                        ropeComponent.timeToLive--;
-                    }
+                        RopeComponent ropeComponent = _entityManager.getComponent(levelUid, ropeEntities[i], ComponentType.Rope) as RopeComponent;
+                        RopeGrabComponent ropeGrabComponent = _entityManager.getComponent(levelUid, ropeEntities[i], ComponentType.RopeGrab) as RopeGrabComponent;
+                        RopeNode head = ropeComponent.ropeNodeHead;
+                        RopeNode current = head;
+                        RopeNode tail = head.tail;
 
-                    while (current != null)
-                    {
-                        // Check tensions
-                        if (current.joint != null)
+                        // Check segment length
+                        if (head.count < 3 && ropeGrabComponent == null)
+                            ropeComponent.startTTLCountdown();
+
+                        // Check anchors
+                        if (head.anchorJoint == null && tail.anchorJoint == null)
+                            ropeComponent.startTTLCountdown();
+
+                        // Check time to live
+                        if (ropeComponent.timeToLive == 0)
                         {
-                            Vector2 relative;
-                            if (current == head || current == tail)
+                            killRope(levelUid, ropeEntities[i]);
+                            ropeComponent.timeToLive--;
+                        }
+                        else if (ropeComponent.timeToLive > -1)
+                        {
+                            ropeComponent.timeToLive--;
+                        }
+
+                        while (current != null)
+                        {
+                            // Check tensions
+                            if (current.joint != null)
                             {
-                                // Check anchor joint
-                                if (current.anchorJoint != null)
+                                Vector2 relative;
+                                if (current == head || current == tail)
                                 {
-                                    relative = current.anchorJoint.BodyA.GetWorldPoint(current.anchorJoint.LocalAnchorA) -
-                                        current.anchorJoint.BodyB.GetWorldPoint(current.anchorJoint.LocalAnchorB);
-                                    if (relative.Length() > 0.8f || current.anchorJoint.GetReactionForce(60f).Length() > 400f)
+                                    // Check anchor joint
+                                    if (current.anchorJoint != null)
                                     {
-                                        breakAnchor(current);
+                                        relative = current.anchorJoint.BodyA.GetWorldPoint(current.anchorJoint.LocalAnchorA) -
+                                            current.anchorJoint.BodyB.GetWorldPoint(current.anchorJoint.LocalAnchorB);
+                                        if (relative.Length() > 0.8f || current.anchorJoint.GetReactionForce(60f).Length() > 400f)
+                                        {
+                                            breakAnchor(current);
+                                        }
                                     }
                                 }
-                            }
 
-                            // Check other joints
-                            relative = current.joint.BodyA.GetWorldPoint(current.joint.LocalAnchorA) -
-                                        current.joint.BodyB.GetWorldPoint(current.joint.LocalAnchorB);
-                            if (relative.Length() > 1.2f || current.joint.GetReactionForce(60f).Length() > 300f)
-                            {
-                                breakJoint(levelUid, ropeEntities[i], current);
+                                // Check other joints
+                                relative = current.joint.BodyA.GetWorldPoint(current.joint.LocalAnchorA) -
+                                            current.joint.BodyB.GetWorldPoint(current.joint.LocalAnchorB);
+                                if (relative.Length() > 1.2f || current.joint.GetReactionForce(60f).Length() > 300f)
+                                {
+                                    breakJoint(levelUid, ropeEntities[i], current);
+                                }
                             }
+                            current = current.next;
                         }
-                        current = current.next;
                     }
                 }
             }

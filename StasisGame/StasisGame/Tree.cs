@@ -56,6 +56,7 @@ namespace StasisGame
         private List<List<Texture2D>> _leafTextures;
         private float _layerDepth;
         private int _entityId;
+        private string _levelUid;
 
         public TreeSystem treeSystem { get { return _treeSystem; } }
         public float age { get { return _age; } }
@@ -93,11 +94,13 @@ namespace StasisGame
         public Matrix worldMatrix { get { return Matrix.Identity; } }
         public Texture2D texture { get { return _barkTexture; } }
         public int entityId { get { return _entityId; } }
+        public string levelUid { get { return _levelUid; } }
 
         // Constructor
-        public Tree(TreeSystem treeSystem, Texture2D barkTexture, List<List<Texture2D>> leafTextures, XElement data)
+        public Tree(TreeSystem treeSystem, string levelUid, Texture2D barkTexture, List<List<Texture2D>> leafTextures, XElement data)
         {
             _treeSystem = treeSystem;
+            _levelUid = levelUid;
             _leafTextures = leafTextures;
             _barkTexture = barkTexture;
             _angle = Loader.loadFloat(data.Attribute("angle"), 0f);
