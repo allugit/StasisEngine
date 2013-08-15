@@ -568,6 +568,7 @@ namespace StasisGame.Systems
                                     if (_newKeyState.IsKeyDown(Keys.E) && _oldKeyState.IsKeyUp(Keys.E))
                                     {
                                         Console.WriteLine("begin level transition to: {0}", levelTransition.levelUid);
+                                        switchToLevel(levelTransition.levelUid, new Vector2(-1f, -1.7f));
                                     }
                                 }
                                 else 
