@@ -54,7 +54,13 @@ namespace StasisGame.Systems
 
         public void addWorld(string levelUid, Vector2 gravity)
         {
-            _worlds.Add(levelUid, new World(gravity));
+            World world = new World(gravity);
+
+            world.ContactManager.BeginContact += new BeginContactDelegate(BeginContact);
+            world.ContactManager.EndContact += new EndContactDelegate(EndContact);
+            world.ContactManager.PreSolve += new PreSolveDelegate(PreSolve);
+            world.ContactManager.PostSolve += new PostSolveDelegate(PostSolve);
+            _worlds.Add(levelUid, world);
             _groundBodies.Add(levelUid, _entityManager.factory.createGroundBody(levelUid, _worlds[levelUid]));
         }
 
