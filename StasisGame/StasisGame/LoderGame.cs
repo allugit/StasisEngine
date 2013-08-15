@@ -249,7 +249,6 @@ namespace StasisGame
                 _levelSystem.createLevelSystems();
                 _levelSystem.loadAllData(levelUid);
                 _levelSystem.createBackgrounds();
-                _levelSystem.switchToLevel(levelUid, _playerSystem.spawnPosition);
                 _loadingScreen.elementsToLoad = _levelSystem.totalEntitiesCount;
                 _loadingScreen.message = "Loading entities, first pass...";
             }));
@@ -385,6 +384,7 @@ namespace StasisGame
                         _levelSystem.clean();
                         _levelSystem.callScripts();
                         _levelSystem.finalized = true;
+                        _levelSystem.switchToLevel(_levelSystem.lastLevelUidLoaded, _playerSystem.spawnPosition);
                         _loadingScreen.message = "Starting level!";
                         _screenSystem.addTransition(new ScreenFadeOutTransition(_loadingScreen, Color.Black, true, 0.05f, null, () =>
                             {

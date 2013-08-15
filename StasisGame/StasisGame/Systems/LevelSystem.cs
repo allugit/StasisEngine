@@ -43,12 +43,14 @@ namespace StasisGame.Systems
         private KeyboardState _newKeyState;
         private KeyboardState _oldKeyState;
         private bool _finalized;
+        private string _lastLevelUidLoaded;
 
         public int defaultPriority { get { return 30; } }
         public SystemType systemType { get { return SystemType.Level; } }
         public bool paused { get { return _paused; } set { _paused = value; } }
         public bool singleStep { get { return _singleStep; } set { _singleStep = value; } }
         public bool finalized { get { return _finalized; } set { _finalized = value; } }
+        public string lastLevelUidLoaded { get { return _lastLevelUidLoaded; } }
         public bool isFinishedLoading
         {
             get
@@ -166,6 +168,7 @@ namespace StasisGame.Systems
             List<string> levelDependencies = new List<string>();
 
             // Load parent level
+            _lastLevelUidLoaded = parentLevelUid;
             using (Stream stream = TitleContainer.OpenStream(ResourceManager.levelPath + string.Format("\\{0}.xml", parentLevelUid)))
             {
                 XDocument doc = XDocument.Load(stream);
