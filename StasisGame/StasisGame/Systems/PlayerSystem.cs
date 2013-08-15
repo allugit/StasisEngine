@@ -40,11 +40,11 @@ namespace StasisGame.Systems
         // createPlayer
         public void createPlayer()
         {
-            playerId = _entityManager.createEntity(PLAYER_ID);
+            playerId = _entityManager.createEntity("global", PLAYER_ID);
         }
 
         // Add components to the entity player that are needed to play in a level
-        public void addLevelComponents()
+        public void addLevelComponents(string levelUid)
         {
             World world = (_systemManager.getSystem(SystemType.Physics) as PhysicsSystem).world;
             Body body;
@@ -76,21 +76,21 @@ namespace StasisGame.Systems
             feetFixture.CollisionCategories = fixture.CollisionCategories;
             feetFixture.CollidesWith = fixture.CollidesWith;
 
-            _entityManager.addComponent(playerId, new PhysicsComponent(body));
-            _entityManager.addComponent(playerId, new CharacterMovementComponent(feetFixture));
-            _entityManager.addComponent(playerId, new CharacterRenderComponent());
-            _entityManager.addComponent(playerId, new BodyFocusPointComponent(body, new Vector2(0, -5f), FocusType.Multiple));
-            _entityManager.addComponent(playerId, new IgnoreTreeCollisionComponent());
-            _entityManager.addComponent(playerId, new IgnoreRopeRaycastComponent());
-            _entityManager.addComponent(playerId, new WorldPositionComponent(body.Position));
-            _entityManager.addComponent(playerId, new SkipFluidResolutionComponent());
-            _entityManager.addComponent(playerId, new ParticleInfluenceComponent(ParticleInfluenceType.Character));
+            _entityManager.addComponent(levelUid, playerId, new PhysicsComponent(body));
+            _entityManager.addComponent(levelUid, playerId, new CharacterMovementComponent(feetFixture));
+            _entityManager.addComponent(levelUid, playerId, new CharacterRenderComponent());
+            _entityManager.addComponent(levelUid, playerId, new BodyFocusPointComponent(body, new Vector2(0, -5f), FocusType.Multiple));
+            _entityManager.addComponent(levelUid, playerId, new IgnoreTreeCollisionComponent());
+            _entityManager.addComponent(levelUid, playerId, new IgnoreRopeRaycastComponent());
+            _entityManager.addComponent(levelUid, playerId, new WorldPositionComponent(body.Position));
+            _entityManager.addComponent(levelUid, playerId, new SkipFluidResolutionComponent());
+            _entityManager.addComponent(levelUid, playerId, new ParticleInfluenceComponent(ParticleInfluenceType.Character));
         }
 
         // removeLevelComponents -- Remove level components from the player
-        public void removeLevelComponents()
+        public void removeLevelComponents(string levelUid)
         {
-            List<IComponent> components = new List<IComponent>(_entityManager.getEntityComponents(_playerId));  // create a copy of the list since we'll need to modify the original
+            List<IComponent> components = new List<IComponent>(_entityManager.getEntityComponents(levelUid, _playerId));  // create a copy of the list since we'll need to modify the original
 
             for (int i = 0; i < components.Count; i++)
             {
@@ -103,16 +103,17 @@ namespace StasisGame.Systems
                     continue;
                 }
 
-                _entityManager.removeComponent(_playerId, components[i]);
+                _entityManager.removeComponent(levelUid, _playerId, components[i]);
             }
         }
 
         public void reloadInventory()
         {
-            _entityManager.removeComponent(_playerId, ComponentType.Inventory);
-            _entityManager.removeComponent(_playerId, ComponentType.Toolbar);
-            DataManager.loadPlayerInventory();
-            DataManager.loadPlayerToolbar();
+            throw new NotImplementedException();
+            //_entityManager.removeComponent(_playerId, ComponentType.Inventory);
+            //_entityManager.removeComponent(_playerId, ComponentType.Toolbar);
+            //DataManager.loadPlayerInventory();
+            //DataManager.loadPlayerToolbar();
         }
 
         // update
@@ -120,12 +121,13 @@ namespace StasisGame.Systems
         {
             if (!_paused || _singleStep)
             {
-                PhysicsComponent physicsComponent = (PhysicsComponent)_entityManager.getComponent(_playerId, ComponentType.Physics);
+                string levelUid = LevelSystem.currentLevelUid;
+                PhysicsComponent physicsComponent = (PhysicsComponent)_entityManager.getComponent(levelUid, _playerId, ComponentType.Physics);
 
                 if (physicsComponent != null)   // If there is a physics component, then we're in a level.
                 {
-                    CharacterMovementComponent characterMovementComponent = _entityManager.getComponent(_playerId, ComponentType.CharacterMovement) as CharacterMovementComponent;
-                    RopeGrabComponent ropeGrabComponent = _entityManager.getComponent(_playerId, ComponentType.RopeGrab) as RopeGrabComponent;
+                    CharacterMovementComponent characterMovementComponent = _entityManager.getComponent(levelUid, _playerId, ComponentType.CharacterMovement) as CharacterMovementComponent;
+                    RopeGrabComponent ropeGrabComponent = _entityManager.getComponent(levelUid, _playerId, ComponentType.RopeGrab) as RopeGrabComponent;
 
                     if (InputSystem.usingGamepad)
                     {

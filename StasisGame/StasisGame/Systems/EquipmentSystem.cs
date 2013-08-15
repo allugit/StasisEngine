@@ -33,19 +33,19 @@ namespace StasisGame.Systems
         }
 
         // assignItemToToolbar
-        public void assignItemToToolbar(ItemComponent itemComponent, ToolbarComponent toolbarComponent, int toolbarSlot)
+        public void assignItemToToolbar(string levelUid, ItemComponent itemComponent, ToolbarComponent toolbarComponent, int toolbarSlot)
         {
             toolbarComponent.inventory[toolbarSlot] = itemComponent;
-            selectToolbarSlot(toolbarComponent, toolbarComponent.selectedIndex);
+            selectToolbarSlot(levelUid, toolbarComponent, toolbarComponent.selectedIndex);
         }
 
         // selectToolbarSlot
-        public void selectToolbarSlot(ToolbarComponent toolbarComponent, int slot)
+        public void selectToolbarSlot(string levelUid, ToolbarComponent toolbarComponent, int slot)
         {
             ItemComponent itemComponent = toolbarComponent.selectedItem;
             if (itemComponent != null && itemComponent.definition.hasAimingComponent)
             {
-                _entityManager.removeComponent(toolbarComponent.entityId, ComponentType.Aim);
+                _entityManager.removeComponent(levelUid, toolbarComponent.entityId, ComponentType.Aim);
             }
 
             toolbarComponent.selectedIndex = slot;
@@ -54,7 +54,7 @@ namespace StasisGame.Systems
             if (itemComponent != null && itemComponent.definition.hasAimingComponent)
             {
                 Console.WriteLine("Adding aim component");
-                _entityManager.addComponent(toolbarComponent.entityId, new AimComponent(new Vector2(10f, 0f), 0f, 10f));
+                _entityManager.addComponent(levelUid, toolbarComponent.entityId, new AimComponent(new Vector2(10f, 0f), 0f, 10f));
             }
         }
 
@@ -118,18 +118,19 @@ namespace StasisGame.Systems
         {
             if (_singleStep || !_paused)
             {
+                string levelUid = LevelSystem.currentLevelUid;
                 PlayerSystem playerSystem = _systemManager.getSystem(SystemType.Player) as PlayerSystem;
                 LevelSystem levelSystem = _systemManager.getSystem(SystemType.Level) as LevelSystem;
                 RopeSystem ropeSystem = _systemManager.getSystem(SystemType.Rope) as RopeSystem;
-                PhysicsComponent playerPhysicsComponent = _entityManager.getComponent(playerSystem.playerId, ComponentType.Physics) as PhysicsComponent;
-                List<int> toolbarEntities = _entityManager.getEntitiesPosessing(ComponentType.Toolbar);
+                PhysicsComponent playerPhysicsComponent = _entityManager.getComponent(levelUid, playerSystem.playerId, ComponentType.Physics) as PhysicsComponent;
+                List<int> toolbarEntities = _entityManager.getEntitiesPosessing(levelUid, ComponentType.Toolbar);
 
                 // Player equipment
                 if (playerSystem != null)
                 {
                     int playerId = playerSystem.playerId;
-                    ToolbarComponent playerToolbar = _entityManager.getComponent(playerId, ComponentType.Toolbar) as ToolbarComponent;
-                    WorldPositionComponent playerPositionComponent = _entityManager.getComponent(playerId, ComponentType.WorldPosition) as WorldPositionComponent;
+                    ToolbarComponent playerToolbar = _entityManager.getComponent(levelUid, playerId, ComponentType.Toolbar) as ToolbarComponent;
+                    WorldPositionComponent playerPositionComponent = _entityManager.getComponent(levelUid, playerId, ComponentType.WorldPosition) as WorldPositionComponent;
                     ItemComponent selectedItem = playerToolbar.selectedItem;
 
                     if (selectedItem != null)
@@ -140,11 +141,11 @@ namespace StasisGame.Systems
                         selectedItem.secondarySingleAction = selectedItem.secondaryContinuousAction && InputSystem.oldMouseState.RightButton == ButtonState.Released;
                         //bool leftTriggerDown = InputSystem.usingGamepad && InputSystem.newGamepadState.Triggers.Left > 0.5f && InputSystem.oldGamepadState.Triggers.Left <= 0.5f;
                         //bool rightTriggerDown = InputSystem.usingGamepad && InputSystem.newGamepadState.Triggers.Right > 0.5f && InputSystem.oldGamepadState.Triggers.Right <= 0.5f;
-                        AimComponent aimComponent = _entityManager.getComponent(playerId, ComponentType.Aim) as AimComponent;
+                        AimComponent aimComponent = _entityManager.getComponent(levelUid, playerId, ComponentType.Aim) as AimComponent;
 
                         if (selectedItem.definition.hasAimingComponent && aimComponent != null)
                         {
-                            WorldPositionComponent worldPositionComponent = _entityManager.getComponent(playerId, ComponentType.WorldPosition) as WorldPositionComponent;
+                            WorldPositionComponent worldPositionComponent = _entityManager.getComponent(levelUid, playerId, ComponentType.WorldPosition) as WorldPositionComponent;
 
                             if (worldPositionComponent != null)
                             {
@@ -172,7 +173,7 @@ namespace StasisGame.Systems
                 // All toolbars
                 for (int i = 0; i < toolbarEntities.Count; i++)
                 {
-                    ToolbarComponent toolbarComponent = _entityManager.getComponent(toolbarEntities[i], ComponentType.Toolbar) as ToolbarComponent;
+                    ToolbarComponent toolbarComponent = _entityManager.getComponent(levelUid, toolbarEntities[i], ComponentType.Toolbar) as ToolbarComponent;
                     ItemComponent selectedItem = toolbarComponent.selectedItem;
 
                     if (selectedItem != null)
@@ -186,16 +187,16 @@ namespace StasisGame.Systems
                             case "ropegun":
                                 if (selectedItem.primarySingleAction)
                                 {
-                                    AimComponent aimComponent = _entityManager.getComponent(toolbarEntities[i], ComponentType.Aim) as AimComponent;
-                                    Vector2 initialPointA = (_entityManager.getComponent(toolbarEntities[i], ComponentType.WorldPosition) as WorldPositionComponent).position;
+                                    AimComponent aimComponent = _entityManager.getComponent(levelUid, toolbarEntities[i], ComponentType.Aim) as AimComponent;
+                                    Vector2 initialPointA = (_entityManager.getComponent(levelUid, toolbarEntities[i], ComponentType.WorldPosition) as WorldPositionComponent).position;
                                     Vector2 initialPointB = initialPointA + new Vector2((float)Math.Cos(aimComponent.angle), (float)Math.Sin(aimComponent.angle)) * aimComponent.length;
-                                    int ropeEntityId = _entityManager.factory.createSingleAnchorRope(initialPointA, initialPointB, _defaultRopeMaterial, true);
+                                    int ropeEntityId = _entityManager.factory.createSingleAnchorRope(levelUid, initialPointA, initialPointB, _defaultRopeMaterial, true);
 
                                     if (ropeEntityId != -1)
                                     {
-                                        RopeGrabComponent ropeGrabComponent = _entityManager.getComponent(toolbarComponent.entityId, ComponentType.RopeGrab) as RopeGrabComponent;
-                                        RopeComponent ropeComponent = _entityManager.getComponent(ropeEntityId, ComponentType.Rope) as RopeComponent;
-                                        PhysicsComponent physicsComponent = _entityManager.getComponent(toolbarEntities[i], ComponentType.Physics) as PhysicsComponent;
+                                        RopeGrabComponent ropeGrabComponent = _entityManager.getComponent(levelUid, toolbarComponent.entityId, ComponentType.RopeGrab) as RopeGrabComponent;
+                                        RopeComponent ropeComponent = _entityManager.getComponent(levelUid, ropeEntityId, ComponentType.Rope) as RopeComponent;
+                                        PhysicsComponent physicsComponent = _entityManager.getComponent(levelUid, toolbarEntities[i], ComponentType.Physics) as PhysicsComponent;
                                         RopeGrabComponent newRopeGrabComponent = null;
                                         Vector2 initialVelocity = physicsComponent.body.LinearVelocity;
                                         RopeNode currentNode = null;
@@ -222,18 +223,18 @@ namespace StasisGame.Systems
                                         // Handle previous grabs
                                         if (ropeGrabComponent != null)
                                         {
-                                            RopeComponent previouslyGrabbedRope = _entityManager.getComponent(ropeGrabComponent.ropeEntityId, ComponentType.Rope) as RopeComponent;
+                                            RopeComponent previouslyGrabbedRope = _entityManager.getComponent(levelUid, ropeGrabComponent.ropeEntityId, ComponentType.Rope) as RopeComponent;
                                             ropeSystem.releaseRope(ropeGrabComponent, physicsComponent.body);
 
                                             if (previouslyGrabbedRope.destroyAfterRelease)
                                                 previouslyGrabbedRope.timeToLive = 100;
-                                            _entityManager.removeComponent(toolbarComponent.entityId, ropeGrabComponent);
+                                            _entityManager.removeComponent(levelUid, toolbarComponent.entityId, ropeGrabComponent);
                                             ropeGrabComponent = null;
                                         }
 
                                         newRopeGrabComponent = new RopeGrabComponent(ropeEntityId, ropeComponent.ropeNodeHead, 0f, ropeComponent.reverseClimbDirection);
                                         ropeSystem.grabRope(newRopeGrabComponent, physicsComponent.body);
-                                        _entityManager.addComponent(toolbarComponent.entityId, newRopeGrabComponent);
+                                        _entityManager.addComponent(levelUid, toolbarComponent.entityId, newRopeGrabComponent);
                                     }
                                 }
                                 break;
@@ -242,9 +243,9 @@ namespace StasisGame.Systems
                             case "dynamite":
                                 if (selectedItem.primarySingleAction)
                                 {
-                                    AimComponent aimComponent = _entityManager.getComponent(toolbarEntities[i], ComponentType.Aim) as AimComponent;
+                                    AimComponent aimComponent = _entityManager.getComponent(levelUid, toolbarEntities[i], ComponentType.Aim) as AimComponent;
 
-                                    _entityManager.factory.createDynamite(playerPhysicsComponent.body.Position, aimComponent.vector * 80f);
+                                    _entityManager.factory.createDynamite(levelUid, playerPhysicsComponent.body.Position, aimComponent.vector * 80f);
                                 }
                                 break;
 
@@ -253,7 +254,7 @@ namespace StasisGame.Systems
                                 if (selectedItem.primaryContinuousAction)
                                 {
                                     FluidSystem fluidSystem = _systemManager.getSystem(SystemType.Fluid) as FluidSystem;
-                                    AimComponent aimComponent = _entityManager.getComponent(toolbarEntities[i], ComponentType.Aim) as AimComponent;
+                                    AimComponent aimComponent = _entityManager.getComponent(levelUid, toolbarEntities[i], ComponentType.Aim) as AimComponent;
                                     Vector2 aimUnitVector = Vector2.Normalize(aimComponent.vector);
                                     Vector2 particlePosition =
                                         playerPhysicsComponent.body.Position +

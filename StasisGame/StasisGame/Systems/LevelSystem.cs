@@ -6,6 +6,7 @@ using System.Xml.Linq;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
+using FarseerPhysics.Dynamics;
 using FarseerPhysics.Collision;
 using StasisCore;
 using StasisCore.Models;
@@ -18,8 +19,8 @@ namespace StasisGame.Systems
 {
     public class LevelSystem : ISystem
     {
+        public static string currentLevelUid;
         private LoderGame _game;
-        private string _uid;
         private EntityManager _entityManager;
         private SystemManager _systemManager;
         private ScriptManager _scriptManager;
@@ -27,31 +28,71 @@ namespace StasisGame.Systems
         private PlayerSystem _playerSystem;
         private bool _paused;
         private bool _singleStep;
-        private Dictionary<int, Goal> _regionGoals;
-        private Dictionary<GameEventType, Dictionary<int, Goal>> _eventGoals;
-        private Dictionary<int, Goal> _completedGoals;
+        //private Dictionary<int, Goal> _regionGoals;
+        //private Dictionary<GameEventType, Dictionary<int, Goal>> _eventGoals;
+        //private Dictionary<int, Goal> _completedGoals;
         private AABB _levelBoundary;
         private Vector2 _boundaryMargin;
-        private int _numSecondPassEntitiesLoaded;
-        private int _numEntitiesProcessed;
-        private bool _firstPassDone;
-        private bool _secondPassDone;
-        private bool _fullyLoaded;
-        private XElement _data;
-        private List<XElement> _actorData;
-        private List<XElement> _secondPassData;
+        private Dictionary<string, XElement> _levelsData;
+        private Dictionary<string, World> _levelWorlds;
+        private Dictionary<string, List<XElement>> _firstPassEntities;
+        private Dictionary<string, List<XElement>> _secondPassEntities;
+        private Dictionary<string, int> _numEntities;
+        private Dictionary<string, int> _numEntitiesProcessed;
+        private Dictionary<string, bool> _finishedLoading;
+        private Dictionary<string, Background> _backgrounds;
         private KeyboardState _newKeyState;
         private KeyboardState _oldKeyState;
+        private bool _finalized;
 
         public int defaultPriority { get { return 30; } }
         public SystemType systemType { get { return SystemType.Level; } }
         public bool paused { get { return _paused; } set { _paused = value; } }
         public bool singleStep { get { return _singleStep; } set { _singleStep = value; } }
-        public string uid { get { return _uid; } }
-        public bool firstPassDone { get { return _firstPassDone; } }
-        public bool secondPassDone { get { return _secondPassDone; } }
-        public bool fullyLoaded { get { return _fullyLoaded; } set { _fullyLoaded = value; } }
-        public int numEntitiesToLoad { get { return _actorData.Count; } }
+        public bool finalized { get { return _finalized; } set { _finalized = value; } }
+        public bool isFinishedLoading
+        {
+            get
+            {
+                foreach (bool finished in _finishedLoading.Values)
+                {
+                    if (!finished)
+                    {
+                        return false;
+                    }
+                }
+                return true;
+            }
+        }
+        public int totalEntitiesCount
+        {
+            get
+            {
+                int sum = 0;
+
+                foreach (List<XElement> actorsData in _firstPassEntities.Values)
+                {
+                    sum += actorsData.Count;
+                }
+                foreach (List<XElement> actorsData in _secondPassEntities.Values)
+                {
+                    sum += actorsData.Count;
+                }
+                return sum;
+            }
+        }
+        public int totalEntitiesProcessedCount
+        {
+            get
+            {
+                int sum = 0;
+                foreach (int count in _numEntitiesProcessed.Values)
+                {
+                    sum += count;
+                }
+                return sum;
+            }
+        }
 
         public LevelSystem(LoderGame game, SystemManager systemManager, EntityManager entityManager)
         {
@@ -59,11 +100,17 @@ namespace StasisGame.Systems
             _systemManager = systemManager;
             _entityManager = entityManager;
             _scriptManager = _game.scriptManager;
-            _regionGoals = new Dictionary<int, Goal>();
-            _eventGoals = new Dictionary<GameEventType, Dictionary<int, Goal>>();
-            _completedGoals = new Dictionary<int, Goal>();
+            //_regionGoals = new Dictionary<int, Goal>();
+            //_eventGoals = new Dictionary<GameEventType, Dictionary<int, Goal>>();
+            //_completedGoals = new Dictionary<int, Goal>();
             _levelBoundary = new AABB();
             _boundaryMargin = new Vector2(50f, 50f);
+            _levelsData = new Dictionary<string, XElement>();
+            _firstPassEntities = new Dictionary<string, List<XElement>>();
+            _secondPassEntities = new Dictionary<string, List<XElement>>();
+            _numEntities = new Dictionary<string, int>();
+            _numEntitiesProcessed = new Dictionary<string, int>();
+            _backgrounds = new Dictionary<string, Background>();
         }
 
         public void expandBoundary(Vector2 point)
@@ -72,28 +119,70 @@ namespace StasisGame.Systems
             _levelBoundary.UpperBound = Vector2.Max(point + _boundaryMargin, _levelBoundary.UpperBound);
         }
 
-        // Load data
-        public void loadData(string levelUID)
+        // initializeLevelData -- Takes a level's data and initializes the states needed for the loading process
+        private void initializeLevelData(XElement levelData)
         {
-            _numEntitiesProcessed = 0;
-            _numSecondPassEntitiesLoaded = 0;
-            _firstPassDone = false;
-            _secondPassDone = false;
-            _fullyLoaded = false;
+            string levelUid = levelData.Attribute("uid").Value;
+            int levelEntityCount = 0;
+
+            _finalized = false;
             _paused = true;
-            _uid = levelUID;
+            _levelsData.Add(levelUid, levelData);
+            _firstPassEntities.Add(levelUid, new List<XElement>());
+            _secondPassEntities.Add(levelUid, new List<XElement>());
+            _numEntitiesProcessed.Add(levelUid, 0);
+            _finishedLoading.Add(levelUid, false);
 
-            using (Stream stream = TitleContainer.OpenStream(ResourceManager.levelPath + string.Format("\\{0}.xml", levelUID)))
+            foreach (XElement actorData in levelData.Elements("Actor"))
             {
-                XDocument doc = XDocument.Load(stream);
+                string type = actorData.Attribute("type").Value;
 
-                _data = doc.Element("Level");
-                _actorData = new List<XElement>(_data.Elements("Actor"));
-                _secondPassData = new List<XElement>();
+                // Sort entities into first and second passses
+                if (type == "Circuit" || type == "Fluid" || type == "Rope" || type == "Revolute" || type == "Prismatic" || type == "CollisionFilter" || type == "Decal")
+                {
+                    _secondPassEntities[levelUid].Add(actorData);
+                }
+                else
+                {
+                    _firstPassEntities[levelUid].Add(actorData);
+                }
+                levelEntityCount++;
 
                 // Reserve actor ids as entity ids
-                foreach (XElement actorData in _actorData)
-                    _entityManager.reserveEntityId(int.Parse(actorData.Attribute("id").Value));
+                _entityManager.reserveEntityId(levelUid, int.Parse(actorData.Attribute("id").Value));
+            }
+
+            _numEntities.Add(levelUid, levelEntityCount);
+        }
+
+        // loadAllData
+        public void loadAllData(string parentLevelUid)
+        {
+            List<string> levelDependencies = new List<string>();
+
+            // Load parent level
+            using (Stream stream = TitleContainer.OpenStream(ResourceManager.levelPath + string.Format("\\{0}.xml", parentLevelUid)))
+            {
+                XDocument doc = XDocument.Load(stream);
+                XElement parentLevelData = doc.Element("Level");
+
+                initializeLevelData(parentLevelData);
+                foreach (XElement levelDependencyData in parentLevelData.Elements("LevelDependency"))
+                {
+                    levelDependencies.Add(levelDependencyData.Attribute("level_uid").Value);
+                }
+            }
+
+            // Load level dependencies
+            foreach (string levelDependencyUid in levelDependencies)
+            {
+                using (Stream stream = TitleContainer.OpenStream(ResourceManager.levelPath + string.Format("\\{0}.xml", levelDependencyUid)))
+                {
+                    XDocument doc = XDocument.Load(stream);
+                    XElement levelDependencyData = doc.Element("Level");
+
+                    initializeLevelData(levelDependencyData);
+                }
             }
         }
 
@@ -101,7 +190,7 @@ namespace StasisGame.Systems
         public void createLevelSystems()
         {
             _systemManager.add(new InputSystem(_systemManager, _entityManager), -1);
-            _systemManager.add(new PhysicsSystem(_systemManager, _entityManager, Loader.loadVector2(_data.Attribute("gravity"), new Vector2(0, 32))), -1);
+            _systemManager.add(new PhysicsSystem(_systemManager, _entityManager), -1);
             _systemManager.add(new CameraSystem(_systemManager, _entityManager), -1);
             _systemManager.add(new EventSystem(_systemManager, _entityManager), -1);
             _systemManager.add(new RopeSystem(_systemManager, _entityManager), -1);
@@ -114,169 +203,161 @@ namespace StasisGame.Systems
         }
 
         // Create output gates
-        public void createOutputGates()
+        public void createOutputGates(string levelUid)
         {
-            _entityManager.factory.createOutputGates(_data);
+            _entityManager.factory.createOutputGates(levelUid, _levelsData[levelUid]);
         }
 
         // Create background
-        public void createBackgroundRenderer()
+        public void createBackgrounds()
         {
-            string backgroundUID;
-            XElement backgroundData;
-            Background background;
-
-            backgroundUID = Loader.loadString(_data.Attribute("background_uid"), "default_background");
-            backgroundData = ResourceManager.getResource(backgroundUID);
-            background = new Background(backgroundData);
-            background.loadTextures();
-            _renderSystem.setBackground(background);
-        }
-
-        // loadEntity -- Loads a level
-        public void loadEntity()
-        {
-            XElement actorData = _actorData[_numEntitiesProcessed];
-            LoadingScreen loadingScreen = (_systemManager.getSystem(SystemType.Screen) as ScreenSystem).getScreen(ScreenType.Loading) as LoadingScreen;
-
-            switch (actorData.Attribute("type").Value)
+            foreach (XElement levelData in _levelsData.Values)
             {
-                case "Box":
-                    _entityManager.factory.createBox(actorData);
-                    loadingScreen.elementsLoaded++;
-                    break;
+                string backgroundUid;
+                XElement backgroundData;
+                Background background;
 
-                case "Circle":
-                    _entityManager.factory.createCircle(actorData);
-                    loadingScreen.elementsLoaded++;
-                    break;
-
-                case "Circuit":
-                    _secondPassData.Add(actorData);
-                    break;
-
-                case "Fluid":
-                    _secondPassData.Add(actorData);
-                    break;
-
-                case "Item":
-                    _entityManager.factory.createWorldItem(actorData);
-                    loadingScreen.elementsLoaded++;
-                    break;
-
-                case "PlayerSpawn":
-                    Vector2 spawnPosition = Loader.loadVector2(actorData.Attribute("position"), Vector2.Zero);
-                    if (_systemManager.getSystem(SystemType.CharacterMovement) == null)
-                        _systemManager.add(new CharacterMovementSystem(_systemManager, _entityManager), -1);
-
-                    (_systemManager.getSystem(SystemType.Player) as PlayerSystem).spawnPosition = spawnPosition;
-                    (_systemManager.getSystem(SystemType.Camera) as CameraSystem).screenCenter = spawnPosition;
-                    _playerSystem.addLevelComponents();
-                    loadingScreen.elementsLoaded++;
-                    break;
-
-                case "Rope":
-                    _secondPassData.Add(actorData);
-                    break;
-
-                case "Terrain":
-                    _entityManager.factory.createTerrain(actorData);
-                    loadingScreen.elementsLoaded++;
-                    break;
-
-                case "Tree":
-                    _entityManager.factory.createTree(actorData);
-                    loadingScreen.elementsLoaded++;
-                    break;
-
-                case "Revolute":
-                    _secondPassData.Add(actorData);
-                    break;
-
-                case "Prismatic":
-                    _secondPassData.Add(actorData);
-                    break;
-
-                case "CollisionFilter":
-                    _secondPassData.Add(actorData);
-                    break;
-
-                case "Goal":
-                    _entityManager.factory.createRegionGoal(actorData);
-                    loadingScreen.elementsLoaded++;
-                    break;
-
-                case "Decal":
-                    _secondPassData.Add(actorData);
-                    break;
-            }
-
-            _numEntitiesProcessed++;
-
-            if (_numEntitiesProcessed == _actorData.Count)
-            {
-                _firstPassDone = true;
-                loadingScreen.message = "Loading entities, second pass...";
+                backgroundUid = Loader.loadString(levelData.Attribute("background_uid"), "default_background");
+                backgroundData = ResourceManager.getResource(backgroundUid);
+                background = new Background(backgroundData);
+                background.loadTextures();
+                _backgrounds.Add(levelData.Attribute("uid").Value, background);
             }
         }
 
-        public void loadSecondPassEntity()
+        // loadNextEntity -- Loads the next entity
+        private void loadNextEntity(string levelUid)
         {
-            XElement actorData = _secondPassData[_numSecondPassEntitiesLoaded];
             LoadingScreen loadingScreen = (_systemManager.getSystem(SystemType.Screen) as ScreenSystem).getScreen(ScreenType.Loading) as LoadingScreen;
+            int firstPassEntitiesCount = _firstPassEntities[levelUid].Count;
+            int numEntitiesProcessed = _numEntitiesProcessed[levelUid];
 
-            // Second pass
-            switch (actorData.Attribute("type").Value)
+            if (numEntitiesProcessed < firstPassEntitiesCount)
             {
-                case "Circuit":
-                    if (_systemManager.getSystem(SystemType.Circuit) == null)
+                XElement actorData = _firstPassEntities[levelUid][numEntitiesProcessed];
+
+                switch (actorData.Attribute("type").Value)
+                {
+                    case "Box":
+                        _entityManager.factory.createBox(levelUid, actorData);
+                        loadingScreen.elementsLoaded++;
+                        break;
+
+                    case "Circle":
+                        _entityManager.factory.createCircle(levelUid, actorData);
+                        loadingScreen.elementsLoaded++;
+                        break;
+
+                    case "Item":
+                        _entityManager.factory.createWorldItem(levelUid, actorData);
+                        loadingScreen.elementsLoaded++;
+                        break;
+
+                    case "PlayerSpawn":
+                        Vector2 spawnPosition = Loader.loadVector2(actorData.Attribute("position"), Vector2.Zero);
+                        if (_systemManager.getSystem(SystemType.CharacterMovement) == null)
+                            _systemManager.add(new CharacterMovementSystem(_systemManager, _entityManager), -1);
+
+                        (_systemManager.getSystem(SystemType.Player) as PlayerSystem).spawnPosition = spawnPosition;
+                        (_systemManager.getSystem(SystemType.Camera) as CameraSystem).screenCenter = spawnPosition;
+                        _playerSystem.addLevelComponents(levelUid);
+                        loadingScreen.elementsLoaded++;
+                        break;
+
+                    case "Terrain":
+                        _entityManager.factory.createTerrain(levelUid, actorData);
+                        loadingScreen.elementsLoaded++;
+                        break;
+
+                    case "Tree":
+                        _entityManager.factory.createTree(levelUid, actorData);
+                        loadingScreen.elementsLoaded++;
+                        break;
+
+                    case "Goal":
+                        _entityManager.factory.createRegionGoal(levelUid, actorData);
+                        loadingScreen.elementsLoaded++;
+                        break;
+
+                    default:
+                        throw new NotImplementedException("Unhandled actor type in loadNextEntity()");
+                }
+            }
+            else
+            {
+                XElement actorData = _secondPassEntities[levelUid][numEntitiesProcessed - firstPassEntitiesCount];
+
+                switch (actorData.Attribute("type").Value)
+                {
+                    case "Circuit":
+                        if (_systemManager.getSystem(SystemType.Circuit) == null)
+                        {
+                            _systemManager.add(new CircuitSystem(_systemManager, _entityManager), -1);
+                        }
+                        _entityManager.factory.createCircuit(levelUid, actorData);
+                        loadingScreen.elementsLoaded++;
+                        break;
+
+                    case "Fluid":
+                        _entityManager.factory.createFluid(levelUid, actorData);
+                        loadingScreen.elementsLoaded++;
+                        break;
+
+                    case "Rope":
+                        _entityManager.factory.createRope(levelUid, actorData);
+                        loadingScreen.elementsLoaded++;
+                        break;
+
+                    case "Revolute":
+                        _entityManager.factory.createRevoluteJoint(levelUid, actorData);
+                        loadingScreen.elementsLoaded++;
+                        break;
+
+                    case "Prismatic":
+                        _entityManager.factory.createPrismaticJoint(levelUid, actorData);
+                        loadingScreen.elementsLoaded++;
+                        break;
+
+                    case "CollisionFilter":
+                        _entityManager.factory.createCollisionFilter(levelUid, actorData);
+                        loadingScreen.elementsLoaded++;
+                        break;
+
+                    case "Decal":
+                        _entityManager.factory.createDecal(levelUid, actorData);
+                        loadingScreen.elementsLoaded++;
+                        break;
+
+                    default:
+                        throw new NotImplementedException("Unhandled actor type in loadNextEntity()");
+                }
+            }
+
+            _numEntitiesProcessed[levelUid]++;
+
+            if (_numEntitiesProcessed[levelUid] == _numEntities[levelUid])
+            {
+                _finishedLoading[levelUid] = true;
+            }
+        }
+
+        // load -- Called by LoderGame during the LoadingLevel state
+        public void load()
+        {
+            if (!isFinishedLoading)
+            {
+                foreach (KeyValuePair<string, bool> levelUidFinishedPair in _finishedLoading)
+                {
+                    if (!levelUidFinishedPair.Value)
                     {
-                        _systemManager.add(new CircuitSystem(_systemManager, _entityManager), -1);
+                        loadNextEntity(levelUidFinishedPair.Key);
+                        break;
                     }
-                    _entityManager.factory.createCircuit(actorData);
-                    loadingScreen.elementsLoaded++;
-                    break;
-
-                case "Fluid":
-                    _entityManager.factory.createFluid(actorData);
-                    loadingScreen.elementsLoaded++;
-                    break;
-
-                case "Rope":
-                    _entityManager.factory.createRope(actorData);
-                    loadingScreen.elementsLoaded++;
-                    break;
-
-                case "Revolute":
-                    _entityManager.factory.createRevoluteJoint(actorData);
-                    loadingScreen.elementsLoaded++;
-                    break;
-
-                case "Prismatic":
-                    _entityManager.factory.createPrismaticJoint(actorData);
-                    loadingScreen.elementsLoaded++;
-                    break;
-
-                case "CollisionFilter":
-                    _entityManager.factory.createCollisionFilter(actorData);
-                    loadingScreen.elementsLoaded++;
-                    break;
-
-                case "Decal":
-                    _entityManager.factory.createDecal(actorData);
-                    loadingScreen.elementsLoaded++;
-                    break;
-            }
-
-            _numSecondPassEntitiesLoaded++;
-
-            if (_numSecondPassEntitiesLoaded == _secondPassData.Count)
-            {
-                _secondPassDone = true;
-                loadingScreen.message = "Relaxing fluid, tree, and physics systems...";
+                }
             }
         }
 
+        // Relax systems
         public void relax()
         {
             // TODO: Relax physics system
@@ -285,6 +366,12 @@ namespace StasisGame.Systems
 
         public void clean()
         {
+            _numEntities.Clear();
+            _numEntitiesProcessed.Clear();
+            _firstPassEntities.Clear();
+            _secondPassEntities.Clear();
+            _levelsData.Clear();
+            _finishedLoading.Clear();
             // Reset entity manager and entity factory -- TODO: move this to unload() ?
             _entityManager.clearReservedEntityIds();
             _entityManager.factory.reset();
@@ -299,56 +386,27 @@ namespace StasisGame.Systems
             _scriptManager.onLevelStart(_uid);
         }
 
-        // unload -- Unloads a level
-        public void unload()
-        {
-            List<int> entitiesToPreserve = new List<int>();
-            ScreenSystem screenSystem = (ScreenSystem)_systemManager.getSystem(SystemType.Screen);
-
-            ResourceManager.clearCache();
-            entitiesToPreserve.Add(_playerSystem.playerId);
-            _playerSystem.removeLevelComponents();
-            _entityManager.killAllEntities(entitiesToPreserve);
-
-            _renderSystem = null;
-
-            _regionGoals.Clear();
-            _eventGoals.Clear();
-            _completedGoals.Clear();
-
-            screenSystem.removeScreen(_game.levelScreen);
-
-            _systemManager.remove(SystemType.Input);
-            _systemManager.remove(SystemType.Physics);
-            _systemManager.remove(SystemType.Camera);
-            _systemManager.remove(SystemType.Event);
-            _systemManager.remove(SystemType.Render);
-            _systemManager.remove(SystemType.Rope);
-            _systemManager.remove(SystemType.Fluid);
-            _systemManager.remove(SystemType.Tree);
-            _systemManager.remove(SystemType.CharacterMovement);
-            _systemManager.remove(SystemType.Explosion);
-        }
-
         // isGoalComplete -- Checks if a goal with a specific id has been completed
         public bool isGoalComplete(int goalId)
         {
-            return _completedGoals.ContainsKey(goalId);
+            return false;
+            //return _completedGoals.ContainsKey(goalId);
         }
 
         // registerRegionGoal -- Registers a region of space (a polygon defined in the editor) as a goal
         public void registerRegionGoal(Goal goal, int regionEntityId)
         {
-            _regionGoals.Add(regionEntityId, goal);
+            //_regionGoals.Add(regionEntityId, goal);
         }
 
         // registerEventGoal -- Registers a specific event from a specific entity as a goal
         public void registerEventGoal(Goal goal, GameEventType eventType, int entityId)
         {
+            /*
             if (!_eventGoals.ContainsKey(eventType))
                 _eventGoals.Add(eventType, new Dictionary<int, Goal>());
 
-            _eventGoals[eventType].Add(entityId, goal);
+            _eventGoals[eventType].Add(entityId, goal);*/
         }
 
         // completeRegionGoal -- Handles completion of a region goal
@@ -399,9 +457,34 @@ namespace StasisGame.Systems
         // endLevel
         public void endLevel()
         {
-            unload();
+            ScreenSystem screenSystem = (ScreenSystem)_systemManager.getSystem(SystemType.Screen);
+
+            foreach (string levelUid in _levelsData.Keys)
+            {
+                List<int> entitiesToPreserve = new List<int>();
+
+                entitiesToPreserve.Add(_playerSystem.playerId);
+                _playerSystem.removeLevelComponents(levelUid);
+                _entityManager.killAllEntities(levelUid, entitiesToPreserve);
+                //_regionGoals.Clear();
+                //_eventGoals.Clear();
+                //_completedGoals.Clear();
+            }
+            ResourceManager.clearCache();
+            _renderSystem = null;
+            screenSystem.removeScreen(_game.levelScreen);
+            _systemManager.remove(SystemType.Input);
+            _systemManager.remove(SystemType.Physics);
+            _systemManager.remove(SystemType.Camera);
+            _systemManager.remove(SystemType.Event);
+            _systemManager.remove(SystemType.Render);
+            _systemManager.remove(SystemType.Rope);
+            _systemManager.remove(SystemType.Fluid);
+            _systemManager.remove(SystemType.Tree);
+            _systemManager.remove(SystemType.CharacterMovement);
+            _systemManager.remove(SystemType.Explosion);
             _game.openWorldMap();
-            _scriptManager.onReturnToWorldMap(_uid, this);
+            _scriptManager.onReturnToWorldMap(currentLevelUid, this);
         }
 
         // update

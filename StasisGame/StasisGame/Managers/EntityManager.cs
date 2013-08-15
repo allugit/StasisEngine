@@ -38,8 +38,15 @@ namespace StasisGame.Managers
         // Create an entity
         public int createEntity(string levelUid)
         {
-            int id = getNewId(levelUid);
+            int id;
+
+            if (!_entities.ContainsKey(levelUid))
+            {
+                _entities.Add(levelUid, new Dictionary<int, List<IComponent>>());
+            }
+            id = getNewId(levelUid);
             _entities[levelUid].Add(id, new List<IComponent>());
+            
             return id;
         }
 

@@ -38,10 +38,12 @@ namespace StasisGame
         private SystemManager _systemManager;
         private EntityManager _entityManager;
         private Random _ropeTextureRNG;
-        private Dictionary<int, Dictionary<int, GateOutputComponent>> _actorIdEntityIdGateComponentMap;     // key 1) actor id needing to be listened to
-                                                                                                            // key 2) output gate's entity id
-        private Dictionary<int, Dictionary<int, GateOutputComponent>> _circuitIdGateIdGateComponentMap;     // key 1) circuit actor id
-                                                                                                            // key 2) gate id
+        private Dictionary<string, Dictionary<int, Dictionary<int, GateOutputComponent>>> _levelUidActorIdEntityIdGateComponentMap;     // key 1) level uid
+                                                                                                                                        // key 2) actor id needing to be listened to
+                                                                                                                                        // key 3) output gate's entity id
+        private Dictionary<string, Dictionary<int, Dictionary<int, GateOutputComponent>>> _levelUidCircuitIdGateIdGateComponentMap;     // key 1) level uid
+                                                                                                                                        // key 2) circuit actor id
+                                                                                                                                        // key 3) gate id
 
         // Constructor
         public EntityFactory(SystemManager systemManager, EntityManager entityManager)
@@ -49,8 +51,8 @@ namespace StasisGame
             _systemManager = systemManager;
             _entityManager = entityManager;
             _ropeTextureRNG = new Random();
-            _actorIdEntityIdGateComponentMap = new Dictionary<int, Dictionary<int, GateOutputComponent>>();
-            _circuitIdGateIdGateComponentMap = new Dictionary<int, Dictionary<int, GateOutputComponent>>();
+            _levelUidActorIdEntityIdGateComponentMap = new Dictionary<string, Dictionary<int, Dictionary<int, GateOutputComponent>>>();
+            _levelUidCircuitIdGateIdGateComponentMap = new Dictionary<string, Dictionary<int, Dictionary<int, GateOutputComponent>>>();
         }
 
         // convertPolygonToCCW -- Take a list of polygon points and make sure they're wound in a counter clockwise direction
@@ -70,8 +72,8 @@ namespace StasisGame
         // reset -- Clears information used to create entities from the level's xml data. Used between level loads.
         public void reset()
         {
-            _actorIdEntityIdGateComponentMap.Clear();
-            _circuitIdGateIdGateComponentMap.Clear();
+            _levelUidActorIdEntityIdGateComponentMap.Clear();
+            _levelUidCircuitIdGateIdGateComponentMap.Clear();
         }
 
         // expandLevelBoundary
@@ -81,10 +83,19 @@ namespace StasisGame
         }
 
         // createOutputGate
-        public void createOutputGates(XElement data)
+        public void createOutputGates(string levelUid, XElement data)
         {
-            _actorIdEntityIdGateComponentMap.Clear();
-            _circuitIdGateIdGateComponentMap.Clear();
+            _levelUidActorIdEntityIdGateComponentMap.Clear();
+            _levelUidCircuitIdGateIdGateComponentMap.Clear();
+
+            if (!_levelUidActorIdEntityIdGateComponentMap.ContainsKey(levelUid))
+            {
+                _levelUidActorIdEntityIdGateComponentMap.Add(levelUid, new Dictionary<int, Dictionary<int, GateOutputComponent>>());
+            }
+            if (!_levelUidCircuitIdGateIdGateComponentMap.ContainsKey(levelUid))
+            {
+                _levelUidCircuitIdGateIdGateComponentMap.Add(levelUid, new Dictionary<int, Dictionary<int, GateOutputComponent>>());
+            }
 
             foreach (XElement circuitActorData in (from element in data.Elements("Actor") where element.Attribute("type").Value == "Circuit" select element))
             {
@@ -96,32 +107,32 @@ namespace StasisGame
                     int gateId = int.Parse(connectionData.Attribute("gate_id").Value);
                     GameEventType onEnabledEvent = (GameEventType)Loader.loadEnum(typeof(GameEventType), connectionData.Attribute("on_enabled_event"), 0);
                     GameEventType onDisabledEvent = (GameEventType)Loader.loadEnum(typeof(GameEventType), connectionData.Attribute("on_disabled_event"), 0);
-                    int entityId = _entityManager.createEntity();
+                    int entityId = _entityManager.createEntity(levelUid);
                     GateOutputComponent gateOutputComponent = new GateOutputComponent();
 
                     gateOutputComponent.onEnabledEvent = onEnabledEvent;
                     gateOutputComponent.onDisabledEvent = onDisabledEvent;
                     gateOutputComponent.entityId = entityId;
 
-                    if (!_actorIdEntityIdGateComponentMap.ContainsKey(actorIdToListenTo))
-                        _actorIdEntityIdGateComponentMap.Add(actorIdToListenTo, new Dictionary<int, GateOutputComponent>());
-                    if (!_actorIdEntityIdGateComponentMap[actorIdToListenTo].ContainsKey(entityId))
-                        _actorIdEntityIdGateComponentMap[actorIdToListenTo].Add(entityId, gateOutputComponent);
+                    if (!_levelUidActorIdEntityIdGateComponentMap[levelUid].ContainsKey(actorIdToListenTo))
+                        _levelUidActorIdEntityIdGateComponentMap[levelUid].Add(actorIdToListenTo, new Dictionary<int, GateOutputComponent>());
+                    if (!_levelUidActorIdEntityIdGateComponentMap[levelUid][actorIdToListenTo].ContainsKey(entityId))
+                        _levelUidActorIdEntityIdGateComponentMap[levelUid][actorIdToListenTo].Add(entityId, gateOutputComponent);
 
-                    if (!_circuitIdGateIdGateComponentMap.ContainsKey(circuitId))
-                        _circuitIdGateIdGateComponentMap.Add(circuitId, new Dictionary<int, GateOutputComponent>());
-                    if (!_circuitIdGateIdGateComponentMap[circuitId].ContainsKey(gateId))
-                        _circuitIdGateIdGateComponentMap[circuitId][gateId] = gateOutputComponent;
+                    if (!_levelUidCircuitIdGateIdGateComponentMap[levelUid].ContainsKey(circuitId))
+                        _levelUidCircuitIdGateIdGateComponentMap[levelUid].Add(circuitId, new Dictionary<int, GateOutputComponent>());
+                    if (!_levelUidCircuitIdGateIdGateComponentMap[levelUid][circuitId].ContainsKey(gateId))
+                        _levelUidCircuitIdGateIdGateComponentMap[levelUid][circuitId][gateId] = gateOutputComponent;
 
-                    _entityManager.addComponent(entityId, gateOutputComponent);
+                    _entityManager.addComponent(levelUid, entityId, gateOutputComponent);
                 }
             }
         }
 
         // createGroundBody -- Creates a body that is used throughout the game as an anchor for joints (TODO: Might not be necessary with Farseer)
-        public Body createGroundBody(World world)
+        public Body createGroundBody(string levelUid, World world)
         {
-            int groundId = _entityManager.createEntity(10000);
+            int groundId = _entityManager.createEntity(levelUid, 10000);
             Body groundBody = BodyFactory.CreateBody(world, groundId);
             Fixture fixture;
 
@@ -129,10 +140,10 @@ namespace StasisGame
             fixture = groundBody.CreateFixture(new CircleShape(0.1f, 1f));
             fixture.IsSensor = true;
 
-            _entityManager.addComponent(groundId, new GroundBodyComponent(groundBody));
-            _entityManager.addComponent(groundId, new IgnoreRopeRaycastComponent());
-            _entityManager.addComponent(groundId, new IgnoreTreeCollisionComponent());
-            _entityManager.addComponent(groundId, new SkipFluidResolutionComponent());
+            _entityManager.addComponent(levelUid, groundId, new GroundBodyComponent(groundBody));
+            _entityManager.addComponent(levelUid, groundId, new IgnoreRopeRaycastComponent());
+            _entityManager.addComponent(levelUid, groundId, new IgnoreTreeCollisionComponent());
+            _entityManager.addComponent(levelUid, groundId, new SkipFluidResolutionComponent());
 
             return groundBody;
         }
@@ -193,11 +204,11 @@ namespace StasisGame
         }
 
         // createBox -- Creates a box from supplied data
-        public void createBox(XElement data)
+        public void createBox(string levelUid, XElement data)
         {
             World world = (_systemManager.getSystem(SystemType.Physics) as PhysicsSystem).world;
             int actorId = int.Parse(data.Attribute("id").Value);
-            int entityId = _entityManager.createEntity(actorId);
+            int entityId = _entityManager.createEntity(levelUid, actorId);
             float layerDepth = Loader.loadFloat(data.Attribute("layer_depth"), 0.1f);
             Body body;
             Fixture fixture;
@@ -232,10 +243,10 @@ namespace StasisGame
 
             // Add components
             if (bodyType != BodyType.Static)
-                _entityManager.addComponent(entityId, new ParticleInfluenceComponent(ParticleInfluenceType.Physical));
-            _entityManager.addComponent(entityId, bodyRenderComponent);
-            _entityManager.addComponent(entityId, new PhysicsComponent(body));
-            _entityManager.addComponent(entityId, new WorldPositionComponent(body.Position));
+                _entityManager.addComponent(levelUid, entityId, new ParticleInfluenceComponent(ParticleInfluenceType.Physical));
+            _entityManager.addComponent(levelUid, entityId, bodyRenderComponent);
+            _entityManager.addComponent(levelUid, entityId, new PhysicsComponent(body));
+            _entityManager.addComponent(levelUid, entityId, new WorldPositionComponent(body.Position));
 
             // Expand level boundary
             body.GetTransform(out xf);
@@ -289,11 +300,11 @@ namespace StasisGame
         }
 
         // createCircle -- Creates a circle entity
-        public void createCircle(XElement data)
+        public void createCircle(string levelUid, XElement data)
         {
             World world = (_systemManager.getSystem(SystemType.Physics) as PhysicsSystem).world;
             int actorId = int.Parse(data.Attribute("id").Value);
-            int entityId = _entityManager.createEntity(actorId);
+            int entityId = _entityManager.createEntity(levelUid, actorId);
             Body body;
             Fixture fixture;
             //BodyDef bodyDef = new BodyDef();
@@ -325,17 +336,17 @@ namespace StasisGame
 
             // Add components
             if (bodyType != BodyType.Static)
-                _entityManager.addComponent(entityId, new ParticleInfluenceComponent(ParticleInfluenceType.Physical));
-            _entityManager.addComponent(entityId, new PhysicsComponent(body));
-            _entityManager.addComponent(entityId, bodyRenderComponent);
-            _entityManager.addComponent(entityId, new WorldPositionComponent(body.Position));
+                _entityManager.addComponent(levelUid, entityId, new ParticleInfluenceComponent(ParticleInfluenceType.Physical));
+            _entityManager.addComponent(levelUid, entityId, new PhysicsComponent(body));
+            _entityManager.addComponent(levelUid, entityId, bodyRenderComponent);
+            _entityManager.addComponent(levelUid, entityId, new WorldPositionComponent(body.Position));
 
             // Expand level boundary
             expandLevelBoundary(body.Position + new Vector2(-circleShape.Radius, -circleShape.Radius));
             expandLevelBoundary(body.Position + new Vector2(circleShape.Radius, circleShape.Radius));
         }
 
-        public void createFluid(XElement data)
+        public void createFluid(string levelUid, XElement data)
         {
             FluidSystem fluidSystem = (FluidSystem)_systemManager.getSystem(SystemType.Fluid);
             List<Vector2> polygonPoints = new List<Vector2>();
@@ -350,12 +361,12 @@ namespace StasisGame
         }
 
         // createWorldItem -- Create an item that exists in the world (as opposed to an item in the inventory)
-        public void createWorldItem(XElement data)
+        public void createWorldItem(string levelUid, XElement data)
         {
             World world = (_systemManager.getSystem(SystemType.Physics) as PhysicsSystem).world;
             RenderSystem renderSystem = _systemManager.getSystem(SystemType.Render) as RenderSystem;
             int actorId = int.Parse(data.Attribute("id").Value);
-            int entityId = _entityManager.createEntity(actorId);
+            int entityId = _entityManager.createEntity(levelUid, actorId);
             string itemUID = data.Attribute("item_uid").Value;
             Body body;
             Fixture fixture;
@@ -383,11 +394,11 @@ namespace StasisGame
                 (ushort)CollisionCategory.Explosion;
 
             // Add components
-            _entityManager.addComponent(entityId, new ItemComponent(itemDefinition, itemState, ResourceManager.getTexture(itemDefinition.inventoryTextureUid)));
-            _entityManager.addComponent(entityId, new PhysicsComponent(body));
-            _entityManager.addComponent(entityId, new PrimitivesRenderComponent(renderSystem.createSpritePrimitiveObject(worldTexture, body.Position, new Vector2(worldTexture.Width, worldTexture.Height) / 2f, body.Rotation, 1f, layerDepth)));
-            _entityManager.addComponent(entityId, new IgnoreTreeCollisionComponent());
-            _entityManager.addComponent(entityId, new WorldPositionComponent(body.Position));
+            _entityManager.addComponent(levelUid, entityId, new ItemComponent(itemDefinition, itemState, ResourceManager.getTexture(itemDefinition.inventoryTextureUid)));
+            _entityManager.addComponent(levelUid, entityId, new PhysicsComponent(body));
+            _entityManager.addComponent(levelUid, entityId, new PrimitivesRenderComponent(renderSystem.createSpritePrimitiveObject(worldTexture, body.Position, new Vector2(worldTexture.Width, worldTexture.Height) / 2f, body.Rotation, 1f, layerDepth)));
+            _entityManager.addComponent(levelUid, entityId, new IgnoreTreeCollisionComponent());
+            _entityManager.addComponent(levelUid, entityId, new WorldPositionComponent(body.Position));
         }
 
         // findRopeTarget -- Tries to find a rope target by raycasting
@@ -558,7 +569,7 @@ namespace StasisGame
         }
 
         // createRope -- Creates a rope from xml information loaded from level data.
-        public int createRope(XElement data)
+        public int createRope(string levelUid, XElement data)
         {
             RopeMaterial ropeMaterial = new RopeMaterial(ResourceManager.getResource(data.Attribute("rope_material_uid").Value));
             bool doubleAnchor = Loader.loadBool(data.Attribute("double_anchor"), false);
@@ -567,15 +578,15 @@ namespace StasisGame
             int entityId = Loader.loadInt(data.Attribute("id"), -1);
 
             if (doubleAnchor)
-                entityId = createDoubleAnchorRope(a, b, ropeMaterial, entityId);
+                entityId = createDoubleAnchorRope(levelUid, a, b, ropeMaterial, entityId);
             else
-                entityId = createSingleAnchorRope(a, b, ropeMaterial, false, entityId);
+                entityId = createSingleAnchorRope(levelUid, a, b, ropeMaterial, false, entityId);
 
             return entityId;
         }
 
         // createSingleAnchorRope -- Creates a rope with one anchor
-        public int createSingleAnchorRope(Vector2 a, Vector2 b, RopeMaterial ropeMaterial, bool destroyAfterRelease, int entityId = -1)
+        public int createSingleAnchorRope(string levelUid, Vector2 a, Vector2 b, RopeMaterial ropeMaterial, bool destroyAfterRelease, int entityId = -1)
         {
             /*
              * - Raycast from A to B
@@ -636,15 +647,15 @@ namespace StasisGame
             tail = head.tail;
             createAnchor(tail, new Vector2(-tail.halfLength, 0), ropeTarget.fixture, ropeTarget.localPoint);
             initializeRopeMaterial(head, ropeMaterial);
-            entityId = entityId == -1 ? _entityManager.createEntity() : _entityManager.createEntity(entityId);
+            entityId = entityId == -1 ? _entityManager.createEntity(levelUid) : _entityManager.createEntity(levelUid, entityId);
 
             // Add components
             ropeComponent = new RopeComponent(head, ropeMaterial.interpolationCount, destroyAfterRelease, false, false);
-            _entityManager.addComponent(entityId, ropeComponent);
-            _entityManager.addComponent(entityId, new IgnoreTreeCollisionComponent());
-            _entityManager.addComponent(entityId, new IgnoreRopeRaycastComponent());
-            _entityManager.addComponent(entityId, new SkipFluidResolutionComponent());
-            _entityManager.addComponent(entityId, new ParticleInfluenceComponent(ParticleInfluenceType.Rope));
+            _entityManager.addComponent(levelUid, entityId, ropeComponent);
+            _entityManager.addComponent(levelUid, entityId, new IgnoreTreeCollisionComponent());
+            _entityManager.addComponent(levelUid, entityId, new IgnoreRopeRaycastComponent());
+            _entityManager.addComponent(levelUid, entityId, new SkipFluidResolutionComponent());
+            _entityManager.addComponent(levelUid, entityId, new ParticleInfluenceComponent(ParticleInfluenceType.Rope));
 
             // Finalize rope properties by giving bodies an entityId and a reference to the ropeComponent
             finalizeRopeNodes(head, entityId, ropeComponent);
@@ -653,7 +664,7 @@ namespace StasisGame
         }
 
         // createDoubleAnchorRope -- Creates a rope with two anchors
-        public int createDoubleAnchorRope(Vector2 a, Vector2 b, RopeMaterial ropeMaterial, int entityId = -1)
+        public int createDoubleAnchorRope(string levelUid, Vector2 a, Vector2 b, RopeMaterial ropeMaterial, int entityId = -1)
         {
             /*
              * - Create midpoint 'c'
@@ -760,15 +771,15 @@ namespace StasisGame
             createAnchor(head, new Vector2(head.halfLength, 0), ropeTargetA.fixture, ropeTargetA.localPoint);
             createAnchor(tail, new Vector2(-tail.halfLength, 0), ropeTargetB.fixture, ropeTargetB.localPoint);
             initializeRopeMaterial(head, ropeMaterial);
-            entityId = entityId == -1 ? _entityManager.createEntity() : _entityManager.createEntity(entityId);
+            entityId = entityId == -1 ? _entityManager.createEntity(levelUid) : _entityManager.createEntity(levelUid, entityId);
 
             // Add components
             ropeComponent = new RopeComponent(head, ropeMaterial.interpolationCount, false, false, true);
-            _entityManager.addComponent(entityId, ropeComponent);
-            _entityManager.addComponent(entityId, new IgnoreTreeCollisionComponent());
-            _entityManager.addComponent(entityId, new IgnoreRopeRaycastComponent());
-            _entityManager.addComponent(entityId, new SkipFluidResolutionComponent());
-            _entityManager.addComponent(entityId, new ParticleInfluenceComponent(ParticleInfluenceType.Rope));
+            _entityManager.addComponent(levelUid, entityId, ropeComponent);
+            _entityManager.addComponent(levelUid, entityId, new IgnoreTreeCollisionComponent());
+            _entityManager.addComponent(levelUid, entityId, new IgnoreRopeRaycastComponent());
+            _entityManager.addComponent(levelUid, entityId, new SkipFluidResolutionComponent());
+            _entityManager.addComponent(levelUid, entityId, new ParticleInfluenceComponent(ParticleInfluenceType.Rope));
 
             // Finalize rope properties by giving bodies an entityId and a reference to the ropeComponent
             finalizeRopeNodes(head, entityId, ropeComponent);
@@ -777,9 +788,9 @@ namespace StasisGame
         }
 
         // recreateRope -- Creates a new rope entity from an existing segment of rope nodes
-        public int recreateRope(RopeNode head, int interpolationCount)
+        public int recreateRope(string levelUid, RopeNode head, int interpolationCount)
         {
-            int entityId = _entityManager.createEntity();
+            int entityId = _entityManager.createEntity(levelUid);
             RopeComponent ropeComponent = new RopeComponent(head, interpolationCount, head.ropeComponent.destroyAfterRelease, head.ropeComponent.reverseClimbDirection, head.ropeComponent.doubleAnchor);
             RopeNode current = head;
 
@@ -787,11 +798,11 @@ namespace StasisGame
             finalizeRopeNodes(head, entityId, ropeComponent);
 
             // Add components
-            _entityManager.addComponent(entityId, ropeComponent);
-            _entityManager.addComponent(entityId, new IgnoreTreeCollisionComponent());
-            _entityManager.addComponent(entityId, new IgnoreRopeRaycastComponent());
-            _entityManager.addComponent(entityId, new SkipFluidResolutionComponent());
-            _entityManager.addComponent(entityId, new ParticleInfluenceComponent(ParticleInfluenceType.Rope));
+            _entityManager.addComponent(levelUid, entityId, ropeComponent);
+            _entityManager.addComponent(levelUid, entityId, new IgnoreTreeCollisionComponent());
+            _entityManager.addComponent(levelUid, entityId, new IgnoreRopeRaycastComponent());
+            _entityManager.addComponent(levelUid, entityId, new SkipFluidResolutionComponent());
+            _entityManager.addComponent(levelUid, entityId, new ParticleInfluenceComponent(ParticleInfluenceType.Rope));
 
             return entityId;
         }
@@ -831,11 +842,11 @@ namespace StasisGame
         }
 
         // createTerrain -- Creates a terrain entity
-        public void createTerrain(XElement data)
+        public void createTerrain(string levelUid, XElement data)
         {
             World world = (_systemManager.getSystem(SystemType.Physics) as PhysicsSystem).world;
             int actorId = int.Parse(data.Attribute("id").Value);
-            int entityId = _entityManager.createEntity(actorId);
+            int entityId = _entityManager.createEntity(levelUid, actorId);
             bool isWall = Loader.loadBool(data.Attribute("wall"), false);
             float layerDepth = Loader.loadFloat(data.Attribute("layer_depth"), 0.1f);
             List<Vector2> points = new List<Vector2>();
@@ -978,31 +989,31 @@ namespace StasisGame
             // Add components
             if (isWall)
             {
-                _entityManager.addComponent(entityId, new IgnoreRopeRaycastComponent());
-                _entityManager.addComponent(entityId, new WallComponent());
-                _entityManager.addComponent(entityId, new SkipFluidResolutionComponent());
+                _entityManager.addComponent(levelUid, entityId, new IgnoreRopeRaycastComponent());
+                _entityManager.addComponent(levelUid, entityId, new WallComponent());
+                _entityManager.addComponent(levelUid, entityId, new SkipFluidResolutionComponent());
             }
 
             if (bodyType != BodyType.Static)
-                _entityManager.addComponent(entityId, new ParticleInfluenceComponent(ParticleInfluenceType.Physical));
+                _entityManager.addComponent(levelUid, entityId, new ParticleInfluenceComponent(ParticleInfluenceType.Physical));
 
             if (isDestructible)
-                _entityManager.addComponent(entityId, new DestructibleGeometryComponent());
-            _entityManager.addComponent(entityId, new PhysicsComponent(body));
-            _entityManager.addComponent(entityId, new WorldPositionComponent(body.Position));
-            _entityManager.addComponent(entityId, bodyRenderComponent);
-            _entityManager.addComponent(entityId, new IgnoreTreeCollisionComponent());
+                _entityManager.addComponent(levelUid, entityId, new DestructibleGeometryComponent());
+            _entityManager.addComponent(levelUid, entityId, new PhysicsComponent(body));
+            _entityManager.addComponent(levelUid, entityId, new WorldPositionComponent(body.Position));
+            _entityManager.addComponent(levelUid, entityId, bodyRenderComponent);
+            _entityManager.addComponent(levelUid, entityId, new IgnoreTreeCollisionComponent());
 
             // Expand level boundary
             foreach (Vector2 point in points)
                 expandLevelBoundary(point);
         }
 
-        public void createTree(XElement data)
+        public void createTree(string levelUid, XElement data)
         {
             RenderSystem renderSystem = _systemManager.getSystem(SystemType.Render) as RenderSystem;
             int actorId = int.Parse(data.Attribute("id").Value);
-            int entityId = _entityManager.createEntity(actorId);
+            int entityId = _entityManager.createEntity(levelUid, actorId);
             Material barkMaterial = new Material(ResourceManager.getResource(data.Attribute("bark_material_uid").Value));
             Material leafMaterial = new Material(ResourceManager.getResource(data.Attribute("leaf_material_uid").Value));
             List<Vector2> barkPoints = new List<Vector2>();
@@ -1054,18 +1065,18 @@ namespace StasisGame
             }
 
             // Add components
-            _entityManager.addComponent(entityId, new TreeComponent(tree));
-            _entityManager.addComponent(entityId, new WorldPositionComponent(tree.position));
+            _entityManager.addComponent(levelUid, entityId, new TreeComponent(tree));
+            _entityManager.addComponent(levelUid, entityId, new WorldPositionComponent(tree.position));
         }
 
         // createRevoluteJoint
-        public void createRevoluteJoint(XElement data)
+        public void createRevoluteJoint(string levelUid, XElement data)
         {
             EventSystem eventSystem = _systemManager.getSystem(SystemType.Event) as EventSystem;
             World world = (_systemManager.getSystem(SystemType.Physics) as PhysicsSystem).world;
             int actorId = int.Parse(data.Attribute("id").Value);
             int entityId;
-            GroundBodyComponent groundBodyComponent = _entityManager.getComponents<GroundBodyComponent>(ComponentType.GroundBody)[0];
+            GroundBodyComponent groundBodyComponent = _entityManager.getComponents<GroundBodyComponent>(levelUid, ComponentType.GroundBody)[0];
             Vector2 jointWorldPosition = Loader.loadVector2(data.Attribute("position"), Vector2.Zero);
             //RevoluteJointDef jointDef = new RevoluteJointDef();
             Body bodyA = null;
@@ -1078,8 +1089,8 @@ namespace StasisGame
             bool enableMotor = bool.Parse(data.Attribute("enable_motor").Value);
             RevoluteJoint joint;
             RevoluteComponent revoluteJointComponent;
-            PhysicsComponent physicsComponentA = _entityManager.getComponent(int.Parse(data.Attribute("actor_a").Value), ComponentType.Physics) as PhysicsComponent;
-            PhysicsComponent physicsComponentB = _entityManager.getComponent(int.Parse(data.Attribute("actor_b").Value), ComponentType.Physics) as PhysicsComponent;
+            PhysicsComponent physicsComponentA = _entityManager.getComponent(levelUid, int.Parse(data.Attribute("actor_a").Value), ComponentType.Physics) as PhysicsComponent;
+            PhysicsComponent physicsComponentB = _entityManager.getComponent(levelUid, int.Parse(data.Attribute("actor_b").Value), ComponentType.Physics) as PhysicsComponent;
 
             if (physicsComponentA == null || physicsComponentB == null)
                 return;
@@ -1096,17 +1107,17 @@ namespace StasisGame
             joint.MaxMotorTorque = maxMotorTorque;
             joint.MotorSpeed = motorSpeed;
             revoluteJointComponent = new RevoluteComponent(joint);
-            entityId = _entityManager.createEntity(actorId);
+            entityId = _entityManager.createEntity(levelUid, actorId);
 
             // Add components
-            _entityManager.addComponent(entityId, revoluteJointComponent);
+            _entityManager.addComponent(levelUid, entityId, revoluteJointComponent);
 
             // Connect to circuit gate if necessary
-            if (_actorIdEntityIdGateComponentMap.ContainsKey(actorId))
+            if (_levelUidActorIdEntityIdGateComponentMap[levelUid].ContainsKey(actorId))
             {
-                foreach (int gateEntityId in _actorIdEntityIdGateComponentMap[actorId].Keys)
+                foreach (int gateEntityId in _levelUidActorIdEntityIdGateComponentMap[levelUid][actorId].Keys)
                 {
-                    GateOutputComponent gateOutputComponent = _actorIdEntityIdGateComponentMap[actorId][gateEntityId];
+                    GateOutputComponent gateOutputComponent = _levelUidActorIdEntityIdGateComponentMap[levelUid][actorId][gateEntityId];
                     eventSystem.addHandler(gateOutputComponent.onEnabledEvent, gateEntityId, revoluteJointComponent);
                     eventSystem.addHandler(gateOutputComponent.onDisabledEvent, gateEntityId, revoluteJointComponent);
                 }
@@ -1114,13 +1125,13 @@ namespace StasisGame
         }
 
         // createPrismaticJoint
-        public void createPrismaticJoint(XElement data)
+        public void createPrismaticJoint(string levelUid, XElement data)
         {
             EventSystem eventSystem = _systemManager.getSystem(SystemType.Event) as EventSystem;
             World world = (_systemManager.getSystem(SystemType.Physics) as PhysicsSystem).world;
             int actorId = int.Parse(data.Attribute("id").Value);
             int entityId;
-            GroundBodyComponent groundBodyComponent = _entityManager.getComponents<GroundBodyComponent>(ComponentType.GroundBody)[0];
+            GroundBodyComponent groundBodyComponent = _entityManager.getComponents<GroundBodyComponent>(levelUid, ComponentType.GroundBody)[0];
             Vector2 jointWorldPosition = Loader.loadVector2(data.Attribute("position"), Vector2.Zero);
             Vector2 axis = Loader.loadVector2(data.Attribute("axis"), new Vector2(1, 0));
             float upperLimit = Loader.loadFloat(data.Attribute("upper_limit"), 0f);
@@ -1134,8 +1145,8 @@ namespace StasisGame
             Body bodyB = null;
             PrismaticJointComponent prismaticJointComponent;
             PrismaticJoint joint;
-            PhysicsComponent physicsComponentA = _entityManager.getComponent(int.Parse(data.Attribute("actor_a").Value), ComponentType.Physics) as PhysicsComponent;
-            PhysicsComponent physicsComponentB = _entityManager.getComponent(int.Parse(data.Attribute("actor_b").Value), ComponentType.Physics) as PhysicsComponent;
+            PhysicsComponent physicsComponentA = _entityManager.getComponent(levelUid, int.Parse(data.Attribute("actor_a").Value), ComponentType.Physics) as PhysicsComponent;
+            PhysicsComponent physicsComponentB = _entityManager.getComponent(levelUid, int.Parse(data.Attribute("actor_b").Value), ComponentType.Physics) as PhysicsComponent;
 
             bodyA = physicsComponentA.body;
             bodyB = physicsComponentB.body;
@@ -1148,18 +1159,18 @@ namespace StasisGame
             joint.MotorSpeed = motorSpeed;
             joint.MaxMotorForce = autoCalculateForce ? bodyA.Mass * world.Gravity.Length() + buttonForceDifference : maxMotorForce;
 
-            entityId = _entityManager.createEntity(actorId);
+            entityId = _entityManager.createEntity(levelUid, actorId);
             prismaticJointComponent = new PrismaticJointComponent(joint);
 
             // Add components
-            _entityManager.addComponent(entityId, prismaticJointComponent);
+            _entityManager.addComponent(levelUid, entityId, prismaticJointComponent);
 
             // Connect to circuit gate if necessary
-            if (_actorIdEntityIdGateComponentMap.ContainsKey(actorId))
+            if (_levelUidActorIdEntityIdGateComponentMap[levelUid].ContainsKey(actorId))
             {
-                foreach (int gateEntityId in _actorIdEntityIdGateComponentMap[actorId].Keys)
+                foreach (int gateEntityId in _levelUidActorIdEntityIdGateComponentMap[levelUid][actorId].Keys)
                 {
-                    GateOutputComponent gateOutputComponent = _actorIdEntityIdGateComponentMap[actorId][gateEntityId];
+                    GateOutputComponent gateOutputComponent = _levelUidActorIdEntityIdGateComponentMap[levelUid][actorId][gateEntityId];
                     eventSystem.addHandler(gateOutputComponent.onEnabledEvent, gateEntityId, prismaticJointComponent);
                     eventSystem.addHandler(gateOutputComponent.onDisabledEvent, gateEntityId, prismaticJointComponent);
                 }
@@ -1167,11 +1178,11 @@ namespace StasisGame
         }
 
         // Create circuit
-        public void createCircuit(XElement data)
+        public void createCircuit(string levelUid, XElement data)
         {
             EventSystem eventSystem = _systemManager.getSystem(SystemType.Event) as EventSystem;
             int actorId = int.Parse(data.Attribute("id").Value);
-            int entityId = _entityManager.createEntity(actorId);
+            int entityId = _entityManager.createEntity(levelUid, actorId);
             string circuitUID = data.Attribute("circuit_uid").Value;
             XElement circuitData = ResourceManager.getResource(circuitUID);
             Circuit circuit = new Circuit(circuitData);
@@ -1186,14 +1197,14 @@ namespace StasisGame
                     return null;
                 };
 
-            _entityManager.addComponent(entityId, circuitComponent);
+            _entityManager.addComponent(levelUid, entityId, circuitComponent);
 
             foreach (Gate gate in circuit.gates)
             {
                 if (gate.type == "output")
                 {
                     OutputGate outputGate = gate as OutputGate;
-                    GateOutputComponent gateOutputComponent = _circuitIdGateIdGateComponentMap[actorId][gate.id];
+                    GateOutputComponent gateOutputComponent = _levelUidCircuitIdGateIdGateComponentMap[levelUid][actorId][gate.id];
                     gateOutputComponent.outputGate = outputGate;
                     outputGate.entityId = gateOutputComponent.entityId;
                 }
@@ -1222,7 +1233,7 @@ namespace StasisGame
         }
 
         // Create collision filter -- Allows pairs of entities' bodies to ignore each other
-        public void createCollisionFilter(XElement data)
+        public void createCollisionFilter(string levelUid, XElement data)
         {
             int actorA = int.Parse(data.Attribute("actor_a").Value);
             int actorB = int.Parse(data.Attribute("actor_b").Value);
@@ -1230,7 +1241,7 @@ namespace StasisGame
             int entityB = actorB;
             Action<int, int> addEntityToIgnored = (ignored, ignorer) =>
                 {
-                    List<IComponent> components = _entityManager.getEntityComponents(ignorer);
+                    List<IComponent> components = _entityManager.getEntityComponents(levelUid, ignorer);
 
                     foreach (IComponent component in components)
                     {
@@ -1272,13 +1283,13 @@ namespace StasisGame
         }
 
         // createRegionGoal -- Creates a polygon that triggers an event when the player touches it
-        public void createRegionGoal(XElement data)
+        public void createRegionGoal(string levelUid, XElement data)
         {
             LevelSystem levelSystem = _systemManager.getSystem(SystemType.Level) as LevelSystem;
             RegionGoalComponent regionGoalComponent = new RegionGoalComponent();
             World world = (_systemManager.getSystem(SystemType.Physics) as PhysicsSystem).world;
             int actorId = int.Parse(data.Attribute("id").Value);
-            int entityId = _entityManager.createEntity(actorId);
+            int entityId = _entityManager.createEntity(levelUid, actorId);
             List<Vector2> points = new List<Vector2>();
             List<PolygonPoint> P2TPoints = new List<PolygonPoint>();
             Polygon polygon;
@@ -1323,11 +1334,11 @@ namespace StasisGame
             body.Position = center;
 
             // Add components
-            _entityManager.addComponent(entityId, new PhysicsComponent(body));
-            _entityManager.addComponent(entityId, regionGoalComponent);
-            _entityManager.addComponent(entityId, new WorldPositionComponent(body.Position));
-            _entityManager.addComponent(entityId, new IgnoreRopeRaycastComponent());
-            _entityManager.addComponent(entityId, new SkipFluidResolutionComponent());
+            _entityManager.addComponent(levelUid, entityId, new PhysicsComponent(body));
+            _entityManager.addComponent(levelUid, entityId, regionGoalComponent);
+            _entityManager.addComponent(levelUid, entityId, new WorldPositionComponent(body.Position));
+            _entityManager.addComponent(levelUid, entityId, new IgnoreRopeRaycastComponent());
+            _entityManager.addComponent(levelUid, entityId, new SkipFluidResolutionComponent());
 
             // Expand level boundary
             foreach (Vector2 point in points)
@@ -1335,12 +1346,12 @@ namespace StasisGame
         }
 
         // createDynamite
-        public int createDynamite(Vector2 position, Vector2 force)
+        public int createDynamite(string levelUid, Vector2 position, Vector2 force)
         {
             World world = (_systemManager.getSystem(SystemType.Physics) as PhysicsSystem).world;
             RenderSystem renderSystem = _systemManager.getSystem(SystemType.Render) as RenderSystem;
             Texture2D worldTexture = ResourceManager.getTexture("dynamite");
-            int entityId = _entityManager.createEntity();
+            int entityId = _entityManager.createEntity(levelUid);
             Body body = BodyFactory.CreateBody(world, entityId);
             PolygonShape shape = new PolygonShape(1f);
             Fixture fixture;
@@ -1360,23 +1371,23 @@ namespace StasisGame
             body.ApplyForce(force, position);
 
             // Add components
-            _entityManager.addComponent(entityId, new SkipFluidResolutionComponent());
-            _entityManager.addComponent(entityId, new PhysicsComponent(body));
-            _entityManager.addComponent(entityId, new PrimitivesRenderComponent(renderSystem.createSpritePrimitiveObject(worldTexture, position, new Vector2(worldTexture.Width, worldTexture.Height) / 2f, body.Rotation, 1f, layerDepth)));
-            _entityManager.addComponent(entityId, new IgnoreTreeCollisionComponent());
-            _entityManager.addComponent(entityId, new IgnoreRopeRaycastComponent());
-            _entityManager.addComponent(entityId, new WorldPositionComponent(body.Position));
-            _entityManager.addComponent(entityId, new DynamiteComponent(400f, 2f, 180));
-            _entityManager.addComponent(entityId, new ParticleInfluenceComponent(ParticleInfluenceType.Dynamite));
+            _entityManager.addComponent(levelUid, entityId, new SkipFluidResolutionComponent());
+            _entityManager.addComponent(levelUid, entityId, new PhysicsComponent(body));
+            _entityManager.addComponent(levelUid, entityId, new PrimitivesRenderComponent(renderSystem.createSpritePrimitiveObject(worldTexture, position, new Vector2(worldTexture.Width, worldTexture.Height) / 2f, body.Rotation, 1f, layerDepth)));
+            _entityManager.addComponent(levelUid, entityId, new IgnoreTreeCollisionComponent());
+            _entityManager.addComponent(levelUid, entityId, new IgnoreRopeRaycastComponent());
+            _entityManager.addComponent(levelUid, entityId, new WorldPositionComponent(body.Position));
+            _entityManager.addComponent(levelUid, entityId, new DynamiteComponent(400f, 2f, 180));
+            _entityManager.addComponent(levelUid, entityId, new ParticleInfluenceComponent(ParticleInfluenceType.Dynamite));
 
             return entityId;
         }
 
         // createExplosion
-        public int createExplosion(Vector2 position, float strength, float radius)
+        public int createExplosion(string levelUid, Vector2 position, float strength, float radius)
         {
             World world = (_systemManager.getSystem(SystemType.Physics) as PhysicsSystem).world;
-            int entityId = _entityManager.createEntity();
+            int entityId = _entityManager.createEntity(levelUid);
             Body body = BodyFactory.CreateBody(world, entityId);
             CircleShape shape = new CircleShape(radius, 1f);
             Fixture fixture = body.CreateFixture(shape);
@@ -1389,20 +1400,20 @@ namespace StasisGame
             fixture.CollidesWith = 0xFFFF;
 
             // Add components
-            _entityManager.addComponent(entityId, new PhysicsComponent(body));
-            _entityManager.addComponent(entityId, new WorldPositionComponent(body.Position));
-            _entityManager.addComponent(entityId, new ExplosionComponent(body.Position, strength, radius));
-            _entityManager.addComponent(entityId, new IgnoreRopeRaycastComponent());
-            _entityManager.addComponent(entityId, new ParticleInfluenceComponent(ParticleInfluenceType.Explosion));
+            _entityManager.addComponent(levelUid, entityId, new PhysicsComponent(body));
+            _entityManager.addComponent(levelUid, entityId, new WorldPositionComponent(body.Position));
+            _entityManager.addComponent(levelUid, entityId, new ExplosionComponent(body.Position, strength, radius));
+            _entityManager.addComponent(levelUid, entityId, new IgnoreRopeRaycastComponent());
+            _entityManager.addComponent(levelUid, entityId, new ParticleInfluenceComponent(ParticleInfluenceType.Explosion));
 
             return entityId;
         }
 
         // createDebris
-        public int createDebris(Fixture sourceFixture, Vector2 force, int timeToLive, RenderableTriangle renderableTriangle, Texture2D texture, float layerDepth)
+        public int createDebris(string levelUid, Fixture sourceFixture, Vector2 force, int timeToLive, RenderableTriangle renderableTriangle, Texture2D texture, float layerDepth)
         {
             World world = (_systemManager.getSystem(SystemType.Physics) as PhysicsSystem).world;
-            int entityId = _entityManager.createEntity();
+            int entityId = _entityManager.createEntity(levelUid);
             PolygonShape sourceShape = sourceFixture.Shape as PolygonShape;
             Body body = BodyFactory.CreateBody(world, entityId);
             PolygonShape shape = new PolygonShape(sourceShape.Density);
@@ -1441,17 +1452,17 @@ namespace StasisGame
             renderableTriangles.Add(renderableTriangle);
 
             // Add components
-            _entityManager.addComponent(entityId, new ParticleInfluenceComponent(ParticleInfluenceType.Physical));
-            _entityManager.addComponent(entityId, new PhysicsComponent(body));
-            _entityManager.addComponent(entityId, new WorldPositionComponent(body.Position));
-            _entityManager.addComponent(entityId, new PrimitivesRenderComponent(new PrimitiveRenderObject(texture, renderableTriangles, layerDepth)));
-            _entityManager.addComponent(entityId, new DebrisComponent(fixture, timeToLive, restitutionIncrement));
+            _entityManager.addComponent(levelUid, entityId, new ParticleInfluenceComponent(ParticleInfluenceType.Physical));
+            _entityManager.addComponent(levelUid, entityId, new PhysicsComponent(body));
+            _entityManager.addComponent(levelUid, entityId, new WorldPositionComponent(body.Position));
+            _entityManager.addComponent(levelUid, entityId, new PrimitivesRenderComponent(new PrimitiveRenderObject(texture, renderableTriangles, layerDepth)));
+            _entityManager.addComponent(levelUid, entityId, new DebrisComponent(fixture, timeToLive, restitutionIncrement));
 
             return entityId;
         }
 
         // createDecal -- Used to determine which decal to create
-        public int createDecal(XElement data)
+        public int createDecal(string levelUid, XElement data)
         {
             string decalUID = data.Attribute("decal_uid").Value;
             Vector2 position = Loader.loadVector2(data.Attribute("position"), Vector2.Zero);
@@ -1462,22 +1473,22 @@ namespace StasisGame
             switch (decalUID)
             {
                 case "blacksmith_hut":
-                    entityId = createBlacksmithHut(position, angle, layerDepth);
+                    entityId = createBlacksmithHut(levelUid, position, angle, layerDepth);
                     break;
                 case "carpenter_hut":
-                    entityId = createCarpenterHut(position, angle, layerDepth);
+                    entityId = createCarpenterHut(levelUid, position, angle, layerDepth);
                     break;
                 case "door_1":
-                    entityId = createDoor("door_1", position, angle, layerDepth);
+                    entityId = createDoor(levelUid, "door_1", position, angle, layerDepth);
                     break;
                 case "door_2":
-                    entityId = createDoor("door_2", position, angle, layerDepth);
+                    entityId = createDoor(levelUid, "door_2", position, angle, layerDepth);
                     break;
                 case "rose_window_1":
-                    entityId = createTreeWindow("rose_window_1", position, angle, layerDepth);
+                    entityId = createTreeWindow(levelUid, "rose_window_1", position, angle, layerDepth);
                     break;
                 case "dagny_hut":
-                    entityId = createDagnyHut(position, angle, layerDepth);
+                    entityId = createDagnyHut(levelUid, position, angle, layerDepth);
                     break;
             }
 
@@ -1485,76 +1496,76 @@ namespace StasisGame
         }
 
         // createBlacksmithHut
-        public int createBlacksmithHut(Vector2 position, float angle, float layerDepth)
+        public int createBlacksmithHut(string levelUid, Vector2 position, float angle, float layerDepth)
         {
             RenderSystem renderSystem = _systemManager.getSystem(SystemType.Render) as RenderSystem;
-            int entityId = _entityManager.createEntity();
+            int entityId = _entityManager.createEntity(levelUid);
             Texture2D texture = ResourceManager.getTexture("blacksmith_hut");
             Vector2 origin = new Vector2(texture.Width, texture.Height) / 2f;
 
-            _entityManager.addComponent(entityId, new PrimitivesRenderComponent(renderSystem.createSpritePrimitiveObject(texture, position, new Vector2(texture.Width / 2f, texture.Height), angle, 1f, layerDepth)));
+            _entityManager.addComponent(levelUid, entityId, new PrimitivesRenderComponent(renderSystem.createSpritePrimitiveObject(texture, position, new Vector2(texture.Width / 2f, texture.Height), angle, 1f, layerDepth)));
 
             return entityId;
         }
 
         // createDoor
-        public int createDoor(string textureUID, Vector2 position, float angle, float layerDepth)
+        public int createDoor(string levelUid, string textureUID, Vector2 position, float angle, float layerDepth)
         {
             RenderSystem renderSystem = _systemManager.getSystem(SystemType.Render) as RenderSystem;
-            int entityId = _entityManager.createEntity();
+            int entityId = _entityManager.createEntity(levelUid);
             Texture2D texture = ResourceManager.getTexture(textureUID);
             Vector2 origin = new Vector2(texture.Width / 2f, texture.Height);
 
-            _entityManager.addComponent(entityId, new PrimitivesRenderComponent(renderSystem.createSpritePrimitiveObject(texture, position, origin, angle, 1f, layerDepth)));
-            _entityManager.addComponent(entityId, new WorldPositionComponent(position));
+            _entityManager.addComponent(levelUid, entityId, new PrimitivesRenderComponent(renderSystem.createSpritePrimitiveObject(texture, position, origin, angle, 1f, layerDepth)));
+            _entityManager.addComponent(levelUid, entityId, new WorldPositionComponent(position));
 
             return entityId;
         }
 
         // createCarpenterHut
-        public int createCarpenterHut(Vector2 position, float angle, float layerDepth)
+        public int createCarpenterHut(string levelUid, Vector2 position, float angle, float layerDepth)
         {
             RenderSystem renderSystem = _systemManager.getSystem(SystemType.Render) as RenderSystem;
-            int entityId = _entityManager.createEntity();
+            int entityId = _entityManager.createEntity(levelUid);
             Texture2D texture = ResourceManager.getTexture("carpenter_hut");
             Vector2 textureOffset = new Vector2(texture.Width / 2f, texture.Height);
             Vector2 origin = new Vector2(texture.Width, texture.Height) / 2f;
 
-            _entityManager.addComponent(entityId, new PrimitivesRenderComponent(renderSystem.createSpritePrimitiveObject(texture, position, textureOffset, angle, 1f, layerDepth)));
-            _entityManager.addComponent(entityId, new IgnoreTreeCollisionComponent());
+            _entityManager.addComponent(levelUid, entityId, new PrimitivesRenderComponent(renderSystem.createSpritePrimitiveObject(texture, position, textureOffset, angle, 1f, layerDepth)));
+            _entityManager.addComponent(levelUid, entityId, new IgnoreTreeCollisionComponent());
 
             return entityId;
         }
 
         // createTreeWindow -- Creates a window decal and attaches it to a metamer
-        public int createTreeWindow(string textureUID, Vector2 position, float angle, float layerDepth)
+        public int createTreeWindow(string levelUid, string textureUID, Vector2 position, float angle, float layerDepth)
         {
             RenderSystem renderSystem = _systemManager.getSystem(SystemType.Render) as RenderSystem;
-            int entityId = _entityManager.createEntity();
+            int entityId = _entityManager.createEntity(levelUid);
             Texture2D texture = ResourceManager.getTexture(textureUID);
             Vector2 origin = new Vector2(texture.Width, texture.Height) / 2f;
             Metamer metamer = (_systemManager.getSystem(SystemType.Tree) as TreeSystem).findMetamer(position);
             System.Diagnostics.Debug.Assert(metamer != null);
 
-            _entityManager.addComponent(entityId, new PrimitivesRenderComponent(renderSystem.createSpritePrimitiveObject(texture, position, origin, angle, 1f, layerDepth)));
-            _entityManager.addComponent(entityId, new WorldPositionComponent(position));
-            _entityManager.addComponent(entityId, new FollowMetamerComponent(metamer));
+            _entityManager.addComponent(levelUid, entityId, new PrimitivesRenderComponent(renderSystem.createSpritePrimitiveObject(texture, position, origin, angle, 1f, layerDepth)));
+            _entityManager.addComponent(levelUid, entityId, new WorldPositionComponent(position));
+            _entityManager.addComponent(levelUid, entityId, new FollowMetamerComponent(metamer));
 
             return entityId;
         }
 
         // createDagnyHut -- Creates Dagny's hut
-        public int createDagnyHut(Vector2 position, float angle, float layerDepth)
+        public int createDagnyHut(string levelUid, Vector2 position, float angle, float layerDepth)
         {
             RenderSystem renderSystem = _systemManager.getSystem(SystemType.Render) as RenderSystem;
-            int entityId = _entityManager.createEntity();
+            int entityId = _entityManager.createEntity(levelUid);
             Texture2D texture = ResourceManager.getTexture("dagny_hut");
             Vector2 origin = new Vector2(texture.Width / 2f, texture.Height);
 
-            _entityManager.addComponent(entityId, new PrimitivesRenderComponent(renderSystem.createSpritePrimitiveObject(texture, position, origin, angle, 1f, layerDepth)));
-            _entityManager.addComponent(entityId, new WorldPositionComponent(position));
-            _entityManager.addComponent(entityId, new TooltipComponent("[Use] Enter Dagny's House", position, 1.2f));
-            _entityManager.addComponent(entityId, new LevelTransitionComponent("dagny_house", position, 1.2f, true));
+            _entityManager.addComponent(levelUid, entityId, new PrimitivesRenderComponent(renderSystem.createSpritePrimitiveObject(texture, position, origin, angle, 1f, layerDepth)));
+            _entityManager.addComponent(levelUid, entityId, new WorldPositionComponent(position));
+            _entityManager.addComponent(levelUid, entityId, new TooltipComponent("[Use] Enter Dagny's House", position, 1.2f));
+            _entityManager.addComponent(levelUid, entityId, new LevelTransitionComponent("dagny_house", position, 1.2f, true));
 
             return entityId;
         }

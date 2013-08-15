@@ -29,12 +29,13 @@ namespace StasisGame.Systems
         {
             if (!_paused || _singleStep)
             {
+                string levelUid = LevelSystem.currentLevelUid;
                 EventSystem eventSystem = _systemManager.getSystem(SystemType.Event) as EventSystem;
-                List<int> circuitEntities = _entityManager.getEntitiesPosessing(ComponentType.Circuit);
+                List<int> circuitEntities = _entityManager.getEntitiesPosessing(levelUid, ComponentType.Circuit);
 
                 for (int i = 0; i < circuitEntities.Count; i++)
                 {
-                    CircuitComponent circuitComponent = _entityManager.getComponent(circuitEntities[i], ComponentType.Circuit) as CircuitComponent;
+                    CircuitComponent circuitComponent = _entityManager.getComponent(levelUid, circuitEntities[i], ComponentType.Circuit) as CircuitComponent;
 
                     foreach (Gate gate in circuitComponent.circuit.gates)
                     {
@@ -43,7 +44,7 @@ namespace StasisGame.Systems
                             OutputGate outputGate = gate as OutputGate;
                             if (outputGate.postEvent)
                             {
-                                GateOutputComponent outputComponent = _entityManager.getComponent(outputGate.entityId, ComponentType.GateOutput) as GateOutputComponent;
+                                GateOutputComponent outputComponent = _entityManager.getComponent(levelUid, outputGate.entityId, ComponentType.GateOutput) as GateOutputComponent;
                                 GameEventType eventType = outputGate.state ? outputComponent.onEnabledEvent : outputComponent.onDisabledEvent;
                                 eventSystem.postEvent(new GameEvent(eventType, outputGate.entityId));
                             }

@@ -184,7 +184,8 @@ namespace StasisGame
             if (body == null)
             {
                 Fixture fixture;
-                int entityId = tree.treeSystem.entityManager.createEntity();
+                string levelUid = LevelSystem.currentLevelUid;
+                int entityId = tree.treeSystem.entityManager.createEntity(levelUid);
 
                 body = BodyFactory.CreateBody(tree.treeSystem.physicsSystem.world, position, entityId);
                 body.BodyType = BodyType.Dynamic;
@@ -197,8 +198,8 @@ namespace StasisGame
                 mouseJoint.MaxForce = 4000f;
 
                 tree.treeSystem.physicsSystem.world.AddJoint(mouseJoint);
-                tree.treeSystem.entityManager.addComponent(entityId, new MetamerComponent(this));
-                tree.treeSystem.entityManager.addComponent(entityId, new IgnoreRopeRaycastComponent());
+                tree.treeSystem.entityManager.addComponent(levelUid, entityId, new MetamerComponent(this));
+                tree.treeSystem.entityManager.addComponent(levelUid, entityId, new IgnoreRopeRaycastComponent());
             }
         }
 
@@ -516,6 +517,8 @@ namespace StasisGame
         // assembleShoot
         private Metamer assembleShoot()
         {
+            string levelUid = LevelSystem.currentLevelUid;
+
             // Initial metamer conditions for the head metamer
             BudType initialActiveBud = tree.maxShootLength > 1 ? BudType.LATERAL : BudType.TERMINAL;
             BudState initialTerminalBudState = tree.maxShootLength > 1 ? BudState.NODE : BudState.DORMANT;
@@ -536,7 +539,7 @@ namespace StasisGame
             tree.treeSystem.physicsSystem.world.RayCast((Fixture fixture, Vector2 point, Vector2 normal, float fraction) =>
             {
                 int entityId = (int)fixture.Body.UserData;
-                if (tree.treeSystem.entityManager.getComponent(entityId, ComponentType.IgnoreTreeCollision) != null)
+                if (tree.treeSystem.entityManager.getComponent(levelUid, entityId, ComponentType.IgnoreTreeCollision) != null)
                     return fraction;
 
                 recalculateDistance = true;
@@ -890,6 +893,8 @@ namespace StasisGame
         // resolveCollisions
         public void resolveCollisions()
         {
+            string levelUid = LevelSystem.currentLevelUid;
+
             if (mainMetamer != null)
                 mainMetamer.resolveCollisions();
             if (lateralMetamer != null)
@@ -905,7 +910,7 @@ namespace StasisGame
 
                     Body fixtureBody = fixture.Body;
                     int entityId = (int)fixtureBody.UserData;
-                    IComponent ignoreTreeCollisionComponent = tree.treeSystem.entityManager.getComponent(entityId, ComponentType.IgnoreTreeCollision);
+                    IComponent ignoreTreeCollisionComponent = tree.treeSystem.entityManager.getComponent(levelUid, entityId, ComponentType.IgnoreTreeCollision);
 
                     if (ignoreTreeCollisionComponent == null)
                     {

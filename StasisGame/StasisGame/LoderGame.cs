@@ -232,7 +232,7 @@ namespace StasisGame
             _graphics.ApplyChanges();
         }
 
-        public void loadLevel(string levelUID)
+        public void loadLevel(string levelUid)
         {
             _screenSystem.addTransition(new ScreenFadeInTransition(_loadingScreen, Color.Black, true, 0.025f, () =>
             {
@@ -242,11 +242,11 @@ namespace StasisGame
             {
                 _gameState = GameState.LoadingLevel;
                 IsFixedTimeStep = false;
-                _scriptManager.loadLevelScript(levelUID);
-                _levelSystem.loadData(levelUID);
+                _scriptManager.loadLevelScript(levelUid);
+                _levelSystem.loadAllData(levelUid);
                 _levelSystem.createLevelSystems();
-                _levelSystem.createBackgroundRenderer();
-                _loadingScreen.elementsToLoad = _levelSystem.numEntitiesToLoad;
+                _levelSystem.createBackgrounds();
+                _loadingScreen.elementsToLoad = _levelSystem.totalEntitiesCount;
                 _loadingScreen.message = "Loading entities, first pass...";
             }));
 
@@ -371,20 +371,16 @@ namespace StasisGame
 
                 case GameState.LoadingLevel:
                     _systemManager.process();
-                    if (!_levelSystem.firstPassDone)
+                    if (!_levelSystem.isFinishedLoading)
                     {
-                        _levelSystem.loadEntity();
+                        _levelSystem.load();
                     }
-                    else if (!_levelSystem.secondPassDone)
-                    {
-                        _levelSystem.loadSecondPassEntity();
-                    }
-                    else if (!_levelSystem.fullyLoaded)
+                    else if (_levelSystem.isFinishedLoading && !_levelSystem.finalized)
                     {
                         _levelSystem.relax();
                         _levelSystem.clean();
                         _levelSystem.callScripts();
-                        _levelSystem.fullyLoaded = true;
+                        _levelSystem.finalized = true;
                         _loadingScreen.message = "Starting level!";
                         _screenSystem.addTransition(new ScreenFadeOutTransition(_loadingScreen, Color.Black, true, 0.05f, null, () =>
                             {

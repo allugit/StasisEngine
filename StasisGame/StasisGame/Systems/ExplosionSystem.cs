@@ -41,15 +41,15 @@ namespace StasisGame.Systems
         }
 
         // explodeDynamite -- Creates an explosion entity and kills the dynamite entity
-        public void explodeDynamite(int entityId, DynamiteComponent dynamiteComponent)
+        public void explodeDynamite(string levelUid, int entityId, DynamiteComponent dynamiteComponent)
         {
             //WorldPositionComponent worldPositionComponent = (WorldPositionComponent)_entityManager.getComponent(entityId, ComponentType.WorldPosition);
-            PhysicsComponent physicsComponent = _entityManager.getComponent(entityId, ComponentType.Physics) as PhysicsComponent;
+            PhysicsComponent physicsComponent = _entityManager.getComponent(levelUid, entityId, ComponentType.Physics) as PhysicsComponent;
             Vector2 position = physicsComponent.body.Position;
 
             physicsComponent.body.World.RemoveBody(physicsComponent.body);
-            _entityManager.killEntity(entityId);
-            _entityManager.factory.createExplosion(position, dynamiteComponent.strength, dynamiteComponent.radius);
+            _entityManager.killEntity(levelUid, entityId);
+            _entityManager.factory.createExplosion(levelUid, position, dynamiteComponent.strength, dynamiteComponent.radius);
         }
 
         // breakFixture -- Breaks off a fixture from a body and create debris
@@ -59,40 +59,41 @@ namespace StasisGame.Systems
         }
 
         // killDebris -- Handles removal of debris entities
-        public void killDebris(int entityId)
+        public void killDebris(string levelUid, int entityId)
         {
-            PhysicsComponent physicsComponent = (PhysicsComponent)_entityManager.getComponent(entityId, ComponentType.Physics);
+            PhysicsComponent physicsComponent = (PhysicsComponent)_entityManager.getComponent(levelUid, entityId, ComponentType.Physics);
 
             physicsComponent.body.World.RemoveBody(physicsComponent.body);
-            _entityManager.killEntity(entityId);
+            _entityManager.killEntity(levelUid, entityId);
         }
 
         public void update()
         {
             if (!_paused || _singleStep)
             {
-                List<int> dynamiteEntities = _entityManager.getEntitiesPosessing(ComponentType.Dynamite);
-                List<int> explosionEntities = _entityManager.getEntitiesPosessing(ComponentType.Explosion);
-                List<int> debrisEntities = _entityManager.getEntitiesPosessing(ComponentType.Debris);
+                string levelUid = LevelSystem.currentLevelUid;
+                List<int> dynamiteEntities = _entityManager.getEntitiesPosessing(levelUid, ComponentType.Dynamite);
+                List<int> explosionEntities = _entityManager.getEntitiesPosessing(levelUid, ComponentType.Explosion);
+                List<int> debrisEntities = _entityManager.getEntitiesPosessing(levelUid, ComponentType.Debris);
 
                 // Dynamite entities
                 for (int i = 0; i < dynamiteEntities.Count; i++)
                 {
-                    DynamiteComponent dynamiteComponent = (DynamiteComponent)_entityManager.getComponent(dynamiteEntities[i], ComponentType.Dynamite);
+                    DynamiteComponent dynamiteComponent = (DynamiteComponent)_entityManager.getComponent(levelUid, dynamiteEntities[i], ComponentType.Dynamite);
 
                     if (dynamiteComponent.timeToLive > 0)
                         dynamiteComponent.timeToLive--;
                     else
-                        explodeDynamite(dynamiteEntities[i], dynamiteComponent);
+                        explodeDynamite(levelUid, dynamiteEntities[i], dynamiteComponent);
                 }
 
                 // Explosion entities -- Explosion contact logic is handled by the PhysicsSystem's contact listeners. This just removes them, since they only should exist for 1 frame
                 for (int i = 0; i < explosionEntities.Count; i++)
                 {
-                    PhysicsComponent physicsComponent = (PhysicsComponent)_entityManager.getComponent(explosionEntities[i], ComponentType.Physics);
+                    PhysicsComponent physicsComponent = (PhysicsComponent)_entityManager.getComponent(levelUid, explosionEntities[i], ComponentType.Physics);
 
                     physicsComponent.body.World.RemoveBody(physicsComponent.body);
-                    _entityManager.killEntity(explosionEntities[i]);
+                    _entityManager.killEntity(levelUid, explosionEntities[i]);
                 }
 
                 // Break fixtures and create debris
@@ -103,7 +104,7 @@ namespace StasisGame.Systems
                     if (fixture.Shape != null)
                     {
                         int entityId = (int)fixture.Body.UserData;
-                        PrimitivesRenderComponent primitiveRenderComponent = (PrimitivesRenderComponent)_entityManager.getComponent(entityId, ComponentType.PrimitivesRender);
+                        PrimitivesRenderComponent primitiveRenderComponent = (PrimitivesRenderComponent)_entityManager.getComponent(levelUid, entityId, ComponentType.PrimitivesRender);
                         PrimitiveRenderObject primitiveRenderObject = primitiveRenderComponent.primitiveRenderObjects[0];
                         RenderableTriangle triangleToRemove = null;
 
@@ -118,7 +119,7 @@ namespace StasisGame.Systems
                         if (triangleToRemove != null)
                             primitiveRenderObject.renderableTriangles.Remove(triangleToRemove);
 
-                        _entityManager.factory.createDebris(fixture, _debrisToCreate[i].force, _debrisToCreate[i].timeToLive, triangleToRemove, primitiveRenderObject.texture, primitiveRenderObject.layerDepth);
+                        _entityManager.factory.createDebris(levelUid, fixture, _debrisToCreate[i].force, _debrisToCreate[i].timeToLive, triangleToRemove, primitiveRenderObject.texture, primitiveRenderObject.layerDepth);
                         fixture.Body.DestroyFixture(fixture);
                     }
                 }
@@ -127,14 +128,14 @@ namespace StasisGame.Systems
                 // Debris
                 for (int i = 0; i < debrisEntities.Count; i++)
                 {
-                    DebrisComponent debrisComponent = (DebrisComponent)_entityManager.getComponent(debrisEntities[i], ComponentType.Debris);
+                    DebrisComponent debrisComponent = (DebrisComponent)_entityManager.getComponent(levelUid, debrisEntities[i], ComponentType.Debris);
                     debrisComponent.timeToLive--;
 
                     if (debrisComponent.restitutionCount < DebrisComponent.RESTITUTION_RESTORE_COUNT)
                         debrisComponent.fixture.Restitution = debrisComponent.fixture.Restitution + debrisComponent.restitutionIncrement;
 
                     if (debrisComponent.timeToLive < 0)
-                        killDebris(debrisEntities[i]);
+                        killDebris(levelUid, debrisEntities[i]);
                 }
             }
             _singleStep = false;

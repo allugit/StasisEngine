@@ -316,7 +316,7 @@ namespace StasisGame.Systems
         }
 
         // resolveCollisions
-        private void resolveCollision(int index)
+        private void resolveCollision(string levelUid, int index)
         {
             Particle particle = liquid[index];
 
@@ -332,8 +332,8 @@ namespace StasisGame.Systems
                 {
                     Body body = fixture.Body;
                     int entityId = (int)body.UserData;
-                    SkipFluidResolutionComponent skipFluidResolutionComponent = _entityManager.getComponent(entityId, ComponentType.SkipFluidResolution) as SkipFluidResolutionComponent;
-                    ParticleInfluenceComponent particleInfluenceComponent = _entityManager.getComponent(entityId, ComponentType.ParticleInfluence) as ParticleInfluenceComponent;
+                    SkipFluidResolutionComponent skipFluidResolutionComponent = _entityManager.getComponent(levelUid, entityId, ComponentType.SkipFluidResolution) as SkipFluidResolutionComponent;
+                    ParticleInfluenceComponent particleInfluenceComponent = _entityManager.getComponent(levelUid, entityId, ComponentType.ParticleInfluence) as ParticleInfluenceComponent;
                     bool influenceEntity = particleInfluenceComponent != null;
 
                     if (skipFluidResolutionComponent == null)
@@ -468,25 +468,25 @@ namespace StasisGame.Systems
         }
 
         // handleParticleInfluence -- Handles interaction between entities and particles
-        public void handleParticleInfluence(Particle particle)
+        public void handleParticleInfluence(string levelUid, Particle particle)
         {
             for (int i = 0; i < particle.entityInfluenceCount; i++)
             {
                 int entityId = particle.entitiesToInfluence[i];
-                ParticleInfluenceComponent particleInfluenceComponent = _entityManager.getComponent(entityId, ComponentType.ParticleInfluence) as ParticleInfluenceComponent;
+                ParticleInfluenceComponent particleInfluenceComponent = _entityManager.getComponent(levelUid, entityId, ComponentType.ParticleInfluence) as ParticleInfluenceComponent;
 
                 particleInfluenceComponent.particleCount++;
                 if (particleInfluenceComponent.type == ParticleInfluenceType.Physical)
                 {
                     // Physical body influences -- body-to-particle influences are usually already handled by resolveCollisions()
-                    PhysicsComponent physicsComponent = _entityManager.getComponent(entityId, ComponentType.Physics) as PhysicsComponent;
+                    PhysicsComponent physicsComponent = _entityManager.getComponent(levelUid, entityId, ComponentType.Physics) as PhysicsComponent;
                     
                     physicsComponent.body.ApplyLinearImpulse(particle.oldPosition - particle.position, particle.oldPosition);
                 }
                 else if (particleInfluenceComponent.type == ParticleInfluenceType.Dynamite)
                 {
                     // Dynamite influence
-                    PhysicsComponent physicsComponent = _entityManager.getComponent(entityId, ComponentType.Physics) as PhysicsComponent;
+                    PhysicsComponent physicsComponent = _entityManager.getComponent(levelUid, entityId, ComponentType.Physics) as PhysicsComponent;
                     Vector2 bodyVelocity = physicsComponent.body.LinearVelocity;
 
                     physicsComponent.body.LinearVelocity = bodyVelocity * 0.98f + particle.velocity;
@@ -496,7 +496,7 @@ namespace StasisGame.Systems
                 else if (particleInfluenceComponent.type == ParticleInfluenceType.Character)
                 {
                     // Character influence
-                    PhysicsComponent physicsComponent = _entityManager.getComponent(entityId, ComponentType.Physics) as PhysicsComponent;
+                    PhysicsComponent physicsComponent = _entityManager.getComponent(levelUid, entityId, ComponentType.Physics) as PhysicsComponent;
                     Vector2 bodyVelocity = physicsComponent.body.LinearVelocity;
 
                     physicsComponent.body.LinearVelocity = bodyVelocity * 0.95f + particle.velocity;
@@ -504,7 +504,7 @@ namespace StasisGame.Systems
                 }
                 else if (particleInfluenceComponent.type == ParticleInfluenceType.Explosion)
                 {
-                    ExplosionComponent explosionComponent = _entityManager.getComponent(entityId, ComponentType.Explosion) as ExplosionComponent;
+                    ExplosionComponent explosionComponent = _entityManager.getComponent(levelUid, entityId, ComponentType.Explosion) as ExplosionComponent;
                     Vector2 relative;
                     float distanceSq;
                     Vector2 force;
@@ -520,12 +520,12 @@ namespace StasisGame.Systems
 
 
         // updateParticle
-        public void updateParticle(int index)
+        public void updateParticle(string levelUid, int index)
         {
             Particle particle = liquid[index];
 
             // Influence actors
-            handleParticleInfluence(particle);
+            handleParticleInfluence(levelUid, particle);
 
             // Update cell
             updateParticleCell(index);
@@ -570,7 +570,8 @@ namespace StasisGame.Systems
         {
             if (!_paused || _singleStep)
             {
-                List<ParticleInfluenceComponent> particleInfluenceComponents = _entityManager.getComponents<ParticleInfluenceComponent>(ComponentType.ParticleInfluence);
+                string levelUid = LevelSystem.currentLevelUid;
+                List<ParticleInfluenceComponent> particleInfluenceComponents = _entityManager.getComponents<ParticleInfluenceComponent>(levelUid, ComponentType.ParticleInfluence);
 
                 // Reset particle influence components
                 for (int i = 0; i < particleInfluenceComponents.Count; i++)
@@ -616,7 +617,7 @@ namespace StasisGame.Systems
                 );
 
                 // Resolve collisions
-                Parallel.For(0, numActiveParticles, i => resolveCollision(activeParticles[i]));
+                Parallel.For(0, numActiveParticles, i => resolveCollision(levelUid, activeParticles[i]));
 
                 // Move particles
                 Parallel.For(0, numActiveParticles, i =>
@@ -639,7 +640,7 @@ namespace StasisGame.Systems
 
                 // Update particles
                 for (int i = numActiveParticles - 1; i >= 0; i--)
-                    updateParticle(activeParticles[i]);
+                    updateParticle(levelUid, activeParticles[i]);
             }
             _singleStep = false;
         }

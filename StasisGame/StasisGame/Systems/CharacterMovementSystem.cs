@@ -33,7 +33,7 @@ namespace StasisGame.Systems
             _ropeSystem = _systemManager.getSystem(SystemType.Rope) as RopeSystem;
         }
 
-        public void attemptRopeGrab(int characterId, CharacterMovementComponent characterMovementComponent, PhysicsComponent physicsComponent, RopeGrabComponent existingRopeGrabComponent)
+        public void attemptRopeGrab(string levelUid, int characterId, CharacterMovementComponent characterMovementComponent, PhysicsComponent physicsComponent, RopeGrabComponent existingRopeGrabComponent)
         {
             float margin = 0.5f;
             AABB region = new AABB();
@@ -50,7 +50,7 @@ namespace StasisGame.Systems
             physicsComponent.body.World.QueryAABB((fixture) =>
                 {
                     int ropeEntityId = (int)fixture.Body.UserData;
-                    RopeComponent ropeComponent = (RopeComponent)_entityManager.getComponent(ropeEntityId, ComponentType.Rope);
+                    RopeComponent ropeComponent = (RopeComponent)_entityManager.getComponent(levelUid, ropeEntityId, ComponentType.Rope);
                     RopeGrabComponent ropeGrabComponent = null;
 
                     if (ropeComponent != null && !ropeComponent.doubleAnchor)
@@ -72,18 +72,18 @@ namespace StasisGame.Systems
 
                         if (existingRopeGrabComponent != null)
                         {
-                            RopeComponent existingRopeComponent = (RopeComponent)_entityManager.getComponent(existingRopeGrabComponent.ropeEntityId, ComponentType.Rope);
+                            RopeComponent existingRopeComponent = (RopeComponent)_entityManager.getComponent(levelUid, existingRopeGrabComponent.ropeEntityId, ComponentType.Rope);
 
                             if (existingRopeComponent.destroyAfterRelease)
                                 existingRopeComponent.timeToLive = 100;
 
                             _ropeSystem.releaseRope(existingRopeGrabComponent, physicsComponent.body);
-                            _entityManager.removeComponent(characterId, existingRopeGrabComponent);
+                            _entityManager.removeComponent(levelUid, characterId, existingRopeGrabComponent);
                         }
 
                         ropeGrabComponent = new RopeGrabComponent(ropeEntityId, ropeNode, (float)nodeCount, ropeComponent.reverseClimbDirection);
                         _ropeSystem.grabRope(ropeGrabComponent, physicsComponent.body);
-                        _entityManager.addComponent(characterId, ropeGrabComponent);
+                        _entityManager.addComponent(levelUid, characterId, ropeGrabComponent);
 
                         return false;
                     }
@@ -96,14 +96,15 @@ namespace StasisGame.Systems
         {
             if (!_paused || _singleStep)
             {
-                List<int> characterEntities = _entityManager.getEntitiesPosessing(ComponentType.CharacterMovement);
+                string levelUid = LevelSystem.currentLevelUid;
+                List<int> characterEntities = _entityManager.getEntitiesPosessing(levelUid, ComponentType.CharacterMovement);
 
                 for (int i = 0; i < characterEntities.Count; i++)
                 {
-                    PhysicsComponent physicsComponent = _entityManager.getComponent(characterEntities[i], ComponentType.Physics) as PhysicsComponent;
-                    ParticleInfluenceComponent particleInfluenceComponent = _entityManager.getComponent(characterEntities[i], ComponentType.ParticleInfluence) as ParticleInfluenceComponent;
-                    CharacterMovementComponent characterMovementComponent = _entityManager.getComponent(characterEntities[i], ComponentType.CharacterMovement) as CharacterMovementComponent;
-                    RopeGrabComponent ropeGrabComponent = _entityManager.getComponent(characterEntities[i], ComponentType.RopeGrab) as RopeGrabComponent;
+                    PhysicsComponent physicsComponent = _entityManager.getComponent(levelUid, characterEntities[i], ComponentType.Physics) as PhysicsComponent;
+                    ParticleInfluenceComponent particleInfluenceComponent = _entityManager.getComponent(levelUid, characterEntities[i], ComponentType.ParticleInfluence) as ParticleInfluenceComponent;
+                    CharacterMovementComponent characterMovementComponent = _entityManager.getComponent(levelUid, characterEntities[i], ComponentType.CharacterMovement) as CharacterMovementComponent;
+                    RopeGrabComponent ropeGrabComponent = _entityManager.getComponent(levelUid, characterEntities[i], ComponentType.RopeGrab) as RopeGrabComponent;
                     Body body = physicsComponent.body;
                     Vector2 averageNormal = Vector2.Zero;
                     float modifier = characterMovementComponent.walkSpeedModifier;
@@ -122,7 +123,7 @@ namespace StasisGame.Systems
 
                     if (characterMovementComponent.allowRopeGrab && characterMovementComponent.doRopeGrab)
                     {
-                        attemptRopeGrab(characterEntities[i], characterMovementComponent, physicsComponent, ropeGrabComponent);
+                        attemptRopeGrab(levelUid, characterEntities[i], characterMovementComponent, physicsComponent, ropeGrabComponent);
                     }
 
                     if (characterMovementComponent.onSurface)
@@ -203,13 +204,13 @@ namespace StasisGame.Systems
                         // While holding rope
                         if (ropeGrabComponent != null)
                         {
-                            RopeComponent ropeComponent = _entityManager.getComponent(ropeGrabComponent.ropeEntityId, ComponentType.Rope) as RopeComponent;
+                            RopeComponent ropeComponent = _entityManager.getComponent(levelUid, ropeGrabComponent.ropeEntityId, ComponentType.Rope) as RopeComponent;
 
                             if (ropeComponent != null && ropeComponent.destroyAfterRelease)
                                 ropeComponent.timeToLive = 100;
 
                             _ropeSystem.releaseRope(ropeGrabComponent, physicsComponent.body);
-                            _entityManager.removeComponent(characterEntities[i], ropeGrabComponent);
+                            _entityManager.removeComponent(levelUid, characterEntities[i], ropeGrabComponent);
                             ropeGrabComponent = null;
 
                             body.LinearVelocity = new Vector2(body.LinearVelocity.X, body.LinearVelocity.Y - jumpForce * 0.66f);

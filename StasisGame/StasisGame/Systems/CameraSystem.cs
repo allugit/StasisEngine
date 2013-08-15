@@ -37,8 +37,9 @@ namespace StasisGame.Systems
 
         public void update()
         {
+            string levelUid = LevelSystem.currentLevelUid;
             float speed = 0.1f;
-            List<BodyFocusPointComponent> bodyFocusPoints = _entityManager.getComponents<BodyFocusPointComponent>(ComponentType.BodyFocusPoint);
+            List<BodyFocusPointComponent> bodyFocusPoints = _entityManager.getComponents<BodyFocusPointComponent>(levelUid, ComponentType.BodyFocusPoint);
             Vector2 singleTarget = _screenCenter;
             Vector2 multipleTarget = Vector2.Zero;
             bool useSingleTarget = false;

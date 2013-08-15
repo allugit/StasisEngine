@@ -17,9 +17,9 @@ namespace StasisGame.Systems
     {
         private SystemManager _systemManager;
         private EntityManager _entityManager;
-        private World _world;
+        //private World _world;
         private float _dt = 1f / 60f;
-        private Body _groundBody;
+        //private Body _groundBody;
         private List<Body> _bodiesToRemove;
         private bool _paused;
         private bool _singleStep;
@@ -27,18 +27,18 @@ namespace StasisGame.Systems
 
         public int defaultPriority { get { return 20; } }
         public SystemType systemType { get { return SystemType.Physics; } }
-        public World world { get { return _world; } }
-        public Body groundBody { get { return _groundBody; } }
+        //public World world { get { return _world; } }
+        //public Body groundBody { get { return _groundBody; } }
         public bool paused { get { return _paused; } set { _paused = value; } }
         public bool singleStep { get { return _singleStep; } set { _singleStep = value; } }
 
-        public PhysicsSystem(SystemManager systemManager, EntityManager entityManager, Vector2 gravity)
+        public PhysicsSystem(SystemManager systemManager, EntityManager entityManager)
         {
             _systemManager = systemManager;
             _entityManager = entityManager;
             _bodiesToRemove = new List<Body>();
             _playerSystem = (PlayerSystem)systemManager.getSystem(SystemType.Player);
-
+            /*
             // Create world
             _world = new World(gravity);
 
@@ -49,7 +49,7 @@ namespace StasisGame.Systems
             _world.ContactManager.PostSolve += new PostSolveDelegate(PostSolve);
 
             // Create ground body/entity
-            _groundBody = _entityManager.factory.createGroundBody(_world);
+            _groundBody = _entityManager.factory.createGroundBody(_world);*/
         }
 
         public void removeBody(Body body)
@@ -61,10 +61,11 @@ namespace StasisGame.Systems
         {
             if (_singleStep || !_paused)
             {
+                string levelUid = LevelSystem.currentLevelUid;
                 EventSystem eventSystem = _systemManager.getSystem(SystemType.Event) as EventSystem;
-                List<CharacterMovementComponent> movementComponents = _entityManager.getComponents<CharacterMovementComponent>(ComponentType.CharacterMovement);
-                List<int> ropeGrabEntities = _entityManager.getEntitiesPosessing(ComponentType.RopeGrab);
-                List<int> prismaticEntities = _entityManager.getEntitiesPosessing(ComponentType.Prismatic);
+                List<CharacterMovementComponent> movementComponents = _entityManager.getComponents<CharacterMovementComponent>(levelUid, ComponentType.CharacterMovement);
+                List<int> ropeGrabEntities = _entityManager.getEntitiesPosessing(levelUid, ComponentType.RopeGrab);
+                List<int> prismaticEntities = _entityManager.getEntitiesPosessing(levelUid, ComponentType.Prismatic);
                 List<int> physicsEntities;
 
                 for (int i = 0; i < _bodiesToRemove.Count; i++)
@@ -84,7 +85,7 @@ namespace StasisGame.Systems
 
                 for (int i = 0; i < prismaticEntities.Count; i++)
                 {
-                    PrismaticJointComponent prismaticJointComponent = _entityManager.getComponent(prismaticEntities[i], ComponentType.Prismatic) as PrismaticJointComponent;
+                    PrismaticJointComponent prismaticJointComponent = _entityManager.getComponent(levelUid, prismaticEntities[i], ComponentType.Prismatic) as PrismaticJointComponent;
                     LimitState limitState = prismaticJointComponent.prismaticJoint.LimitState;
 
                     if (prismaticJointComponent.previousLimitState != limitState)
@@ -105,12 +106,12 @@ namespace StasisGame.Systems
                 _world.Step(_dt);
 
                 // Handle physic entities
-                physicsEntities = _entityManager.getEntitiesPosessing(ComponentType.Physics);
+                physicsEntities = _entityManager.getEntitiesPosessing(levelUid, ComponentType.Physics);
                 for (int i = 0; i < physicsEntities.Count; i++)
                 {
-                    PhysicsComponent physicsComponent = _entityManager.getComponent(physicsEntities[i], ComponentType.Physics) as PhysicsComponent;
-                    WorldPositionComponent worldPositionComponent = _entityManager.getComponent(physicsEntities[i], ComponentType.WorldPosition) as WorldPositionComponent;
-                    FollowMetamerComponent followMetamerComponent = _entityManager.getComponent(physicsEntities[i], ComponentType.FollowMetamer) as FollowMetamerComponent;
+                    PhysicsComponent physicsComponent = _entityManager.getComponent(levelUid, physicsEntities[i], ComponentType.Physics) as PhysicsComponent;
+                    WorldPositionComponent worldPositionComponent = _entityManager.getComponent(levelUid, physicsEntities[i], ComponentType.WorldPosition) as WorldPositionComponent;
+                    FollowMetamerComponent followMetamerComponent = _entityManager.getComponent(levelUid, physicsEntities[i], ComponentType.FollowMetamer) as FollowMetamerComponent;
 
                     // Set body position to the metamer being followed
                     if (followMetamerComponent != null)
@@ -134,6 +135,7 @@ namespace StasisGame.Systems
             int entityA = (int)fixtureA.Body.UserData;
             int entityB = (int)fixtureB.Body.UserData;
             int playerId = _playerSystem.playerId;
+            string levelUid = LevelSystem.currentLevelUid;
 
             // Check for custom collision filters
             bool fixtureAIgnoresEntityB = fixtureA.IsIgnoredEntity(entityB);
@@ -148,20 +150,20 @@ namespace StasisGame.Systems
             {
                 int itemEntityId = entityA == playerId ? entityB : entityA;
                 Fixture fixture = entityA == playerId ? fixtureB : fixtureA;
-                ItemComponent itemComponent = _entityManager.getComponent(itemEntityId, ComponentType.Item) as ItemComponent;
+                ItemComponent itemComponent = _entityManager.getComponent(levelUid, itemEntityId, ComponentType.Item) as ItemComponent;
 
                 if (itemComponent != null)
                 {
                     contact.Enabled = false;
                     if (itemComponent.state.inWorld)
                     {
-                        InventoryComponent playerInventory = _entityManager.getComponent(playerId, ComponentType.Inventory) as InventoryComponent;
+                        InventoryComponent playerInventory = _entityManager.getComponent(levelUid, playerId, ComponentType.Inventory) as InventoryComponent;
                         EquipmentSystem equipmentSystem = _systemManager.getSystem(SystemType.Equipment) as EquipmentSystem;
 
                         equipmentSystem.addInventoryItem(playerInventory, itemComponent);
                         itemComponent.state.inWorld = false;
                         _bodiesToRemove.Add(fixture.Body);
-                        _entityManager.killEntity(itemEntityId);
+                        _entityManager.killEntity(levelUid, itemEntityId);
                         eventSystem.postEvent(new GameEvent(GameEventType.OnItemPickedUp, itemEntityId));
                     }
                 }
@@ -170,14 +172,15 @@ namespace StasisGame.Systems
 
         public void PostSolve(Contact contact, ContactConstraint contactConstraint)
         {
-            List<int> characterEntities = _entityManager.getEntitiesPosessing(ComponentType.CharacterMovement);
+            string levelUid = LevelSystem.currentLevelUid;
+            List<int> characterEntities = _entityManager.getEntitiesPosessing(levelUid, ComponentType.CharacterMovement);
             int entityAId = (int)contact.FixtureA.Body.UserData;
             int entityBId = (int)contact.FixtureB.Body.UserData;
             CharacterMovementComponent characterMovementComponent = null;
             FixedArray2<Vector2> points;
             Vector2 normal;
 
-            characterMovementComponent = (_entityManager.getComponent(entityAId, ComponentType.CharacterMovement) ?? _entityManager.getComponent(entityBId, ComponentType.CharacterMovement)) as CharacterMovementComponent;
+            characterMovementComponent = (_entityManager.getComponent(levelUid, entityAId, ComponentType.CharacterMovement) ?? _entityManager.getComponent(levelUid, entityBId, ComponentType.CharacterMovement)) as CharacterMovementComponent;
             if (characterMovementComponent != null)
             {
                 if (contact.FixtureA == characterMovementComponent.feetFixture || contact.FixtureB == characterMovementComponent.feetFixture)
@@ -192,8 +195,9 @@ namespace StasisGame.Systems
 
         public bool BeginContact(Contact contact)
         {
-            List<int> levelGoalEntities = _entityManager.getEntitiesPosessing(ComponentType.RegionGoal);
-            List<int> explosionEntities = _entityManager.getEntitiesPosessing(ComponentType.Explosion);
+            string levelUid = LevelSystem.currentLevelUid;
+            List<int> levelGoalEntities = _entityManager.getEntitiesPosessing(levelUid, ComponentType.RegionGoal);
+            List<int> explosionEntities = _entityManager.getEntitiesPosessing(levelUid, ComponentType.Explosion);
             LevelSystem levelSystem = (LevelSystem)_systemManager.getSystem(SystemType.Level);
             ExplosionSystem explosionSystem = (ExplosionSystem)_systemManager.getSystem(SystemType.Explosion);
 
@@ -225,14 +229,14 @@ namespace StasisGame.Systems
                 Fixture targetFixture = null;
                 FixedArray2<Vector2> points;
 
-                if (_entityManager.tryGetComponent(entityA, ComponentType.Explosion, out component))
+                if (_entityManager.tryGetComponent(levelUid, entityA, ComponentType.Explosion, out component))
                     targetFixture = contact.FixtureB;
-                else if (_entityManager.tryGetComponent(entityB, ComponentType.Explosion, out component))
+                else if (_entityManager.tryGetComponent(levelUid, entityB, ComponentType.Explosion, out component))
                     targetFixture = contact.FixtureA;
 
                 if (targetFixture != null && component != null)
                 {
-                    DestructibleGeometryComponent destructibleGeometryComponent = (DestructibleGeometryComponent)_entityManager.getComponent((int)targetFixture.Body.UserData, ComponentType.DestructibleGeometry);
+                    DestructibleGeometryComponent destructibleGeometryComponent = (DestructibleGeometryComponent)_entityManager.getComponent(levelUid, (int)targetFixture.Body.UserData, ComponentType.DestructibleGeometry);
                     Vector2 contactNormal;
                     Vector2 relative;
                     Vector2 force;

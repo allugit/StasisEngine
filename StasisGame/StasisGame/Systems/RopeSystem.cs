@@ -86,19 +86,19 @@ namespace StasisGame.Systems
             ropeGrabComponent.joints.Clear();
         }
 
-        public void killRope(int entityId)
+        public void killRope(string levelUid, int entityId)
         {
-            RopeComponent ropeComponent = (RopeComponent)_entityManager.getComponent(entityId, ComponentType.Rope);
-            List<int> ropeGrabEntities = _entityManager.getEntitiesPosessing(ComponentType.RopeGrab);
+            RopeComponent ropeComponent = (RopeComponent)_entityManager.getComponent(levelUid, entityId, ComponentType.Rope);
+            List<int> ropeGrabEntities = _entityManager.getEntitiesPosessing(levelUid, ComponentType.RopeGrab);
 
             // Detach any rope grab components from this rope
             for (int i = 0; i < ropeGrabEntities.Count; i++)
             {
-                RopeGrabComponent ropeGrabComponent = (RopeGrabComponent)_entityManager.getComponent(ropeGrabEntities[i], ComponentType.RopeGrab);
+                RopeGrabComponent ropeGrabComponent = (RopeGrabComponent)_entityManager.getComponent(levelUid, ropeGrabEntities[i], ComponentType.RopeGrab);
                 if (ropeGrabComponent.ropeEntityId == entityId)
                 {
                     detachAll(ropeGrabComponent);
-                    _entityManager.removeComponent(ropeGrabEntities[i], ropeGrabComponent);
+                    _entityManager.removeComponent(levelUid, ropeGrabEntities[i], ropeGrabComponent);
                 }
             }
 
@@ -111,8 +111,8 @@ namespace StasisGame.Systems
                     {
                         int entityIdA = (int)current.anchorJoint.BodyA.UserData;
                         int entityIdB = (int)current.anchorJoint.BodyB.UserData;
-                        MetamerComponent metamerComponentA = _entityManager.getComponent(entityIdA, ComponentType.Metamer) as MetamerComponent;
-                        MetamerComponent metamerComponentB = _entityManager.getComponent(entityIdB, ComponentType.Metamer) as MetamerComponent;
+                        MetamerComponent metamerComponentA = _entityManager.getComponent(levelUid, entityIdA, ComponentType.Metamer) as MetamerComponent;
+                        MetamerComponent metamerComponentB = _entityManager.getComponent(levelUid, entityIdB, ComponentType.Metamer) as MetamerComponent;
 
                         if (metamerComponentA != null)
                         {
@@ -138,7 +138,7 @@ namespace StasisGame.Systems
                     current.body.World.RemoveBody(current.body);
                     current = current.next;
                 }
-                _entityManager.killEntity(entityId);
+                _entityManager.killEntity(levelUid, entityId);
             }
         }
 
@@ -156,7 +156,7 @@ namespace StasisGame.Systems
         }
 
         // breakJoint -- Breaks the link between two nodes and determines whether or not to keep them alive, or kill them
-        public void breakJoint(int entityId, RopeNode ropeNode)
+        public void breakJoint(string levelUid, int entityId, RopeNode ropeNode)
         {
             // Disconnect linked rope nodes
             if (ropeNode.previous != null)
@@ -164,7 +164,7 @@ namespace StasisGame.Systems
             ropeNode.previous = null;
 
             // Recreate disconnected segment as its own entity
-            _entityManager.factory.recreateRope(ropeNode, ropeNode.ropeComponent.interpolationCount);
+            _entityManager.factory.recreateRope(levelUid, ropeNode, ropeNode.ropeComponent.interpolationCount);
 
             // Destroy joint
             ropeNode.body.World.RemoveJoint(ropeNode.joint);
@@ -175,12 +175,13 @@ namespace StasisGame.Systems
         {
             if (!_paused || _singleStep)
             {
-                List<int> ropeEntities = _entityManager.getEntitiesPosessing(ComponentType.Rope);
+                string levelUid = LevelSystem.currentLevelUid;
+                List<int> ropeEntities = _entityManager.getEntitiesPosessing(levelUid, ComponentType.Rope);
 
                 for (int i = 0; i < ropeEntities.Count; i++)
                 {
-                    RopeComponent ropeComponent = _entityManager.getComponent(ropeEntities[i], ComponentType.Rope) as RopeComponent;
-                    RopeGrabComponent ropeGrabComponent = _entityManager.getComponent(ropeEntities[i], ComponentType.RopeGrab) as RopeGrabComponent;
+                    RopeComponent ropeComponent = _entityManager.getComponent(levelUid, ropeEntities[i], ComponentType.Rope) as RopeComponent;
+                    RopeGrabComponent ropeGrabComponent = _entityManager.getComponent(levelUid, ropeEntities[i], ComponentType.RopeGrab) as RopeGrabComponent;
                     RopeNode head = ropeComponent.ropeNodeHead;
                     RopeNode current = head;
                     RopeNode tail = head.tail;
@@ -196,7 +197,7 @@ namespace StasisGame.Systems
                     // Check time to live
                     if (ropeComponent.timeToLive == 0)
                     {
-                        killRope(ropeEntities[i]);
+                        killRope(levelUid, ropeEntities[i]);
                         ropeComponent.timeToLive--;
                     }
                     else if (ropeComponent.timeToLive > -1)
@@ -229,7 +230,7 @@ namespace StasisGame.Systems
                                         current.joint.BodyB.GetWorldPoint(current.joint.LocalAnchorB);
                             if (relative.Length() > 1.2f || current.joint.GetReactionForce(60f).Length() > 300f)
                             {
-                                breakJoint(ropeEntities[i], current);
+                                breakJoint(levelUid, ropeEntities[i], current);
                             }
                         }
                         current = current.next;

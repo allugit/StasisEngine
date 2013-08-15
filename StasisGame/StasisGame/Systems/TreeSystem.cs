@@ -88,7 +88,8 @@ namespace StasisGame.Systems
         {
             if (!_paused || _singleStep)
             {
-                List<int> treeEntities = _entityManager.getEntitiesPosessing(ComponentType.Tree);
+                string levelUid = LevelSystem.currentLevelUid;
+                List<int> treeEntities = _entityManager.getEntitiesPosessing(levelUid, ComponentType.Tree);
 
                 // Update treeAABB
                 Vector2 screenCenter = _renderSystem.screenCenter;
@@ -103,7 +104,7 @@ namespace StasisGame.Systems
 
                 for (int i = 0; i < treeEntities.Count; i++)
                 {
-                    TreeComponent treeComponent = (TreeComponent)_entityManager.getComponent(treeEntities[i], ComponentType.Tree);
+                    TreeComponent treeComponent = (TreeComponent)_entityManager.getComponent(levelUid, treeEntities[i], ComponentType.Tree);
                     treeComponent.tree.update();
                 }
             }
@@ -115,13 +116,14 @@ namespace StasisGame.Systems
         {
             Dictionary<int, List<Metamer>> gridX;
             List<Metamer> gridY;
+            string levelUid = LevelSystem.currentLevelUid;
 
             // Query the world using the screen's AABB
             _physicsSystem.world.QueryAABB((Fixture fixture) =>
             {
                 // Skip certain collisions
                 int entityId = (int)fixture.Body.UserData;
-                if (_entityManager.getComponent(entityId, ComponentType.IgnoreTreeCollision) != null)
+                if (_entityManager.getComponent(levelUid, entityId, ComponentType.IgnoreTreeCollision) != null)
                     return true;
 
                 AABB aabb;

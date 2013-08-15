@@ -309,7 +309,7 @@ namespace StasisGame.Managers
             InventoryComponent inventoryComponent = new InventoryComponent(int.Parse(inventoryData.Attribute("slots").Value));
             EquipmentSystem equipmentSystem = _systemManager.getSystem(SystemType.Equipment) as EquipmentSystem;
 
-            _entityManager.addComponent(PlayerSystem.PLAYER_ID, inventoryComponent);
+            _entityManager.addComponent("global", PlayerSystem.PLAYER_ID, inventoryComponent);
             foreach (XElement itemStateData in inventoryData.Elements("ItemState"))
             {
                 ItemDefinition itemDefinition = _itemManager.getItemDefinition(itemStateData.Attribute("item_uid").Value);
@@ -329,18 +329,19 @@ namespace StasisGame.Managers
             XElement toolbarData = _playerData.Element("ToolbarState");
             ToolbarComponent toolbarComponent = new ToolbarComponent(int.Parse(toolbarData.Attribute("slots").Value), PlayerSystem.PLAYER_ID);
             EquipmentSystem equipmentSystem = _systemManager.getSystem(SystemType.Equipment) as EquipmentSystem;
-            InventoryComponent inventoryComponent = _entityManager.getComponent(PlayerSystem.PLAYER_ID, ComponentType.Inventory) as InventoryComponent;
+            InventoryComponent inventoryComponent = _entityManager.getComponent("global", PlayerSystem.PLAYER_ID, ComponentType.Inventory) as InventoryComponent;
 
-            _entityManager.addComponent(PlayerSystem.PLAYER_ID, toolbarComponent);
+            _entityManager.addComponent("global", PlayerSystem.PLAYER_ID, toolbarComponent);
             foreach (XElement slotData in toolbarData.Elements("Slot"))
             {
                 equipmentSystem.assignItemToToolbar(
+                    "global",
                     equipmentSystem.getInventoryItem(inventoryComponent, int.Parse(slotData.Attribute("inventory_slot").Value)),
                     toolbarComponent,
                     int.Parse(slotData.Attribute("slot_id").Value));
             }
 
-            equipmentSystem.selectToolbarSlot(toolbarComponent, int.Parse(toolbarData.Attribute("selected_index").Value));
+            equipmentSystem.selectToolbarSlot("global", toolbarComponent, int.Parse(toolbarData.Attribute("selected_index").Value));
         }
 
         // Load custom flags
@@ -410,8 +411,8 @@ namespace StasisGame.Managers
                     _questManager.addNewQuestState("helping_dagny_1");
 
                     // Create inventory and toolbar
-                    _entityManager.addComponent(PlayerSystem.PLAYER_ID, new InventoryComponent(32));
-                    _entityManager.addComponent(PlayerSystem.PLAYER_ID, new ToolbarComponent(4, PlayerSystem.PLAYER_ID));
+                    _entityManager.addComponent("global", PlayerSystem.PLAYER_ID, new InventoryComponent(32));
+                    _entityManager.addComponent("global", PlayerSystem.PLAYER_ID, new ToolbarComponent(4, PlayerSystem.PLAYER_ID));
 
                     // Custom flags
                     setCustomFlag("new_game", true);
@@ -518,8 +519,8 @@ namespace StasisGame.Managers
             using (FileStream fs = new FileStream(filePath, FileMode.Create))
             {
                 XDocument doc = new XDocument();
-                InventoryComponent inventoryComponent = _entityManager.getComponent(PlayerSystem.PLAYER_ID, ComponentType.Inventory) as InventoryComponent;
-                ToolbarComponent toolbarComponent = _entityManager.getComponent(PlayerSystem.PLAYER_ID, ComponentType.Toolbar) as ToolbarComponent;
+                InventoryComponent inventoryComponent = _entityManager.getComponent("global", PlayerSystem.PLAYER_ID, ComponentType.Inventory) as InventoryComponent;
+                ToolbarComponent toolbarComponent = _entityManager.getComponent("global", PlayerSystem.PLAYER_ID, ComponentType.Toolbar) as ToolbarComponent;
                 EquipmentSystem equipmentSystem = _systemManager.getSystem(SystemType.Equipment) as EquipmentSystem;
                 XElement inventoryData = new XElement("InventoryState");
                 XElement toolbarData = new XElement("ToolbarState");

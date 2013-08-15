@@ -24,7 +24,6 @@ namespace StasisCore
         private static Dictionary<string, XElement> _blueprintScrapResources;
         private static Dictionary<string, XElement> _characterResources;
         private static Dictionary<string, XElement> _dialogueResources;
-        private static Dictionary<string, XElement> _levelResources;
         private static Dictionary<string, XElement> _circuitResources;
         private static Dictionary<string, XElement> _backgroundResources;
         private static Dictionary<string, XElement> _worldMapResources;
@@ -108,16 +107,6 @@ namespace StasisCore
                 return resources;
             }
         }
-        public static List<XElement> levelResources
-        {
-            get
-            {
-                List<XElement> resources = new List<XElement>();
-                foreach (XElement resource in _levelResources.Values)
-                    resources.Add(resource);
-                return resources;
-            }
-        }
         public static List<XElement> circuitResources
         {
             get
@@ -180,7 +169,6 @@ namespace StasisCore
             _blueprintScrapResources = new Dictionary<string, XElement>();
             _characterResources = new Dictionary<string, XElement>();
             _dialogueResources = new Dictionary<string, XElement>();
-            _levelResources = new Dictionary<string, XElement>();
             _circuitResources = new Dictionary<string, XElement>();
             _backgroundResources = new Dictionary<string, XElement>();
             _worldMapResources = new Dictionary<string, XElement>();
@@ -196,7 +184,6 @@ namespace StasisCore
             _resources.Add(_blueprintScrapResources);
             _resources.Add(_characterResources);
             _resources.Add(_dialogueResources);
-            _resources.Add(_levelResources);
             _resources.Add(_circuitResources);
             _resources.Add(_backgroundResources);
             _resources.Add(_worldMapResources);

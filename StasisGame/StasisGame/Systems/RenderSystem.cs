@@ -206,16 +206,17 @@ namespace StasisGame.Systems
         // draw
         public void draw()
         {
+            string levelUid = LevelSystem.currentLevelUid;
             FluidSystem fluidSystem = (FluidSystem)_systemManager.getSystem(SystemType.Fluid);
-            List<int> primitiveRenderEntities = _entityManager.getEntitiesPosessing(ComponentType.PrimitivesRender);
-            List<int> ropeEntities = _entityManager.getEntitiesPosessing(ComponentType.Rope);
-            List<int> characterRenderEntities = _entityManager.getEntitiesPosessing(ComponentType.CharacterRender);
-            List<int> characterMovementEntities = _entityManager.getEntitiesPosessing(ComponentType.CharacterMovement);
-            List<int> treeEntities = _entityManager.getEntitiesPosessing(ComponentType.Tree);
-            List<int> aimEntities = _entityManager.getEntitiesPosessing(ComponentType.Aim);
-            List<int> explosionEntities = _entityManager.getEntitiesPosessing(ComponentType.Explosion);
-            List<RopeGrabComponent> ropeGrabComponents = _entityManager.getComponents<RopeGrabComponent>(ComponentType.RopeGrab);
-            List<TooltipComponent> tooltipComponents = _entityManager.getComponents<TooltipComponent>(ComponentType.Tooltip);
+            List<int> primitiveRenderEntities = _entityManager.getEntitiesPosessing(levelUid, ComponentType.PrimitivesRender);
+            List<int> ropeEntities = _entityManager.getEntitiesPosessing(levelUid, ComponentType.Rope);
+            List<int> characterRenderEntities = _entityManager.getEntitiesPosessing(levelUid, ComponentType.CharacterRender);
+            List<int> characterMovementEntities = _entityManager.getEntitiesPosessing(levelUid, ComponentType.CharacterMovement);
+            List<int> treeEntities = _entityManager.getEntitiesPosessing(levelUid, ComponentType.Tree);
+            List<int> aimEntities = _entityManager.getEntitiesPosessing(levelUid, ComponentType.Aim);
+            List<int> explosionEntities = _entityManager.getEntitiesPosessing(levelUid, ComponentType.Explosion);
+            List<RopeGrabComponent> ropeGrabComponents = _entityManager.getComponents<RopeGrabComponent>(levelUid, ComponentType.RopeGrab);
+            List<TooltipComponent> tooltipComponents = _entityManager.getComponents<TooltipComponent>(levelUid, ComponentType.Tooltip);
             Vector2 screenCenter = _cameraSystem.screenCenter;
 
             // Temporary debug draw
@@ -303,12 +304,12 @@ namespace StasisGame.Systems
             for (int i = 0; i < primitiveRenderEntities.Count; i++)
             {
                 int entityId = primitiveRenderEntities[i];
-                PrimitivesRenderComponent primitiveRenderComponent = (PrimitivesRenderComponent)_entityManager.getComponent(entityId, ComponentType.PrimitivesRender);
+                PrimitivesRenderComponent primitiveRenderComponent = (PrimitivesRenderComponent)_entityManager.getComponent(levelUid, entityId, ComponentType.PrimitivesRender);
 
                 for (int j = 0; j < primitiveRenderComponent.primitiveRenderObjects.Count; j++)
                 {
                     PrimitiveRenderObject primitiveRenderObject = primitiveRenderComponent.primitiveRenderObjects[j];
-                    PhysicsComponent physicsComponent = (PhysicsComponent)_entityManager.getComponent(entityId, ComponentType.Physics);
+                    PhysicsComponent physicsComponent = (PhysicsComponent)_entityManager.getComponent(levelUid, entityId, ComponentType.Physics);
                     IComponent component;
 
                     // Update world matrix
@@ -316,7 +317,7 @@ namespace StasisGame.Systems
                     {
                         primitiveRenderObject.worldMatrix = primitiveRenderObject.originMatrix * Matrix.CreateRotationZ(physicsComponent.body.Rotation) * Matrix.CreateTranslation(new Vector3(physicsComponent.body.Position, 0));
                     }
-                    else if (_entityManager.tryGetComponent(entityId, ComponentType.FollowMetamer, out component))
+                    else if (_entityManager.tryGetComponent(levelUid, entityId, ComponentType.FollowMetamer, out component))
                     {
                         FollowMetamerComponent followMetamerComponent = component as FollowMetamerComponent;
                         primitiveRenderObject.worldMatrix = primitiveRenderObject.originMatrix * Matrix.CreateRotationZ(followMetamerComponent.metamer.currentAngle + StasisMathHelper.halfPi) * Matrix.CreateTranslation(new Vector3(followMetamerComponent.metamer.position, 0));
@@ -333,7 +334,7 @@ namespace StasisGame.Systems
             for (int i = 0; i < ropeEntities.Count; i++)
             {
                 int entityId = ropeEntities[i];
-                RopeComponent ropeComponent = _entityManager.getComponent(entityId, ComponentType.Rope) as RopeComponent;
+                RopeComponent ropeComponent = _entityManager.getComponent(levelUid, entityId, ComponentType.Rope) as RopeComponent;
                 RopeNode current = ropeComponent.ropeNodeHead;
                 RopeNode head = current;
                 RopeNode tail = head.tail;
@@ -376,7 +377,7 @@ namespace StasisGame.Systems
             // Character rendering
             for (int i = 0; i < characterRenderEntities.Count; i++)
             {
-                PhysicsComponent physicsComponent = (PhysicsComponent)_entityManager.getComponent(characterRenderEntities[i], ComponentType.Physics);
+                PhysicsComponent physicsComponent = (PhysicsComponent)_entityManager.getComponent(levelUid, characterRenderEntities[i], ComponentType.Physics);
                 PolygonShape bodyShape = physicsComponent.body.FixtureList[0].Shape as PolygonShape;
                 float shapeWidth = bodyShape.Vertices[2].X - bodyShape.Vertices[0].X;
                 float shapeHeight = bodyShape.Vertices[3].Y - bodyShape.Vertices[0].Y;
@@ -388,8 +389,8 @@ namespace StasisGame.Systems
 
             for (int i = 0; i < characterMovementEntities.Count; i++)
             {
-                PhysicsComponent physicsComponent = (PhysicsComponent)_entityManager.getComponent(characterMovementEntities[i], ComponentType.Physics);
-                CharacterMovementComponent characterMovementComponent = (CharacterMovementComponent)_entityManager.getComponent(characterMovementEntities[i], ComponentType.CharacterMovement);
+                PhysicsComponent physicsComponent = (PhysicsComponent)_entityManager.getComponent(levelUid, characterMovementEntities[i], ComponentType.Physics);
+                CharacterMovementComponent characterMovementComponent = (CharacterMovementComponent)_entityManager.getComponent(levelUid, characterMovementEntities[i], ComponentType.CharacterMovement);
                 Vector2 movementNormal = characterMovementComponent.movementNormal;
                 Rectangle source = new Rectangle(0, 0, (int)(movementNormal.Length() * _scale), 2);
                 float angle = characterMovementComponent.movementAngle;
@@ -401,7 +402,7 @@ namespace StasisGame.Systems
             _primitivesEffect.Parameters["world"].SetValue(Matrix.Identity);
             for (int i = 0; i < treeEntities.Count; i++)
             {
-                TreeComponent treeComponent = _entityManager.getComponent(treeEntities[i], ComponentType.Tree) as TreeComponent;
+                TreeComponent treeComponent = _entityManager.getComponent(levelUid, treeEntities[i], ComponentType.Tree) as TreeComponent;
 
                 if (treeComponent.tree.active)
                 {
@@ -429,15 +430,15 @@ namespace StasisGame.Systems
             // Draw explosions (TEMPORARY)
             for (int i = 0; i < explosionEntities.Count; i++)
             {
-                ExplosionComponent explosionComponent = (ExplosionComponent)_entityManager.getComponent(explosionEntities[i], ComponentType.Explosion);
+                ExplosionComponent explosionComponent = (ExplosionComponent)_entityManager.getComponent(levelUid, explosionEntities[i], ComponentType.Explosion);
                 _spriteBatch.Draw(_circle, (explosionComponent.position - screenCenter) * _scale + _halfScreen, _circle.Bounds, Color.Red, 0f, new Vector2(_circle.Width, _circle.Height) / 2f, ((explosionComponent.radius * _scale) / (_circle.Width / 2f)), SpriteEffects.None, 0f);
             }
 
             // Aim components
             for (int i = 0; i < aimEntities.Count; i++)
             {
-                AimComponent aimComponent = (AimComponent)_entityManager.getComponent(aimEntities[i], ComponentType.Aim);
-                Vector2 worldPosition = (_entityManager.getComponent(aimEntities[i], ComponentType.WorldPosition) as WorldPositionComponent).position;
+                AimComponent aimComponent = (AimComponent)_entityManager.getComponent(levelUid, aimEntities[i], ComponentType.Aim);
+                Vector2 worldPosition = (_entityManager.getComponent(levelUid, aimEntities[i], ComponentType.WorldPosition) as WorldPositionComponent).position;
                 float length = aimComponent.length;
 
                 _spriteBatch.Draw(_reticle, (worldPosition - screenCenter + new Vector2((float)Math.Cos(aimComponent.angle), (float)Math.Sin(aimComponent.angle)) * length) * _scale + _halfScreen, _reticle.Bounds, Color.Red, aimComponent.angle, new Vector2(_reticle.Width, _reticle.Height) / 2f, 1f, SpriteEffects.None, 0f);

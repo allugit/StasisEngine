@@ -41,10 +41,10 @@ namespace StasisGame.UI
             _pixel.SetData<Color>(new[] { Color.White });
             _arial = _content.Load<SpriteFont>("arial");
 
-            ToolbarComponent toolbarComponent = (ToolbarComponent)_entityManager.getComponent(_playerId, ComponentType.Toolbar);
+            ToolbarComponent toolbarComponent = (ToolbarComponent)_entityManager.getComponent(LevelSystem.currentLevelUid, _playerId, ComponentType.Toolbar);
 
             _toolbarDisplay = new ToolbarDisplay(_game.spriteBatch, _equipmentSystem, toolbarComponent);
-            _inventoryDisplay = new InventoryDisplay(_game.spriteBatch, _equipmentSystem, (InventoryComponent)_entityManager.getComponent(_playerId, ComponentType.Inventory), toolbarComponent);
+            _inventoryDisplay = new InventoryDisplay(_game.spriteBatch, _equipmentSystem, (InventoryComponent)_entityManager.getComponent(LevelSystem.currentLevelUid, _playerId, ComponentType.Inventory), toolbarComponent);
             _inventoryDisplay.inFocus = false;
             _toolbarDisplay.inFocus = true;
 
@@ -94,8 +94,7 @@ namespace StasisGame.UI
 
         public override void draw()
         {
-            int playerId = (_systemManager.getSystem(SystemType.Player) as PlayerSystem).playerId;
-            PhysicsComponent physicsComponent = (PhysicsComponent)_entityManager.getComponent(playerId, ComponentType.Physics);
+            PhysicsComponent physicsComponent = (PhysicsComponent)_entityManager.getComponent(LevelSystem.currentLevelUid, PlayerSystem.PLAYER_ID, ComponentType.Physics);
             //string text = string.Format("Body count: {0}", physicsComponent.body.GetWorld().BodyCount);
 
             if (_displayInventory)
