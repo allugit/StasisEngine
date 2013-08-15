@@ -1346,6 +1346,41 @@ namespace StasisGame
                 levelSystem.expandBoundary(point);
         }
 
+        // createLevelTransition
+        public int createLevelTransition(string levelUid, XElement data)
+        {
+            return createLevelTransition(
+                levelUid,
+                int.Parse(data.Attribute("id").Value),
+                data.Attribute("level_uid").Value,
+                Loader.loadVector2(data.Attribute("position"), Vector2.Zero),
+                float.Parse(data.Attribute("radius").Value),
+                true);
+        }
+
+        public int createLevelTransition(string levelUid, string transitionLevelUid, Vector2 position, float radius, bool requiresActivation)
+        {
+            return createLevelTransition(levelUid, -1, transitionLevelUid, position, radius, requiresActivation);
+        }
+
+        public int createLevelTransition(string levelUid, int actorId, string transitionLevelUid, Vector2 position, float radius, bool requiresActivation)
+        {
+            int entityId;
+
+            if (actorId == -1)
+            {
+                entityId = _entityManager.createEntity(levelUid);
+            }
+            else
+            {
+                entityId = _entityManager.createEntity(levelUid, actorId);
+            }
+
+            _entityManager.addComponent(levelUid, entityId, new LevelTransitionComponent(transitionLevelUid, position, radius, requiresActivation));
+
+            return entityId;
+        }
+
         // createDynamite
         public int createDynamite(string levelUid, Vector2 position, Vector2 force)
         {
@@ -1488,8 +1523,8 @@ namespace StasisGame
                 case "rose_window_1":
                     entityId = createTreeWindow(levelUid, "rose_window_1", position, angle, layerDepth);
                     break;
-                case "dagny_hut":
-                    entityId = createDagnyHut(levelUid, position, angle, layerDepth);
+                case "dagny_house":
+                    entityId = createDagnyHouse(levelUid, position, angle, layerDepth);
                     break;
             }
 
@@ -1555,18 +1590,17 @@ namespace StasisGame
             return entityId;
         }
 
-        // createDagnyHut -- Creates Dagny's hut
-        public int createDagnyHut(string levelUid, Vector2 position, float angle, float layerDepth)
+        // createDagnyHouse -- Creates Dagny's house
+        public int createDagnyHouse(string levelUid, Vector2 position, float angle, float layerDepth)
         {
             RenderSystem renderSystem = _systemManager.getSystem(SystemType.Render) as RenderSystem;
             int entityId = _entityManager.createEntity(levelUid);
-            Texture2D texture = ResourceManager.getTexture("dagny_hut");
+            Texture2D texture = ResourceManager.getTexture("dagny_house");
             Vector2 origin = new Vector2(texture.Width / 2f, texture.Height);
 
             _entityManager.addComponent(levelUid, entityId, new PrimitivesRenderComponent(renderSystem.createSpritePrimitiveObject(texture, position, origin, angle, 1f, layerDepth)));
             _entityManager.addComponent(levelUid, entityId, new WorldPositionComponent(position));
             _entityManager.addComponent(levelUid, entityId, new TooltipComponent("[Use] Enter Dagny's House", position, 1.2f));
-            _entityManager.addComponent(levelUid, entityId, new LevelTransitionComponent("dagny_house", position, 1.2f, true));
 
             return entityId;
         }

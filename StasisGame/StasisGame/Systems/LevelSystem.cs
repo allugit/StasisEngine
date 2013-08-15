@@ -288,6 +288,11 @@ namespace StasisGame.Systems
                         loadingScreen.elementsLoaded++;
                         break;
 
+                    case "LevelTransition":
+                        _entityManager.factory.createLevelTransition(levelUid, actorData);
+                        loadingScreen.elementsLoaded++;
+                        break;
+
                     default:
                         throw new NotImplementedException("Unhandled actor type in loadNextEntity()");
                 }
