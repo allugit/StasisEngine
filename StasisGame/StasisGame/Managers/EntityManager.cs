@@ -30,7 +30,7 @@ namespace StasisGame.Managers
         public int getNewId(string levelUid)
         {
             int i = 0;
-            while (_entities[levelUid].ContainsKey(i) || _reservedIds[levelUid].Contains(i))
+            while (_entities[levelUid].ContainsKey(i) || (_reservedIds.ContainsKey(levelUid) && _reservedIds[levelUid].Contains(i)))
                 i++;
             return i;
         }
