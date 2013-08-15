@@ -128,6 +128,7 @@ namespace StasisEditor.Controllers
             _editorView.enablePreviewLevel(true);
             _editorView.addLevelSettings(_levelController.level);
             _actorToolbar = new ActorToolbar();
+            _actorToolbar.Dock = System.Windows.Forms.DockStyle.Top;
             _actorToolbar.setController(_levelController);
             _editorView.addActorToolbar(_actorToolbar);
         }
@@ -143,6 +144,7 @@ namespace StasisEditor.Controllers
             _editorView.enablePreviewLevel(true);
             _editorView.addLevelSettings(_levelController.level);
             _actorToolbar = new ActorToolbar();
+            _actorToolbar.Dock = System.Windows.Forms.DockStyle.Top;
             _actorToolbar.setController(_levelController);
             _editorView.addActorToolbar(_actorToolbar);
         }

@@ -31,7 +31,8 @@
         Prismatic,
         CollisionFilter,
         Goal,
-        Decal
+        Decal,
+        LevelTransition
     };
 
     public enum PlantType

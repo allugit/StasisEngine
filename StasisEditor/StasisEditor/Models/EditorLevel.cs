@@ -127,6 +127,10 @@ namespace StasisEditor.Models
                     case "Decal":
                         addActor(new EditorDecalActor(this, actorData));
                         break;
+                    
+                    case "LevelTransition":
+                        addActor(new EditorLevelTransitionActor(this, actorData));
+                        break;
                 }
             }
 

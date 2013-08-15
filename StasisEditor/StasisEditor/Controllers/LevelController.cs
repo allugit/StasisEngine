@@ -257,6 +257,10 @@ namespace StasisEditor.Controllers
                 case "decalsButton":
                     actor = new EditorDecalActor(_level);
                     break;
+
+                case "levelTransitionButton":
+                    actor = new EditorLevelTransitionActor(_level);
+                    break;
             }
 
             if (actor != null)
