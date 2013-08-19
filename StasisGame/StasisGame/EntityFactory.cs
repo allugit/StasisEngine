@@ -1526,6 +1526,9 @@ namespace StasisGame
                 case "dagny_house":
                     entityId = createDagnyHouse(levelUid, position, angle, layerDepth);
                     break;
+                case "dagny_house_interior":
+                    entityId = createDagnyHouseInterior(levelUid, position, angle, layerDepth);
+                    break;
             }
 
             return entityId;
@@ -1601,6 +1604,21 @@ namespace StasisGame
             _entityManager.addComponent(levelUid, entityId, new PrimitivesRenderComponent(renderSystem.createSpritePrimitiveObject(texture, position, origin, angle, 1f, layerDepth)));
             _entityManager.addComponent(levelUid, entityId, new WorldPositionComponent(position));
             _entityManager.addComponent(levelUid, entityId, new TooltipComponent("[Use] Enter Dagny's House", position, 1.2f));
+
+            return entityId;
+        }
+
+        // createDagnyHouseInterior -- Creates Dagny's house (interior view)
+        public int createDagnyHouseInterior(string levelUid, Vector2 position, float angle, float layerDepth)
+        {
+            RenderSystem renderSystem = _systemManager.getSystem(SystemType.Render) as RenderSystem;
+            int entityId = _entityManager.createEntity(levelUid);
+            Texture2D texture = ResourceManager.getTexture("dagny_house_interior");
+            Vector2 origin = new Vector2(texture.Width / 2f, texture.Height);
+
+            _entityManager.addComponent(levelUid, entityId, new PrimitivesRenderComponent(renderSystem.createSpritePrimitiveObject(texture, position, origin, angle, 1f, layerDepth)));
+            _entityManager.addComponent(levelUid, entityId, new WorldPositionComponent(position));
+            _entityManager.addComponent(levelUid, entityId, new TooltipComponent("[Use] Leave House", position, 1.2f));
 
             return entityId;
         }

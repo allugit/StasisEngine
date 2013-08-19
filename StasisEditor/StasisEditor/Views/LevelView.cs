@@ -281,6 +281,12 @@ namespace StasisEditor.Views
             _spriteBatch.DrawString(_font, text, (position + _controller.worldOffset) * _controller.scale, color, 0, Vector2.Zero, 1f, SpriteEffects.None, 0);
         }
 
+        // drawTexture
+        public void drawTexture(Texture2D texture, Vector2 position, float angle, Vector2 origin, float layerDepth)
+        {
+            _spriteBatch.Draw(texture, (position + _controller.worldOffset) * _controller.scale, texture.Bounds, Color.White, angle, origin, _controller.scale / EditorController.ORIGINAL_SCALE, SpriteEffects.None, layerDepth);
+        }
+
         // Render polygon
         public Texture2D renderPolygon(VertexPositionTexture[] _vertices, int primitiveCount)
         {
