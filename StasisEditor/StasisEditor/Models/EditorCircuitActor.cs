@@ -293,7 +293,7 @@ namespace StasisEditor.Models
                 Color dotColor = gateControl.gate.type == "input" ? Color.Green : Color.Red;
                 _level.controller.view.drawLine(_position, gateControl.position, lineColor, _layerDepth - 0.0001f);
                 _level.controller.view.drawPoint(gateControl.position, dotColor, _layerDepth - 0.0001f);
-                _level.controller.view.drawString(gateControl.gate.id.ToString(), gateControl.position, Color.White);
+                _level.controller.view.drawString(gateControl.gate.id.ToString(), gateControl.position, Color.White, 0f);
             }
 
             // Connections
@@ -303,7 +303,7 @@ namespace StasisEditor.Models
                 Color dotColor = (connection.gate.type == "input" ? Color.Green : Color.Red) * 0.5f;
                 _level.controller.view.drawLine(_position, connection.actor.circuitConnectionPosition, lineColor, _layerDepth - 0.0001f);
                 _level.controller.view.drawPoint(connection.actor.circuitConnectionPosition, dotColor, _layerDepth - 0.0001f);
-                _level.controller.view.drawString(connection.gate.id.ToString(), (_position + connection.actor.circuitConnectionPosition) / 2, Color.White);
+                _level.controller.view.drawString(connection.gate.id.ToString(), (_position + connection.actor.circuitConnectionPosition) / 2, Color.White, 0f);
             }
         }
     }

@@ -129,16 +129,13 @@ namespace StasisEditor.Views
                     _spriteBatch.End();
                 }
                 
-                _spriteBatch.Begin();
+                _spriteBatch.Begin(SpriteSortMode.BackToFront, BlendState.AlphaBlend);
 
                 // Draw grid
                 drawGrid();
 
                 // Draw level
                 _controller.level.draw();
-
-                // Draw mouse position
-                drawMousePosition();
 
                 _spriteBatch.End();
 
@@ -160,6 +157,13 @@ namespace StasisEditor.Views
                     _backgroundRenderer.drawSecondHalf();
                     _spriteBatch.End();
                 }
+
+                _spriteBatch.Begin(SpriteSortMode.BackToFront, BlendState.AlphaBlend);
+
+                // Draw mouse position
+                drawMousePosition();
+
+                _spriteBatch.End();
             }
         }
 
@@ -203,8 +207,9 @@ namespace StasisEditor.Views
                 0);
 
             // Draw position as string
-            _spriteBatch.DrawString(_font, text, (worldMouse + worldOffset) * scale + new Vector2(17, 17), Color.Black, 0f, Vector2.Zero, 1f, SpriteEffects.None, 0.0000000001f);
-            _spriteBatch.DrawString(_font, text, (worldMouse + worldOffset) * scale + new Vector2(16, 16), Color.White, 0f, Vector2.Zero, 1f, SpriteEffects.None, 0);
+            drawString(text, worldMouse, Color.White, 0f);
+            //_spriteBatch.DrawString(_font, text, (worldMouse + worldOffset) * scale + new Vector2(17, 17), Color.Black, 0f, Vector2.Zero, 1f, SpriteEffects.None, 0.0000000001f);
+            //_spriteBatch.DrawString(_font, text, (worldMouse + worldOffset) * scale + new Vector2(16, 16), Color.White, 0f, Vector2.Zero, 1f, SpriteEffects.None, 0);
         }
 
         // drawBox
@@ -281,10 +286,10 @@ namespace StasisEditor.Views
         }
 
         // drawString
-        public void drawString(string text, Vector2 position, Color color)
+        public void drawString(string text, Vector2 position, Color color, float layerDepth)
         {
-            _spriteBatch.DrawString(_font, text, (position + _controller.worldOffset) * _controller.scale + new Vector2(1, 1), Color.Black, 0, Vector2.Zero, 1f, SpriteEffects.None, 0.0001f);
-            _spriteBatch.DrawString(_font, text, (position + _controller.worldOffset) * _controller.scale, color, 0, Vector2.Zero, 1f, SpriteEffects.None, 0);
+            _spriteBatch.DrawString(_font, text, (position + _controller.worldOffset) * _controller.scale + new Vector2(1, 1), Color.Black, 0, Vector2.Zero, 1f, SpriteEffects.None, layerDepth + 0.0001f);
+            _spriteBatch.DrawString(_font, text, (position + _controller.worldOffset) * _controller.scale, color, 0, Vector2.Zero, 1f, SpriteEffects.None, layerDepth);
         }
 
         // drawTexture
