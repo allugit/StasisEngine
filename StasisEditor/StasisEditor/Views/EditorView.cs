@@ -197,6 +197,7 @@ namespace StasisEditor.Views
         private void menuLevelSave_Click(object sender, EventArgs e)
         {
             SaveFileDialog fileDialog = new SaveFileDialog();
+            fileDialog.FileName = _controller.levelController.level.name + ".xml";
             fileDialog.Filter = "Level XML (*.xml) | *.xml";
             if (fileDialog.ShowDialog() == System.Windows.Forms.DialogResult.OK)
             {
