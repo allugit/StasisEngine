@@ -1500,126 +1500,30 @@ namespace StasisGame
         // createDecal -- Used to determine which decal to create
         public int createDecal(string levelUid, XElement data)
         {
-            string decalUID = data.Attribute("decal_uid").Value;
+            RenderSystem renderSystem = _systemManager.getSystem(SystemType.Render) as RenderSystem;
+            string decalType = data.Attribute("decal_type").Value;
             Vector2 position = Loader.loadVector2(data.Attribute("position"), Vector2.Zero);
             float angle = Loader.loadFloat(data.Attribute("angle"), 0f);
-            int entityId = Loader.loadInt(data.Attribute("id"), -1);
+            int actorId = Loader.loadInt(data.Attribute("id"), -1);
             float layerDepth = Loader.loadFloat(data.Attribute("layer_depth"), 0.11f);
+            string textureUid = Loader.loadString(data.Attribute("texture_uid"), "default");
+            int entityId = -1;
 
-            switch (decalUID)
+            if (decalType == "default_decal")
             {
-                case "blacksmith_hut":
-                    entityId = createBlacksmithHut(levelUid, position, angle, layerDepth);
-                    break;
-                case "carpenter_hut":
-                    entityId = createCarpenterHut(levelUid, position, angle, layerDepth);
-                    break;
-                case "door_1":
-                    entityId = createDoor(levelUid, "door_1", position, angle, layerDepth);
-                    break;
-                case "door_2":
-                    entityId = createDoor(levelUid, "door_2", position, angle, layerDepth);
-                    break;
-                case "rose_window_1":
-                    entityId = createTreeWindow(levelUid, "rose_window_1", position, angle, layerDepth);
-                    break;
-                case "dagny_house":
-                    entityId = createDagnyHouse(levelUid, position, angle, layerDepth);
-                    break;
-                case "dagny_house_interior":
-                    entityId = createDagnyHouseInterior(levelUid, position, angle, layerDepth);
-                    break;
+                Texture2D texture = ResourceManager.getTexture(textureUid);
+                Vector2 origin = Loader.loadVector2(data.Attribute("origin"), Vector2.Zero) * new Vector2(texture.Width, texture.Height);
+
+                entityId = _entityManager.createEntity(levelUid);
+                _entityManager.addComponent(levelUid, entityId, new PrimitivesRenderComponent(renderSystem.createSpritePrimitiveObject(texture, position, origin, angle, 1f, layerDepth)));
+                _entityManager.addComponent(levelUid, entityId, new WorldPositionComponent(position));
+            }
+            else
+            {
+                // TODO: Special decals here
             }
 
-            return entityId;
-        }
-
-        // createBlacksmithHut
-        public int createBlacksmithHut(string levelUid, Vector2 position, float angle, float layerDepth)
-        {
-            RenderSystem renderSystem = _systemManager.getSystem(SystemType.Render) as RenderSystem;
-            int entityId = _entityManager.createEntity(levelUid);
-            Texture2D texture = ResourceManager.getTexture("blacksmith_hut");
-            Vector2 origin = new Vector2(texture.Width, texture.Height) / 2f;
-
-            _entityManager.addComponent(levelUid, entityId, new PrimitivesRenderComponent(renderSystem.createSpritePrimitiveObject(texture, position, new Vector2(texture.Width / 2f, texture.Height), angle, 1f, layerDepth)));
-
-            return entityId;
-        }
-
-        // createDoor
-        public int createDoor(string levelUid, string textureUID, Vector2 position, float angle, float layerDepth)
-        {
-            RenderSystem renderSystem = _systemManager.getSystem(SystemType.Render) as RenderSystem;
-            int entityId = _entityManager.createEntity(levelUid);
-            Texture2D texture = ResourceManager.getTexture(textureUID);
-            Vector2 origin = new Vector2(texture.Width / 2f, texture.Height);
-
-            _entityManager.addComponent(levelUid, entityId, new PrimitivesRenderComponent(renderSystem.createSpritePrimitiveObject(texture, position, origin, angle, 1f, layerDepth)));
-            _entityManager.addComponent(levelUid, entityId, new WorldPositionComponent(position));
-
-            return entityId;
-        }
-
-        // createCarpenterHut
-        public int createCarpenterHut(string levelUid, Vector2 position, float angle, float layerDepth)
-        {
-            RenderSystem renderSystem = _systemManager.getSystem(SystemType.Render) as RenderSystem;
-            int entityId = _entityManager.createEntity(levelUid);
-            Texture2D texture = ResourceManager.getTexture("carpenter_hut");
-            Vector2 textureOffset = new Vector2(texture.Width / 2f, texture.Height);
-            Vector2 origin = new Vector2(texture.Width, texture.Height) / 2f;
-
-            _entityManager.addComponent(levelUid, entityId, new PrimitivesRenderComponent(renderSystem.createSpritePrimitiveObject(texture, position, textureOffset, angle, 1f, layerDepth)));
-            _entityManager.addComponent(levelUid, entityId, new IgnoreTreeCollisionComponent());
-
-            return entityId;
-        }
-
-        // createTreeWindow -- Creates a window decal and attaches it to a metamer
-        public int createTreeWindow(string levelUid, string textureUID, Vector2 position, float angle, float layerDepth)
-        {
-            RenderSystem renderSystem = _systemManager.getSystem(SystemType.Render) as RenderSystem;
-            int entityId = _entityManager.createEntity(levelUid);
-            Texture2D texture = ResourceManager.getTexture(textureUID);
-            Vector2 origin = new Vector2(texture.Width, texture.Height) / 2f;
-            Metamer metamer = (_systemManager.getSystem(SystemType.Tree) as TreeSystem).findMetamer(position);
-            System.Diagnostics.Debug.Assert(metamer != null);
-
-            _entityManager.addComponent(levelUid, entityId, new PrimitivesRenderComponent(renderSystem.createSpritePrimitiveObject(texture, position, origin, angle, 1f, layerDepth)));
-            _entityManager.addComponent(levelUid, entityId, new WorldPositionComponent(position));
-            _entityManager.addComponent(levelUid, entityId, new FollowMetamerComponent(metamer));
-
-            return entityId;
-        }
-
-        // createDagnyHouse -- Creates Dagny's house
-        public int createDagnyHouse(string levelUid, Vector2 position, float angle, float layerDepth)
-        {
-            RenderSystem renderSystem = _systemManager.getSystem(SystemType.Render) as RenderSystem;
-            int entityId = _entityManager.createEntity(levelUid);
-            Texture2D texture = ResourceManager.getTexture("dagny_house");
-            Vector2 origin = new Vector2(texture.Width / 2f, texture.Height);
-
-            _entityManager.addComponent(levelUid, entityId, new PrimitivesRenderComponent(renderSystem.createSpritePrimitiveObject(texture, position, origin, angle, 1f, layerDepth)));
-            _entityManager.addComponent(levelUid, entityId, new WorldPositionComponent(position));
-            _entityManager.addComponent(levelUid, entityId, new TooltipComponent("[Use] Enter Dagny's House", position, 1.2f));
-
-            return entityId;
-        }
-
-        // createDagnyHouseInterior -- Creates Dagny's house (interior view)
-        public int createDagnyHouseInterior(string levelUid, Vector2 position, float angle, float layerDepth)
-        {
-            RenderSystem renderSystem = _systemManager.getSystem(SystemType.Render) as RenderSystem;
-            int entityId = _entityManager.createEntity(levelUid);
-            Texture2D texture = ResourceManager.getTexture("dagny_house_interior");
-            Vector2 origin = new Vector2(texture.Width / 2f, texture.Height);
-
-            _entityManager.addComponent(levelUid, entityId, new PrimitivesRenderComponent(renderSystem.createSpritePrimitiveObject(texture, position, origin, angle, 1f, layerDepth)));
-            _entityManager.addComponent(levelUid, entityId, new WorldPositionComponent(position));
-            _entityManager.addComponent(levelUid, entityId, new TooltipComponent("[Use] Leave House", position, 1.2f));
-
+            System.Diagnostics.Debug.Assert(entityId != -1);
             return entityId;
         }
     }

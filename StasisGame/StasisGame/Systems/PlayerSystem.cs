@@ -169,7 +169,7 @@ namespace StasisGame.Systems
                             characterMovementComponent.climbUp = InputSystem.newKeyState.IsKeyDown(Keys.W);
                             characterMovementComponent.climbDown = InputSystem.newKeyState.IsKeyDown(Keys.S);
                             characterMovementComponent.climbAmount = 1f;
-                            characterMovementComponent.doRopeGrab = InputSystem.newKeyState.IsKeyDown(Keys.E);
+                            characterMovementComponent.doRopeGrab = InputSystem.newKeyState.IsKeyDown(Keys.E) && InputSystem.oldKeyState.IsKeyUp(Keys.E);
                             characterMovementComponent.allowRopeGrab = characterMovementComponent.allowRopeGrab ? true : (InputSystem.newKeyState.IsKeyUp(Keys.E) && InputSystem.oldKeyState.IsKeyDown(Keys.E));
 
                         }
