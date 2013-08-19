@@ -1355,28 +1355,20 @@ namespace StasisGame
                 data.Attribute("level_uid").Value,
                 Loader.loadVector2(data.Attribute("position"), Vector2.Zero),
                 float.Parse(data.Attribute("radius").Value),
+                Loader.loadVector2(data.Attribute("position_in_level"), Vector2.Zero),
                 true);
         }
 
-        public int createLevelTransition(string levelUid, string transitionLevelUid, Vector2 position, float radius, bool requiresActivation)
+        public int createLevelTransition(string levelUid, string transitionLevelUid, Vector2 position, float radius, Vector2 positionInLevel, bool requiresActivation)
         {
-            return createLevelTransition(levelUid, -1, transitionLevelUid, position, radius, requiresActivation);
+            return createLevelTransition(levelUid, -1, transitionLevelUid, position, radius, positionInLevel, requiresActivation);
         }
 
-        public int createLevelTransition(string levelUid, int actorId, string transitionLevelUid, Vector2 position, float radius, bool requiresActivation)
+        public int createLevelTransition(string levelUid, int actorId, string transitionLevelUid, Vector2 position, float radius, Vector2 positionInLevel, bool requiresActivation)
         {
-            int entityId;
+            int entityId = actorId == -1 ? _entityManager.createEntity(levelUid) : _entityManager.createEntity(levelUid, actorId);
 
-            if (actorId == -1)
-            {
-                entityId = _entityManager.createEntity(levelUid);
-            }
-            else
-            {
-                entityId = _entityManager.createEntity(levelUid, actorId);
-            }
-
-            _entityManager.addComponent(levelUid, entityId, new LevelTransitionComponent(transitionLevelUid, position, radius, requiresActivation));
+            _entityManager.addComponent(levelUid, entityId, new LevelTransitionComponent(transitionLevelUid, position, radius, positionInLevel, requiresActivation));
 
             return entityId;
         }

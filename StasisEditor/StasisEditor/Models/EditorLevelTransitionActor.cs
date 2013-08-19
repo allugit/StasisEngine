@@ -13,11 +13,13 @@ namespace StasisEditor.Models
         private Vector2 _position;
         private float _radius;
         private string _levelUid;
+        private Vector2 _positionInLevel;
 
         [Browsable(false)]
         public Vector2 position { get { return _position; } set { _position = value; } }
         public float radius { get { return _radius; } set { _radius = value; } }
         public string levelUid { get { return _levelUid; } set { _levelUid = value; } }
+        public Vector2 positionInLevel { get { return _positionInLevel; } set { _positionInLevel = value; } }
         [Browsable(false)]
         public override XElement data
         {
@@ -28,6 +30,7 @@ namespace StasisEditor.Models
                 d.SetAttributeValue("position", _position);
                 d.SetAttributeValue("radius", _radius);
                 d.SetAttributeValue("level_uid", _levelUid);
+                d.SetAttributeValue("position_in_level", _positionInLevel);
                 return d;
             }
         }
@@ -38,6 +41,7 @@ namespace StasisEditor.Models
             _position = level.controller.worldMouse;
             _radius = 1f;
             _levelUid = "default";
+            _positionInLevel = Vector2.Zero;
         }
 
         public EditorLevelTransitionActor(EditorLevel level, XElement data)
@@ -46,6 +50,7 @@ namespace StasisEditor.Models
             _position = Loader.loadVector2(data.Attribute("position"), Vector2.Zero);
             _radius = Loader.loadFloat(data.Attribute("radius"), 1f);
             _levelUid = Loader.loadString(data.Attribute("level_uid"), "default");
+            _positionInLevel = Loader.loadVector2(data.Attribute("position_in_level"), Vector2.Zero);
         }
 
         public override void handleSelectedClick(System.Windows.Forms.MouseButtons button)
