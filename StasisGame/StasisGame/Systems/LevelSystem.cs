@@ -40,6 +40,7 @@ namespace StasisGame.Systems
         private Dictionary<string, int> _numEntitiesProcessed;
         private Dictionary<string, bool> _finishedLoading;
         private Dictionary<string, Background> _backgrounds;
+        private Dictionary<string, Vector2> _spawnPositions;
         private KeyboardState _newKeyState;
         private KeyboardState _oldKeyState;
         private bool _finalized;
@@ -113,8 +114,16 @@ namespace StasisGame.Systems
             _numEntitiesProcessed = new Dictionary<string, int>();
             _backgrounds = new Dictionary<string, Background>();
             _finishedLoading = new Dictionary<string, bool>();
+            _spawnPositions = new Dictionary<string, Vector2>();
         }
 
+        // getPlayerSpawn -- Gets a player spawn position for a specific level
+        public Vector2 getPlayerSpawn(string levelUid)
+        {
+            return _spawnPositions[levelUid];
+        }
+
+        // expandBoundary
         public void expandBoundary(Vector2 point)
         {
             _levelBoundary.LowerBound = Vector2.Min(point - _boundaryMargin, _levelBoundary.LowerBound);
@@ -271,8 +280,8 @@ namespace StasisGame.Systems
                         if (_systemManager.getSystem(SystemType.CharacterMovement) == null)
                             _systemManager.add(new CharacterMovementSystem(_systemManager, _entityManager), -1);
 
-                        (_systemManager.getSystem(SystemType.Player) as PlayerSystem).spawnPosition = spawnPosition;
-                        (_systemManager.getSystem(SystemType.Camera) as CameraSystem).screenCenter = spawnPosition;
+                        _spawnPositions.Add(levelUid, spawnPosition);
+                        //(_systemManager.getSystem(SystemType.Camera) as CameraSystem).screenCenter = spawnPosition;
                         loadingScreen.elementsLoaded++;
                         break;
 
@@ -386,7 +395,7 @@ namespace StasisGame.Systems
             (_systemManager.getSystem(SystemType.Fluid) as FluidSystem).relaxFluid();
         }
 
-        // Clean states set during the level load process -- TODO: rename this?
+        // Clean states set during the level load process. Called directly after level is loaded -- TODO: rename this?
         public void clean()
         {
             _numEntities.Clear();
@@ -400,6 +409,12 @@ namespace StasisGame.Systems
             _entityManager.factory.reset();
         }
 
+        // Reset states used during the previous level. Called directly before a level is loaded
+        public void reset()
+        {
+            _spawnPositions.Clear();
+        }
+
         // switchToLevel -- Switch to a different level (must be loaded!)
         public void switchToLevel(string levelUid, Vector2 playerPosition)
         {
@@ -410,6 +425,9 @@ namespace StasisGame.Systems
             _playerSystem.addPlayerToLevel(levelUid, playerPosition);
             _renderSystem.setBackground(_backgrounds[levelUid]);
             currentLevelUid = levelUid;
+
+            // Update camera
+            (_systemManager.getSystem(SystemType.Camera) as CameraSystem).screenCenter = playerPosition;
         }
 
         // TODO: Refactor this crap
@@ -418,9 +436,12 @@ namespace StasisGame.Systems
             /*
             // Call registerGoals script hook for this level
             _scriptManager.registerGoals(currentLevelUid, this);
+            */
 
-            // Call onLevelStart script hook for this level
-            _scriptManager.onLevelStart(currentLevelUid);*/
+            foreach (string levelUid in _levelsData.Keys)
+            {
+                _scriptManager.onLevelStart(levelUid);
+            }
         }
 
         // isGoalComplete -- Checks if a goal with a specific id has been completed

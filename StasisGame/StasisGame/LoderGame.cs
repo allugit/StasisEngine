@@ -250,6 +250,7 @@ namespace StasisGame
             {
                 _gameState = GameState.LoadingLevel;
                 IsFixedTimeStep = false;
+                _levelSystem.reset();
                 _levelSystem.createLevelSystems();
                 _levelSystem.loadAllData(levelUid);
                 _levelSystem.createBackgrounds();
@@ -388,7 +389,7 @@ namespace StasisGame
                         _levelSystem.clean();
                         _levelSystem.callScripts();
                         _levelSystem.finalized = true;
-                        _levelSystem.switchToLevel(_levelSystem.lastLevelUidLoaded, _playerSystem.spawnPosition);
+                        _levelSystem.switchToLevel(_levelSystem.lastLevelUidLoaded, _levelSystem.getPlayerSpawn(_levelSystem.lastLevelUidLoaded));
                         _loadingScreen.message = "Starting level!";
                         _screenSystem.addTransition(new ScreenFadeOutTransition(_loadingScreen, Color.Black, true, 0.05f, null, () =>
                             {
@@ -399,7 +400,6 @@ namespace StasisGame
                                 _levelScreen = new LevelScreen(this, _systemManager, _entityManager);
                                 _screenSystem.addScreen(_levelScreen);
                                 _screenSystem.addTransition(new ScreenFadeInTransition(_levelScreen, Color.Black, true, 0.025f));
-                                _scriptManager.onLevelStart(_levelSystem.lastLevelUidLoaded);
                             }));
                     }
                     break;

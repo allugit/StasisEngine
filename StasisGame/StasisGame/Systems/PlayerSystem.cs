@@ -21,7 +21,6 @@ namespace StasisGame.Systems
         private int _playerId;
         private bool _paused;
         private bool _singleStep;
-        private Vector2 _spawnPosition;
 
         public int defaultPriority { get { return 30; } }
         public SystemType systemType { get { return SystemType.Player; } }
@@ -29,7 +28,6 @@ namespace StasisGame.Systems
         public bool paused { get { return _paused; } set { _paused = value; } }
         public bool singleStep { get { return _singleStep; } set { _singleStep = value; } }
         public EntityManager entityManager { get { return _entityManager; } }
-        public Vector2 spawnPosition { get { return _spawnPosition; } set { _spawnPosition = value; } }
 
         public PlayerSystem(SystemManager systemManager, EntityManager entityManager)
         {
