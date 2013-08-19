@@ -1381,6 +1381,26 @@ namespace StasisGame
             return entityId;
         }
 
+        // createTooltip
+        public int createTooltip(string levelUid, XElement data)
+        {
+            return createTooltip(
+                levelUid,
+                int.Parse(data.Attribute("id").Value),
+                Loader.loadVector2(data.Attribute("position"), Vector2.Zero),
+                Loader.loadFloat(data.Attribute("radius"), 0.25f),
+                Loader.loadString(data.Attribute("message"), "Default Message"));
+        }
+
+        public int createTooltip(string levelUid, int actorId, Vector2 position, float radius, string message)
+        {
+            int entityId = actorId == -1 ? _entityManager.createEntity(levelUid) : _entityManager.createEntity(levelUid, actorId);
+
+            _entityManager.addComponent(levelUid, entityId, new TooltipComponent(message, position, radius));
+
+            return entityId;
+        }
+
         // createDynamite
         public int createDynamite(string levelUid, Vector2 position, Vector2 force)
         {

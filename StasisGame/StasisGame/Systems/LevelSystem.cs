@@ -296,6 +296,11 @@ namespace StasisGame.Systems
                         loadingScreen.elementsLoaded++;
                         break;
 
+                    case "Tooltip":
+                        _entityManager.factory.createTooltip(levelUid, actorData);
+                        loadingScreen.elementsLoaded++;
+                        break;
+
                     default:
                         throw new NotImplementedException("Unhandled actor type in loadNextEntity()");
                 }
