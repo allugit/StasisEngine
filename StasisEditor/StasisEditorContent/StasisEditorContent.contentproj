@@ -156,8 +156,8 @@
     </Compile>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="actor_icons\tooltip_icon.png">
-      <Name>tooltip_icon</Name>
+    <Compile Include="actor_icons\tooltip.png">
+      <Name>tooltip</Name>
       <Importer>TextureImporter</Importer>
       <Processor>TextureProcessor</Processor>
     </Compile>

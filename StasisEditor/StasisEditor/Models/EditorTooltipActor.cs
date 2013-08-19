@@ -120,7 +120,8 @@ namespace StasisEditor.Models
 
         public override void draw()
         {
-            _level.controller.view.drawCircle(_position, _radius, Color.Green * 0.5f, _layerDepth);
+            _level.controller.view.drawCircle(_position, _radius, Color.Green * 0.5f, _layerDepth + 0.0001f);
+            _level.controller.view.drawIcon(_type, _position, _layerDepth);
         }
     }
 }
