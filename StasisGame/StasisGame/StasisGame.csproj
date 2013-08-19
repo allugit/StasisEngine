@@ -125,6 +125,7 @@
     <Compile Include="Managers\WorldMapManager.cs" />
     <Compile Include="PrimitiveRenderObject.cs" />
     <Compile Include="RenderableTriangle.cs" />
+    <Compile Include="Scripts\HomeVillageScript.cs" />
     <Compile Include="Systems\ExplosionSystem.cs" />
     <Compile Include="Systems\LevelSystem.cs" />
     <Compile Include="Managers\DataManager.cs" />
@@ -140,7 +141,7 @@
     <Compile Include="Program.cs" />
     <Compile Include="LoderGame.cs" />
     <Compile Include="RenderablePrimitiveNode.cs" />
-    <Compile Include="ScriptBase.cs" />
+    <Compile Include="Scripts\ScriptBase.cs" />
     <Compile Include="Systems\CameraSystem.cs" />
     <Compile Include="Systems\CharacterMovementSystem.cs" />
     <Compile Include="Systems\CircuitSystem.cs" />

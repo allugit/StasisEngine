@@ -3,9 +3,9 @@ using System.Collections.Generic;
 using StasisGame.Managers;
 using StasisGame.Systems;
 
-namespace StasisGame
+namespace StasisGame.Scripts
 {
-    public class ScriptBase
+    abstract public class ScriptBase
     {
         protected SystemManager _systemManager;
         protected EntityManager _entityManager;

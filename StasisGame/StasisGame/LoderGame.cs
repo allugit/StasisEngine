@@ -12,6 +12,7 @@ using Microsoft.Xna.Framework.Input;
 using Microsoft.Xna.Framework.Media;
 using StasisGame.Managers;
 using StasisGame.UI;
+using StasisGame.Scripts;
 using StasisGame.Systems;
 using StasisGame.Components;
 using StasisCore;
@@ -90,11 +91,12 @@ namespace StasisGame
         {
             Logger.log("LoderGame.Initialize method started.");
 
-            base.Initialize();
-
             _systemManager = new SystemManager();
             _entityManager = new EntityManager(_systemManager);
             _scriptManager = new ScriptManager(_systemManager, _entityManager);
+
+            base.Initialize();
+
             _screenSystem = new ScreenSystem(_systemManager, _spriteBatch);
             _systemManager.add(_screenSystem, -1);
             _loadingScreen = new LoadingScreen(this);
@@ -115,7 +117,7 @@ namespace StasisGame
 
             _logo = Content.Load<Texture2D>("logo");
 
-            // TODO: Be more selective about which resources to load...
+            // TODO: Be more selective about which resources to load?
             ResourceManager.initialize(GraphicsDevice);
             ResourceManager.loadAllCharacters(TitleContainer.OpenStream(ResourceManager.characterPath));
             ResourceManager.loadAllCircuits(TitleContainer.OpenStream(ResourceManager.circuitPath));
@@ -175,6 +177,9 @@ namespace StasisGame
             _arial = Content.Load<SpriteFont>("arial");
 
             _menuBackgroundRenderer = new BackgroundRenderer(_spriteBatch);
+
+            // Scripts
+            _scriptManager.addScript("home_village", new HomeVillageScript(_systemManager, _entityManager));
 
             Logger.log("LoderGame.LoadContent method finished.");
         }
@@ -245,7 +250,6 @@ namespace StasisGame
             {
                 _gameState = GameState.LoadingLevel;
                 IsFixedTimeStep = false;
-                _scriptManager.loadLevelScript(levelUid);
                 _levelSystem.createLevelSystems();
                 _levelSystem.loadAllData(levelUid);
                 _levelSystem.createBackgrounds();
@@ -395,6 +399,7 @@ namespace StasisGame
                                 _levelScreen = new LevelScreen(this, _systemManager, _entityManager);
                                 _screenSystem.addScreen(_levelScreen);
                                 _screenSystem.addTransition(new ScreenFadeInTransition(_levelScreen, Color.Black, true, 0.025f));
+                                _scriptManager.onLevelStart(_levelSystem.lastLevelUidLoaded);
                             }));
                     }
                     break;
