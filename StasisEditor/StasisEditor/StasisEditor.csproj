@@ -108,6 +108,7 @@
     <Compile Include="Models\EditorRevoluteActor.cs" />
     <Compile Include="Models\EditorRopeActor.cs" />
     <Compile Include="Models\EditorTerrainActor.cs" />
+    <Compile Include="Models\EditorTooltipActor.cs" />
     <Compile Include="Models\EditorTreeActor.cs" />
     <Compile Include="Models\IActorComponent.cs" />
     <Compile Include="Models\EditorActor.cs" />
@@ -277,6 +278,7 @@
       <XnaPlatformSpecific>true</XnaPlatformSpecific>
     </Content>
     <Content Include="Resources\circuits.png" />
+    <None Include="Resources\tooltip.png" />
     <None Include="Resources\level_transition.png" />
     <None Include="Resources\decals.png" />
     <None Include="Resources\collision_filter.png" />

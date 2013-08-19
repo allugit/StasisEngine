@@ -8,16 +8,16 @@ using StasisCore;
 
 namespace StasisEditor.Models
 {
-    public class EditorLevelTransitionActor : EditorActor, IActorComponent
+    public class EditorTooltipActor : EditorActor, IActorComponent
     {
         private Vector2 _position;
         private float _radius;
-        private string _levelUid;
+        private string _message;
 
         [Browsable(false)]
         public Vector2 position { get { return _position; } set { _position = value; } }
         public float radius { get { return _radius; } set { _radius = value; } }
-        public string levelUid { get { return _levelUid; } set { _levelUid = value; } }
+        public string message { get { return _message; } set { _message = value; } }
         [Browsable(false)]
         public override XElement data
         {
@@ -27,25 +27,25 @@ namespace StasisEditor.Models
 
                 d.SetAttributeValue("position", _position);
                 d.SetAttributeValue("radius", _radius);
-                d.SetAttributeValue("level_uid", _levelUid);
+                d.SetAttributeValue("message", _message);
                 return d;
             }
         }
 
-        public EditorLevelTransitionActor(EditorLevel level)
-            : base(level, ActorType.LevelTransition, level.getUnusedActorId())
+        public EditorTooltipActor(EditorLevel level)
+            : base(level, ActorType.Tooltip, level.getUnusedActorId())
         {
             _position = level.controller.worldMouse;
             _radius = 1f;
-            _levelUid = "default";
+            _message = "Default Message";
         }
 
-        public EditorLevelTransitionActor(EditorLevel level, XElement data)
+        public EditorTooltipActor(EditorLevel level, XElement data)
             : base(level, data)
         {
             _position = Loader.loadVector2(data.Attribute("position"), Vector2.Zero);
             _radius = Loader.loadFloat(data.Attribute("radius"), 1f);
-            _levelUid = Loader.loadString(data.Attribute("level_uid"), "default");
+            _message = Loader.loadString(data.Attribute("message"), "Default Message");
         }
 
         public override void handleSelectedClick(System.Windows.Forms.MouseButtons button)
@@ -120,7 +120,7 @@ namespace StasisEditor.Models
 
         public override void draw()
         {
-            _level.controller.view.drawCircle(_position, _radius, Color.Yellow * 0.5f, _layerDepth);
+            _level.controller.view.drawCircle(_position, _radius, Color.Green * 0.5f, _layerDepth);
         }
     }
 }

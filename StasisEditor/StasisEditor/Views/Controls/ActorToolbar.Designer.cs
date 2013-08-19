@@ -45,6 +45,7 @@
             this.goalButton = new System.Windows.Forms.ToolStripButton();
             this.decalsButton = new System.Windows.Forms.ToolStripButton();
             this.levelTransitionButton = new System.Windows.Forms.ToolStripButton();
+            this.tooltipButton = new System.Windows.Forms.ToolStripButton();
             this.anchorToolStrip.SuspendLayout();
             this.SuspendLayout();
             // 
@@ -72,11 +73,12 @@
             this.collisionFilterButton,
             this.goalButton,
             this.decalsButton,
-            this.levelTransitionButton});
+            this.levelTransitionButton,
+            this.tooltipButton});
             this.anchorToolStrip.LayoutStyle = System.Windows.Forms.ToolStripLayoutStyle.Flow;
             this.anchorToolStrip.Location = new System.Drawing.Point(0, 0);
             this.anchorToolStrip.Name = "anchorToolStrip";
-            this.anchorToolStrip.Size = new System.Drawing.Size(206, 78);
+            this.anchorToolStrip.Size = new System.Drawing.Size(206, 150);
             this.anchorToolStrip.TabIndex = 0;
             this.anchorToolStrip.Text = "Actor Toolbar";
             this.anchorToolStrip.ItemClicked += new System.Windows.Forms.ToolStripItemClickedEventHandler(this.anchorToolStrip_ItemClicked);
@@ -233,6 +235,16 @@
             this.levelTransitionButton.Text = "Level Transition";
             this.levelTransitionButton.ToolTipText = "Level Transition";
             // 
+            // tooltipButton
+            // 
+            this.tooltipButton.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
+            this.tooltipButton.Image = ((System.Drawing.Image)(resources.GetObject("tooltipButton.Image")));
+            this.tooltipButton.ImageTransparentColor = System.Drawing.Color.Magenta;
+            this.tooltipButton.Margin = new System.Windows.Forms.Padding(0);
+            this.tooltipButton.Name = "tooltipButton";
+            this.tooltipButton.Size = new System.Drawing.Size(26, 26);
+            this.tooltipButton.Text = "Tooltip";
+            // 
             // ActorToolbar
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -240,7 +252,7 @@
             this.AutoSize = true;
             this.Controls.Add(this.anchorToolStrip);
             this.Name = "ActorToolbar";
-            this.Size = new System.Drawing.Size(206, 78);
+            this.Size = new System.Drawing.Size(206, 150);
             this.anchorToolStrip.ResumeLayout(false);
             this.anchorToolStrip.PerformLayout();
             this.ResumeLayout(false);
@@ -265,5 +277,6 @@
         private System.Windows.Forms.ToolStripButton collisionFilterButton;
         private System.Windows.Forms.ToolStripButton decalsButton;
         private System.Windows.Forms.ToolStripButton levelTransitionButton;
+        private System.Windows.Forms.ToolStripButton tooltipButton;
     }
 }

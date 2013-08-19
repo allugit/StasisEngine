@@ -32,7 +32,8 @@
         CollisionFilter,
         Goal,
         Decal,
-        LevelTransition
+        LevelTransition,
+        Tooltip
     };
 
     public enum PlantType

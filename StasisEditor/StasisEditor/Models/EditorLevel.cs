@@ -131,6 +131,10 @@ namespace StasisEditor.Models
                     case "LevelTransition":
                         addActor(new EditorLevelTransitionActor(this, actorData));
                         break;
+
+                    case "Tooltip":
+                        addActor(new EditorTooltipActor(this, actorData));
+                        break;
                 }
             }
 

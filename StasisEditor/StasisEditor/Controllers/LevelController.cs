@@ -261,6 +261,10 @@ namespace StasisEditor.Controllers
                 case "levelTransitionButton":
                     actor = new EditorLevelTransitionActor(_level);
                     break;
+
+                case "tooltipButton":
+                    actor = new EditorTooltipActor(_level);
+                    break;
             }
 
             if (actor != null)
