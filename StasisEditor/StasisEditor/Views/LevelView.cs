@@ -129,7 +129,7 @@ namespace StasisEditor.Views
                     _spriteBatch.End();
                 }
                 
-                _spriteBatch.Begin(SpriteSortMode.BackToFront, BlendState.AlphaBlend);
+                _spriteBatch.Begin();
 
                 // Draw grid
                 drawGrid();
