@@ -1538,5 +1538,52 @@ namespace StasisGame
             System.Diagnostics.Debug.Assert(entityId != -1);
             return entityId;
         }
+
+        // createDagny
+        public int createDagny(string levelUid, Vector2 position)
+        {
+            World world = (_systemManager.getSystem(SystemType.Physics) as PhysicsSystem).getWorld(levelUid);
+            Body body;
+            Fixture fixture;
+            Fixture feetFixture;
+            PolygonShape polygonShape = new PolygonShape(1f);
+            CircleShape feetShape = new CircleShape(0.18f, 0.1f);
+            int entityId = _entityManager.createEntity(levelUid);
+
+            body = BodyFactory.CreateBody(world, position, entityId);
+            body.IsBullet = true;
+            body.FixedRotation = true;
+            body.BodyType = BodyType.Dynamic;
+            polygonShape.SetAsBox(0.18f, 0.27f);
+            fixture = body.CreateFixture(polygonShape);
+            fixture.Friction = 0f;
+            fixture.Restitution = 0f;
+            fixture.CollisionCategories = (ushort)CollisionCategory.Player;
+            fixture.CollidesWith =
+                (ushort)CollisionCategory.DynamicGeometry |
+                (ushort)CollisionCategory.Item |
+                (ushort)CollisionCategory.Rope |
+                (ushort)CollisionCategory.StaticGeometry |
+                (ushort)CollisionCategory.Explosion;
+
+            feetShape.Position = new Vector2(0, 0.27f);
+            feetShape.Density = 0.1f;
+            feetFixture = body.CreateFixture(feetShape);
+            feetFixture.Friction = 0.1f;
+            feetFixture.CollisionCategories = fixture.CollisionCategories;
+            feetFixture.CollidesWith = fixture.CollidesWith;
+
+            _entityManager.addComponent(levelUid, entityId, new PhysicsComponent(body));
+            _entityManager.addComponent(levelUid, entityId, new CharacterMovementComponent(feetFixture));
+            _entityManager.addComponent(levelUid, entityId, new CharacterRenderComponent());
+            //_entityManager.addComponent(levelUid, entityId, new BodyFocusPointComponent(body, new Vector2(0, -5f), FocusType.Multiple));
+            _entityManager.addComponent(levelUid, entityId, new IgnoreTreeCollisionComponent());
+            _entityManager.addComponent(levelUid, entityId, new IgnoreRopeRaycastComponent());
+            _entityManager.addComponent(levelUid, entityId, new WorldPositionComponent(body.Position));
+            _entityManager.addComponent(levelUid, entityId, new SkipFluidResolutionComponent());
+            _entityManager.addComponent(levelUid, entityId, new ParticleInfluenceComponent(ParticleInfluenceType.Character));
+
+            return entityId;
+        }
     }
 }

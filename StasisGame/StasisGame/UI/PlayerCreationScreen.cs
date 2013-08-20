@@ -75,7 +75,8 @@ namespace StasisGame.UI
                         _game.playerSystem.createPlayer();
                         playerSlot = DataManager.createPlayerData(_nameInputPane.name);
                         DataManager.loadPlayerData(playerSlot);
-                        _game.openWorldMap();
+                        _game.loadLevel("dagny_house");
+                        //_game.openWorldMap();
                     }));
                 });
         }

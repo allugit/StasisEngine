@@ -43,6 +43,7 @@ namespace StasisGame.Systems
         private Dictionary<string, Vector2> _spawnPositions;
         private KeyboardState _newKeyState;
         private KeyboardState _oldKeyState;
+        private List<string> _loadedLevels;
         private bool _finalized;
         private string _lastLevelUidLoaded;
 
@@ -115,6 +116,7 @@ namespace StasisGame.Systems
             _backgrounds = new Dictionary<string, Background>();
             _finishedLoading = new Dictionary<string, bool>();
             _spawnPositions = new Dictionary<string, Vector2>();
+            _loadedLevels = new List<string>();
         }
 
         // getPlayerSpawn -- Gets a player spawn position for a specific level
@@ -178,6 +180,7 @@ namespace StasisGame.Systems
 
             // Load parent level
             _lastLevelUidLoaded = parentLevelUid;
+            _loadedLevels.Add(parentLevelUid);
             using (Stream stream = TitleContainer.OpenStream(ResourceManager.levelPath + string.Format("\\{0}.xml", parentLevelUid)))
             {
                 XDocument doc = XDocument.Load(stream);
@@ -190,7 +193,10 @@ namespace StasisGame.Systems
                 {
                     if (actorData.Attribute("type").Value == "LevelTransition")
                     {
-                        levelDependencies.Add(actorData.Attribute("level_uid").Value);
+                        string levelDependencyUid = actorData.Attribute("level_uid").Value;
+
+                        _loadedLevels.Add(levelDependencyUid);
+                        levelDependencies.Add(levelDependencyUid);
                     }
                 }
             }
@@ -412,6 +418,7 @@ namespace StasisGame.Systems
         // Reset states used during the previous level. Called directly before a level is loaded
         public void reset()
         {
+            _loadedLevels.Clear();
             _spawnPositions.Clear();
         }
 
@@ -430,7 +437,7 @@ namespace StasisGame.Systems
             (_systemManager.getSystem(SystemType.Camera) as CameraSystem).screenCenter = playerPosition;
         }
 
-        // TODO: Refactor this crap
+        // TODO: Refactor(rename) this crap
         public void callScripts()
         {
             /*
@@ -438,7 +445,7 @@ namespace StasisGame.Systems
             _scriptManager.registerGoals(currentLevelUid, this);
             */
 
-            foreach (string levelUid in _levelsData.Keys)
+            foreach (string levelUid in _loadedLevels)
             {
                 _scriptManager.onLevelStart(levelUid);
             }

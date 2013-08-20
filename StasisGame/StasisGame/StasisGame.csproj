@@ -125,6 +125,7 @@
     <Compile Include="Managers\WorldMapManager.cs" />
     <Compile Include="PrimitiveRenderObject.cs" />
     <Compile Include="RenderableTriangle.cs" />
+    <Compile Include="Scripts\DagnyHouseScript.cs" />
     <Compile Include="Scripts\HomeVillageScript.cs" />
     <Compile Include="Systems\ExplosionSystem.cs" />
     <Compile Include="Systems\LevelSystem.cs" />
