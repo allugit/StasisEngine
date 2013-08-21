@@ -15,6 +15,7 @@ namespace StasisGame.Components
 
         public WaypointsComponent(string uid, List<Vector2> waypoints)
         {
+            _uid = uid;
             _waypoints = waypoints;
         }
     }

@@ -21,7 +21,8 @@ namespace StasisGame.Systems
         Equipment,
         Rope,
         Level,
-        Explosion
+        Explosion,
+        AIBehavior
     };
 
     public interface ISystem

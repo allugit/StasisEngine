@@ -544,6 +544,25 @@ namespace StasisGame.Systems
                 _spriteBatch.End();
                 */
             }
+
+            // AI Wander Behavior debug
+            if (LoderGame.debug)
+            {
+                AIBehaviorSystem aiBehaviorSystem = _systemManager.getSystem(SystemType.AIBehavior) as AIBehaviorSystem;
+                List<int> wanderBehaviorEntities = _entityManager.getEntitiesPosessing(levelUid, ComponentType.AIWanderBehavior);
+
+                for (int i =0; i < wanderBehaviorEntities.Count; i++)
+                {
+                    AIWanderBehaviorComponent wanderComponent = _entityManager.getComponent(levelUid, wanderBehaviorEntities[i], ComponentType.AIWanderBehavior) as AIWanderBehaviorComponent;
+                    List<WaypointsComponent> waypointsComponents = _entityManager.getComponents<WaypointsComponent>(levelUid, ComponentType.Waypoints);
+                    WaypointsComponent waypointsComponent = aiBehaviorSystem.getWaypointsComponent(wanderComponent.waypointsUid, waypointsComponents);
+                    Vector2 waypointPosition = waypointsComponent.waypoints[wanderComponent.currentWaypointIndex];
+
+                    _spriteBatch.Begin();
+                    _spriteBatch.Draw(_circle, (waypointPosition - screenCenter) * _scale + _halfScreen, _circle.Bounds, Color.Red, 0f, new Vector2(_circle.Width, _circle.Height) / 2f, 0.02f, SpriteEffects.None, 0f);
+                    _spriteBatch.End();
+                }
+            }
         }
     }
 }
