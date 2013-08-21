@@ -165,6 +165,7 @@ namespace StasisGame.Systems
                             characterMovementComponent.walkLeft = InputSystem.newKeyState.IsKeyDown(Keys.A) || InputSystem.newKeyState.IsKeyDown(Keys.Left);
                             characterMovementComponent.walkRight = InputSystem.newKeyState.IsKeyDown(Keys.D) || InputSystem.newKeyState.IsKeyDown(Keys.Right);
                             characterMovementComponent.attemptJump = InputSystem.newKeyState.IsKeyDown(Keys.Space) && InputSystem.oldKeyState.IsKeyUp(Keys.Space);
+                            characterMovementComponent.swimUp = InputSystem.newKeyState.IsKeyDown(Keys.Space);
                             characterMovementComponent.climbUp = InputSystem.newKeyState.IsKeyDown(Keys.W);
                             characterMovementComponent.climbDown = InputSystem.newKeyState.IsKeyDown(Keys.S);
                             characterMovementComponent.climbAmount = 1f;

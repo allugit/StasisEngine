@@ -21,6 +21,7 @@ namespace StasisGame.Components
         private bool _doRopeGrab;
         private bool _allowRopeGrab = true;
         private bool _inFluid;
+        private bool _swimUp;
 
         public ComponentType componentType { get { return ComponentType.CharacterMovement; } }
         public List<Vector2> collisionNormals { get { return _collisionNormals; } }
@@ -37,6 +38,7 @@ namespace StasisGame.Components
         public bool doRopeGrab { get { return _doRopeGrab; } set { _doRopeGrab = value; } }
         public bool allowRopeGrab { get { return _allowRopeGrab; } set { _allowRopeGrab = value; } }
         public bool inFluid { get { return _inFluid; } set { _inFluid = value; } }
+        public bool swimUp { get { return _swimUp; } set { _swimUp = value; } }
 
         public CharacterMovementComponent(Fixture feetFixture, float speedLimit)
         {

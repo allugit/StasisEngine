@@ -159,14 +159,16 @@ namespace StasisGame.Systems
                                 // Walk
                                 if (currentSpeed <= characterMovementComponent.speedLimit)
                                 {
-                                    Vector2 movementUnitVector = characterMovementComponent.movementUnitVector;
-                                    Vector2 impulse;
+                                    Vector2 impulse = characterMovementComponent.movementUnitVector * _baseWalkMultiplier;
 
                                     if (characterMovementComponent.walkRight)
                                     {
-                                        movementUnitVector *= -1;
+                                        impulse *= -1;
                                     }
-                                    impulse = movementUnitVector * _baseWalkMultiplier;
+                                    if (characterMovementComponent.inFluid)
+                                    {
+                                        impulse *= 0.5f;
+                                    }
                                     body.ApplyLinearImpulse(ref impulse);
                                 }
                             }
@@ -245,6 +247,14 @@ namespace StasisGame.Systems
                                 body.ApplyLinearImpulse(ref impulse);
                                 characterMovementComponent.attemptJump = false;
                             }
+                        }
+
+                        // Swim
+                        if (characterMovementComponent.inFluid && characterMovementComponent.swimUp)
+                        {
+                            Vector2 impulse = new Vector2(0, -0.25f);
+
+                            body.ApplyLinearImpulse(ref impulse);
                         }
 
                         // Climbing
