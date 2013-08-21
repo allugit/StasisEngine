@@ -10,9 +10,11 @@ namespace StasisEditor.Models
 {
     public class EditorWaypointActor : EditorActor, IActorComponent
     {
-        protected PointListNode _headPoint;
-        protected List<PointListNode> _selectedPoints;
+        private PointListNode _headPoint;
+        private List<PointListNode> _selectedPoints;
+        private string _uid;
 
+        public string uid { get { return _uid; } set { _uid = value; } }
         [Browsable(false)]
         public override XElement data
         {
@@ -20,6 +22,8 @@ namespace StasisEditor.Models
             {
                 XElement d = base.data;
                 PointListNode current = _headPoint;
+
+                d.SetAttributeValue("uid", _uid);
                 while (current != null)
                 {
                     d.Add(new XElement("Point", current.position));
@@ -34,6 +38,7 @@ namespace StasisEditor.Models
         {
             _selectedPoints = new List<PointListNode>();
             _layerDepth = 0.1f;
+            _uid = "default_waypoint";
 
             Vector2 worldMouse = level.controller.worldMouse;
             _headPoint = new PointListNode(worldMouse + new Vector2(-0.5f, 0f));
@@ -45,6 +50,7 @@ namespace StasisEditor.Models
             : base(level, data)
         {
             _selectedPoints = new List<PointListNode>();
+            _uid = Loader.loadString(data.Attribute("uid"), "default_waypoint");
             foreach (XElement pointData in data.Elements("Point"))
             {
                 if (_headPoint == null)
