@@ -137,12 +137,10 @@ namespace StasisGame.Systems
                                 // Adjust friction
                                 if (body.LinearVelocity.X < -0.1f && characterMovementComponent.walkRight)
                                 {
-                                    Console.WriteLine("limiting slide to the left... velocity: {0}", body.LinearVelocity);
                                     body.Friction = 10f;
                                 }
                                 else if (body.LinearVelocity.X > 0.1f && characterMovementComponent.walkLeft)
                                 {
-                                    Console.WriteLine("limiting slide to the right... velocity: {0}", body.LinearVelocity);
                                     body.Friction = 10f;
                                 }
                                 else
@@ -162,10 +160,6 @@ namespace StasisGame.Systems
                                     }
                                     impulse = movementUnitVector * _baseWalkMultipler;
                                     body.ApplyLinearImpulse(ref impulse);
-                                }
-                                else
-                                {
-                                    Console.WriteLine("speed limit reached.");
                                 }
                             }
                             else
