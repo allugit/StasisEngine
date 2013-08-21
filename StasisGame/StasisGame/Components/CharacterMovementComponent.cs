@@ -14,7 +14,7 @@ namespace StasisGame.Components
         private bool _walkRight;
         private float _speedLimit;
         private Fixture _feetFixture;
-        private bool _jump;
+        private bool _attemptJump;
         private bool _climbUp;
         private bool _climbDown;
         private float _climbAmount;
@@ -30,7 +30,7 @@ namespace StasisGame.Components
         public float speedLimit { get { return _speedLimit; } set { _speedLimit = value; } }
         public bool onSurface { get { return _collisionNormals.Count > 0; } }
         public Fixture feetFixture { get { return _feetFixture; } }
-        public bool jump { get { return _jump; } set { _jump = value; } }
+        public bool attemptJump { get { return _attemptJump; } set { _attemptJump = value; } }
         public bool climbUp { get { return _climbUp; } set { _climbUp = value; } }
         public bool climbDown { get { return _climbDown; } set { _climbDown = value; } }
         public float climbAmount { get { return _climbAmount; } set { _climbAmount = value; } }

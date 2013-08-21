@@ -157,14 +157,14 @@ namespace StasisGame.Systems
                                 characterMovementComponent.climbAmount = Math.Abs(InputSystem.newGamepadState.ThumbSticks.Left.Y);
                             }
 
-                            characterMovementComponent.jump = InputSystem.newGamepadState.Buttons.A == ButtonState.Pressed;
+                            characterMovementComponent.attemptJump = InputSystem.newGamepadState.Buttons.A == ButtonState.Pressed;
                         }
                         else
                         {
                             //characterMovementComponent.walkSpeedModifier = 1f;
                             characterMovementComponent.walkLeft = InputSystem.newKeyState.IsKeyDown(Keys.A) || InputSystem.newKeyState.IsKeyDown(Keys.Left);
                             characterMovementComponent.walkRight = InputSystem.newKeyState.IsKeyDown(Keys.D) || InputSystem.newKeyState.IsKeyDown(Keys.Right);
-                            characterMovementComponent.jump = InputSystem.newKeyState.IsKeyDown(Keys.Space);
+                            characterMovementComponent.attemptJump = InputSystem.newKeyState.IsKeyDown(Keys.Space) && InputSystem.oldKeyState.IsKeyUp(Keys.Space);
                             characterMovementComponent.climbUp = InputSystem.newKeyState.IsKeyDown(Keys.W);
                             characterMovementComponent.climbDown = InputSystem.newKeyState.IsKeyDown(Keys.S);
                             characterMovementComponent.climbAmount = 1f;

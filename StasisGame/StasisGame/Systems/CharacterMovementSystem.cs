@@ -184,7 +184,7 @@ namespace StasisGame.Systems
                         }
 
                         // Jump
-                        if (characterMovementComponent.jump)
+                        if (characterMovementComponent.attemptJump)
                         {
                             // While holding rope
                             if (ropeGrabComponent != null)
@@ -200,6 +200,15 @@ namespace StasisGame.Systems
 
                                 //body.LinearVelocity = new Vector2(body.LinearVelocity.X, body.LinearVelocity.Y - jumpForce * 0.66f);
                             }
+
+                            if (characterMovementComponent.onSurface)
+                            {
+                                Vector2 impulse = new Vector2(0, -2f);
+
+                                body.ApplyLinearImpulse(ref impulse);
+                                characterMovementComponent.attemptJump = false;
+                            }
+
                             //else if (!characterMovementComponent.alreadyJumped && (characterMovementComponent.allowLeftMovement || characterMovementComponent.allowRightMovement))
                             //{
                                 //characterMovementComponent.alreadyJumped = true;
