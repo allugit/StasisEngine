@@ -55,6 +55,7 @@ namespace StasisGame.Systems
             body.IsBullet = true;
             body.FixedRotation = true;
             body.BodyType = BodyType.Dynamic;
+            body.SleepingAllowed = false;
             polygonShape.SetAsBox(0.18f, 0.27f);
             fixture = body.CreateFixture(polygonShape);
             fixture.Friction = 0f;
@@ -78,7 +79,7 @@ namespace StasisGame.Systems
             _entityManager.addComponent(levelUid, playerId, _entityManager.getComponent("global", playerId, ComponentType.Toolbar));
             _entityManager.addComponent(levelUid, playerId, _entityManager.getComponent("global", playerId, ComponentType.Inventory));
             _entityManager.addComponent(levelUid, playerId, new PhysicsComponent(body));
-            _entityManager.addComponent(levelUid, playerId, new CharacterMovementComponent(feetFixture));
+            _entityManager.addComponent(levelUid, playerId, new CharacterMovementComponent(feetFixture, 7f));
             _entityManager.addComponent(levelUid, playerId, new CharacterRenderComponent());
             _entityManager.addComponent(levelUid, playerId, new BodyFocusPointComponent(body, new Vector2(0, -5f), FocusType.Multiple));
             _entityManager.addComponent(levelUid, playerId, new IgnoreTreeCollisionComponent());
@@ -124,7 +125,7 @@ namespace StasisGame.Systems
                         {
                             if (InputSystem.newGamepadState.ThumbSticks.Left.X < 0)
                             {
-                                characterMovementComponent.walkSpeedModifier = Math.Abs(InputSystem.newGamepadState.ThumbSticks.Left.X);
+                                //characterMovementComponent.walkSpeedModifier = Math.Abs(InputSystem.newGamepadState.ThumbSticks.Left.X);
                                 characterMovementComponent.walkLeft = true;
                             }
                             else if (InputSystem.newGamepadState.DPad.Left == ButtonState.Pressed)
@@ -134,7 +135,7 @@ namespace StasisGame.Systems
 
                             if (InputSystem.newGamepadState.ThumbSticks.Left.X > 0)
                             {
-                                characterMovementComponent.walkSpeedModifier = InputSystem.newGamepadState.ThumbSticks.Left.X;
+                                //characterMovementComponent.walkSpeedModifier = InputSystem.newGamepadState.ThumbSticks.Left.X;
                                 characterMovementComponent.walkRight = true;
                             }
                             else if (InputSystem.newGamepadState.DPad.Right == ButtonState.Pressed)
@@ -160,7 +161,7 @@ namespace StasisGame.Systems
                         }
                         else
                         {
-                            characterMovementComponent.walkSpeedModifier = 1f;
+                            //characterMovementComponent.walkSpeedModifier = 1f;
                             characterMovementComponent.walkLeft = InputSystem.newKeyState.IsKeyDown(Keys.A) || InputSystem.newKeyState.IsKeyDown(Keys.Left);
                             characterMovementComponent.walkRight = InputSystem.newKeyState.IsKeyDown(Keys.D) || InputSystem.newKeyState.IsKeyDown(Keys.Right);
                             characterMovementComponent.jump = InputSystem.newKeyState.IsKeyDown(Keys.Space);
@@ -169,7 +170,6 @@ namespace StasisGame.Systems
                             characterMovementComponent.climbAmount = 1f;
                             characterMovementComponent.doRopeGrab = InputSystem.newKeyState.IsKeyDown(Keys.E) && InputSystem.oldKeyState.IsKeyUp(Keys.E);
                             characterMovementComponent.allowRopeGrab = characterMovementComponent.allowRopeGrab ? true : (InputSystem.newKeyState.IsKeyUp(Keys.E) && InputSystem.oldKeyState.IsKeyDown(Keys.E));
-
                         }
                     }
                 }

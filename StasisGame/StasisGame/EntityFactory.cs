@@ -1571,6 +1571,7 @@ namespace StasisGame
             body.IsBullet = true;
             body.FixedRotation = true;
             body.BodyType = BodyType.Dynamic;
+            body.SleepingAllowed = false;
             polygonShape.SetAsBox(0.18f, 0.27f);
             fixture = body.CreateFixture(polygonShape);
             fixture.Friction = 0f;
@@ -1591,7 +1592,7 @@ namespace StasisGame
             feetFixture.CollidesWith = fixture.CollidesWith;
 
             _entityManager.addComponent(levelUid, entityId, new PhysicsComponent(body));
-            _entityManager.addComponent(levelUid, entityId, new CharacterMovementComponent(feetFixture));
+            _entityManager.addComponent(levelUid, entityId, new CharacterMovementComponent(feetFixture, 7f));
             _entityManager.addComponent(levelUid, entityId, new CharacterRenderComponent());
             //_entityManager.addComponent(levelUid, entityId, new BodyFocusPointComponent(body, new Vector2(0, -5f), FocusType.Multiple));
             _entityManager.addComponent(levelUid, entityId, new IgnoreTreeCollisionComponent());

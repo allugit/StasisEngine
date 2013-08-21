@@ -398,9 +398,9 @@ namespace StasisGame.Systems
             {
                 PhysicsComponent physicsComponent = (PhysicsComponent)_entityManager.getComponent(levelUid, characterMovementEntities[i], ComponentType.Physics);
                 CharacterMovementComponent characterMovementComponent = (CharacterMovementComponent)_entityManager.getComponent(levelUid, characterMovementEntities[i], ComponentType.CharacterMovement);
-                Vector2 movementNormal = characterMovementComponent.movementNormal;
-                Rectangle source = new Rectangle(0, 0, (int)(movementNormal.Length() * _scale), 2);
-                float angle = characterMovementComponent.movementAngle;
+                Vector2 movementUnitVector = characterMovementComponent.movementUnitVector;
+                Rectangle source = new Rectangle(0, 0, (int)(movementUnitVector.Length() * _scale), 2);
+                float angle = (float)Math.Atan2(movementUnitVector.Y, movementUnitVector.X);
 
                 _spriteBatch.Draw(_pixel, (physicsComponent.body.Position - screenCenter) * _scale + _halfScreen, source, Color.Yellow, angle, new Vector2(0, 1), 1f, SpriteEffects.None, 0);
             }

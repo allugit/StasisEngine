@@ -11,10 +11,8 @@ namespace StasisGame.Systems
 {
     public class CharacterMovementSystem : ISystem
     {
-        public const float MAX_WALK_SPEED = 7;
-        public const float WALK_FORCE = 12;
-        public const float JUMP_FORCE = 10.5f;
         public const float CLIMB_SPEED = 0.1f;
+        private float _baseWalkMultipler = 0.25f;
         private SystemManager _systemManager;
         private EntityManager _entityManager;
         private RopeSystem _ropeSystem;
@@ -110,92 +108,83 @@ namespace StasisGame.Systems
                         CharacterMovementComponent characterMovementComponent = _entityManager.getComponent(levelUid, characterEntities[i], ComponentType.CharacterMovement) as CharacterMovementComponent;
                         RopeGrabComponent ropeGrabComponent = _entityManager.getComponent(levelUid, characterEntities[i], ComponentType.RopeGrab) as RopeGrabComponent;
                         Body body = physicsComponent.body;
-                        Vector2 averageNormal = Vector2.Zero;
-                        float modifier = characterMovementComponent.walkSpeedModifier;
-                        bool applyForce =
-                            (characterMovementComponent.walkLeft && characterMovementComponent.allowLeftMovement) ||
-                            (characterMovementComponent.walkRight && characterMovementComponent.allowRightMovement);
-                        Vector2 characterVelocity = physicsComponent.body.LinearVelocity;
-                        float characterSpeed = characterVelocity.Length();
-                        float characterHorizontalSpeed = Math.Abs(characterVelocity.X);
+                        float currentSpeed = body.LinearVelocity.Length();
 
                         // Handle fluid properties
                         characterMovementComponent.inFluid = particleInfluenceComponent.particleCount > 2;
-                        characterMovementComponent.alreadyJumped = characterMovementComponent.inFluid ? false : characterMovementComponent.alreadyJumped;
+                        //characterMovementComponent.alreadyJumped = characterMovementComponent.inFluid ? false : characterMovementComponent.alreadyJumped;
 
-                        characterMovementComponent.calculateMovementAngle();
 
+                        // Handle rope grabs
                         if (characterMovementComponent.allowRopeGrab && characterMovementComponent.doRopeGrab)
                         {
                             attemptRopeGrab(levelUid, characterEntities[i], characterMovementComponent, physicsComponent, ropeGrabComponent);
                         }
 
+                        // Calculate movement vector
+                        characterMovementComponent.movementUnitVector = Vector2.Zero;
+                        for (int j = 0; j < characterMovementComponent.collisionNormals.Count; j++)
+                        {
+                            characterMovementComponent.movementUnitVector += characterMovementComponent.collisionNormals[j] / characterMovementComponent.collisionNormals.Count;
+                        }
+                        characterMovementComponent.movementUnitVector = new Vector2(characterMovementComponent.movementUnitVector.Y, -characterMovementComponent.movementUnitVector.X);
+
+                        // On surface movement
                         if (characterMovementComponent.onSurface)
                         {
-                            // Check speed limit
-                            if (Math.Abs(body.LinearVelocity.Length()) > MAX_WALK_SPEED)
-                                applyForce = false;
-
-                            // Pull harder if grabbing
-                            //if (grabbing)
-                            //    modifier = 2;
-
-                            // Apply movement force
-                            if (applyForce)
+                            if (characterMovementComponent.walkLeft || characterMovementComponent.walkRight)
                             {
-                                Vector2 movement = new Vector2((float)Math.Cos(characterMovementComponent.movementAngle), (float)Math.Sin(characterMovementComponent.movementAngle));
+                                // Adjust friction
+                                if (body.LinearVelocity.X < -0.1f && characterMovementComponent.walkRight)
+                                {
+                                    Console.WriteLine("limiting slide to the left... velocity: {0}", body.LinearVelocity);
+                                    body.Friction = 10f;
+                                }
+                                else if (body.LinearVelocity.X > 0.1f && characterMovementComponent.walkLeft)
+                                {
+                                    Console.WriteLine("limiting slide to the right... velocity: {0}", body.LinearVelocity);
+                                    body.Friction = 10f;
+                                }
+                                else
+                                {
+                                    body.Friction = 0.1f;
+                                }
 
-                                if (characterMovementComponent.inFluid)
-                                    modifier *= 0.66f;
+                                // Walk
+                                if (currentSpeed <= characterMovementComponent.speedLimit)
+                                {
+                                    Vector2 movementUnitVector = characterMovementComponent.movementUnitVector;
+                                    Vector2 impulse;
 
-                                movement *= characterMovementComponent.walkLeft ? -1 : 1;
-                                movement *= WALK_FORCE * modifier;
-                                body.ApplyForce(movement, body.Position);
+                                    if (characterMovementComponent.walkRight)
+                                    {
+                                        movementUnitVector *= -1;
+                                    }
+                                    impulse = movementUnitVector * _baseWalkMultipler;
+                                    body.ApplyLinearImpulse(ref impulse);
+                                }
+                                else
+                                {
+                                    Console.WriteLine("speed limit reached.");
+                                }
                             }
-
-                            // Fake friction when not moving
-                            if ((body.LinearVelocity.X > 0 && characterMovementComponent.walkLeft) ||
-                                (body.LinearVelocity.X < 0 && characterMovementComponent.walkRight) ||
-                                (!characterMovementComponent.walkLeft && !characterMovementComponent.walkRight) &&
-                                !characterMovementComponent.jump)
+                            else
                             {
-                                // All conditions necessary for damping have been met
-                                if (Math.Abs(body.LinearVelocity.Y) < 1 || Math.Abs(body.LinearVelocity.Length()) < 10)
-                                    body.ApplyForce(new Vector2(-body.LinearVelocity.X * 10, -body.LinearVelocity.Y * 5), body.Position);
+                                body.Friction = 100f;
                             }
                         }
-                        else
+                        else  // In-air movement
                         {
                             if (characterMovementComponent.walkLeft || characterMovementComponent.walkRight)
                             {
                                 if (ropeGrabComponent != null)
                                 {
                                     // Swing
-                                    float swingForce = (characterMovementComponent.walkLeft ? -WALK_FORCE : WALK_FORCE) / 2f;
-                                    Vector2 movement = new Vector2((float)Math.Cos(characterMovementComponent.movementAngle), (float)Math.Sin(characterMovementComponent.movementAngle));
-                                    physicsComponent.body.ApplyForce(movement * swingForce, body.Position);
                                 }
                                 else
                                 {
                                     // Air walk
-                                    float airWalkForce = (characterMovementComponent.walkLeft ? -WALK_FORCE : WALK_FORCE) / 4;
-
-                                    // Check speed limit
-                                    if (Math.Abs(body.LinearVelocity.X) > MAX_WALK_SPEED / 2)
-                                    {
-                                        if (body.LinearVelocity.X < -MAX_WALK_SPEED / 2 && airWalkForce < 0)
-                                            applyForce = false;
-                                        else if (body.LinearVelocity.X > MAX_WALK_SPEED / 2 && airWalkForce > 0)
-                                            applyForce = false;
-                                    }
-
-                                    // Apply movement force
-                                    if (applyForce)
-                                    {
-                                        Vector2 movement = new Vector2((float)Math.Cos(characterMovementComponent.movementAngle), (float)Math.Sin(characterMovementComponent.movementAngle));
-                                        movement *= airWalkForce;
-                                        body.ApplyForce(movement, body.Position);
-                                    }
+                                    
                                 }
                             }
                         }
@@ -203,8 +192,6 @@ namespace StasisGame.Systems
                         // Jump
                         if (characterMovementComponent.jump)
                         {
-                            float jumpForce = characterMovementComponent.inFluid ? JUMP_FORCE * 0.66f : JUMP_FORCE;
-
                             // While holding rope
                             if (ropeGrabComponent != null)
                             {
@@ -217,13 +204,13 @@ namespace StasisGame.Systems
                                 _entityManager.removeComponent(levelUid, characterEntities[i], ropeGrabComponent);
                                 ropeGrabComponent = null;
 
-                                body.LinearVelocity = new Vector2(body.LinearVelocity.X, body.LinearVelocity.Y - jumpForce * 0.66f);
+                                //body.LinearVelocity = new Vector2(body.LinearVelocity.X, body.LinearVelocity.Y - jumpForce * 0.66f);
                             }
-                            else if (!characterMovementComponent.alreadyJumped && (characterMovementComponent.allowLeftMovement || characterMovementComponent.allowRightMovement))
-                            {
-                                characterMovementComponent.alreadyJumped = true;
-                                body.LinearVelocity = new Vector2(body.LinearVelocity.X, -jumpForce);
-                            }
+                            //else if (!characterMovementComponent.alreadyJumped && (characterMovementComponent.allowLeftMovement || characterMovementComponent.allowRightMovement))
+                            //{
+                                //characterMovementComponent.alreadyJumped = true;
+                                //body.LinearVelocity = new Vector2(body.LinearVelocity.X, -jumpForce);
+                            //}
                         }
 
                         // Climbing
@@ -240,7 +227,7 @@ namespace StasisGame.Systems
                             }
                         }
 
-                        characterMovementComponent.collisionNormals.Clear();
+                        //characterMovementComponent.collisionNormals.Clear();
                     }
                 }
             }

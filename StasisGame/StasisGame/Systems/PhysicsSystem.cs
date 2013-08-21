@@ -98,10 +98,8 @@ namespace StasisGame.Systems
                     for (int i = 0; i < movementComponents.Count; i++)
                     {
                         CharacterMovementComponent movementComponent = movementComponents[i];
-                        if (!movementComponent.onSurface)
-                        {
-                            movementComponent.allowJumpResetOnCollision = true;
-                        }
+
+                        movementComponent.collisionNormals.Clear();
                     }
 
                     for (int i = 0; i < prismaticEntities.Count; i++)
@@ -209,8 +207,8 @@ namespace StasisGame.Systems
                 {
                     contact.GetWorldManifold(out normal, out points);
                     characterMovementComponent.collisionNormals.Add(normal);
-                    if (characterMovementComponent.allowJumpResetOnCollision)
-                        characterMovementComponent.alreadyJumped = false;
+                    //if (characterMovementComponent.allowJumpResetOnCollision)
+                    //    characterMovementComponent.alreadyJumped = false;
                 }
             }
         }

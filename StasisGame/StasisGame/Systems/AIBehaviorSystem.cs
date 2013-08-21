@@ -69,7 +69,7 @@ namespace StasisGame.Systems
                             Vector2 currentWaypoint = waypointsComponent.waypoints[behaviorComponent.currentWaypointIndex];
                             Vector2 relative = currentWaypoint - worldPositionComponent.position;
 
-                            movementComponent.walkSpeedModifier = behaviorComponent.maxWalkSpeed;
+                            movementComponent.speedLimit = behaviorComponent.walkSpeed;
 
                             if (relative.X > 0.25f)
                             {
