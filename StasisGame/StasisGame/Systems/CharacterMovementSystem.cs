@@ -114,7 +114,6 @@ namespace StasisGame.Systems
 
                         // Handle fluid properties
                         characterMovementComponent.inFluid = particleInfluenceComponent.particleCount > 2;
-                        //characterMovementComponent.alreadyJumped = characterMovementComponent.inFluid ? false : characterMovementComponent.alreadyJumped;
 
                         // Handle rope grabs
                         if (characterMovementComponent.allowRopeGrab && characterMovementComponent.doRopeGrab)
@@ -183,9 +182,6 @@ namespace StasisGame.Systems
                                 if (ropeGrabComponent != null)
                                 {
                                     // Swing
-                                    //float angle = ropeGrabComponent.ropeNode.body.Rotation;
-                                    //Vector2 ropeUnitVector = new Vector2((float)Math.Cos(angle), (float)Math.Sin(angle));
-                                    //Vector2 averageUnitVector = Vector2.Normalize((ropeUnitVector + characterMovementComponent.movementUnitVector * 3f) / 4f);
                                     Vector2 impulse = characterMovementComponent.movementUnitVector * _baseSwingMultiplier;
 
                                     if (characterMovementComponent.walkRight)
@@ -233,7 +229,6 @@ namespace StasisGame.Systems
                                 ropeGrabComponent = null;
 
                                 body.ApplyLinearImpulse(ref impulse);
-                                //body.LinearVelocity = new Vector2(body.LinearVelocity.X, body.LinearVelocity.Y - jumpForce * 0.66f);
                             }
 
                             if (characterMovementComponent.onSurface)
@@ -265,8 +260,6 @@ namespace StasisGame.Systems
                                 _ropeSystem.moveAttachedBody(ropeGrabComponent, physicsComponent.body, -climbSpeed);
                             }
                         }
-
-                        //characterMovementComponent.collisionNormals.Clear();
                     }
                 }
             }
