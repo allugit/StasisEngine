@@ -12,7 +12,9 @@ namespace StasisGame.Systems
     public class CharacterMovementSystem : ISystem
     {
         public const float CLIMB_SPEED = 0.1f;
-        private float _baseWalkMultipler = 0.25f;
+        private float _baseWalkMultiplier = 0.25f;
+        private float _baseSwingMultiplier = 0.1f;
+        private float _baseAirWalkMultiplier = 0.05f;
         private SystemManager _systemManager;
         private EntityManager _entityManager;
         private RopeSystem _ropeSystem;
@@ -114,7 +116,6 @@ namespace StasisGame.Systems
                         characterMovementComponent.inFluid = particleInfluenceComponent.particleCount > 2;
                         //characterMovementComponent.alreadyJumped = characterMovementComponent.inFluid ? false : characterMovementComponent.alreadyJumped;
 
-
                         // Handle rope grabs
                         if (characterMovementComponent.allowRopeGrab && characterMovementComponent.doRopeGrab)
                         {
@@ -122,12 +123,20 @@ namespace StasisGame.Systems
                         }
 
                         // Calculate movement vector
-                        characterMovementComponent.movementUnitVector = Vector2.Zero;
-                        for (int j = 0; j < characterMovementComponent.collisionNormals.Count; j++)
+                        if (characterMovementComponent.collisionNormals.Count > 0)
                         {
-                            characterMovementComponent.movementUnitVector += characterMovementComponent.collisionNormals[j] / characterMovementComponent.collisionNormals.Count;
+                            characterMovementComponent.movementUnitVector = Vector2.Zero;
+                            for (int j = 0; j < characterMovementComponent.collisionNormals.Count; j++)
+                            {
+                                characterMovementComponent.movementUnitVector += characterMovementComponent.collisionNormals[j] / characterMovementComponent.collisionNormals.Count;
+                            }
+                            characterMovementComponent.movementUnitVector = new Vector2(characterMovementComponent.movementUnitVector.Y, -characterMovementComponent.movementUnitVector.X);
+                            characterMovementComponent.movementUnitVector.Normalize();
                         }
-                        characterMovementComponent.movementUnitVector = new Vector2(characterMovementComponent.movementUnitVector.Y, -characterMovementComponent.movementUnitVector.X);
+                        else
+                        {
+                            characterMovementComponent.movementUnitVector = new Vector2(-1, 0);
+                        }
 
                         // On surface movement
                         if (characterMovementComponent.onSurface)
@@ -158,13 +167,13 @@ namespace StasisGame.Systems
                                     {
                                         movementUnitVector *= -1;
                                     }
-                                    impulse = movementUnitVector * _baseWalkMultipler;
+                                    impulse = movementUnitVector * _baseWalkMultiplier;
                                     body.ApplyLinearImpulse(ref impulse);
                                 }
                             }
                             else
                             {
-                                body.Friction = 100f;
+                                body.Friction = 10f;
                             }
                         }
                         else  // In-air movement
@@ -174,11 +183,35 @@ namespace StasisGame.Systems
                                 if (ropeGrabComponent != null)
                                 {
                                     // Swing
+                                    //float angle = ropeGrabComponent.ropeNode.body.Rotation;
+                                    //Vector2 ropeUnitVector = new Vector2((float)Math.Cos(angle), (float)Math.Sin(angle));
+                                    //Vector2 averageUnitVector = Vector2.Normalize((ropeUnitVector + characterMovementComponent.movementUnitVector * 3f) / 4f);
+                                    Vector2 impulse = characterMovementComponent.movementUnitVector * _baseSwingMultiplier;
+
+                                    if (characterMovementComponent.walkRight)
+                                    {
+                                        impulse *= -1;
+                                    }
+
+                                    body.ApplyLinearImpulse(ref impulse);
                                 }
                                 else
                                 {
                                     // Air walk
-                                    
+                                    if ((body.LinearVelocity.X < 0 && characterMovementComponent.walkRight) ||
+                                        (body.LinearVelocity.X > 0 && characterMovementComponent.walkLeft) ||
+                                        (body.LinearVelocity.X > -characterMovementComponent.speedLimit && characterMovementComponent.walkLeft) ||
+                                        (body.LinearVelocity.X < characterMovementComponent.speedLimit && characterMovementComponent.walkRight))
+                                    {
+                                        Vector2 impulse = characterMovementComponent.movementUnitVector * _baseAirWalkMultiplier;
+
+                                        if (characterMovementComponent.walkRight)
+                                        {
+                                            impulse *= -1;
+                                        }
+
+                                        body.ApplyLinearImpulse(ref impulse);
+                                    }
                                 }
                             }
                         }
@@ -190,6 +223,7 @@ namespace StasisGame.Systems
                             if (ropeGrabComponent != null)
                             {
                                 RopeComponent ropeComponent = _entityManager.getComponent(levelUid, ropeGrabComponent.ropeEntityId, ComponentType.Rope) as RopeComponent;
+                                Vector2 impulse = new Vector2(0, -1.2f);
 
                                 if (ropeComponent != null && ropeComponent.destroyAfterRelease)
                                     ropeComponent.timeToLive = 100;
@@ -198,22 +232,24 @@ namespace StasisGame.Systems
                                 _entityManager.removeComponent(levelUid, characterEntities[i], ropeGrabComponent);
                                 ropeGrabComponent = null;
 
+                                body.ApplyLinearImpulse(ref impulse);
                                 //body.LinearVelocity = new Vector2(body.LinearVelocity.X, body.LinearVelocity.Y - jumpForce * 0.66f);
                             }
 
                             if (characterMovementComponent.onSurface)
                             {
                                 Vector2 impulse = new Vector2(0, -2f);
+                                float adjustment = 0f;
+
+                                // Try to limit the impulse based on the current y velocity.
+                                // This is done to prevent jumps from contributing too much to the y velocity when
+                                // the player is already moving upwards too fast (which results in a super-jump).
+                                adjustment = (body.LinearVelocity.Y / 6f);
+                                impulse.Y -= adjustment;
 
                                 body.ApplyLinearImpulse(ref impulse);
                                 characterMovementComponent.attemptJump = false;
                             }
-
-                            //else if (!characterMovementComponent.alreadyJumped && (characterMovementComponent.allowLeftMovement || characterMovementComponent.allowRightMovement))
-                            //{
-                                //characterMovementComponent.alreadyJumped = true;
-                                //body.LinearVelocity = new Vector2(body.LinearVelocity.X, -jumpForce);
-                            //}
                         }
 
                         // Climbing
