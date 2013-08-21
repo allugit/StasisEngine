@@ -316,6 +316,11 @@ namespace StasisGame.Systems
                         loadingScreen.elementsLoaded++;
                         break;
 
+                    case "Waypoint":
+                        _entityManager.factory.createWaypoint(levelUid, actorData);
+                        loadingScreen.elementsLoaded++;
+                        break;
+
                     default:
                         throw new NotImplementedException("Unhandled actor type in loadNextEntity()");
                 }

@@ -1539,6 +1539,23 @@ namespace StasisGame
             return entityId;
         }
 
+        // createWaypoint
+        public int createWaypoint(string levelUid, XElement data)
+        {
+            List<Vector2> points = new List<Vector2>();
+            string uid = data.Attribute("uid").Value;
+            int entityId = _entityManager.createEntity(levelUid, int.Parse(data.Attribute("id").Value));
+
+            foreach (XElement pointData in data.Elements("Point"))
+            {
+                points.Add(Loader.loadVector2(pointData, Vector2.Zero));
+            }
+
+            _entityManager.addComponent(levelUid, entityId, new WaypointsComponent(uid, points));
+
+            return entityId;
+        }
+
         // createDagny
         public int createDagny(string levelUid, Vector2 position)
         {

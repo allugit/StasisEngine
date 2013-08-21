@@ -36,7 +36,7 @@ namespace StasisGame.Components
         FollowMetamer,
         Tooltip,
         LevelTransition,
-        AIPaceBehavior
+        Waypoints
     };
 
     public interface IComponent

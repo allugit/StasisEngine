@@ -115,6 +115,7 @@
     <Compile Include="Components\PrimitivesRenderComponent.cs" />
     <Compile Include="Components\RopeNode.cs" />
     <Compile Include="Components\RopeComponent.cs" />
+    <Compile Include="Components\WaypointsComponent.cs" />
     <Compile Include="Components\WorldPositionComponent.cs" />
     <Compile Include="DistanceMetamerConstraint.cs" />
     <Compile Include="GameSettings.cs" />
