@@ -418,8 +418,25 @@
         5yjoX0vFHSJWjceHqcn0Gxhpc3vOj84zAAAAAElFTkSuQmCC
 </value>
   </data>
+  <data name="tooltipButton.Image" type="System.Drawing.Bitmap, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
+    <value>
+        iVBORw0KGgoAAAANSUhEUgAAABYAAAAWCAYAAADEtGw7AAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8
+        YQUAAAAJcEhZcwAADsMAAA7DAcdvqGQAAAJzSURBVEhLrZXLaipBEIZ9FxUVhGy84C0YMRsV0XiPd42o
+        eEFDEAIBL1mJazdmk7MVyRMIgi9Wp/+KPWdmYoLncAZ+p6e666vqqpY2yKfRaNwILer1+kbo/S+1gW+t
+        VgudcJ9Ps9ncPD4+0svLC+v5+Zmenp5oPB7TcDikXq9H3W6X2u02PTw8kFjPEjBF0oYgDBXGm9FoRNvt
+        llarFYP6/b4CarVaCgwA4UgiM42q1Sq/MYc1YhwCeIEMl8ulxgmLpSqViqJyucwqlUoawaaCLwxIfTKZ
+        cJYSmE6nKRAIsPx+/xf5fD6W1+tlJZNJKhaLHBhgMAF+Ry07nY4CtdlsNJ/Pv2g2m52VxWJhuMxaZPyL
+        wYPBgGsJMLIE5Hg8XizAkTlKogGjUWgOtoKt/jcwshUfvBU9WBwcRepvOZZgj8fzFYzjBAPAaAoWSvAl
+        mk6nDEYDNWCUAQZExJbUYJmhXnLuRzDKgMZhQg++RBJ8f3/PHA0YjcPEdxnLsbSrBbDb7daC8SPgXF9M
+        IPK/ZKwGi3L8AaO+hUKB4vE4mc1mXvzx8cGOh8OB1us1287JZDJRNBplfw1YNi6fz1M2m6VYLEZWq5X2
+        +z3tdju6vr6mq6srcrlcLKfTqcjhcFAkEqFUKvU9OJfLUSaTodvbW/5rI0u73c5n++7uTiP8hdU6B37T
+        g5FBMBgko9FI4XD4R2gikeA3EkGNwQITYNwafCoQUcJRM2QBBwhjvRBEjuGH5AAWvFeDGIQEnA04GTjL
+        iIwgeqEH54Q5FRTvzytKfODOkkau03fCzvSCXULBYqh8EEUYX081R0MvlvB7g68Yny5Tg+E3BrYCrs8p
+        pR0AAAAASUVORK5CYII=
+</value>
+  </data>
   <assembly alias="System.Windows.Forms" name="System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089" />
-  <data name="tooltipButton.Image" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\..\Resources\tooltip.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  <data name="waypointButton.Image" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\..\Resources\waypoint.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
 </root>

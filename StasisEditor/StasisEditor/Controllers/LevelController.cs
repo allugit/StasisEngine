@@ -265,6 +265,10 @@ namespace StasisEditor.Controllers
                 case "tooltipButton":
                     actor = new EditorTooltipActor(_level);
                     break;
+
+                case "waypointButton":
+                    actor = new EditorWaypointActor(_level);
+                    break;
             }
 
             if (actor != null)

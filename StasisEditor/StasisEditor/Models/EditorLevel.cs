@@ -135,6 +135,10 @@ namespace StasisEditor.Models
                     case "Tooltip":
                         addActor(new EditorTooltipActor(this, actorData));
                         break;
+
+                    case "Waypoint":
+                        addActor(new EditorWaypointActor(this, actorData));
+                        break;
                 }
             }
 

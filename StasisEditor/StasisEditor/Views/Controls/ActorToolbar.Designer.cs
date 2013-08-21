@@ -46,6 +46,7 @@
             this.decalsButton = new System.Windows.Forms.ToolStripButton();
             this.levelTransitionButton = new System.Windows.Forms.ToolStripButton();
             this.tooltipButton = new System.Windows.Forms.ToolStripButton();
+            this.waypointButton = new System.Windows.Forms.ToolStripButton();
             this.anchorToolStrip.SuspendLayout();
             this.SuspendLayout();
             // 
@@ -74,7 +75,8 @@
             this.goalButton,
             this.decalsButton,
             this.levelTransitionButton,
-            this.tooltipButton});
+            this.tooltipButton,
+            this.waypointButton});
             this.anchorToolStrip.LayoutStyle = System.Windows.Forms.ToolStripLayoutStyle.Flow;
             this.anchorToolStrip.Location = new System.Drawing.Point(0, 0);
             this.anchorToolStrip.Name = "anchorToolStrip";
@@ -245,6 +247,16 @@
             this.tooltipButton.Size = new System.Drawing.Size(26, 26);
             this.tooltipButton.Text = "Tooltip";
             // 
+            // waypointButton
+            // 
+            this.waypointButton.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
+            this.waypointButton.Image = ((System.Drawing.Image)(resources.GetObject("waypointButton.Image")));
+            this.waypointButton.ImageTransparentColor = System.Drawing.Color.Magenta;
+            this.waypointButton.Margin = new System.Windows.Forms.Padding(0);
+            this.waypointButton.Name = "waypointButton";
+            this.waypointButton.Size = new System.Drawing.Size(26, 26);
+            this.waypointButton.Text = "Waypoint";
+            // 
             // ActorToolbar
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -278,5 +290,6 @@
         private System.Windows.Forms.ToolStripButton decalsButton;
         private System.Windows.Forms.ToolStripButton levelTransitionButton;
         private System.Windows.Forms.ToolStripButton tooltipButton;
+        private System.Windows.Forms.ToolStripButton waypointButton;
     }
 }

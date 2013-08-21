@@ -33,7 +33,8 @@
         Goal,
         Decal,
         LevelTransition,
-        Tooltip
+        Tooltip,
+        Waypoint
     };
 
     public enum PlantType
