@@ -54,29 +54,38 @@ namespace StasisGame.Systems
                     {
                         int entityId = wanderBehaviorEntities[i];
                         AIWanderBehaviorComponent behaviorComponent = _entityManager.getComponent(levelUid, entityId, ComponentType.AIWanderBehavior) as AIWanderBehaviorComponent;
-                        WaypointsComponent waypointsComponent = getWaypointsComponent(behaviorComponent.waypointsUid, waypointsComponents);
-                        WorldPositionComponent worldPositionComponent = _entityManager.getComponent(levelUid, entityId, ComponentType.WorldPosition) as WorldPositionComponent;
                         CharacterMovementComponent movementComponent = _entityManager.getComponent(levelUid, entityId, ComponentType.CharacterMovement) as CharacterMovementComponent;
-                        Vector2 currentWaypoint = waypointsComponent.waypoints[behaviorComponent.currentWaypointIndex];
-                        Vector2 relative = currentWaypoint - worldPositionComponent.position;
 
-                        // Adjust walk speed based on distance from waypoint
-                        movementComponent.walkSpeedModifier = Math.Max(0.1f, Math.Min(1f, Math.Abs(relative.X)));
-                        Console.WriteLine("relative: {0} | walkSpeed: {1}", relative, movementComponent.walkSpeedModifier);
-
-                        if (relative.X > 0.25f)
+                        if (behaviorComponent.currentDelay > 0)
                         {
-                            movementComponent.walkRight = true;
                             movementComponent.walkLeft = false;
-                        }
-                        else if (relative.X < -0.25f)
-                        {
-                            movementComponent.walkLeft = true;
                             movementComponent.walkRight = false;
+                            behaviorComponent.currentDelay--;
                         }
                         else
                         {
-                            behaviorComponent.currentWaypointIndex = _random.Next(waypointsComponent.waypoints.Count);
+                            WaypointsComponent waypointsComponent = getWaypointsComponent(behaviorComponent.waypointsUid, waypointsComponents);
+                            WorldPositionComponent worldPositionComponent = _entityManager.getComponent(levelUid, entityId, ComponentType.WorldPosition) as WorldPositionComponent;
+                            Vector2 currentWaypoint = waypointsComponent.waypoints[behaviorComponent.currentWaypointIndex];
+                            Vector2 relative = currentWaypoint - worldPositionComponent.position;
+
+                            movementComponent.walkSpeedModifier = behaviorComponent.maxWalkSpeed;
+
+                            if (relative.X > 0.25f)
+                            {
+                                movementComponent.walkRight = true;
+                                movementComponent.walkLeft = false;
+                            }
+                            else if (relative.X < -0.25f)
+                            {
+                                movementComponent.walkLeft = true;
+                                movementComponent.walkRight = false;
+                            }
+                            else
+                            {
+                                behaviorComponent.currentWaypointIndex = _random.Next(waypointsComponent.waypoints.Count);
+                                behaviorComponent.currentDelay = _random.Next(behaviorComponent.minDelay, behaviorComponent.maxDelay + 1);
+                            }
                         }
                     }
                 }

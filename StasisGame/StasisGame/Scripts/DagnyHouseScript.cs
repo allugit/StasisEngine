@@ -19,7 +19,7 @@ namespace StasisGame.Scripts
         public override void onLevelStart()
         {
             _dagnyEntityId = _entityManager.factory.createDagny(_levelUid, new Vector2(-6.74f, -8.2f));
-            _entityManager.addComponent(_levelUid, _dagnyEntityId, new AIWanderBehaviorComponent("dagny_idle"));
+            _entityManager.addComponent(_levelUid, _dagnyEntityId, new AIWanderBehaviorComponent("dagny_idle", 0.05f, 0.35f, 30, 360));
         }
     }
 }
