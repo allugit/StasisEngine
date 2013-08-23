@@ -131,6 +131,7 @@
     <Compile Include="Scripts\DagnyHouseScript.cs" />
     <Compile Include="Scripts\HomeVillageScript.cs" />
     <Compile Include="Systems\AIBehaviorSystem.cs" />
+    <Compile Include="Systems\AnimationSystem.cs" />
     <Compile Include="Systems\ExplosionSystem.cs" />
     <Compile Include="Systems\LevelSystem.cs" />
     <Compile Include="Managers\DataManager.cs" />

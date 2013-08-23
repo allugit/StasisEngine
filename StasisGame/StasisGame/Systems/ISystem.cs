@@ -1,7 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
+﻿using Microsoft.Xna.Framework;
 
 namespace StasisGame.Systems
 {
@@ -22,12 +19,13 @@ namespace StasisGame.Systems
         Rope,
         Level,
         Explosion,
-        AIBehavior
+        AIBehavior,
+        Animation
     };
 
     public interface ISystem
     {
-        void update();
+        void update(GameTime gameTime);
         SystemType systemType { get; }
         int defaultPriority { get; }
         bool paused { get; set; }

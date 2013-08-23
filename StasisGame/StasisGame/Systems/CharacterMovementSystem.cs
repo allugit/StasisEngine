@@ -92,7 +92,7 @@ namespace StasisGame.Systems
                 ref region);
         }
 
-        public void update()
+        public void update(GameTime gameTime)
         {
             if (!_paused || _singleStep)
             {

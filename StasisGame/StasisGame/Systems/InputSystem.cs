@@ -34,7 +34,7 @@ namespace StasisGame.Systems
             _entityManager = entityManager;
         }
 
-        public void update()
+        public void update(GameTime gameTime)
         {
             RenderSystem renderSystem = (RenderSystem)_systemManager.getSystem(SystemType.Render);
             bool togglePause = newKeyState.IsKeyDown(Keys.F3) && oldKeyState.IsKeyUp(Keys.F3);

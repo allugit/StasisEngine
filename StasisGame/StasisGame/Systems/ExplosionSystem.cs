@@ -67,7 +67,7 @@ namespace StasisGame.Systems
             _entityManager.killEntity(levelUid, entityId);
         }
 
-        public void update()
+        public void update(GameTime gameTime)
         {
             if (!_paused || _singleStep)
             {

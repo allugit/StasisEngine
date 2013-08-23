@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Diagnostics;
+using Microsoft.Xna.Framework;
 using StasisGame.Systems;
 using StasisCore;
 
@@ -101,12 +102,12 @@ namespace StasisGame.Managers
             Logger.log(string.Format("Removed {0} system from SystemManager.", system.systemType));
         }
 
-        public void process()
+        public void process(GameTime gameTime)
         {
             SystemNode current = _head;
             while (current != null)
             {
-                current.system.update();
+                current.system.update(gameTime);
                 current = current.next;
             }
         }

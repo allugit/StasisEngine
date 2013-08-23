@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using Microsoft.Xna.Framework;
 using StasisCore;
 using StasisGame.Managers;
 
@@ -59,7 +60,7 @@ namespace StasisGame.Systems
             _levelSystem.tryCompleteEventGoal(e);
         }
 
-        public void update()
+        public void update(GameTime gameTime)
         {
         }
     }

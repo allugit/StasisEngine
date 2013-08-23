@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using Microsoft.Xna.Framework;
 using StasisCore;
 using StasisCore.Models;
 using StasisGame.Managers;
@@ -25,7 +26,7 @@ namespace StasisGame.Systems
             _entityManager = entityManager;
         }
 
-        public void update()
+        public void update(GameTime gameTime)
         {
             if (!_paused || _singleStep)
             {

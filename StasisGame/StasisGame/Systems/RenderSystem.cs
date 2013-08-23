@@ -197,7 +197,7 @@ namespace StasisGame.Systems
         }
 
         // update
-        public void update()
+        public void update(GameTime gameTime)
         {
             LevelSystem levelSystem = _systemManager.getSystem(SystemType.Level) as LevelSystem;
 
@@ -213,7 +213,7 @@ namespace StasisGame.Systems
         }
 
         // draw
-        public void draw()
+        public void draw(GameTime gameTime)
         {
             string levelUid = LevelSystem.currentLevelUid;
             FluidSystem fluidSystem = (FluidSystem)_systemManager.getSystem(SystemType.Fluid);
@@ -389,11 +389,12 @@ namespace StasisGame.Systems
                 PhysicsComponent physicsComponent = (PhysicsComponent)_entityManager.getComponent(levelUid, characterRenderEntities[i], ComponentType.Physics);
                 CharacterRenderComponent characterRenderComponent = _entityManager.getComponent(levelUid, characterRenderEntities[i], ComponentType.CharacterRender) as CharacterRenderComponent;
                 Vector2 offset;
-                Texture2D texture = _animationManager.getTexture(characterRenderComponent.character, characterRenderComponent.animation, 0, out offset);
+                Texture2D texture = _animationManager.getTexture(characterRenderComponent.character, characterRenderComponent.animation, characterRenderComponent.currentFrame, out offset);
 
                 _spriteBatch.Draw(texture, (physicsComponent.body.Position - screenCenter) * _scale + _halfScreen, texture.Bounds, Color.White, 0, offset, 1f, SpriteEffects.None, 0.05f);
             }
 
+            /*
             for (int i = 0; i < characterMovementEntities.Count; i++)
             {
                 PhysicsComponent physicsComponent = (PhysicsComponent)_entityManager.getComponent(levelUid, characterMovementEntities[i], ComponentType.Physics);
@@ -403,7 +404,7 @@ namespace StasisGame.Systems
                 float angle = (float)Math.Atan2(movementUnitVector.Y, movementUnitVector.X);
 
                 _spriteBatch.Draw(_pixel, (physicsComponent.body.Position - screenCenter) * _scale + _halfScreen, source, Color.Yellow, angle, new Vector2(0, 1), 1f, SpriteEffects.None, 0);
-            }
+            }*/
 
             // Tree
             _primitivesEffect.Parameters["world"].SetValue(Matrix.Identity);

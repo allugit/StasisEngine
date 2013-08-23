@@ -171,7 +171,7 @@ namespace StasisGame.Systems
             ropeNode.joint = null;
         }
 
-        public void update()
+        public void update(GameTime gameTime)
         {
             if (!_paused || _singleStep)
             {

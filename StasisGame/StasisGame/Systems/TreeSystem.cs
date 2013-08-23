@@ -84,7 +84,7 @@ namespace StasisGame.Systems
             return result;
         }
 
-        public void update()
+        public void update(GameTime gameTime)
         {
             if (!_paused || _singleStep)
             {

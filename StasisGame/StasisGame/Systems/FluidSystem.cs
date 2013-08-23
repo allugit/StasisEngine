@@ -115,13 +115,14 @@ namespace StasisGame.Systems
         // relaxFluid -- Runs the simulation for all particles
         public void relaxFluid()
         {
+            GameTime fakeGameTime = new GameTime();
             simulationAABB.LowerBound.X = float.MinValue;
             simulationAABB.LowerBound.Y = float.MinValue;
             simulationAABB.UpperBound.X = float.MaxValue;
             simulationAABB.UpperBound.Y = float.MaxValue;
             _skipAABBUpdate = true;
             for (int i = 0; i < 300; i++)
-                update();
+                update(fakeGameTime);
             _skipAABBUpdate = false;
         }
 
@@ -566,7 +567,7 @@ namespace StasisGame.Systems
         }
 
         // Update
-        public void update()
+        public void update(GameTime gameTime)
         {
             if (!_paused || _singleStep)
             {

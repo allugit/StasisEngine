@@ -25,6 +25,7 @@ namespace StasisGame.Systems
         private SystemManager _systemManager;
         private ScriptManager _scriptManager;
         private RenderSystem _renderSystem;
+        private AnimationSystem _animationSystem;
         private PlayerSystem _playerSystem;
         private bool _paused;
         private bool _singleStep;
@@ -224,7 +225,9 @@ namespace StasisGame.Systems
             _systemManager.add(new RopeSystem(_systemManager, _entityManager), -1);
             _systemManager.add(new ExplosionSystem(_systemManager, _entityManager), -1);
             _renderSystem = new RenderSystem(_game, _systemManager, _entityManager);
+            _animationSystem = new AnimationSystem(_systemManager, _entityManager, _game.animationManager);
             _systemManager.add(_renderSystem, -1);
+            _systemManager.add(_animationSystem, -1);
             _systemManager.add(new TreeSystem(_systemManager, _entityManager), -1);
             _systemManager.add(new FluidSystem(_systemManager, _entityManager), -1);
             _systemManager.add(new AIBehaviorSystem(_systemManager, _entityManager), -1);
@@ -559,7 +562,7 @@ namespace StasisGame.Systems
         }
 
         // update
-        public void update()
+        public void update(GameTime gameTime)
         {
             if (!_paused || _singleStep)
             {
@@ -623,9 +626,9 @@ namespace StasisGame.Systems
         }
 
         // draw
-        public void draw()
+        public void draw(GameTime gameTime)
         {
-            _renderSystem.draw();
+            _renderSystem.draw(gameTime);
         }
     }
 }

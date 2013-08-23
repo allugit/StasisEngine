@@ -35,7 +35,7 @@ namespace StasisGame.Systems
             _entityManager = entityManager;
         }
 
-        public void update()
+        public void update(GameTime gameTime)
         {
             string levelUid = LevelSystem.currentLevelUid;
             LevelSystem levelSystem = _systemManager.getSystem(SystemType.Level) as LevelSystem;

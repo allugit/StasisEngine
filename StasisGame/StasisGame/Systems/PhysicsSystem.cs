@@ -74,7 +74,7 @@ namespace StasisGame.Systems
             _bodiesToRemove.Add(body);
         }
 
-        public void update()
+        public void update(GameTime gameTime)
         {
             if (_singleStep || !_paused)
             {

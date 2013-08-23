@@ -374,15 +374,15 @@ namespace StasisGame
                 case GameState.MainMenu:
                     _menuBackgroundScreenOffset += new Vector2(0.005f, 0f);
                     _menuBackgroundRenderer.update(35f, _menuBackgroundScreenOffset);
-                    _systemManager.process();
+                    _systemManager.process(gameTime);
                     break;
 
                 case GameState.WorldMap:
-                    _systemManager.process();
+                    _systemManager.process(gameTime);
                     break;
 
                 case GameState.LoadingLevel:
-                    _systemManager.process();
+                    _systemManager.process(gameTime);
                     if (!_levelSystem.isFinishedLoading)
                     {
                         _levelSystem.load();
@@ -409,7 +409,7 @@ namespace StasisGame
                     break;
 
                 case GameState.Level:
-                    _systemManager.process();
+                    _systemManager.process(gameTime);
                     break;
             }
 
@@ -447,7 +447,7 @@ namespace StasisGame
                     break;
 
                 case GameState.Level:
-                    _levelSystem.draw();
+                    _levelSystem.draw(gameTime);
                     _spriteBatch.Begin(SpriteSortMode.BackToFront, BlendState.AlphaBlend);
                     _screenSystem.draw();
                     _spriteBatch.End();
