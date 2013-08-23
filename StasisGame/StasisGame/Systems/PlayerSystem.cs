@@ -80,7 +80,7 @@ namespace StasisGame.Systems
             _entityManager.addComponent(levelUid, playerId, _entityManager.getComponent("global", playerId, ComponentType.Inventory));
             _entityManager.addComponent(levelUid, playerId, new PhysicsComponent(body));
             _entityManager.addComponent(levelUid, playerId, new CharacterMovementComponent(feetFixture, 7f));
-            _entityManager.addComponent(levelUid, playerId, new CharacterRenderComponent());
+            _entityManager.addComponent(levelUid, playerId, new CharacterRenderComponent("main_character"));
             _entityManager.addComponent(levelUid, playerId, new BodyFocusPointComponent(body, new Vector2(0, -5f), FocusType.Multiple));
             _entityManager.addComponent(levelUid, playerId, new IgnoreTreeCollisionComponent());
             _entityManager.addComponent(levelUid, playerId, new IgnoreRopeRaycastComponent());

@@ -1593,7 +1593,7 @@ namespace StasisGame
 
             _entityManager.addComponent(levelUid, entityId, new PhysicsComponent(body));
             _entityManager.addComponent(levelUid, entityId, new CharacterMovementComponent(feetFixture, 7f));
-            _entityManager.addComponent(levelUid, entityId, new CharacterRenderComponent());
+            _entityManager.addComponent(levelUid, entityId, new CharacterRenderComponent("dagny"));
             //_entityManager.addComponent(levelUid, entityId, new BodyFocusPointComponent(body, new Vector2(0, -5f), FocusType.Multiple));
             _entityManager.addComponent(levelUid, entityId, new IgnoreTreeCollisionComponent());
             _entityManager.addComponent(levelUid, entityId, new IgnoreRopeRaycastComponent());

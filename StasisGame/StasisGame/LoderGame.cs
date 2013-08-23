@@ -48,6 +48,7 @@ namespace StasisGame
         private SystemManager _systemManager;
         private EntityManager _entityManager;
         private ScriptManager _scriptManager;
+        private AnimationManager _animationManager;
         private PlayerSystem _playerSystem;
         private EquipmentSystem _equipmentSystem;
         private LevelSystem _levelSystem;
@@ -69,6 +70,7 @@ namespace StasisGame
         public SystemManager systemManager { get { return _systemManager; } }
         public EntityManager entityManager { get { return _entityManager; } }
         public ScriptManager scriptManager { get { return _scriptManager; } }
+        public AnimationManager animationManager { get { return _animationManager; } }
         public BackgroundRenderer menuBackgroundRenderer { get { return _menuBackgroundRenderer; } }
         public Vector2 menuBackgroundScreenOffset { get { return _menuBackgroundScreenOffset; } }
         public LevelScreen levelScreen { get { return _levelScreen; } }
@@ -94,6 +96,7 @@ namespace StasisGame
             _systemManager = new SystemManager();
             _entityManager = new EntityManager(_systemManager);
             _scriptManager = new ScriptManager(_systemManager, _entityManager);
+            _animationManager = new AnimationManager(this);
 
             base.Initialize();
 

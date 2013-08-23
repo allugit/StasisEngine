@@ -21,6 +21,7 @@ namespace StasisGame.Systems
         private LoderGame _game;
         private SystemManager _systemManager;
         private EntityManager _entityManager;
+        private AnimationManager _animationManager;
         private CameraSystem _cameraSystem;
         private MaterialRenderer _materialRenderer;
         private float _scale = Settings.BASE_SCALE;
@@ -67,6 +68,7 @@ namespace StasisGame.Systems
             _game = game;
             _systemManager = systemManager;
             _entityManager = entityManager;
+            _animationManager = game.animationManager;
             //_sortedRenderablePrimitives = new SortedDictionary<float, List<IRenderablePrimitive>>();
             _cameraSystem = _systemManager.getSystem(SystemType.Camera) as CameraSystem;
             _graphicsDevice = game.GraphicsDevice;
@@ -385,13 +387,11 @@ namespace StasisGame.Systems
             for (int i = 0; i < characterRenderEntities.Count; i++)
             {
                 PhysicsComponent physicsComponent = (PhysicsComponent)_entityManager.getComponent(levelUid, characterRenderEntities[i], ComponentType.Physics);
-                PolygonShape bodyShape = physicsComponent.body.FixtureList[0].Shape as PolygonShape;
-                float shapeWidth = bodyShape.Vertices[2].X - bodyShape.Vertices[0].X;
-                float shapeHeight = bodyShape.Vertices[3].Y - bodyShape.Vertices[0].Y;
-                Rectangle source = new Rectangle(0, 0, (int)(shapeWidth * _scale), (int)(shapeHeight * _scale));
-                Vector2 origin = new Vector2(source.Width / 2f, source.Height / 2f);
+                CharacterRenderComponent characterRenderComponent = _entityManager.getComponent(levelUid, characterRenderEntities[i], ComponentType.CharacterRender) as CharacterRenderComponent;
+                Vector2 offset;
+                Texture2D texture = _animationManager.getTexture(characterRenderComponent.character, characterRenderComponent.animation, 0, out offset);
 
-                _spriteBatch.Draw(_pixel, (physicsComponent.body.Position - screenCenter) * _scale + _halfScreen, source, Color.White, 0, origin, 1f, SpriteEffects.None, 0.05f);
+                _spriteBatch.Draw(texture, (physicsComponent.body.Position - screenCenter) * _scale + _halfScreen, texture.Bounds, Color.White, 0, offset, 1f, SpriteEffects.None, 0.05f);
             }
 
             for (int i = 0; i < characterMovementEntities.Count; i++)

@@ -122,6 +122,7 @@
     <Compile Include="GameSettings.cs" />
     <Compile Include="Goal.cs" />
     <Compile Include="IRenderablePrimitive.cs" />
+    <Compile Include="Managers\AnimationManager.cs" />
     <Compile Include="Managers\ItemManager.cs" />
     <Compile Include="Managers\QuestManager.cs" />
     <Compile Include="Managers\WorldMapManager.cs" />
