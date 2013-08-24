@@ -45,26 +45,6 @@
     <Reference Include="Microsoft.Xna.Framework.Content.Pipeline.VideoImporters" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="animations\main_character\walk_left\0.png">
-      <Name>0</Name>
-      <Importer>TextureImporter</Importer>
-      <Processor>TextureProcessor</Processor>
-    </Compile>
-    <Compile Include="animations\main_character\walk_left\1.png">
-      <Name>1</Name>
-      <Importer>TextureImporter</Importer>
-      <Processor>TextureProcessor</Processor>
-    </Compile>
-    <Compile Include="animations\main_character\walk_left\2.png">
-      <Name>2</Name>
-      <Importer>TextureImporter</Importer>
-      <Processor>TextureProcessor</Processor>
-    </Compile>
-    <Compile Include="animations\main_character\walk_left\3.png">
-      <Name>3</Name>
-      <Importer>TextureImporter</Importer>
-      <Processor>TextureProcessor</Processor>
-    </Compile>
     <Compile Include="santa_barbara_normal.spritefont">
       <Name>santa_barbara_normal</Name>
       <Importer>FontDescriptionImporter</Importer>
@@ -591,13 +571,6 @@
     </Compile>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="animations\main_character\idle\0.png">
-      <Name>0</Name>
-      <Importer>TextureImporter</Importer>
-      <Processor>TextureProcessor</Processor>
-    </Compile>
-  </ItemGroup>
-  <ItemGroup>
     <Compile Include="animations\no_texture.jpg">
       <Name>no_texture</Name>
       <Importer>TextureImporter</Importer>
@@ -605,6 +578,26 @@
     </Compile>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="animations\main_character\walk_left\0.png">
+      <Name>0</Name>
+      <Importer>TextureImporter</Importer>
+      <Processor>TextureProcessor</Processor>
+    </Compile>
+    <Compile Include="animations\main_character\walk_left\1.png">
+      <Name>1</Name>
+      <Importer>TextureImporter</Importer>
+      <Processor>TextureProcessor</Processor>
+    </Compile>
+    <Compile Include="animations\main_character\walk_left\2.png">
+      <Name>2</Name>
+      <Importer>TextureImporter</Importer>
+      <Processor>TextureProcessor</Processor>
+    </Compile>
+    <Compile Include="animations\main_character\walk_left\3.png">
+      <Name>3</Name>
+      <Importer>TextureImporter</Importer>
+      <Processor>TextureProcessor</Processor>
+    </Compile>
     <Compile Include="animations\main_character\walk_left\4.png">
       <Name>4</Name>
       <Importer>TextureImporter</Importer>
@@ -664,6 +657,13 @@
     </Compile>
     <Compile Include="animations\main_character\walk_right\7.png">
       <Name>7</Name>
+      <Importer>TextureImporter</Importer>
+      <Processor>TextureProcessor</Processor>
+    </Compile>
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="animations\main_character\idle\0.png">
+      <Name>0</Name>
       <Importer>TextureImporter</Importer>
       <Processor>TextureProcessor</Processor>
     </Compile>
