@@ -38,20 +38,21 @@ float4 LiquidPS(float2 texCoord:TEXCOORD0) : COLOR0
 	// Apply speed
 	result.rgb += speed;
 
+
 	// Scattering
 	float scattering = base.a / 10;
-	scattering += tex2D(baseSample, texCoord + float2(1, -10) * pixelSize) / 10;
-	scattering += tex2D(baseSample, texCoord + float2(-2, -20) * pixelSize) / 10;
-	scattering += tex2D(baseSample, texCoord + float2(3, -30) * pixelSize) / 10;
-	scattering += tex2D(baseSample, texCoord + float2(-4, -40) * pixelSize) / 10;
-	scattering += tex2D(baseSample, texCoord + float2(5, -50) * pixelSize) / 10;
-	scattering += tex2D(baseSample, texCoord + float2(-6, -60) * pixelSize) / 10;
-	scattering += tex2D(baseSample, texCoord + float2(7, -70) * pixelSize) / 10;
-	scattering += tex2D(baseSample, texCoord + float2(-8, -80) * pixelSize) / 10;
-	scattering += tex2D(baseSample, texCoord + float2(9, -90) * pixelSize) / 10;
-	scattering += tex2D(baseSample, texCoord + float2(-10, -100) * pixelSize) / 10;
+	scattering += tex2D(baseSample, texCoord + float2(1, -8) * pixelSize) / 10;
+	scattering += tex2D(baseSample, texCoord + float2(-2, -16) * pixelSize) / 10;
+	scattering += tex2D(baseSample, texCoord + float2(3, -24) * pixelSize) / 10;
+	scattering += tex2D(baseSample, texCoord + float2(-4, -32) * pixelSize) / 10;
+	scattering += tex2D(baseSample, texCoord + float2(5, -40) * pixelSize) / 10;
+	scattering += tex2D(baseSample, texCoord + float2(-6, -48) * pixelSize) / 10;
+	scattering += tex2D(baseSample, texCoord + float2(7, -56) * pixelSize) / 10;
+	scattering += tex2D(baseSample, texCoord + float2(-8, -64) * pixelSize) / 10;
+	scattering += tex2D(baseSample, texCoord + float2(9, -72) * pixelSize) / 10;
+	scattering += tex2D(baseSample, texCoord + float2(-10, -80) * pixelSize) / 10;
 	scattering = 1 - scattering;
-	scattering = lerp(0.5, 0.8, scattering);
+	scattering = lerp(0.35, 1, scattering);
 	result.rgb *= scattering;
 
 	// Add some blue
