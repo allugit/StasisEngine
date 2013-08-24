@@ -28,7 +28,7 @@ float4 LiquidPS(float2 texCoord:TEXCOORD0) : COLOR0
 
 	// Top shimmer
 	float top = base.a;
-	top -= tex2D(baseSample, texCoord + float2(0, -8 * pixelSize.y)).a;
+	top -= tex2D(baseSample, texCoord + float2(0, -6.5 * pixelSize.y)).a;
 	top = top > 0.7 ? top : 0;
 	result.rgb += top;
 
