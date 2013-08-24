@@ -26,11 +26,13 @@ namespace StasisGame.Managers
         private static WorldMapManager _worldMapManager;
         private static QuestManager _questManager;
         private static ItemManager _itemManager;
+        private static DialogueManager _dialogueManager;
         private static string _playerName;
         private static int _playerSlot;
         private static XElement _playerData;
         private static Dictionary<string, bool> _customFlags;
         private static Dictionary<string, int> _customValues;
+        private static Dictionary<string, string> _customStrings;
 
         public static GameSettings gameSettings { get { return _gameSettings; } }
         public static string playerName { get { return _playerName; } }
@@ -55,6 +57,7 @@ namespace StasisGame.Managers
 
             _customFlags = new Dictionary<string, bool>();
             _customValues = new Dictionary<string, int>();
+            _customStrings = new Dictionary<string, string>();
         }
 
         // Set custom flag
@@ -79,6 +82,18 @@ namespace StasisGame.Managers
         public static int getCustomValue(string valueUid)
         {
             return _customValues[valueUid];
+        }
+
+        // Set custom string
+        public static void setCustomString(string stringUid, string value)
+        {
+            _customStrings.Add(stringUid, value);
+        }
+
+        // Get custom string
+        public static string getCustomString(string stringUid)
+        {
+            return _customStrings[stringUid];
         }
 
         // Load game settings
@@ -240,6 +255,12 @@ namespace StasisGame.Managers
             return new ItemManager(itemDefinitions);
         }
 
+        // Create dialogue manager
+        public static DialogueManager createDialogueManager()
+        {
+            return new DialogueManager(_systemManager, _entityManager);
+        }
+
         // Load world map states
         public static Dictionary<string, WorldMapState> loadWorldMapStates(List<XElement> allWorldMapStateData)
         {
@@ -280,7 +301,7 @@ namespace StasisGame.Managers
         }
 
         // Load quest states
-        public static Dictionary<string, QuestState> loadQuestStates(List<XElement> allQuestStateData)
+        private static Dictionary<string, QuestState> loadQuestStates(List<XElement> allQuestStateData)
         {
             Dictionary<string, QuestState> questStates = new Dictionary<string, QuestState>();
 
@@ -408,7 +429,7 @@ namespace StasisGame.Managers
                         startingWorldMapState);
 
                     // Create starting quest states
-                    _questManager.addNewQuestState("helping_dagny_1");
+                    //_questManager.addNewQuestState("helping_dagny_1");
 
                     // Create inventory and toolbar
                     _entityManager.addComponent("global", PlayerSystem.PLAYER_ID, new InventoryComponent(32));
