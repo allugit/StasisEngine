@@ -231,6 +231,7 @@ namespace StasisGame.Systems
             _systemManager.add(new TreeSystem(_systemManager, _entityManager), -1);
             _systemManager.add(new FluidSystem(_systemManager, _entityManager), -1);
             _systemManager.add(new AIBehaviorSystem(_systemManager, _entityManager), -1);
+            _systemManager.add(new DialogueSystem(_systemManager, _entityManager), -1);
             _playerSystem = (PlayerSystem)_systemManager.getSystem(SystemType.Player);
         }
 

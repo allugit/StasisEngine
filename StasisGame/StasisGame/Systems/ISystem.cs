@@ -20,7 +20,8 @@ namespace StasisGame.Systems
         Level,
         Explosion,
         AIBehavior,
-        Animation
+        Animation,
+        Dialogue
     };
 
     public interface ISystem

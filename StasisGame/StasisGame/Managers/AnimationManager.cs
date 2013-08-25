@@ -80,7 +80,7 @@ namespace StasisGame.Managers
             }
             if (frames == null)
             {
-                offset = new Vector2(_default.Width * 0.5f, 0.6f);
+                offset = new Vector2(_default.Width * 0.5f, _default.Height * 0.6f);
                 return _default;
             }
             else

@@ -27,7 +27,7 @@ namespace StasisGame.Managers
             string dialogueUid = "";
 
             // Start switchvine quest dialogue
-            dialogueUid = "quest_start_switchvine";
+            dialogueUid = "start_quest_collect_switchvine";
             addDialogueDefinition(dialogueUid, () => { return true; });
 
             addDialogueNode(dialogueUid, "wake_up", string.Format("Wake up, {0}!", DataManager.playerName));

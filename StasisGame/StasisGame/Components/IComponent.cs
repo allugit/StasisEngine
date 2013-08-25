@@ -37,7 +37,8 @@ namespace StasisGame.Components
         Tooltip,
         LevelTransition,
         Waypoints,
-        AIWanderBehavior
+        AIWanderBehavior,
+        CharacterDialogue
     };
 
     public interface IComponent

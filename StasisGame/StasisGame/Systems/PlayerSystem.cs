@@ -114,9 +114,34 @@ namespace StasisGame.Systems
 
                 if (levelSystem.finalized)
                 {
+                    DialogueSystem dialogueSystem = _systemManager.getSystem(SystemType.Dialogue) as DialogueSystem;
                     PhysicsComponent physicsComponent = (PhysicsComponent)_entityManager.getComponent(levelUid, _playerId, ComponentType.Physics);
+                    List<int> dialogueEntities = _entityManager.getEntitiesPosessing(levelUid, ComponentType.CharacterDialogue);
 
-                    if (physicsComponent != null)   // If there is a physics component, then we're in a level.
+                    for (int i = 0; i < dialogueEntities.Count; i++)
+                    {
+                        PhysicsComponent otherPhysicsComponent = _entityManager.getComponent(levelUid, dialogueEntities[i], ComponentType.Physics) as PhysicsComponent;
+                        TooltipComponent tooltipComponent = _entityManager.getComponent(levelUid, dialogueEntities[i], ComponentType.Tooltip) as TooltipComponent;
+                        Vector2 relative = physicsComponent.body.Position - otherPhysicsComponent.body.Position;
+                        float distanceSq = relative.LengthSquared();
+
+                        if (tooltipComponent == null)
+                        {
+                            if (distanceSq <= 1f)
+                            {
+                                _entityManager.addComponent(levelUid, dialogueEntities[i], new TooltipComponent("[Use] Talk", otherPhysicsComponent.body, 1f));
+                            }
+                        }
+                        else
+                        {
+                            if (distanceSq > 1f)
+                            {
+                                _entityManager.removeComponent(levelUid, dialogueEntities[i], ComponentType.Tooltip);
+                            }
+                        }
+                    }
+
+                    if (physicsComponent != null)
                     {
                         CharacterMovementComponent characterMovementComponent = _entityManager.getComponent(levelUid, _playerId, ComponentType.CharacterMovement) as CharacterMovementComponent;
                         RopeGrabComponent ropeGrabComponent = _entityManager.getComponent(levelUid, _playerId, ComponentType.RopeGrab) as RopeGrabComponent;
