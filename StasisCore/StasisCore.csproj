@@ -68,6 +68,10 @@
     <Compile Include="Models\Background.cs" />
     <Compile Include="Models\BackgroundLayer.cs" />
     <Compile Include="BackgroundRenderer.cs" />
+    <Compile Include="Models\DialogueDefinition.cs" />
+    <Compile Include="Models\DialogueNode.cs" />
+    <Compile Include="Models\DialogueOption.cs" />
+    <Compile Include="Models\DialogueState.cs" />
     <Compile Include="Models\ItemDefinition.cs" />
     <Compile Include="Models\ItemState.cs" />
     <Compile Include="Models\LevelIconDefinition.cs" />

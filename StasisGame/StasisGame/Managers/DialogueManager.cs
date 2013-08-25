@@ -8,23 +8,27 @@ namespace StasisGame.Managers
     {
         private SystemManager _systemManager;
         private EntityManager _entityManager;
-        private List<Dialogue> _dialogueDefinitions;
+        private List<DialogueDefinition> _dialogueDefinitions;
+        private Dictionary<string, DialogueState> _dialogueStates;
+
+        public Dictionary<string, DialogueState> dialogueStates { get { return _dialogueStates; } set { _dialogueStates = value; } }
 
         public DialogueManager(SystemManager systemManager, EntityManager entityManager)
         {
             _systemManager = systemManager;
             _entityManager = entityManager;
-            _dialogueDefinitions = createDialogueDefinitions();
+            _dialogueDefinitions = new List<DialogueDefinition>();
+            createDialogueDefinitions();
         }
 
-        private List<Dialogue> createDialogueDefinitions()
+        private List<DialogueDefinition> createDialogueDefinitions()
         {
-            List<Dialogue> definitions = new List<Dialogue>();
+            List<DialogueDefinition> definitions = new List<DialogueDefinition>();
             string dialogueUid = "";
 
             // Start switchvine quest dialogue
             dialogueUid = "quest_start_switchvine";
-            addDialogueDefinition(dialogueUid, "wake_up", () => { return true; });
+            addDialogueDefinition(dialogueUid, () => { return true; });
 
             addDialogueNode(dialogueUid, "wake_up", string.Format("Wake up, {0}!", DataManager.playerName));
             addDialogueNodeOption(
@@ -32,7 +36,7 @@ namespace StasisGame.Managers
                 "wake_up",
                 "...", 
                 () => { return true; },
-                () => { DataManager.set });
+                () => { DataManager.setCustomString(dialogueUid + "_current_dialogue_node", "get_switchvines"); });
 
             addDialogueNode(dialogueUid, "get_switchvines", "I'm running low on switchvine. I need you to run to the ravine and grab some more for me.");
             addDialogueNodeOption(dialogueUid, "get_switchvines", "Okay.", () => { return true; }, () => { DataManager.questManager.addNewQuestState("helping_dagny_1"); });
@@ -40,9 +44,9 @@ namespace StasisGame.Managers
             return definitions;
         }
 
-        public Dialogue getDialogueDefinition(string dialogueUid)
+        public DialogueDefinition getDialogueDefinition(string dialogueUid)
         {
-            foreach (Dialogue definition in _dialogueDefinitions)
+            foreach (DialogueDefinition definition in _dialogueDefinitions)
             {
                 if (definition.uid == dialogueUid)
                 {
@@ -54,7 +58,7 @@ namespace StasisGame.Managers
 
         public DialogueNode getDialogueNode(string dialogueUid, string nodeUid)
         {
-            Dialogue definition = getDialogueDefinition(dialogueUid);
+            DialogueDefinition definition = getDialogueDefinition(dialogueUid);
 
             foreach (DialogueNode node in definition.dialogueNodes)
             {
@@ -66,14 +70,14 @@ namespace StasisGame.Managers
             return null;
         }
 
-        private void addDialogueDefinition(string dialogueUid, string headNodeUid, Func<bool> conditionsToMeet)
+        private void addDialogueDefinition(string dialogueUid, Func<bool> conditionsToMeet)
         {
-            _dialogueDefinitions.Add(new Dialogue(dialogueUid, headNodeUid, conditionsToMeet));
+            _dialogueDefinitions.Add(new DialogueDefinition(dialogueUid, conditionsToMeet));
         }
 
         private void addDialogueNode(string dialogueUid, string nodeUid, string message)
         {
-            Dialogue dialogueDefinition = getDialogueDefinition(dialogueUid);
+            DialogueDefinition dialogueDefinition = getDialogueDefinition(dialogueUid);
 
             dialogueDefinition.dialogueNodes.Add(new DialogueNode(dialogueDefinition, nodeUid, message));
         }

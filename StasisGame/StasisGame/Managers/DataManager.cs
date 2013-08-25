@@ -192,7 +192,7 @@ namespace StasisGame.Managers
         }
 
         // Create quest manager
-        public static QuestManager createQuestManager()
+        private static QuestManager createQuestManager()
         {
             List<QuestDefinition> questDefinitions = new List<QuestDefinition>();
             List<XElement> allQuestData = ResourceManager.questResources;
@@ -218,7 +218,7 @@ namespace StasisGame.Managers
         }
 
         // Create item manager
-        public static ItemManager createItemManager()
+        private static ItemManager createItemManager()
         {
             List<ItemDefinition> itemDefinitions = new List<ItemDefinition>();
             List<XElement> allItemData = ResourceManager.itemResources;
@@ -262,7 +262,7 @@ namespace StasisGame.Managers
         }
 
         // Load world map states
-        public static Dictionary<string, WorldMapState> loadWorldMapStates(List<XElement> allWorldMapStateData)
+        private static Dictionary<string, WorldMapState> loadWorldMapStates(List<XElement> allWorldMapStateData)
         {
             Dictionary<string, WorldMapState> worldMapStates = new Dictionary<string, WorldMapState>();
 
@@ -321,6 +321,24 @@ namespace StasisGame.Managers
             }
 
             return questStates;
+        }
+
+        // Load dialogue states
+        private static Dictionary<string, DialogueState> loadDialogueStates(List<XElement> allDialogueStateData)
+        {
+            Dictionary<string, DialogueState> dialogueStates = new Dictionary<string, DialogueState>();
+
+            foreach (XElement dialogueStateData in allDialogueStateData)
+            {
+                string dialogueUid = dialogueStateData.Attribute("dialogue_uid").Value;
+                DialogueState dialogueState = new DialogueState(
+                    _dialogueManager.getDialogueDefinition(dialogueUid),
+                    dialogueStateData.Attribute("current_node_uid").Value);
+
+                dialogueStates.Add(dialogueUid, dialogueState);
+            }
+
+            return dialogueStates;
         }
 
         // Load player inventory
@@ -393,6 +411,20 @@ namespace StasisGame.Managers
             }
         }
 
+        // Load custom strings
+        private static void loadCustomStrings()
+        {
+            List<XElement> allCustomStringData = new List<XElement>(_playerData.Elements("CustomString"));
+
+            _customStrings.Clear();
+            foreach (XElement customStringData in allCustomStringData)
+            {
+                _customStrings.Add(
+                    customStringData.Attribute("uid").Value,
+                    customStringData.Attribute("value").Value);
+            }
+        }
+
         // Create new player data
         public static int createPlayerData(string playerName)
         {
@@ -416,6 +448,7 @@ namespace StasisGame.Managers
                     _worldMapManager = createWorldMapManager();
                     _questManager = createQuestManager();
                     _itemManager = createItemManager();
+                    _dialogueManager = createDialogueManager();
 
                     // Create starting world map states
                     startingWorldMapState = new WorldMapState(_worldMapManager.getWorldMapDefinition("oria_world_map"), true);
@@ -436,7 +469,7 @@ namespace StasisGame.Managers
                     _entityManager.addComponent("global", PlayerSystem.PLAYER_ID, new ToolbarComponent(4, PlayerSystem.PLAYER_ID));
 
                     // Custom flags
-                    setCustomFlag("new_game", true);
+                    //setCustomFlag("new_game", true);
 
                     // Save data
                     savePlayerData();
@@ -506,6 +539,7 @@ namespace StasisGame.Managers
                 _worldMapManager = createWorldMapManager();
                 _questManager = createQuestManager();
                 _itemManager = createItemManager();
+                _dialogueManager = createDialogueManager();
 
                 // Basic player data
                 _playerData = doc.Element("PlayerData");
@@ -517,6 +551,9 @@ namespace StasisGame.Managers
 
                 // Quest states
                 _questManager.questStates = loadQuestStates(new List<XElement>(_playerData.Elements("QuestState")));
+
+                // Dialogue states
+                _dialogueManager.dialogueStates = loadDialogueStates(new List<XElement>(_playerData.Elements("DialogueState")));
 
                 // Inventory and toolbar
                 loadPlayerInventory();
@@ -547,6 +584,7 @@ namespace StasisGame.Managers
                 XElement toolbarData = new XElement("ToolbarState");
                 List<XElement> customFlagsData = new List<XElement>();
                 List<XElement> customValuesData = new List<XElement>();
+                List<XElement> customStringsData = new List<XElement>();
 
                 // Basic player data
                 _playerData = new XElement(
@@ -638,6 +676,13 @@ namespace StasisGame.Managers
                     customValuesData.Add(new XElement("CustomValue", new XAttribute("uid", uidValuePair.Key), new XAttribute("value", uidValuePair.Value)));
                 }
                 _playerData.Add(customValuesData);
+
+                // Custom values
+                foreach (KeyValuePair<string, string> uidStringPair in _customStrings)
+                {
+                    customStringsData.Add(new XElement("CustomString", new XAttribute("uid", uidStringPair.Key), new XAttribute("value", uidStringPair.Value)));
+                }
+                _playerData.Add(customStringsData);
 
                 doc.Add(_playerData);
                 doc.Save(fs);
