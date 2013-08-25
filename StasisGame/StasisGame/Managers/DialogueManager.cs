@@ -28,9 +28,9 @@ namespace StasisGame.Managers
 
             // Start switchvine quest dialogue
             dialogueUid = "start_quest_collect_switchvine";
-            addDialogueDefinition(dialogueUid, () => { return true; });
+            addDialogueDefinition(dialogueUid, "wake_up", () => { return true; });
 
-            addDialogueNode(dialogueUid, "wake_up", string.Format("Wake up, {0}!", DataManager.playerName));
+            addDialogueNode(dialogueUid, "wake_up", string.Format("Wake up, [PLAYER_NAME]!", DataManager.playerName));
             addDialogueNodeOption(
                 dialogueUid,
                 "wake_up",
@@ -56,6 +56,24 @@ namespace StasisGame.Managers
             return null;
         }
 
+        public DialogueNode getCurrentDialogueNode(string dialogueUid)
+        {
+            DialogueDefinition definition = getDialogueDefinition(dialogueUid);
+            DialogueState dialogueState = null;
+            string currentNodeUid = null;
+
+            if (_dialogueStates.TryGetValue(dialogueUid, out dialogueState))
+            {
+                currentNodeUid = dialogueState.currentNodeUid;
+            }
+            else
+            {
+                currentNodeUid = definition.initialNodeUid;
+            }
+
+            return getDialogueNode(dialogueUid, currentNodeUid);
+        }
+
         public DialogueNode getDialogueNode(string dialogueUid, string nodeUid)
         {
             DialogueDefinition definition = getDialogueDefinition(dialogueUid);
@@ -70,9 +88,9 @@ namespace StasisGame.Managers
             return null;
         }
 
-        private void addDialogueDefinition(string dialogueUid, Func<bool> conditionsToMeet)
+        private void addDialogueDefinition(string dialogueUid, string initialNodeUid, Func<bool> conditionsToMeet)
         {
-            _dialogueDefinitions.Add(new DialogueDefinition(dialogueUid, conditionsToMeet));
+            _dialogueDefinitions.Add(new DialogueDefinition(dialogueUid, initialNodeUid, conditionsToMeet));
         }
 
         private void addDialogueNode(string dialogueUid, string nodeUid, string message)
@@ -87,6 +105,21 @@ namespace StasisGame.Managers
             DialogueNode node = getDialogueNode(dialogueUid, nodeUid);
 
             node.options.Add(new DialogueOption(node, conditionsToMeet, message, action));
+        }
+
+        public string getText(string dialogueUid)
+        {
+            DialogueNode node = getCurrentDialogueNode(dialogueUid);
+            string text = replaceSymbols(node.message);
+
+            return text;
+        }
+
+        private string replaceSymbols(string text)
+        {
+            text = text.Replace("[PLAYER_NAME]", DataManager.playerName);
+
+            return text;
         }
     }
 }

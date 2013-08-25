@@ -76,7 +76,7 @@ namespace StasisGame.UI
             _transitionsToRemove = new List<Transition>();
         }
 
-        public string wrapText(SpriteFont spriteFont, string text, float maxLineWidth)
+        public static string wrapText(SpriteFont spriteFont, string text, float maxLineWidth)
         {
             string[] words = text.Split(' ', '\n');
 

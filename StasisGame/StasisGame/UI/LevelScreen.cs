@@ -26,6 +26,7 @@ namespace StasisGame.UI
         private SpriteFont _arial;
         private LargeHealthBar _healthBar;
         private List<DialoguePane> _dialogePanes;
+        private SpriteFont _dialogueFont;
 
         public LevelScreen(LoderGame game, SystemManager systemManager, EntityManager entityManager)
             : base(game.screenSystem, ScreenType.Level)
@@ -42,6 +43,7 @@ namespace StasisGame.UI
             _pixel.SetData<Color>(new[] { Color.White });
             _arial = _content.Load<SpriteFont>("arial");
             _dialogePanes = new List<DialoguePane>();
+            _dialogueFont = _content.Load<SpriteFont>("shared_ui/dialogue_font");
 
             ToolbarComponent toolbarComponent = (ToolbarComponent)_entityManager.getComponent(LevelSystem.currentLevelUid, _playerId, ComponentType.Toolbar);
 
@@ -62,13 +64,13 @@ namespace StasisGame.UI
         {
             _dialogePanes.Add(
                 new DialoguePane(
-                    DataManager.dialogueManager,
                     this,
                     UIAlignment.MiddleCenter,
                     0,
                     0,
                     600,
                     300,
+                    _dialogueFont,
                     dialogueComponent));
         }
 

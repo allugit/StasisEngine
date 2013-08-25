@@ -201,7 +201,7 @@
     </Compile>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="dialogue_font.spritefont">
+    <Compile Include="shared_ui\dialogue_font.spritefont">
       <Name>dialogue_font</Name>
       <Importer>FontDescriptionImporter</Importer>
       <Processor>FontDescriptionProcessor</Processor>
