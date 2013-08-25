@@ -40,6 +40,7 @@ namespace StasisGame.Managers
         public static WorldMapManager worldMapManager { get { return _worldMapManager; } }
         public static QuestManager questManager { get { return _questManager; } }
         public static ItemManager itemManager { get { return _itemManager; } }
+        public static DialogueManager dialogueManager { get { return _dialogueManager; } }
 
         // Initialize
         public static void initialize(LoderGame game, SystemManager systemManager, EntityManager entityManager)

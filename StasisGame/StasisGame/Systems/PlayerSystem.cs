@@ -21,6 +21,8 @@ namespace StasisGame.Systems
         private int _playerId;
         private bool _paused;
         private bool _singleStep;
+        private KeyboardState _newKeyState;
+        private KeyboardState _oldKeyState;
 
         public int defaultPriority { get { return 30; } }
         public SystemType systemType { get { return SystemType.Player; } }
@@ -118,29 +120,47 @@ namespace StasisGame.Systems
                     PhysicsComponent physicsComponent = (PhysicsComponent)_entityManager.getComponent(levelUid, _playerId, ComponentType.Physics);
                     List<int> dialogueEntities = _entityManager.getEntitiesPosessing(levelUid, ComponentType.CharacterDialogue);
 
+                    _oldKeyState = _newKeyState;
+                    _newKeyState = Keyboard.GetState();
+
+                    // Handle dialogue
                     for (int i = 0; i < dialogueEntities.Count; i++)
                     {
                         PhysicsComponent otherPhysicsComponent = _entityManager.getComponent(levelUid, dialogueEntities[i], ComponentType.Physics) as PhysicsComponent;
-                        TooltipComponent tooltipComponent = _entityManager.getComponent(levelUid, dialogueEntities[i], ComponentType.Tooltip) as TooltipComponent;
                         Vector2 relative = physicsComponent.body.Position - otherPhysicsComponent.body.Position;
                         float distanceSq = relative.LengthSquared();
 
-                        if (tooltipComponent == null)
+                        if (_newKeyState.IsKeyDown(Keys.E) && _oldKeyState.IsKeyUp(Keys.E))
                         {
                             if (distanceSq <= 1f)
                             {
-                                _entityManager.addComponent(levelUid, dialogueEntities[i], new TooltipComponent("[Use] Talk", otherPhysicsComponent.body, 1f));
+                                CharacterDialogueComponent dialogueComponent = _entityManager.getComponent(levelUid, dialogueEntities[i], ComponentType.CharacterDialogue) as CharacterDialogueComponent;
+
+                                dialogueSystem.beginDialogue(levelUid, PlayerSystem.PLAYER_ID, dialogueEntities[i], dialogueComponent);
                             }
                         }
                         else
                         {
-                            if (distanceSq > 1f)
+                            TooltipComponent tooltipComponent = _entityManager.getComponent(levelUid, dialogueEntities[i], ComponentType.Tooltip) as TooltipComponent;
+
+                            if (tooltipComponent == null)
                             {
-                                _entityManager.removeComponent(levelUid, dialogueEntities[i], ComponentType.Tooltip);
+                                if (distanceSq <= 1f)
+                                {
+                                    _entityManager.addComponent(levelUid, dialogueEntities[i], new TooltipComponent("[Use] Talk", otherPhysicsComponent.body, 1f));
+                                }
+                            }
+                            else
+                            {
+                                if (distanceSq > 1f)
+                                {
+                                    _entityManager.removeComponent(levelUid, dialogueEntities[i], ComponentType.Tooltip);
+                                }
                             }
                         }
                     }
 
+                    // Handle character movement
                     if (physicsComponent != null)
                     {
                         CharacterMovementComponent characterMovementComponent = _entityManager.getComponent(levelUid, _playerId, ComponentType.CharacterMovement) as CharacterMovementComponent;

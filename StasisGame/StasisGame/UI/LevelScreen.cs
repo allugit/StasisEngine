@@ -25,6 +25,7 @@ namespace StasisGame.UI
         private EquipmentSystem _equipmentSystem;
         private SpriteFont _arial;
         private LargeHealthBar _healthBar;
+        private List<DialoguePane> _dialogePanes;
 
         public LevelScreen(LoderGame game, SystemManager systemManager, EntityManager entityManager)
             : base(game.screenSystem, ScreenType.Level)
@@ -40,6 +41,7 @@ namespace StasisGame.UI
             _pixel = new Texture2D(_game.GraphicsDevice, 1, 1);
             _pixel.SetData<Color>(new[] { Color.White });
             _arial = _content.Load<SpriteFont>("arial");
+            _dialogePanes = new List<DialoguePane>();
 
             ToolbarComponent toolbarComponent = (ToolbarComponent)_entityManager.getComponent(LevelSystem.currentLevelUid, _playerId, ComponentType.Toolbar);
 
@@ -54,6 +56,35 @@ namespace StasisGame.UI
         ~LevelScreen()
         {
             _content.Unload();
+        }
+
+        public void addDialoguePane(CharacterDialogueComponent dialogueComponent)
+        {
+            _dialogePanes.Add(
+                new DialoguePane(
+                    DataManager.dialogueManager,
+                    this,
+                    UIAlignment.MiddleCenter,
+                    0,
+                    0,
+                    600,
+                    300,
+                    dialogueComponent));
+        }
+
+        public void removeDialoguePane(CharacterDialogueComponent dialogueComponent)
+        {
+            DialoguePane pane = null;
+
+            for (int i = 0; i < _dialogePanes.Count; i++)
+            {
+                if (_dialogePanes[i].dialogueComponent == dialogueComponent)
+                {
+                    pane = _dialogePanes[i];
+                }
+            }
+
+            _dialogePanes.Remove(pane);
         }
 
         public override void update()
@@ -95,7 +126,6 @@ namespace StasisGame.UI
         public override void draw()
         {
             PhysicsComponent physicsComponent = (PhysicsComponent)_entityManager.getComponent(LevelSystem.currentLevelUid, PlayerSystem.PLAYER_ID, ComponentType.Physics);
-            //string text = string.Format("Body count: {0}", physicsComponent.body.GetWorld().BodyCount);
 
             if (_displayInventory)
             {
@@ -103,8 +133,10 @@ namespace StasisGame.UI
             }
             _toolbarDisplay.draw();
 
-            //_spriteBatch.DrawString(_arial, text, new Vector2(8, 8), Color.White, 0f, Vector2.Zero, 1f, SpriteEffects.None, 0f);
-            //_spriteBatch.DrawString(_arial, text, new Vector2(9, 9), Color.Black, 0f, Vector2.Zero, 1f, SpriteEffects.None, 0.00001f);
+            for (int i = 0; i < _dialogePanes.Count; i++)
+            {
+                _dialogePanes[i].draw();
+            }
 
             base.draw();
         }

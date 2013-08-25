@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using Microsoft.Xna.Framework;
 using StasisGame.Components;
 using StasisGame.Managers;
+using StasisGame.UI;
 
 namespace StasisGame.Systems
 {
@@ -22,6 +23,26 @@ namespace StasisGame.Systems
         {
             _systemManager = systemManager;
             _entityManager = entityManager;
+        }
+
+        public void beginDialogue(string levelUid, int entityA, int entityB, CharacterDialogueComponent dialogueComponent)
+        {
+            ScreenSystem screenSystem = _systemManager.getSystem(SystemType.Screen) as ScreenSystem;
+            LevelScreen levelScreen = screenSystem.getScreen(ScreenType.Level) as LevelScreen;
+
+            _entityManager.addComponent(levelUid, entityA, new InDialogueComponent());
+            _entityManager.addComponent(levelUid, entityB, new InDialogueComponent());
+            levelScreen.addDialoguePane(dialogueComponent);
+        }
+
+        public void endDialogue(string levelUid, int entityA, int entityB, CharacterDialogueComponent dialogueComponent)
+        {
+            ScreenSystem screenSystem = _systemManager.getSystem(SystemType.Screen) as ScreenSystem;
+            LevelScreen levelScreen = screenSystem.getScreen(ScreenType.Level) as LevelScreen;
+
+            _entityManager.removeComponent(levelUid, entityA, ComponentType.InDialogue);
+            _entityManager.removeComponent(levelUid, entityB, ComponentType.InDialogue);
+            levelScreen.removeDialoguePane(dialogueComponent);
         }
 
         public void update(GameTime gameTime)

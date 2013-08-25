@@ -38,7 +38,8 @@ namespace StasisGame.Components
         LevelTransition,
         Waypoints,
         AIWanderBehavior,
-        CharacterDialogue
+        CharacterDialogue,
+        InDialogue
     };
 
     public interface IComponent
