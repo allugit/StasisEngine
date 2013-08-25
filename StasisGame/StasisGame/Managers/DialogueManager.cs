@@ -107,9 +107,9 @@ namespace StasisGame.Managers
             node.options.Add(new DialogueOption(node, conditionsToMeet, message, action));
         }
 
-        public string getText(string dialogueUid)
+        public string getText(string dialogueUid, string nodeUid)
         {
-            DialogueNode node = getCurrentDialogueNode(dialogueUid);
+            DialogueNode node = getDialogueNode(dialogueUid, nodeUid);
             string text = replaceSymbols(node.message);
 
             return text;

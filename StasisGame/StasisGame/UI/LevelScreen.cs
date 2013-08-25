@@ -25,8 +25,9 @@ namespace StasisGame.UI
         private EquipmentSystem _equipmentSystem;
         private SpriteFont _arial;
         private LargeHealthBar _healthBar;
-        private List<DialoguePane> _dialogePanes;
+        private List<InteractiveDialoguePane> _dialogePanes;
         private SpriteFont _dialogueFont;
+        private SpriteFont _dialogueOptionFont;
 
         public LevelScreen(LoderGame game, SystemManager systemManager, EntityManager entityManager)
             : base(game.screenSystem, ScreenType.Level)
@@ -42,8 +43,9 @@ namespace StasisGame.UI
             _pixel = new Texture2D(_game.GraphicsDevice, 1, 1);
             _pixel.SetData<Color>(new[] { Color.White });
             _arial = _content.Load<SpriteFont>("arial");
-            _dialogePanes = new List<DialoguePane>();
+            _dialogePanes = new List<InteractiveDialoguePane>();
             _dialogueFont = _content.Load<SpriteFont>("shared_ui/dialogue_font");
+            _dialogueOptionFont = _content.Load<SpriteFont>("shared_ui/dialogue_option_font");
 
             ToolbarComponent toolbarComponent = (ToolbarComponent)_entityManager.getComponent(LevelSystem.currentLevelUid, _playerId, ComponentType.Toolbar);
 
@@ -63,7 +65,7 @@ namespace StasisGame.UI
         public void addDialoguePane(CharacterDialogueComponent dialogueComponent)
         {
             _dialogePanes.Add(
-                new DialoguePane(
+                new InteractiveDialoguePane(
                     this,
                     UIAlignment.MiddleCenter,
                     0,
@@ -71,12 +73,13 @@ namespace StasisGame.UI
                     600,
                     300,
                     _dialogueFont,
+                    _dialogueOptionFont,
                     dialogueComponent));
         }
 
         public void removeDialoguePane(CharacterDialogueComponent dialogueComponent)
         {
-            DialoguePane pane = null;
+            InteractiveDialoguePane pane = null;
 
             for (int i = 0; i < _dialogePanes.Count; i++)
             {
@@ -121,6 +124,11 @@ namespace StasisGame.UI
                 _inventoryDisplay.update();
             }
             _toolbarDisplay.update();
+
+            for (int i = 0; i < _dialogePanes.Count; i++)
+            {
+                _dialogePanes[i].update();
+            }
 
             base.update();
         }
