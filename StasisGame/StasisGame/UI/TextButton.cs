@@ -40,7 +40,11 @@ namespace StasisGame.UI
                 if (_textAlignment == TextAlignment.Center)
                 {
                     _localHitBox.X = -(int)(textSize.X / 2f + _hitBoxPadding);
-                    _localHitBox.Y = -(int)(_hitBoxPadding / 2f);
+                    //_localHitBox.Y = -(int)(_hitBoxPadding / 2f);
+                }
+                else if (_textAlignment == TextAlignment.Right)
+                {
+                    _localHitBox.X = -(int)(textSize.X + _hitBoxPadding);
                 }
 
                 _localHitBox.Width = (int)textSize.X + _hitBoxPadding * 2;

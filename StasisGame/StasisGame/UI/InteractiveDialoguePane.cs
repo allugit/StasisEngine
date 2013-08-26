@@ -72,18 +72,19 @@ namespace StasisGame.UI
             // Handle button input
             for (int i = 0; i < _optionButtons.Count; i++)
             {
-                if (_selectedOptionIndex != i)
+                if (_optionButtons[i].hitTest(mousePosition))
                 {
-                    if (_optionButtons[i].hitTest(mousePosition))
+                    if (_selectedOptionIndex != i)
                     {
                         _selectedOptionIndex = i;
                         _optionButtons[i].select();
                     }
+
+                    if (_screen.newMouseState.LeftButton == ButtonState.Pressed && _screen.oldMouseState.LeftButton == ButtonState.Released)
+                    {
+                        _optionButtons[_selectedOptionIndex].activate();
+                    }
                 }
-            }
-            if (_screen.newMouseState.LeftButton == ButtonState.Pressed && _screen.oldMouseState.LeftButton == ButtonState.Released)
-            {
-                _optionButtons[_selectedOptionIndex].activate();
             }
         }
 
