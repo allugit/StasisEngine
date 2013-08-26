@@ -44,11 +44,14 @@ namespace StasisGame.UI
             _optionButtons.Clear();
             foreach (DialogueOption option in _dialogueManager.getDialogueOptions(dialogueComponent.dialogueUid, _currentNodeUid))
             {
-                string text = Screen.wrapText(_optionFont, option.message, _maxLineWidth);
-                Vector2 size = _optionFont.MeasureString(text);
+                if (option.conditionsToMeet())
+                {
+                    string text = Screen.wrapText(_optionFont, option.message, _maxLineWidth);
+                    Vector2 size = _optionFont.MeasureString(text);
 
-                _optionButtons.Add(new TextButton(_screen, _optionFont, UIAlignment.TopLeft, x + _width - (int)_margin, y + _height - (int)optionYOffset, 0, TextAlignment.Right, option.message, 1, Color.Yellow, Color.Gray, option.action));
-                optionYOffset += size.Y;
+                    _optionButtons.Add(new TextButton(_screen, _optionFont, UIAlignment.TopLeft, x + _width - (int)_margin, y + _height - (int)optionYOffset, 0, TextAlignment.Right, option.message, 1, Color.Yellow, Color.Gray, option.action));
+                    optionYOffset += size.Y;
+                }
             }
             _optionButtons[0].select();
         }
