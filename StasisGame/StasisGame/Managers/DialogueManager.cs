@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using StasisCore.Models;
+using StasisGame.Systems;
 
 namespace StasisGame.Managers
 {
@@ -30,16 +31,52 @@ namespace StasisGame.Managers
             dialogueUid = "start_quest_collect_switchvine";
             addDialogueDefinition(dialogueUid, "wake_up", () => { return true; });
 
-            addDialogueNode(dialogueUid, "wake_up", string.Format("Wake up, [PLAYER_NAME]!", DataManager.playerName));
+            addDialogueNode(dialogueUid, "wake_up", "Wake up, [PLAYER_NAME]! We've got a lot of work to do today.");
             addDialogueNodeOption(
                 dialogueUid,
                 "wake_up",
                 "...", 
                 () => { return true; },
-                () => { DataManager.setCustomString(dialogueUid + "_current_dialogue_node", "get_switchvines"); });
+                () => { setCurrentDialogueNode(dialogueUid, "get_switchvines"); });
 
             addDialogueNode(dialogueUid, "get_switchvines", "I'm running low on switchvine. I need you to run to the ravine and grab some more for me.");
-            addDialogueNodeOption(dialogueUid, "get_switchvines", "Okay.", () => { return true; }, () => { DataManager.questManager.addNewQuestState("helping_dagny_1"); });
+            addDialogueNodeOption(
+                dialogueUid,
+                "get_switchvines",
+                "Okay.",
+                () => { return true; },
+                () => 
+                { 
+                    DataManager.questManager.receiveQuest("collect_switchvine");
+                    setCurrentDialogueNode(dialogueUid, "unfinished");
+                    closeDialogue();
+                });
+
+            addDialogueNode(dialogueUid, "unfinished", "Have you collected those vines yet?");
+            addDialogueNodeOption(
+                dialogueUid,
+                "unfinished",
+                "Yes, here.",
+                () =>
+                {
+                    return DataManager.questManager.isQuestComplete("collect_switchvine");
+                },
+                () =>
+                {
+                    closeDialogue();
+                });
+            addDialogueNodeOption(
+                dialogueUid,
+                "unfinished",
+                "No, not yet.",
+                () =>
+                {
+                    return !DataManager.questManager.isQuestComplete("collect_switchvine");
+                },
+                () =>
+                {
+                    closeDialogue();
+                });
 
             return definitions;
         }
@@ -72,6 +109,18 @@ namespace StasisGame.Managers
             }
 
             return getDialogueNode(dialogueUid, currentNodeUid);
+        }
+
+        public void setCurrentDialogueNode(string dialogueUid, string nodeUid)
+        {
+            if (!_dialogueStates.ContainsKey(dialogueUid))
+            {
+                _dialogueStates.Add(dialogueUid, new DialogueState(getDialogueDefinition(dialogueUid), nodeUid));
+            }
+            else
+            {
+                _dialogueStates[dialogueUid].currentNodeUid = nodeUid;
+            }
         }
 
         public DialogueNode getDialogueNode(string dialogueUid, string nodeUid)
@@ -120,6 +169,14 @@ namespace StasisGame.Managers
             text = text.Replace("[PLAYER_NAME]", DataManager.playerName);
 
             return text;
+        }
+
+        private void closeDialogue()
+        {
+            DialogueSystem dialogueSystem = _systemManager.getSystem(SystemType.Dialogue) as DialogueSystem;
+            string levelUid = LevelSystem.currentLevelUid;
+
+            dialogueSystem.endDialogue(levelUid);
         }
     }
 }

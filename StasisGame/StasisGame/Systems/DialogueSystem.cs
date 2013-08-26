@@ -13,6 +13,9 @@ namespace StasisGame.Systems
         private EntityManager _entityManager;
         private bool _paused;
         private bool _singleStep;
+        private int _currentEntityA;
+        private int _currentEntityB;
+        private CharacterDialogueComponent _currentDialogueComponent;
 
         public SystemType systemType { get { return SystemType.Dialogue; } }
         public int defaultPriority { get { return 40; } }
@@ -30,19 +33,22 @@ namespace StasisGame.Systems
             ScreenSystem screenSystem = _systemManager.getSystem(SystemType.Screen) as ScreenSystem;
             LevelScreen levelScreen = screenSystem.getScreen(ScreenType.Level) as LevelScreen;
 
+            _currentEntityA = entityA;
+            _currentEntityB = entityB;
+            _currentDialogueComponent = dialogueComponent;
             _entityManager.addComponent(levelUid, entityA, new InDialogueComponent());
             _entityManager.addComponent(levelUid, entityB, new InDialogueComponent());
             levelScreen.addDialoguePane(dialogueComponent);
         }
 
-        public void endDialogue(string levelUid, int entityA, int entityB, CharacterDialogueComponent dialogueComponent)
+        public void endDialogue(string levelUid)
         {
             ScreenSystem screenSystem = _systemManager.getSystem(SystemType.Screen) as ScreenSystem;
             LevelScreen levelScreen = screenSystem.getScreen(ScreenType.Level) as LevelScreen;
 
-            _entityManager.removeComponent(levelUid, entityA, ComponentType.InDialogue);
-            _entityManager.removeComponent(levelUid, entityB, ComponentType.InDialogue);
-            levelScreen.removeDialoguePane(dialogueComponent);
+            _entityManager.removeComponent(levelUid, _currentEntityA, ComponentType.InDialogue);
+            _entityManager.removeComponent(levelUid, _currentEntityB, ComponentType.InDialogue);
+            levelScreen.removeDialoguePane(_currentDialogueComponent);
         }
 
         public void update(GameTime gameTime)

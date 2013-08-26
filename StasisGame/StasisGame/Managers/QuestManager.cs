@@ -1,61 +1,109 @@
 ﻿using System;
+using System.IO;
 using System.Diagnostics;
 using System.Collections.Generic;
+using System.Xml.Linq;
+using StasisCore;
 using StasisCore.Models;
 
 namespace StasisGame.Managers
 {
     public class QuestManager
     {
-        private List<QuestDefinition> _questDefinitions;
-        private Dictionary<string, QuestState> _questStates;
+        private Dictionary<string, Quest> _quests;
 
-        public List<QuestDefinition> questDefinitions { get { return _questDefinitions; } }
-        public Dictionary<string, QuestState> questStates { get { return _questStates; } set { _questStates = value; } }
-
-        public QuestManager(List<QuestDefinition> questDefinitions)
+        public QuestManager()
         {
-            _questDefinitions = questDefinitions;
-            _questStates = new Dictionary<string, QuestState>();
-        }
+            XElement playerData = DataManager.playerData;
+            List<XElement> allQuestData = ResourceManager.questResources;
 
-        public QuestDefinition getQuestDefinition(string questUid)
-        {
-            foreach (QuestDefinition questDefinition in _questDefinitions)
+            _quests = new Dictionary<string, Quest>();
+
+            // Load quest definitions
+            foreach (XElement questData in allQuestData)
             {
-                if (questDefinition.uid == questUid)
+                string questUid = questData.Attribute("uid").Value;
+                Quest quest = new Quest(questUid, questData.Attribute("title").Value, questData.Attribute("description").Value);
+
+                _quests.Add(questUid, quest);
+
+                foreach (XElement objectiveData in questData.Elements("Objective"))
                 {
-                    return questDefinition;
+                    string objectiveUid = objectiveData.Attribute("uid").Value;
+                    Objective objective = new Objective(
+                        objectiveUid,
+                        objectiveData.Attribute("label").Value,
+                        Loader.loadInt(objectiveData.Attribute("starting_value"), 0),
+                        Loader.loadInt(objectiveData.Attribute("end_value"), 1),
+                        Loader.loadBool(objectiveData.Attribute("optional"), false));
+
+                    quest.objectives.Add(objectiveUid, objective);
                 }
             }
-            return null;
-        }
 
-        public ObjectiveDefinition getObjectiveDefinition(string questUid, string objectiveUid)
-        {
-            QuestDefinition questDefinition = getQuestDefinition(questUid);
-
-            foreach (ObjectiveDefinition objectiveDefinition in questDefinition.objectiveDefinitions)
+            // Load quest states from player data
+            foreach (XElement questStateData in playerData.Elements("QuestState"))
             {
-                if (objectiveDefinition.uid == objectiveUid)
+                string questUid = questStateData.Attribute("quest_uid").Value;
+                Quest quest = _quests[questUid];
+
+                quest.received = bool.Parse(questStateData.Attribute("received").Value);
+
+                foreach (XElement objectiveStateData in questStateData.Elements("ObjectiveData"))
                 {
-                    return objectiveDefinition;
+                    string objectiveUid = objectiveStateData.Attribute("objective_uid").Value;
+                    Objective objective = quest.objectives[objectiveUid];
+
+                    objective.currentValue = int.Parse(objectiveStateData.Attribute("current_value").Value);
                 }
             }
-            return null;
         }
 
-        public void addNewQuestState(string questUid)
+        // Create data
+        public List<XElement> createData()
         {
-            QuestDefinition questDefinition = getQuestDefinition(questUid);
-            QuestState questState = new QuestState(questDefinition);
+            List<XElement> data = new List<XElement>();
 
-            foreach (ObjectiveDefinition objectiveDefinition in questDefinition.objectiveDefinitions)
+            foreach (Quest quest in _quests.Values)
             {
-                questState.objectiveStates.Add(new ObjectiveState(objectiveDefinition, objectiveDefinition.startingValue));
+                XElement questData = new XElement(
+                    "QuestState",
+                    new XAttribute("quest_uid", quest.uid),
+                    new XAttribute("received", quest.received));
+
+                foreach (Objective objective in quest.objectives.Values)
+                {
+                    questData.Add(
+                        new XElement(
+                            "ObjectiveState",
+                            new XAttribute("objective_uid", objective.uid),
+                            new XAttribute("current_value", objective.currentValue)));
+                }
             }
 
-            _questStates.Add(questUid, questState);
+            return data;
+        }
+
+        public bool isQuestComplete(string questUid)
+        {
+            Quest quest = _quests[questUid];
+            bool complete = true;
+
+            foreach (Objective objective in quest.objectives.Values)
+            {
+                if (objective.currentValue != objective.endValue && !objective.optional)
+                {
+                    complete = false;
+                    break;
+                }
+            }
+
+            return complete;
+        }
+
+        public void receiveQuest(string questUid)
+        {
+            _quests[questUid].received = true;
         }
     }
 }

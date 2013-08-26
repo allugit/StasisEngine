@@ -47,20 +47,40 @@ namespace StasisGame.UI
                 string text = Screen.wrapText(_optionFont, option.message, _maxLineWidth);
                 Vector2 size = _optionFont.MeasureString(text);
 
-                _optionButtons.Add(new TextButton(_screen, _optionFont, UIAlignment.TopLeft, x + _width - (int)_margin, y + _height - (int)optionYOffset, 0, TextAlignment.Right, option.message, 1, Color.White, Color.Gray, option.action));
+                _optionButtons.Add(new TextButton(_screen, _optionFont, UIAlignment.TopLeft, x + _width - (int)_margin, y + _height - (int)optionYOffset, 0, TextAlignment.Right, option.message, 1, Color.Yellow, Color.Gray, option.action));
                 optionYOffset += size.Y;
             }
+            _optionButtons[0].select();
         }
 
         public override void update()
         {
             DialogueNode currentNode = _dialogueManager.getCurrentDialogueNode(dialogueComponent.dialogueUid);
+            Vector2 mousePosition = new Vector2(_screen.newMouseState.X, _screen.newMouseState.Y);
 
             base.update();
 
+            // Update current node
             if (_currentNode != currentNode)
             {
                 setCurrentNode(currentNode);
+            }
+
+            // Handle button input
+            for (int i = 0; i < _optionButtons.Count; i++)
+            {
+                if (_selectedOptionIndex != i)
+                {
+                    if (_optionButtons[i].hitTest(mousePosition))
+                    {
+                        _selectedOptionIndex = i;
+                        _optionButtons[i].select();
+                    }
+                }
+            }
+            if (_screen.newMouseState.LeftButton == ButtonState.Pressed && _screen.oldMouseState.LeftButton == ButtonState.Released)
+            {
+                _optionButtons[_selectedOptionIndex].activate();
             }
         }
 

@@ -80,10 +80,8 @@
     <Compile Include="Models\LevelPathKey.cs" />
     <Compile Include="Models\LevelPathState.cs" />
     <Compile Include="Models\MaterialWorleyLayer.cs" />
-    <Compile Include="Models\ObjectiveDefinition.cs" />
-    <Compile Include="Models\ObjectiveState.cs" />
-    <Compile Include="Models\QuestDefinition.cs" />
-    <Compile Include="Models\QuestState.cs" />
+    <Compile Include="Models\Objective.cs" />
+    <Compile Include="Models\Quest.cs" />
     <Compile Include="Models\RopeMaterial.cs" />
     <Compile Include="Models\RopeMaterialTexture.cs" />
     <Compile Include="Models\WorldMapDefinition.cs" />

@@ -41,6 +41,7 @@ namespace StasisGame.Managers
         public static QuestManager questManager { get { return _questManager; } }
         public static ItemManager itemManager { get { return _itemManager; } }
         public static DialogueManager dialogueManager { get { return _dialogueManager; } }
+        public static XElement playerData { get { return _playerData; } }
 
         // Initialize
         public static void initialize(LoderGame game, SystemManager systemManager, EntityManager entityManager)
@@ -192,32 +193,6 @@ namespace StasisGame.Managers
             return new WorldMapManager(definitions);
         }
 
-        // Create quest manager
-        private static QuestManager createQuestManager()
-        {
-            List<QuestDefinition> questDefinitions = new List<QuestDefinition>();
-            List<XElement> allQuestData = ResourceManager.questResources;
-
-            foreach (XElement questData in allQuestData)
-            {
-                QuestDefinition questDefinition = new QuestDefinition(questData.Attribute("uid").Value, questData.Attribute("title").Value, questData.Attribute("description").Value);
-
-                foreach (XElement objectiveData in questData.Elements("Objective"))
-                {
-                    questDefinition.objectiveDefinitions.Add(
-                        new ObjectiveDefinition(
-                            objectiveData.Attribute("uid").Value,
-                            objectiveData.Attribute("label").Value,
-                            Loader.loadInt(objectiveData.Attribute("starting_value"), 0),
-                            Loader.loadInt(objectiveData.Attribute("end_value"), 1),
-                            Loader.loadBool(objectiveData.Attribute("optional"), false)));
-                }
-                questDefinitions.Add(questDefinition);
-            }
-
-            return new QuestManager(questDefinitions);
-        }
-
         // Create item manager
         private static ItemManager createItemManager()
         {
@@ -299,29 +274,6 @@ namespace StasisGame.Managers
             }
 
             return worldMapStates;
-        }
-
-        // Load quest states
-        private static Dictionary<string, QuestState> loadQuestStates(List<XElement> allQuestStateData)
-        {
-            Dictionary<string, QuestState> questStates = new Dictionary<string, QuestState>();
-
-            foreach (XElement questStateData in allQuestStateData)
-            {
-                string questUid = questStateData.Attribute("quest_uid").Value;
-                QuestState questState = new QuestState(_questManager.getQuestDefinition(questUid));
-
-                foreach (XElement objectiveStateData in questStateData.Elements("ObjectiveState"))
-                {
-                    questState.objectiveStates.Add(
-                        new ObjectiveState(
-                            _questManager.getObjectiveDefinition(questUid, objectiveStateData.Attribute("objective_uid").Value),
-                            int.Parse(objectiveStateData.Attribute("current_value").Value)));
-                }
-                questStates.Add(questUid, questState);
-            }
-
-            return questStates;
         }
 
         // Load dialogue states
@@ -447,7 +399,6 @@ namespace StasisGame.Managers
 
                     // Create managers
                     _worldMapManager = createWorldMapManager();
-                    _questManager = createQuestManager();
                     _itemManager = createItemManager();
                     _dialogueManager = createDialogueManager();
 
@@ -474,6 +425,8 @@ namespace StasisGame.Managers
 
                     // Save data
                     savePlayerData();
+
+                    _questManager = new QuestManager();
                     created = true;
                 }
             }
@@ -536,22 +489,19 @@ namespace StasisGame.Managers
             {
                 XDocument doc = XDocument.Load(fs);
 
-                // Create managers
-                _worldMapManager = createWorldMapManager();
-                _questManager = createQuestManager();
-                _itemManager = createItemManager();
-                _dialogueManager = createDialogueManager();
-
                 // Basic player data
                 _playerData = doc.Element("PlayerData");
                 _playerSlot = playerSlot;
                 _playerName = _playerData.Attribute("name").Value;
 
+                // Create managers
+                _worldMapManager = createWorldMapManager();
+                _questManager = new QuestManager();
+                _itemManager = createItemManager();
+                _dialogueManager = createDialogueManager();
+
                 // World map states
                 _worldMapManager.worldMapStates = loadWorldMapStates(new List<XElement>(_playerData.Elements("WorldMapState")));
-
-                // Quest states
-                _questManager.questStates = loadQuestStates(new List<XElement>(_playerData.Elements("QuestState")));
 
                 // Dialogue states
                 _dialogueManager.dialogueStates = loadDialogueStates(new List<XElement>(_playerData.Elements("DialogueState")));
@@ -619,20 +569,7 @@ namespace StasisGame.Managers
                 }
 
                 // Quest states
-                foreach (QuestState questState in _questManager.questStates.Values)
-                {
-                    XElement questStateData = new XElement("QuestState", new XAttribute("quest_uid", questState.definition.uid));
-
-                    foreach (ObjectiveState objectiveState in questState.objectiveStates)
-                    {
-                        questStateData.Add(
-                            new XElement("ObjectiveState",
-                                new XAttribute("objective_uid", objectiveState.definition.uid),
-                                new XAttribute("current_value", objectiveState.currentValue)));
-                    }
-
-                    _playerData.Add(questStateData);
-                }
+                _playerData.Add(_questManager.createData());
 
                 // Inventory states
                 inventoryData.SetAttributeValue("slots", inventoryComponent.slots);
