@@ -64,8 +64,7 @@ namespace StasisGame.UI
 
         public void addDialoguePane(CharacterDialogueComponent dialogueComponent)
         {
-            _dialogePanes.Add(
-                new InteractiveDialoguePane(
+            InteractiveDialoguePane pane = new InteractiveDialoguePane(
                     this,
                     UIAlignment.MiddleCenter,
                     0,
@@ -74,7 +73,11 @@ namespace StasisGame.UI
                     300,
                     _dialogueFont,
                     _dialogueOptionFont,
-                    dialogueComponent));
+                    dialogueComponent);
+
+            pane.scale = 0f;
+            _dialogePanes.Add(pane);
+            _transitions.Add(new ScaleTransition(pane, 0.1f, 1f, false, 0.1f, null, () => { pane.showText = true; }));
         }
 
         public void removeDialoguePane(CharacterDialogueComponent dialogueComponent)
@@ -89,7 +92,7 @@ namespace StasisGame.UI
                 }
             }
 
-            _dialogePanes.Remove(pane);
+            _transitions.Add(new ScaleTransition(pane, 1f, 0.1f, false, 0.1f, () => { pane.showText = false; }, () => { _dialogePanes.Remove(pane); }));
         }
 
         public override void update()

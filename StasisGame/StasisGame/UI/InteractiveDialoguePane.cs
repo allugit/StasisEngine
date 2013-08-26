@@ -21,8 +21,10 @@ namespace StasisGame.UI
         private float _margin = 16f;
         private float _optionMargin = 8f;
         private float _maxLineWidth;
+        private bool _showText;
 
         public CharacterDialogueComponent dialogueComponent { get { return _dialogueComponent; } }
+        public bool showText { get { return _showText; } set { _showText = value; } }
 
         public InteractiveDialoguePane(Screen screen, UIAlignment alignment, int x, int y, int width, int height, SpriteFont dialogueFont, SpriteFont optionFont, CharacterDialogueComponent dialogueComponent)
             : base(screen, alignment, x, y, width, height)
@@ -93,13 +95,17 @@ namespace StasisGame.UI
             string message;
 
             base.draw();
-            message = Screen.wrapText(_dialogueFont, _dialogueManager.getText(_dialogueComponent.dialogueUid, _currentNodeUid), _maxLineWidth);
 
-            _spriteBatch.DrawString(_dialogueFont, message, new Vector2(x + _margin, y + _margin), Color.White);
-
-            for (int i = 0; i < _optionButtons.Count; i++)
+            if (_showText)
             {
-                _optionButtons[i].draw();
+                message = Screen.wrapText(_dialogueFont, _dialogueManager.getText(_dialogueComponent.dialogueUid, _currentNodeUid), _maxLineWidth);
+
+                _spriteBatch.DrawString(_dialogueFont, message, new Vector2(x + _margin, y + _margin), Color.White);
+
+                for (int i = 0; i < _optionButtons.Count; i++)
+                {
+                    _optionButtons[i].draw();
+                }
             }
         }
     }
