@@ -39,7 +39,7 @@ namespace StasisGame.UI
             _content = new ContentManager(_game.Services);
             _content.RootDirectory = "Content";
             _equipmentSystem = (EquipmentSystem)_systemManager.getSystem(SystemType.Equipment);
-            _playerId = (_systemManager.getSystem(SystemType.Player) as PlayerSystem).playerId;
+            _playerId = PlayerSystem.PLAYER_ID;
             _pixel = new Texture2D(_game.GraphicsDevice, 1, 1);
             _pixel.SetData<Color>(new[] { Color.White });
             _arial = _content.Load<SpriteFont>("arial");

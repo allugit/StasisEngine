@@ -538,7 +538,7 @@ namespace StasisGame.Systems
             {
                 List<int> entitiesToPreserve = new List<int>();
 
-                entitiesToPreserve.Add(_playerSystem.playerId);
+                entitiesToPreserve.Add(PlayerSystem.PLAYER_ID);
                 _entityManager.killAllEntities(levelUid, entitiesToPreserve);
                 //_regionGoals.Clear();
                 //_eventGoals.Clear();
@@ -569,7 +569,7 @@ namespace StasisGame.Systems
             {
                 if (_finalized)
                 {
-                    PhysicsComponent playerPhysicsComponent = (PhysicsComponent)_entityManager.getComponent(currentLevelUid, _playerSystem.playerId, ComponentType.Physics);
+                    PhysicsComponent playerPhysicsComponent = (PhysicsComponent)_entityManager.getComponent(currentLevelUid, PlayerSystem.PLAYER_ID, ComponentType.Physics);
                     List<TooltipComponent> tooltipComponents = _entityManager.getComponents<TooltipComponent>(currentLevelUid, ComponentType.Tooltip);
                     List<LevelTransitionComponent> levelTransitionComponents = _entityManager.getComponents<LevelTransitionComponent>(currentLevelUid, ComponentType.LevelTransition);
 

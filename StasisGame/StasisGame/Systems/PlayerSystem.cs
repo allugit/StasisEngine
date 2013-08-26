@@ -18,7 +18,6 @@ namespace StasisGame.Systems
         public const int PLAYER_ID = 9999;
         private SystemManager _systemManager;
         private EntityManager _entityManager;
-        private int _playerId;
         private bool _paused;
         private bool _singleStep;
         private KeyboardState _newKeyState;
@@ -26,7 +25,6 @@ namespace StasisGame.Systems
 
         public int defaultPriority { get { return 30; } }
         public SystemType systemType { get { return SystemType.Player; } }
-        public int playerId { get { return _playerId; } set { _playerId = value; } }
         public bool paused { get { return _paused; } set { _paused = value; } }
         public bool singleStep { get { return _singleStep; } set { _singleStep = value; } }
         public EntityManager entityManager { get { return _entityManager; } }
@@ -40,7 +38,7 @@ namespace StasisGame.Systems
         // createPlayer
         public void createPlayer()
         {
-            playerId = _entityManager.createEntity("global", PLAYER_ID);
+            _entityManager.createEntity("global", PLAYER_ID);
         }
 
         // Add level-specific components for the player
@@ -53,7 +51,7 @@ namespace StasisGame.Systems
             PolygonShape polygonShape = new PolygonShape(1f);
             CircleShape feetShape = new CircleShape(0.18f, 0.1f);
 
-            body = BodyFactory.CreateBody(world, position, _playerId);
+            body = BodyFactory.CreateBody(world, position, PLAYER_ID);
             body.IsBullet = true;
             body.FixedRotation = true;
             body.BodyType = BodyType.Dynamic;
@@ -77,33 +75,76 @@ namespace StasisGame.Systems
             feetFixture.CollisionCategories = fixture.CollisionCategories;
             feetFixture.CollidesWith = fixture.CollidesWith;
 
-            _entityManager.createEntity(levelUid, playerId);
-            _entityManager.addComponent(levelUid, playerId, _entityManager.getComponent("global", playerId, ComponentType.Toolbar));
-            _entityManager.addComponent(levelUid, playerId, _entityManager.getComponent("global", playerId, ComponentType.Inventory));
-            _entityManager.addComponent(levelUid, playerId, new PhysicsComponent(body));
-            _entityManager.addComponent(levelUid, playerId, new CharacterMovementComponent(feetFixture, 7f));
-            _entityManager.addComponent(levelUid, playerId, new CharacterRenderComponent("main_character"));
-            _entityManager.addComponent(levelUid, playerId, new BodyFocusPointComponent(body, new Vector2(0, -5f), FocusType.Multiple));
-            _entityManager.addComponent(levelUid, playerId, new IgnoreTreeCollisionComponent());
-            _entityManager.addComponent(levelUid, playerId, new IgnoreRopeRaycastComponent());
-            _entityManager.addComponent(levelUid, playerId, new WorldPositionComponent(body.Position));
-            _entityManager.addComponent(levelUid, playerId, new SkipFluidResolutionComponent());
-            _entityManager.addComponent(levelUid, playerId, new ParticleInfluenceComponent(ParticleInfluenceType.Character));
+            _entityManager.createEntity(levelUid, PLAYER_ID);
+            _entityManager.addComponent(levelUid, PLAYER_ID, _entityManager.getComponent("global", PLAYER_ID, ComponentType.Toolbar));
+            _entityManager.addComponent(levelUid, PLAYER_ID, _entityManager.getComponent("global", PLAYER_ID, ComponentType.Inventory));
+            _entityManager.addComponent(levelUid, PLAYER_ID, new PhysicsComponent(body));
+            _entityManager.addComponent(levelUid, PLAYER_ID, new CharacterMovementComponent(feetFixture, 7f));
+            _entityManager.addComponent(levelUid, PLAYER_ID, new CharacterRenderComponent("main_character"));
+            _entityManager.addComponent(levelUid, PLAYER_ID, new BodyFocusPointComponent(body, new Vector2(0, -5f), FocusType.Multiple));
+            _entityManager.addComponent(levelUid, PLAYER_ID, new IgnoreTreeCollisionComponent());
+            _entityManager.addComponent(levelUid, PLAYER_ID, new IgnoreRopeRaycastComponent());
+            _entityManager.addComponent(levelUid, PLAYER_ID, new WorldPositionComponent(body.Position));
+            _entityManager.addComponent(levelUid, PLAYER_ID, new SkipFluidResolutionComponent());
+            _entityManager.addComponent(levelUid, PLAYER_ID, new ParticleInfluenceComponent(ParticleInfluenceType.Character));
         }
 
         // removePlayerFromLevel -- Removes the player entity from a specific level
         public void removePlayerFromLevel(string levelUid)
         {
-            _entityManager.killEntity(levelUid, playerId);
+            _entityManager.killEntity(levelUid, PLAYER_ID);
         }
 
         public void reloadInventory()
         {
             throw new NotImplementedException();
-            //_entityManager.removeComponent(_playerId, ComponentType.Inventory);
-            //_entityManager.removeComponent(_playerId, ComponentType.Toolbar);
+            //_entityManager.removeComponent(PLAYER_ID, ComponentType.Inventory);
+            //_entityManager.removeComponent(PLAYER_ID, ComponentType.Toolbar);
             //DataManager.loadPlayerInventory();
             //DataManager.loadPlayerToolbar();
+        }
+
+        private void handleDialogue(string levelUid, PhysicsComponent playerPhysicsComponent)
+        {
+            DialogueSystem dialogueSystem = _systemManager.getSystem(SystemType.Dialogue) as DialogueSystem;
+            List<int> dialogueEntities = _entityManager.getEntitiesPosessing(levelUid, ComponentType.CharacterDialogue);
+            bool inDialogue = _entityManager.getComponent(levelUid, PLAYER_ID, ComponentType.InDialogue) != null;
+
+            for (int i = 0; i < dialogueEntities.Count; i++)
+            {
+                PhysicsComponent otherPhysicsComponent = _entityManager.getComponent(levelUid, dialogueEntities[i], ComponentType.Physics) as PhysicsComponent;
+                Vector2 relative = playerPhysicsComponent.body.Position - otherPhysicsComponent.body.Position;
+                float distanceSq = relative.LengthSquared();
+
+                if (_newKeyState.IsKeyDown(Keys.E) && _oldKeyState.IsKeyUp(Keys.E))
+                {
+                    if (!inDialogue && distanceSq <= 1f)
+                    {
+                        CharacterDialogueComponent dialogueComponent = _entityManager.getComponent(levelUid, dialogueEntities[i], ComponentType.CharacterDialogue) as CharacterDialogueComponent;
+
+                        dialogueSystem.beginDialogue(levelUid, PlayerSystem.PLAYER_ID, dialogueEntities[i], dialogueComponent);
+                    }
+                }
+                else
+                {
+                    TooltipComponent tooltipComponent = _entityManager.getComponent(levelUid, dialogueEntities[i], ComponentType.Tooltip) as TooltipComponent;
+
+                    if (tooltipComponent == null)
+                    {
+                        if (!inDialogue && distanceSq <= 1f)
+                        {
+                            _entityManager.addComponent(levelUid, dialogueEntities[i], new TooltipComponent("[Use] Talk", otherPhysicsComponent.body, 1f));
+                        }
+                    }
+                    else
+                    {
+                        if (inDialogue || distanceSq > 1f)
+                        {
+                            _entityManager.removeComponent(levelUid, dialogueEntities[i], ComponentType.Tooltip);
+                        }
+                    }
+                }
+            }
         }
 
         // update
@@ -116,55 +157,19 @@ namespace StasisGame.Systems
 
                 if (levelSystem.finalized)
                 {
-                    DialogueSystem dialogueSystem = _systemManager.getSystem(SystemType.Dialogue) as DialogueSystem;
-                    PhysicsComponent physicsComponent = (PhysicsComponent)_entityManager.getComponent(levelUid, _playerId, ComponentType.Physics);
-                    List<int> dialogueEntities = _entityManager.getEntitiesPosessing(levelUid, ComponentType.CharacterDialogue);
+                    PhysicsComponent playerPhysicsComponent = (PhysicsComponent)_entityManager.getComponent(levelUid, PLAYER_ID, ComponentType.Physics);
 
                     _oldKeyState = _newKeyState;
                     _newKeyState = Keyboard.GetState();
 
                     // Handle dialogue
-                    for (int i = 0; i < dialogueEntities.Count; i++)
-                    {
-                        PhysicsComponent otherPhysicsComponent = _entityManager.getComponent(levelUid, dialogueEntities[i], ComponentType.Physics) as PhysicsComponent;
-                        Vector2 relative = physicsComponent.body.Position - otherPhysicsComponent.body.Position;
-                        float distanceSq = relative.LengthSquared();
-
-                        if (_newKeyState.IsKeyDown(Keys.E) && _oldKeyState.IsKeyUp(Keys.E))
-                        {
-                            if (distanceSq <= 1f)
-                            {
-                                CharacterDialogueComponent dialogueComponent = _entityManager.getComponent(levelUid, dialogueEntities[i], ComponentType.CharacterDialogue) as CharacterDialogueComponent;
-
-                                dialogueSystem.beginDialogue(levelUid, PlayerSystem.PLAYER_ID, dialogueEntities[i], dialogueComponent);
-                            }
-                        }
-                        else
-                        {
-                            TooltipComponent tooltipComponent = _entityManager.getComponent(levelUid, dialogueEntities[i], ComponentType.Tooltip) as TooltipComponent;
-
-                            if (tooltipComponent == null)
-                            {
-                                if (distanceSq <= 1f)
-                                {
-                                    _entityManager.addComponent(levelUid, dialogueEntities[i], new TooltipComponent("[Use] Talk", otherPhysicsComponent.body, 1f));
-                                }
-                            }
-                            else
-                            {
-                                if (distanceSq > 1f)
-                                {
-                                    _entityManager.removeComponent(levelUid, dialogueEntities[i], ComponentType.Tooltip);
-                                }
-                            }
-                        }
-                    }
+                    handleDialogue(levelUid, playerPhysicsComponent);
 
                     // Handle character movement
-                    if (physicsComponent != null)
+                    if (playerPhysicsComponent != null)
                     {
-                        CharacterMovementComponent characterMovementComponent = _entityManager.getComponent(levelUid, _playerId, ComponentType.CharacterMovement) as CharacterMovementComponent;
-                        RopeGrabComponent ropeGrabComponent = _entityManager.getComponent(levelUid, _playerId, ComponentType.RopeGrab) as RopeGrabComponent;
+                        CharacterMovementComponent characterMovementComponent = _entityManager.getComponent(levelUid, PLAYER_ID, ComponentType.CharacterMovement) as CharacterMovementComponent;
+                        RopeGrabComponent ropeGrabComponent = _entityManager.getComponent(levelUid, PLAYER_ID, ComponentType.RopeGrab) as RopeGrabComponent;
 
                         if (InputSystem.usingGamepad)
                         {

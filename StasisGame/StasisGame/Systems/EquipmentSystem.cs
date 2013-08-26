@@ -125,15 +125,14 @@ namespace StasisGame.Systems
                 {
                     PlayerSystem playerSystem = _systemManager.getSystem(SystemType.Player) as PlayerSystem;
                     RopeSystem ropeSystem = _systemManager.getSystem(SystemType.Rope) as RopeSystem;
-                    PhysicsComponent playerPhysicsComponent = _entityManager.getComponent(levelUid, playerSystem.playerId, ComponentType.Physics) as PhysicsComponent;
+                    PhysicsComponent playerPhysicsComponent = _entityManager.getComponent(levelUid, PlayerSystem.PLAYER_ID, ComponentType.Physics) as PhysicsComponent;
                     List<int> toolbarEntities = _entityManager.getEntitiesPosessing(levelUid, ComponentType.Toolbar);
 
                     // Player equipment
                     if (playerSystem != null)
                     {
-                        int playerId = playerSystem.playerId;
-                        ToolbarComponent playerToolbar = _entityManager.getComponent(levelUid, playerId, ComponentType.Toolbar) as ToolbarComponent;
-                        WorldPositionComponent playerPositionComponent = _entityManager.getComponent(levelUid, playerId, ComponentType.WorldPosition) as WorldPositionComponent;
+                        ToolbarComponent playerToolbar = _entityManager.getComponent(levelUid, PlayerSystem.PLAYER_ID, ComponentType.Toolbar) as ToolbarComponent;
+                        WorldPositionComponent playerPositionComponent = _entityManager.getComponent(levelUid, PlayerSystem.PLAYER_ID, ComponentType.WorldPosition) as WorldPositionComponent;
                         ItemComponent selectedItem = playerToolbar.selectedItem;
 
                         if (selectedItem != null)
@@ -144,11 +143,11 @@ namespace StasisGame.Systems
                             selectedItem.secondarySingleAction = selectedItem.secondaryContinuousAction && InputSystem.oldMouseState.RightButton == ButtonState.Released;
                             //bool leftTriggerDown = InputSystem.usingGamepad && InputSystem.newGamepadState.Triggers.Left > 0.5f && InputSystem.oldGamepadState.Triggers.Left <= 0.5f;
                             //bool rightTriggerDown = InputSystem.usingGamepad && InputSystem.newGamepadState.Triggers.Right > 0.5f && InputSystem.oldGamepadState.Triggers.Right <= 0.5f;
-                            AimComponent aimComponent = _entityManager.getComponent(levelUid, playerId, ComponentType.Aim) as AimComponent;
+                            AimComponent aimComponent = _entityManager.getComponent(levelUid, PlayerSystem.PLAYER_ID, ComponentType.Aim) as AimComponent;
 
                             if (selectedItem.definition.hasAimingComponent && aimComponent != null)
                             {
-                                WorldPositionComponent worldPositionComponent = _entityManager.getComponent(levelUid, playerId, ComponentType.WorldPosition) as WorldPositionComponent;
+                                WorldPositionComponent worldPositionComponent = _entityManager.getComponent(levelUid, PlayerSystem.PLAYER_ID, ComponentType.WorldPosition) as WorldPositionComponent;
 
                                 if (worldPositionComponent != null)
                                 {

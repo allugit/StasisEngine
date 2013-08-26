@@ -152,9 +152,9 @@ namespace StasisGame.Systems
             EventSystem eventSystem = (EventSystem)_systemManager.getSystem(SystemType.Event);
             Fixture fixtureA = contact.FixtureA;
             Fixture fixtureB = contact.FixtureB;
+            int playerId = PlayerSystem.PLAYER_ID;
             int entityA = (int)fixtureA.Body.UserData;
             int entityB = (int)fixtureB.Body.UserData;
-            int playerId = _playerSystem.playerId;
             string levelUid = LevelSystem.currentLevelUid;
 
             // Check for custom collision filters
@@ -220,6 +220,7 @@ namespace StasisGame.Systems
             List<int> explosionEntities = _entityManager.getEntitiesPosessing(levelUid, ComponentType.Explosion);
             LevelSystem levelSystem = (LevelSystem)_systemManager.getSystem(SystemType.Level);
             ExplosionSystem explosionSystem = (ExplosionSystem)_systemManager.getSystem(SystemType.Explosion);
+            int playerId = PlayerSystem.PLAYER_ID;
 
             // See if player is touching a level goal
             if (levelGoalEntities.Count > 0)
@@ -227,12 +228,12 @@ namespace StasisGame.Systems
                 int entityA = (int)contact.FixtureA.Body.UserData;
                 int entityB = (int)contact.FixtureB.Body.UserData;
 
-                if (entityA == _playerSystem.playerId)
+                if (entityA == playerId)
                 {
                     if (levelGoalEntities.Contains(entityB))
                         levelSystem.completeRegionGoal(entityB);
                 }
-                else if (entityB == _playerSystem.playerId)
+                else if (entityB == playerId)
                 {
                     if (levelGoalEntities.Contains(entityA))
                         levelSystem.completeRegionGoal(entityA);

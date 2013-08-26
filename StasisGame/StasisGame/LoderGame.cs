@@ -281,7 +281,7 @@ namespace StasisGame
             _mainMenuScreen.applyIntroTransitions();
             if (fadeIn)
             {
-                _screenSystem.addTransition(new ScreenFadeInTransition(_mainMenuScreen, Color.Black, true, 0.01f));
+                _screenSystem.addTransition(new ScreenFadeInTransition(_mainMenuScreen, Color.Black, false, 0.025f));
             }
             _screenSystem.addTransition(new TranslateTransition(_mainMenuScreen, -300, 0, 0, 0, false, 0.025f, () => { _screenSystem.addScreen(_mainMenuScreen); }));
         }
