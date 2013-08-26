@@ -15,7 +15,7 @@ namespace StasisGame.UI
         private SpriteFont _dialogueFont;
         private SpriteFont _optionFont;
         private CharacterDialogueComponent _dialogueComponent;
-        private DialogueNode _currentNode;
+        private string _currentNodeUid;
         private List<TextButton> _optionButtons;
         private int _selectedOptionIndex;
         private float _margin = 16f;
@@ -33,16 +33,16 @@ namespace StasisGame.UI
             _dialogueManager = DataManager.dialogueManager;
             _maxLineWidth = (float)_width - _margin * 2f;
             _optionButtons = new List<TextButton>();
-            setCurrentNode(_dialogueManager.getCurrentDialogueNode(dialogueComponent.dialogueUid));
+            setCurrentNodeUid(_dialogueManager.getCurrentDialogueNodeUid(dialogueComponent.dialogueUid));
         }
 
-        private void setCurrentNode(DialogueNode node)
+        private void setCurrentNodeUid(string nodeUid)
         {
             float optionYOffset = 32;
-            _currentNode = node;
+            _currentNodeUid = nodeUid;
             _selectedOptionIndex = 0;
             _optionButtons.Clear();
-            foreach (DialogueOption option in node.options)
+            foreach (DialogueOption option in _dialogueManager.getDialogueOptions(dialogueComponent.dialogueUid, _currentNodeUid))
             {
                 string text = Screen.wrapText(_optionFont, option.message, _maxLineWidth);
                 Vector2 size = _optionFont.MeasureString(text);
@@ -55,15 +55,15 @@ namespace StasisGame.UI
 
         public override void update()
         {
-            DialogueNode currentNode = _dialogueManager.getCurrentDialogueNode(dialogueComponent.dialogueUid);
+            string currentNodeUid = _dialogueManager.getCurrentDialogueNodeUid(dialogueComponent.dialogueUid);
             Vector2 mousePosition = new Vector2(_screen.newMouseState.X, _screen.newMouseState.Y);
 
             base.update();
 
             // Update current node
-            if (_currentNode != currentNode)
+            if (_currentNodeUid != currentNodeUid)
             {
-                setCurrentNode(currentNode);
+                setCurrentNodeUid(currentNodeUid);
             }
 
             // Handle button input
@@ -89,7 +89,7 @@ namespace StasisGame.UI
             string message;
 
             base.draw();
-            message = Screen.wrapText(_dialogueFont, _dialogueManager.getText(_dialogueComponent.dialogueUid, _currentNode.uid), _maxLineWidth);
+            message = Screen.wrapText(_dialogueFont, _dialogueManager.getText(_dialogueComponent.dialogueUid, _currentNodeUid), _maxLineWidth);
 
             _spriteBatch.DrawString(_dialogueFont, message, new Vector2(x + _margin, y + _margin), Color.White);
 

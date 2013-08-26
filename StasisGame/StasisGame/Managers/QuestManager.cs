@@ -42,19 +42,22 @@ namespace StasisGame.Managers
             }
 
             // Load quest states from player data
-            foreach (XElement questStateData in playerData.Elements("QuestState"))
+            if (playerData != null)     // playerData is null when new player data is being created
             {
-                string questUid = questStateData.Attribute("quest_uid").Value;
-                Quest quest = _quests[questUid];
-
-                quest.received = bool.Parse(questStateData.Attribute("received").Value);
-
-                foreach (XElement objectiveStateData in questStateData.Elements("ObjectiveData"))
+                foreach (XElement questStateData in playerData.Elements("QuestState"))
                 {
-                    string objectiveUid = objectiveStateData.Attribute("objective_uid").Value;
-                    Objective objective = quest.objectives[objectiveUid];
+                    string questUid = questStateData.Attribute("quest_uid").Value;
+                    Quest quest = _quests[questUid];
 
-                    objective.currentValue = int.Parse(objectiveStateData.Attribute("current_value").Value);
+                    quest.received = bool.Parse(questStateData.Attribute("received").Value);
+
+                    foreach (XElement objectiveStateData in questStateData.Elements("ObjectiveData"))
+                    {
+                        string objectiveUid = objectiveStateData.Attribute("objective_uid").Value;
+                        Objective objective = quest.objectives[objectiveUid];
+
+                        objective.currentValue = int.Parse(objectiveStateData.Attribute("current_value").Value);
+                    }
                 }
             }
         }

@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Xml.Linq;
 using StasisCore.Models;
 using StasisGame.Systems;
 
@@ -9,27 +10,24 @@ namespace StasisGame.Managers
     {
         private SystemManager _systemManager;
         private EntityManager _entityManager;
-        private List<DialogueDefinition> _dialogueDefinitions;
-        private Dictionary<string, DialogueState> _dialogueStates;
-
-        public Dictionary<string, DialogueState> dialogueStates { get { return _dialogueStates; } set { _dialogueStates = value; } }
+        private Dictionary<string, Dialogue> _dialogues;
 
         public DialogueManager(SystemManager systemManager, EntityManager entityManager)
         {
             _systemManager = systemManager;
             _entityManager = entityManager;
-            _dialogueDefinitions = new List<DialogueDefinition>();
-            createDialogueDefinitions();
+            _dialogues = new Dictionary<string, Dialogue>();
+            createDialogues();
+            loadStates();
         }
 
-        private List<DialogueDefinition> createDialogueDefinitions()
+        private void createDialogues()
         {
-            List<DialogueDefinition> definitions = new List<DialogueDefinition>();
             string dialogueUid = "";
 
             // Start switchvine quest dialogue
             dialogueUid = "start_quest_collect_switchvine";
-            addDialogueDefinition(dialogueUid, "wake_up", () => { return true; });
+            addDialogue(dialogueUid, "wake_up", () => { return true; });
 
             addDialogueNode(dialogueUid, "wake_up", "Wake up, [PLAYER_NAME]! We've got a lot of work to do today.");
             addDialogueNodeOption(
@@ -37,7 +35,7 @@ namespace StasisGame.Managers
                 "wake_up",
                 "...", 
                 () => { return true; },
-                () => { setCurrentDialogueNode(dialogueUid, "get_switchvines"); });
+                () => { setCurrentDialogueNodeUid(dialogueUid, "get_switchvines"); });
 
             addDialogueNode(dialogueUid, "get_switchvines", "I'm running low on switchvine. I need you to run to the ravine and grab some more for me.");
             addDialogueNodeOption(
@@ -48,7 +46,7 @@ namespace StasisGame.Managers
                 () => 
                 { 
                     DataManager.questManager.receiveQuest("collect_switchvine");
-                    setCurrentDialogueNode(dialogueUid, "unfinished");
+                    setCurrentDialogueNodeUid(dialogueUid, "unfinished");
                     closeDialogue();
                 });
 
@@ -77,98 +75,71 @@ namespace StasisGame.Managers
                 {
                     closeDialogue();
                 });
-
-            return definitions;
         }
 
-        public DialogueDefinition getDialogueDefinition(string dialogueUid)
+        private void loadStates()
         {
-            foreach (DialogueDefinition definition in _dialogueDefinitions)
-            {
-                if (definition.uid == dialogueUid)
-                {
-                    return definition;
-                }
-            }
-            return null;
-        }
+            XElement playerData = DataManager.playerData;
 
-        public DialogueNode getCurrentDialogueNode(string dialogueUid)
-        {
-            DialogueDefinition definition = getDialogueDefinition(dialogueUid);
-            DialogueState dialogueState = null;
-            string currentNodeUid = null;
+            foreach (XElement dialogueStateData in playerData.Elements("DialogueState"))
+            {
+                string dialogueUid = dialogueStateData.Attribute("dialogue_uid").Value;
+                Dialogue dialogue = _dialogues[dialogueUid];
 
-            if (_dialogueStates.TryGetValue(dialogueUid, out dialogueState))
-            {
-                currentNodeUid = dialogueState.currentNodeUid;
-            }
-            else
-            {
-                currentNodeUid = definition.initialNodeUid;
-            }
-
-            return getDialogueNode(dialogueUid, currentNodeUid);
-        }
-
-        public void setCurrentDialogueNode(string dialogueUid, string nodeUid)
-        {
-            if (!_dialogueStates.ContainsKey(dialogueUid))
-            {
-                _dialogueStates.Add(dialogueUid, new DialogueState(getDialogueDefinition(dialogueUid), nodeUid));
-            }
-            else
-            {
-                _dialogueStates[dialogueUid].currentNodeUid = nodeUid;
+                dialogue.currentNodeUid = dialogueStateData.Attribute("current_node_uid").Value;
             }
         }
 
-        public DialogueNode getDialogueNode(string dialogueUid, string nodeUid)
+        public List<XElement> createData()
         {
-            DialogueDefinition definition = getDialogueDefinition(dialogueUid);
+            List<XElement> dialogueStateData = new List<XElement>();
 
-            foreach (DialogueNode node in definition.dialogueNodes)
+            foreach (Dialogue dialogue in _dialogues.Values)
             {
-                if (node.uid == nodeUid)
-                {
-                    return node;
-                }
+                dialogueStateData.Add(new XElement("DialogueState", new XAttribute("dialogue_uid", dialogue.uid), new XAttribute("current_node_uid", dialogue.currentNodeUid)));
             }
-            return null;
+
+            return dialogueStateData;
         }
 
-        private void addDialogueDefinition(string dialogueUid, string initialNodeUid, Func<bool> conditionsToMeet)
+        private void addDialogue(string dialogueUid, string initialNodeUid, Func<bool> conditionsToMeet)
         {
-            _dialogueDefinitions.Add(new DialogueDefinition(dialogueUid, initialNodeUid, conditionsToMeet));
+            _dialogues.Add(dialogueUid, new Dialogue(dialogueUid, initialNodeUid, conditionsToMeet));
         }
 
         private void addDialogueNode(string dialogueUid, string nodeUid, string message)
         {
-            DialogueDefinition dialogueDefinition = getDialogueDefinition(dialogueUid);
-
-            dialogueDefinition.dialogueNodes.Add(new DialogueNode(dialogueDefinition, nodeUid, message));
+            _dialogues[dialogueUid].dialogueNodes.Add(nodeUid, new DialogueNode(nodeUid, message));
         }
 
         private void addDialogueNodeOption(string dialogueUid, string nodeUid, string message, Func<bool> conditionsToMeet, Action action)
         {
-            DialogueNode node = getDialogueNode(dialogueUid, nodeUid);
-
-            node.options.Add(new DialogueOption(node, conditionsToMeet, message, action));
+            _dialogues[dialogueUid].dialogueNodes[nodeUid].options.Add(new DialogueOption(conditionsToMeet, message, action));
         }
 
         public string getText(string dialogueUid, string nodeUid)
         {
-            DialogueNode node = getDialogueNode(dialogueUid, nodeUid);
-            string text = replaceSymbols(node.message);
-
-            return text;
+            return replaceSymbols(_dialogues[dialogueUid].dialogueNodes[nodeUid].message);
         }
 
         private string replaceSymbols(string text)
         {
-            text = text.Replace("[PLAYER_NAME]", DataManager.playerName);
+            return text.Replace("[PLAYER_NAME]", DataManager.playerName);
+        }
 
-            return text;
+        private void setCurrentDialogueNodeUid(string dialogueUid, string nodeUid)
+        {
+            _dialogues[dialogueUid].currentNodeUid = nodeUid;
+        }
+
+        public string getCurrentDialogueNodeUid(string dialogueUid)
+        {
+            return _dialogues[dialogueUid].currentNodeUid;
+        }
+
+        public List<DialogueOption> getDialogueOptions(string dialogueUid, string nodeUid)
+        {
+            return _dialogues[dialogueUid].dialogueNodes[nodeUid].options;
         }
 
         private void closeDialogue()

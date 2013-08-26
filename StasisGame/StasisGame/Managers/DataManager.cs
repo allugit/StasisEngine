@@ -231,12 +231,6 @@ namespace StasisGame.Managers
             return new ItemManager(itemDefinitions);
         }
 
-        // Create dialogue manager
-        public static DialogueManager createDialogueManager()
-        {
-            return new DialogueManager(_systemManager, _entityManager);
-        }
-
         // Load world map states
         private static Dictionary<string, WorldMapState> loadWorldMapStates(List<XElement> allWorldMapStateData)
         {
@@ -274,24 +268,6 @@ namespace StasisGame.Managers
             }
 
             return worldMapStates;
-        }
-
-        // Load dialogue states
-        private static Dictionary<string, DialogueState> loadDialogueStates(List<XElement> allDialogueStateData)
-        {
-            Dictionary<string, DialogueState> dialogueStates = new Dictionary<string, DialogueState>();
-
-            foreach (XElement dialogueStateData in allDialogueStateData)
-            {
-                string dialogueUid = dialogueStateData.Attribute("dialogue_uid").Value;
-                DialogueState dialogueState = new DialogueState(
-                    _dialogueManager.getDialogueDefinition(dialogueUid),
-                    dialogueStateData.Attribute("current_node_uid").Value);
-
-                dialogueStates.Add(dialogueUid, dialogueState);
-            }
-
-            return dialogueStates;
         }
 
         // Load player inventory
@@ -400,7 +376,8 @@ namespace StasisGame.Managers
                     // Create managers
                     _worldMapManager = createWorldMapManager();
                     _itemManager = createItemManager();
-                    _dialogueManager = createDialogueManager();
+                    _dialogueManager = new DialogueManager(_systemManager, _entityManager);
+                    _questManager = new QuestManager();
 
                     // Create starting world map states
                     startingWorldMapState = new WorldMapState(_worldMapManager.getWorldMapDefinition("oria_world_map"), true);
@@ -413,20 +390,12 @@ namespace StasisGame.Managers
                         "oria_world_map",
                         startingWorldMapState);
 
-                    // Create starting quest states
-                    //_questManager.addNewQuestState("helping_dagny_1");
-
                     // Create inventory and toolbar
                     _entityManager.addComponent("global", PlayerSystem.PLAYER_ID, new InventoryComponent(32));
                     _entityManager.addComponent("global", PlayerSystem.PLAYER_ID, new ToolbarComponent(4, PlayerSystem.PLAYER_ID));
 
-                    // Custom flags
-                    //setCustomFlag("new_game", true);
-
                     // Save data
                     savePlayerData();
-
-                    _questManager = new QuestManager();
                     created = true;
                 }
             }
@@ -498,13 +467,10 @@ namespace StasisGame.Managers
                 _worldMapManager = createWorldMapManager();
                 _questManager = new QuestManager();
                 _itemManager = createItemManager();
-                _dialogueManager = createDialogueManager();
+                _dialogueManager = new DialogueManager(_systemManager, _entityManager);
 
                 // World map states
                 _worldMapManager.worldMapStates = loadWorldMapStates(new List<XElement>(_playerData.Elements("WorldMapState")));
-
-                // Dialogue states
-                _dialogueManager.dialogueStates = loadDialogueStates(new List<XElement>(_playerData.Elements("DialogueState")));
 
                 // Inventory and toolbar
                 loadPlayerInventory();
