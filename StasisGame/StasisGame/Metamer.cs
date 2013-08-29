@@ -1119,30 +1119,37 @@ namespace StasisGame
                 tree.vertices[count].Position = _vertices[0].Position;
                 tree.vertices[count].TextureCoordinate.X = 0f;
                 tree.vertices[count].TextureCoordinate.Y = 0f;
+                tree.vertices[count].Color = textureColor;
                 count++;
                 // 2
                 tree.vertices[count].Position = _vertices[1].Position;
                 tree.vertices[count].TextureCoordinate.X = textureWidth;
                 tree.vertices[count].TextureCoordinate.Y = 0f;
+                tree.vertices[count].Color = textureColor;
                 count++;
                 // 3
                 tree.vertices[count].Position = previousMetamer.vertices[0].Position;
                 tree.vertices[count].TextureCoordinate.X = 0f;
                 tree.vertices[count].TextureCoordinate.Y = 1f;
+                tree.vertices[count].Color = previousMetamer.textureColor;
                 count++;
                 // 4
                 tree.vertices[count].Position = vertices[1].Position;
-                tree.vertices[count].TextureCoordinate = new Vector2(textureWidth, 0);
+                tree.vertices[count].TextureCoordinate.X = textureWidth;
+                tree.vertices[count].TextureCoordinate.Y = 0;
+                tree.vertices[count].Color = textureColor;
                 count++;
                 // 5
                 tree.vertices[count].Position = previousMetamer.vertices[1].Position;
                 tree.vertices[count].TextureCoordinate.X = previousMetamer.textureWidth;
                 tree.vertices[count].TextureCoordinate.Y = 1f;
+                tree.vertices[count].Color = previousMetamer.textureColor;
                 count++;
                 // 6
                 tree.vertices[count].Position = previousMetamer.vertices[0].Position;
                 tree.vertices[count].TextureCoordinate.X = 0f;
                 tree.vertices[count].TextureCoordinate.Y = 1f;
+                tree.vertices[count].Color = previousMetamer.textureColor;
                 tree.numVertices += 6;
                 tree.primitiveCount += 2;
             }
