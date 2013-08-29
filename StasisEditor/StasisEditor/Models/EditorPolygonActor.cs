@@ -16,7 +16,7 @@ namespace StasisEditor.Models
     {
         protected PointListNode _headPoint;
         protected List<PointListNode> _selectedPoints;
-        protected VertexPositionTexture[] _vertices = new VertexPositionTexture[5000];
+        protected VertexPositionColorTexture[] _vertices = new VertexPositionColorTexture[5000];
         protected int _primitiveCount;
         protected Texture2D _polygonTexture;
         protected Vector2 _polygonPosition;
@@ -96,8 +96,9 @@ namespace StasisEditor.Models
             {
                 for (int i = 0; i < 3; i++)
                 {
-                    _vertices[index++] = new VertexPositionTexture(
+                    _vertices[index++] = new VertexPositionColorTexture(
                         new Vector3(triangle.Points[i].Xf, triangle.Points[i].Yf, 0),
+                        Color.White,
                         Vector2.Zero);
                 }
             }

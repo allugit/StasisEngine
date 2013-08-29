@@ -299,7 +299,7 @@ namespace StasisEditor.Views
         }
 
         // Render polygon
-        public Texture2D renderPolygon(VertexPositionTexture[] _vertices, int primitiveCount)
+        public Texture2D renderPolygon(VertexPositionColorTexture[] _vertices, int primitiveCount)
         {
             Vector2 topLeft = new Vector2(_vertices[0].Position.X, _vertices[0].Position.Y);
             Vector2 bottomRight = topLeft;
@@ -325,7 +325,7 @@ namespace StasisEditor.Views
             _primitivesEffect.Parameters["view"].SetValue(viewMatrix);
             _primitivesEffect.Parameters["projection"].SetValue(projectionMatrix);
             _primitivesEffect.CurrentTechnique.Passes["primitives"].Apply();
-            GraphicsDevice.DrawUserPrimitives(PrimitiveType.TriangleList, _vertices, 0, primitiveCount, VertexPositionTexture.VertexDeclaration);
+            GraphicsDevice.DrawUserPrimitives(PrimitiveType.TriangleList, _vertices, 0, primitiveCount, VertexPositionColorTexture.VertexDeclaration);
             GraphicsDevice.SetRenderTarget(null);
 
             Texture2D texture = new Texture2D(GraphicsDevice, width, height);
