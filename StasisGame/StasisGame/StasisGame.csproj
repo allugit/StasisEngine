@@ -83,6 +83,7 @@
   <ItemGroup>
     <Compile Include="Components\AimComponent.cs" />
     <Compile Include="Components\AIWanderBehaviorComponent.cs" />
+    <Compile Include="Components\BlockTreeLimbsComponent.cs" />
     <Compile Include="Components\BodyFocusPointComponent.cs" />
     <Compile Include="Components\CharacterDialogueComponent.cs" />
     <Compile Include="Components\CharacterMovementComponent.cs" />

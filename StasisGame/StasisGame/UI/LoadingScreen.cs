@@ -24,7 +24,8 @@ namespace StasisGame.UI
 
         public string message { get { return _message.text; } set { _message.text = value; } }
         public int elementsToLoad { get { return _elementsToLoad; } set { _elementsToLoad = value; } }
-        public int elementsLoaded {
+        public int elementsLoaded 
+        {
             get { return _elementsLoaded; } 
             set 
             {

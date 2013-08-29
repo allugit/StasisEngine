@@ -24,6 +24,7 @@ namespace StasisEditor.Models
         private float _friction;
         private float _restitution;
         private string _materialUID;
+        private bool _blockTreeLimbs;
 
         public BodyType bodyType { get { return _bodyType; } set { _bodyType = value; } }
         public bool destructible { get { return _destructible; } set { _destructible = value; } }
@@ -37,6 +38,7 @@ namespace StasisEditor.Models
         public float friction { get { return _friction; } set { _friction = value; } }
         public float restitution { get { return _restitution; } set { _restitution = value; } }
         public string materialUID { get { return _materialUID; } set { _materialUID = value; } }
+        public bool blockTreeLimbs { get { return _blockTreeLimbs; } set { _blockTreeLimbs = value; } }
         [Browsable(false)]
         protected override Color polygonFill { get { return Color.Orange * 0.3f; } }
         [Browsable(false)]
@@ -62,6 +64,7 @@ namespace StasisEditor.Models
                 d.SetAttributeValue("friction", _friction);
                 d.SetAttributeValue("restitution", _restitution);
                 d.SetAttributeValue("material_uid", _materialUID);
+                d.SetAttributeValue("block_tree_limbs", _blockTreeLimbs);
                 return d;
             }
         }
@@ -80,6 +83,7 @@ namespace StasisEditor.Models
             _friction = 1f;
             _restitution = 0f;
             _materialUID = "default";
+            _blockTreeLimbs = false;
         }
 
         public EditorTerrainActor(EditorLevel level, XElement data)
@@ -97,6 +101,7 @@ namespace StasisEditor.Models
             _friction = Loader.loadFloat(data.Attribute("friction"), 1f);
             _restitution = Loader.loadFloat(data.Attribute("restitution"), 0f);
             _materialUID = Loader.loadString(data.Attribute("material_uid"), "default");
+            _blockTreeLimbs = Loader.loadBool(data.Attribute("block_tree_limbs"), false);
         }
 
         public override void draw()

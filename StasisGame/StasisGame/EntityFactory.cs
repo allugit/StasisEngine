@@ -863,6 +863,7 @@ namespace StasisGame
             float chunkJitterX = Loader.loadFloat(data.Attribute("chunk_jitter_x"), 0.2f);
             float chunkJitterY = Loader.loadFloat(data.Attribute("chunk_jitter_y"), 0.2f);
             float averageChunkSize = (chunkSpacingX + chunkSpacingY) / 2f;
+            bool blockTreeLimbs = Loader.loadBool(data.Attribute("block_tree_limbs"), false);
             Random rng = new Random(Loader.loadInt(data.Attribute("destructible_seed"), 12345));
             Texture2D texture;
             List<RenderableTriangle> renderableTriangles;
@@ -994,12 +995,18 @@ namespace StasisGame
                 _entityManager.addComponent(levelUid, entityId, new WallComponent());
                 _entityManager.addComponent(levelUid, entityId, new SkipFluidResolutionComponent());
             }
-
             if (bodyType != BodyType.Static)
+            {
                 _entityManager.addComponent(levelUid, entityId, new ParticleInfluenceComponent(ParticleInfluenceType.Physical));
-
+            }
             if (isDestructible)
+            {
                 _entityManager.addComponent(levelUid, entityId, new DestructibleGeometryComponent());
+            }
+            if (blockTreeLimbs)
+            {
+                _entityManager.addComponent(levelUid, entityId, new BlockTreeLimbsComponent());
+            }
             _entityManager.addComponent(levelUid, entityId, new PhysicsComponent(body));
             _entityManager.addComponent(levelUid, entityId, new WorldPositionComponent(body.Position));
             _entityManager.addComponent(levelUid, entityId, bodyRenderComponent);

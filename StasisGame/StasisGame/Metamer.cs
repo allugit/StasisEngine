@@ -281,23 +281,23 @@ namespace StasisGame
                                     aabb.LowerBound = random;
                                     aabb.UpperBound = random;
                                     bool placeMarker = true;
-                                    /*
-                                    tree.treeSystem.physicsSystem.world.QueryAABB((Fixture fixture) =>
+
+                                    tree.treeSystem.physicsSystem.getWorld(tree.levelUid).QueryAABB((Fixture fixture) =>
                                     {
-                                        //UserData data = fixtureProxy.fixture.GetBody().GetUserData() as UserData;
-                                        //if (data.actorType == ActorType.WALL_GROUP || data.actorType == ActorType.GROUND)
-                                        //    return true;
+                                        int entityId = (int)fixture.Body.UserData;
 
                                         if (fixture.TestPoint(ref random, tree.internodeLength))
                                         {
-                                            placeMarker = false;
+                                            placeMarker = tree.treeSystem.entityManager.getComponent(tree.levelUid, entityId, ComponentType.BlockTreeLimbs) == null;
                                             return false;
                                         }
                                         else
+                                        {
                                             return true;
+                                        }
                                     },
                                         ref aabb);
-                                    */
+
                                     // Add marker
                                     if (placeMarker)
                                     {

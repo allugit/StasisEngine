@@ -65,26 +65,30 @@ namespace StasisGame.Systems
                         else
                         {
                             WaypointsComponent waypointsComponent = getWaypointsComponent(behaviorComponent.waypointsUid, waypointsComponents);
-                            WorldPositionComponent worldPositionComponent = _entityManager.getComponent(levelUid, entityId, ComponentType.WorldPosition) as WorldPositionComponent;
-                            Vector2 currentWaypoint = waypointsComponent.waypoints[behaviorComponent.currentWaypointIndex];
-                            Vector2 relative = currentWaypoint - worldPositionComponent.position;
 
-                            movementComponent.speedLimit = behaviorComponent.walkSpeed;
+                            if (waypointsComponent != null)
+                            {
+                                WorldPositionComponent worldPositionComponent = _entityManager.getComponent(levelUid, entityId, ComponentType.WorldPosition) as WorldPositionComponent;
+                                Vector2 currentWaypoint = waypointsComponent.waypoints[behaviorComponent.currentWaypointIndex];
+                                Vector2 relative = currentWaypoint - worldPositionComponent.position;
 
-                            if (relative.X > 0.25f)
-                            {
-                                movementComponent.walkRight = true;
-                                movementComponent.walkLeft = false;
-                            }
-                            else if (relative.X < -0.25f)
-                            {
-                                movementComponent.walkLeft = true;
-                                movementComponent.walkRight = false;
-                            }
-                            else
-                            {
-                                behaviorComponent.currentWaypointIndex = _random.Next(waypointsComponent.waypoints.Count);
-                                behaviorComponent.currentDelay = _random.Next(behaviorComponent.minDelay, behaviorComponent.maxDelay + 1);
+                                movementComponent.speedLimit = behaviorComponent.walkSpeed;
+
+                                if (relative.X > 0.25f)
+                                {
+                                    movementComponent.walkRight = true;
+                                    movementComponent.walkLeft = false;
+                                }
+                                else if (relative.X < -0.25f)
+                                {
+                                    movementComponent.walkLeft = true;
+                                    movementComponent.walkRight = false;
+                                }
+                                else
+                                {
+                                    behaviorComponent.currentWaypointIndex = _random.Next(waypointsComponent.waypoints.Count);
+                                    behaviorComponent.currentDelay = _random.Next(behaviorComponent.minDelay, behaviorComponent.maxDelay + 1);
+                                }
                             }
                         }
                     }

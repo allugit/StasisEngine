@@ -37,6 +37,7 @@ namespace StasisGame.Systems
         private Dictionary<string, XElement> _levelsData;
         private Dictionary<string, List<XElement>> _firstPassEntities;
         private Dictionary<string, List<XElement>> _secondPassEntities;
+        private Dictionary<string, List<XElement>> _thirdPassEntities;
         private Dictionary<string, int> _numEntities;
         private Dictionary<string, int> _numEntitiesProcessed;
         private Dictionary<string, bool> _finishedLoading;
@@ -82,6 +83,10 @@ namespace StasisGame.Systems
                 {
                     sum += actorsData.Count;
                 }
+                foreach (List<XElement> actorsData in _thirdPassEntities.Values)
+                {
+                    sum += actorsData.Count;
+                }
                 return sum;
             }
         }
@@ -112,6 +117,7 @@ namespace StasisGame.Systems
             _levelsData = new Dictionary<string, XElement>();
             _firstPassEntities = new Dictionary<string, List<XElement>>();
             _secondPassEntities = new Dictionary<string, List<XElement>>();
+            _thirdPassEntities = new Dictionary<string, List<XElement>>();
             _numEntities = new Dictionary<string, int>();
             _numEntitiesProcessed = new Dictionary<string, int>();
             _backgrounds = new Dictionary<string, Background>();
@@ -145,6 +151,7 @@ namespace StasisGame.Systems
             _levelsData.Add(levelUid, levelData);
             _firstPassEntities.Add(levelUid, new List<XElement>());
             _secondPassEntities.Add(levelUid, new List<XElement>());
+            _thirdPassEntities.Add(levelUid, new List<XElement>());
             _numEntitiesProcessed.Add(levelUid, 0);
             _finishedLoading.Add(levelUid, false);
 
@@ -158,6 +165,10 @@ namespace StasisGame.Systems
 
                 // Sort entities into first and second passses
                 if (type == "Circuit" || type == "Fluid" || type == "Rope" || type == "Revolute" || type == "Prismatic" || type == "CollisionFilter" || type == "Decal")
+                {
+                    _thirdPassEntities[levelUid].Add(actorData);
+                }
+                else if (type == "Tree")
                 {
                     _secondPassEntities[levelUid].Add(actorData);
                 }
@@ -264,6 +275,7 @@ namespace StasisGame.Systems
             LoadingScreen loadingScreen = (_systemManager.getSystem(SystemType.Screen) as ScreenSystem).getScreen(ScreenType.Loading) as LoadingScreen;
             int firstPassEntitiesCount = _firstPassEntities[levelUid].Count;
             int numEntitiesProcessed = _numEntitiesProcessed[levelUid];
+            int firstAndSecondPassEntitiesCount = firstPassEntitiesCount + _secondPassEntities[levelUid].Count;
 
             if (numEntitiesProcessed < firstPassEntitiesCount)
             {
@@ -301,11 +313,6 @@ namespace StasisGame.Systems
                         loadingScreen.elementsLoaded++;
                         break;
 
-                    case "Tree":
-                        _entityManager.factory.createTree(levelUid, actorData);
-                        loadingScreen.elementsLoaded++;
-                        break;
-
                     case "Goal":
                         _entityManager.factory.createRegionGoal(levelUid, actorData);
                         loadingScreen.elementsLoaded++;
@@ -330,9 +337,21 @@ namespace StasisGame.Systems
                         throw new NotImplementedException("Unhandled actor type in loadNextEntity()");
                 }
             }
-            else
+            else if (numEntitiesProcessed < firstAndSecondPassEntitiesCount)
             {
                 XElement actorData = _secondPassEntities[levelUid][numEntitiesProcessed - firstPassEntitiesCount];
+
+                switch (actorData.Attribute("type").Value)
+                {
+                    case "Tree":
+                        _entityManager.factory.createTree(levelUid, actorData);
+                        loadingScreen.elementsLoaded++;
+                        break;
+                }
+            }
+            else
+            {
+                XElement actorData = _thirdPassEntities[levelUid][numEntitiesProcessed - firstAndSecondPassEntitiesCount];
 
                 switch (actorData.Attribute("type").Value)
                 {
@@ -417,7 +436,7 @@ namespace StasisGame.Systems
             _numEntities.Clear();
             _numEntitiesProcessed.Clear();
             _firstPassEntities.Clear();
-            _secondPassEntities.Clear();
+            _thirdPassEntities.Clear();
             _levelsData.Clear();
             _finishedLoading.Clear();
             // Reset entity manager and entity factory -- TODO: move this to unload() ?
