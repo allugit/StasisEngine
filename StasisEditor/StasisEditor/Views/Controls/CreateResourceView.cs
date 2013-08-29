@@ -23,6 +23,11 @@ namespace StasisEditor.Views.Controls
         private void uidBox_KeyDown(object sender, KeyEventArgs e)
         {
             createButton.Enabled = uidBox.Text.Length > 0;
+
+            if (createButton.Enabled && e.KeyCode == Keys.Enter)
+            {
+                createButton_Click(sender, e);
+            }
         }
 
         // Create clicked

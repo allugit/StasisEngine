@@ -348,6 +348,11 @@ namespace StasisCore
                         edgeLayer.randomBlue,
                         edgeLayer.randomAlpha);
                     break;
+
+                case "leaves":
+                    MaterialLeavesLayer leavesLayer = layer as MaterialLeavesLayer;
+                    current = leavesPass(current, growthFactor, leavesLayer.textureUIDs);
+                    break;
             }
 
             return current;
@@ -1023,6 +1028,85 @@ namespace StasisCore
                         _spriteBatch.Draw(texture, (position - topLeft) * Settings.BASE_SCALE, texture.Bounds, actualColor, angle, new Vector2(texture.Width, texture.Height) / 2, textureScale, SpriteEffects.None, 0);
                         currentPosition += spacing;
                     }
+                }
+            }
+            _spriteBatch.End();
+            _graphicsDevice.SetRenderTarget(null);
+
+            // Save render target into texture
+            renderTarget.GetData<Color>(data);
+            result.SetData<Color>(data);
+
+            // Cleanup
+            renderTarget.Dispose();
+
+            return result;
+        }
+
+        // Leaves pass
+        public Texture2D leavesPass(
+            Texture2D current,
+            float growthFactor,
+            List<string> textureUids
+            )
+        {
+            // Initialize render targets and textures
+            RenderTarget2D renderTarget = new RenderTarget2D(_graphicsDevice, current.Width, current.Height);
+            Texture2D result = new Texture2D(_graphicsDevice, renderTarget.Width, renderTarget.Height);
+            Color[] data = new Color[renderTarget.Width * renderTarget.Height];
+            Random rng = new Random();
+
+            // Load and validate textures
+            List<Texture2D> textures = new List<Texture2D>();
+            foreach (string textureUID in textureUids)
+            {
+                Texture2D texture = ResourceManager.getTexture(textureUID);
+                if (texture == null)
+                    return result;
+                textures.Add(texture);
+            }
+            if (textures.Count == 0)
+                return current;
+
+            float maxTextureSize = 256;
+            float size = maxTextureSize * growthFactor;
+            float maxRadius = (size / 2f) * 0.85f;
+            float lowTint = 0.3f;
+
+            if (size < 48f)
+            {
+                return current;
+            }
+
+            // Draw
+            _graphicsDevice.SetRenderTarget(renderTarget);
+            _graphicsDevice.Clear(Color.Transparent);
+            _spriteBatch.Begin(SpriteSortMode.Immediate, BlendState.AlphaBlend);
+            _spriteBatch.Draw(current, current.Bounds, Color.White);
+            for (float tint = lowTint; tint < 1f; tint += 0.1f)
+            {
+                float radius = maxRadius * (1f - tint + lowTint);
+                int leafCount = (int)((radius / 2f) * (size / maxTextureSize));
+                //Console.WriteLine("maxTextureSize: {0}, size: {1}, maxRadius: {2}, radius: {3}, tint: {4}, leafCount: {5}", maxTextureSize, size, maxRadius, radius, tint, leafCount);
+                for (int n = 0; n < leafCount; n++)
+                {
+                    // Calculate random position
+                    Texture2D leafTexture = textures[rng.Next(textures.Count)];
+                    Vector2 position = new Vector2(StasisMathHelper.floatBetween(-1f, 1f, rng), StasisMathHelper.floatBetween(-1f, 1f, rng)) * radius;
+                    position += new Vector2(current.Width, current.Height) / 2;
+
+                    // Calculate shadow value
+                    //float shadowValue = Math.Max(metamer.budQuality, 0.5f);
+
+                    // Calculate color value
+                    float r = StasisMathHelper.floatBetween(0.9f, 1.2f, rng);
+                    float g = StasisMathHelper.floatBetween(0.9f, 1.1f, rng);
+                    float b = StasisMathHelper.floatBetween(0.9f, 1f, rng);
+                    Color finalColor = new Color(tint * r, tint * g, tint * b);
+
+                    float angle = (float)(rng.NextDouble() * Math.PI * 2);
+                    float scale = StasisMathHelper.floatBetween(0.25f, 1f, rng);
+                    _spriteBatch.Draw(leafTexture, position, leafTexture.Bounds, finalColor, angle, new Vector2(leafTexture.Width, leafTexture.Height) / 2, scale, SpriteEffects.None, 0);
                 }
             }
             _spriteBatch.End();

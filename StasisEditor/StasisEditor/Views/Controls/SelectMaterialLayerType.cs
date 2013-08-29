@@ -14,7 +14,7 @@ namespace StasisEditor.Views.Controls
         {
             InitializeComponent();
 
-            layerTypeListBox.DataSource = new string[] { "group", "texture", "perlin", "worley", "uniform_scatter", "radial_scatter", "edge_scatter" };
+            layerTypeListBox.DataSource = new string[] { "group", "texture", "perlin", "worley", "uniform_scatter", "radial_scatter", "edge_scatter", "leaves" };
         }
 
         private void InitializeComponent()

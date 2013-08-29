@@ -76,6 +76,10 @@ namespace StasisCore.Models
                 case "edge_scatter":
                     layer = new MaterialEdgeScatterLayer(data);
                     break;
+
+                case "leaves":
+                    layer = new MaterialLeavesLayer(data);
+                    break;
             }
 
             System.Diagnostics.Debug.Assert(layer != null, "Layer wasn't created (is null)");
@@ -114,6 +118,10 @@ namespace StasisCore.Models
 
                 case "edge_scatter":
                     layer = new MaterialEdgeScatterLayer();
+                    break;
+
+                case "leaves":
+                    layer = new MaterialLeavesLayer();
                     break;
             }
 

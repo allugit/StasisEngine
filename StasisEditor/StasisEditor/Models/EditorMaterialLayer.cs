@@ -36,6 +36,9 @@ namespace StasisEditor.Models
 
                 case "edge_scatter":
                     return new EditorMaterialEdgeScatterLayer(data);
+
+                case "leaves":
+                    return new EditorMaterialLeavesLayer(data);
             }
 
             System.Diagnostics.Debug.Assert(false, "Layer wasn't created");
@@ -66,6 +69,9 @@ namespace StasisEditor.Models
 
                 case "edge_scatter":
                     return new EditorMaterialEdgeScatterLayer();
+
+                case "leaves":
+                    return new EditorMaterialLeavesLayer();
             }
 
             System.Diagnostics.Debug.Assert(false, "Layer wasn't created");

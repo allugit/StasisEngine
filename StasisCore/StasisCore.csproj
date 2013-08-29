@@ -78,6 +78,7 @@
     <Compile Include="Models\LevelPathDefinition.cs" />
     <Compile Include="Models\LevelPathKey.cs" />
     <Compile Include="Models\LevelPathState.cs" />
+    <Compile Include="Models\MaterialLeavesLayer.cs" />
     <Compile Include="Models\MaterialWorleyLayer.cs" />
     <Compile Include="Models\Objective.cs" />
     <Compile Include="Models\Quest.cs" />

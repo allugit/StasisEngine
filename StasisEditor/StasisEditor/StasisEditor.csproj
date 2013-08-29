@@ -101,6 +101,7 @@
     <Compile Include="Models\EditorGoalActor.cs" />
     <Compile Include="Models\EditorItemActor.cs" />
     <Compile Include="Models\EditorLevelTransitionActor.cs" />
+    <Compile Include="Models\EditorMaterialLeavesLayer.cs" />
     <Compile Include="Models\EditorMaterialWorleyLayer.cs" />
     <Compile Include="Models\EditorPlayerSpawnActor.cs" />
     <Compile Include="Models\EditorPolygonActor.cs" />

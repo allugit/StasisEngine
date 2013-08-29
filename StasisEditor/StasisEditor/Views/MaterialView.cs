@@ -134,8 +134,6 @@ namespace StasisEditor.Views
         {
             SuspendLayout();
 
-            List<MaterialLayer> layers = rootLayer.layers;
-
             // Clear existing nodes
             layersTreeView.Nodes.Clear();
 
