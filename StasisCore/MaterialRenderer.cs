@@ -351,7 +351,7 @@ namespace StasisCore
 
                 case "leaves":
                     MaterialLeavesLayer leavesLayer = layer as MaterialLeavesLayer;
-                    current = leavesPass(current, growthFactor, leavesLayer.textureUIDs);
+                    current = leavesPass(current, growthFactor, leavesLayer.textureUIDs, leavesLayer.baseColor);
                     break;
             }
 
@@ -1047,7 +1047,8 @@ namespace StasisCore
         public Texture2D leavesPass(
             Texture2D current,
             float growthFactor,
-            List<string> textureUids
+            List<string> textureUids,
+            Color baseColor
             )
         {
             // Initialize render targets and textures
@@ -1102,7 +1103,7 @@ namespace StasisCore
                     float r = StasisMathHelper.floatBetween(0.9f, 1.2f, rng);
                     float g = StasisMathHelper.floatBetween(0.9f, 1.1f, rng);
                     float b = StasisMathHelper.floatBetween(0.9f, 1f, rng);
-                    Color finalColor = new Color(tint * r, tint * g, tint * b);
+                    Color finalColor = new Color(tint * r * (baseColor.R / 255f), tint * g * (baseColor.G / 255f), tint * b * (baseColor.B / 255f));
 
                     float angle = (float)(rng.NextDouble() * Math.PI * 2);
                     float scale = StasisMathHelper.floatBetween(0.25f, 1f, rng);
