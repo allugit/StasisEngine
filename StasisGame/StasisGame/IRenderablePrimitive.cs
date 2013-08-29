@@ -9,7 +9,7 @@ namespace StasisGame
     public interface IRenderablePrimitive
     {
         Texture2D texture { get; }
-        VertexPositionTexture[] vertices { get; }
+        VertexPositionColorTexture[] vertices { get; }
         Matrix worldMatrix { get; }
         int primitiveCount { get; }
         float layerDepth { get; }

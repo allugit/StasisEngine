@@ -8,7 +8,7 @@ namespace StasisGame
     public class PrimitiveRenderObject : IRenderablePrimitive
     {
         private Texture2D _texture;
-        private VertexPositionTexture[] _vertices;
+        private VertexPositionColorTexture[] _vertices;
         private List<RenderableTriangle> _renderableTriangles;
         private Matrix _worldMatrix;
         private Matrix _originMatrix;
@@ -19,12 +19,12 @@ namespace StasisGame
         public Matrix originMatrix { get { return _originMatrix; } set { _originMatrix = value; } }
         public int primitiveCount { get { return _renderableTriangles.Count; } }
         public float layerDepth { get { return _layerDepth; } }
-        public VertexPositionTexture[] vertices { get { return _vertices; } }
+        public VertexPositionColorTexture[] vertices { get { return _vertices; } }
         public List<RenderableTriangle> renderableTriangles { get { return _renderableTriangles; } }
 
         public PrimitiveRenderObject(Texture2D texture, List<RenderableTriangle> renderableTriangle, float layerDepth)
         {
-            _vertices = new VertexPositionTexture[renderableTriangle.Count * 3];
+            _vertices = new VertexPositionColorTexture[renderableTriangle.Count * 3];
             _texture = texture;
             _renderableTriangles = renderableTriangle;
             _layerDepth = layerDepth;

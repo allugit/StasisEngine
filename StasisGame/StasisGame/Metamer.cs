@@ -83,13 +83,13 @@ namespace StasisGame
         private float currentTextureAngle;
         private Color textureColor = Color.White;
         private int timeToLive = 360;
-        private VertexPositionTexture[] _vertices;
+        private VertexPositionColorTexture[] _vertices;
         private Texture2D leafTexture;
         private float _z;
         public int anchorCount;
         private PrimitiveRenderObject _renderObject;
 
-        public VertexPositionTexture[] vertices { get { return _vertices; } }
+        public VertexPositionColorTexture[] vertices { get { return _vertices; } }
 
         public Metamer(Tree tree, Metamer previousMetamer, BudType activeBud, BudState terminalBudState, BudState lateralBudState, float axis, bool placeBudOnLeft)
         {
@@ -115,7 +115,7 @@ namespace StasisGame
             collisionNormals = new Vector2[FarseerPhysics.Settings.MaxPolygonVertices];
             constraints = new List<MetamerConstraint>();
             relatedConstraints = new List<MetamerConstraint>();
-            _vertices = new VertexPositionTexture[2];
+            _vertices = new VertexPositionColorTexture[2];
 
             // Mass
             mass = 1f;
@@ -610,8 +610,11 @@ namespace StasisGame
             inverseMassSq = inverseMass * inverseMass;
 
             // Find texture shadow value
-            float shadowValue = Math.Max(Math.Min(budQuality, 1f), 0.5f);
-            textureColor = new Color(new Vector3(shadowValue, shadowValue, shadowValue));
+            //float shadowValue = Math.Max(Math.Min(budQuality, 1f), 0.5f);
+            //textureColor = new Color(new Vector3(shadowValue, shadowValue, shadowValue));
+            float shadowValue = 1f;
+            shadowValue = Math.Max(budQuality, 0.5f);
+            textureColor = new Color(shadowValue, shadowValue, shadowValue);
 
             // Modify z index based on shadow value
             _z = tree.layerDepth + StasisMathHelper.floatBetween(-0.02f, 0.01f, tree.random) + shadowValue / 100f;
@@ -625,6 +628,7 @@ namespace StasisGame
                 _renderObject = (tree.treeSystem.systemManager.getSystem(SystemType.Render) as RenderSystem).createSpritePrimitiveObject(
                     leafTexture,
                     position,
+                    textureColor,
                     new Vector2(leafTexture.Width, leafTexture.Height) / 2f,
                     0f,
                     1f,

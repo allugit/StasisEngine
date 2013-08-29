@@ -105,7 +105,7 @@ namespace StasisGame.Systems
         }
 
         // createSpriteRenderObject -- Creates a primitive render object that can be used in place of sprite batch
-        public PrimitiveRenderObject createSpritePrimitiveObject(Texture2D texture, Vector2 position, Vector2 origin, float angle, float scale, float layerDepth)
+        public PrimitiveRenderObject createSpritePrimitiveObject(Texture2D texture, Vector2 position, Color color, Vector2 origin, float angle, float scale, float layerDepth)
         {
             // a-----------d
             // |         / |
@@ -122,15 +122,15 @@ namespace StasisGame.Systems
 
             renderableTriangles.Add(
                 new RenderableTriangle(
-                    new VertexPositionTexture(a, Vector2.Zero),
-                    new VertexPositionTexture(d, new Vector2(1, 0)),
-                    new VertexPositionTexture(b, new Vector2(0, 1))));
+                    new VertexPositionColorTexture(a, color, Vector2.Zero),
+                    new VertexPositionColorTexture(d, color, new Vector2(1, 0)),
+                    new VertexPositionColorTexture(b, color, new Vector2(0, 1))));
 
             renderableTriangles.Add(
                 new RenderableTriangle(
-                    new VertexPositionTexture(b, new Vector2(0, 1)),
-                    new VertexPositionTexture(d, new Vector2(1, 0)),
-                    new VertexPositionTexture(c, new Vector2(1, 1))));
+                    new VertexPositionColorTexture(b, color, new Vector2(0, 1)),
+                    new VertexPositionColorTexture(d, color, new Vector2(1, 0)),
+                    new VertexPositionColorTexture(c, color, new Vector2(1, 1))));
 
             primitiveRenderObject = new PrimitiveRenderObject(texture, renderableTriangles, layerDepth);
             primitiveRenderObject.originMatrix = Matrix.CreateTranslation(new Vector3(-origin / gameScale, 0));
@@ -187,7 +187,7 @@ namespace StasisGame.Systems
                 _graphicsDevice.Textures[0] = current.renderablePrimitive.texture;
                 _primitivesEffect.Parameters["world"].SetValue(current.renderablePrimitive.worldMatrix);
                 _primitivesEffect.CurrentTechnique.Passes["textured_primitives"].Apply();
-                _graphicsDevice.DrawUserPrimitives(PrimitiveType.TriangleList, current.renderablePrimitive.vertices, 0, current.renderablePrimitive.primitiveCount, VertexPositionTexture.VertexDeclaration);
+                _graphicsDevice.DrawUserPrimitives(PrimitiveType.TriangleList, current.renderablePrimitive.vertices, 0, current.renderablePrimitive.primitiveCount, VertexPositionColorTexture.VertexDeclaration);
                 //_graphicsDevice.DrawUserPrimitives<CustomVertexFormat>(PrimitiveType.TriangleList, current.renderablePrimitive.vertices, 0, current.renderablePrimitive.primitiveCount);
 
                 current = current.next;

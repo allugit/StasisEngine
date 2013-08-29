@@ -50,7 +50,7 @@ namespace StasisGame
         private Vector2 _aabbMargin = new Vector2(64f, 64f) / Settings.BASE_SCALE;
         private bool _active;
         private int _longestPath;
-        private VertexPositionTexture[] _vertices;
+        private VertexPositionColorTexture[] _vertices;
         private int _primitiveCount;
         private Texture2D _barkTexture;
         private List<List<Texture2D>> _leafTextures;
@@ -83,7 +83,7 @@ namespace StasisGame
         public Vector2 brokenGravity { get { return _brokenGravity; } }
         public Vector2 gravity { get { return _gravity; } }
         public float internodeLengthSq { get { return _internodeLengthSq; } }
-        public VertexPositionTexture[] vertices { get { return _vertices; } }
+        public VertexPositionColorTexture[] vertices { get { return _vertices; } }
         public int numVertices { get { return _numVertices; } set { _numVertices = value; } }
         public int primitiveCount { get { return _primitiveCount; } set { _primitiveCount = value; } }
         public Texture2D barkTexture { get { return _barkTexture; } }
@@ -124,7 +124,11 @@ namespace StasisGame
             _layerDepth = Loader.loadFloat(data.Attribute("layer_depth"), 0.1f);
             _entityId = int.Parse(data.Attribute("id").Value);
 
-            _vertices = new VertexPositionTexture[MAX_VERTICES];
+            _vertices = new VertexPositionColorTexture[MAX_VERTICES];
+            for (int i = 0; i < MAX_VERTICES; i++)
+            {
+                _vertices[i].Color = Color.White;
+            }
             _random = new Random(_seed);
             _internodeLengthSq = _internodeLength * _internodeLength;
             _aabb = new AABB();

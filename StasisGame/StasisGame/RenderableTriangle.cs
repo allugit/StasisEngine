@@ -11,12 +11,12 @@ namespace StasisGame
 {
     public class RenderableTriangle
     {
-        public VertexPositionTexture[] vertices;
+        public VertexPositionColorTexture[] vertices;
         public Fixture fixture;
 
-        public RenderableTriangle(VertexPositionTexture v1, VertexPositionTexture v2, VertexPositionTexture v3)
+        public RenderableTriangle(VertexPositionColorTexture v1, VertexPositionColorTexture v2, VertexPositionColorTexture v3)
         {
-            vertices = new VertexPositionTexture[3] { v1, v2, v3 };
+            vertices = new VertexPositionColorTexture[3] { v1, v2, v3 };
         }
 
         public RenderableTriangle(DelaunayTriangle triangle, Vector2 topLeft, Vector2 bottomRight, bool fixVerticeRotation = false, float angleCorrection = 0f)
@@ -33,15 +33,18 @@ namespace StasisGame
                 p3 = Vector2.Transform(p3, Matrix.CreateRotationZ(-angleCorrection));
             }
 
-            vertices = new VertexPositionTexture[3];
-            vertices[0] = new VertexPositionTexture(
+            vertices = new VertexPositionColorTexture[3];
+            vertices[0] = new VertexPositionColorTexture(
                 new Vector3(p1, 0),
+                Color.White,
                 (p1 - topLeft) / (bottomRight - topLeft));
-            vertices[1] = new VertexPositionTexture(
+            vertices[1] = new VertexPositionColorTexture(
                 new Vector3(p2, 0),
+                Color.White,
                 (p2 - topLeft) / (bottomRight - topLeft));
-            vertices[2] = new VertexPositionTexture(
+            vertices[2] = new VertexPositionColorTexture(
                 new Vector3(p3, 0),
+                Color.White,
                 (p3 - topLeft) / (bottomRight - topLeft));
         }
 
@@ -49,12 +52,13 @@ namespace StasisGame
         {
             PolygonShape polygonShape = triangleFixture.Shape as PolygonShape;
 
-            vertices = new VertexPositionTexture[3];
+            vertices = new VertexPositionColorTexture[3];
             for (int i = 0; i < 3; i++)
             {
                 Vector2 p = polygonShape.Vertices[i];
-                vertices[i] = new VertexPositionTexture(
+                vertices[i] = new VertexPositionColorTexture(
                     new Vector3(p, 0),
+                    Color.White,
                     (p - topLeft) / (bottomRight - topLeft));
             }
         }

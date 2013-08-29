@@ -396,7 +396,7 @@ namespace StasisGame
             // Add components
             _entityManager.addComponent(levelUid, entityId, new ItemComponent(itemDefinition, itemState, ResourceManager.getTexture(itemDefinition.inventoryTextureUid)));
             _entityManager.addComponent(levelUid, entityId, new PhysicsComponent(body));
-            _entityManager.addComponent(levelUid, entityId, new PrimitivesRenderComponent(renderSystem.createSpritePrimitiveObject(worldTexture, body.Position, new Vector2(worldTexture.Width, worldTexture.Height) / 2f, body.Rotation, 1f, layerDepth)));
+            _entityManager.addComponent(levelUid, entityId, new PrimitivesRenderComponent(renderSystem.createSpritePrimitiveObject(worldTexture, body.Position, Color.White, new Vector2(worldTexture.Width, worldTexture.Height) / 2f, body.Rotation, 1f, layerDepth)));
             _entityManager.addComponent(levelUid, entityId, new IgnoreTreeCollisionComponent());
             _entityManager.addComponent(levelUid, entityId, new WorldPositionComponent(body.Position));
         }
@@ -1428,7 +1428,7 @@ namespace StasisGame
             // Add components
             _entityManager.addComponent(levelUid, entityId, new SkipFluidResolutionComponent());
             _entityManager.addComponent(levelUid, entityId, new PhysicsComponent(body));
-            _entityManager.addComponent(levelUid, entityId, new PrimitivesRenderComponent(renderSystem.createSpritePrimitiveObject(worldTexture, position, new Vector2(worldTexture.Width, worldTexture.Height) / 2f, body.Rotation, 1f, layerDepth)));
+            _entityManager.addComponent(levelUid, entityId, new PrimitivesRenderComponent(renderSystem.createSpritePrimitiveObject(worldTexture, position, Color.White, new Vector2(worldTexture.Width, worldTexture.Height) / 2f, body.Rotation, 1f, layerDepth)));
             _entityManager.addComponent(levelUid, entityId, new IgnoreTreeCollisionComponent());
             _entityManager.addComponent(levelUid, entityId, new IgnoreRopeRaycastComponent());
             _entityManager.addComponent(levelUid, entityId, new WorldPositionComponent(body.Position));
@@ -1534,7 +1534,7 @@ namespace StasisGame
                 Vector2 origin = Loader.loadVector2(data.Attribute("origin"), Vector2.Zero) * new Vector2(texture.Width, texture.Height);
 
                 entityId = _entityManager.createEntity(levelUid);
-                _entityManager.addComponent(levelUid, entityId, new PrimitivesRenderComponent(renderSystem.createSpritePrimitiveObject(texture, position, origin, angle, 1f, layerDepth)));
+                _entityManager.addComponent(levelUid, entityId, new PrimitivesRenderComponent(renderSystem.createSpritePrimitiveObject(texture, position, Color.White, origin, angle, 1f, layerDepth)));
                 _entityManager.addComponent(levelUid, entityId, new WorldPositionComponent(position));
             }
             else
