@@ -77,9 +77,9 @@ namespace StasisGame
         }
 
         // expandLevelBoundary
-        private void expandLevelBoundary(Vector2 point)
+        private void expandLevelBoundary(string levelUid, Vector2 point)
         {
-            ((LevelSystem)_systemManager.getSystem(SystemType.Level)).expandBoundary(point);
+            ((LevelSystem)_systemManager.getSystem(SystemType.Level)).expandBoundary(levelUid, point);
         }
 
         // createOutputGate
@@ -253,7 +253,7 @@ namespace StasisGame
             for (int i = 0; i < boxShape.Vertices.Count; i++)
             {
                 Vector2 point = MathUtils.Multiply(ref xf, boxShape.Vertices[i]);
-                expandLevelBoundary(point);
+                expandLevelBoundary(levelUid, point);
             }
         }
 
@@ -342,8 +342,8 @@ namespace StasisGame
             _entityManager.addComponent(levelUid, entityId, new WorldPositionComponent(body.Position));
 
             // Expand level boundary
-            expandLevelBoundary(body.Position + new Vector2(-circleShape.Radius, -circleShape.Radius));
-            expandLevelBoundary(body.Position + new Vector2(circleShape.Radius, circleShape.Radius));
+            expandLevelBoundary(levelUid, body.Position + new Vector2(-circleShape.Radius, -circleShape.Radius));
+            expandLevelBoundary(levelUid, body.Position + new Vector2(circleShape.Radius, circleShape.Radius));
         }
 
         public void createFluid(string levelUid, XElement data)
@@ -357,7 +357,7 @@ namespace StasisGame
 
             // Expand level boundary
             foreach (Vector2 point in polygonPoints)
-                expandLevelBoundary(point);
+                expandLevelBoundary(levelUid, point);
         }
 
         // createWorldItem -- Create an item that exists in the world (as opposed to an item in the inventory)
@@ -878,7 +878,7 @@ namespace StasisGame
 
             // Expand level boundary
             foreach (Vector2 point in points)
-                expandLevelBoundary(point);
+                expandLevelBoundary(levelUid, point);
 
             // Convert to counter clockwise polygon
             points = convertPolygonToCCW(points);
@@ -1350,7 +1350,7 @@ namespace StasisGame
 
             // Expand level boundary
             foreach (Vector2 point in points)
-                levelSystem.expandBoundary(point);
+                levelSystem.expandBoundary(levelUid, point);
         }
 
         // createLevelTransition

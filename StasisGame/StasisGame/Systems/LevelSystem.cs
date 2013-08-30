@@ -32,7 +32,9 @@ namespace StasisGame.Systems
         //private Dictionary<int, Goal> _regionGoals;
         //private Dictionary<GameEventType, Dictionary<int, Goal>> _eventGoals;
         //private Dictionary<int, Goal> _completedGoals;
-        private AABB _levelBoundary;
+        private Dictionary<string, AABB> _levelBoundaries;
+        private Dictionary<string, Vector2> _leftEdgeBoundaries;
+        private Dictionary<string, Vector2> _rightEdgeBoundaries;
         private Vector2 _boundaryMargin;
         private Dictionary<string, XElement> _levelsData;
         private Dictionary<string, List<XElement>> _firstPassEntities;
@@ -112,7 +114,9 @@ namespace StasisGame.Systems
             //_regionGoals = new Dictionary<int, Goal>();
             //_eventGoals = new Dictionary<GameEventType, Dictionary<int, Goal>>();
             //_completedGoals = new Dictionary<int, Goal>();
-            _levelBoundary = new AABB();
+            _levelBoundaries = new Dictionary<string, AABB>();
+            _leftEdgeBoundaries = new Dictionary<string, Vector2>();
+            _rightEdgeBoundaries = new Dictionary<string, Vector2>();
             _boundaryMargin = new Vector2(50f, 50f);
             _levelsData = new Dictionary<string, XElement>();
             _firstPassEntities = new Dictionary<string, List<XElement>>();
@@ -133,10 +137,36 @@ namespace StasisGame.Systems
         }
 
         // expandBoundary
-        public void expandBoundary(Vector2 point)
+        public void expandBoundary(string levelUid, Vector2 point)
         {
-            _levelBoundary.LowerBound = Vector2.Min(point - _boundaryMargin, _levelBoundary.LowerBound);
-            _levelBoundary.UpperBound = Vector2.Max(point + _boundaryMargin, _levelBoundary.UpperBound);
+            AABB newBoundary;
+
+            if (!_levelBoundaries.ContainsKey(levelUid))
+            {
+                _levelBoundaries.Add(levelUid, new AABB());
+            }
+
+            newBoundary = _levelBoundaries[levelUid];
+            newBoundary.LowerBound = Vector2.Min(point - _boundaryMargin, newBoundary.LowerBound);
+            newBoundary.UpperBound = Vector2.Max(point + _boundaryMargin, newBoundary.UpperBound);
+            _levelBoundaries[levelUid] = newBoundary;
+        }
+
+        // setEdgeBoundary
+        private void setEdgeBoundary(string levelUid, XElement data)
+        {
+            bool isLeftEdge = Loader.loadString(data.Attribute("edge_boundary_type"), "Left") == "Left";
+            Vector2 position = Loader.loadVector2(data.Attribute("position"), Vector2.Zero);
+
+            if (isLeftEdge)
+            {
+                _leftEdgeBoundaries.Add(levelUid, position);
+            }
+            else
+            {
+                _rightEdgeBoundaries.Add(levelUid, position);
+            }
+            Console.WriteLine("setting edge: {0}", position);
         }
 
         // initializeLevelData -- Takes a level's data and initializes the states needed for the loading process
@@ -333,6 +363,11 @@ namespace StasisGame.Systems
                         loadingScreen.elementsLoaded++;
                         break;
 
+                    case "EdgeBoundary":
+                        setEdgeBoundary(levelUid, actorData);
+                        loadingScreen.elementsLoaded++;
+                        break;
+
                     default:
                         throw new NotImplementedException("Unhandled actor type in loadNextEntity()");
                 }
@@ -436,6 +471,7 @@ namespace StasisGame.Systems
             _numEntities.Clear();
             _numEntitiesProcessed.Clear();
             _firstPassEntities.Clear();
+            _secondPassEntities.Clear();
             _thirdPassEntities.Clear();
             _levelsData.Clear();
             _finishedLoading.Clear();
@@ -449,6 +485,9 @@ namespace StasisGame.Systems
         {
             _loadedLevels.Clear();
             _spawnPositions.Clear();
+            _levelBoundaries.Clear();
+            _leftEdgeBoundaries.Clear();
+            _rightEdgeBoundaries.Clear();
         }
 
         // switchToLevel -- Switch to a different level (must be loaded!)
@@ -598,10 +637,11 @@ namespace StasisGame.Systems
                     if (playerPhysicsComponent != null)
                     {
                         Vector2 position = playerPhysicsComponent.body.Position;
+                        AABB levelBoundary = _levelBoundaries[currentLevelUid];
 
                         // Check player's position against the level boundary
-                        if (position.X < _levelBoundary.LowerBound.X || position.X > _levelBoundary.UpperBound.X ||
-                            position.Y < _levelBoundary.LowerBound.Y || position.Y > _levelBoundary.UpperBound.Y)
+                        if (position.X < levelBoundary.LowerBound.X || position.X > levelBoundary.UpperBound.X ||
+                            position.Y < levelBoundary.LowerBound.Y || position.Y > levelBoundary.UpperBound.Y)
                         {
                             endLevel();
                             _playerSystem.reloadInventory();
