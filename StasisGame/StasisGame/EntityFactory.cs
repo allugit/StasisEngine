@@ -876,6 +876,10 @@ namespace StasisGame
             foreach (XElement pointData in data.Elements("Point"))
                 points.Add(Loader.loadVector2(pointData, Vector2.Zero));
 
+            // Expand level boundary
+            foreach (Vector2 point in points)
+                expandLevelBoundary(point);
+
             // Convert to counter clockwise polygon
             points = convertPolygonToCCW(points);
 
@@ -1011,10 +1015,6 @@ namespace StasisGame
             _entityManager.addComponent(levelUid, entityId, new WorldPositionComponent(body.Position));
             _entityManager.addComponent(levelUid, entityId, bodyRenderComponent);
             _entityManager.addComponent(levelUid, entityId, new IgnoreTreeCollisionComponent());
-
-            // Expand level boundary
-            foreach (Vector2 point in points)
-                expandLevelBoundary(point);
         }
 
         public void createTree(string levelUid, XElement data)
