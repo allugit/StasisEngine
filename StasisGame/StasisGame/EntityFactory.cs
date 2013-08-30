@@ -79,7 +79,7 @@ namespace StasisGame
         // expandLevelBoundary
         private void expandLevelBoundary(string levelUid, Vector2 point)
         {
-            ((LevelSystem)_systemManager.getSystem(SystemType.Level)).expandBoundary(levelUid, point);
+            ((LevelSystem)_systemManager.getSystem(SystemType.Level)).expandFallbackBoundary(levelUid, point);
         }
 
         // createOutputGate
@@ -1350,7 +1350,7 @@ namespace StasisGame
 
             // Expand level boundary
             foreach (Vector2 point in points)
-                levelSystem.expandBoundary(levelUid, point);
+                levelSystem.expandFallbackBoundary(levelUid, point);
         }
 
         // createLevelTransition

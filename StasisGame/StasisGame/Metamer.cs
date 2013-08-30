@@ -159,7 +159,7 @@ namespace StasisGame
             destroyMarkersInOccupiedZone();
 
             // Expand level boundary
-            tree.treeSystem.levelSystem.expandBoundary(tree.levelUid, position);
+            tree.treeSystem.levelSystem.expandFallbackBoundary(tree.levelUid, position);
 
             // Determine z-index
             _z = tree.layerDepth + StasisMathHelper.floatBetween(-0.02f, 0.01f, tree.random);

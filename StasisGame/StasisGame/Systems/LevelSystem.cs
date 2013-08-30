@@ -33,8 +33,7 @@ namespace StasisGame.Systems
         //private Dictionary<GameEventType, Dictionary<int, Goal>> _eventGoals;
         //private Dictionary<int, Goal> _completedGoals;
         private Dictionary<string, AABB> _levelBoundaries;
-        private Dictionary<string, Vector2> _leftEdgeBoundaries;
-        private Dictionary<string, Vector2> _rightEdgeBoundaries;
+        private Dictionary<string, AABB> _fallbackLevelBoundaries;
         private Vector2 _boundaryMargin;
         private Dictionary<string, XElement> _levelsData;
         private Dictionary<string, List<XElement>> _firstPassEntities;
@@ -115,8 +114,7 @@ namespace StasisGame.Systems
             //_eventGoals = new Dictionary<GameEventType, Dictionary<int, Goal>>();
             //_completedGoals = new Dictionary<int, Goal>();
             _levelBoundaries = new Dictionary<string, AABB>();
-            _leftEdgeBoundaries = new Dictionary<string, Vector2>();
-            _rightEdgeBoundaries = new Dictionary<string, Vector2>();
+            _fallbackLevelBoundaries = new Dictionary<string, AABB>();
             _boundaryMargin = new Vector2(50f, 50f);
             _levelsData = new Dictionary<string, XElement>();
             _firstPassEntities = new Dictionary<string, List<XElement>>();
@@ -136,48 +134,49 @@ namespace StasisGame.Systems
             return _spawnPositions[levelUid];
         }
 
-        // expandBoundary
-        public void expandBoundary(string levelUid, Vector2 point)
+        // expandFallbackBoundary
+        public void expandFallbackBoundary(string levelUid, Vector2 point)
         {
             AABB newBoundary;
+
+            if (!_fallbackLevelBoundaries.ContainsKey(levelUid))
+            {
+                _fallbackLevelBoundaries.Add(levelUid, new AABB());
+            }
+
+            newBoundary = _fallbackLevelBoundaries[levelUid];
+            newBoundary.LowerBound = Vector2.Min(point - _boundaryMargin, newBoundary.LowerBound);
+            newBoundary.UpperBound = Vector2.Max(point + _boundaryMargin, newBoundary.UpperBound);
+            _fallbackLevelBoundaries[levelUid] = newBoundary;
+        }
+
+        // setBoundary
+        public void setBoundary(string levelUid, XElement data)
+        {
+            bool isLowerBound = Loader.loadString(data.Attribute("edge_boundary_type"), "LowerBound") == "LowerBound";
+            Vector2 position = Loader.loadVector2(data.Attribute("position"), Vector2.Zero);
+            AABB boundary;
 
             if (!_levelBoundaries.ContainsKey(levelUid))
             {
                 _levelBoundaries.Add(levelUid, new AABB());
             }
+            boundary = _levelBoundaries[levelUid];
 
-            newBoundary = _levelBoundaries[levelUid];
-            newBoundary.LowerBound = Vector2.Min(point - _boundaryMargin, newBoundary.LowerBound);
-            newBoundary.UpperBound = Vector2.Max(point + _boundaryMargin, newBoundary.UpperBound);
-            _levelBoundaries[levelUid] = newBoundary;
-        }
-
-        // setEdgeBoundary
-        private void setEdgeBoundary(string levelUid, XElement data)
-        {
-            bool isLeftEdge = Loader.loadString(data.Attribute("edge_boundary_type"), "Left") == "Left";
-            Vector2 position = Loader.loadVector2(data.Attribute("position"), Vector2.Zero);
-
-            if (isLeftEdge)
+            if (isLowerBound)
             {
-                _leftEdgeBoundaries.Add(levelUid, position);
+                boundary.LowerBound = position;
             }
             else
             {
-                _rightEdgeBoundaries.Add(levelUid, position);
+                boundary.UpperBound = position;
             }
+            _levelBoundaries[levelUid] = boundary;
         }
 
-        // getLeftEdgeBoundary
-        public Vector2 getLeftEdgeBoundary(string levelUid)
+        public AABB getBoundary(string levelUid)
         {
-            return _leftEdgeBoundaries[levelUid];
-        }
-
-        // getRightEdgeBoundary
-        public Vector2 getRightEdgeBoundary(string levelUid)
-        {
-            return _rightEdgeBoundaries[levelUid];
+            return _levelBoundaries[levelUid];
         }
 
         // initializeLevelData -- Takes a level's data and initializes the states needed for the loading process
@@ -375,7 +374,7 @@ namespace StasisGame.Systems
                         break;
 
                     case "EdgeBoundary":
-                        setEdgeBoundary(levelUid, actorData);
+                        setBoundary(levelUid, actorData);
                         loadingScreen.elementsLoaded++;
                         break;
 
@@ -452,13 +451,10 @@ namespace StasisGame.Systems
             {
                 _finishedLoading[levelUid] = true;
 
-                if (!_leftEdgeBoundaries.ContainsKey(levelUid))
+                // Set boundary to fallback boundary if needed
+                if (!_levelBoundaries.ContainsKey(levelUid))
                 {
-                    _leftEdgeBoundaries[levelUid] = _levelBoundaries[levelUid].LowerBound;
-                }
-                if (!_rightEdgeBoundaries.ContainsKey(levelUid))
-                {
-                    _rightEdgeBoundaries[levelUid] = _levelBoundaries[levelUid].UpperBound;
+                    _levelBoundaries[levelUid] = _fallbackLevelBoundaries[levelUid];
                 }
             }
         }
@@ -496,6 +492,7 @@ namespace StasisGame.Systems
             _thirdPassEntities.Clear();
             _levelsData.Clear();
             _finishedLoading.Clear();
+            _fallbackLevelBoundaries.Clear();
             // Reset entity manager and entity factory -- TODO: move this to unload() ?
             _entityManager.clearReservedEntityIds();
             _entityManager.factory.reset();
@@ -507,8 +504,6 @@ namespace StasisGame.Systems
             _loadedLevels.Clear();
             _spawnPositions.Clear();
             _levelBoundaries.Clear();
-            _leftEdgeBoundaries.Clear();
-            _rightEdgeBoundaries.Clear();
         }
 
         // switchToLevel -- Switch to a different level (must be loaded!)

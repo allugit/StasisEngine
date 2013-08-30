@@ -12,8 +12,8 @@ namespace StasisEditor.Models
     {
         public enum EdgeBoundaryType
         {
-            Left,
-            Right
+            LowerBound,
+            UpperBound
         };
 
         private Vector2 _position;
@@ -37,7 +37,7 @@ namespace StasisEditor.Models
             : base(level, ActorType.EdgeBoundary, level.getUnusedActorId())
         {
             _position = _level.controller.worldMouse;
-            _edgeBoundaryType = EdgeBoundaryType.Left;
+            _edgeBoundaryType = EdgeBoundaryType.LowerBound;
         }
 
         public EditorEdgeBoundaryActor(EditorLevel level, XElement data)
@@ -49,15 +49,21 @@ namespace StasisEditor.Models
 
         public override void draw()
         {
-            Vector2 a = _position + new Vector2(0, -1000f);
-            Vector2 b = _position + new Vector2(0, 1000f);
-            Vector2 a2 = _position + new Vector2(0, -1f);
-            Vector2 b2 = _position + new Vector2(0, 1f);
-
-            _level.controller.view.drawLine(a, b, Color.DarkRed * 0.5f, 0.05f);
-            _level.controller.view.drawLine(a2, b2, Color.Red, 0.04f);
-            _level.controller.view.drawPoint(a2, Color.Yellow, 0f);
-            _level.controller.view.drawPoint(b2, Color.Yellow, 0f);
+            if (_edgeBoundaryType == EdgeBoundaryType.LowerBound)
+            {
+                _level.controller.view.drawLine(_position, _position + new Vector2(1000f, 0f), Color.DarkRed * 0.5f, 0.05f);
+                _level.controller.view.drawLine(_position, _position + new Vector2(0f, 1000f), Color.DarkRed * 0.5f, 0.05f);
+                _level.controller.view.drawLine(_position, _position + new Vector2(1f, 0f), Color.Red, 0.04f);
+                _level.controller.view.drawLine(_position, _position + new Vector2(0f, 1f), Color.Red, 0.04f);
+            }
+            else if (_edgeBoundaryType == EdgeBoundaryType.UpperBound)
+            {
+                _level.controller.view.drawLine(_position, _position + new Vector2(-1000f, 0f), Color.DarkRed * 0.5f, 0.05f);
+                _level.controller.view.drawLine(_position, _position + new Vector2(0f, -1000f), Color.DarkRed * 0.5f, 0.05f);
+                _level.controller.view.drawLine(_position, _position + new Vector2(-1f, 0f), Color.Red, 0.04f);
+                _level.controller.view.drawLine(_position, _position + new Vector2(0f, -1f), Color.Red, 0.04f);
+            }
+            _level.controller.view.drawPoint(_position, Color.Yellow, 0.03f);
         }
 
         public override void update()
@@ -104,11 +110,9 @@ namespace StasisEditor.Models
         public override bool hitTest(Vector2 testPoint, HitTestCallback callback)
         {
             List<IActorComponent> results = new List<IActorComponent>();
-            Vector2 a = _position + new Vector2(0, -1f);
-            Vector2 b = _position + new Vector2(0, 1f);
 
-            // Hit test line
-            if (_level.controller.hitTestLine(testPoint, a, b))
+            // Hit test point
+            if (_level.controller.hitTestPoint(testPoint, _position))
             {
                 results.Add(this);
                 return callback(results);

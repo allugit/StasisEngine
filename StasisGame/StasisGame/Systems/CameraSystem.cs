@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using FarseerPhysics.Collision;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Input;
 using StasisGame.Managers;
@@ -68,8 +69,7 @@ namespace StasisGame.Systems
                 // Handle camera movement
                 if (!_paused || _singleStep)
                 {
-                    Vector2 leftEdge = levelSystem.getLeftEdgeBoundary(levelUid);
-                    Vector2 rightEdge = levelSystem.getRightEdgeBoundary(levelUid);
+                    AABB boundary = levelSystem.getBoundary(levelUid);
                     Vector2 scaledHalfScreen = renderSystem.halfScreen / renderSystem.scale;
 
                     for (int i = 0; i < bodyFocusPoints.Count; i++)
@@ -93,8 +93,8 @@ namespace StasisGame.Systems
                         _screenCenter += (multipleTarget / multipleTargetCount - _screenCenter) / 2f;
 
                     // Enforce edge boundaries
-                    _screenCenter.X = (float)Math.Max(_screenCenter.X, leftEdge.X + scaledHalfScreen.X);
-                    _screenCenter.X = (float)Math.Min(_screenCenter.X, rightEdge.X - scaledHalfScreen.X);
+                    _screenCenter = Vector2.Max(_screenCenter, boundary.LowerBound + scaledHalfScreen);
+                    _screenCenter = Vector2.Min(_screenCenter, boundary.UpperBound - scaledHalfScreen);
 
                     _singleStep = false;
                 }

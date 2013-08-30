@@ -281,7 +281,7 @@
       <XnaPlatformSpecific>true</XnaPlatformSpecific>
     </Content>
     <Content Include="Resources\circuits.png" />
-    <None Include="Resources\edge_boundary.png" />
+    <Content Include="Resources\edge_boundary.png" />
     <None Include="Resources\waypoint.png" />
     <None Include="Resources\tooltip.png" />
     <None Include="Resources\level_transition.png" />
