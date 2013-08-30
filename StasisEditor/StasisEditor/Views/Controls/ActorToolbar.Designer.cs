@@ -47,6 +47,7 @@
             this.levelTransitionButton = new System.Windows.Forms.ToolStripButton();
             this.tooltipButton = new System.Windows.Forms.ToolStripButton();
             this.waypointButton = new System.Windows.Forms.ToolStripButton();
+            this.edgeBoundaryButton = new System.Windows.Forms.ToolStripButton();
             this.anchorToolStrip.SuspendLayout();
             this.SuspendLayout();
             // 
@@ -76,7 +77,8 @@
             this.decalsButton,
             this.levelTransitionButton,
             this.tooltipButton,
-            this.waypointButton});
+            this.waypointButton,
+            this.edgeBoundaryButton});
             this.anchorToolStrip.LayoutStyle = System.Windows.Forms.ToolStripLayoutStyle.Flow;
             this.anchorToolStrip.Location = new System.Drawing.Point(0, 0);
             this.anchorToolStrip.Name = "anchorToolStrip";
@@ -257,6 +259,16 @@
             this.waypointButton.Size = new System.Drawing.Size(26, 26);
             this.waypointButton.Text = "Waypoint";
             // 
+            // edgeBoundaryButton
+            // 
+            this.edgeBoundaryButton.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
+            this.edgeBoundaryButton.Image = ((System.Drawing.Image)(resources.GetObject("edgeBoundaryButton.Image")));
+            this.edgeBoundaryButton.ImageTransparentColor = System.Drawing.Color.Magenta;
+            this.edgeBoundaryButton.Margin = new System.Windows.Forms.Padding(0);
+            this.edgeBoundaryButton.Name = "edgeBoundaryButton";
+            this.edgeBoundaryButton.Size = new System.Drawing.Size(26, 26);
+            this.edgeBoundaryButton.Text = "Edge Boundary";
+            // 
             // ActorToolbar
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -291,5 +303,6 @@
         private System.Windows.Forms.ToolStripButton levelTransitionButton;
         private System.Windows.Forms.ToolStripButton tooltipButton;
         private System.Windows.Forms.ToolStripButton waypointButton;
+        private System.Windows.Forms.ToolStripButton edgeBoundaryButton;
     }
 }

@@ -269,6 +269,10 @@ namespace StasisEditor.Controllers
                 case "waypointButton":
                     actor = new EditorWaypointActor(_level);
                     break;
+
+                case "edgeBoundaryButton":
+                    actor = new EditorEdgeBoundaryActor(_level);
+                    break;
             }
 
             if (actor != null)

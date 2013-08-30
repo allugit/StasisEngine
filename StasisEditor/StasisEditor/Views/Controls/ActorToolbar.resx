@@ -435,8 +435,27 @@
         pR0AAAAASUVORK5CYII=
 </value>
   </data>
+  <data name="waypointButton.Image" type="System.Drawing.Bitmap, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
+    <value>
+        iVBORw0KGgoAAAANSUhEUgAAABYAAAAWCAYAAADEtGw7AAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8
+        YQUAAAAJcEhZcwAADsMAAA7DAcdvqGQAAAMTSURBVEhLlZVbT1NBFIX7zDOI1bamFmOakqAN6dXSS4w8
+        kBBK7+XWK20pEEBSg9Zo4Inw4JNGS0zglZj4BzTGB/+B/2c5a8Mcewp4OcnqnJkz+5s1e/bpseirUqnE
+        lfbL5XJP6eQ/1WNsqVRKXODOr2q12tvZ2UG32xXt7e1hd3cX29vb2NzcRLvdRqvVQqPRQK1Wg5ovUjBD
+        eoyLCFQNxre2tnB2doajoyMBra+vG6B6vW7ACFCBUM5MWllZkZbPOEfdJwjep8PDw0NTECdrLS8vG1pa
+        WhItLi6axLE++L6F1judjrjUwL+BFhYWRMVi0RD7nE8wmQSfMJfNZlMA0WgULpdLWk7uhw4CC4WCIfa1
+        a+X4VMAbGxuSy1gshlxrCu+/rEo7NTVlgmpgPzSfzxtgzjOBeVA8HLvdjt7XBj79fIoPCk7nf3JJKJXL
+        5aR/CUy3qiMOkxU/Pn5vIdsMwev1GsB+aD9Qi/1LYJYTB+jM7XbD5bYiVQ9iYmLiWmAmk0E4HIbT6UQo
+        FEI2m5V4E5hp4ABXZNDdsTs4/bGO8Yf3kEwmr3RIWL4VValrotiOyyKXwEwDy0zn0u/3Y+31DNZezcDn
+        85mAdDY7O4vh4WE5B54H4XTOWHJMYNag3vbc3Bw8D8bEtdPlQDqdFiAViURgs9/Gk4wX9ZePpYIK7RiC
+        waAZzB8FlxrkA71l5vfF2wzyazHZJnNK9xO++3jzuYzuuwxu3rqBkZERBAIBpFIpA6zS8RvM/NKt3u70
+        9DQC8XGsKldDQ0NwOByYrzzCidpFuhaBx+NBIpHA/Py8iLtivAmsD45uCaU7ymq1ovo8IbVdehZHqRMX
+        x5OTkwaQh8uWjq8F0y2BXJ0aHR01Duj4W1OcMy0a2K+rwMdXgTmRucushgWeVi1fmEEoD5otY5hjssgk
+        mF8NqQqdY50KQgi32WzSamdaOgUU42iOYMU7sKibhILLACtD1zIXGZR+UQbFZ31QtuefKNXhN0sPSp6u
+        k/6f7hfHNZQsgeqLq6jBg4uc80D/WSrumLHq/uJjarH8AiAkqq00hhztAAAAAElFTkSuQmCC
+</value>
+  </data>
   <assembly alias="System.Windows.Forms" name="System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089" />
-  <data name="waypointButton.Image" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\..\Resources\waypoint.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  <data name="edgeBoundaryButton.Image" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\..\Resources\edge_boundary.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
 </root>

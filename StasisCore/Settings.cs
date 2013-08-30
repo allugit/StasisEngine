@@ -34,7 +34,8 @@
         Decal,
         LevelTransition,
         Tooltip,
-        Waypoint
+        Waypoint,
+        EdgeBoundary
     };
 
     public enum PlantType

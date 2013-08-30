@@ -139,6 +139,10 @@ namespace StasisEditor.Models
                     case "Waypoint":
                         addActor(new EditorWaypointActor(this, actorData));
                         break;
+
+                    case "EdgeBoundary":
+                        addActor(new EditorEdgeBoundaryActor(this, actorData));
+                        break;
                 }
             }
 
