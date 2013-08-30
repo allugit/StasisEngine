@@ -145,8 +145,8 @@ namespace StasisGame.Systems
             }
 
             newBoundary = _fallbackLevelBoundaries[levelUid];
-            newBoundary.LowerBound = Vector2.Min(point - _boundaryMargin, newBoundary.LowerBound);
-            newBoundary.UpperBound = Vector2.Max(point + _boundaryMargin, newBoundary.UpperBound);
+            newBoundary.LowerBound = Vector2.Min(point, newBoundary.LowerBound);
+            newBoundary.UpperBound = Vector2.Max(point, newBoundary.UpperBound);
             _fallbackLevelBoundaries[levelUid] = newBoundary;
         }
 
@@ -656,8 +656,8 @@ namespace StasisGame.Systems
                         AABB levelBoundary = _levelBoundaries[currentLevelUid];
 
                         // Check player's position against the level boundary
-                        if (position.X < levelBoundary.LowerBound.X || position.X > levelBoundary.UpperBound.X ||
-                            position.Y < levelBoundary.LowerBound.Y || position.Y > levelBoundary.UpperBound.Y)
+                        if (position.X < levelBoundary.LowerBound.X - _boundaryMargin.X || position.X > levelBoundary.UpperBound.X + _boundaryMargin.X ||
+                            position.Y < levelBoundary.LowerBound.Y - _boundaryMargin.Y || position.Y > levelBoundary.UpperBound.Y + _boundaryMargin.Y)
                         {
                             endLevel();
                             _playerSystem.reloadInventory();
