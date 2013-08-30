@@ -166,7 +166,18 @@ namespace StasisGame.Systems
             {
                 _rightEdgeBoundaries.Add(levelUid, position);
             }
-            Console.WriteLine("setting edge: {0}", position);
+        }
+
+        // getLeftEdgeBoundary
+        public Vector2 getLeftEdgeBoundary(string levelUid)
+        {
+            return _leftEdgeBoundaries[levelUid];
+        }
+
+        // getRightEdgeBoundary
+        public Vector2 getRightEdgeBoundary(string levelUid)
+        {
+            return _rightEdgeBoundaries[levelUid];
         }
 
         // initializeLevelData -- Takes a level's data and initializes the states needed for the loading process
@@ -436,9 +447,19 @@ namespace StasisGame.Systems
 
             _numEntitiesProcessed[levelUid]++;
 
+            // Check to see if level is finished loading
             if (_numEntitiesProcessed[levelUid] == _numEntities[levelUid])
             {
                 _finishedLoading[levelUid] = true;
+
+                if (!_leftEdgeBoundaries.ContainsKey(levelUid))
+                {
+                    _leftEdgeBoundaries[levelUid] = _levelBoundaries[levelUid].LowerBound;
+                }
+                if (!_rightEdgeBoundaries.ContainsKey(levelUid))
+                {
+                    _rightEdgeBoundaries[levelUid] = _levelBoundaries[levelUid].UpperBound;
+                }
             }
         }
 

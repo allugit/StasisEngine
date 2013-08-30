@@ -39,6 +39,7 @@ namespace StasisGame.Systems
         {
             string levelUid = LevelSystem.currentLevelUid;
             LevelSystem levelSystem = _systemManager.getSystem(SystemType.Level) as LevelSystem;
+            RenderSystem renderSystem = _systemManager.getSystem(SystemType.Render) as RenderSystem;
 
             if (levelSystem.finalized)
             {
@@ -67,6 +68,10 @@ namespace StasisGame.Systems
                 // Handle camera movement
                 if (!_paused || _singleStep)
                 {
+                    Vector2 leftEdge = levelSystem.getLeftEdgeBoundary(levelUid);
+                    Vector2 rightEdge = levelSystem.getRightEdgeBoundary(levelUid);
+                    Vector2 scaledHalfScreen = renderSystem.halfScreen / renderSystem.scale;
+
                     for (int i = 0; i < bodyFocusPoints.Count; i++)
                     {
                         if (bodyFocusPoints[i].focusType == FocusType.Multiple)
@@ -86,6 +91,10 @@ namespace StasisGame.Systems
                         _screenCenter += (singleTarget - _screenCenter) / 2f;
                     else
                         _screenCenter += (multipleTarget / multipleTargetCount - _screenCenter) / 2f;
+
+                    // Enforce edge boundaries
+                    _screenCenter.X = (float)Math.Max(_screenCenter.X, leftEdge.X + scaledHalfScreen.X);
+                    _screenCenter.X = (float)Math.Min(_screenCenter.X, rightEdge.X - scaledHalfScreen.X);
 
                     _singleStep = false;
                 }
