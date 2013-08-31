@@ -156,10 +156,10 @@ namespace StasisGame
         }
 
         // iterate
-        public void iterate(int count)
+        public void iterate(string levelUid, int count)
         {
             // Clear marker competition and shadow values
-            foreach (Dictionary<int, MarkerCell> gridRow in _treeSystem.markerGrid.Values)
+            foreach (Dictionary<int, MarkerCell> gridRow in _treeSystem.markerGrid[levelUid].Values)
             {
                 foreach (MarkerCell gridCell in gridRow.Values)
                 {

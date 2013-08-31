@@ -149,11 +149,19 @@ namespace StasisGame
             // Put this metamer in a cell in the metamer grid
             ci = tree.treeSystem.getPlantGridX(position.X);
             cj = tree.treeSystem.getPlantGridY(position.Y);
-            if (!tree.treeSystem.metamerGrid.ContainsKey(ci))
-                tree.treeSystem.metamerGrid[ci] = new Dictionary<int, List<Metamer>>();
-            if (!tree.treeSystem.metamerGrid[ci].ContainsKey(cj))
-                tree.treeSystem.metamerGrid[ci][cj] = new List<Metamer>();
-            tree.treeSystem.metamerGrid[ci][cj].Add(this);
+            if (!tree.treeSystem.metamerGrid.ContainsKey(tree.levelUid))
+            {
+                tree.treeSystem.metamerGrid.Add(tree.levelUid, new Dictionary<int, Dictionary<int, List<Metamer>>>());
+            }
+            if (!tree.treeSystem.metamerGrid[tree.levelUid].ContainsKey(ci))
+            {
+                tree.treeSystem.metamerGrid[tree.levelUid][ci] = new Dictionary<int, List<Metamer>>();
+            }
+            if (!tree.treeSystem.metamerGrid[tree.levelUid][ci].ContainsKey(cj))
+            {
+                tree.treeSystem.metamerGrid[tree.levelUid][ci][cj] = new List<Metamer>();
+            }
+            tree.treeSystem.metamerGrid[tree.levelUid][ci][cj].Add(this);
 
             // Destroy markers in the occupied zone
             destroyMarkersInOccupiedZone();
@@ -207,24 +215,28 @@ namespace StasisGame
         {
             int gridX = tree.treeSystem.getPlantGridX(position.X);
             int gridY = tree.treeSystem.getPlantGridY(position.Y);
+            Dictionary<int, Dictionary<int, MarkerCell>> levelMarkerGrid;
             Dictionary<int, MarkerCell> gridRow;
             MarkerCell gridCell;
 
-            for (int i = -localGridHalfWidth; i < localGridHalfWidth; i++)
+            if (tree.treeSystem.markerGrid.TryGetValue(tree.levelUid, out levelMarkerGrid))
             {
-                for (int j = -localGridHalfHeight; j < localGridHalfHeight; j++)
+                for (int i = -localGridHalfWidth; i < localGridHalfWidth; i++)
                 {
-                    if (tree.treeSystem.markerGrid.TryGetValue(gridX + i, out gridRow) && gridRow.TryGetValue(gridY + j, out gridCell))
+                    for (int j = -localGridHalfHeight; j < localGridHalfHeight; j++)
                     {
-                        List<MetamerMarker> markersToDestroy = new List<MetamerMarker>();
-                        for (int n = 0; n < gridCell.markers.Count; n++)
+                        if (levelMarkerGrid.TryGetValue(gridX + i, out gridRow) && gridRow.TryGetValue(gridY + j, out gridCell))
                         {
-                            MetamerMarker marker = gridCell.markers[n];
-                            if ((marker.point - position).Length() < tree.occupancyRadius)
-                                markersToDestroy.Add(marker);
+                            List<MetamerMarker> markersToDestroy = new List<MetamerMarker>();
+                            for (int n = 0; n < gridCell.markers.Count; n++)
+                            {
+                                MetamerMarker marker = gridCell.markers[n];
+                                if ((marker.point - position).Length() < tree.occupancyRadius)
+                                    markersToDestroy.Add(marker);
+                            }
+                            for (int n = 0; n < markersToDestroy.Count; n++)
+                                gridCell.markers.Remove(markersToDestroy[n]);
                         }
-                        for (int n = 0; n < markersToDestroy.Count; n++)
-                            gridCell.markers.Remove(markersToDestroy[n]);
                     }
                 }
             }
@@ -250,58 +262,62 @@ namespace StasisGame
                 // Initialize local environment
                 int gridX = tree.treeSystem.getPlantGridX(position.X);
                 int gridY = tree.treeSystem.getPlantGridY(position.Y);
+                Dictionary<int, Dictionary<int, MarkerCell>> levelMarkerGrid;
                 Dictionary<int, MarkerCell> gridRow;
                 MarkerCell gridCell;
-                for (int i = -localGridHalfWidth; i < localGridHalfWidth; i++)
+                if (tree.treeSystem.markerGrid.TryGetValue(tree.levelUid, out levelMarkerGrid))
                 {
-                    for (int j = -localGridHalfHeight; j < localGridHalfHeight; j++)
+                    for (int i = -localGridHalfWidth; i < localGridHalfWidth; i++)
                     {
-                        // Ensure grid cells exist
-                        bool populateCell = false;
-                        if (!tree.treeSystem.markerGrid.TryGetValue(gridX + i, out gridRow))
-                            tree.treeSystem.markerGrid[gridX + i] = new Dictionary<int, MarkerCell>();
-                        if (!tree.treeSystem.markerGrid[gridX + i].TryGetValue(gridY + j, out gridCell))
+                        for (int j = -localGridHalfHeight; j < localGridHalfHeight; j++)
                         {
-                            populateCell = true;
-                            tree.treeSystem.markerGrid[gridX + i][gridY + j] = new MarkerCell(gridX + i, gridY + j);
-                        }
-
-                        if (populateCell)
-                        {
-                            // Populate local grid with marker points
-                            for (int n = 0; n < TreeSystem.MARKERS_PER_CELL; n++)
+                            // Ensure grid cells exist
+                            bool populateCell = false;
+                            if (!levelMarkerGrid.TryGetValue(gridX + i, out gridRow))
+                                levelMarkerGrid[gridX + i] = new Dictionary<int, MarkerCell>();
+                            if (!levelMarkerGrid[gridX + i].TryGetValue(gridY + j, out gridCell))
                             {
-                                MarkerCell cell = tree.treeSystem.markerGrid[gridX + i][gridY + j];
-                                if (cell.markers.Count < TreeSystem.MARKERS_PER_CELL)     // enforce a maximum amount of markers per cell
+                                populateCell = true;
+                                levelMarkerGrid[gridX + i][gridY + j] = new MarkerCell(gridX + i, gridY + j);
+                            }
+
+                            if (populateCell)
+                            {
+                                // Populate local grid with marker points
+                                for (int n = 0; n < TreeSystem.MARKERS_PER_CELL; n++)
                                 {
-                                    // Generate random point
-                                    Vector2 random = new Vector2(gridX + i, gridY + j) * TreeSystem.PLANT_CELL_SIZE + new Vector2((float)tree.random.NextDouble(), (float)tree.random.NextDouble()) * TreeSystem.PLANT_CELL_SIZE;
-
-                                    // Query the world before adding marker
-                                    aabb.LowerBound = random;
-                                    aabb.UpperBound = random;
-                                    bool placeMarker = true;
-
-                                    tree.treeSystem.physicsSystem.getWorld(tree.levelUid).QueryAABB((Fixture fixture) =>
+                                    MarkerCell cell = levelMarkerGrid[gridX + i][gridY + j];
+                                    if (cell.markers.Count < TreeSystem.MARKERS_PER_CELL)     // enforce a maximum amount of markers per cell
                                     {
-                                        int entityId = (int)fixture.Body.UserData;
+                                        // Generate random point
+                                        Vector2 random = new Vector2(gridX + i, gridY + j) * TreeSystem.PLANT_CELL_SIZE + new Vector2((float)tree.random.NextDouble(), (float)tree.random.NextDouble()) * TreeSystem.PLANT_CELL_SIZE;
 
-                                        if (fixture.TestPoint(ref random, tree.internodeLength))
-                                        {
-                                            placeMarker = tree.treeSystem.entityManager.getComponent(tree.levelUid, entityId, ComponentType.BlockTreeLimbs) == null;
-                                            return false;
-                                        }
-                                        else
-                                        {
-                                            return true;
-                                        }
-                                    },
-                                        ref aabb);
+                                        // Query the world before adding marker
+                                        aabb.LowerBound = random;
+                                        aabb.UpperBound = random;
+                                        bool placeMarker = true;
 
-                                    // Add marker
-                                    if (placeMarker)
-                                    {
-                                        tree.treeSystem.markerGrid[gridX + i][gridY + j].markers.Add(new MetamerMarker(cell, random));
+                                        tree.treeSystem.physicsSystem.getWorld(tree.levelUid).QueryAABB((Fixture fixture) =>
+                                        {
+                                            int entityId = (int)fixture.Body.UserData;
+
+                                            if (fixture.TestPoint(ref random, tree.internodeLength))
+                                            {
+                                                placeMarker = tree.treeSystem.entityManager.getComponent(tree.levelUid, entityId, ComponentType.BlockTreeLimbs) == null;
+                                                return false;
+                                            }
+                                            else
+                                            {
+                                                return true;
+                                            }
+                                        },
+                                            ref aabb);
+
+                                        // Add marker
+                                        if (placeMarker)
+                                        {
+                                            levelMarkerGrid[gridX + i][gridY + j].markers.Add(new MetamerMarker(cell, random));
+                                        }
                                     }
                                 }
                             }
@@ -327,25 +343,29 @@ namespace StasisGame
         // calculateShadowValues
         private void calculateShadowValues()
         {
+            Dictionary<int, Dictionary<int, MarkerCell>> levelMarkerGrid;
             Dictionary<int, MarkerCell> gridRow;
             MarkerCell gridCell;
             int gridX = tree.treeSystem.getPlantGridX(position.X);
             int gridY = tree.treeSystem.getPlantGridY(position.Y);
 
-            for (int q = 0; q < Tree.SHADOW_DEPTH; q++)
+            if (tree.treeSystem.markerGrid.TryGetValue(tree.levelUid, out levelMarkerGrid))
             {
-                for (int p = 0; p < q; p++)
+                for (int q = 0; q < Tree.SHADOW_DEPTH; q++)
                 {
-                    int affectedXLeft = gridX - p;
-                    int affectedXRight = gridX + p;
-                    int affectedY = gridY + q;
-                    float deltaS = tree.penumbraA * (float)Math.Pow(tree.penumbraB, -q);
+                    for (int p = 0; p < q; p++)
+                    {
+                        int affectedXLeft = gridX - p;
+                        int affectedXRight = gridX + p;
+                        int affectedY = gridY + q;
+                        float deltaS = tree.penumbraA * (float)Math.Pow(tree.penumbraB, -q);
 
-                    if (tree.treeSystem.markerGrid.TryGetValue(affectedXLeft, out gridRow) && gridRow.TryGetValue(affectedY, out gridCell))
-                        gridCell.shadowValue += deltaS;
-                    if (tree.treeSystem.markerGrid.TryGetValue(affectedXRight, out gridRow) && gridRow.TryGetValue(affectedY, out gridCell))
-                        gridCell.shadowValue += deltaS;
+                        if (levelMarkerGrid.TryGetValue(affectedXLeft, out gridRow) && gridRow.TryGetValue(affectedY, out gridCell))
+                            gridCell.shadowValue += deltaS;
+                        if (levelMarkerGrid.TryGetValue(affectedXRight, out gridRow) && gridRow.TryGetValue(affectedY, out gridCell))
+                            gridCell.shadowValue += deltaS;
 
+                    }
                 }
             }
         }
@@ -355,26 +375,30 @@ namespace StasisGame
         {
             int gridX = tree.treeSystem.getPlantGridX(position.X);
             int gridY = tree.treeSystem.getPlantGridY(position.Y);
+            Dictionary<int, Dictionary<int, MarkerCell>> levelMarkerGrid;
             Dictionary<int, MarkerCell> gridRow;
             MarkerCell gridCell;
             int gridRange = (int)Math.Floor(tree.perceptionRadius / TreeSystem.PLANT_CELL_SIZE) + 2;
-            for (int i = -gridRange; i < gridRange; i++)
+            if (tree.treeSystem.markerGrid.TryGetValue(tree.levelUid, out levelMarkerGrid))
             {
-                for (int j = -gridRange; j < gridRange; j++)
+                for (int i = -gridRange; i < gridRange; i++)
                 {
-                    if (tree.treeSystem.markerGrid.TryGetValue(gridX + i, out gridRow) && gridRow.TryGetValue(gridY + j, out gridCell))
+                    for (int j = -gridRange; j < gridRange; j++)
                     {
-                        for (int n = 0; n < gridCell.markers.Count; n++)
+                        if (levelMarkerGrid.TryGetValue(gridX + i, out gridRow) && gridRow.TryGetValue(gridY + j, out gridCell))
                         {
-                            Vector2 relativePosition = (gridCell.markers[n].point - position);
-                            float distanceToBud = relativePosition.Length();
-                            Matrix rotationMatrix = Matrix.CreateRotationZ(-axis);
-                            relativePosition = Vector2.Transform(relativePosition, rotationMatrix);
-                            float markerAngle = (float)Math.Atan2(relativePosition.Y, relativePosition.X);
-                            if (markerAngle <= axisTolerance && markerAngle >= -axisTolerance && distanceToBud <= tree.perceptionRadius)
+                            for (int n = 0; n < gridCell.markers.Count; n++)
                             {
-                                // Add competition results to grid cell
-                                gridCell.addMarkerCompetition(n, budType, distanceToBud, this);
+                                Vector2 relativePosition = (gridCell.markers[n].point - position);
+                                float distanceToBud = relativePosition.Length();
+                                Matrix rotationMatrix = Matrix.CreateRotationZ(-axis);
+                                relativePosition = Vector2.Transform(relativePosition, rotationMatrix);
+                                float markerAngle = (float)Math.Atan2(relativePosition.Y, relativePosition.X);
+                                if (markerAngle <= axisTolerance && markerAngle >= -axisTolerance && distanceToBud <= tree.perceptionRadius)
+                                {
+                                    // Add competition results to grid cell
+                                    gridCell.addMarkerCompetition(n, budType, distanceToBud, this);
+                                }
                             }
                         }
                     }
@@ -400,7 +424,7 @@ namespace StasisGame
             // Calculate bud quality from cell shadow value
             int gridX = tree.treeSystem.getPlantGridX(position.X);
             int gridY = tree.treeSystem.getPlantGridY(position.Y);
-            budQuality = Math.Max(tree.fullExposure - tree.treeSystem.markerGrid[gridX][gridY].shadowValue, 0);
+            budQuality = Math.Max(tree.fullExposure - tree.treeSystem.markerGrid[tree.levelUid][gridX][gridY].shadowValue, 0);
             //budQuality = Math.Max(tree.fullExposure - Main.markerGrid[gridX][gridY].shadowValue + tree.penumbraA, 0);
 
             if (activeBud != BudType.NONE)
@@ -456,17 +480,21 @@ namespace StasisGame
         {
             int gridX = tree.treeSystem.getPlantGridX(position.X);
             int gridY = tree.treeSystem.getPlantGridY(position.Y);
+            Dictionary<int, Dictionary<int, MarkerCell>> levelMarkerGrid;
             Dictionary<int, MarkerCell> gridRow;
             MarkerCell gridCell;
             int gridRange = (int)Math.Floor(tree.perceptionRadius / TreeSystem.PLANT_CELL_SIZE) + 2;
             associatedMarkers.Clear();
-            for (int i = -gridRange; i < gridRange; i++)
+            if (tree.treeSystem.markerGrid.TryGetValue(tree.levelUid, out levelMarkerGrid))
             {
-                for (int j = -gridRange; j < gridRange; j++)
+                for (int i = -gridRange; i < gridRange; i++)
                 {
-                    if (tree.treeSystem.markerGrid.TryGetValue(gridX + i, out gridRow) && gridRow.TryGetValue(gridY + j, out gridCell))
+                    for (int j = -gridRange; j < gridRange; j++)
                     {
-                        associatedMarkers.AddRange(gridCell.getAssociatedMarkers(budType, this));
+                        if (levelMarkerGrid.TryGetValue(gridX + i, out gridRow) && gridRow.TryGetValue(gridY + j, out gridCell))
+                        {
+                            associatedMarkers.AddRange(gridCell.getAssociatedMarkers(budType, this));
+                        }
                     }
                 }
             }
@@ -744,42 +772,46 @@ namespace StasisGame
                 int gridLowerBoundY = tree.treeSystem.getPlantGridY(position.Y - coneRadius);
                 int gridUpperBoundX = tree.treeSystem.getPlantGridX(position.X + coneRadius);
                 int gridUpperBoundY = tree.treeSystem.getPlantGridY(position.Y + coneRadius);
+                Dictionary<int, Dictionary<int, List<Metamer>>> levelMetamerGrid;
                 Dictionary<int, List<Metamer>> gridX;
                 List<Metamer> gridY;
 
-                for (int i = gridLowerBoundX; i < gridUpperBoundX; i++)
+                if (tree.treeSystem.metamerGrid.TryGetValue(tree.levelUid, out levelMetamerGrid))
                 {
-                    for (int j = gridLowerBoundY; j < gridUpperBoundY; j++)
+                    for (int i = gridLowerBoundX; i < gridUpperBoundX; i++)
                     {
-                        if (tree.treeSystem.metamerGrid.TryGetValue(i, out gridX) && gridX.TryGetValue(j, out gridY))
+                        for (int j = gridLowerBoundY; j < gridUpperBoundY; j++)
                         {
-                            for (int n = 0; n < gridY.Count; n++)
+                            if (levelMetamerGrid.TryGetValue(i, out gridX) && gridX.TryGetValue(j, out gridY))
                             {
-                                Metamer metamer = gridY[n];
-                                if (metamer.tree != tree || metamer == this || metamer.isBroken || !(metamer.isTail || isBranchingPoint()))
-                                    continue;
-
-                                Vector2 relative = metamer.position - position;
-                                float distance = relative.Length();
-
-                                // Cone radius check
-                                if (distance <= coneRadius)
+                                for (int n = 0; n < gridY.Count; n++)
                                 {
-                                    float metamerAngle = (float)Math.Atan2(relative.Y, relative.X);
-                                    float difference = Math.Abs(MathHelper.WrapAngle(metamerAngle - coneAngle));
+                                    Metamer metamer = gridY[n];
+                                    if (metamer.tree != tree || metamer == this || metamer.isBroken || !(metamer.isTail || isBranchingPoint()))
+                                        continue;
 
-                                    // Cone angle check
-                                    if (difference <= coneHalfAngle)
+                                    Vector2 relative = metamer.position - position;
+                                    float distance = relative.Length();
+
+                                    // Cone radius check
+                                    if (distance <= coneRadius)
                                     {
-                                        if (difference > minDifference)
+                                        float metamerAngle = (float)Math.Atan2(relative.Y, relative.X);
+                                        float difference = Math.Abs(MathHelper.WrapAngle(metamerAngle - coneAngle));
+
+                                        // Cone angle check
+                                        if (difference <= coneHalfAngle)
                                         {
-                                            // Lateral
-                                            constraints.Add(new DistanceMetamerConstraint(this, metamer, distance, 0.01f));
-                                        }
-                                        else
-                                        {
-                                            // Perpendicular
-                                            constraints.Add(new DistanceMetamerConstraint(this, metamer, distance, 0.1f));
+                                            if (difference > minDifference)
+                                            {
+                                                // Lateral
+                                                constraints.Add(new DistanceMetamerConstraint(this, metamer, distance, 0.01f));
+                                            }
+                                            else
+                                            {
+                                                // Perpendicular
+                                                constraints.Add(new DistanceMetamerConstraint(this, metamer, distance, 0.1f));
+                                            }
                                         }
                                     }
                                 }
@@ -1158,17 +1190,19 @@ namespace StasisGame
         // kill
         private void kill()
         {
+            string levelUid = tree.levelUid;
+
             if (mainMetamer != null)
                 mainMetamer.kill();
             if (lateralMetamer != null)
                 lateralMetamer.kill();
 
             // Remove from metamer grid
-            tree.treeSystem.metamerGrid[ci][cj].Remove(this);
-            if (tree.treeSystem.metamerGrid[ci][cj].Count == 0)
-                tree.treeSystem.metamerGrid[ci].Remove(cj);
-            if (tree.treeSystem.metamerGrid[ci].Count == 0)
-                tree.treeSystem.metamerGrid.Remove(ci);
+            tree.treeSystem.metamerGrid[levelUid][ci][cj].Remove(this);
+            if (tree.treeSystem.metamerGrid[levelUid][ci][cj].Count == 0)
+                tree.treeSystem.metamerGrid[levelUid][ci].Remove(cj);
+            if (tree.treeSystem.metamerGrid[levelUid][ci].Count == 0)
+                tree.treeSystem.metamerGrid[levelUid].Remove(ci);
 
             // Should have no bodies or mouse joints
             Debug.Assert(body == null);
@@ -1198,6 +1232,8 @@ namespace StasisGame
         // update
         public void update()
         {
+            string levelUid = tree.levelUid;
+
             // Construct render vertices
             constructRenderVertices();
 
@@ -1237,24 +1273,24 @@ namespace StasisGame
                 return;
             else
             {
-                tree.treeSystem.metamerGrid[ci][cj].Remove(this);
+                tree.treeSystem.metamerGrid[levelUid][ci][cj].Remove(this);
 
-                if (tree.treeSystem.metamerGrid[ci][cj].Count == 0)
+                if (tree.treeSystem.metamerGrid[levelUid][ci][cj].Count == 0)
                 {
-                    tree.treeSystem.metamerGrid[ci].Remove(cj);
+                    tree.treeSystem.metamerGrid[levelUid][ci].Remove(cj);
 
-                    if (tree.treeSystem.metamerGrid[ci].Count == 0)
+                    if (tree.treeSystem.metamerGrid[levelUid][ci].Count == 0)
                     {
-                        tree.treeSystem.metamerGrid.Remove(ci);
+                        tree.treeSystem.metamerGrid[levelUid].Remove(ci);
                     }
                 }
 
-                if (!tree.treeSystem.metamerGrid.ContainsKey(i))
-                    tree.treeSystem.metamerGrid[i] = new Dictionary<int, List<Metamer>>();
-                if (!tree.treeSystem.metamerGrid[i].ContainsKey(j))
-                    tree.treeSystem.metamerGrid[i][j] = new List<Metamer>(10);
+                if (!tree.treeSystem.metamerGrid[levelUid].ContainsKey(i))
+                    tree.treeSystem.metamerGrid[levelUid][i] = new Dictionary<int, List<Metamer>>();
+                if (!tree.treeSystem.metamerGrid[levelUid][i].ContainsKey(j))
+                    tree.treeSystem.metamerGrid[levelUid][i][j] = new List<Metamer>(10);
 
-                tree.treeSystem.metamerGrid[i][j].Add(this);
+                tree.treeSystem.metamerGrid[levelUid][i][j].Add(this);
                 ci = i;
                 cj = j;
             }

@@ -608,7 +608,7 @@ namespace StasisGame
             {
                 // Test for metamers
                 TreeSystem treeSystem = (_systemManager.getSystem(SystemType.Tree) as TreeSystem);
-                Metamer metamer = treeSystem.findMetamer(b);
+                Metamer metamer = treeSystem.findMetamer(levelUid, b);
 
                 if (metamer != null)
                 {
@@ -693,7 +693,7 @@ namespace StasisGame
             if (!ropeTargetA.success)
             {
                 // Test metamers
-                Metamer metamer = (_systemManager.getSystem(SystemType.Tree) as TreeSystem).findMetamer(a);
+                Metamer metamer = (_systemManager.getSystem(SystemType.Tree) as TreeSystem).findMetamer(levelUid, a);
 
                 if (metamer != null)
                 {
@@ -729,7 +729,7 @@ namespace StasisGame
             if (!ropeTargetB.success)
             {
                 // Test metamers
-                Metamer metamer = (_systemManager.getSystem(SystemType.Tree) as TreeSystem).findMetamer(b);
+                Metamer metamer = (_systemManager.getSystem(SystemType.Tree) as TreeSystem).findMetamer(levelUid, b);
 
                 if (metamer != null)
                 {
@@ -1029,6 +1029,7 @@ namespace StasisGame
             Texture2D barkTexture;
             List<List<Texture2D>> leafTextures = new List<List<Texture2D>>();
             Tree tree;
+            TreeSystem treeSystem = _systemManager.getSystem(SystemType.Tree) as TreeSystem;
             float maxBaseHalfWidth = Loader.loadFloat(data.Attribute("max_base_half_width"), 0.5f);
             float internodeHalfLength = Loader.loadFloat(data.Attribute("internode_half_length"), 0.5f);
             float leafRange = 1f / (float)TreeSystem.NUM_LEAF_GROUPS;  // 1f / numSizes
@@ -1056,13 +1057,24 @@ namespace StasisGame
                 insideList.Add(renderSystem.materialRenderer.renderMaterial(leafMaterial, maxLeafPoints, 1f, true));
             }
 
-            tree = new Tree(_systemManager.getSystem(SystemType.Tree) as TreeSystem, levelUid, barkTexture, leafTextures, data);  // also expands level boundary
+            // Initialize grids
+            if (!treeSystem.markerGrid.ContainsKey(levelUid))
+            {
+                treeSystem.markerGrid.Add(levelUid, new Dictionary<int, Dictionary<int, MarkerCell>>());
+            }
+            if (!treeSystem.metamerGrid.ContainsKey(levelUid))
+            {
+                treeSystem.metamerGrid.Add(levelUid, new Dictionary<int, Dictionary<int, List<Metamer>>>());
+            }
+
+            // Create tree
+            tree = new Tree(treeSystem, levelUid, barkTexture, leafTextures, data);  // also expands level boundary
 
             // Handle initial iterations
             while ((int)tree.age > tree.iterations)
             {
                 // Iterate
-                tree.iterate(1);
+                tree.iterate(levelUid, 1);
 
                 // Relax if on last iteration
                 if ((int)tree.age == tree.iterations)

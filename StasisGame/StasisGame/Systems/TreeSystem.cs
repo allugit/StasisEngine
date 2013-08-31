@@ -21,16 +21,16 @@ namespace StasisGame.Systems
         private RenderSystem _renderSystem;
         private Vector2 _gravity = new Vector2(0, 0.005f);
         private Vector2 _brokenGravity = new Vector2(0, 0.02f);
-        private Dictionary<int, Dictionary<int, MarkerCell>> _markerGrid;
-        private Dictionary<int, Dictionary<int, List<Metamer>>> _metamerGrid;
+        private Dictionary<string, Dictionary<int, Dictionary<int, MarkerCell>>> _markerGrid;
+        private Dictionary<string, Dictionary<int, Dictionary<int, List<Metamer>>>> _metamerGrid;
         private bool _paused;
         private bool _singleStep;
         public AABB treeAABB;
 
         public int defaultPriority { get { return 30; } }
         public SystemType systemType { get { return SystemType.Tree; } }
-        public Dictionary<int, Dictionary<int, MarkerCell>> markerGrid { get { return _markerGrid; } }
-        public Dictionary<int, Dictionary<int, List<Metamer>>> metamerGrid { get { return _metamerGrid; } }
+        public Dictionary<string, Dictionary<int, Dictionary<int, MarkerCell>>> markerGrid { get { return _markerGrid; } }
+        public Dictionary<string, Dictionary<int, Dictionary<int, List<Metamer>>>> metamerGrid { get { return _metamerGrid; } }
         public PhysicsSystem physicsSystem { get { return _physicsSystem; } }
         public bool paused { get { return _paused; } set { _paused = value; } }
         public bool singleStep { get { return _singleStep; } set { _singleStep = value; } }
@@ -44,15 +44,16 @@ namespace StasisGame.Systems
             _entityManager = entityManager;
             _physicsSystem = _systemManager.getSystem(SystemType.Physics) as PhysicsSystem;
             _renderSystem = _systemManager.getSystem(SystemType.Render) as RenderSystem;
-            _markerGrid = new Dictionary<int, Dictionary<int, MarkerCell>>();
-            _metamerGrid = new Dictionary<int, Dictionary<int, List<Metamer>>>();
+            _markerGrid = new Dictionary<string, Dictionary<int, Dictionary<int, MarkerCell>>>();
+            _metamerGrid = new Dictionary<string, Dictionary<int, Dictionary<int, List<Metamer>>>>();
         }
 
         public int getPlantGridX(float x) { return (int)Math.Floor(x / PLANT_CELL_SIZE); }
         public int getPlantGridY(float y) { return (int)Math.Floor(y / PLANT_CELL_SIZE); }
 
-        public Metamer findMetamer(Vector2 position)
+        public Metamer findMetamer(string levelUid, Vector2 position)
         {
+            Dictionary<int, Dictionary<int, List<Metamer>>> levelMetamerGrid;
             Dictionary<int, List<Metamer>> gridX;
             List<Metamer> gridY;
             int i = getPlantGridX(position.X);
@@ -60,21 +61,25 @@ namespace StasisGame.Systems
             int padding = 2;
             float shortestDistanceSq = 99999f;
             Metamer result = null;
-            for (int x = i - padding; x < i + padding; x++)
+
+            if (metamerGrid.TryGetValue(levelUid, out levelMetamerGrid))
             {
-                for (int y = j - padding; y < j + padding; y++)
+                for (int x = i - padding; x < i + padding; x++)
                 {
-                    if (metamerGrid.TryGetValue(x, out gridX) && gridX.TryGetValue(y, out gridY))
+                    for (int y = j - padding; y < j + padding; y++)
                     {
-                        for (int n = 0; n < gridY.Count; n++)
+                        if (levelMetamerGrid.TryGetValue(x, out gridX) && gridX.TryGetValue(y, out gridY))
                         {
-                            if (gridY[n].isBranchingPoint() || gridY[n].isTail)
+                            for (int n = 0; n < gridY.Count; n++)
                             {
-                                float distanceSq = (gridY[n].position - position).LengthSquared();
-                                if (distanceSq < shortestDistanceSq)
+                                if (gridY[n].isBranchingPoint() || gridY[n].isTail)
                                 {
-                                    shortestDistanceSq = distanceSq;
-                                    result = gridY[n];
+                                    float distanceSq = (gridY[n].position - position).LengthSquared();
+                                    if (distanceSq < shortestDistanceSq)
+                                    {
+                                        shortestDistanceSq = distanceSq;
+                                        result = gridY[n];
+                                    }
                                 }
                             }
                         }
@@ -120,6 +125,7 @@ namespace StasisGame.Systems
         private void prepareCollisions()
         {
             string levelUid = LevelSystem.currentLevelUid;
+            Dictionary<int, Dictionary<int, List<Metamer>>> levelMetamerGrid;
             Dictionary<int, List<Metamer>> gridX;
             List<Metamer> gridY;
 
@@ -139,19 +145,22 @@ namespace StasisGame.Systems
                 int Ay = getPlantGridY(aabb.LowerBound.Y);
                 int Bx = getPlantGridX(aabb.UpperBound.X) + 1;
                 int By = getPlantGridY(aabb.UpperBound.Y) + 1;
-                for (int i = Ax; i < Bx; i++)
+                if (_metamerGrid.TryGetValue(levelUid, out levelMetamerGrid))
                 {
-                    for (int j = Ay; j < By; j++)
+                    for (int i = Ax; i < Bx; i++)
                     {
-                        if (metamerGrid.TryGetValue(i, out gridX) && gridX.TryGetValue(j, out gridY))
+                        for (int j = Ay; j < By; j++)
                         {
-                            for (int n = 0; n < gridY.Count; n++)
+                            if (levelMetamerGrid.TryGetValue(i, out gridX) && gridX.TryGetValue(j, out gridY))
                             {
-                                Metamer metamer = gridY[n];
-                                if (metamer.numFixturesToTest < Metamer.MAX_FIXTURES_TO_TEST)
+                                for (int n = 0; n < gridY.Count; n++)
                                 {
-                                    metamer.fixturesToTest[metamer.numFixturesToTest] = fixture;
-                                    metamer.numFixturesToTest++;
+                                    Metamer metamer = gridY[n];
+                                    if (metamer.numFixturesToTest < Metamer.MAX_FIXTURES_TO_TEST)
+                                    {
+                                        metamer.fixturesToTest[metamer.numFixturesToTest] = fixture;
+                                        metamer.numFixturesToTest++;
+                                    }
                                 }
                             }
                         }
