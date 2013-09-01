@@ -15,7 +15,6 @@
     </StartArguments>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Release|x86'">
-    <StartArguments>
-    </StartArguments>
+    <StartArguments>-l home_village_ravine</StartArguments>
   </PropertyGroup>
 </Project>

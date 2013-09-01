@@ -220,7 +220,7 @@ namespace StasisGame
             _systemManager.add(_levelSystem, -1);
         }
 
-        private void previewLevel(string levelUID)
+        private void previewLevel(string levelUid)
         {
             /*
             startPersistentSystems();
@@ -230,7 +230,19 @@ namespace StasisGame
             // Load level
             loadLevel(levelUID);
             */
-            throw new NotImplementedException();
+
+            _gameState = GameState.LoadingLevel;
+            _screenSystem.addScreen(_loadingScreen);
+            startPersistentSystems();
+            playerSystem.createPlayer();
+            DataManager.createTemporaryPlayerData();
+            IsFixedTimeStep = false;
+            _levelSystem.reset();
+            _levelSystem.createLevelSystems();
+            _levelSystem.loadAllData(levelUid);
+            _levelSystem.createBackgrounds();
+            _loadingScreen.elementsToLoad = _levelSystem.totalEntitiesCount;
+            _loadingScreen.message = "Loading entities, first pass...";
         }
 
         // applyDisplaySettings -- Uses data from DataManager to alter the display settings.

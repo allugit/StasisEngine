@@ -355,7 +355,7 @@ namespace StasisGame.Managers
         }
 
         // Create new player data
-        public static int createPlayerData(string playerName)
+        public static int createPlayerData(string playerName, bool saveData = true)
         {
             Logger.log("DataManager.createPlayerData method starting.");
 
@@ -394,8 +394,10 @@ namespace StasisGame.Managers
                     _entityManager.addComponent("global", PlayerSystem.PLAYER_ID, new InventoryComponent(32));
                     _entityManager.addComponent("global", PlayerSystem.PLAYER_ID, new ToolbarComponent(4, PlayerSystem.PLAYER_ID));
 
-                    // Save data
-                    savePlayerData();
+                    if (saveData)
+                    {
+                        savePlayerData();
+                    }
                     created = true;
                 }
             }
@@ -421,7 +423,8 @@ namespace StasisGame.Managers
         // Create temporary player data
         public static void createTemporaryPlayerData()
         {
-            createPlayerData("McCormick");
+            _playerData = new XElement("PlayerData");
+            createPlayerData("McCormick", false);
         }
 
         // Load player saves
