@@ -13,6 +13,9 @@ namespace StasisEditor.Models
         private Vector2 _position;
 
         [Browsable(false)]
+        public Vector2 position { get { return _position; } set { _position = value; } }
+
+        [Browsable(false)]
         public override XElement data
         {
             get

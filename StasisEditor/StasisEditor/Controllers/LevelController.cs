@@ -20,6 +20,7 @@ namespace StasisEditor.Controllers
     public class LevelController : Controller
     {
         public const float MIN_ACTOR_SIZE = 0.1f;
+        public const float ORIGINAL_SCALE = 35f;
 
         private EditorController _editorController;
         private LevelView _levelView;
@@ -31,17 +32,18 @@ namespace StasisEditor.Controllers
         private bool[] _keysPressed;
         private bool[] _keysChecked;
         private bool _mouseOverView;
+        private float _scale = ORIGINAL_SCALE;
 
         public System.Drawing.Point mouse { get { return _mouse; } set { _oldMouse = _mouse; _mouse = value; } }
         public EditorLevel level { get { return _level; } set { _level = value; } }
         public LevelView view { get { return _levelView; } }
         public Vector2 screenCenter { get { return _screenCenter; } set { _screenCenter = value; } }
         public bool mouseOverView { get { return _mouseOverView; } set { _mouseOverView = value; } }
-        public Vector2 worldOffset { get { return _screenCenter + (new Vector2(_levelView.Width, _levelView.Height) / 2) / _editorController.scale; } }
-        public Vector2 worldMouse { get { return new Vector2(_mouse.X, _mouse.Y) / _editorController.scale - worldOffset; } }
-        public Vector2 oldWorldMouse { get { return new Vector2(_oldMouse.X, _oldMouse.Y) / _editorController.scale - worldOffset; } }
-        public Vector2 worldDeltaMouse { get { return new Vector2(_mouse.X - _oldMouse.X, _mouse.Y - _oldMouse.Y) / _editorController.scale; } }
-        public float scale { get { return _editorController.scale; } }
+        public Vector2 worldOffset { get { return _screenCenter + (new Vector2(_levelView.Width, _levelView.Height) / 2) / _scale; } }
+        public Vector2 worldMouse { get { return new Vector2(_mouse.X, _mouse.Y) / _scale - worldOffset; } }
+        public Vector2 oldWorldMouse { get { return new Vector2(_oldMouse.X, _oldMouse.Y) / _scale - worldOffset; } }
+        public Vector2 worldDeltaMouse { get { return new Vector2(_mouse.X - _oldMouse.X, _mouse.Y - _oldMouse.Y) / _scale; } }
+        public float scale { get { return _scale; } set { _scale = value; } }
 
         public EditorActor selectedActor { get { return _selectedActor; } set { _selectedActor = value; } }
         public EditorController editorController { get { return _editorController; } }
@@ -305,7 +307,7 @@ namespace StasisEditor.Controllers
         public void zoom(int delta)
         {
             float modifier = 0.01f;
-            _editorController.scale = Math.Max(_editorController.scale + modifier * delta, 1f);
+            _scale = Math.Max(_scale + modifier * delta, 1f);
         }
 
         // Update circuit actor connections
@@ -430,6 +432,21 @@ namespace StasisEditor.Controllers
                 if (isKeyHeld(XKeys.LeftControl))
                 {
                     _screenCenter += worldMouse - oldWorldMouse;
+                }
+
+                if (isKeyHeld(XKeys.Home))
+                {
+                    List<EditorPlayerSpawnActor> spawnActors = _level.getActors<EditorPlayerSpawnActor>(ActorType.PlayerSpawn);
+
+                    if (spawnActors.Count > 0)
+                    {
+                        _screenCenter = spawnActors[0].position;
+                    }
+                    else
+                    {
+                        _screenCenter = Vector2.Zero;
+                    }
+                    _scale = ORIGINAL_SCALE;
                 }
 
                 _level.update();

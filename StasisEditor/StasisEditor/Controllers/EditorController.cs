@@ -19,7 +19,7 @@ namespace StasisEditor.Controllers
         public static string debugGamePath;
         public static string releaseGamePath;
         public static string resourcesSourcePath;
-        public const float ORIGINAL_SCALE = 35f;
+        //public const float ORIGINAL_SCALE = 35f;
         private MaterialController _materialController;
         private LevelController _levelController;
         private BlueprintController _blueprintController;
@@ -30,7 +30,7 @@ namespace StasisEditor.Controllers
         private EditorView _editorView;
         private ActorToolbar _actorToolbar;
 
-        private float _scale = ORIGINAL_SCALE;
+        //private float _scale = ORIGINAL_SCALE;
 
         public EditorView view { get { return _editorView; } }
         public MaterialController materialController { get { return _materialController; } }
@@ -38,7 +38,7 @@ namespace StasisEditor.Controllers
         public BlueprintController blueprintController { get { return _blueprintController; } }
         public CircuitController circuitController { get { return _circuitController; } }
         public BackgroundController backgroundController { get { return _backgroundController; } }
-        public float scale { get { return _scale; } set { _scale = value; } }
+        //public float scale { get { return _scale; } set { _scale = value; } }
 
         public EditorController(EditorView view)
         {

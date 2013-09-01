@@ -295,7 +295,7 @@ namespace StasisEditor.Views
         // drawTexture
         public void drawTexture(Texture2D texture, Vector2 position, float angle, Vector2 origin, float layerDepth)
         {
-            _spriteBatch.Draw(texture, (position + _controller.worldOffset) * _controller.scale, texture.Bounds, Color.White * 0.5f, angle, origin, _controller.scale / EditorController.ORIGINAL_SCALE, SpriteEffects.None, layerDepth);
+            _spriteBatch.Draw(texture, (position + _controller.worldOffset) * _controller.scale, texture.Bounds, Color.White * 0.5f, angle, origin, _controller.scale / LevelController.ORIGINAL_SCALE, SpriteEffects.None, layerDepth);
         }
 
         // Render polygon
@@ -309,15 +309,15 @@ namespace StasisEditor.Views
                 topLeft = Vector2.Min(topLeft, vertex);
                 bottomRight = Vector2.Max(bottomRight, vertex);
             }
-            int width = (int)Math.Ceiling((bottomRight.X - topLeft.X) * EditorController.ORIGINAL_SCALE);
-            int height = (int)Math.Ceiling((bottomRight.Y - topLeft.Y) * EditorController.ORIGINAL_SCALE);
+            int width = (int)Math.Ceiling((bottomRight.X - topLeft.X) * LevelController.ORIGINAL_SCALE);
+            int height = (int)Math.Ceiling((bottomRight.Y - topLeft.Y) * LevelController.ORIGINAL_SCALE);
 
             RenderTarget2D renderTarget = new RenderTarget2D(GraphicsDevice, width, height);
 
             GraphicsDevice.SetRenderTarget(renderTarget);
             GraphicsDevice.Clear(Color.Transparent);
             Matrix viewMatrix = Matrix.CreateTranslation(new Vector3(-topLeft, 0)) *
-                Matrix.CreateScale(new Vector3(EditorController.ORIGINAL_SCALE, -EditorController.ORIGINAL_SCALE, 1f)) *
+                Matrix.CreateScale(new Vector3(LevelController.ORIGINAL_SCALE, -LevelController.ORIGINAL_SCALE, 1f)) *
                 Matrix.CreateTranslation(new Vector3(-width, height, 0) / 2f);
             Matrix projectionMatrix = Matrix.CreateOrthographic(GraphicsDevice.Viewport.Width, GraphicsDevice.Viewport.Height, 0, 1);
 

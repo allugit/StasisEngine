@@ -82,7 +82,7 @@ namespace StasisEditor.Views.Controls
             if (!IsDesignerHosted)
             {
                 if (_backgroundRenderer.background != null)
-                    _backgroundRenderer.update(_view.controller.editorController.scale, _view.controller.screenCenter);
+                    _backgroundRenderer.update(_view.controller.editorController.levelController.scale, _view.controller.screenCenter);
 
                 GraphicsDevice.Clear(Color.Black);
 
