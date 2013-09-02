@@ -100,6 +100,7 @@
     <Compile Include="Components\MetamerComponent.cs" />
     <Compile Include="Components\ParticleInfluenceComponent.cs" />
     <Compile Include="Components\RegionGoalComponent.cs" />
+    <Compile Include="Components\RegionComponent.cs" />
     <Compile Include="Components\RopeGrabComponent.cs" />
     <Compile Include="Components\GroundBodyComponent.cs" />
     <Compile Include="Components\IComponent.cs" />

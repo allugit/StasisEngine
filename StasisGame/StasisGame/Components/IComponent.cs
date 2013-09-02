@@ -40,7 +40,8 @@ namespace StasisGame.Components
         AIWanderBehavior,
         CharacterDialogue,
         InDialogue,
-        BlockTreeLimbs
+        BlockTreeLimbs,
+        Region
     };
 
     public interface IComponent

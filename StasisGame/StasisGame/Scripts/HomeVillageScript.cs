@@ -16,11 +16,15 @@ namespace StasisGame.Scripts
         {
         }
 
-        public override void onLevelStart()
+        private void createDagnyNpc()
         {
-            Console.WriteLine("Home village script started.");
             _dagnyEntityId = _entityManager.factory.createDagny(_levelUid, new Vector2(-6.74f, -8.2f));
             _entityManager.addComponent(_levelUid, _dagnyEntityId, new AIWanderBehaviorComponent("dagny_idle", 4f, 30, 360));
+        }
+
+        public override void onLevelStart()
+        {
+            createDagnyNpc();
         }
     }
 }

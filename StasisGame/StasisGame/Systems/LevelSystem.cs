@@ -353,8 +353,8 @@ namespace StasisGame.Systems
                         loadingScreen.elementsLoaded++;
                         break;
 
-                    case "Goal":
-                        _entityManager.factory.createRegionGoal(levelUid, actorData);
+                    case "Region":
+                        _entityManager.factory.createRegion(levelUid, actorData);
                         loadingScreen.elementsLoaded++;
                         break;
 

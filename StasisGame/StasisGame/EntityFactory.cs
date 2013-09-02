@@ -1302,14 +1302,14 @@ namespace StasisGame
             addEntityToIgnored(entityB, entityA);
         }
 
-        // createRegionGoal -- Creates a polygon that triggers an event when the player touches it
-        public void createRegionGoal(string levelUid, XElement data)
+        // createRegion -- Create a polygon that can trigger events when acted upon
+        public void createRegion(string levelUid, XElement data)
         {
             LevelSystem levelSystem = _systemManager.getSystem(SystemType.Level) as LevelSystem;
-            RegionGoalComponent regionGoalComponent = new RegionGoalComponent();
             World world = (_systemManager.getSystem(SystemType.Physics) as PhysicsSystem).getWorld(levelUid);
             int actorId = int.Parse(data.Attribute("id").Value);
             int entityId = _entityManager.createEntity(levelUid, actorId);
+            string regionUid = Loader.loadString(data.Attribute("uid"), "");
             List<Vector2> points = new List<Vector2>();
             List<PolygonPoint> P2TPoints = new List<PolygonPoint>();
             Polygon polygon;
@@ -1319,13 +1319,17 @@ namespace StasisGame
             body.BodyType = BodyType.Static;
 
             foreach (XElement pointData in data.Elements("Point"))
+            {
                 points.Add(Loader.loadVector2(pointData, Vector2.Zero));
-
+            }
             foreach (Vector2 point in points)
+            {
                 center += point / points.Count;
-
+            }
             foreach (Vector2 point in points)
+            {
                 P2TPoints.Add(new PolygonPoint(point.X - center.X, point.Y - center.Y));
+            }
 
             polygon = new Polygon(P2TPoints);
             P2T.Triangulate(polygon);
@@ -1354,15 +1358,11 @@ namespace StasisGame
             body.Position = center;
 
             // Add components
+            _entityManager.addComponent(levelUid, entityId, new RegionComponent(regionUid));
             _entityManager.addComponent(levelUid, entityId, new PhysicsComponent(body));
-            _entityManager.addComponent(levelUid, entityId, regionGoalComponent);
             _entityManager.addComponent(levelUid, entityId, new WorldPositionComponent(body.Position));
             _entityManager.addComponent(levelUid, entityId, new IgnoreRopeRaycastComponent());
             _entityManager.addComponent(levelUid, entityId, new SkipFluidResolutionComponent());
-
-            // Expand level boundary
-            foreach (Vector2 point in points)
-                levelSystem.expandFallbackBoundary(levelUid, point);
         }
 
         // createLevelTransition
