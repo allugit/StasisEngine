@@ -120,8 +120,8 @@ namespace StasisEditor.Models
                         secondPassData.Add(actorData);
                         break;
 
-                    case "Goal":
-                        addActor(new EditorGoalActor(this, actorData), true);
+                    case "Region":
+                        addActor(new EditorRegionActor(this, actorData), true);
                         break;
 
                     case "Decal":

@@ -252,8 +252,8 @@ namespace StasisEditor.Controllers
                     actor = new EditorCollisionFilterActor(_level);
                     break;
 
-                case "goalButton":
-                    actor = new EditorGoalActor(_level);
+                case "regionButton":
+                    actor = new EditorRegionActor(_level);
                     break;
 
                 case "decalsButton":

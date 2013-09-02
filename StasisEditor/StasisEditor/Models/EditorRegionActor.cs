@@ -11,19 +11,38 @@ using StasisEditor.Controllers;
 namespace StasisEditor.Models
 {
 
-    public class EditorGoalActor : EditorPolygonActor
+    public class EditorRegionActor : EditorPolygonActor
     {
+        private string _uid;
+
+        public string uid { get { return _uid; } set { _uid = value; } }
+
         [Browsable(false)]
         protected override Color polygonFill { get { return Color.Green * 0.3f; } }
 
-        public EditorGoalActor(EditorLevel level)
-            : base(level, ActorType.Goal)
+        [Browsable(false)]
+        public override XElement data
         {
+            get
+            {
+                XElement d = base.data;
+
+                d.SetAttributeValue("uid", _uid);
+
+                return d;
+            }
         }
 
-        public EditorGoalActor(EditorLevel level, XElement data)
+        public EditorRegionActor(EditorLevel level)
+            : base(level, ActorType.Region)
+        {
+            _uid = "";
+        }
+
+        public EditorRegionActor(EditorLevel level, XElement data)
             : base(level, data)
         {
+            _uid = Loader.loadString(data.Attribute("uid"), "");
         }
 
         public override void draw()

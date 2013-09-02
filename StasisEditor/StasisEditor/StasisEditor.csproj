@@ -99,7 +99,7 @@
     <Compile Include="Models\EditorDecalActor.cs" />
     <Compile Include="Models\EditorEdgeBoundaryActor.cs" />
     <Compile Include="Models\EditorFluidActor.cs" />
-    <Compile Include="Models\EditorGoalActor.cs" />
+    <Compile Include="Models\EditorRegionActor.cs" />
     <Compile Include="Models\EditorItemActor.cs" />
     <Compile Include="Models\EditorLevelTransitionActor.cs" />
     <Compile Include="Models\EditorMaterialLeavesLayer.cs" />
@@ -282,6 +282,7 @@
     </Content>
     <Content Include="Resources\circuits.png" />
     <Content Include="Resources\edge_boundary.png" />
+    <None Include="Resources\region.png" />
     <None Include="Resources\waypoint.png" />
     <None Include="Resources\tooltip.png" />
     <None Include="Resources\level_transition.png" />
@@ -298,7 +299,6 @@
     <None Include="Resources\plants.png" />
     <None Include="Resources\moving_platform.png" />
     <None Include="Resources\items.png" />
-    <None Include="Resources\goal.png" />
     <None Include="Resources\fluid.png" />
     <None Include="Resources\circle.png" />
     <None Include="Resources\box.png" />

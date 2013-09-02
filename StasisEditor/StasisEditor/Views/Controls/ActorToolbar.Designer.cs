@@ -42,7 +42,7 @@
             this.revoluteButton = new System.Windows.Forms.ToolStripButton();
             this.prismaticButton = new System.Windows.Forms.ToolStripButton();
             this.collisionFilterButton = new System.Windows.Forms.ToolStripButton();
-            this.goalButton = new System.Windows.Forms.ToolStripButton();
+            this.regionButton = new System.Windows.Forms.ToolStripButton();
             this.decalsButton = new System.Windows.Forms.ToolStripButton();
             this.levelTransitionButton = new System.Windows.Forms.ToolStripButton();
             this.tooltipButton = new System.Windows.Forms.ToolStripButton();
@@ -73,7 +73,7 @@
             this.revoluteButton,
             this.prismaticButton,
             this.collisionFilterButton,
-            this.goalButton,
+            this.regionButton,
             this.decalsButton,
             this.levelTransitionButton,
             this.tooltipButton,
@@ -208,15 +208,15 @@
             this.collisionFilterButton.Text = "toolStripButton1";
             this.collisionFilterButton.ToolTipText = "Collision Filter";
             // 
-            // goalButton
+            // regionButton
             // 
-            this.goalButton.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
-            this.goalButton.Image = ((System.Drawing.Image)(resources.GetObject("goalButton.Image")));
-            this.goalButton.ImageTransparentColor = System.Drawing.Color.Magenta;
-            this.goalButton.Margin = new System.Windows.Forms.Padding(0);
-            this.goalButton.Name = "goalButton";
-            this.goalButton.Size = new System.Drawing.Size(26, 26);
-            this.goalButton.Text = "Goal";
+            this.regionButton.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
+            this.regionButton.Image = ((System.Drawing.Image)(resources.GetObject("regionButton.Image")));
+            this.regionButton.ImageTransparentColor = System.Drawing.Color.Magenta;
+            this.regionButton.Margin = new System.Windows.Forms.Padding(0);
+            this.regionButton.Name = "regionButton";
+            this.regionButton.Size = new System.Drawing.Size(26, 26);
+            this.regionButton.Text = "Region";
             // 
             // decalsButton
             // 
@@ -292,7 +292,7 @@
         private System.Windows.Forms.ToolStripButton ropeButton;
         private System.Windows.Forms.ToolStripButton fluidButton;
         private System.Windows.Forms.ToolStripButton playerSpawnButton;
-        private System.Windows.Forms.ToolStripButton goalButton;
+        private System.Windows.Forms.ToolStripButton regionButton;
         private System.Windows.Forms.ToolStripButton itemsButton;
         private System.Windows.Forms.ToolStripButton plantsButton;
         private System.Windows.Forms.ToolStripButton circuitsButton;

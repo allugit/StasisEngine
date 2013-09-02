@@ -30,7 +30,7 @@
         Revolute,
         Prismatic,
         CollisionFilter,
-        Goal,
+        Region,
         Decal,
         LevelTransition,
         Tooltip,
