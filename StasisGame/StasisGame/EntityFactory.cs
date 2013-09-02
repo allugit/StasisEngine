@@ -1373,21 +1373,23 @@ namespace StasisGame
                 int.Parse(data.Attribute("id").Value),
                 data.Attribute("level_uid").Value,
                 Loader.loadVector2(data.Attribute("position"), Vector2.Zero),
-                float.Parse(data.Attribute("radius").Value),
+                float.Parse(data.Attribute("half_width").Value),
+                float.Parse(data.Attribute("half_height").Value),
+                float.Parse(data.Attribute("angle").Value),
                 Loader.loadVector2(data.Attribute("position_in_level"), Vector2.Zero),
-                true);
+                Loader.loadBool(data.Attribute("requires_activation"), true));
         }
 
-        public int createLevelTransition(string levelUid, string transitionLevelUid, Vector2 position, float radius, Vector2 positionInLevel, bool requiresActivation)
+        public int createLevelTransition(string levelUid, string transitionLevelUid, Vector2 position, float halfWidth, float halfHeight, float angle, Vector2 positionInLevel, bool requiresActivation)
         {
-            return createLevelTransition(levelUid, -1, transitionLevelUid, position, radius, positionInLevel, requiresActivation);
+            return createLevelTransition(levelUid, -1, transitionLevelUid, position, halfWidth, halfHeight, angle, positionInLevel, requiresActivation);
         }
 
-        public int createLevelTransition(string levelUid, int actorId, string transitionLevelUid, Vector2 position, float radius, Vector2 positionInLevel, bool requiresActivation)
+        public int createLevelTransition(string levelUid, int actorId, string transitionLevelUid, Vector2 position, float halfWidth, float halfHeight, float angle, Vector2 positionInLevel, bool requiresActivation)
         {
             int entityId = actorId == -1 ? _entityManager.createEntity(levelUid) : _entityManager.createEntity(levelUid, actorId);
 
-            _entityManager.addComponent(levelUid, entityId, new LevelTransitionComponent(transitionLevelUid, position, radius, positionInLevel, requiresActivation));
+            _entityManager.addComponent(levelUid, entityId, new LevelTransitionComponent(transitionLevelUid, position, halfWidth, halfHeight, angle, positionInLevel, requiresActivation));
 
             return entityId;
         }

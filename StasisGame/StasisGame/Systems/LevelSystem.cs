@@ -636,6 +636,27 @@ namespace StasisGame.Systems
             _scriptManager.onReturnToWorldMap(currentLevelUid, this);
         }
 
+        // hitTestBox
+        private bool hitTestBox(Vector2 boxPosition, float halfWidth, float halfHeight, float angle, Vector2 testPoint)
+        {
+            Vector2 relativePosition = boxPosition - testPoint;
+            Vector2 transformedRelativePosition = Vector2.Transform(relativePosition, Matrix.CreateRotationZ(-angle));
+            Vector2 topLeft = -(new Vector2(halfWidth, halfHeight));
+            Vector2 bottomRight = -topLeft;
+            Vector2 d1, d2;
+
+            d1 = transformedRelativePosition - topLeft;
+            d2 = bottomRight - transformedRelativePosition;
+
+            // One of these components will be less than zero if the alignedRelative position is outside of the bounds
+            if (d1.X < 0 || d1.Y < 0)
+                return false;
+
+            if (d2.X < 0 || d2.Y < 0)
+                return false;
+
+            return true;
+        }
         // update
         public void update(GameTime gameTime)
         {
@@ -679,7 +700,7 @@ namespace StasisGame.Systems
                         {
                             LevelTransitionComponent levelTransition = levelTransitionComponents[i];
 
-                            if ((position - levelTransition.position).LengthSquared() <= levelTransition.radiusSq)
+                            if (hitTestBox(levelTransition.position, levelTransition.halfWidth, levelTransition.halfHeight, levelTransition.angle, position))
                             {
                                 if (levelTransition.requiresActivation)
                                 {
@@ -692,6 +713,7 @@ namespace StasisGame.Systems
                                 else 
                                 {
                                     Console.WriteLine("begin level transition to: {0}", levelTransition.levelUid);
+                                    switchToLevel(levelTransition.levelUid, levelTransition.positionInLevel);
                                 }
                             }
                         }
