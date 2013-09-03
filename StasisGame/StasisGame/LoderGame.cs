@@ -184,6 +184,7 @@ namespace StasisGame
             // Scripts
             _scriptManager.addScript("home_village", new HomeVillageScript(_systemManager, _entityManager));
             _scriptManager.addScript("dagny_house", new DagnyHouseScript(_systemManager, _entityManager));
+            _scriptManager.addScript("home_village_ravine", new HomeVillageRavineScript(_systemManager, _entityManager));
 
             Logger.log("LoderGame.LoadContent method finished.");
         }

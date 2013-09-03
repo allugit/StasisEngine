@@ -38,7 +38,9 @@ namespace StasisGame.Managers
             }
 
             if (tryGlobal)
+            {
                 _scripts["global"].doAction(action);
+            }
         }
 
         // registerGoals -- Hook for registering goals for a specific level
@@ -47,7 +49,9 @@ namespace StasisGame.Managers
             ScriptBase script = null;
 
             if (_scripts.TryGetValue(key, out script))
+            {
                 script.registerGoals(levelSystem);
+            }
         }
 
         // onLevelStart -- Hook for the start of the level
@@ -56,7 +60,9 @@ namespace StasisGame.Managers
             ScriptBase script = null;
 
             if (_scripts.TryGetValue(key, out script))
+            {
                 script.onLevelStart();
+            }
         }
 
         // onLevelEnd -- Hook for the end of a level
@@ -65,7 +71,20 @@ namespace StasisGame.Managers
             ScriptBase script = null;
 
             if (_scripts.TryGetValue(key, out script))
+            {
                 script.onLevelEnd();
+            }
+        }
+
+        // onSwitchLevel
+        public void onSwitchLevel(string from, string to)
+        {
+            ScriptBase script = null;
+
+            if (_scripts.TryGetValue(to, out script))
+            {
+                script.onSwitchLevel(from, to);
+            }
         }
 
         // onReturnToWorldMap -- Hook called when returning to the world map after a level ends

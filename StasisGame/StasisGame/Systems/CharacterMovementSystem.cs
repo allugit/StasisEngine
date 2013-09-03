@@ -33,6 +33,14 @@ namespace StasisGame.Systems
             _ropeSystem = _systemManager.getSystem(SystemType.Rope) as RopeSystem;
         }
 
+        public void attemptRopeGrab(string levelUid, int characterId)
+        {
+            CharacterMovementComponent characterMovementComponent = _entityManager.getComponent(levelUid, characterId, ComponentType.CharacterMovement) as CharacterMovementComponent;
+            PhysicsComponent physicsComponent = _entityManager.getComponent(levelUid, characterId, ComponentType.Physics) as PhysicsComponent;
+
+            attemptRopeGrab(levelUid, characterId, characterMovementComponent, physicsComponent, null);
+        }
+
         public void attemptRopeGrab(string levelUid, int characterId, CharacterMovementComponent characterMovementComponent, PhysicsComponent physicsComponent, RopeGrabComponent existingRopeGrabComponent)
         {
             float margin = 0.5f;

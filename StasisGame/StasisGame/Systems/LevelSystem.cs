@@ -513,8 +513,15 @@ namespace StasisGame.Systems
             {
                 _playerSystem.removePlayerFromLevel(levelUid);
             }
+
+            // Switching logic
             _playerSystem.addPlayerToLevel(levelUid, playerPosition);
             _renderSystem.setBackground(_backgrounds[levelUid]);
+
+            // Script hook
+            _scriptManager.onSwitchLevel(currentLevelUid, levelUid);
+
+            // Update curren level uid
             currentLevelUid = levelUid;
 
             // Update camera

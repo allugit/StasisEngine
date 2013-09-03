@@ -37,6 +37,10 @@ namespace StasisGame.Scripts
         {
         }
 
+        virtual public void onSwitchLevel(string from, string to)
+        {
+        }
+
         virtual public void onReturnToWorldMap(LevelSystem levelSystem)
         {
         }
